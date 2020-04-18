@@ -1,0 +1,18 @@
+# folder
+.settings
+.gradle
+.gradle_data
+bin
+build
+eclipse
+libs
+run
+src/main/java/test
+
+# file
+!gradlew.bat
+*.bat
+*.launch
+.metadata
+.classpath
+.project

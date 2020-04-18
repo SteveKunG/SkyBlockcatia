@@ -1,0 +1,113 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sponge"
+            url = "https://repo.spongepowered.org/maven"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
+    }
+}
+
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
+
+def mcVersion = project.mc_version
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mixin"
+
+version = project.version
+group = "stevekung.mods.indicatia"
+archivesBaseName = "IndicatiaSkyBlock"
+sourceCompatibility = targetCompatibility = 1.8
+
+minecraft {
+    version = "${forge_version}"
+    runDir = "run"
+    mappings = "${mcp_mapping}"
+    makeObfSourceJar = false
+}
+
+configurations {
+    provided
+    compile.extendsFrom(provided)
+}
+
+dependencies {
+    provided("org.spongepowered:mixin:0.6.4-SNAPSHOT") {
+        exclude module: "launchwrapper"
+        exclude module: "guava"
+        exclude module: "gson"
+        exclude module: "commons-io"
+        exclude module: "log4j-core"
+    }
+}
+
+repositories {
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        url = "http://repo.spongepowered.org/maven/"
+    }
+}
+
+jar {
+    from(configurations.provided.asFileTree.files.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
+    }
+    manifest.attributes(
+            "FMLAT": "indicatia_at.cfg",
+            "MixinConfigs": "mixins.indicatia.json",
+            "TweakOrder": "0",
+            "TweakClass": "stevekung.mods.indicatia.tweaker.MixinsLoadingPlugin"
+    )
+    exclude "codes/biscuit/**"
+    exclude "com/github/**"
+    exclude "test/**"
+    baseName = "IndicatiaSkyBlock-" + mcVersion
+}
+
+mixin {
+    defaultObfuscationEnv searge
+    add sourceSets.main, "mixins.indicatia.refmap.json"
+}
+
+curseforge {
+    apiKey = project.indicatia_api
+    project {
+        id = "272146"
+        changelog = "Change Log"
+        releaseType = "beta"
+        addGameVersion mcVersion
+
+        mainArtifact(jar) {
+            displayName = "IndicatiaSkyBlock-" + mcVersion + "-" + version
+        }
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    from(configurations.provided.asFileTree.files.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
+    }
+    manifest.attributes(
+            "FMLAT": "indicatia_at.cfg",
+            "MixinConfigs": "mixins.indicatia.json",
+            "TweakOrder": "0",
+            "TweakClass": "stevekung.mods.indicatia.tweaker.MixinsLoadingPlugin"
+    )
+    baseName = "IndicatiaSkyBlock-" + mcVersion
+    classifier = "deobf"
+}
