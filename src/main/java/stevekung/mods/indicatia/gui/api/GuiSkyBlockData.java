@@ -17,6 +17,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -1201,7 +1202,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getSlayerInfo(currentUserProfile);
                 this.getInventories(currentUserProfile);
                 this.getPets(currentUserProfile);
-                //                this.getCraftedMinions(currentUserProfile);
+                //this.getCraftedMinions(currentUserProfile);
                 this.getCollections(currentUserProfile);
                 this.createFakePlayer();
                 this.calculatePlayerStats(currentUserProfile);
@@ -1219,7 +1220,6 @@ public class GuiSkyBlockData extends GuiScreen
     private void getCraftedMinions(JsonObject currentProfile)
     {
         JsonArray craftedMinions = currentProfile.get("crafted_generators").getAsJsonArray();
-
         Multimap<String, Integer> minions = ArrayListMultimap.create();
 
         //        List<String> list = new LinkedList<>();
@@ -1257,7 +1257,7 @@ public class GuiSkyBlockData extends GuiScreen
 
 
         //        int max = Collections.max(minions.values());
-        //        
+        //
         //        minions.entrySet().stream()
         //        .filter(entry -> entry.getValue() == max)
         //        .map(entry -> entry.getKey())
@@ -1265,13 +1265,13 @@ public class GuiSkyBlockData extends GuiScreen
 
 
         //        Collections.max(minions.entrySet(), Comparator.comparingInt(Map.Entry::getValue));
-        //        
+        //
         //        Optional<Map.Entry<String, Integer>> maxEntry = minions.entrySet()
         //                .stream()
         //                .max((e1, e2) -> e1.getValue()
         //                    .compareTo(e2.getValue())
         //                );
-        //        
+        //
         //        Map<String, Integer> result = new HashMap<>();
         //        maxEntry.ifPresent(result::put);
         //        return result;
@@ -1297,38 +1297,11 @@ public class GuiSkyBlockData extends GuiScreen
         //        list.forEach(minion -> System.out.println(minion + ","));
     }
 
-    public static Map<String, Integer> getKeysWithMaxValue(Map<String, Integer> map){
-        //        final List<String> resultList = new ArrayList<String>();
-
-        Map<String, Integer> maptest = new HashMap<>();
-
-        int currentMaxValuevalue = Integer.MIN_VALUE;
-        for (Map.Entry<String, Integer> entry : map.entrySet()){
-            if (entry.getValue() > currentMaxValuevalue){
-                maptest.clear();
-                maptest.put(entry.getKey(), entry.getValue());
-                //                resultList.clear();
-                //                resultList.add(entry.getKey());
-                currentMaxValuevalue = entry.getValue();
-            } else if (entry.getValue() == currentMaxValuevalue){
-                //                resultList.add(entry.getKey());
-                maptest.put(entry.getKey(), currentMaxValuevalue);
-            }            
-        }
-        return maptest;
-    }
-
-    public <K, V extends Comparable<V>> V maxUsingStreamAndMethodReference(Map<K, V> map) {
-        Optional<Map.Entry<K, V>> maxEntry = map.entrySet()
-                .stream()
-                .max(Comparator.comparing(Map.Entry::getValue));
-        return maxEntry.get().getValue();
-    }
-
-    private void getCollections(JsonObject currentProfile)//TODO
+    private void getCollections(JsonObject currentProfile)
     {
         JsonElement collections = currentProfile.get("collection");
         JsonElement unlockedTiersElement = currentProfile.get("unlocked_coll_tiers");
+        Multimap<String, Integer> skyblockCollectionMap = HashMultimap.create();
 
         if (unlockedTiersElement != null)
         {
@@ -1338,7 +1311,7 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 String[] split = unlockedTier.getAsString().toLowerCase().split("_");
                 String unlockedId = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
-                String unlockedLvl = split[split.length - 1];
+                int unlockedLvl = Integer.parseInt(split[split.length - 1]);
 
                 for (SkyBlockCollection.ItemId sbItem : SkyBlockCollection.ItemId.VALUES)
                 {
@@ -1349,23 +1322,12 @@ public class GuiSkyBlockData extends GuiScreen
                         unlockedId = unlockedId.replace(sbItemId, sbItem.getMinecraftId());
                     }
                 }
-
-                String[] splitId = unlockedId.split(":");
-                String itemId = splitId[0];
-                int meta = 0;
-
-                try
-                {
-                    meta = Integer.parseInt(splitId[1]);
-                }
-                catch (Exception e) {}
-
-                Item item = Item.getByNameOrId(itemId);
-                LoggerIN.info("item: {}, collectionLevel: {}", item.getItemStackDisplayName(new ItemStack(item, 0, meta)), unlockedLvl);
+                skyblockCollectionMap.put(unlockedId, unlockedLvl);
             }
         }
 
         if (collections != null)
+        {
             for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
             {
                 String collectionId = collection.getKey().toLowerCase();
@@ -1384,6 +1346,7 @@ public class GuiSkyBlockData extends GuiScreen
                 String[] split = collectionId.split(":");
                 String itemId = split[0];
                 int meta = 0;
+                int level = 0;
 
                 try
                 {
@@ -1412,16 +1375,26 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     type = SkyBlockCollection.Type.FISHING;
                 }
-                this.collections.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount));
+
+                for (String itemIdFromLvl : skyblockCollectionMap.keySet())
+                {
+                    if (collectionId.equals(itemIdFromLvl))
+                    {
+                        level = Collections.max(skyblockCollectionMap.get(itemIdFromLvl));
+                        break;
+                    }
+                }
+                this.collections.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
             }
 
-        this.collections.sort((sbColl1, sbColl2) -> new CompareToBuilder().append(sbColl1.getCollectionType().ordinal(), sbColl2.getCollectionType().ordinal()).append(sbColl2.getValue(), sbColl1.getValue()).build());
+            this.collections.sort((sbColl1, sbColl2) -> new CompareToBuilder().append(sbColl1.getCollectionType().ordinal(), sbColl2.getCollectionType().ordinal()).append(sbColl2.getValue(), sbColl1.getValue()).build());
 
-        this.collections.forEach(collection ->
-        {
-            //LoggerIN.info("type: {}, name: {}, value: {}", collection.getCollectionType(), collection.getItemStack().getItem().getItemStackDisplayName(collection.getItemStack()), collection.getValue());
-        });
-    }
+            this.collections.forEach(collection ->
+            {
+                LoggerIN.info("Type: {}, Name: {}, Value: {}, MaxLevel: {}", collection.getCollectionType(), collection.getItemStack().getItem().getItemStackDisplayName(collection.getItemStack()), collection.getValue(), collection.getLevel());
+            });
+        }
+    }//TODO
 
     private void getPets(JsonObject currentUserProfile)
     {

@@ -7,12 +7,14 @@ public class SkyBlockCollection
     private final ItemStack itemStack;
     private final Type type;
     private final int value;
+    private final int level;
 
-    public SkyBlockCollection(ItemStack itemStack, Type type, int value)
+    public SkyBlockCollection(ItemStack itemStack, Type type, int value, int level)
     {
         this.itemStack = itemStack;
         this.type = type;
         this.value = value;
+        this.level = level;
     }
 
     public ItemStack getItemStack()
@@ -28,6 +30,11 @@ public class SkyBlockCollection
     public int getValue()
     {
         return this.value;
+    }
+    
+    public int getLevel()
+    {
+        return this.level;
     }
 
     public enum ItemId
