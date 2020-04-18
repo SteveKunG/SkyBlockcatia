@@ -25,7 +25,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -48,7 +47,6 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -342,7 +340,7 @@ public class IndicatiaEventHandler
         {
             GuiChest chest = (GuiChest)event.gui;
 
-                        if (ExtendedConfig.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("SkyBlock Hub Selector"))
+            if (ExtendedConfig.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("SkyBlock Hub Selector"))
             {
                 List<String> lobby1 = new ArrayList<>();
                 List<String> lobby2 = new ArrayList<>();

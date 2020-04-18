@@ -1,8 +1,5 @@
 package stevekung.mods.indicatia.utils;
 
-import net.minecraft.item.ItemStack;
-import stevekung.mods.indicatia.gui.api.GuiSkyBlockData.SkillType;
-
 public enum SkyBlockMinion
 {
     ACACIA,
@@ -57,18 +54,18 @@ public enum SkyBlockMinion
     TARANTULA,
     WHEAT,
     ZOMBIE;
-    
-//    private final String uuid;
-//    private final String value;
-//    
-//    private SkyBlockMinion(String uuid, String value)
-//    {
-//        this.uuid = uuid;
-//        this.value = value;
-//    }
-//    
-//    public ItemStack getPetItem()
-//    {
-//        return RenderUtils.getSkullItemStack(this.uuid, this.value);
-//    }
+
+    //    private final String uuid;
+    //    private final String value;
+    //
+    //    private SkyBlockMinion(String uuid, String value)
+    //    {
+    //        this.uuid = uuid;
+    //        this.value = value;
+    //    }
+    //
+    //    public ItemStack getPetItem()
+    //    {
+    //        return RenderUtils.getSkullItemStack(this.uuid, this.value);
+    //    }
 }
