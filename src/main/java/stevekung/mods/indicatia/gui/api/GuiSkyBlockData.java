@@ -16,7 +16,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Mouse;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonArray;
@@ -1202,7 +1201,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getSlayerInfo(currentUserProfile);
                 this.getInventories(currentUserProfile);
                 this.getPets(currentUserProfile);
-                //this.getCraftedMinions(currentUserProfile);
+                this.getCraftedMinions(currentUserProfile);
                 this.getCollections(currentUserProfile);
                 this.createFakePlayer();
                 this.calculatePlayerStats(currentUserProfile);
@@ -1220,9 +1219,7 @@ public class GuiSkyBlockData extends GuiScreen
     private void getCraftedMinions(JsonObject currentProfile)
     {
         JsonArray craftedMinions = currentProfile.get("crafted_generators").getAsJsonArray();
-        Multimap<String, Integer> minions = ArrayListMultimap.create();
-
-        //        List<String> list = new LinkedList<>();
+        Multimap<String, Integer> minions = HashMultimap.create();
 
         for (JsonElement craftedMinion : craftedMinions)
         {
@@ -1237,64 +1234,10 @@ public class GuiSkyBlockData extends GuiScreen
             //            list.add(minionType);
         }
 
-        minions.entries().forEach(entry ->
+        for (Map.Entry<String, Integer> entry : minions.entries())
         {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-
-            //            minions.entries().stream().getKey();
-            //            System.out.println("max " + maxEntry.getKey() + " " + maxEntry.getValue());
-        });
-
-
-
-
-
-        //        Optional test = minions.entries().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1);
-
-        //        List<String> filteredList = test.stream()
-        //                .flatMap(o -> o.map(Stream::of).orElseGet(Stream::empty))
-        //                .collect(Collectors.toList());
-
-
-        //        int max = Collections.max(minions.values());
-        //
-        //        minions.entrySet().stream()
-        //        .filter(entry -> entry.getValue() == max)
-        //        .map(entry -> entry.getKey())
-        //        .collect(Collectors.toList());
-
-
-        //        Collections.max(minions.entrySet(), Comparator.comparingInt(Map.Entry::getValue));
-        //
-        //        Optional<Map.Entry<String, Integer>> maxEntry = minions.entrySet()
-        //                .stream()
-        //                .max((e1, e2) -> e1.getValue()
-        //                    .compareTo(e2.getValue())
-        //                );
-        //
-        //        Map<String, Integer> result = new HashMap<>();
-        //        maxEntry.ifPresent(result::put);
-        //        return result;
-
-        //        Optional<Map.Entry<String, Integer>> result =
-        //                maxEntry.stream()
-        //                      .map(this::resolve)
-        //                      .flatMap(o -> o.isPresent() ? Stream.of(o.get()) : Stream.empty())
-        //                      .findFirst();
-
-        //        optional.stream().collect(Collectors.toList());
-
-        //      for (Map.Entry<String, Integer> entry : this.getKeysWithMaxValue(minions).entrySet())
-        //      {
-        //          System.out.println(entry.getKey() + " " + entry.getValue());
-        //      }
-
-        //        System.out.println(Collections.max(minions.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getClass());
-
-
-
-        //        list = list.stream().distinct().collect(Collectors.toList());
-        //        list.forEach(minion -> System.out.println(minion + ","));
+//            System.out.println(entry.getKey() + " " + entry.getValue() + "");
+        }
     }
 
     private void getCollections(JsonObject currentProfile)
@@ -1391,7 +1334,7 @@ public class GuiSkyBlockData extends GuiScreen
 
             this.collections.forEach(collection ->
             {
-                LoggerIN.info("Type: {}, Name: {}, Value: {}, MaxLevel: {}", collection.getCollectionType(), collection.getItemStack().getItem().getItemStackDisplayName(collection.getItemStack()), collection.getValue(), collection.getLevel());
+                //LoggerIN.info("Type: {}, Name: {}, Value: {}, MaxLevel: {}", collection.getCollectionType(), collection.getItemStack().getItem().getItemStackDisplayName(collection.getItemStack()), collection.getValue(), collection.getLevel());
             });
         }
     }//TODO
