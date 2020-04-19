@@ -1251,22 +1251,25 @@ public class GuiSkyBlockData extends GuiScreen
 
     private void getCraftedMinions(JsonObject currentProfile)//TODO
     {
-        JsonArray craftedMinions = currentProfile.get("crafted_generators").getAsJsonArray();
+        JsonElement craftedGenerators = currentProfile.get("crafted_generators");
         Multimap<String, Integer> minions = HashMultimap.create();
 
-        for (JsonElement craftedMinion : craftedMinions)
+        if (craftedGenerators != null)
         {
-            String[] split = craftedMinion.getAsString().split("_");
-            String minionType = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
-            int unlockedLvl = Integer.parseInt(split[split.length - 1]);
-            minions.put(minionType, unlockedLvl);
-        }
+            for (JsonElement craftedMinion : craftedGenerators.getAsJsonArray())
+            {
+                String[] split = craftedMinion.getAsString().split("_");
+                String minionType = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
+                int unlockedLvl = Integer.parseInt(split[split.length - 1]);
+                minions.put(minionType, unlockedLvl);
+            }
 
-        this.sbCraftedMinions.add(new SkyBlockStats(EnumChatFormatting.RED + "WARNING: THIS WORK IN PROGRESS!", Float.NEGATIVE_INFINITY));
+            this.sbCraftedMinions.add(new SkyBlockStats(EnumChatFormatting.RED + "WARNING: THIS WORK IN PROGRESS!", Float.NEGATIVE_INFINITY));
 
-        for (Map.Entry<String, Integer> entry : minions.entries())
-        {
-            this.sbCraftedMinions.add(new SkyBlockStats(entry.getKey(), entry.getValue()));
+            for (Map.Entry<String, Integer> entry : minions.entries())
+            {
+                this.sbCraftedMinions.add(new SkyBlockStats(entry.getKey(), entry.getValue()));
+            }
         }
     }
 
@@ -1340,6 +1343,11 @@ public class GuiSkyBlockData extends GuiScreen
                     if (collectionId.equals(itemIdFromLvl))
                     {
                         level = Collections.max(skyblockCollectionMap.get(itemIdFromLvl));
+
+                        if (level == -1)
+                        {
+                            level = 0;
+                        }
                         break;
                     }
                 }
@@ -1383,20 +1391,36 @@ public class GuiSkyBlockData extends GuiScreen
             foraging.sort(com);
             fishing.sort(com);
 
-            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FARMING, -1, -1));
-            this.collections.addAll(farming);
+            if (!farming.isEmpty())
+            {
+                this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FARMING, -1, -1));
+                this.collections.addAll(farming);
+            }
+            if (!mining.isEmpty())
+            {
+                this.collections.add(dummyCollection);
+                this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.MINING, -1, -1));
+                this.collections.addAll(mining);
+            }
+            if (!combat.isEmpty())
+            {
+                this.collections.add(dummyCollection);
+                this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.COMBAT, -1, -1));
+                this.collections.addAll(combat);
+            }
+            if (!foraging.isEmpty())
+            {
+                this.collections.add(dummyCollection);
+                this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FORAGING, -1, -1));
+                this.collections.addAll(foraging);
+            }
+            if (!fishing.isEmpty())
+            {
+                this.collections.add(dummyCollection);
+                this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FISHING, -1, -1));
+                this.collections.addAll(fishing);
+            }
             this.collections.add(dummyCollection);
-            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.MINING, -1, -1));
-            this.collections.addAll(mining);
-            this.collections.add(dummyCollection);
-            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.COMBAT, -1, -1));
-            this.collections.addAll(combat);
-            this.collections.add(dummyCollection);
-            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FORAGING, -1, -1));
-            this.collections.addAll(foraging);
-            this.collections.add(dummyCollection);
-            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FISHING, -1, -1));
-            this.collections.addAll(fishing);
         }
         else
         {
