@@ -500,6 +500,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
                     }
                 }
             }
+            else
+            {
+                if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
+                {
+                    baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
+                    color = EnumChatFormatting.GOLD.toString();
+                }
+            }
         }
         catch (Exception e)
         {
@@ -508,7 +516,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
 
         this.username = jsonPlayer.getAsJsonObject().get("displayname").getAsString();
 
-        if (newPackageRank != null)
+        if (!baseRankText.isEmpty())
         {
             this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.username;
         }
