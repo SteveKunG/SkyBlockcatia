@@ -73,7 +73,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
         for (int i = 0; i < 2; ++i)
         {
             GlStateManager.disableLighting();
-            GlStateManager.blendFunc(ConfigManagerIN.enable1_15ArmorEnchantedGlint ? 770 : 1, 1);
+            GlStateManager.blendFunc(ConfigManagerIN.enable1_15ArmorEnchantedGlint ? 770 : 768, 1);
             GlStateManager.color(0.38F, 0.19F, 0.608F, ConfigManagerIN.enable1_15ArmorEnchantedGlint ? 0.5F : 1.0F);
             GlStateManager.matrixMode(5890);
             GlStateManager.loadIdentity();
