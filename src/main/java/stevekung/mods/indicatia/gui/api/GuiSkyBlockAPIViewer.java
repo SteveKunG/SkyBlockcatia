@@ -267,7 +267,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
 
                     if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY)
                     {
-                        this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, this.skyblockStats, 500, false));
+                        this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, this.skyblockStats + this.uuid, 500, false));
                     }
                 }
             }
