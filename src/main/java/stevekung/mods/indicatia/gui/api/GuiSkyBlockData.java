@@ -429,7 +429,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         else
         {
-            if (state == 0)
+            if (state == 0 && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).getType() == EmptyStats.Type.INVENTORY)
             {
                 int i = mouseX - this.guiLeft;
                 int j = mouseY - this.guiTop;
