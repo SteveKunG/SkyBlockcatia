@@ -37,6 +37,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
     private GuiButtonSearch checkButton;
     private GuiButton closeButton;
     private String username = "";
+    private String uuid = "";
     private String displayName = "";
     private boolean openFromPlayer;
     private boolean loadingApi;
@@ -361,7 +362,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
         {
             if (result)
             {
-                CommonUtils.openLink(this.skyblockStats);
+                CommonUtils.openLink(this.skyblockStats + this.uuid);
             }
             this.mc.displayGuiScreen(this);
         }
@@ -433,9 +434,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
             this.setErrorMessage("Player not found!");
             return;
         }
-
-        //        System.out.print(jsonPlayer);
-        //        System.out.println();
 
         JsonElement newPackageRank = jsonPlayer.getAsJsonObject().get("newPackageRank"); // base rank
         System.out.println("newPackageRank: " + newPackageRank);
@@ -519,7 +517,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
             this.displayName = HypixelRank.Base.NONE.getColor() + this.username;
         }
 
-        //ClientUtils.printClientMessage("****************** " + this.displayName + " ******************");
         JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
 
         if (stats == null)
@@ -541,6 +538,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
 
         if (profiles.entrySet().isEmpty())
         {
+            this.uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
             this.setErrorMessage("Empty profile data! Please check on website instead", true);
             return;
         }
