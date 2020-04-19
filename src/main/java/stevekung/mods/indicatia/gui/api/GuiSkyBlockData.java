@@ -102,7 +102,6 @@ public class GuiSkyBlockData extends GuiScreen
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
     public static boolean renderSecondLayer;
-    private static final int MAX_FAIRY_SOULS = 194;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
     private final List<SkyBlockSkillInfo> skillRightList = new ArrayList<>();
@@ -1263,6 +1262,8 @@ public class GuiSkyBlockData extends GuiScreen
             minions.put(minionType, unlockedLvl);
         }
 
+        this.sbCraftedMinions.add(new SkyBlockStats(EnumChatFormatting.RED + "WARNING: THIS WORK IN PROGRESS!", Float.NEGATIVE_INFINITY));
+
         for (Map.Entry<String, Integer> entry : minions.entries())
         {
             this.sbCraftedMinions.add(new SkyBlockStats(entry.getKey(), entry.getValue()));
@@ -1810,7 +1811,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.infoList.add(new SkyBlockInfo("", ""));
 
-        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + GuiSkyBlockData.MAX_FAIRY_SOULS));
+        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SkyBlockAPIUtils.MAX_FAIRY_SOULS));
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);

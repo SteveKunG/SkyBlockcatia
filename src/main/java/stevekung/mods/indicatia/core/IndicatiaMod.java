@@ -176,6 +176,7 @@ public class IndicatiaMod
                 {
                     PlayerStatsBonus.getBonusFromRemote(type);
                 }
+                SkyBlockAPIUtils.getFairySouls();
             }
             catch (Throwable e)
             {

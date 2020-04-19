@@ -1,11 +1,17 @@
 package stevekung.mods.indicatia.utils;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import net.minecraft.init.Blocks;
@@ -18,6 +24,8 @@ import stevekung.mods.indicatia.config.ConfigManagerIN;
 
 public class SkyBlockAPIUtils
 {
+    private static final Gson GSON = new Gson();
+    public static int MAX_FAIRY_SOULS;
     private static String API_KEY;
     public static String PLAYER_NAME;
     public static String SKYBLOCK_PROFILE;
@@ -38,6 +46,21 @@ public class SkyBlockAPIUtils
         ConfigManagerIN.hypixelApiKey = uuid;
         ConfigManagerIN.getConfig().save();
         SkyBlockAPIUtils.setApiKey();
+    }
+
+    public static void getFairySouls()
+    {
+        try
+        {
+            URL url = new URL("https://raw.githubusercontent.com/SteveKunG/Indicatia/1.8.9_skyblock/api/stats_bonuses/misc/max_fairy_souls.json");
+            URLConnection connection = url.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            MAX_FAIRY_SOULS = GSON.fromJson(in, MaxFairySouls.class).getMaxFairySouls();
+        }
+        catch (IOException e)
+        {
+            MAX_FAIRY_SOULS = 194;
+        }
     }
 
     public static List<ItemStack> decodeItem(JsonObject currentProfile, SkyBlockInventoryType type)
