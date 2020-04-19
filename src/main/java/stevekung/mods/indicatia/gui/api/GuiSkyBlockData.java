@@ -1299,6 +1299,8 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
 
+        SkyBlockCollection dummyCollection = new SkyBlockCollection(null, null, -1, -1);
+
         if (collections != null)
         {
             List<SkyBlockCollection> farming = new ArrayList<>();
@@ -1344,32 +1346,33 @@ public class GuiSkyBlockData extends GuiScreen
 
                 Item item = Item.getByNameOrId(itemId);
                 SkyBlockCollection.Type type = SkyBlockCollection.Type.FARMING;
+                SkyBlockCollection itemCollection = new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level);
 
                 if (item == Item.getItemFromBlock(Blocks.cobblestone) || item == Items.coal || item == Items.iron_ingot || item == Items.gold_ingot || item == Items.diamond || item == Items.emerald || item == Items.redstone
                         || item == Items.quartz || item == Item.getItemFromBlock(Blocks.obsidian) || item == Items.glowstone_dust || item == Item.getItemFromBlock(Blocks.gravel) || item == Item.getItemFromBlock(Blocks.ice) || item == Item.getItemFromBlock(Blocks.netherrack)
                         || item == Item.getItemFromBlock(Blocks.sand) || item == Item.getItemFromBlock(Blocks.end_stone) || item == Items.dye && meta == 4)
                 {
-                    mining.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    mining.add(itemCollection);
                     type = SkyBlockCollection.Type.MINING;
                 }
                 else if (item == Items.rotten_flesh || item == Items.bone || item == Items.string || item == Items.spider_eye || item == Items.gunpowder || item == Items.ender_pearl || item == Items.ghast_tear || item == Items.slime_ball || item == Items.blaze_rod || item == Items.magma_cream)
                 {
-                    combat.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    combat.add(itemCollection);
                     type = SkyBlockCollection.Type.COMBAT;
                 }
                 else if (item == Item.getItemFromBlock(Blocks.log) || item == Item.getItemFromBlock(Blocks.log2))
                 {
-                    foraging.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    foraging.add(itemCollection);
                     type = SkyBlockCollection.Type.FORAGING;
                 }
                 else if (item == Items.fish || item == Items.prismarine_shard || item == Items.prismarine_crystals || item == Items.clay_ball || item == Item.getItemFromBlock(Blocks.waterlily) || item == Item.getItemFromBlock(Blocks.sponge) || item == Items.dye && meta == 0)
                 {
-                    fishing.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    fishing.add(itemCollection);
                     type = SkyBlockCollection.Type.FISHING;
                 }
                 else
                 {
-                    farming.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    farming.add(itemCollection);
                 }
             }
 
@@ -1382,22 +1385,22 @@ public class GuiSkyBlockData extends GuiScreen
 
             this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FARMING, -1, -1));
             this.collections.addAll(farming);
-            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(dummyCollection);
             this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.MINING, -1, -1));
             this.collections.addAll(mining);
-            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(dummyCollection);
             this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.COMBAT, -1, -1));
             this.collections.addAll(combat);
-            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(dummyCollection);
             this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FORAGING, -1, -1));
             this.collections.addAll(foraging);
-            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(dummyCollection);
             this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FISHING, -1, -1));
             this.collections.addAll(fishing);
         }
         else
         {
-            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(dummyCollection);
         }
     }
 
