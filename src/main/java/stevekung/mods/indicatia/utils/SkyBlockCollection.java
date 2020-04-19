@@ -1,9 +1,12 @@
 package stevekung.mods.indicatia.utils;
 
+import java.text.DecimalFormat;
+
 import net.minecraft.item.ItemStack;
 
 public class SkyBlockCollection
 {
+    private static final DecimalFormat FORMAT = new DecimalFormat("#,###");
     private final ItemStack itemStack;
     private final Type type;
     private final int value;
@@ -31,10 +34,15 @@ public class SkyBlockCollection
     {
         return this.value;
     }
-    
+
     public int getLevel()
     {
         return this.level;
+    }
+
+    public String getCollectionAmount()
+    {
+        return FORMAT.format(this.value);
     }
 
     public enum ItemId
@@ -70,10 +78,22 @@ public class SkyBlockCollection
 
     public enum Type
     {
-        FARMING,
-        MINING,
-        COMBAT,
-        FORAGING,
-        FISHING;
+        FARMING("Farming"),
+        MINING("Mining"),
+        COMBAT("Combat"),
+        FORAGING("Foraging"),
+        FISHING("Fishing");
+
+        private final String name;
+
+        private Type(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
     }
 }

@@ -29,12 +29,10 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -222,10 +220,12 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
 
-        GuiButton basicInfoButton = new GuiButton(BasicInfoViewButton.INFO.id, this.width / 2 - 88, this.height - 48, 80, 20, LangUtils.translate("gui.sb_basic_info"));
+        GuiButton basicInfoButton = new GuiButton(BasicInfoViewButton.INFO.id, this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_basic_info"));
         basicInfoButton.enabled = false;
         this.buttonList.add(basicInfoButton);
-        this.buttonList.add(new GuiButton(BasicInfoViewButton.INVENTORY.id, this.width / 2 + 8, this.height - 48, 80, 20, LangUtils.translate("gui.sb_inventory")));
+        this.buttonList.add(new GuiButton(BasicInfoViewButton.INVENTORY.id, this.width / 2 - 84, this.height - 48, 80, 20, LangUtils.translate("gui.sb_inventory")));
+        this.buttonList.add(new GuiButton(BasicInfoViewButton.COLLECTIONS.id, this.width / 2 + 4, this.height - 48, 80, 20, LangUtils.translate("gui.sb_collections")));
+        this.buttonList.add(new GuiButton(BasicInfoViewButton.CRAFTED_MINIONS.id, this.width / 2 + 90, this.height - 48, 80, 20, LangUtils.translate("gui.sb_crafted_minions")));
 
         for (GuiButton viewButton : this.buttonList)
         {
@@ -277,6 +277,10 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, EmptyStats.Type.INVENTORY);
                 this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
             }
+            else if (this.currentBasicSlotId == BasicInfoViewButton.COLLECTIONS.id)
+            {
+                this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.collections);
+            }
         }
         else if (this.currentSlotId == ViewButton.SKILLS.id)
         {
@@ -293,7 +297,7 @@ public class GuiSkyBlockData extends GuiScreen
         else if (this.currentSlotId == ViewButton.OTHERS.id)
         {
             SkyBlockStats.Type statType = SkyBlockStats.Type.KILLS;
-            List<SkyBlockStats> list = this.sbKills;
+            List<SkyBlockStats> list = null;
 
             if (this.currentOthersSlotId == -1 || this.currentOthersSlotId == OthersViewButton.KILLS.id)
             {
@@ -311,7 +315,10 @@ public class GuiSkyBlockData extends GuiScreen
                 list = this.sbOthers;
             }
 
-            this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+            if (list != null)
+            {
+                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+            }
             this.hideBasicInfoButton();
 
             for (GuiButton viewButton : this.buttonList)
@@ -673,6 +680,10 @@ public class GuiSkyBlockData extends GuiScreen
                     this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, EmptyStats.Type.INVENTORY);
                     this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
                 }
+                else if (this.currentBasicSlotId == BasicInfoViewButton.COLLECTIONS.id)
+                {
+                    this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.collections);
+                }
 
                 this.currentSlotId = ViewButton.INFO.id;
                 this.hideOthersButton();
@@ -766,7 +777,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
 
             SkyBlockStats.Type statType = SkyBlockStats.Type.KILLS;
-            List<SkyBlockStats> list = this.sbKills;
+            List<SkyBlockStats> list = null;
 
             if (type.id == OthersViewButton.KILLS.id)
             {
@@ -780,13 +791,17 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentOthersSlotId = OthersViewButton.DEATHS.id;
                 list = this.sbDeaths;
             }
-            else
+            else if (type.id == OthersViewButton.OTHER_STATS.id)
             {
                 statType = SkyBlockStats.Type.OTHERS;
                 this.currentOthersSlotId = OthersViewButton.OTHER_STATS.id;
                 list = this.sbOthers;
             }
-            this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+
+            if (list != null)
+            {
+                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+            }
         }
     }
 
@@ -813,11 +828,16 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.infoList);
                 this.currentBasicSlotId = BasicInfoViewButton.INFO.id;
             }
-            else
+            else if (type.id == BasicInfoViewButton.INVENTORY.id)
             {
                 this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, EmptyStats.Type.INVENTORY);
                 this.currentBasicSlotId = BasicInfoViewButton.INVENTORY.id;
                 this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
+            }
+            else if (type.id == BasicInfoViewButton.COLLECTIONS.id)
+            {
+                this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.collections);
+                this.currentBasicSlotId = BasicInfoViewButton.COLLECTIONS.id;
             }
         }
     }
@@ -1236,7 +1256,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         for (Map.Entry<String, Integer> entry : minions.entries())
         {
-//            System.out.println(entry.getKey() + " " + entry.getValue() + "");
+            //            System.out.println(entry.getKey() + " " + entry.getValue() + "");
         }
     }
 
@@ -1271,6 +1291,12 @@ public class GuiSkyBlockData extends GuiScreen
 
         if (collections != null)
         {
+            List<SkyBlockCollection> farming = new ArrayList<>();
+            List<SkyBlockCollection> mining = new ArrayList<>();
+            List<SkyBlockCollection> combat = new ArrayList<>();
+            List<SkyBlockCollection> foraging = new ArrayList<>();
+            List<SkyBlockCollection> fishing = new ArrayList<>();
+
             for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
             {
                 String collectionId = collection.getKey().toLowerCase();
@@ -1297,28 +1323,6 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 catch (Exception e) {}
 
-                Item item = Item.getByNameOrId(itemId);
-                SkyBlockCollection.Type type = SkyBlockCollection.Type.FARMING;
-
-                if (item == Item.getItemFromBlock(Blocks.cobblestone) || item == Items.coal || item == Items.iron_ingot || item == Items.gold_ingot || item == Items.diamond || item == Items.emerald || item == Items.redstone
-                        || item == Items.quartz || item == Item.getItemFromBlock(Blocks.obsidian) || item == Items.glowstone_dust || item == Item.getItemFromBlock(Blocks.gravel) || item == Item.getItemFromBlock(Blocks.ice) || item == Item.getItemFromBlock(Blocks.netherrack)
-                        || item == Item.getItemFromBlock(Blocks.sand) || item == Item.getItemFromBlock(Blocks.end_stone) || item == Items.dye && meta == 4)
-                {
-                    type = SkyBlockCollection.Type.MINING;
-                }
-                else if (item == Items.rotten_flesh || item == Items.bone || item == Items.string || item == Items.spider_eye || item == Items.gunpowder || item == Items.ender_pearl || item == Items.ghast_tear || item == Items.slime_ball || item == Items.blaze_rod || item == Items.magma_cream)
-                {
-                    type = SkyBlockCollection.Type.COMBAT;
-                }
-                else if (item == Item.getItemFromBlock(Blocks.log) || item == Item.getItemFromBlock(Blocks.log2))
-                {
-                    type = SkyBlockCollection.Type.FORAGING;
-                }
-                else if (item == Items.fish || item == Items.prismarine_shard || item == Items.prismarine_crystals || item == Items.clay_ball || item == Item.getItemFromBlock(Blocks.waterlily) || item == Item.getItemFromBlock(Blocks.sponge) || item == Items.dye && meta == 0)
-                {
-                    type = SkyBlockCollection.Type.FISHING;
-                }
-
                 for (String itemIdFromLvl : skyblockCollectionMap.keySet())
                 {
                     if (collectionId.equals(itemIdFromLvl))
@@ -1327,17 +1331,65 @@ public class GuiSkyBlockData extends GuiScreen
                         break;
                     }
                 }
-                this.collections.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+
+                Item item = Item.getByNameOrId(itemId);
+                SkyBlockCollection.Type type = SkyBlockCollection.Type.FARMING;
+
+                if (item == Item.getItemFromBlock(Blocks.cobblestone) || item == Items.coal || item == Items.iron_ingot || item == Items.gold_ingot || item == Items.diamond || item == Items.emerald || item == Items.redstone
+                        || item == Items.quartz || item == Item.getItemFromBlock(Blocks.obsidian) || item == Items.glowstone_dust || item == Item.getItemFromBlock(Blocks.gravel) || item == Item.getItemFromBlock(Blocks.ice) || item == Item.getItemFromBlock(Blocks.netherrack)
+                        || item == Item.getItemFromBlock(Blocks.sand) || item == Item.getItemFromBlock(Blocks.end_stone) || item == Items.dye && meta == 4)
+                {
+                    mining.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    type = SkyBlockCollection.Type.MINING;
+                }
+                else if (item == Items.rotten_flesh || item == Items.bone || item == Items.string || item == Items.spider_eye || item == Items.gunpowder || item == Items.ender_pearl || item == Items.ghast_tear || item == Items.slime_ball || item == Items.blaze_rod || item == Items.magma_cream)
+                {
+                    combat.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    type = SkyBlockCollection.Type.COMBAT;
+                }
+                else if (item == Item.getItemFromBlock(Blocks.log) || item == Item.getItemFromBlock(Blocks.log2))
+                {
+                    foraging.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    type = SkyBlockCollection.Type.FORAGING;
+                }
+                else if (item == Items.fish || item == Items.prismarine_shard || item == Items.prismarine_crystals || item == Items.clay_ball || item == Item.getItemFromBlock(Blocks.waterlily) || item == Item.getItemFromBlock(Blocks.sponge) || item == Items.dye && meta == 0)
+                {
+                    fishing.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                    type = SkyBlockCollection.Type.FISHING;
+                }
+                else
+                {
+                    farming.add(new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level));
+                }
             }
 
-            this.collections.sort((sbColl1, sbColl2) -> new CompareToBuilder().append(sbColl1.getCollectionType().ordinal(), sbColl2.getCollectionType().ordinal()).append(sbColl2.getValue(), sbColl1.getValue()).build());
+            Comparator<SkyBlockCollection> com = (sbColl1, sbColl2) -> new CompareToBuilder().append(sbColl1.getCollectionType().ordinal(), sbColl2.getCollectionType().ordinal()).append(sbColl2.getValue(), sbColl1.getValue()).build();
+            farming.sort(com);
+            mining.sort(com);
+            combat.sort(com);
+            foraging.sort(com);
+            fishing.sort(com);
 
-            this.collections.forEach(collection ->
-            {
-                //LoggerIN.info("Type: {}, Name: {}, Value: {}, MaxLevel: {}", collection.getCollectionType(), collection.getItemStack().getItem().getItemStackDisplayName(collection.getItemStack()), collection.getValue(), collection.getLevel());
-            });
+            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FARMING, -1, -1));
+            this.collections.addAll(farming);
+            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.MINING, -1, -1));
+            this.collections.addAll(mining);
+            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.COMBAT, -1, -1));
+            this.collections.addAll(combat);
+            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FORAGING, -1, -1));
+            this.collections.addAll(foraging);
+            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+            this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FISHING, -1, -1));
+            this.collections.addAll(fishing);
         }
-    }//TODO
+        else
+        {
+            this.collections.add(new SkyBlockCollection(null, null, -1, -1));
+        }
+    }
 
     private void getPets(JsonObject currentUserProfile)
     {
@@ -2900,6 +2952,89 @@ public class GuiSkyBlockData extends GuiScreen
         }
     }
 
+    class SkyBlockCollections extends GuiScrollingList
+    {
+        private final List<SkyBlockCollection> collection;
+        private final GuiSkyBlockData parent;
+
+        public SkyBlockCollections(GuiSkyBlockData parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockCollection> collection)
+        {
+            super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
+            this.collection = collection;
+            this.parent = parent;
+        }
+
+        @Override
+        protected int getSize()
+        {
+            return this.collection.size();
+        }
+
+        @Override
+        protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
+        {
+            if (this.collection.size() == 1)
+            {
+                this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.RED + "Collection API is not available!", this.left + 4, top + 5, 16777215);
+            }
+            else
+            {
+                SkyBlockCollection collection = this.collection.get(index);
+
+                if (collection.getItemStack() != null && collection.getCollectionType() != null)
+                {
+                    this.drawStatsScreen(this.left + 2, top, collection.getItemStack());
+
+                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.left + 25, top + 6, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.right - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                }
+                else
+                {
+                    if (collection.getCollectionType() != null)
+                    {
+                        this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + collection.getCollectionType().getName(), this.left + 4, top + 5, 16777215);
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void elementClicked(int index, boolean doubleClick) {}
+
+        @Override
+        protected void drawBackground() {}
+
+        @Override
+        protected boolean isSelected(int index)
+        {
+            return false;
+        }
+
+        private void drawStatsScreen(int x, int y, ItemStack itemStack)
+        {
+            this.drawSprite(x + 1, y + 1);
+            GlStateManager.enableRescaleNormal();
+            RenderHelper.enableGUIStandardItemLighting();
+            this.parent.mc.getRenderItem().renderItemIntoGUI(itemStack, x + 2, y + 2);
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.disableRescaleNormal();
+        }
+
+        private void drawSprite(int left, int top)
+        {
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            this.parent.mc.getTextureManager().bindTexture(Gui.statIcons);
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldrenderer.pos(left, top + 18, this.parent.zLevel).tex(0, 18 * 0.0078125F).endVertex();
+            worldrenderer.pos(left + 18, top + 18, this.parent.zLevel).tex(18 * 0.0078125F, 18 * 0.0078125F).endVertex();
+            worldrenderer.pos(left + 18, top, this.parent.zLevel).tex(18 * 0.0078125F, 0).endVertex();
+            worldrenderer.pos(left, top, this.parent.zLevel).tex(0, 0).endVertex();
+            tessellator.draw();
+        }
+    }
+
     public class BonusStatTemplate
     {
         private int health;
@@ -3150,7 +3285,7 @@ public class GuiSkyBlockData extends GuiScreen
         SLAYERS(12),
         OTHERS(13);
 
-        private int id;
+        private final int id;
         protected static final ViewButton[] VALUES = ViewButton.values();
 
         private ViewButton(int id)
@@ -3177,7 +3312,7 @@ public class GuiSkyBlockData extends GuiScreen
         DEATHS(21),
         OTHER_STATS(22);
 
-        private int id;
+        private final int id;
         protected static final OthersViewButton[] VALUES = OthersViewButton.values();
 
         private OthersViewButton(int id)
@@ -3201,9 +3336,11 @@ public class GuiSkyBlockData extends GuiScreen
     private enum BasicInfoViewButton
     {
         INFO(30),
-        INVENTORY(31);
+        INVENTORY(31),
+        COLLECTIONS(32),
+        CRAFTED_MINIONS(33);
 
-        private int id;
+        private final int id;
         protected static final BasicInfoViewButton[] VALUES = BasicInfoViewButton.values();
 
         private BasicInfoViewButton(int id)

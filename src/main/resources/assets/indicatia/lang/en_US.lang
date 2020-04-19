@@ -208,6 +208,8 @@ gui.sb_others.others_stats=Other Stats
 gui.sb_basic_info=Basic Info
 gui.sb_inventory=Inventory
 gui.close=Close
+gui.sb_collections=Collections
+gui.sb_crafted_minions=Crafted Minions
 
 # SKYBLOCK INVENTORY
 skyblock_tab.inventory=Inventory

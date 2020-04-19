@@ -42,6 +42,6 @@ public class SkyBlockStats
 
     public enum Type
     {
-        KILLS, DEATHS, OTHERS;
+        KILLS, DEATHS, OTHERS, COLLECTIONS, MINIONS;
     }
 }
