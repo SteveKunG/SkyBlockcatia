@@ -18,7 +18,8 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.network.play.client.C14PacketTabComplete;
 import net.minecraft.tileentity.TileEntitySkull;
@@ -30,25 +31,22 @@ import stevekung.mods.indicatia.gui.GuiRightClickTextField;
 import stevekung.mods.indicatia.gui.GuiSBProfileButton;
 import stevekung.mods.indicatia.utils.*;
 
-public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback, ITabComplete
+public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 {
     public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
     private GuiRightClickTextField usernameTextField;
     private GuiButtonSearch checkButton;
     private GuiButton closeButton;
     private String username = "";
-    private String uuid = "";
     private String displayName = "";
     private boolean openFromPlayer;
     private boolean loadingApi;
     private boolean error;
-    private boolean showWeb;
     private String errorMessage;
     private String statusMessage;
     private List<ProfileDataCallback> profiles = new ArrayList<>();
     private final StopWatch watch = new StopWatch();
     private List<GuiSBProfileButton> profileButtonList = new ArrayList<>();
-    private final String skyblockStats = "https://sky.lea.moe/";
     private boolean fromError;
     private boolean playerNamesFound;
     private boolean waitingOnAutocomplete;
@@ -256,20 +254,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
                         button.playPressSound(this.mc.getSoundHandler());
                     }
                 }
-
-                if (this.showWeb)
-                {
-                    String url = "Click here to open SkyBlock Stats: " + this.skyblockStats;
-                    int minX = this.width / 2 - this.fontRendererObj.getStringWidth(url) / 2 - 2;
-                    int minY = 119;
-                    int maxX = minX + this.fontRendererObj.getStringWidth(url) + 2;
-                    int maxY = minY + this.fontRendererObj.FONT_HEIGHT + 1;
-
-                    if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY)
-                    {
-                        this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, this.skyblockStats + this.uuid, 500, false));
-                    }
-                }
             }
         }
     }
@@ -294,23 +278,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
             if (this.error)
             {
                 this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
-
-                if (this.showWeb)
-                {
-                    String url = "Click here to open SkyBlock Stats: " + this.skyblockStats;
-                    boolean hover = false;
-                    int minX = this.width / 2 - this.fontRendererObj.getStringWidth(url) / 2 - 2;
-                    int minY = 119;
-                    int maxX = minX + this.fontRendererObj.getStringWidth(url) + 2;
-                    int maxY = minY + this.fontRendererObj.FONT_HEIGHT + 1;
-
-                    if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY)
-                    {
-                        hover = true;
-                    }
-                    Gui.drawRect(minX, minY, maxX, maxY, ColorUtils.to32BitColor(hover ? 128 : 60, 255, 255, 255));
-                    this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.YELLOW + url, this.width / 2, 120, 16777215);
-                }
                 super.drawScreen(mouseX, mouseY, partialTicks);
             }
             else
@@ -353,19 +320,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
     {
         this.profileButtonList.clear();
         super.setWorldAndResolution(mc, width, height);
-    }
-
-    @Override
-    public void confirmClicked(boolean result, int id)
-    {
-        if (id == 500)
-        {
-            if (result)
-            {
-                CommonUtils.openLink(this.skyblockStats + this.uuid);
-            }
-            this.mc.displayGuiScreen(this);
-        }
     }
 
     @Override
@@ -526,6 +480,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
         }
 
         JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
+        String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
 
         if (stats == null)
         {
@@ -542,12 +497,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
         }
 
         JsonObject profiles = jsonSkyBlock.getAsJsonObject().get("profiles").getAsJsonObject();
+        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.username));
         int i = 0;
 
         if (profiles.entrySet().isEmpty())
         {
-            this.uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
-            this.setErrorMessage("Empty profile data! Please check on website instead", true);
+            this.statusMessage = "Found default profile";
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, this.getLastSaveProfile(uuid, uuid));
+            this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, callback));
             return;
         }
 
@@ -558,9 +515,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
         {
             String sbProfileId = profiles.get(entry.getKey()).getAsJsonObject().get("profile_id").getAsString();
             String profileName = profiles.get(entry.getKey()).getAsJsonObject().get("cute_name").getAsString();
-            String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
             this.statusMessage = "Found " + EnumChatFormatting.GOLD + "\"" + profileName + "\"" + EnumChatFormatting.GRAY + " profile";
-            GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.username));
             ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, this.getLastSaveProfile(sbProfileId, uuid));
             GuiSBProfileButton button = new GuiSBProfileButton(i + 1000, this.width / 2 - 75, 75, 150, 20, callback);
 
@@ -623,14 +578,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements GuiYesNoCallback,
 
     private void setErrorMessage(String message)
     {
-        this.setErrorMessage(message, false);
-    }
-
-    private void setErrorMessage(String message, boolean showWeb)
-    {
         this.error = true;
         this.loadingApi = false;
-        this.showWeb = showWeb;
         this.errorMessage = message;
         this.checkButton.visible = !this.error;
         this.closeButton.displayString = LangUtils.translate("gui.back");
