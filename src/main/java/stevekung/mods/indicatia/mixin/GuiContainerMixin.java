@@ -24,7 +24,6 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -217,21 +216,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
         if (this.that instanceof GuiChest)
         {
             GuiChest chest = (GuiChest)this.that;
-
-            for (int i = 0; i < chest.lowerChestInventory.getSizeInventory(); i++)
-            {
-                ItemStack itemStack = chest.lowerChestInventory.getStackInSlot(i);
-
-                if (itemStack == null)
-                {
-                    continue;
-                }
-                if (itemStack.hasTagCompound() && itemStack.getItem() == Items.skull) //TODO
-                {
-                    NBTTagCompound compound = itemStack.getTagCompound();
-                    LoggerIN.info("({}, \"{}\", \"{}\"),", EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName()).replace(" Minion", "").toUpperCase(), compound.getCompoundTag("SkullOwner").getString("Id"), compound.getCompoundTag("SkullOwner").getCompoundTag("Properties").getTagList("textures", 10).getCompoundTagAt(0).getString("Value"));
-                }
-            }
 
             if (this.isChatableGui(chest.lowerChestInventory))
             {

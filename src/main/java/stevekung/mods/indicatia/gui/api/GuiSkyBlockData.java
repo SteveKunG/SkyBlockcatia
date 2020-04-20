@@ -18,6 +18,7 @@ import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -109,10 +110,11 @@ public class GuiSkyBlockData extends GuiScreen
     private final List<SkyBlockStats> sbKills = new ArrayList<>();
     private final List<SkyBlockStats> sbDeaths = new ArrayList<>();
     private final List<SkyBlockStats> sbOthers = new ArrayList<>();
-    private final List<SkyBlockStats> sbCraftedMinions = new ArrayList<>();
+    private final List<CraftedMinion> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
     private final List<SkyBlockCollection> collections = new ArrayList<>();
+    private final Multimap<String, Integer> craftedMinions = HashMultimap.create();
     private SkyBlockSkillInfo carpentrySkill;
     private int slayerTotalAmountSpent;
     private int totalSlayerXp;
@@ -283,7 +285,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
-                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.sbCraftedMinions, SkyBlockStats.Type.MINIONS);
+                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.sbCraftedMinions);
             }
         }
         else if (this.currentSlotId == ViewButton.SKILLS.id)
@@ -690,7 +692,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
                 {
-                    this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.sbCraftedMinions, SkyBlockStats.Type.MINIONS);
+                    this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.sbCraftedMinions);
                 }
 
                 this.currentSlotId = ViewButton.INFO.id;
@@ -849,7 +851,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else if (type.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
-                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.sbCraftedMinions, SkyBlockStats.Type.MINIONS);
+                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.sbCraftedMinions);
                 this.currentBasicSlotId = BasicInfoViewButton.CRAFTED_MINIONS.id;
             }
         }
@@ -1224,17 +1226,23 @@ public class GuiSkyBlockData extends GuiScreen
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
+            this.getCraftedMinions(profiles.get(userUUID).getAsJsonObject());
+        }
+
+        this.processCraftedMinions();
+
+        for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
+        {
+            String userUUID = entry.getKey();
 
             if (userUUID.equals(this.uuid))
             {
                 JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
-
                 this.getSkills(currentUserProfile);
                 this.getStats(currentUserProfile);
                 this.getSlayerInfo(currentUserProfile);
                 this.getInventories(currentUserProfile);
                 this.getPets(currentUserProfile);
-                this.getCraftedMinions(currentUserProfile);
                 this.getCollections(currentUserProfile);
                 this.createFakePlayer();
                 this.calculatePlayerStats(currentUserProfile);
@@ -1249,10 +1257,9 @@ public class GuiSkyBlockData extends GuiScreen
         this.loadingApi = false;
     }
 
-    private void getCraftedMinions(JsonObject currentProfile)//TODO
+    private void getCraftedMinions(JsonObject currentProfile)
     {
         JsonElement craftedGenerators = currentProfile.get("crafted_generators");
-        Multimap<String, Integer> minions = HashMultimap.create();
 
         if (craftedGenerators != null)
         {
@@ -1261,15 +1268,171 @@ public class GuiSkyBlockData extends GuiScreen
                 String[] split = craftedMinion.getAsString().split("_");
                 String minionType = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
-                minions.put(minionType, unlockedLvl);
+                this.craftedMinions.put(minionType, unlockedLvl);
             }
+        }
+    }
 
-            this.sbCraftedMinions.add(new SkyBlockStats(EnumChatFormatting.RED + "WARNING: THIS WORK IN PROGRESS!", Float.NEGATIVE_INFINITY));
+    private void processCraftedMinions()
+    {
+        List<MinionLevel> minionLevels = new ArrayList<>();
+        List<MinionData> minionDatas = new ArrayList<>();
+        int level = 1;
 
-            for (Map.Entry<String, Integer> entry : minions.entries())
+        for (SkyBlockMinion minion : SkyBlockMinion.values())
+        {
+            for (String minionType : this.craftedMinions.keySet())
             {
-                this.sbCraftedMinions.add(new SkyBlockStats(entry.getKey(), entry.getValue()));
+                if (minion.name().equals(minionType))
+                {
+                    level = Collections.max(this.craftedMinions.get(minionType));
+                    break;
+                }
             }
+            minionLevels.add(new MinionLevel(minion.name(), minion.getAltName(), minion.getPetItem(), level, minion.getMinionCategory()));
+        }
+
+        int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+
+        for (Map.Entry<String, Collection<Integer>> entry : this.craftedMinions.asMap().entrySet())
+        {
+            String minionType = entry.getKey();
+            Collection<Integer> craftedList = entry.getValue();
+            StringBuilder builder = new StringBuilder();
+            int[] craftedTiers = Ints.toArray(craftedList);
+            List<String> minionList = new ArrayList<>();
+            Set<Integer> dummySet = new HashSet<>();
+            Set<Integer> skippedList = new HashSet<>();
+
+            for (int craftedTier : craftedTiers)
+            {
+                dummySet.add(craftedTier);
+            }
+            for (int dummyTier : dummyTiers)
+            {
+                if (dummySet.add(dummyTier))
+                {
+                    skippedList.add(dummyTier);
+                }
+            }
+
+            for (int skipped : skippedList)
+            {
+                minionList.add(EnumChatFormatting.RED + "" + skipped);
+            }
+            for (int crafted : craftedList)
+            {
+                minionList.add(EnumChatFormatting.GREEN + "" + crafted);
+            }
+
+            minionList.sort((text1, text2) -> new CompareToBuilder().append(Integer.parseInt(EnumChatFormatting.getTextWithoutFormattingCodes(text1)), Integer.parseInt(EnumChatFormatting.getTextWithoutFormattingCodes(text2))).build());
+            int i = 0;
+
+            for (String allTiers : minionList)
+            {
+                builder.append(allTiers.substring(0, allTiers.length() - (allTiers.length() == 4 ? 2 : 1)) + NumberUtils.intToRoman(Integer.parseInt(allTiers.substring(2))));
+
+                if (i < minionList.size() - 1)
+                {
+                    builder.append(" ");
+                }
+                ++i;
+            }
+            minionDatas.add(new MinionData(minionType, builder.toString()));
+        }
+
+        List<CraftedMinion> farmingMinion = new ArrayList<>();
+        List<CraftedMinion> miningMinion = new ArrayList<>();
+        List<CraftedMinion> combatMinion = new ArrayList<>();
+        List<CraftedMinion> foragingMinion = new ArrayList<>();
+        List<CraftedMinion> fishingMinion = new ArrayList<>();
+        CraftedMinion dummy = new CraftedMinion(null, null, 0, null, null, null);
+        String displayName = null;
+        ItemStack itemStack = null;
+        SkillType category = null;
+        Comparator<CraftedMinion> com = (cm1, cm2) -> new CompareToBuilder().append(cm1.getMinionName(), cm2.getMinionName()).build();
+
+        for (MinionData minionData : minionDatas)
+        {
+            for (MinionLevel minionLevel : minionLevels)
+            {
+                if (minionLevel.getMinionType().equals(minionData.getMinionType()))
+                {
+                    displayName = minionLevel.getDisplayName();
+                    level = minionLevel.getMinionMaxTier();
+                    itemStack = minionLevel.getMinionItem();
+                    category = minionLevel.getMinionCategory();
+                    break;
+                }
+            }
+
+            CraftedMinion min = new CraftedMinion(minionData.getMinionType(), displayName, level, minionData.getCraftedTiers(), itemStack, category);
+
+            switch (category)
+            {
+            case FARMING:
+            default:
+                farmingMinion.add(min);
+                break;
+            case MINING:
+                miningMinion.add(min);
+                break;
+            case COMBAT:
+                combatMinion.add(min);
+                break;
+            case FORAGING:
+                foragingMinion.add(min);
+                break;
+            case FISHING:
+                fishingMinion.add(min);
+                break;
+            }
+        }
+
+        farmingMinion.sort(com);
+        miningMinion.sort(com);
+        combatMinion.sort(com);
+        foragingMinion.sort(com);
+        fishingMinion.sort(com);
+
+        if (!farmingMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new CraftedMinion("Farming", null, 0, null, null, null));
+            this.sbCraftedMinions.addAll(farmingMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (!miningMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new CraftedMinion("Mining", null, 0, null, null, null));
+            this.sbCraftedMinions.addAll(miningMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (!combatMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new CraftedMinion("Combat", null, 0, null, null, null));
+            this.sbCraftedMinions.addAll(combatMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (!foragingMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new CraftedMinion("Foraging", null, 0, null, null, null));
+            this.sbCraftedMinions.addAll(foragingMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (!fishingMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new CraftedMinion("Fishing", null, 0, null, null, null));
+            this.sbCraftedMinions.addAll(fishingMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (this.sbCraftedMinions.isEmpty())
+        {
+            this.sbCraftedMinions.add(dummy);
         }
     }
 
@@ -2345,6 +2508,145 @@ public class GuiSkyBlockData extends GuiScreen
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
+    private void drawItemStackSlot(int x, int y, ItemStack itemStack)
+    {
+        this.drawSprite(x + 1, y + 1);
+        GlStateManager.enableRescaleNormal();
+        RenderHelper.enableGUIStandardItemLighting();
+        this.mc.getRenderItem().renderItemIntoGUI(itemStack, x + 2, y + 2);
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+    }
+
+    private void drawSprite(int left, int top)
+    {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(Gui.statIcons);
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos(left, top + 18, this.zLevel).tex(0, 18 * 0.0078125F).endVertex();
+        worldrenderer.pos(left + 18, top + 18, this.zLevel).tex(18 * 0.0078125F, 18 * 0.0078125F).endVertex();
+        worldrenderer.pos(left + 18, top, this.zLevel).tex(18 * 0.0078125F, 0).endVertex();
+        worldrenderer.pos(left, top, this.zLevel).tex(0, 0).endVertex();
+        tessellator.draw();
+    }
+
+    class MinionLevel
+    {
+        private final String minionType;
+        private final String displayName;
+        private final ItemStack minionItem;
+        private final int minionMaxTier;
+        private final SkillType category;
+
+        public MinionLevel(String minionType, String displayName, ItemStack minionItem, int minionMaxTier, SkillType category)
+        {
+            this.minionType = minionType;
+            this.displayName = displayName;
+            this.minionItem = minionItem;
+            this.minionMaxTier = minionMaxTier;
+            this.category = category;
+        }
+
+        public String getMinionType()
+        {
+            return this.minionType;
+        }
+
+        public String getDisplayName()
+        {
+            return this.displayName;
+        }
+
+        public ItemStack getMinionItem()
+        {
+            return this.minionItem;
+        }
+
+        public int getMinionMaxTier()
+        {
+            return this.minionMaxTier;
+        }
+
+        public SkillType getMinionCategory()
+        {
+            return this.category;
+        }
+    }
+
+    class MinionData
+    {
+        private final String minionType;
+        private final String craftedTiers;
+
+        public MinionData(String minionType, String craftedTiers)
+        {
+            this.minionType = minionType;
+            this.craftedTiers = craftedTiers;
+        }
+
+        public String getMinionType()
+        {
+            return this.minionType;
+        }
+
+        public String getCraftedTiers()
+        {
+            return this.craftedTiers;
+        }
+    }
+
+    class CraftedMinion
+    {
+        private final String minionName;
+        private final String displayName;
+        private final int minionMaxTier;
+        private final String craftedTiers;
+        private final ItemStack minionItem;
+        private final SkillType category;
+
+        public CraftedMinion(String minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem, SkillType category)
+        {
+            this.minionName = minionName;
+            this.displayName = displayName;
+            this.minionMaxTier = minionMaxTier;
+            this.craftedTiers = craftedTiers;
+            this.minionItem = minionItem;
+            this.category = category;
+        }
+
+        public String getMinionName()
+        {
+            return this.minionName;
+        }
+
+        public String getDisplayName()
+        {
+            return this.displayName;
+        }
+
+        public int getMinionMaxTier()
+        {
+            return this.minionMaxTier;
+        }
+
+        public String getCraftedTiers()
+        {
+            return this.craftedTiers;
+        }
+
+        public ItemStack getMinionItem()
+        {
+            return this.minionItem;
+        }
+
+        public SkillType getMinionCategory()
+        {
+            return this.category;
+        }
+    }
+
     class SkyBlockInventory
     {
         private final List<ItemStack> items;
@@ -3020,8 +3322,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (collection.getItemStack() != null && collection.getCollectionType() != null)
                 {
-                    this.drawStatsScreen(this.left + 2, top, collection.getItemStack());
-
+                    this.parent.drawItemStackSlot(this.left + 2, top, collection.getItemStack());
                     this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.left + 25, top + 6, 16777215);
                     this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.right - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
                 }
@@ -3046,29 +3347,64 @@ public class GuiSkyBlockData extends GuiScreen
         {
             return false;
         }
+    }
 
-        private void drawStatsScreen(int x, int y, ItemStack itemStack)
+    class SkyBlockCraftedMinions extends GuiScrollingList
+    {
+        private final List<CraftedMinion> craftMinions;
+        private final GuiSkyBlockData parent;
+
+        public SkyBlockCraftedMinions(GuiSkyBlockData parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<CraftedMinion> craftMinions)
         {
-            this.drawSprite(x + 1, y + 1);
-            GlStateManager.enableRescaleNormal();
-            RenderHelper.enableGUIStandardItemLighting();
-            this.parent.mc.getRenderItem().renderItemIntoGUI(itemStack, x + 2, y + 2);
-            RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableRescaleNormal();
+            super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
+            this.craftMinions = craftMinions;
+            this.parent = parent;
         }
 
-        private void drawSprite(int left, int top)
+        @Override
+        protected int getSize()
         {
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            this.parent.mc.getTextureManager().bindTexture(Gui.statIcons);
-            Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-            worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldrenderer.pos(left, top + 18, this.parent.zLevel).tex(0, 18 * 0.0078125F).endVertex();
-            worldrenderer.pos(left + 18, top + 18, this.parent.zLevel).tex(18 * 0.0078125F, 18 * 0.0078125F).endVertex();
-            worldrenderer.pos(left + 18, top, this.parent.zLevel).tex(18 * 0.0078125F, 0).endVertex();
-            worldrenderer.pos(left, top, this.parent.zLevel).tex(0, 0).endVertex();
-            tessellator.draw();
+            return this.craftMinions.size();
+        }
+
+        @Override
+        protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
+        {
+            if (this.craftMinions.size() == 1)
+            {
+                this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.RED + "Crafted Minions is empty!", this.left + 4, top + 5, 16777215);
+            }
+            else
+            {
+                CraftedMinion craftedMinion = this.craftMinions.get(index);
+
+                if (craftedMinion.getMinionItem() != null)
+                {
+                    String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
+                    this.parent.drawItemStackSlot(this.left + 2, top, craftedMinion.getMinionItem());
+                    this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.left + 25, top + 6, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.right - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                }
+                else
+                {
+                    if (craftedMinion.getMinionName() != null)
+                    {
+                        this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.left + 4, top + 5, 16777215);
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void elementClicked(int index, boolean doubleClick) {}
+
+        @Override
+        protected void drawBackground() {}
+
+        @Override
+        protected boolean isSelected(int index)
+        {
+            return false;
         }
     }
 
