@@ -1,0 +1,18 @@
+[
+    {
+        "level": 1,
+        "health": 2
+    },
+    {
+        "level": 15,
+        "health": 3
+    },
+    {
+        "level": 20,
+        "health": 4
+    },
+    {
+        "level": 26,
+        "health": 5
+    }
+]

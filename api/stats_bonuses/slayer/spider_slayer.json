@@ -1,0 +1,14 @@
+[
+    {
+        "level": 1,
+        "crit_damage": 1
+    },
+    {
+        "level": 5,
+        "crit_damage": 2
+    },
+    {
+        "level": 9,
+        "crit_chance": 3
+    }
+]

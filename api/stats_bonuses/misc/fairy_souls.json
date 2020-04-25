@@ -1,0 +1,282 @@
+[
+    {
+        "count": 5,
+        "health": 3,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 10,
+        "health": 3,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 15,
+        "health": 4,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 20,
+        "health": 4,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 25,
+        "health": 5,
+        "defense": 2,
+        "strength": 2,
+        "speed": 0
+    },
+    {
+        "count": 30,
+        "health": 5,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 35,
+        "health": 6,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 40,
+        "health": 6,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 45,
+        "health": 7,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 50,
+        "health": 7,
+        "defense": 2,
+        "strength": 2,
+        "speed": 1
+    },
+    {
+        "count": 55,
+        "health": 8,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 60,
+        "health": 8,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 65,
+        "health": 9,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 70,
+        "health": 9,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 75,
+        "health": 10,
+        "defense": 2,
+        "strength": 2,
+        "speed": 0
+    },
+    {
+        "count": 80,
+        "health": 10,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 85,
+        "health": 11,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 90,
+        "health": 11,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 95,
+        "health": 12,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 100,
+        "health": 12,
+        "defense": 2,
+        "strength": 2,
+        "speed": 1
+    },
+    {
+        "count": 105,
+        "health": 13,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 110,
+        "health": 13,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 115,
+        "health": 14,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 120,
+        "health": 14,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 125,
+        "health": 15,
+        "defense": 2,
+        "strength": 2,
+        "speed": 0
+    },
+    {
+        "count": 130,
+        "health": 15,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 135,
+        "health": 16,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 140,
+        "health": 16,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 145,
+        "health": 17,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 150,
+        "health": 17,
+        "defense": 2,
+        "strength": 2,
+        "speed": 1
+    },
+    {
+        "count": 155,
+        "health": 18,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 160,
+        "health": 18,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 165,
+        "health": 19,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 170,
+        "health": 19,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 175,
+        "health": 20,
+        "defense": 2,
+        "strength": 2,
+        "speed": 0
+    },
+    {
+        "count": 180,
+        "health": 20,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 185,
+        "health": 21,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 190,
+        "health": 21,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 195,
+        "health": 22,
+        "defense": 1,
+        "strength": 1,
+        "speed": 0
+    },
+    {
+        "count": 200,
+        "health": 22,
+        "defense": 2,
+        "strength": 2,
+        "speed": 1
+    }
+]
