@@ -12,13 +12,8 @@ buildscript {
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
     }
-}
-
-plugins {
-    id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 def mcVersion = project.mc_version
@@ -81,20 +76,6 @@ jar {
 mixin {
     defaultObfuscationEnv searge
     add sourceSets.main, "mixins.skyblockcatia.refmap.json"
-}
-
-curseforge {
-    apiKey = project.skyblockcatia_api
-    project {
-        id = "272146"
-        changelog = "Change Log"
-        releaseType = "beta"
-        addGameVersion mcVersion
-
-        mainArtifact(jar) {
-            displayName = "SkyBlockcatiaSkyBlock-" + mcVersion + "-" + version
-        }
-    }
 }
 
 task deobfJar(type: Jar) {
