@@ -27,8 +27,8 @@ apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "org.spongepowered.mixin"
 
 version = project.version
-group = "stevekung.mods.indicatia"
-archivesBaseName = "IndicatiaSkyBlock"
+group = "com.stevekung.skyblockcatia"
+archivesBaseName = "SkyBlockcatiaSkyBlock"
 sourceCompatibility = targetCompatibility = 1.8
 
 minecraft {
@@ -67,24 +67,24 @@ jar {
         exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
     }
     manifest.attributes(
-            "FMLAT": "indicatia_at.cfg",
-            "MixinConfigs": "mixins.indicatia.json",
+            "FMLAT": "skyblockcatia_at.cfg",
+            "MixinConfigs": "mixins.skyblockcatia.json",
             "TweakOrder": "0",
-            "TweakClass": "stevekung.mods.indicatia.tweaker.MixinsLoadingPlugin"
+            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingPlugin"
     )
     exclude "codes/biscuit/**"
     exclude "com/github/**"
     exclude "test/**"
-    baseName = "IndicatiaSkyBlock-" + mcVersion
+    baseName = "SkyBlockcatiaSkyBlock-" + mcVersion
 }
 
 mixin {
     defaultObfuscationEnv searge
-    add sourceSets.main, "mixins.indicatia.refmap.json"
+    add sourceSets.main, "mixins.skyblockcatia.refmap.json"
 }
 
 curseforge {
-    apiKey = project.indicatia_api
+    apiKey = project.skyblockcatia_api
     project {
         id = "272146"
         changelog = "Change Log"
@@ -92,7 +92,7 @@ curseforge {
         addGameVersion mcVersion
 
         mainArtifact(jar) {
-            displayName = "IndicatiaSkyBlock-" + mcVersion + "-" + version
+            displayName = "SkyBlockcatiaSkyBlock-" + mcVersion + "-" + version
         }
     }
 }
@@ -103,11 +103,11 @@ task deobfJar(type: Jar) {
         exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
     }
     manifest.attributes(
-            "FMLAT": "indicatia_at.cfg",
-            "MixinConfigs": "mixins.indicatia.json",
+            "FMLAT": "skyblockcatia_at.cfg",
+            "MixinConfigs": "mixins.skyblockcatia.json",
             "TweakOrder": "0",
-            "TweakClass": "stevekung.mods.indicatia.tweaker.MixinsLoadingPlugin"
+            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingPlugin"
     )
-    baseName = "IndicatiaSkyBlock-" + mcVersion
+    baseName = "SkyBlockcatiaSkyBlock-" + mcVersion
     classifier = "deobf"
 }

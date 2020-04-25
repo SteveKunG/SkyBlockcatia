@@ -1,0 +1,80 @@
+{
+    "block.crop.break": {
+        "sounds": [
+            {
+                "name": "skyblockcatia:block/sapling_place1",
+                "volume": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/sapling_place2",
+                "volume": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/sapling_place3",
+                "volume": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/sapling_place4",
+                "volume": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/sapling_place5",
+                "volume": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/sapling_place6",
+                "volume": 0.9
+            }
+        ]
+    },
+    "block.nether_wart.break": {
+        "sounds": [
+            {
+                "name": "skyblockcatia:block/netherwart1",
+                "volume": 0.9,
+                "pitch": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/netherwart2",
+                "volume": 0.9,
+                "pitch": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/netherwart3",
+                "volume": 0.9,
+                "pitch": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/netherwart4",
+                "volume": 0.9,
+                "pitch": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/netherwart5",
+                "volume": 0.9,
+                "pitch": 0.9
+            },
+            {
+                "name": "skyblockcatia:block/netherwart6",
+                "volume": 0.9,
+                "pitch": 0.9
+            }
+        ]
+    },
+    "ui.toast.in": {
+        "sounds": [
+            {
+                "name": "skyblockcatia:ui/toast_in",
+                "volume": 0.4
+            }
+        ]
+    },
+    "ui.toast.out": {
+        "sounds": [
+            {
+                "name": "skyblockcatia:ui/toast_out",
+                "volume": 0.4
+            }
+        ]
+    }
+}
