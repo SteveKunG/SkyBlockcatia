@@ -13,6 +13,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import stevekung.mods.indicatia.config.ConfigManagerIN;
 import stevekung.mods.indicatia.utils.CommonUtils;
 
 @Mixin(EntityPlayerSP.class)
@@ -31,7 +32,10 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer
     @Inject(method = "onLivingUpdate()V", at = @At(value = "INVOKE", target = "net/minecraft/util/MovementInput.updatePlayerMoveState()V", shift = At.Shift.AFTER))
     private void updateMovementInput(CallbackInfo info)
     {
-        CommonUtils.onInputUpdate(this.that, this.that.movementInput);
+        if (ConfigManagerIN.enableMovementHandler)
+        {
+            CommonUtils.onInputUpdate(this.that, this.that.movementInput);
+        }
     }
 
     @Overwrite

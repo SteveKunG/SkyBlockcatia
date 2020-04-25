@@ -39,6 +39,7 @@ public class ConfigManagerIN
     public static boolean enableShortcutGameButton;
     public static boolean enableOldFishingRodRenderModel;
     public static boolean enable1_15ArmorEnchantedGlint;
+    public static boolean enableMovementHandler;
 
     // Key Binding Settings
     public static String keyToggleSprint;
@@ -162,6 +163,11 @@ public class ConfigManagerIN
 
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable 1.15 Armor Enchanted Glint", false);
         ConfigManagerIN.enable1_15ArmorEnchantedGlint = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Movement Handler", true);
+        prop.comment = LangUtils.translate("gui.config.indicatia.movement_handler");
+        ConfigManagerIN.enableMovementHandler = prop.getBoolean();
         propOrder.add(prop.getName());
 
         return propOrder;

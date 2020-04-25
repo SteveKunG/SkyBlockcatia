@@ -16,6 +16,7 @@ gui.config.indicatia.transparent_skull_render=Same as alternate player model but
 gui.config.indicatia.custom_server_selection=Show response time as number instead and improved server info.
 gui.config.indicatia.confirm_to_disconnect=This will display confirmation screen if you want to disconnect from the server.
 gui.config.indicatia.old_fishing_rod=Replaced vanilla fishing line and fishing rod model rendering.
+gui.config.indicatia.movement_handler=Enable this to use Toggle Sprint/Sneak. Disable if it conflict with other mods.
 
 # KEY BINDING
 key.indicatia.category=Indicatia
