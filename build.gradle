@@ -70,7 +70,7 @@ jar {
             "FMLAT": "skyblockcatia_at.cfg",
             "MixinConfigs": "mixins.skyblockcatia.json",
             "TweakOrder": "0",
-            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingPlugin"
+            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
     )
     exclude "codes/biscuit/**"
     exclude "com/github/**"
@@ -106,7 +106,7 @@ task deobfJar(type: Jar) {
             "FMLAT": "skyblockcatia_at.cfg",
             "MixinConfigs": "mixins.skyblockcatia.json",
             "TweakOrder": "0",
-            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingPlugin"
+            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
     )
     baseName = "SkyBlockcatiaSkyBlock-" + mcVersion
     classifier = "deobf"

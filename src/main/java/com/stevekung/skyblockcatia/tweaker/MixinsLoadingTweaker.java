@@ -18,7 +18,7 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.SortingIndex(1)
-public class MixinsLoadingPlugin implements ITweaker
+public class MixinsLoadingTweaker implements ITweaker
 {
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {}

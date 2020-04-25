@@ -2,12 +2,9 @@ package com.stevekung.skyblockcatia.gui.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
+import com.stevekung.skyblockcatia.utils.CurlExecutor;
 
 public class ExpProgress
 {
@@ -43,9 +40,7 @@ public class ExpProgress
 
     public static ExpProgress[] getXpProgressFromRemote(Type type) throws IOException
     {
-        URL url = new URL("https://raw.githubusercontent.com/SteveKunG/Indicatia/1.8.9_skyblock/api/exp_progress/" + type + ".json");
-        URLConnection connection = url.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+        BufferedReader in = CurlExecutor.execute("api/exp_progress/" + type + ".json");
         return GSON.fromJson(in, ExpProgress[].class);
     }
 

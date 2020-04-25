@@ -2,13 +2,10 @@ package com.stevekung.skyblockcatia.gui.api;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.utils.CurlExecutor;
 
 public class PlayerStatsBonus
 {
@@ -27,9 +24,7 @@ public class PlayerStatsBonus
 
     public static void getBonusFromRemote(Type type) throws IOException
     {
-        URL url = new URL("https://raw.githubusercontent.com/SteveKunG/Indicatia/1.8.9_skyblock/api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
-        URLConnection connection = url.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+        BufferedReader in = CurlExecutor.execute("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
 
         switch (type)
         {

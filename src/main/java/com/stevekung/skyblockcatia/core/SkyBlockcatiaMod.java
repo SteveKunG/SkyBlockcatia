@@ -1,7 +1,6 @@
 package com.stevekung.skyblockcatia.core;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +35,6 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -54,7 +52,6 @@ public class SkyBlockcatiaMod
     private static final int MAJOR_VERSION = 1;
     private static final int MINOR_VERSION = 0;
     private static final int BUILD_VERSION = 0;
-    public static final int DEV_BUILD = 100;
     protected static final String GUI_FACTORY = "com.stevekung.skyblockcatia.config.ConfigGuiFactory";
     public static final String VERSION = SkyBlockcatiaMod.MAJOR_VERSION + "." + SkyBlockcatiaMod.MINOR_VERSION + "." + SkyBlockcatiaMod.BUILD_VERSION;
     protected static final String FORGE_VERSION = "after:Forge@[11.15.1.2318,);";
@@ -66,6 +63,9 @@ public class SkyBlockcatiaMod
     public static boolean isSkyblockAddonsLoaded = Loader.isModLoaded("skyblockaddons");
     public static boolean isIngameAccountSwitcherLoaded = Loader.isModLoaded("IngameAccountSwitcher");
     public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
+
+    private static boolean githubDown;
+    private static boolean noUUID;
 
     static
     {
@@ -123,6 +123,15 @@ public class SkyBlockcatiaMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        if (noUUID)
+        {
+            throw new InvalidUUIDException();
+        }
+        if (githubDown)
+        {
+            throw new WhitelistException();
+        }
+
         SkyBlockcatiaMod.init(event.getModMetadata());
         ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingHandler.init();
@@ -297,8 +306,7 @@ public class SkyBlockcatiaMod
 
         try
         {
-            InputStream input = new URL("https://raw.githubusercontent.com/SteveKunG/SupporterData/master/skyblock_uuid").openStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_UUID");
             String inputLine;
 
             while ((inputLine = reader.readLine()) != null)
@@ -309,27 +317,16 @@ public class SkyBlockcatiaMod
         catch (IOException e)
         {
             e.printStackTrace();
-            throw new WhitelistException();
+            SkyBlockcatiaMod.githubDown = true;
         }
 
         if (!uuidList.stream().anyMatch(text ->
         {
-            String[] split = text.split(":");
-            String uuid = split[0];
-            return GameProfileUtils.getUUID().toString().equals(uuid);
+            return GameProfileUtils.getUUID().toString().equals(text);
         }))
         {
-            throw new InvalidUUIDException();
-        }
-        if (!uuidList.stream().anyMatch(text ->
-        {
-            String[] split = text.split(":");
-            int devBuild = Integer.valueOf(split[1]);
-            return SkyBlockcatiaMod.DEV_BUILD == devBuild;
-        }))
-        {
-            System.out.println("Not allowed to use this dev build!");
-            FMLCommonHandler.instance().handleExit(0);
+            LoggerIN.error("UUID not found!");
+            SkyBlockcatiaMod.noUUID = true;
         }
     }
 }

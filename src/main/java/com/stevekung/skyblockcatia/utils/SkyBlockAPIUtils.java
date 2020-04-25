@@ -1,12 +1,7 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -52,10 +47,7 @@ public class SkyBlockAPIUtils
     {
         try
         {
-            URL url = new URL("https://raw.githubusercontent.com/SteveKunG/Indicatia/1.8.9_skyblock/api/stats_bonuses/misc/max_fairy_souls.json");
-            URLConnection connection = url.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-            MAX_FAIRY_SOULS = GSON.fromJson(in, MaxFairySouls.class).getMaxFairySouls();
+            MAX_FAIRY_SOULS = GSON.fromJson(CurlExecutor.execute("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
         }
         catch (IOException e)
         {
