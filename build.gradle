@@ -23,7 +23,7 @@ apply plugin: "org.spongepowered.mixin"
 
 version = project.version
 group = "com.stevekung.skyblockcatia"
-archivesBaseName = "SkyBlockcatiaSkyBlock"
+archivesBaseName = "SkyBlockcatia"
 sourceCompatibility = targetCompatibility = 1.8
 
 minecraft {
@@ -46,7 +46,6 @@ dependencies {
         exclude module: "commons-io"
         exclude module: "log4j-core"
     }
-    provided group: "com.github.rockswang", name: "java-curl", version: "1.2.2.2"
 }
 
 repositories {
@@ -71,7 +70,7 @@ jar {
     exclude "codes/biscuit/**"
     exclude "com/github/**"
     exclude "test/**"
-    baseName = "SkyBlockcatiaSkyBlock-" + mcVersion
+    baseName = "SkyBlockcatia-" + mcVersion
 }
 
 mixin {
@@ -90,6 +89,6 @@ task deobfJar(type: Jar) {
             "TweakOrder": "0",
             "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
     )
-    baseName = "SkyBlockcatiaSkyBlock-" + mcVersion
+    baseName = "SkyBlockcatia-" + mcVersion
     classifier = "deobf"
 }
