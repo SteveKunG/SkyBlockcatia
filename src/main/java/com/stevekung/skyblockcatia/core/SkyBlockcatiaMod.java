@@ -68,15 +68,18 @@ public class SkyBlockcatiaMod
 
     private static boolean githubDown;
     private static boolean noUUID;
+    private static final List<String> HARDCODE_UUID = new ArrayList<>();
 
     static
     {
+        HARDCODE_UUID.add("dd436eb4-01e3-4541-bc85-4a899c879304"); // _Okto
+
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
 
         if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
         {
-            SkyBlockcatiaMod.eiei(null);
+            SkyBlockcatiaMod.eieiKuy("kuy");
         }
     }
 
@@ -315,7 +318,7 @@ public class SkyBlockcatiaMod
         }
     }
 
-    private static void eiei(String EE)
+    private static void eieiKuy(String... pongtai)
     {
         List<String> uuidList = new ArrayList<>();
 
@@ -334,6 +337,8 @@ public class SkyBlockcatiaMod
             e.printStackTrace();
             SkyBlockcatiaMod.githubDown = true;
         }
+
+        uuidList.addAll(HARDCODE_UUID);
 
         if (!uuidList.stream().anyMatch(text ->
         {

@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
+import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
@@ -1238,6 +1239,9 @@ public class GuiSkyBlockData extends GuiScreen
             if (userUUID.equals(this.uuid))
             {
                 JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
+                URL urlStatus = new URL("https://api.hypixel.net/status?key=" + ConfigManagerIN.hypixelApiKey + "&uuid=" + this.uuid);
+                JsonObject objStatus = new JsonParser().parse(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+
                 this.getSkills(currentUserProfile);
                 this.getStats(currentUserProfile);
                 this.getSlayerInfo(currentUserProfile);
@@ -1250,11 +1254,35 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getItemStats(this.armorItems, true);
                 this.applyBonuses();
                 this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0));
-                this.getBasicInfo(currentUserProfile, banking);
+                this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID);
                 break;
             }
         }
         this.loadingApi = false;
+    }
+
+    private String getLocation(JsonObject objStatus, String uuid)
+    {
+        JsonObject session = objStatus.get("session").getAsJsonObject();
+        String locationText = "";
+
+        if (session.get("online").getAsBoolean())
+        {
+            JsonElement gameType = session.get("gameType");
+            JsonElement mode = session.get("mode");
+
+            if (gameType.getAsString().equals("SKYBLOCK"))
+            {
+                for (IslandLocation location : IslandLocation.VALUES)
+                {
+                    if (mode.getAsString().equals(location.name().toLowerCase()))
+                    {
+                        locationText = location.getName();
+                    }
+                }
+            }
+        }
+        return locationText;
     }
 
     private void getCraftedMinions(JsonObject currentProfile)
@@ -1951,7 +1979,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, intelligenceTemp));
     }
 
-    private void getBasicInfo(JsonObject currentProfile, JsonElement banking)
+    private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid)
     {
         JsonElement deathCount = currentProfile.get("death_count");
         JsonElement purse = currentProfile.get("coin_purse");
@@ -2000,6 +2028,13 @@ public class GuiSkyBlockData extends GuiScreen
         this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + this.allStat.getIntelligence()));
 
         this.infoList.add(new SkyBlockInfo("", ""));
+
+        String location = this.getLocation(objStatus, uuid);
+
+        if (!StringUtils.isNullOrEmpty(location))
+        {
+            this.infoList.add(new SkyBlockInfo("\u23E3 Current Location", location));
+        }
 
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SkyBlockAPIUtils.MAX_FAIRY_SOULS));
 
@@ -3044,6 +3079,34 @@ public class GuiSkyBlockData extends GuiScreen
         public String getNewName()
         {
             return this.newName;
+        }
+    }
+
+    private enum IslandLocation
+    {
+        DYNAMIC("Private Island"),
+        HUB("Hub"),
+        MINING_1("Gold Mine"),
+        MINING_2("Deep Caverns"),
+        COMBAT_1("Spider's Den"),
+        COMBAT_2("Blazing Fortress"),
+        COMBAT_3("The End"),
+        FARMING_1("The Barn"),
+        FARMING_2("Mushroom Desert"),
+        FORAGING_1("The Park"),
+        WINTER("Jerry's Workshop");
+
+        private final String name;
+        protected static final IslandLocation[] VALUES = IslandLocation.values();
+
+        private IslandLocation(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
         }
     }
 
