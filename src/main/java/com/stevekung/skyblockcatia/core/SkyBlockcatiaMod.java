@@ -39,12 +39,13 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, guiFactory = SkyBlockcatiaMod.GUI_FACTORY)
+@Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, guiFactory = SkyBlockcatiaMod.GUI_FACTORY, certificateFingerprint = SkyBlockcatiaMod.CERTIFICATE)
 public class SkyBlockcatiaMod
 {
     protected static final String NAME = "SkyBlockcatia";
@@ -55,6 +56,7 @@ public class SkyBlockcatiaMod
     protected static final String GUI_FACTORY = "com.stevekung.skyblockcatia.config.ConfigGuiFactory";
     public static final String VERSION = SkyBlockcatiaMod.MAJOR_VERSION + "." + SkyBlockcatiaMod.MINOR_VERSION + "." + SkyBlockcatiaMod.BUILD_VERSION;
     protected static final String FORGE_VERSION = "after:Forge@[11.15.1.2318,);";
+    protected static final String CERTIFICATE = "@FINGERPRINT@";
     protected static final String DEPENDENCIES = "after:skyblockaddons@[1.5.0-beta.16,); " + SkyBlockcatiaMod.FORGE_VERSION;
     private static final String URL = "https://minecraft.curseforge.com/projects/skyblockcatia";
 
@@ -213,6 +215,19 @@ public class SkyBlockcatiaMod
         {
             ConfigManagerIN.syncConfig(false);
             SkyBlockAPIUtils.setApiKey();
+        }
+    }
+
+    @EventHandler
+    public void onFingerprintViolation(FMLFingerprintViolationEvent event)
+    {
+        if ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+        {
+            LoggerIN.info("Development environment detected! Ignore certificate check.");
+        }
+        else
+        {
+            throw new RuntimeException("Invalid fingerprint detected! This version will NOT be support or responsible by the author!");
         }
     }
 
