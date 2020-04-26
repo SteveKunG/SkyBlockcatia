@@ -46,6 +46,7 @@ dependencies {
         exclude module: "commons-io"
         exclude module: "log4j-core"
     }
+    provided group: "com.github.rockswang", name: "java-curl", version: "1.2.2.2"
 }
 
 repositories {
@@ -53,7 +54,7 @@ repositories {
         url "https://plugins.gradle.org/m2/"
     }
     maven {
-        url = "http://repo.spongepowered.org/maven/"
+        url "http://repo.spongepowered.org/maven/"
     }
 }
 

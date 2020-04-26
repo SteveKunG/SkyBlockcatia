@@ -74,7 +74,7 @@ public class SkyBlockcatiaMod
 
         if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
         {
-            SkyBlockcatiaMod.eiei();
+            SkyBlockcatiaMod.eiei(null);
         }
     }
 
@@ -300,7 +300,7 @@ public class SkyBlockcatiaMod
         }
     }
 
-    private static void eiei()
+    private static void eiei(String EE)
     {
         List<String> uuidList = new ArrayList<>();
 
@@ -325,7 +325,6 @@ public class SkyBlockcatiaMod
             return GameProfileUtils.getUUID().toString().equals(text);
         }))
         {
-            LoggerIN.error("UUID not found!");
             SkyBlockcatiaMod.noUUID = true;
         }
     }
