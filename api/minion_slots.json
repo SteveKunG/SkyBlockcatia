@@ -1,0 +1,86 @@
+[
+    {
+        "current_slot": 0,
+        "minion_slot": 5
+    },
+    {
+        "current_slot": 5,
+        "minion_slot": 6
+    },
+    {
+        "current_slot": 15,
+        "minion_slot": 7
+    },
+    {
+        "current_slot": 30,
+        "minion_slot": 8
+    },
+    {
+        "current_slot": 50,
+        "minion_slot": 9
+    },
+    {
+        "current_slot": 75,
+        "minion_slot": 10
+    },
+    {
+        "current_slot": 100,
+        "minion_slot": 11
+    },
+    {
+        "current_slot": 125,
+        "minion_slot": 12
+    },
+    {
+        "current_slot": 150,
+        "minion_slot": 13
+    },
+    {
+        "current_slot": 175,
+        "minion_slot": 14
+    },
+    {
+        "current_slot": 200,
+        "minion_slot": 15
+    },
+    {
+        "current_slot": 225,
+        "minion_slot": 16
+    },
+    {
+        "current_slot": 250,
+        "minion_slot": 17
+    },
+    {
+        "current_slot": 275,
+        "minion_slot": 18
+    },
+    {
+        "current_slot": 300,
+        "minion_slot": 19
+    },
+    {
+        "current_slot": 350,
+        "minion_slot": 20
+    },
+    {
+        "current_slot": 400,
+        "minion_slot": 21
+    },
+    {
+        "current_slot": 450,
+        "minion_slot": 22
+    },
+    {
+        "current_slot": 500,
+        "minion_slot": 23
+    },
+    {
+        "current_slot": 550,
+        "minion_slot": 24
+    },
+    {
+        "current_slot": 600,
+        "minion_slot": 25
+    }
+]
