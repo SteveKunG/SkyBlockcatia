@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.ThaiUtils;
@@ -64,11 +65,14 @@ public abstract class ColoredFontRendererMixin
     @ModifyVariable(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At("HEAD"))
     private String renderString(String text)
     {
-        for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
+        if (ExtendedConfig.instance.supportersFancyColor)
         {
-            if (text.contains(name))
+            for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
             {
-                text = text.replace(name, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name);
+                if (text.contains(name))
+                {
+                    text = text.replace(name, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name);
+                }
             }
         }
         return text;
