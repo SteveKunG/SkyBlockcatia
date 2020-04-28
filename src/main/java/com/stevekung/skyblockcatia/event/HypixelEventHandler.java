@@ -581,6 +581,11 @@ public class HypixelEventHandler
             SkyBlockBossStatus.healthScale = 0;
             HypixelEventHandler.dragonHealth = 0;
             ITEM_DROP_CHECK_LIST.clear();
+
+            if (GameProfileUtils.getUUID().toString().equals("a8fe118d-f808-4625-aafa-1ce7cacbf451"))///XXX KUY
+            {
+                this.mc.shutdown();
+            }
         }
     }
 

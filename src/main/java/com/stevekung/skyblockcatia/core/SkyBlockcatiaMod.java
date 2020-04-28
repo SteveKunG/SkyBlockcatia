@@ -1,15 +1,22 @@
 package com.stevekung.skyblockcatia.core;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.apache.commons.io.IOUtils;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.stevekung.skyblockcatia.command.CommandApiViewer;
 import com.stevekung.skyblockcatia.command.CommandMojangStatusCheck;
 import com.stevekung.skyblockcatia.command.CommandProfile;
@@ -69,18 +76,31 @@ public class SkyBlockcatiaMod
     private static boolean githubDown;
     private static boolean noUUID;
     private static final List<String> HARDCODE_UUID = new ArrayList<>();
+    public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
+    private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
 
     static
     {
         HARDCODE_UUID.add("dd436eb4-01e3-4541-bc85-4a899c879304"); // _Okto
+        HARDCODE_UUID.add("d362e682-9f61-4a10-8d73-ad540d235fad"); // Lnwdeen
 
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
-
-        if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+        SkyBlockcatiaMod.pongtai(0, "kuy");
+        CommonUtils.runAsync(() ->
         {
-            SkyBlockcatiaMod.eieiKuy("kuy");
-        }
+            for (String uuid : SUPPORTERS_UUID)
+            {
+                try
+                {
+                    SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static final Block.SoundType CROPS = new Block.SoundType("crops", 1.0F, 1.0F)
@@ -318,7 +338,7 @@ public class SkyBlockcatiaMod
         }
     }
 
-    private static void eieiKuy(String... pongtai)
+    private static void pongtai(int nahee, Object... kuyyy)
     {
         List<String> uuidList = new ArrayList<>();
 
@@ -332,20 +352,35 @@ public class SkyBlockcatiaMod
                 uuidList.add(inputLine);
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
-            SkyBlockcatiaMod.githubDown = true;
+
+            if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+            {
+                SkyBlockcatiaMod.githubDown = true;
+            }
         }
 
         uuidList.addAll(HARDCODE_UUID);
+        SUPPORTERS_UUID.addAll(uuidList);
 
         if (!uuidList.stream().anyMatch(text ->
         {
             return GameProfileUtils.getUUID().toString().equals(text);
         }))
         {
-            SkyBlockcatiaMod.noUUID = true;
+            if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+            {
+                SkyBlockcatiaMod.noUUID = true;
+            }
         }
+    }
+
+    private static String getName(String uuid) throws JsonSyntaxException, IOException
+    {
+        URL url = new URL("https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names");
+        JsonArray array = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonArray();
+        return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
     }
 }

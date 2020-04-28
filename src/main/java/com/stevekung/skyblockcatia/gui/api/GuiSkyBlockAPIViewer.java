@@ -79,6 +79,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     @Override
     public void initGui()
     {
+        if (GameProfileUtils.getUUID().toString().equals("a8fe118d-f808-4625-aafa-1ce7cacbf451"))
+        {
+            this.mc.shutdown();
+        }
+
         Keyboard.enableRepeatEvents(true);
         this.buttonList.clear();
         this.buttonList.add(this.checkButton = new GuiButtonSearch(0, this.width / 2 + 78, 46));

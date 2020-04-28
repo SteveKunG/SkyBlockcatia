@@ -6,8 +6,11 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.ThaiUtils;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -56,6 +59,19 @@ public abstract class ColoredFontRendererMixin
     private void renderString(String text, float x, float y, int color, boolean dropShadow, CallbackInfoReturnable info)
     {
         this.dropShadow = dropShadow;
+    }
+
+    @ModifyVariable(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At("HEAD"))
+    private String renderString(String text)
+    {
+        for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
+        {
+            if (text.contains(name))
+            {
+                text = text.replace(name, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name);
+            }
+        }
+        return text;
     }
 
     @Inject(method = "renderDefaultChar(IZ)F", at = @At("HEAD"))

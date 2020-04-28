@@ -168,6 +168,7 @@ lobby_player_viewer.extended_config=Lobby Player Viewer
 auction_bid_confirm.extended_config=Auction Bid Confirmation
 auction_bid_confirm_value.extended_config=Auction Bid Confirm Value
 disable_block_particles.extended_config=Disable Block Particles
+supporters_fancy_color.extended_config=Fancy Color for Supporters
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

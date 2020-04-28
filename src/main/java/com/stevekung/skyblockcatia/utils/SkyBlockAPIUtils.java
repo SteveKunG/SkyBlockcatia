@@ -49,8 +49,9 @@ public class SkyBlockAPIUtils
         {
             MAX_FAIRY_SOULS = GSON.fromJson(CurlExecutor.execute("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
+            e.printStackTrace();
             MAX_FAIRY_SOULS = 194;
         }
     }

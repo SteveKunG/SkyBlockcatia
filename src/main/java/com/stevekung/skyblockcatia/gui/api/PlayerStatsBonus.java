@@ -1,7 +1,6 @@
 package com.stevekung.skyblockcatia.gui.api;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +21,7 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.FairySouls[] FAIRY_SOULS;
     private static final Gson GSON = new Gson();
 
-    public static void getBonusFromRemote(Type type) throws IOException
+    public static void getBonusFromRemote(Type type) throws Exception
     {
         BufferedReader in = CurlExecutor.execute("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
 

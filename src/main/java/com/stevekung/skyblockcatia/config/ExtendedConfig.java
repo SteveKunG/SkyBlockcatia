@@ -142,6 +142,7 @@ public class ExtendedConfig
     public boolean disableBlockParticles = false;
     public int itemRarityOpacity = 75;
     public int auctionBidConfirmValue = 500000;
+    public boolean supportersFancyColor = false;
 
     private ExtendedConfig() {}
 
@@ -273,6 +274,7 @@ public class ExtendedConfig
             this.lobbyPlayerViewer = ExtendedConfig.getBoolean(nbt, "LobbyPlayerViewer", this.lobbyPlayerViewer);
             this.auctionBidConfirm = ExtendedConfig.getBoolean(nbt, "AuctionBidConfirm", this.auctionBidConfirm);
             this.disableBlockParticles = ExtendedConfig.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
+            this.supportersFancyColor = ExtendedConfig.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -395,7 +397,7 @@ public class ExtendedConfig
             nbt.setBoolean("CurrentServerDay", this.currentServerDay);
             nbt.setBoolean("LobbyPlayerViewer", this.lobbyPlayerViewer);
             nbt.setBoolean("AuctionBidConfirm", this.auctionBidConfirm);
-            nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
+            nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
@@ -722,6 +724,10 @@ public class ExtendedConfig
         {
             this.disableBlockParticles = !this.disableBlockParticles;
         }
+        else if (options == ExtendedConfig.Options.SUPPORTERS_FANCY_COLOR)
+        {
+            this.supportersFancyColor = !this.supportersFancyColor;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1011,6 +1017,8 @@ public class ExtendedConfig
             return this.auctionBidConfirm;
         case DISABLE_BLOCK_PARTICLES:
             return this.disableBlockParticles;
+        case SUPPORTERS_FANCY_COLOR:
+            return this.supportersFancyColor;
         default:
             return false;
         }
@@ -1198,6 +1206,7 @@ public class ExtendedConfig
         LOBBY_PLAYER_VIEWER(false, true),
         AUCTION_BID_CONFIRM(false, true),
         DISABLE_BLOCK_PARTICLES(false, true),
+        SUPPORTERS_FANCY_COLOR(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

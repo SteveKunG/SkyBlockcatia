@@ -34,13 +34,14 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.ITEM_RARITY_OPACITY);
         OPTIONS.add(ExtendedConfig.Options.SHOW_HITBOX_WHEN_DRAGON_SPAWNED);
         OPTIONS.add(ExtendedConfig.Options.SHOW_DRAGON_HITBOX_ONLY);
-        OPTIONS.add(ExtendedConfig.Options.SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON);
         OPTIONS.add(ExtendedConfig.Options.LEAVE_PARTY_WHEN_LAST_EYE_PLACED);
+        OPTIONS.add(ExtendedConfig.Options.SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON);
         OPTIONS.add(ExtendedConfig.Options.CURRENT_SERVER_DAY);
         OPTIONS.add(ExtendedConfig.Options.LOBBY_PLAYER_VIEWER);
         OPTIONS.add(ExtendedConfig.Options.AUCTION_BID_CONFIRM);
         OPTIONS.add(ExtendedConfig.Options.AUCTION_BID_CONFIRM_VALUE);
         OPTIONS.add(ExtendedConfig.Options.DISABLE_BLOCK_PARTICLES);
+        OPTIONS.add(ExtendedConfig.Options.SUPPORTERS_FANCY_COLOR);
     }
 
     public GuiHypixelSettings(GuiScreen parent)
