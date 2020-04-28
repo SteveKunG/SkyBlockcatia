@@ -2,6 +2,8 @@ package com.stevekung.skyblockcatia.event;
 
 import java.util.Random;
 
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 import com.stevekung.skyblockcatia.utils.GuiChatRegistry;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
@@ -47,6 +49,10 @@ public class ClientEventHandler
             {
                 ClientEventHandler.ticksPaused++;
             }
+        }
+        if (SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.CURRENT_UUID.toString().equals(GameProfileUtils.getUUID().toString()))
+        {
+            this.mc.shutdown();
         }
     }
 

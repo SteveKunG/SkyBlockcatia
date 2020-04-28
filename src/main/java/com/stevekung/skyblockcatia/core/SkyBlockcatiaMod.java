@@ -3,10 +3,7 @@ package com.stevekung.skyblockcatia.core;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.io.IOUtils;
@@ -78,6 +75,7 @@ public class SkyBlockcatiaMod
     private static final List<String> HARDCODE_UUID = new ArrayList<>();
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
+    public static UUID CURRENT_UUID;
 
     static
     {
@@ -157,6 +155,7 @@ public class SkyBlockcatiaMod
             throw new WhitelistException();
         }
 
+        SkyBlockcatiaMod.CURRENT_UUID = GameProfileUtils.getUUID();
         SkyBlockcatiaMod.init(event.getModMetadata());
         ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingHandler.init();
@@ -212,6 +211,7 @@ public class SkyBlockcatiaMod
                     PlayerStatsBonus.getBonusFromRemote(type);
                 }
                 SkyBlockAPIUtils.getFairySouls();
+                SkyBlockMinion.getMinionSlotFromRemote();
             }
             catch (Throwable e)
             {

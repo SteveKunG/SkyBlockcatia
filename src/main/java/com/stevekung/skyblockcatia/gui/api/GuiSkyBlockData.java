@@ -99,6 +99,7 @@ public class GuiSkyBlockData extends GuiScreen
     private boolean updated;
 
     // API
+    private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense): (?<value>(?:\\+|\\-)[0-9,]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,]+ HP\\)){0,1})|(?: \\(\\+[0-9,]+\\))|(?: \\(\\w+ \\+[0-9,]+(?:\\%){0,1}\\))){0,1}");
     private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###,###,###");
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
@@ -116,6 +117,8 @@ public class GuiSkyBlockData extends GuiScreen
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
     private final List<SkyBlockCollection> collections = new ArrayList<>();
     private final Multimap<String, Integer> craftedMinions = HashMultimap.create();
+    private int craftedMinionCount;
+    private int currentMinionSlot;
     private SkyBlockSkillInfo carpentrySkill;
     private int slayerTotalAmountSpent;
     private int totalSlayerXp;
@@ -286,7 +289,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
-                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
             }
         }
         else if (this.currentSlotId == ViewButton.SKILLS.id)
@@ -619,6 +622,13 @@ public class GuiSkyBlockData extends GuiScreen
                     this.drawString(this.fontRendererObj, total1, this.width - this.fontRendererObj.getStringWidth(total1) - 60, this.height - 36, 16777215);
                     this.drawString(this.fontRendererObj, total2, this.width - this.fontRendererObj.getStringWidth(total2) - 60, this.height - 46, 16777215);
                 }
+                else if (this.currentSlot instanceof SkyBlockCraftedMinions)
+                {
+                    String total1 = EnumChatFormatting.GRAY + "Unique Minions: " + EnumChatFormatting.YELLOW + this.craftedMinionCount + "/" + GuiSkyBlockData.MAXED_UNIQUE_MINIONS + EnumChatFormatting.GRAY + " (" + this.craftedMinionCount * 100 / GuiSkyBlockData.MAXED_UNIQUE_MINIONS + "%)";
+                    String total2 = EnumChatFormatting.GRAY + "Current Minion Slot: " + EnumChatFormatting.YELLOW + this.currentMinionSlot;
+                    this.drawString(this.fontRendererObj, total1, this.width - this.fontRendererObj.getStringWidth(total1) - 60, this.height - 68, 16777215);
+                    this.drawString(this.fontRendererObj, total2, this.width - this.fontRendererObj.getStringWidth(total2) - 60, this.height - 58, 16777215);
+                }
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.enableDepth();
             }
@@ -693,7 +703,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
                 {
-                    this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                    this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
                 }
 
                 this.currentSlotId = ViewButton.INFO.id;
@@ -852,7 +862,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else if (type.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
-                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
                 this.currentBasicSlotId = BasicInfoViewButton.CRAFTED_MINIONS.id;
             }
         }
@@ -1297,17 +1307,26 @@ public class GuiSkyBlockData extends GuiScreen
                 String minionType = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
                 this.craftedMinions.put(minionType, unlockedLvl);
+                this.craftedMinionCount++;
             }
         }
     }
 
     private void processCraftedMinions()
     {
+        for (SkyBlockMinion.MinionSlot minion : SkyBlockMinion.MINION_SLOTS)
+        {
+            if (minion.getCurrentSlot() <= this.craftedMinionCount)
+            {
+                this.currentMinionSlot = minion.getMinionSlot();
+            }
+        }
+
         List<MinionLevel> minionLevels = new ArrayList<>();
         List<MinionData> minionDatas = new ArrayList<>();
         int level = 1;
 
-        for (SkyBlockMinion minion : SkyBlockMinion.values())
+        for (SkyBlockMinion.Type minion : SkyBlockMinion.Type.VALUES)
         {
             for (String minionType : this.craftedMinions.keySet())
             {
