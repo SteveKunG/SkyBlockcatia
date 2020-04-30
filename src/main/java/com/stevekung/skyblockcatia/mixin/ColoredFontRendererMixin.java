@@ -15,6 +15,7 @@ import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.ThaiUtils;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.EnumChatFormatting;
 
 @Mixin(FontRenderer.class)
 public abstract class ColoredFontRendererMixin
@@ -71,7 +72,7 @@ public abstract class ColoredFontRendererMixin
             {
                 if (text.contains(name))
                 {
-                    text = text.replace(name, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name);
+                    text = text.replace(name, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + EnumChatFormatting.RESET);
                 }
             }
         }
