@@ -81,10 +81,11 @@ public class SkyBlockcatiaMod
     {
         HARDCODE_UUID.add("dd436eb4-01e3-4541-bc85-4a899c879304"); // _Okto
         HARDCODE_UUID.add("d362e682-9f61-4a10-8d73-ad540d235fad"); // Lnwdeen
+        HARDCODE_UUID.add("5669d719-e494-47f5-9362-0ece491d0875"); // Badify
 
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
-        SkyBlockcatiaMod.pongtai(0, "kuy");
+        SkyBlockcatiaMod.nahee();
         CommonUtils.runAsync(() ->
         {
             for (String uuid : SUPPORTERS_UUID)
@@ -338,7 +339,7 @@ public class SkyBlockcatiaMod
         }
     }
 
-    private static void pongtai(int nahee, Object... kuyyy)
+    private static void nahee()
     {
         List<String> uuidList = new ArrayList<>();
 
