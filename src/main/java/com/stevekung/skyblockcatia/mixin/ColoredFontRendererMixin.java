@@ -72,7 +72,7 @@ public abstract class ColoredFontRendererMixin
             {
                 if (text.contains(name))
                 {
-                    text = text.replace(name, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + EnumChatFormatting.RESET);
+                    text = text.replaceAll("\\b" + name + "\\b", ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + EnumChatFormatting.RESET);
                 }
             }
         }

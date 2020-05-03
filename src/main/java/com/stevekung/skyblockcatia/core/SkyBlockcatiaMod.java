@@ -82,6 +82,7 @@ public class SkyBlockcatiaMod
         HARDCODE_UUID.add("dd436eb4-01e3-4541-bc85-4a899c879304"); // _Okto
         HARDCODE_UUID.add("d362e682-9f61-4a10-8d73-ad540d235fad"); // Lnwdeen
         HARDCODE_UUID.add("5669d719-e494-47f5-9362-0ece491d0875"); // Badify
+        HARDCODE_UUID.add("1becdba3-84c3-42b0-86b0-0198680108e1"); // jacckt23
 
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
