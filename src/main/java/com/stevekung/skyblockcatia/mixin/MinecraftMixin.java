@@ -99,8 +99,8 @@ public abstract class MinecraftMixin
 
     private boolean actionKeyF3;
 
-    private static final List<String> SKYBLOCK_PACK_16 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (16x)", "v8O1.8 Hypixel Skyblock Pack(16x)", "v9F1.8 Hypixel Skyblock Pack (16x)", "v9O1.8 Hypixel Skyblock Pack (16x)"));
-    private static final List<String> SKYBLOCK_PACK_32 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (x32)", "v8O1.8 Hypixel Skyblock Pack (32x)", "v9F1.8 Hypixel Skyblock Pack (32x)", "v9.1O1.8 Hypixel Skyblock Pack (32x)"));
+    private static final List<String> SKYBLOCK_PACK_16 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (16x)", "v8O1.8 Hypixel Skyblock Pack(16x)", "v9F1.8 Hypixel Skyblock Pack (16x)", "v9O1.8 Hypixel Skyblock Pack (16x)", "vXF16x_Skyblock_Pack_1.8.9", "vXO16x_Skyblock_Pack_1.8.9"));
+    private static final List<String> SKYBLOCK_PACK_32 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (x32)", "v8O1.8 Hypixel Skyblock Pack (32x)", "v9F1.8 Hypixel Skyblock Pack (32x)", "v9.1O1.8 Hypixel Skyblock Pack (32x)", "vXF32x_Skyblock_Pack_1.8.9", "vXO32x_Skyblock_Pack_1.8.9"));
 
     @Overwrite
     public void runTick() throws IOException
@@ -416,7 +416,7 @@ public abstract class MinecraftMixin
                 HypixelEventHandler.skyBlockPackResolution = "32";
             }
 
-            if (packName.contains("Hypixel Skyblock Pack") && packDesc.contains("by Hypixel Packs HQ"))
+            if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && packDesc.contains("by Hypixel Packs HQ"))
             {
                 HypixelEventHandler.foundSkyBlockPack = true;
                 found = true;
