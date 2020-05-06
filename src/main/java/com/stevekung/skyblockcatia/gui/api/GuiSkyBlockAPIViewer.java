@@ -461,6 +461,12 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             }
             else
             {
+                if (rank != null)
+                {
+                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank.getAsString());
+                    baseRankText = rankType == HypixelRank.Type.YOUTUBER ? EnumChatFormatting.WHITE + rankType.getName() : rankType.getName();
+                    color = rankType.getColor().toString();
+                }
                 if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
                 {
                     baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
