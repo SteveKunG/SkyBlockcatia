@@ -15,6 +15,7 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.Combat[] COMBAT;
     public static PlayerStatsBonus.Enchanting[] ENCHANTING;
     public static PlayerStatsBonus.Alchemy[] ALCHEMY;
+    public static PlayerStatsBonus.PetLuck[] PET_LUCK;
     public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
     public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
     public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
@@ -59,6 +60,9 @@ public class PlayerStatsBonus
             break;
         case FAIRY_SOULS:
             FAIRY_SOULS = GSON.fromJson(in, PlayerStatsBonus.FairySouls[].class);
+            break;
+        case PET_LUCK:
+            PET_LUCK = GSON.fromJson(in, PlayerStatsBonus.PetLuck[].class);
             break;
         }
     }
@@ -229,6 +233,31 @@ public class PlayerStatsBonus
         public int getIntelligence()
         {
             return this.intelligence;
+        }
+    }
+
+    public class PetLuck implements IBonusTemplate
+    {
+        private final int level;
+        @SerializedName("pet_luck")
+        private final int petLuck;
+
+        public PetLuck(int level, int petLuck)
+        {
+            this.level = level;
+            this.petLuck = petLuck;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public int getPetLuck()
+        {
+            return this.petLuck;
         }
     }
 
@@ -424,6 +453,21 @@ public class PlayerStatsBonus
         {
             return 0;
         }
+
+        default int getSeaCreatureChance()
+        {
+            return 0;
+        }
+
+        default int getMagicFind()
+        {
+            return 0;
+        }
+
+        default int getPetLuck()
+        {
+            return 0;
+        }
     }
 
     public enum Type
@@ -435,6 +479,7 @@ public class PlayerStatsBonus
         COMBAT("skill"),
         ENCHANTING("skill"),
         ALCHEMY("skill"),
+        PET_LUCK("skill"),
         ZOMBIE_SLAYER("slayer"),
         SPIDER_SLAYER("slayer"),
         WOLF_SLAYER("slayer"),
