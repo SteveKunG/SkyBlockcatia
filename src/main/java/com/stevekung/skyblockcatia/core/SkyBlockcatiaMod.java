@@ -16,16 +16,15 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
-import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
-import com.stevekung.skyblockcatia.gui.api.ExpProgress;
-import com.stevekung.skyblockcatia.gui.api.PlayerStatsBonus;
+import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
-import com.stevekung.skyblockcatia.utils.SkyBlockAPIUtils;
-import com.stevekung.skyblockcatia.utils.SkyBlockMinion;
-import com.stevekung.skyblockcatia.utils.ToastLog;
+import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
+import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
+import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
@@ -108,14 +107,14 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(this);
         CommonUtils.registerEventHandler(new MainEventHandler());
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
-        CommonUtils.registerEventHandler(new HypixelEventHandler());
+        CommonUtils.registerEventHandler(new SkyBlockEventHandler());
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
     }
 
     private void loadComplete(FMLLoadCompleteEvent event)
     {
-        SkyBlockAPIUtils.setApiKey();
+        SBAPIUtils.setApiKey();
         CommonUtils.runAsync(() ->
         {
             try
@@ -135,8 +134,8 @@ public class SkyBlockcatiaMod
                 {
                     PlayerStatsBonus.getBonusFromRemote(type);
                 }
-                SkyBlockAPIUtils.getFairySouls();
-                SkyBlockMinion.getMinionSlotFromRemote();
+                SBAPIUtils.getFairySouls();
+                SBMinions.getMinionSlotFromRemote();
             }
             catch (Throwable e)
             {

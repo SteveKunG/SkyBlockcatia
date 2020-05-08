@@ -1,7 +1,7 @@
 package com.stevekung.skyblockcatia.config;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.utils.SkyBlockAPIUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,14 +43,14 @@ public class SkyBlockcatiaConfig
     @SubscribeEvent
     public static void onLoad(ModConfig.Loading event)
     {
-        SkyBlockAPIUtils.setApiKey();
+        SBAPIUtils.setApiKey();
         SkyBlockcatiaMod.LOGGER.info("Loaded config file {}", event.getConfig().getFileName());
     }
 
     @SubscribeEvent
     public static void onFileChange(ModConfig.Reloading event)
     {
-        SkyBlockAPIUtils.setApiKey();
+        SBAPIUtils.setApiKey();
         SkyBlockcatiaMod.LOGGER.info("Indicatia config just got changed on the file system");
     }
 }

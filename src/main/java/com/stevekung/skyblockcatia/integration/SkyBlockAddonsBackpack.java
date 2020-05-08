@@ -2,21 +2,22 @@
 //
 //import java.lang.reflect.Method;
 //
-//import com.stevekung.skyblockcatia.config.ExtendedConfig;
+//import org.apache.commons.lang3.EnumUtils;
+//
+//import com.mojang.blaze3d.systems.RenderSystem;
+//import com.mojang.realmsclient.gui.ChatFormatting;
+//import com.stevekung.indicatia.config.ExtendedConfig;
 //import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData;
-//import com.stevekung.skyblockcatia.utils.RenderUtils;
+//import com.stevekung.stevekungslib.utils.client.RenderUtils;
 //
 //import codes.biscuit.skyblockaddons.SkyblockAddons;
 //import codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook;
 //import codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook;
 //import codes.biscuit.skyblockaddons.utils.Backpack;
 //import codes.biscuit.skyblockaddons.utils.BackpackColor;
-//import codes.biscuit.skyblockaddons.utils.EnumUtils;
 //import codes.biscuit.skyblockaddons.utils.Feature;
-//import codes.biscuit.skyblockaddons.utils.nifty.ChatFormatting;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.Gui;
-//import net.minecraft.client.renderer.GlStateManager;
 //import net.minecraft.client.renderer.RenderHelper;
 //import net.minecraft.client.renderer.entity.RenderItem;
 //import net.minecraft.item.ItemStack;
@@ -41,7 +42,7 @@
 //            int y = backpack.getY();
 //            ItemStack[] items = backpack.getItems();
 //            int length = items.length;
-//            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+//            RenderSystem.color(1.0F, 1.0F, 1.0F, 1.0F);
 //
 //            if (!GuiContainerHook.isFreezeBackpack())
 //            {
@@ -53,15 +54,15 @@
 //            {
 //                mc.getTextureManager().bindTexture(CHEST_GUI_TEXTURE);
 //                int rows = length/9;
-//                GlStateManager.disableLighting();
-//                GlStateManager.pushMatrix();
-//                GlStateManager.translate(0,0,300);
+//                RenderSystem.disableLighting();
+//                RenderSystem.pushMatrix();
+//                RenderSystem.translate(0,0,300);
 //                int textColor = 4210752;
 //
 //                if (main.getConfigValues().isEnabled(Feature.MAKE_BACKPACK_INVENTORIES_COLORED))
 //                {
 //                    BackpackColor color = backpack.getBackpackColor();
-//                    GlStateManager.color(color.getR(), color.getG(), color.getB(), 1);
+//                    RenderSystem.color(color.getR(), color.getG(), color.getB(), 1);
 //                    textColor = color.getInventoryTextColor();
 //                }
 //
@@ -95,11 +96,11 @@
 //                gui.drawTexturedModalRect(x, y, 0, 0, 176, rows * 18 + 17);
 //                gui.drawTexturedModalRect(x, y + rows * 18 + 17, 0, 215, 176, 7);
 //                mc.fontRendererObj.drawString(backpack.getBackpackName(), x+8, y+6, textColor);
-//                GlStateManager.popMatrix();
-//                GlStateManager.enableLighting();
+//                RenderSystem.popMatrix();
+//                RenderSystem.enableLighting();
 //                RenderHelper.enableGUIStandardItemLighting();
-//                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-//                GlStateManager.enableRescaleNormal();
+//                RenderSystem.color(1.0F, 1.0F, 1.0F, 1.0F);
+//                RenderSystem.enableRescaleNormal();
 //
 //                ItemStack toRenderOverlay = null;
 //
@@ -139,15 +140,15 @@
 //            }
 //            else
 //            {
-//                GlStateManager.disableLighting();
-//                GlStateManager.pushMatrix();
-//                GlStateManager.translate(0,0, 300);
+//                RenderSystem.disableLighting();
+//                RenderSystem.pushMatrix();
+//                RenderSystem.translate(0,0, 300);
 //                Gui.drawRect(x, y, x + 16 * 9 + 3, y + 16 * (length / 9) + 3, ChatFormatting.DARK_GRAY.getColor(250).getRGB());
-//                GlStateManager.popMatrix();
-//                GlStateManager.enableLighting();
+//                RenderSystem.popMatrix();
+//                RenderSystem.enableLighting();
 //                RenderHelper.enableGUIStandardItemLighting();
-//                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-//                GlStateManager.enableRescaleNormal();
+//                RenderSystem.color(1.0F, 1.0F, 1.0F, 1.0F);
+//                RenderSystem.enableRescaleNormal();
 //
 //                for (int i = 0; i < length; i++)
 //                {
@@ -171,8 +172,8 @@
 //            {
 //                main.getUtils().setBackpackToRender(null);
 //            }
-//            GlStateManager.enableLighting();
-//            GlStateManager.enableDepth();
+//            RenderSystem.enableLighting();
+//            RenderSystem.enableDepth();
 //            RenderHelper.enableStandardItemLighting();
 //        }
 //    }

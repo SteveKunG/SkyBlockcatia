@@ -3,17 +3,17 @@ package com.stevekung.skyblockcatia.gui.config;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.gui.ExtendedTextFieldWidget;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.gui.widget.ExtendedTextFieldWidget;
 
 import net.minecraft.client.gui.widget.Widget;
 
 public class TextFieldConfigOption extends ExtendedConfigOption
 {
-    private final Function<ExtendedConfig, String> getter;
-    private final BiConsumer<ExtendedConfig, String> setter;
+    private final Function<SBExtendedConfig, String> getter;
+    private final BiConsumer<SBExtendedConfig, String> setter;
 
-    public TextFieldConfigOption(String key, Function<ExtendedConfig, String> getter, BiConsumer<ExtendedConfig, String> setter)
+    public TextFieldConfigOption(String key, Function<SBExtendedConfig, String> getter, BiConsumer<SBExtendedConfig, String> setter)
     {
         super(key);
         this.getter = getter;
@@ -33,11 +33,11 @@ public class TextFieldConfigOption extends ExtendedConfigOption
 
     public void set(String value)
     {
-        this.setter.accept(ExtendedConfig.INSTANCE, value);
+        this.setter.accept(SBExtendedConfig.INSTANCE, value);
     }
 
     public String get()
     {
-        return this.getter.apply(ExtendedConfig.INSTANCE);
+        return this.getter.apply(SBExtendedConfig.INSTANCE);
     }
 }

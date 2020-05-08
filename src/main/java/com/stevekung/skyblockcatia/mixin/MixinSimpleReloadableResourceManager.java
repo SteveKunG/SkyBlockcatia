@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ClientResourcePackInfo;
@@ -46,27 +46,27 @@ public abstract class MixinSimpleReloadableResourceManager
 
                 if (MainEventHandler.SKYBLOCK_PACK_16.stream().anyMatch(name -> packName.contains(name)))
                 {
-                    HypixelEventHandler.skyBlockPackResolution = "16";
+                    SkyBlockEventHandler.skyBlockPackResolution = "16";
                 }
                 if (MainEventHandler.SKYBLOCK_PACK_32.stream().anyMatch(name -> packName.contains(name)))
                 {
-                    HypixelEventHandler.skyBlockPackResolution = "32";
+                    SkyBlockEventHandler.skyBlockPackResolution = "32";
                 }
 
                 if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && packDesc.contains("by Hypixel Packs HQ"))
                 {
-                    HypixelEventHandler.foundSkyBlockPack = true;
+                    SkyBlockEventHandler.foundSkyBlockPack = true;
                     found = true;
                     break;
                 }
             }
             if (found)
             {
-                SkyBlockcatiaMod.LOGGER.info("Found SkyBlock Pack with x" + HypixelEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
+                SkyBlockcatiaMod.LOGGER.info("Found SkyBlock Pack with x" + SkyBlockEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
             }
             else
             {
-                HypixelEventHandler.foundSkyBlockPack = false;
+                SkyBlockEventHandler.foundSkyBlockPack = false;
                 SkyBlockcatiaMod.LOGGER.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
             }
         }

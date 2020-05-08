@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.entity.Entity;
@@ -19,7 +19,7 @@ public abstract class MixinFarmlandBlock
     @Inject(method = "onFallenUpon(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;F)V", cancellable = true, at = @At("HEAD"))
     private void onFallenUpon(World world, BlockPos pos, Entity entity, float fallDistance, CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND)
         {
             info.cancel();
         }

@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,7 @@ public abstract class MixinItem implements IForgeItem
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
     {
-        if (HypixelEventHandler.isSkyBlock && !newStack.isEmpty() && !oldStack.isEmpty() && (oldStack.getItem() == Items.BOW || oldStack.getItem() == Items.IRON_AXE) && oldStack.getItem() == newStack.getItem())
+        if (SkyBlockEventHandler.isSkyBlock && !newStack.isEmpty() && !oldStack.isEmpty() && (oldStack.getItem() == Items.BOW || oldStack.getItem() == Items.IRON_AXE) && oldStack.getItem() == newStack.getItem())
         {
             return false;
         }

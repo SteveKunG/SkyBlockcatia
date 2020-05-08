@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 
@@ -16,7 +16,7 @@ public abstract class MixinFontRenderer
     @ModifyVariable(method = "renderString(Ljava/lang/String;FFILnet/minecraft/client/renderer/Matrix4f;Z)I", at = @At("HEAD"))
     private String renderString(String text)
     {
-        if (ExtendedConfig.INSTANCE.supportersFancyColor)
+        if (SBExtendedConfig.INSTANCE.supportersFancyColor)
         {
             for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
             {

@@ -9,7 +9,6 @@
     "client": [
         "MixinArmorLayer",
         "MixinBossOverlayGui",
-        "MixinChatScreen",
         "MixinClientPlayerEntity",
         "MixinContainerScreen",
         "MixinDownloadingTexture",

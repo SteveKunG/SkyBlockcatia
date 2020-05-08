@@ -3,17 +3,17 @@ package com.stevekung.skyblockcatia.gui.config;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.gui.ExtendedButton;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.gui.widget.button.ExtendedButton;
 
 import net.minecraft.client.gui.widget.Widget;
 
 public class StringConfigOption extends ExtendedConfigOption
 {
-    private final BiConsumer<ExtendedConfig, Integer> getter;
-    private final BiFunction<ExtendedConfig, StringConfigOption, String> setter;
+    private final BiConsumer<SBExtendedConfig, Integer> getter;
+    private final BiFunction<SBExtendedConfig, StringConfigOption, String> setter;
 
-    public StringConfigOption(String key, BiConsumer<ExtendedConfig, Integer> getter, BiFunction<ExtendedConfig, StringConfigOption, String> setter)
+    public StringConfigOption(String key, BiConsumer<SBExtendedConfig, Integer> getter, BiFunction<SBExtendedConfig, StringConfigOption, String> setter)
     {
         super(key);
         this.getter = getter;
@@ -32,12 +32,12 @@ public class StringConfigOption extends ExtendedConfigOption
 
     public void set(int value)
     {
-        this.getter.accept(ExtendedConfig.INSTANCE, value);
-        ExtendedConfig.INSTANCE.save();
+        this.getter.accept(SBExtendedConfig.INSTANCE, value);
+        SBExtendedConfig.INSTANCE.save();
     }
 
     public String get()
     {
-        return this.setter.apply(ExtendedConfig.INSTANCE, this);
+        return this.setter.apply(SBExtendedConfig.INSTANCE, this);
     }
 }

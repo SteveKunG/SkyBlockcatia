@@ -5,11 +5,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
-import com.stevekung.skyblockcatia.utils.NumberUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBNumberUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.EditSignScreen;
@@ -41,7 +42,7 @@ public abstract class MixinEditSignScreen extends Screen
     @Inject(method = "init()V", at = @At("RETURN"))
     private void init(CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
             if (this.isAuctionSign())
             {
@@ -76,7 +77,7 @@ public abstract class MixinEditSignScreen extends Screen
     {
         this.tileSign.markDirty();
 
-        if (ExtendedConfig.INSTANCE.auctionBidConfirm && this.isAuctionSign())
+        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && this.isAuctionSign())
         {
             info.cancel();
         }
@@ -85,7 +86,7 @@ public abstract class MixinEditSignScreen extends Screen
     @Inject(method = "render(IIF)V", at = @At("RETURN"))
     private void render(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
             if (this.isAuctionSign())
             {
@@ -115,11 +116,11 @@ public abstract class MixinEditSignScreen extends Screen
     {
         String text = this.tileSign.signText[0].getString();
 
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
             if (!StringUtils.isNullOrEmpty(text))
             {
-                if (NumberUtils.isNumericWithKM(text))
+                if (SBNumberUtils.isNumericWithKM(text))
                 {
                     if (this.isBankWithdraw())
                     {
@@ -148,11 +149,11 @@ public abstract class MixinEditSignScreen extends Screen
             }
         }
 
-        if (ExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionSign())
+        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionSign())
         {
             int price = Integer.parseInt(text);
 
-            if (price >= ExtendedConfig.INSTANCE.auctionBidConfirmValue)
+            if (price >= SBExtendedConfig.INSTANCE.auctionBidConfirmValue)
             {
                 this.minecraft.displayGuiScreen(new ConfirmScreen(confirm ->
                 {

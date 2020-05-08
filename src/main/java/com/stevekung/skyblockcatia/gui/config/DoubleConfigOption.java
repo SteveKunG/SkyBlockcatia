@@ -4,8 +4,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.gui.ConfigOptionSliderWidget;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.gui.widget.ConfigOptionSliderWidget;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
@@ -15,11 +15,11 @@ public class DoubleConfigOption extends ExtendedConfigOption
     protected final float interval;
     protected final double min;
     protected double max;
-    private final Function<ExtendedConfig, Double> getter;
-    private final BiConsumer<ExtendedConfig, Double> setter;
-    private final BiFunction<ExtendedConfig, DoubleConfigOption, String> displayStringGetter;
+    private final Function<SBExtendedConfig, Double> getter;
+    private final BiConsumer<SBExtendedConfig, Double> setter;
+    private final BiFunction<SBExtendedConfig, DoubleConfigOption, String> displayStringGetter;
 
-    public DoubleConfigOption(String key, double min, double max, float interval, Function<ExtendedConfig, Double> getter, BiConsumer<ExtendedConfig, Double> setter, BiFunction<ExtendedConfig, DoubleConfigOption, String> displayStringGetter)
+    public DoubleConfigOption(String key, double min, double max, float interval, Function<SBExtendedConfig, Double> getter, BiConsumer<SBExtendedConfig, Double> setter, BiFunction<SBExtendedConfig, DoubleConfigOption, String> displayStringGetter)
     {
         super(key);
         this.min = min;
@@ -72,16 +72,16 @@ public class DoubleConfigOption extends ExtendedConfigOption
 
     public void set(double value)
     {
-        this.setter.accept(ExtendedConfig.INSTANCE, value);
+        this.setter.accept(SBExtendedConfig.INSTANCE, value);
     }
 
     public double get()
     {
-        return this.getter.apply(ExtendedConfig.INSTANCE);
+        return this.getter.apply(SBExtendedConfig.INSTANCE);
     }
 
     public String getDisplayString()
     {
-        return this.displayStringGetter.apply(ExtendedConfig.INSTANCE, this);
+        return this.displayStringGetter.apply(SBExtendedConfig.INSTANCE, this);
     }
 }

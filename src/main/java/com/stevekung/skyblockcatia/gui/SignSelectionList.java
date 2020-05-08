@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.utils.NumberUtils;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -127,11 +127,11 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
 
                 if (Util.milliTime() - this.lastClicked < 250L)
                 {
-                    if (ExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
+                    if (SBExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
                     {
                         int price = Integer.valueOf(this.value);
 
-                        if (price >= ExtendedConfig.INSTANCE.auctionBidConfirmValue)
+                        if (price >= SBExtendedConfig.INSTANCE.auctionBidConfirmValue)
                         {
                             this.mc.displayGuiScreen(new ConfirmScreen(confirm ->
                             {

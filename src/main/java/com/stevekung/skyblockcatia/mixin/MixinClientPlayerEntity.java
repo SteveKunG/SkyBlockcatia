@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -26,6 +26,6 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     @Redirect(method = "setPlayerSPHealth(F)V", at = @At(value = "FIELD", target = "net/minecraft/client/entity/player/ClientPlayerEntity.hurtTime:I", opcode = Opcodes.PUTFIELD))
     private void setNoHurtTime(ClientPlayerEntity entity, int oldValue)
     {
-        entity.hurtTime = HypixelEventHandler.isSkyBlock ? 0 : oldValue;
+        entity.hurtTime = SkyBlockEventHandler.isSkyBlock ? 0 : oldValue;
     }
 }

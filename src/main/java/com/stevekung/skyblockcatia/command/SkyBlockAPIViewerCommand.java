@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 import com.stevekung.stevekungslib.utils.client.command.IClientCommand;
 import com.stevekung.stevekungslib.utils.client.command.IClientSuggestionProvider;

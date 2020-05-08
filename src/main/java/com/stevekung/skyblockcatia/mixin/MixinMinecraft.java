@@ -4,8 +4,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -30,7 +30,7 @@ public abstract class MixinMinecraft
                 break;
             }
         }
-        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.INSTANCE.sneakToOpenInventoryWhileFightDragon && foundDragon)
+        if (SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.sneakToOpenInventoryWhileFightDragon && foundDragon)
         {
             return key.isPressed() && this.that.player.isSneaking();
         }

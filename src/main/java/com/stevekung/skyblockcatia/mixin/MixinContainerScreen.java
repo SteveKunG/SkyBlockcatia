@@ -16,14 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
 import com.stevekung.skyblockcatia.utils.SearchMode;
-import com.stevekung.skyblockcatia.utils.SkyBlockRecipeViewer;
-import com.stevekung.skyblockcatia.utils.SkyBlockRenderUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.client.gui.NumberWidget;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.CommonUtils;
@@ -31,6 +30,7 @@ import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.CommandSuggestionHelper;
@@ -96,7 +96,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "init()V", at = @At("RETURN"))
     private void init(CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isAuctionBrowser())
             {
@@ -135,7 +135,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z", shift = Shift.AFTER))
     private void mouseClicked(double mouseX, double mouseY, int mouseButton, CallbackInfoReturnable<Boolean> info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -162,7 +162,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "removed()V", at = @At("RETURN"))
     private void removed(CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui() || this.isAuctionBrowser())
             {
@@ -178,7 +178,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "tick()V", at = @At("RETURN"))
     private void tick(CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -195,7 +195,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "render(IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/Screen.render(IIF)V", shift = Shift.BEFORE))
     private void render(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -224,7 +224,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "keyPressed(III)Z", cancellable = true, at = @At("HEAD"))
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.commandSuggestionHelper != null && this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
+        if (SkyBlockEventHandler.isSkyBlock && this.commandSuggestionHelper != null && this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
         {
             info.setReturnValue(true);
         }
@@ -235,7 +235,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
 
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.inputField != null && this.isChatableGui())
             {
@@ -256,7 +256,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     {
                         if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                         {
-                            SkyBlockRecipeViewer.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                            MixinContainerScreen.viewRecipe(this.minecraft.player, this.hoveredSlot);
                             info.setReturnValue(true);
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
@@ -372,7 +372,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 {
                     if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                     {
-                        SkyBlockRecipeViewer.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                        MixinContainerScreen.viewRecipe(this.minecraft.player, this.hoveredSlot);
                         info.setReturnValue(true);
                     }
                     else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
@@ -420,7 +420,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "handleMouseClick(Lnet/minecraft/inventory/container/Slot;IILnet/minecraft/inventory/container/ClickType;)V", cancellable = true, at = @At("HEAD"))
     private void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
             if (slotId != -999 && slotId != -1)
             {
@@ -466,15 +466,15 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V"))
     private void renderRarity(Slot slot, CallbackInfo info)
     {
-        if (ExtendedConfig.INSTANCE.showItemRarity)
+        if (SBExtendedConfig.INSTANCE.showItemRarity)
         {
             if (this.that instanceof ChestScreen)
             {
-                SkyBlockRenderUtils.renderRarity(slot, this.title.getUnformattedComponentText());
+                SBRenderUtils.renderRarity(slot, this.title.getUnformattedComponentText());
             }
             else
             {
-                SkyBlockRenderUtils.renderRarity(slot, null);
+                SBRenderUtils.renderRarity(slot, null);
             }
         }
     }
@@ -482,7 +482,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
     private void renderBids(Slot slot, CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isRenderBids())
             {
@@ -496,7 +496,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         super.resize(mc, width, height);
 
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -513,7 +513,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         super.insertText(newText, shouldOverwrite);
 
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -532,7 +532,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta)
     {
-        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (scrollDelta > 1.0D)
             {
@@ -808,6 +808,20 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
             }
             break;
+        }
+    }
+
+    private static void viewRecipe(ClientPlayerEntity player, Slot slot)
+    {
+        if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
+        {
+            CompoundNBT extraAttrib = slot.getStack().getTag().getCompound("ExtraAttributes");
+
+            if (extraAttrib.contains("id"))
+            {
+                String itemId = extraAttrib.getString("id");
+                player.sendChatMessage("/viewrecipe " + itemId);
+            }
         }
     }
 }

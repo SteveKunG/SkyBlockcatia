@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.client.gui.overlay.BossOverlayGui;
 
@@ -15,7 +15,7 @@ public abstract class MixinBossOverlayGui
     @Inject(method = "shouldDarkenSky()Z", cancellable = true, at = @At("HEAD"))
     private void disableDarkenSky(CallbackInfoReturnable<Boolean> info)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
             info.setReturnValue(false);
         }

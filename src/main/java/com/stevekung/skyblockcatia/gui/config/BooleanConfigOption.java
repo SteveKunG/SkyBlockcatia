@@ -3,8 +3,8 @@ package com.stevekung.skyblockcatia.gui.config;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.gui.ExtendedButton;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.gui.widget.button.ExtendedButton;
 import com.stevekung.stevekungslib.utils.LangUtils;
 
 import net.minecraft.client.gui.widget.Widget;
@@ -12,18 +12,18 @@ import net.minecraft.util.text.TextFormatting;
 
 public class BooleanConfigOption extends ExtendedConfigOption
 {
-    private final Predicate<ExtendedConfig> getter;
-    private final BiConsumer<ExtendedConfig, Boolean> setter;
+    private final Predicate<SBExtendedConfig> getter;
+    private final BiConsumer<SBExtendedConfig, Boolean> setter;
     private boolean yesNo;
 
-    public BooleanConfigOption(String key, Predicate<ExtendedConfig> getter, BiConsumer<ExtendedConfig, Boolean> setter)
+    public BooleanConfigOption(String key, Predicate<SBExtendedConfig> getter, BiConsumer<SBExtendedConfig, Boolean> setter)
     {
         super(key);
         this.getter = getter;
         this.setter = setter;
     }
 
-    public BooleanConfigOption(String key, Predicate<ExtendedConfig> getter, BiConsumer<ExtendedConfig, Boolean> setter, boolean yesNo)
+    public BooleanConfigOption(String key, Predicate<SBExtendedConfig> getter, BiConsumer<SBExtendedConfig, Boolean> setter, boolean yesNo)
     {
         super(key);
         this.getter = getter;
@@ -49,17 +49,17 @@ public class BooleanConfigOption extends ExtendedConfigOption
     public void set()
     {
         this.set(!this.get());
-        ExtendedConfig.INSTANCE.save();
+        SBExtendedConfig.INSTANCE.save();
     }
 
     private void set(boolean value)
     {
-        this.setter.accept(ExtendedConfig.INSTANCE, value);
+        this.setter.accept(SBExtendedConfig.INSTANCE, value);
     }
 
     public boolean get()
     {
-        return this.getter.test(ExtendedConfig.INSTANCE);
+        return this.getter.test(SBExtendedConfig.INSTANCE);
     }
 
     public String getDisplayString()

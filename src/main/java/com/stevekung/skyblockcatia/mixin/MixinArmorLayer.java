@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.utils.DragonArmorRenderType;
-import com.stevekung.skyblockcatia.utils.DragonType;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
+import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -57,7 +57,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
     private void renderGlowingLayer(MatrixStack matrixStack, IRenderTypeBuffer buffer, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, EquipmentSlotType slot, int packedLight)
     {
-        if (!HypixelEventHandler.foundSkyBlockPack || !ExtendedConfig.INSTANCE.glowingDragonArmor)
+        if (!SkyBlockEventHandler.foundSkyBlockPack || !SBExtendedConfig.INSTANCE.glowingDragonArmor)
         {
             return;
         }
@@ -102,6 +102,6 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
     private ResourceLocation getArmorType(String id, boolean isLeg)
     {
         DragonType dragonType = DragonType.getDragonTypeById(id);
-        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/models/armor/" + HypixelEventHandler.skyBlockPackResolution + "/" + dragonType.getShortName() + "_layer_" + String.valueOf(isLeg ? 2 : 1) + ".png") : null;
+        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/models/armor/" + SkyBlockEventHandler.skyBlockPackResolution + "/" + dragonType.getShortName() + "_layer_" + String.valueOf(isLeg ? 2 : 1) + ".png") : null;
     }
 }

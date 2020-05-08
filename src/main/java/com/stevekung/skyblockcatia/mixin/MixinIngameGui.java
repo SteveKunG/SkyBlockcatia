@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.utils.SkyBlockRenderUtils;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 
 import net.minecraft.client.gui.IngameGui;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,9 +18,9 @@ public abstract class MixinIngameGui
     @Inject(method = "renderHotbarItem(IIFLnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V"))
     private void renderRarity(int x, int y, float partialTicks, PlayerEntity player, ItemStack itemStack, CallbackInfo info)
     {
-        if (ExtendedConfig.INSTANCE.showItemRarity)
+        if (SBExtendedConfig.INSTANCE.showItemRarity)
         {
-            SkyBlockRenderUtils.renderRarity(itemStack, x, y);
+            SBRenderUtils.renderRarity(itemStack, x, y);
         }
     }
 }
