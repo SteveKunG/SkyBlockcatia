@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.event.MainEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
@@ -81,6 +82,12 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Shadow
     protected Slot hoveredSlot;
 
+    @Shadow
+    protected abstract boolean func_195363_d(int keyCode, int scanCode);
+
+    @Shadow
+    protected abstract void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type);
+
     public MixinContainerScreen(T screenContainer, PlayerInventory inv, ITextComponent title)
     {
         super(title);
@@ -89,7 +96,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "init()V", at = @At("RETURN"))
     private void init(CallbackInfo info)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isAuctionBrowser())
             {
@@ -128,7 +135,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z", shift = Shift.AFTER))
     private void mouseClicked(double mouseX, double mouseY, int mouseButton, CallbackInfoReturnable<Boolean> info)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -155,7 +162,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "removed()V", at = @At("RETURN"))
     private void removed(CallbackInfo info)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui() || this.isAuctionBrowser())
             {
@@ -171,7 +178,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "tick()V", at = @At("RETURN"))
     private void tick(CallbackInfo info)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -188,7 +195,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "render(IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/Screen.render(IIF)V", shift = Shift.BEFORE))
     private void render(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -217,7 +224,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "keyPressed(III)Z", cancellable = true, at = @At("HEAD"))
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info)
     {
-        if (this.commandSuggestionHelper != null && this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
+        if (HypixelEventHandler.isSkyBlock && this.commandSuggestionHelper != null && this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
         {
             info.setReturnValue(true);
         }
@@ -228,7 +235,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
 
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.inputField != null && this.isChatableGui())
             {
@@ -241,7 +248,11 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 }
                 else
                 {
-                    if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+                    if (this.func_195363_d(keyCode, scanCode))
+                    {
+                        info.setReturnValue(true);
+                    }
+                    else if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
                     {
                         if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                         {
@@ -269,6 +280,15 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 info.setReturnValue(true);
                             }
                         }
+                        else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
+                        {
+                            this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
+                            info.setReturnValue(true);
+                        }
+                    }
+                    else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
+                    {
+                        info.setReturnValue(true);
                     }
                     else
                     {
@@ -322,6 +342,23 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 }
                 else
                 {
+                    if (this.func_195363_d(keyCode, scanCode))
+                    {
+                        info.setReturnValue(true);
+                    }
+                    else if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+                    {
+                        if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
+                        {
+                            this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
+                            info.setReturnValue(true);
+                        }
+                    }
+                    else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
+                    {
+                        info.setReturnValue(true);
+                    }
+
                     if (keyCode == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))
                     {
                         this.minecraft.player.closeScreen();
@@ -331,9 +368,48 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
             else
             {
+                if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+                {
+                    if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
+                    {
+                        SkyBlockRecipeViewer.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                        info.setReturnValue(true);
+                    }
+                    else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
+                    {
+                        ItemStack itemStack = this.hoveredSlot.getStack();
+
+                        if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
+                        {
+                            String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                            itemId = WordUtils.capitalize(itemId);
+                            this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
+
+                            this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(confirm ->
+                            {
+                                if (confirm)
+                                {
+                                    CommonUtils.openLink(this.fandomUrl);
+                                }
+                                this.minecraft.displayGuiScreen(this);
+                            }, this.fandomUrl, true));
+                            info.setReturnValue(true);
+                        }
+                    }
+                    else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
+                    {
+                        this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
+                        info.setReturnValue(true);
+                    }
+                }
+
                 if (keyCode == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))
                 {
                     this.minecraft.player.closeScreen();
+                    info.setReturnValue(true);
+                }
+                else if (this.func_195363_d(keyCode, scanCode))
+                {
                     info.setReturnValue(true);
                 }
             }
@@ -344,42 +420,45 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "handleMouseClick(Lnet/minecraft/inventory/container/Slot;IILnet/minecraft/inventory/container/ClickType;)V", cancellable = true, at = @At("HEAD"))
     private void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo info)
     {
-        if (slotId != -999 && slotId != -1)
+        if (HypixelEventHandler.isSkyBlock)
         {
-            ItemStack itemStack = this.that.getContainer().getSlot(slotId).getStack();
-
-            if (!itemStack.isEmpty())
+            if (slotId != -999 && slotId != -1)
             {
-                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                ItemStack itemStack = this.that.getContainer().getSlot(slotId).getStack();
+
+                if (!itemStack.isEmpty())
                 {
-                    info.cancel();
+                    if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                    {
+                        info.cancel();
+                    }
                 }
             }
-        }
-        if (this.that instanceof ChestScreen)
-        {
-            if (slot != null && mouseButton == 2 && type == ClickType.CLONE && this.canViewSeller())
+            if (this.that instanceof ChestScreen)
             {
-                if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
+                if (slot != null && mouseButton == 2 && type == ClickType.CLONE && this.canViewSeller())
                 {
-                    CompoundNBT compound = slot.getStack().getTag().getCompound("display");
-
-                    if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
+                    if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
                     {
-                        ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
+                        CompoundNBT compound = slot.getStack().getTag().getCompound("display");
 
-                        for (int j1 = 0; j1 < list.size(); ++j1)
+                        if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
                         {
-                            String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
+                            ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
 
-                            if (lore.startsWith("Seller: "))
+                            for (int j1 = 0; j1 < list.size(); ++j1)
                             {
-                                this.minecraft.player.sendChatMessage("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
+                                String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
+
+                                if (lore.startsWith("Seller: "))
+                                {
+                                    this.minecraft.player.sendChatMessage("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
+                                }
                             }
                         }
                     }
+                    info.cancel();
                 }
-                info.cancel();
             }
         }
     }
@@ -403,7 +482,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
     private void renderBids(Slot slot, CallbackInfo info)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isRenderBids())
             {
@@ -417,7 +496,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         super.resize(mc, width, height);
 
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -434,7 +513,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         super.insertText(newText, shouldOverwrite);
 
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
@@ -453,7 +532,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta)
     {
-        if (this.that instanceof ChestScreen)
+        if (HypixelEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (scrollDelta > 1.0D)
             {
