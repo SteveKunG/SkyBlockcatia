@@ -9,6 +9,7 @@ buildscript {
         classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
     }
 }
 
@@ -20,6 +21,7 @@ def mcVersion = project.mc_version
 def username = project.username
 def password = project.password
 
+apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "net.minecraftforge.gradle"
 apply plugin: "org.spongepowered.mixin"
 apply plugin: "eclipse"
@@ -45,9 +47,15 @@ minecraft {
 }
 
 configurations {
-    provided {
-        compile.extendsFrom(provided)
-    }
+    embed
+    compile.extendsFrom(embed)
+}
+
+shadowJar {
+    configurations = [project.configurations.embed]
+    baseName = "SkyBlockcatia-" + mcVersion
+    classifier = ""
+    relocate "org.apache.commons.text", "com.stevekung.skyblockcatia.relocate.org.apache.commons.text"
 }
 
 dependencies {
@@ -55,8 +63,8 @@ dependencies {
     compile "org.spongepowered:mixin:0.8.1-SNAPSHOT"
     compile files("libs/SteveKunG's-Lib-1.15.2-3.0.4-deobf.jar")
     compile files("libs/Indicatia-1.15.2-3.0.3-deobf.jar")
-    provided("org.apache.commons:commons-text:1.8") {
-        exclude group: 'org.apache.commons', module: 'commons-lang3'
+    embed("org.apache.commons:commons-text:1.8") {
+        exclude group: "org.apache.commons", module: "commons-lang3"
     }
 }
 
@@ -65,7 +73,10 @@ repositories {
         url "https://plugins.gradle.org/m2/"
     }
     maven {
-        url "http://repo.spongepowered.org/maven/"
+        url "https://repo.spongepowered.org/maven/"
+    }
+    maven {
+        url "https://jitpack.io"
     }
 }
 
@@ -75,10 +86,14 @@ sourceSets {
     }
 }
 
-jar {
-    from(configurations.provided.collect { it.isDirectory() ? it : zipTree(it) }) {
-        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
+reobf {
+    shadowJar {
+        dependsOn tasks.createMcpToSrg
+        mappings = tasks.createMcpToSrg.outputs.files.singleFile
     }
+}
+
+jar {
     manifest {
         attributes("MixinConnector": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConnector"
         )
@@ -88,12 +103,18 @@ jar {
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
+    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
+    }
     baseName = "SkyBlockcatia-" + mcVersion
     classifier = "sources"
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
+    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
+    }
     manifest {
         attributes("MixinConnector": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConnector"
         )
