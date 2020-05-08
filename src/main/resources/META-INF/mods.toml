@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[31,)"
+updateJSONURL="https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json"
+issueTrackerURL="https://github.com/SteveKunG/SkyBlockcatia/issues"
+
+[[mods]]
+modId="skyblockcatia"
+version="2.0.0"
+displayName="SkyBlockcatia"
+description="SkyBlock API and helper!"
+displayURL="https://minecraft.curseforge.com/projects/skyblockcatia"
+logoFile=""
+authors="SteveKunG"
+
+[[dependencies.skyblockcatia]]
+    modId="forge"
+    mandatory=true
+    versionRange="[31,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.skyblockcatia]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.15.2]"
+    ordering="NONE"
+    side="CLIENT"

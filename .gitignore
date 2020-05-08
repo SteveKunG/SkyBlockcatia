@@ -1,0 +1,15 @@
+# folder
+.gradle
+.settings
+bin
+build
+libs
+eclipse
+run
+
+# file
+!gradlew.bat
+*.bat
+*.launch
+.classpath
+.project

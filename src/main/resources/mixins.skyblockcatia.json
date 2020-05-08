@@ -1,0 +1,34 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "compatibilityLevel": "JAVA_8",
+    "package": "com.stevekung.skyblockcatia.mixin",
+    "refmap": "mixins.skyblockcatia.refmap.json",
+    "target": "@env(DEFAULT)",
+    "mixins": [],
+    "client": [
+        "MixinArmorLayer",
+        "MixinBossOverlayGui",
+        "MixinChatScreen",
+        "MixinClientPlayerEntity",
+        "MixinContainerScreen",
+        "MixinDownloadingTexture",
+        "MixinEditSignScreen",
+        "MixinFarmlandBlock",
+        "MixinFishingRodItem",
+        "MixinFontRenderer",
+        "MixinGameRenderer",
+        "MixinIngameGui",
+        "MixinItem",
+        "MixinMinecraft",
+        "MixinNetworkPlayerInfo",
+        "MixinParticleManager",
+        "MixinPlayerController",
+        "MixinPlayerRenderer",
+        "MixinPlayerTabOverlayGui",
+        "MixinSimpleReloadableResourceManager"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

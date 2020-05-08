@@ -1,0 +1,140 @@
+buildscript {
+    repositories {
+        maven { url "https://files.minecraftforge.net/maven" }
+        maven { url "https://repo.spongepowered.org/maven" }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
+    }
+}
+
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+}
+
+def mcVersion = project.mc_version
+def username = project.username
+def password = project.password
+
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "org.spongepowered.mixin"
+apply plugin: "eclipse"
+
+import net.minecraftforge.gradle.common.task.SignJar
+
+version = project.version
+group = "com.stevekung.skyblockcatia"
+archivesBaseName = "SkyBlockcatia"
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = 1.8
+
+minecraft {
+    mappings channel: "snapshot", version: "${mcp_mapping}"
+    accessTransformer file("src/main/resources/META-INF/accesstransformer.cfg")
+
+    runs {
+        client {
+            workingDirectory project.file("run")
+            source sourceSets.main
+            args "--mixin", "mixins.skyblockcatia.json", "--username", username, "--password", password
+        }
+    }
+}
+
+configurations {
+    provided {
+        compile.extendsFrom(provided)
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${forge_version}"
+    compile "org.spongepowered:mixin:0.8.1-SNAPSHOT"
+    compile files("libs/SteveKunG's-Lib-1.15.2-3.0.4-deobf.jar")
+    compile files("libs/Indicatia-1.15.2-3.0.3-deobf.jar")
+    provided("org.apache.commons:commons-text:1.8") {
+        exclude group: 'org.apache.commons', module: 'commons-lang3'
+    }
+}
+
+repositories {
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        url "http://repo.spongepowered.org/maven/"
+    }
+}
+
+sourceSets {
+    main {
+        ext.refMap = "mixins.skyblockcatia.refmap.json"
+    }
+}
+
+jar {
+    from(configurations.provided.collect { it.isDirectory() ? it : zipTree(it) }) {
+        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
+    }
+    manifest {
+        attributes("MixinConnector": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConnector"
+        )
+    }
+    baseName = "SkyBlockcatia-" + mcVersion
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    baseName = "SkyBlockcatia-" + mcVersion
+    classifier = "sources"
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    manifest {
+        attributes("MixinConnector": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConnector"
+        )
+    }
+    baseName = "SkyBlockcatia-" + mcVersion
+    classifier = "deobf"
+}
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+}
+
+curseforge {
+    apiKey = project.stevekungs_lib_api
+    project {
+        id = "296019"
+        changelog = file("CHANGE_LOG.md")
+        changelogType = "markdown"
+        releaseType = "release"
+        addGameVersion mcVersion
+
+        mainArtifact(jar) {
+            displayName = "SkyBlockcatia-" + mcVersion + "-" + version
+            relations {
+                requiredLibrary "mixinbootstrap"
+            }
+        }
+        addArtifact sourcesJar
+        addArtifact deobfJar
+    }
+}
+
+task signJar(type: SignJar, dependsOn: jar) {
+    keyStore = project.keystore_path
+    alias = project.alias
+    storePass = project.keystore_pass
+    keyPass = project.keystore_pass
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar
+tasks.curseforge.dependsOn(build)
