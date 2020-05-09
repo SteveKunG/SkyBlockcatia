@@ -1,4 +1,9 @@
-package com.stevekung.skyblockcatia.renderer.entity.layers;
+package com.stevekung.skyblockcatia.mixin;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -9,6 +14,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.GenericHeadModel;
@@ -24,17 +30,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class LayerGlowingTexture<T extends LivingEntity, M extends EntityModel<T> & IHasHead> extends LayerRenderer<T, M>
+@Mixin(HeadLayer.class)
+public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityModel<T> & IHasHead> extends LayerRenderer<T, M>
 {
     private final GenericHeadModel head = new HumanoidHeadModel();
 
-    public LayerGlowingTexture(IEntityRenderer<T, M> renderer)
+    public MixinHeadLayer(IEntityRenderer<T, M> renderer)
     {
         super(renderer);
     }
 
-    @Override
-    public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
+    @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("RETURN"))
+    private void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info)
     {
         if (!SBExtendedConfig.INSTANCE.glowingDragonArmor)
         {

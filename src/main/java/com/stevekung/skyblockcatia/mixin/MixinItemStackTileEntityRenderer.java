@@ -1,0 +1,63 @@
+package com.stevekung.skyblockcatia.mixin;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
+import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.model.GenericHeadModel;
+import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+@Mixin(ItemStackTileEntityRenderer.class)
+public abstract class MixinItemStackTileEntityRenderer
+{
+    private final GenericHeadModel head = new HumanoidHeadModel();
+
+    @Inject(method = "render(Lnet/minecraft/item/ItemStack;Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;II)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/SkullTileEntityRenderer.render(Lnet/minecraft/util/Direction;FLnet/minecraft/block/SkullBlock$ISkullType;Lcom/mojang/authlib/GameProfile;FLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;I)V", shift = Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void renderDragonOverlay(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, CallbackInfo info, Item item, Block block, GameProfile gameprofile)
+    {
+        matrixStack.push();
+        matrixStack.translate(-0.5D, 0.0D, -0.5D);
+
+        if (!itemStack.hasTag())
+        {
+            return;
+        }
+
+        ResourceLocation location = this.getDragonEyeTexture(itemStack.getTag().getCompound("ExtraAttributes").getString("id"));
+
+        if (location != null)
+        {
+            matrixStack.push();
+            matrixStack.translate(1.0D, 0.0D, 1.0D);
+            matrixStack.scale(-1.001F, -1.0F, 1.001F);
+
+            IVertexBuilder ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(location));
+            this.head.func_225603_a_(0.0F, 180.0F, 0.0F);
+            this.head.render(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            matrixStack.pop();
+        }
+        matrixStack.pop();
+    }
+
+    private ResourceLocation getDragonEyeTexture(String id)
+    {
+        DragonType dragonType = DragonType.getDragonTypeById(id);
+        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/entity/" + (dragonType.isWhiteEye() ? "white_eye" : dragonType.getShortName()) + ".png") : null;
+    }
+}
