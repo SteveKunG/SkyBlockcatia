@@ -128,6 +128,8 @@ jungle_axe_cooldown_color.extended_config=Jungle Axe Cooldown Color
 grappling_hook_cooldown_color.extended_config=Grappling Hook Cooldown Color
 zealot_respawn_cooldown_color.extended_config=Zealot Respawn Cooldown Color
 placed_summoning_eye_color.extended_config=Placed Summoning Eye Tracker Color
+golem_stage_color.extended_config=Golem Stage Tracker Color
+
 fps_value_color.extended_config=FPS Value Color
 fps_26_and_40_color.extended_config=FPS 26 & 40 Color
 fps_low_25_color.extended_config=FPS < 25 Color
@@ -145,6 +147,8 @@ game_time_value_color.extended_config=Game Time Value Color
 game_weather_value_color.extended_config=Game Weather Value Color
 moon_phase_value_color.extended_config=Moon Phase Value Color
 placed_summoning_eye_value_color.extended_config=Placed Summoning Eye Tracker Value Color
+golem_stage_value_color.extended_config=Golem Stage Tracker Value Color
+
 right_click_add_party.extended_config=Right Click to Add Party
 add_party_visit_island.extended_config=Add Party when people visit island
 jungle_axe_cooldown.extended_config=Jungle Axe Cooldown
@@ -169,6 +173,7 @@ auction_bid_confirm.extended_config=Auction Bid Confirmation
 auction_bid_confirm_value.extended_config=Auction Bid Confirm Value
 disable_block_particles.extended_config=Disable Block Particles
 supporters_fancy_color.extended_config=Fancy Color for Supporters
+golem_stage_tracker.extended_config=Golem Stage Tracker
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

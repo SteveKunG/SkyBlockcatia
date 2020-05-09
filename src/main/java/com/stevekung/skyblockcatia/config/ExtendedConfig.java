@@ -90,6 +90,7 @@ public class ExtendedConfig
     public String grapplingHookCooldownColor = defaultWhite;
     public String zealotRespawnCooldownColor = defaultWhite;
     public String placedSummoningEyeColor = defaultWhite;
+    public String golemStageColor = defaultWhite;
 
     // Custom Color : Value
     public String fpsValueColor = "85,255,85";
@@ -109,6 +110,7 @@ public class ExtendedConfig
     public String gameWeatherValueColor = defaultWhite;
     public String moonPhaseValueColor = defaultWhite;
     public String placedSummoningEyeValueColor = defaultWhite;
+    public String golemStageValueColor = defaultWhite;
 
     // Misc
     public String toggleSprintUseMode = "command";
@@ -140,6 +142,7 @@ public class ExtendedConfig
     public boolean lobbyPlayerViewer = false;
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
+    public boolean golemStageTracker = false;
     public int itemRarityOpacity = 75;
     public int auctionBidConfirmValue = 500000;
     public boolean supportersFancyColor = false;
@@ -228,6 +231,7 @@ public class ExtendedConfig
             this.grapplingHookCooldownColor = ExtendedConfig.getString(nbt, "GrapplingHookCooldownColor", this.grapplingHookCooldownColor);
             this.zealotRespawnCooldownColor = ExtendedConfig.getString(nbt, "ZealotRespawnCooldownColor", this.zealotRespawnCooldownColor);
             this.placedSummoningEyeColor = ExtendedConfig.getString(nbt, "PlacedSummoningEyeColor", this.placedSummoningEyeColor);
+            this.golemStageColor = ExtendedConfig.getString(nbt, "GolemStageColor", this.golemStageColor);
 
             // Custom Color : Value
             this.fpsValueColor = ExtendedConfig.getString(nbt, "FPSValueColor", this.fpsValueColor);
@@ -247,6 +251,7 @@ public class ExtendedConfig
             this.gameWeatherValueColor = ExtendedConfig.getString(nbt, "GameWeatherValueColor", this.gameWeatherValueColor);
             this.moonPhaseValueColor = ExtendedConfig.getString(nbt, "MoonPhaseValueColor", this.moonPhaseValueColor);
             this.placedSummoningEyeValueColor = ExtendedConfig.getString(nbt, "PlacedSummoningEyeValueColor", this.placedSummoningEyeValueColor);
+            this.golemStageValueColor = ExtendedConfig.getString(nbt, "GolemStageValueColor", this.golemStageValueColor);
 
             // Misc
             this.toggleSprintUseMode = ExtendedConfig.getString(nbt, "ToggleSprintUseMode", this.toggleSprintUseMode);
@@ -275,6 +280,7 @@ public class ExtendedConfig
             this.auctionBidConfirm = ExtendedConfig.getBoolean(nbt, "AuctionBidConfirm", this.auctionBidConfirm);
             this.disableBlockParticles = ExtendedConfig.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = ExtendedConfig.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
+            this.golemStageTracker = ExtendedConfig.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -357,6 +363,7 @@ public class ExtendedConfig
             nbt.setString("GrapplingHookCooldownColor", this.grapplingHookCooldownColor);
             nbt.setString("ZealotRespawnCooldownColor", this.zealotRespawnCooldownColor);
             nbt.setString("PlacedSummoningEyeColor", this.placedSummoningEyeColor);
+            nbt.setString("GolemStageColor", this.golemStageColor);
 
             // Custom Color : Value
             nbt.setString("FPSValueColor", this.fpsValueColor);
@@ -376,6 +383,7 @@ public class ExtendedConfig
             nbt.setString("GameWeatherValueColor", this.gameWeatherValueColor);
             nbt.setString("MoonPhaseValueColor", this.moonPhaseValueColor);
             nbt.setString("PlacedSummoningEyeValueColor", this.placedSummoningEyeValueColor);
+            nbt.setString("GolemStageValueColor", this.golemStageValueColor);
 
             // Misc
             nbt.setString("ToggleSprintUseMode", this.toggleSprintUseMode);
@@ -398,6 +406,7 @@ public class ExtendedConfig
             nbt.setBoolean("LobbyPlayerViewer", this.lobbyPlayerViewer);
             nbt.setBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
+            nbt.setBoolean("GolemStageTracker", this.golemStageTracker);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
@@ -728,6 +737,10 @@ public class ExtendedConfig
         {
             this.supportersFancyColor = !this.supportersFancyColor;
         }
+        else if (options == ExtendedConfig.Options.GOLEM_STAGE_TRACKER)
+        {
+            this.golemStageTracker = !this.golemStageTracker;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -837,6 +850,10 @@ public class ExtendedConfig
         {
             this.placedSummoningEyeColor = value;
         }
+        else if (options == ExtendedConfig.Options.GOLEM_STAGE_COLOR)
+        {
+            this.golemStageColor = value;
+        }
 
         else if (options == ExtendedConfig.Options.FPS_VALUE_COLOR)
         {
@@ -905,6 +922,10 @@ public class ExtendedConfig
         else if (options == ExtendedConfig.Options.PLACED_SUMMONING_EYE_VALUE_COLOR)
         {
             this.placedSummoningEyeValueColor = value;
+        }
+        else if (options == ExtendedConfig.Options.GOLEM_STAGE_VALUE_COLOR)
+        {
+            this.golemStageValueColor = value;
         }
     }
 
@@ -1019,6 +1040,8 @@ public class ExtendedConfig
             return this.disableBlockParticles;
         case SUPPORTERS_FANCY_COLOR:
             return this.supportersFancyColor;
+        case GOLEM_STAGE_TRACKER:
+            return this.golemStageTracker;
         default:
             return false;
         }
@@ -1064,6 +1087,8 @@ public class ExtendedConfig
             return this.zealotRespawnCooldownColor;
         case PLACED_SUMMONING_EYE_COLOR:
             return this.placedSummoningEyeColor;
+        case GOLEM_STAGE_COLOR:
+            return this.golemStageColor;
 
         case FPS_VALUE_COLOR:
             return this.fpsValueColor;
@@ -1099,6 +1124,8 @@ public class ExtendedConfig
             return this.moonPhaseValueColor;
         case PLACED_SUMMONING_EYE_VALUE_COLOR:
             return this.placedSummoningEyeValueColor;
+        case GOLEM_STAGE_VALUE_COLOR:
+            return this.golemStageValueColor;
         default:
             return "";
         }
@@ -1171,6 +1198,7 @@ public class ExtendedConfig
         GRAPPLING_HOOK_COOLDOWN_COLOR(false, false, true),
         ZEALOT_RESPAWN_COOLDOWN_COLOR(false, false, true),
         PLACED_SUMMONING_EYE_COLOR(false, false, true),
+        GOLEM_STAGE_COLOR(false, false, true),
 
         FPS_VALUE_COLOR(false, false, true),
         FPS_26_AND_40_COLOR(false, false, true),
@@ -1189,6 +1217,7 @@ public class ExtendedConfig
         GAME_WEATHER_VALUE_COLOR(false, false, true),
         MOON_PHASE_VALUE_COLOR(false, false, true),
         PLACED_SUMMONING_EYE_VALUE_COLOR(false, false, true),
+        GOLEM_STAGE_VALUE_COLOR(false, false, true),
 
         RIGHT_CLICK_ADD_PARTY(false, true),
         ADD_PARTY_VISIT_ISLAND(false, true),
@@ -1207,6 +1236,7 @@ public class ExtendedConfig
         AUCTION_BID_CONFIRM(false, true),
         DISABLE_BLOCK_PARTICLES(false, true),
         SUPPORTERS_FANCY_COLOR(false, true),
+        GOLEM_STAGE_TRACKER(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

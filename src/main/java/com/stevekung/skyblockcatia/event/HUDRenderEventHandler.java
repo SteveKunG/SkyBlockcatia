@@ -241,6 +241,22 @@ public class HUDRenderEventHandler
                     rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
                 }
 
+                if (ExtendedConfig.instance.golemStageTracker && HypixelEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
+                {
+                    int golemStage = 0;
+
+                    for (int headPos = 1; headPos < 5; headPos++)
+                    {
+                        if (this.mc.theWorld.getBlockState(new BlockPos(-689, 5 + headPos, -273)).getBlock() == Blocks.skull)
+                        {
+                            golemStage = headPos + 1;
+                        }
+                    }
+
+                    String color = ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageValueColor).toColoredFont();
+                    rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
+                }
+
                 // equipments
                 if (!this.mc.thePlayer.isSpectator() && ExtendedConfig.instance.equipmentHUD)
                 {
