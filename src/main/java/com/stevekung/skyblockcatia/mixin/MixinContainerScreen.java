@@ -353,6 +353,32 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                             this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
                             info.setReturnValue(true);
                         }
+                        else if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
+                        {
+                            MixinContainerScreen.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                            info.setReturnValue(true);
+                        }
+                        else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
+                        {
+                            ItemStack itemStack = this.hoveredSlot.getStack();
+
+                            if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
+                            {
+                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                                itemId = WordUtils.capitalize(itemId);
+                                this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
+
+                                this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(confirm ->
+                                {
+                                    if (confirm)
+                                    {
+                                        CommonUtils.openLink(this.fandomUrl);
+                                    }
+                                    this.minecraft.displayGuiScreen(this);
+                                }, this.fandomUrl, true));
+                                info.setReturnValue(true);
+                            }
+                        }
                     }
                     else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
                     {
