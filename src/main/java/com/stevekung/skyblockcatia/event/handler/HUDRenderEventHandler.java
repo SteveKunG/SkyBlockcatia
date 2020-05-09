@@ -151,7 +151,7 @@ public class HUDRenderEventHandler
                 List<String> leftInfo = new LinkedList<>();
                 List<String> rightInfo = new LinkedList<>();
 
-                if (ExtendedConfig.INSTANCE.placedSummoningEyeTracker && HypixelEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
+                if (SBExtendedConfig.INSTANCE.placedSummoningEyeTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
                 {
                     int summoningEyeCount = 0;
 
@@ -162,8 +162,22 @@ public class HUDRenderEventHandler
                             ++summoningEyeCount;
                         }
                     }
-                    String color = ColorUtils.stringToRGB(ExtendedConfig.INSTANCE.placedSummoningEyeValueColor).toColoredFont();
-                    rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.INSTANCE.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
+                    String color = ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.placedSummoningEyeValueColor).toColoredFont();
+                    rightInfo.add(ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
+                }
+                if (SBExtendedConfig.INSTANCE.golemStageTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
+                {
+                    int golemStage = 0;
+
+                    for (int headPos = 1; headPos < 5; headPos++)
+                    {
+                        if (this.mc.world.getBlockState(new BlockPos(-689, 5 + headPos, -273)).getBlock() == Blocks.PLAYER_HEAD)
+                        {
+                            golemStage = headPos + 1;
+                        }
+                    }
+                    String color = ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.golemStageValueColor).toColoredFont();
+                    rightInfo.add(ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
                 }
             }*/
         }

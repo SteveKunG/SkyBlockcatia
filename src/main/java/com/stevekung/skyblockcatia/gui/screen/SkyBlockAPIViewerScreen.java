@@ -46,6 +46,7 @@ import com.stevekung.stevekungslib.utils.client.RenderUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -142,11 +143,11 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final Multimap<String, Integer> craftedMinions = HashMultimap.create();
     private int craftedMinionCount;
     private int currentMinionSlot;
-    private SkyBlockSkillInfo carpentrySkill;
     private int slayerTotalAmountSpent;
     private int totalSlayerXp;
     private SBFakePlayerEntity player;
     private String skillAvg;
+    private int petScore;
 
     // Info & Inventory
     private static final int SIZE = 36;
@@ -168,10 +169,11 @@ public class SkyBlockAPIViewerScreen extends Screen
     private int combatLevel;
     private int enchantingLevel;
     private int alchemyLevel;
+    private int tamingLevel;
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
-    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 20, 50, 100);
+    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 20, 50, 100, 20, 10, 0);
 
     // GuiContainer fields
     private int xSize;
@@ -256,7 +258,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.setCurrentGroup(SBInventoryGroup.GROUPS[i]);
         this.guiLeft = (this.width - this.xSize) / 2 + 50;
         this.guiTop = (this.height - this.ySize) / 2 + 10;
-        this.children.add(this.currentSlot);
     }
 
     @Override
@@ -314,6 +315,26 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Override
+    public IGuiEventListener getFocused()
+    {
+        if (this.currentSlot != null)
+        {
+            return this.currentSlot;
+        }
+        return super.getFocused();
+    }
+
+    @Override
+    public Optional<IGuiEventListener> getEventListenerForPos(double mouseX, double mouseY)
+    {
+        if (this.currentSlot != null && this.currentSlot.isMouseOver(mouseX, mouseY))
+        {
+            return Optional.of(this.currentSlot);
+        }
+        return super.getEventListenerForPos(mouseX, mouseY);
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int state)
     {
         if (this.loadingApi)
@@ -340,6 +361,14 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.isScrolling = this.needsScrollBars();
                     return true;
                 }
+            }
+            if (this.currentSlot != null && this.currentSlot.mouseClicked(mouseX, mouseY, state))
+            {
+                if (state == 0)
+                {
+                    this.setDragging(true);
+                }
+                return true;
             }
         }
         return super.mouseClicked(mouseX, mouseY, state);
@@ -511,7 +540,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                         for (SkyBlockSkillInfo info : this.skillLeftList)
                         {
                             int x = this.width / 2 - 120;
-                            int y = height + 16;
+                            int y = height + 12;
                             int barY = y + 20 + height * i;
                             int textY = y + height * i;
                             this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
@@ -523,20 +552,17 @@ public class SkyBlockAPIViewerScreen extends Screen
                         for (SkyBlockSkillInfo info : this.skillRightList)
                         {
                             int x = this.width / 2 + 30;
-                            int y = height + 16;
+                            int y = height + 12;
                             int barY = y + 20 + height * i;
                             int textY = y + height * i;
                             this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
                             ++i;
                         }
-                        int x = this.width / 2 - 46;
-                        int y = this.height - 35 - this.height / 7;
-                        this.renderSkillBar(this.carpentrySkill.getName(), x, y + 28, x + 46, y + 8, this.carpentrySkill.getCurrentXp(), this.carpentrySkill.getXpRequired(), this.carpentrySkill.getCurrentLvl(), this.carpentrySkill.isReachLimit());
 
                         if (this.skillAvg != null)
                         {
-                            String avg = "Average Skill: " + this.skillAvg;
-                            this.drawString(this.font, avg, this.width - this.font.getStringWidth(avg) - 63, this.height - 42, 16777215);
+                            String avg = "AVG: " + this.skillAvg;
+                            this.drawString(ClientUtils.unicodeFontRenderer, avg, this.width - ClientUtils.unicodeFontRenderer.getStringWidth(avg) - 60, this.height - 38, 16777215);
                         }
                     }
                 }
@@ -1082,7 +1108,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 this.getItemStats(this.inventoryToStats, false);
                 this.getItemStats(this.armorItems, true);
                 this.applyBonuses();
-                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0));
+                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0));
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID);
                 break;
             }
@@ -1475,6 +1501,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         JsonArray pets = petsObj.getAsJsonArray();
+        int commonScore = 0;
+        int uncommonScore = 0;
+        int rareScore = 0;
+        int epicScore = 0;
+        int legendaryScore = 0;
 
         if (pets.size() > 0)
         {
@@ -1510,6 +1541,27 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + petRarity + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     petData.add(new PetData(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
+
+                    switch (tier)
+                    {
+                    case COMMON:
+                        commonScore += 1;
+                        break;
+                    case UNCOMMON:
+                        uncommonScore += 2;
+                        break;
+                    case RARE:
+                        rareScore += 3;
+                        break;
+                    case EPIC:
+                        epicScore += 4;
+                        break;
+                    case LEGENDARY:
+                        legendaryScore += 5;
+                        break;
+                    default:
+                        break;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1527,6 +1579,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 SKYBLOCK_INV.add(new SkyBlockInventory(data.getItemStack(), SBInventoryGroup.PET));
             }
         }
+        this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
     private PetLevel checkPetLevel(float petExp, SBPets.Tier tier)
@@ -1593,6 +1646,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.allStat.addSpeed(20);
         }
+        if (this.checkSkyBlockItem(this.armorItems, "ANGLER_") == 4)
+        {
+            this.allStat.addSeaCreatureChance(4);
+        }
         if (this.checkSkyBlockItem(this.armorItems, "SUPERIOR_DRAGON_") == 4)
         {
             this.allStat.setHealth((int)Math.round(this.allStat.getHealth() * 1.05D));
@@ -1602,6 +1659,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.allStat.setCritChance((int)Math.round(this.allStat.getCritChance() * 1.05D));
             this.allStat.setCritDamage((int)Math.round(this.allStat.getCritDamage() * 1.05D));
             this.allStat.setIntelligence((int)Math.round(this.allStat.getIntelligence() * 1.05D));
+            this.allStat.setSeaCreatureChance((int)Math.round(this.allStat.getSeaCreatureChance() * 1.05D));
+            this.allStat.setMagicFind((int)Math.round(this.allStat.getMagicFind() * 1.05D));
         }
         if (this.checkSkyBlockItem(this.armorItems, "FAIRY_") == 4)
         {
@@ -1619,6 +1678,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         this.allStat.add(this.getFairySouls(this.totalFairySouls));
+        this.allStat.add(this.getMagicFindFromPets(this.petScore));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FARMING, this.farmingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FORAGING, this.foragingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.MINING, this.miningLevel));
@@ -1626,6 +1686,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.COMBAT, this.combatLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ENCHANTING, this.enchantingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ALCHEMY, this.alchemyLevel));
+        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.TAMING, this.tamingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ZOMBIE_SLAYER, this.zombieSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.SPIDER_SLAYER, this.spiderSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.WOLF_SLAYER, this.wolfSlayerLevel));
@@ -1641,6 +1702,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         int critChanceTemp = 0;
         int critDamageTemp = 0;
         int intelligenceTemp = 0;
+        int seaCreatureChanceTemp = 0;
+        int magicFindTemp = 0;
+        int petLuckTemp = 0;
 
         for (int i = 0; i < bonus.length; ++i)
         {
@@ -1671,6 +1735,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int critChance = bonus[i].getCritChance();
                 int critDamage = bonus[i].getCritDamage();
                 int intelligence = bonus[i].getIntelligence();
+                int seaCreatureChance = bonus[i].getSeaCreatureChance();
+                int magicFind = bonus[i].getMagicFind();
+                int petLuck = bonus[i].getPetLuck();
 
                 for (int level = levelToCheck; level <= skillLevel; level++)
                 {
@@ -1686,10 +1753,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                     critChanceTemp += critChance;
                     critDamageTemp += critDamage;
                     intelligenceTemp += intelligence;
+                    seaCreatureChanceTemp += seaCreatureChance;
+                    magicFindTemp += magicFind;
+                    petLuckTemp += petLuck;
                 }
             }
         }
-        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, intelligenceTemp);
+        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp);
     }
 
     private void getHealthFromCake(CompoundNBT extraAttrib)
@@ -1737,6 +1807,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         int critChanceTemp = 0;
         int critDamageTemp = 0;
         int intelligenceTemp = 0;
+        int seaCreatureChanceTemp = 0;
+        int magicFindTemp = 0;
+        int petLuckTemp = 0;
 
         for (ItemStack itemStack : inventory)
         {
@@ -1752,7 +1825,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
                 else if (itemId.equals("SPEED_TALISMAN"))
                 {
-                    this.allStat.addSpeed(3);
+                    this.allStat.addSpeed(1);
                 }
                 else if (itemId.equals("NEW_YEAR_CAKE_BAG"))
                 {
@@ -1812,13 +1885,22 @@ public class SkyBlockAPIViewerScreen extends Screen
                             case "Intelligence":
                                 intelligenceTemp += valueInt;
                                 break;
+                            case "Sea Creature Chance":
+                                seaCreatureChanceTemp += valueInt;
+                                break;
+                            case "Magic Find":
+                                magicFindTemp += valueInt;
+                                break;
+                            case "Pet Luck":
+                                petLuckTemp += valueInt;
+                                break;
                             }
                         }
                     }
                 }
             }
         }
-        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, intelligenceTemp));
+        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp));
     }
 
     private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid)
@@ -1858,7 +1940,18 @@ public class SkyBlockAPIViewerScreen extends Screen
         String critDamage = ColorUtils.stringToRGB("70,90,201").toColoredFont();
         String intelligence = ColorUtils.stringToRGB("129,212,250").toColoredFont();
         String fairySoulsColor = ColorUtils.stringToRGB("203,54,202").toColoredFont();
+        String seaCreatureChance = ColorUtils.stringToRGB("0,170,170").toColoredFont();
+        String magicFind = ColorUtils.stringToRGB("85,255,255").toColoredFont();
+        String petLuck = ColorUtils.stringToRGB("255,85,255").toColoredFont();
+        String location = this.getLocation(objStatus, uuid);
 
+        if (!StringUtils.isNullOrEmpty(location))
+        {
+            this.infoList.add(new SkyBlockInfo("\u23E3 Current Location", location));
+        }
+
+        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
+        this.infoList.add(new SkyBlockInfo("", ""));
         this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + this.allStat.getHealth()));
         this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + this.allStat.getEffectiveHealth()));
         this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + this.allStat.getDefense()));
@@ -1868,17 +1961,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + this.allStat.getCritChance()));
         this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + this.allStat.getCritDamage()));
         this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + this.allStat.getIntelligence()));
+        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + this.allStat.getSeaCreatureChance()));
+        this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + this.allStat.getMagicFind()));
+        this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + this.allStat.getPetLuck()));
 
         this.infoList.add(new SkyBlockInfo("", ""));
-
-        String location = this.getLocation(objStatus, uuid);
-
-        if (!StringUtils.isNullOrEmpty(location))
-        {
-            this.infoList.add(new SkyBlockInfo("\u23E3 Current Location", location));
-        }
-
-        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
@@ -1927,7 +2014,24 @@ public class SkyBlockAPIViewerScreen extends Screen
                 speedBase += speed;
             }
         }
-        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0);
+        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0, 0, 0, 0);
+    }
+
+    private BonusStatTemplate getMagicFindFromPets(int petsScore)
+    {
+        int magicFindBase = 0;
+
+        for (PlayerStatsBonus.PetsScore score : PlayerStatsBonus.PETS_SCORE)
+        {
+            int scoreToCheck = score.getScore();
+            int magicFind = score.getMagicFind();
+
+            if (scoreToCheck <= petsScore)
+            {
+                magicFindBase = magicFind;
+            }
+        }
+        return new BonusStatTemplate(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, magicFindBase, 0);
     }
 
     private String replaceStatsString(String statName, String replace)
@@ -1942,20 +2046,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SkillType.FORAGING));
         this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SkillType.MINING));
         this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SkillType.FISHING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SkillType.RUNECRAFTING, ExpProgress.RUNECRAFTING));
 
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SkillType.COMBAT));
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SkillType.ENCHANTING));
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_alchemy"), SkillType.ALCHEMY));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SkillType.RUNECRAFTING, ExpProgress.RUNECRAFTING));
-
-        this.carpentrySkill = this.checkSkill(currentProfile.get("experience_skill_carpentry"), SkillType.CARPENTRY);
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SkillType.TAMING));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SkillType.CARPENTRY));
 
         float avg = 0;
         int count = 0;
         List<SkyBlockSkillInfo> skills = new ArrayList<>();
         skills.addAll(this.skillLeftList);
         skills.addAll(this.skillRightList);
-        skills.add(this.carpentrySkill);
 
         for (SkyBlockSkillInfo skill : skills)
         {
@@ -2056,6 +2159,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         case ALCHEMY:
             this.alchemyLevel = currentLevel;
             break;
+        case TAMING:
+            this.tamingLevel = currentLevel;
+            break;
         default:
             break;
         }
@@ -2117,7 +2223,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.sbKills.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        auctions.add(0, new SkyBlockStats(TextFormatting.YELLOW + "" + TextFormatting.UNDERLINE + TextFormatting.BOLD + "Auctions", 0.0F));
+        auctions.add(0, new SkyBlockStats(new StringTextComponent("Auctions").applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
@@ -2145,7 +2251,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
         list.add(0, new SkyBlockStats(null, 0.0F));
-        list.add(1, new SkyBlockStats(TextFormatting.YELLOW + "" + TextFormatting.UNDERLINE + TextFormatting.BOLD + name, 0.0F));
+        list.add(1, new SkyBlockStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
     }
 
     private long checkSkyBlockItem(List<ItemStack> list, String type)
@@ -3162,7 +3268,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     if (collection.getCollectionType() != null)
                     {
-                        this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).setStyle(new Style().setBold(true).setUnderlined(true).setColor(TextFormatting.YELLOW)).getFormattedText(), left + 4, top + 5, 16777215);
+                        this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
                     }
                 }
             }
@@ -3209,7 +3315,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     if (craftedMinion.getMinionName() != null)
                     {
-                        this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).setStyle(new Style().setBold(true).setUnderlined(true).setColor(TextFormatting.YELLOW)).getFormattedText(), left + 4, top + 5, 16777215);
+                        this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
                     }
                 }
             }
@@ -3227,8 +3333,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         private int critChance;
         private int critDamage;
         private int intelligence;
+        private int seaCreatureChance;
+        private int magicFind;
+        private int petLuck;
 
-        public BonusStatTemplate(int health, int defense, int trueDefense, int effectiveHealth, int strength, int speed, int critChance, int critDamage, int intelligence)
+        public BonusStatTemplate(int health, int defense, int trueDefense, int effectiveHealth, int strength, int speed, int critChance, int critDamage, int intelligence, int seaCreatureChance, int magicFind, int petLuck)
         {
             this.health = health;
             this.defense = defense;
@@ -3239,6 +3348,9 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.critChance = critChance;
             this.critDamage = critDamage;
             this.intelligence = intelligence;
+            this.seaCreatureChance = seaCreatureChance;
+            this.magicFind = magicFind;
+            this.petLuck = petLuck;
         }
 
         public BonusStatTemplate add(BonusStatTemplate toAdd)
@@ -3252,7 +3364,10 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.critChance += toAdd.critChance;
             this.critDamage += toAdd.critDamage;
             this.intelligence += toAdd.intelligence;
-            return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.intelligence);
+            this.seaCreatureChance += toAdd.seaCreatureChance;
+            this.magicFind += toAdd.magicFind;
+            this.petLuck += toAdd.petLuck;
+            return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
         }
 
         public int getHealth()
@@ -3308,6 +3423,21 @@ public class SkyBlockAPIViewerScreen extends Screen
             return this.intelligence;
         }
 
+        public int getSeaCreatureChance()
+        {
+            return this.seaCreatureChance;
+        }
+
+        public int getMagicFind()
+        {
+            return this.magicFind;
+        }
+
+        public int getPetLuck()
+        {
+            return this.petLuck;
+        }
+
         public void setHealth(int health)
         {
             this.health = health;
@@ -3351,6 +3481,21 @@ public class SkyBlockAPIViewerScreen extends Screen
         public void setIntelligence(int intelligence)
         {
             this.intelligence = intelligence;
+        }
+
+        public void setSeaCreatureChance(int seaCreatureChance)
+        {
+            this.seaCreatureChance = seaCreatureChance;
+        }
+
+        public void setMagicFind(int magicFind)
+        {
+            this.magicFind = magicFind;
+        }
+
+        public void setPetLuck(int petLuck)
+        {
+            this.petLuck = petLuck;
         }
 
         public BonusStatTemplate addHealth(int health)
@@ -3406,6 +3551,24 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.intelligence += intelligence;
             return this;
         }
+
+        public BonusStatTemplate addSeaCreatureChance(int seaCreatureChance)
+        {
+            this.seaCreatureChance += seaCreatureChance;
+            return this;
+        }
+
+        public BonusStatTemplate addMagicFind(int magicFind)
+        {
+            this.magicFind += magicFind;
+            return this;
+        }
+
+        public BonusStatTemplate addPetLuck(int petLuck)
+        {
+            this.petLuck += petLuck;
+            return this;
+        }
     }
 
     public enum SkillType
@@ -3418,7 +3581,8 @@ public class SkyBlockAPIViewerScreen extends Screen
         ENCHANTING("Enchanting"),
         ALCHEMY("Alchemy"),
         RUNECRAFTING("Runecrafting"),
-        CARPENTRY("Carpentry");
+        CARPENTRY("Carpentry"),
+        TAMING("Taming");
 
         private final String name;
 

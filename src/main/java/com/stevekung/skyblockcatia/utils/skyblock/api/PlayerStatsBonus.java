@@ -15,11 +15,12 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.Combat[] COMBAT;
     public static PlayerStatsBonus.Enchanting[] ENCHANTING;
     public static PlayerStatsBonus.Alchemy[] ALCHEMY;
-    public static PlayerStatsBonus.PetLuck[] PET_LUCK;
+    public static PlayerStatsBonus.Taming[] TAMING;
     public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
     public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
     public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
     public static PlayerStatsBonus.FairySouls[] FAIRY_SOULS;
+    public static PlayerStatsBonus.PetsScore[] PETS_SCORE;
     private static final Gson GSON = new Gson();
 
     public static void getBonusFromRemote(Type type) throws Exception
@@ -61,9 +62,13 @@ public class PlayerStatsBonus
         case FAIRY_SOULS:
             FAIRY_SOULS = GSON.fromJson(in, PlayerStatsBonus.FairySouls[].class);
             break;
-        case PET_LUCK:
-            PET_LUCK = GSON.fromJson(in, PlayerStatsBonus.PetLuck[].class);
+        case TAMING:
+            TAMING = GSON.fromJson(in, PlayerStatsBonus.Taming[].class);
             break;
+        case PETS_SCORE:
+            PETS_SCORE = GSON.fromJson(in, PlayerStatsBonus.PetsScore[].class);
+            break;
+        default:
         }
     }
 
@@ -236,13 +241,13 @@ public class PlayerStatsBonus
         }
     }
 
-    public class PetLuck implements IBonusTemplate
+    public class Taming implements IBonusTemplate
     {
         private final int level;
         @SerializedName("pet_luck")
         private final int petLuck;
 
-        public PetLuck(int level, int petLuck)
+        public Taming(int level, int petLuck)
         {
             this.level = level;
             this.petLuck = petLuck;
@@ -407,6 +412,29 @@ public class PlayerStatsBonus
         }
     }
 
+    public class PetsScore
+    {
+        private final int score;
+        @SerializedName("magic_find")
+        private final int magicFind;
+
+        public PetsScore(int score, int magicFind)
+        {
+            this.score = score;
+            this.magicFind = magicFind;
+        }
+
+        public int getScore()
+        {
+            return this.score;
+        }
+
+        public int getMagicFind()
+        {
+            return this.magicFind;
+        }
+    }
+
     public interface IBonusTemplate
     {
         default int getLevel()
@@ -479,11 +507,12 @@ public class PlayerStatsBonus
         COMBAT("skill"),
         ENCHANTING("skill"),
         ALCHEMY("skill"),
-        PET_LUCK("skill"),
+        TAMING("skill"),
         ZOMBIE_SLAYER("slayer"),
         SPIDER_SLAYER("slayer"),
         WOLF_SLAYER("slayer"),
-        FAIRY_SOULS("misc");
+        FAIRY_SOULS("misc"),
+        PETS_SCORE("misc");
 
         public static final Type[] VALUES = values();
         private final String path;

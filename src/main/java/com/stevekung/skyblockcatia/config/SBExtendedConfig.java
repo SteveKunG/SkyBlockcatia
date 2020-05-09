@@ -32,9 +32,11 @@ public class SBExtendedConfig
     public String grapplingHookCooldownColor = WHITE;
     public String zealotRespawnCooldownColor = WHITE;
     public String placedSummoningEyeColor = WHITE;
+    public String golemStageColor = WHITE;
 
     // Custom Color : Value
     public String placedSummoningEyeValueColor = WHITE;
+    public String golemStageValueColor = WHITE;
 
     // Hypixel
     public boolean axeCooldown = true;
@@ -52,6 +54,7 @@ public class SBExtendedConfig
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
     public boolean supportersFancyColor = false;
+    public boolean golemStageTracker = false;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -82,6 +85,7 @@ public class SBExtendedConfig
     public static final BooleanConfigOption AUCTION_BID_CONFIRM = new BooleanConfigOption("auction_bid_confirm", config -> config.auctionBidConfirm, (config, value) -> config.auctionBidConfirm = value);
     public static final BooleanConfigOption DISABLE_BLOCK_PARTICLES = new BooleanConfigOption("disable_block_particles", config -> config.disableBlockParticles, (config, value) -> config.disableBlockParticles = value);
     public static final BooleanConfigOption SUPPORTERS_FANCY_COLOR = new BooleanConfigOption("supporters_fancy_color", config -> config.supportersFancyColor, (config, value) -> config.supportersFancyColor = value);
+    public static final BooleanConfigOption GOLEM_STAGE_TRACKER = new BooleanConfigOption("golem_stage_tracker", config -> config.golemStageTracker, (config, value) -> config.golemStageTracker = value);
 
 
     public static final StringConfigOption VISIT_ISLAND_DISPLAY_MODE = new StringConfigOption("visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey()));
@@ -91,11 +95,15 @@ public class SBExtendedConfig
     public static final StringConfigOption PET_DISPLAY_MODE = new StringConfigOption("pet_display_mode", (config, value) -> config.petDisplayMode = ToastMode.byId(config.petDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.petDisplayMode.getTranslationKey()));
 
 
-    public static final TextFieldConfigOption AXE_COOLDOWN_COLOR = new TextFieldConfigOption("fps_color", config -> config.axeCooldownColor, (config, value) -> config.axeCooldownColor = value);
-    public static final TextFieldConfigOption GRAPPLING_HOOK_COOLDOWN_COLOR = new TextFieldConfigOption("fps_color", config -> config.grapplingHookCooldownColor, (config, value) -> config.grapplingHookCooldownColor = value);
-    public static final TextFieldConfigOption ZEALOT_RESPAWN_COOLDOWN_COLOR = new TextFieldConfigOption("fps_color", config -> config.zealotRespawnCooldownColor, (config, value) -> config.zealotRespawnCooldownColor = value);
-    public static final TextFieldConfigOption PLACED_SUMMONING_EYE_COLOR = new TextFieldConfigOption("fps_color", config -> config.placedSummoningEyeColor, (config, value) -> config.placedSummoningEyeColor = value);
-    public static final TextFieldConfigOption PLACED_SUMMONING_EYE_VALUE_COLOR = new TextFieldConfigOption("fps_color", config -> config.placedSummoningEyeValueColor, (config, value) -> config.placedSummoningEyeValueColor = value);
+    public static final TextFieldConfigOption AXE_COOLDOWN_COLOR = new TextFieldConfigOption("axe_cooldown_color", config -> config.axeCooldownColor, (config, value) -> config.axeCooldownColor = value);
+    public static final TextFieldConfigOption GRAPPLING_HOOK_COOLDOWN_COLOR = new TextFieldConfigOption("grappling_hook_cooldown_color", config -> config.grapplingHookCooldownColor, (config, value) -> config.grapplingHookCooldownColor = value);
+    public static final TextFieldConfigOption ZEALOT_RESPAWN_COOLDOWN_COLOR = new TextFieldConfigOption("zealot_respawn_cooldown_color", config -> config.zealotRespawnCooldownColor, (config, value) -> config.zealotRespawnCooldownColor = value);
+    public static final TextFieldConfigOption PLACED_SUMMONING_EYE_COLOR = new TextFieldConfigOption("placed_summoning_eye_color", config -> config.placedSummoningEyeColor, (config, value) -> config.placedSummoningEyeColor = value);
+    public static final TextFieldConfigOption GOLEM_STAGE_COLOR = new TextFieldConfigOption("golem_stage_color", config -> config.golemStageColor, (config, value) -> config.golemStageColor = value);
+
+
+    public static final TextFieldConfigOption PLACED_SUMMONING_EYE_VALUE_COLOR = new TextFieldConfigOption("placed_summoning_eye_value_color", config -> config.placedSummoningEyeValueColor, (config, value) -> config.placedSummoningEyeValueColor = value);
+    public static final TextFieldConfigOption GOLEM_STAGE_VALUE_COLOR = new TextFieldConfigOption("golem_stage_value_color", config -> config.golemStageValueColor, (config, value) -> config.golemStageValueColor = value);
 
     private SBExtendedConfig() {}
 
@@ -132,6 +140,7 @@ public class SBExtendedConfig
             this.auctionBidConfirm = this.getBoolean(nbt, "AuctionBidConfirm", this.auctionBidConfirm);
             this.disableBlockParticles = this.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = this.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
+            this.golemStageTracker = this.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -147,9 +156,11 @@ public class SBExtendedConfig
             this.grapplingHookCooldownColor = this.getString(nbt, "GrapplingHookCooldownColor", this.grapplingHookCooldownColor);
             this.zealotRespawnCooldownColor = this.getString(nbt, "ZealotRespawnCooldownColor", this.zealotRespawnCooldownColor);
             this.placedSummoningEyeColor = this.getString(nbt, "PlacedSummoningEyeColor", this.placedSummoningEyeColor);
+            this.golemStageColor = this.getString(nbt, "GolemStageColor", this.golemStageColor);
 
             // Custom Color : Value
             this.placedSummoningEyeValueColor = this.getString(nbt, "PlacedSummoningEyeValueColor", this.placedSummoningEyeValueColor);
+            this.golemStageValueColor = this.getString(nbt, "GolemStageValueColor", this.golemStageValueColor);
 
             SkyBlockcatiaMod.LOGGER.info("Loading extended config {}", SBExtendedConfig.PROFILE_FILE.getPath());
         }
@@ -183,6 +194,7 @@ public class SBExtendedConfig
             nbt.putBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.putBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.putBoolean("SupportersFancyColor", this.supportersFancyColor);
+            nbt.putBoolean("GolemStageTracker", this.golemStageTracker);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());
@@ -198,9 +210,11 @@ public class SBExtendedConfig
             nbt.putString("GrapplingHookCooldownColor", this.grapplingHookCooldownColor);
             nbt.putString("ZealotRespawnCooldownColor", this.zealotRespawnCooldownColor);
             nbt.putString("PlacedSummoningEyeColor", this.placedSummoningEyeColor);
+            nbt.putString("GolemStageColor", this.golemStageColor);
 
             // Custom Color : Value
             nbt.putString("PlacedSummoningEyeValueColor", this.placedSummoningEyeValueColor);
+            nbt.putString("GolemStageValueColor", this.golemStageValueColor);
 
             CompressedStreamTools.write(nbt, !profileName.equalsIgnoreCase("default") ? new File(USER_DIR, profileName + ".dat") : SBExtendedConfig.PROFILE_FILE);
         }
