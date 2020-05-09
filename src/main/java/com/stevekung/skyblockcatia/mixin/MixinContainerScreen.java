@@ -66,7 +66,6 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private String historyBuffer = "";
     private int sentHistoryCursor = -1;
     protected TextFieldWidget inputField;
-    private String defaultInputFieldText = "";
     private CommandSuggestionHelper commandSuggestionHelper;
 
     // Auction
@@ -107,7 +106,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.inputField = new TextFieldWidget(this.font, 4, this.height - 12, this.width - 4, 12, I18n.format("chat.editBox"));
                 this.inputField.setMaxStringLength(256);
                 this.inputField.setEnableBackgroundDrawing(false);
-                this.inputField.setText(this.defaultInputFieldText);
+                this.inputField.setText("");
                 this.inputField.setResponder(text -> this.setCommandResponder());
                 this.children.add(this.inputField);
                 this.commandSuggestionHelper = new CommandSuggestionHelper(this.minecraft, this, this.inputField, this.font, false, false, 1, 10, true, -805306368);
@@ -529,8 +528,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
     private void setCommandResponder()
     {
-        String s = this.inputField.getText();
-        this.commandSuggestionHelper.func_228124_a_(!s.equals(this.defaultInputFieldText));
+        this.commandSuggestionHelper.func_228124_a_(false);
         this.commandSuggestionHelper.init();
     }
 

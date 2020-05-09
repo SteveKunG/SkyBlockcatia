@@ -20,6 +20,7 @@ import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.widget.RightClickTextFieldWidget;
 import com.stevekung.skyblockcatia.gui.widget.button.APISearchButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SkyBlockProfileButton;
+import com.stevekung.skyblockcatia.utils.PlayerNameSuggestionHelper;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelRank;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
@@ -28,6 +29,7 @@ import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -53,6 +55,7 @@ public class SkyBlockProfileViewerScreen extends Screen
     private List<ProfileDataCallback> profiles = new ArrayList<>();
     private final StopWatch watch = new StopWatch();
     private boolean fromError;
+    private PlayerNameSuggestionHelper suggestionHelper;
 
     public SkyBlockProfileViewerScreen(GuiState state)
     {
@@ -101,7 +104,6 @@ public class SkyBlockProfileViewerScreen extends Screen
                     this.watch.reset();
                     this.watch.start();
                     this.checkAPI();
-                    //                    this.watch.stop();
 
                     if (this.watch.getTime() > 0)
                     {
@@ -120,10 +122,14 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused2(true);
         this.usernameTextField.setText(this.username);
+        this.usernameTextField.setResponder(text -> this.setCommandResponder());
         this.setFocusedDefault(this.usernameTextField);
         this.checkButton.active = this.usernameTextField.getText().trim().length() > 0;
         this.checkButton.visible = !this.error;
         this.children.add(this.usernameTextField);
+        this.suggestionHelper = new PlayerNameSuggestionHelper(this.minecraft, this, this.usernameTextField, this.font, true, true, 0, 7, false, Integer.MIN_VALUE);
+        this.suggestionHelper.func_228124_a_(true);
+        this.suggestionHelper.init();
 
         if (this.error)
         {
@@ -188,11 +194,46 @@ public class SkyBlockProfileViewerScreen extends Screen
     }
 
     @Override
+    public void resize(Minecraft mc, int width, int height)
+    {
+        String s = this.usernameTextField.getText();
+        this.init(mc, width, height);
+        this.usernameTextField.setText(s);
+        this.suggestionHelper.init();
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta)
+    {
+        if (delta > 1.0D)
+        {
+            delta = 1.0D;
+        }
+        if (delta < -1.0D)
+        {
+            delta = -1.0D;
+        }
+
+        if (this.suggestionHelper.onScroll(delta))
+        {
+            return true;
+        }
+        else
+        {
+            return super.mouseScrolled(mouseX, mouseY, delta);
+        }
+    }
+
+    @Override
     public boolean keyPressed(int key, int scanCode, int modifiers)
     {
         if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER)
         {
             this.checkButton.onPress();
+            return true;
+        }
+        else if (this.suggestionHelper.onKeyPressed(key, scanCode, modifiers))
+        {
             return true;
         }
         else
@@ -219,20 +260,15 @@ public class SkyBlockProfileViewerScreen extends Screen
     {
         if (!this.loadingApi)
         {
-            this.usernameTextField.mouseClicked(mouseX, mouseY, mouseButton);
+            if (this.suggestionHelper.onClick((int)mouseX, (int)mouseY, mouseButton))
+            {
+                return true;
+            }
+            else if (this.usernameTextField.mouseClicked(mouseX, mouseY, mouseButton))
+            {
+                return true;
+            }
             return super.mouseClicked(mouseX, mouseY, mouseButton);
-            //
-            //            if (mouseButton == 0)
-            //            {
-            //                for (SkyBlockProfileButton button : this.profileButtonList)
-            //                {
-            //                    if (button.mousePressed(this.minecraft, mouseX, mouseY))
-            //                    {
-            //                        this.selectedButton = button;
-            //                        button.playPressSound(this.minecraft.getSoundHandler());
-            //                    }
-            //                }
-            //            }
         }
         return false;
     }
@@ -266,9 +302,10 @@ public class SkyBlockProfileViewerScreen extends Screen
                     this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profile(s)", this.width / 2, 30, 16777215);
                 }
 
+                this.suggestionHelper.render(mouseX, mouseY);
                 this.usernameTextField.render(mouseX, mouseY, partialTicks);
 
-                if (StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
+                if (this.suggestionHelper.field_228108_q_ == null && StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
                 {
                     this.drawString(this.font, "Enter username", this.width / 2 - 71, 51, 10526880);
                 }
@@ -472,7 +509,6 @@ public class SkyBlockProfileViewerScreen extends Screen
             button.y += i2 * 22;
             button.setProfileList(this.profiles);
             this.addButton(button);
-            //            this.profileButtonList.add(button);
             ++i2;
         }
         this.usernameTextField.setText(this.username);
@@ -515,6 +551,12 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.checkButton.active = !this.error;
         this.usernameTextField.active = !this.error;
         this.closeButton.setMessage(LangUtils.translate("gui.back"));
+    }
+
+    private void setCommandResponder()
+    {
+        this.suggestionHelper.func_228124_a_(true);
+        this.suggestionHelper.init();
     }
 
     public enum GuiState
