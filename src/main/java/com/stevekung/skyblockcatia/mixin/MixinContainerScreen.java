@@ -132,7 +132,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z", shift = Shift.AFTER))
+    @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z", remap = false, shift = Shift.AFTER))
     private void mouseClicked(double mouseX, double mouseY, int mouseButton, CallbackInfoReturnable<Boolean> info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)

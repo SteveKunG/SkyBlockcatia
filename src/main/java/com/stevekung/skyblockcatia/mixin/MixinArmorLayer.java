@@ -36,7 +36,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
     @Shadow
     protected abstract void setModelSlotVisible(A modelIn, EquipmentSlotType slot);
 
-    @Shadow
+    @Shadow(remap = false)
     protected abstract A getArmorModelHook(T entity, ItemStack itemStack, EquipmentSlotType slot, A model);
 
     @Shadow

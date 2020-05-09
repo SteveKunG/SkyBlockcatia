@@ -12,13 +12,13 @@ import com.stevekung.skyblockcatia.gui.screen.SkyBlockcatiaErrorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.ClientModLoader;
 
-@Mixin(ClientModLoader.class)
+@Mixin(value = ClientModLoader.class, remap = false)
 public abstract class MixinClientModLoader
 {
-    @Shadow
+    @Shadow(remap = false)
     private static Minecraft mc;
 
-    @Inject(method = "completeModLoading()Z", cancellable = true, at = @At("RETURN"))
+    @Inject(method = "completeModLoading()Z", cancellable = true, remap = false, at = @At("RETURN"))
     private static void completeModLoading(CallbackInfoReturnable<Boolean> info)
     {
         if (SkyBlockcatiaMod.NO_UUID_MATCHED)
