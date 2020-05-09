@@ -42,7 +42,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
@@ -82,12 +81,6 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Shadow
     protected Slot hoveredSlot;
 
-    @Shadow
-    protected abstract boolean func_195363_d(int keyCode, int scanCode);
-
-    @Shadow
-    protected abstract void handleMouseClick(Slot slotIn, int slotId, int mouseButton, ClickType type);
-
     public MixinContainerScreen(T screenContainer, PlayerInventory inv, ITextComponent title)
     {
         super(title);
@@ -105,6 +98,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.priceSearch.setText(MainEventHandler.auctionPrice);
                 this.priceSearch.setCanLoseFocus(true);
                 this.children.add(this.priceSearch);
+                this.setFocusedDefault(this.priceSearch);
             }
             if (this.isChatableGui())
             {
@@ -132,7 +126,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z", remap = false, shift = Shift.AFTER))
+    @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At("HEAD"))
     private void mouseClicked(double mouseX, double mouseY, int mouseButton, CallbackInfoReturnable<Boolean> info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
@@ -184,7 +178,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             {
                 this.inputField.tick();
             }
-            if (this.priceSearch != null && this.isAuctionBrowser())
+            if (this.isAuctionBrowser())
             {
                 MainEventHandler.auctionPrice = this.priceSearch.getText();
                 this.priceSearch.tick();
@@ -224,39 +218,83 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "keyPressed(III)Z", cancellable = true, at = @At("HEAD"))
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.commandSuggestionHelper != null && this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
+        if (!this.isChatableGui() && !this.isAuctionBrowser() && this.hoveredSlot != null && this.hoveredSlot.getHasStack())
         {
-            info.setReturnValue(true);
-        }
-    }
-
-    @Inject(method = "keyPressed(III)Z", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/util/InputMappings.getInputByCode(II)Lnet/minecraft/client/util/InputMappings$Input;", shift = Shift.AFTER))
-    private void keyPressed2(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info)
-    {
-        InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
-
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
-        {
-            if (this.inputField != null && this.isChatableGui())
+            if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
             {
-                if (this.inputField.isFocused())
+                this.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                info.setReturnValue(true);
+            }
+            else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
+            {
+                ItemStack itemStack = this.hoveredSlot.getStack();
+
+                if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
+                {
+                    String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                    itemId = WordUtils.capitalize(itemId);
+                    this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
+                    this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(this::openFandom, this.fandomUrl, true));
+                    info.setReturnValue(true);
+                }
+            }
+        }
+
+        if (this.that instanceof ChestScreen)
+        {
+            if (this.isChatableGui())
+            {
+                if (this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
+                {
+                    info.setReturnValue(true);
+                }
+                else if (super.keyPressed(keyCode, scanCode, modifiers))
+                {
+                    info.setReturnValue(true);
+                }
+                else if (this.inputField.isFocused())
                 {
                     if (keyCode == 256)
                     {
                         this.inputField.setFocused2(false);
                     }
+                    if (keyCode != 257 && keyCode != 335)
+                    {
+                        if (keyCode == 265)
+                        {
+                            this.getSentHistory(-1);
+                            info.setReturnValue(true);
+                        }
+                        else if (keyCode == 264)
+                        {
+                            this.getSentHistory(1);
+                            info.setReturnValue(true);
+                        }
+                        else
+                        {
+                            info.setReturnValue(false);
+                        }
+                    }
+                    else
+                    {
+                        String text = this.inputField.getText().trim();
+
+                        if (!text.isEmpty())
+                        {
+                            this.sendMessage(text);
+                            this.sentHistoryCursor = this.minecraft.ingameGUI.getChatGUI().getSentMessages().size();
+                            this.inputField.setText("");
+                        }
+                        info.setReturnValue(true);
+                    }
                 }
                 else
                 {
-                    if (this.func_195363_d(keyCode, scanCode))
-                    {
-                        info.setReturnValue(true);
-                    }
-                    else if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+                    if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
                     {
                         if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                         {
-                            MixinContainerScreen.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                            this.viewRecipe(this.minecraft.player, this.hoveredSlot);
                             info.setReturnValue(true);
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
@@ -268,94 +306,35 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
                                 itemId = WordUtils.capitalize(itemId);
                                 this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
-
-                                this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(confirm ->
-                                {
-                                    if (confirm)
-                                    {
-                                        CommonUtils.openLink(this.fandomUrl);
-                                    }
-                                    this.minecraft.displayGuiScreen(this);
-                                }, this.fandomUrl, true));
+                                this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(this::openFandom, this.fandomUrl, true));
                                 info.setReturnValue(true);
                             }
-                        }
-                        else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
-                        {
-                            this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
-                            info.setReturnValue(true);
+                            info.setReturnValue(false);
                         }
                     }
-                    else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
-                    {
-                        info.setReturnValue(true);
-                    }
-                    else
-                    {
-                        this.minecraft.player.closeScreen();
-                        info.setReturnValue(true);
-                    }
-                }
-
-                if (this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
-                {
-                    info.setReturnValue(true);
-                }
-                else if (keyCode != 257 && keyCode != 335)
-                {
-                    if (keyCode == 265)
-                    {
-                        this.getSentHistory(-1);
-                        info.setReturnValue(true);
-                    }
-                    else if (keyCode == 264)
-                    {
-                        this.getSentHistory(1);
-                        info.setReturnValue(true);
-                    }
-                    else
-                    {
-                        info.setReturnValue(false);
-                    }
-                }
-                else
-                {
-                    String text = this.inputField.getText().trim();
-
-                    if (!text.isEmpty())
-                    {
-                        this.sendMessage(text);
-                        this.sentHistoryCursor = this.minecraft.ingameGUI.getChatGUI().getSentMessages().size();
-                        this.inputField.setText("");
-                    }
-                    info.setReturnValue(true);
                 }
             }
-            else if (this.priceSearch != null && this.isAuctionBrowser())
+            else if (this.isAuctionBrowser())
             {
-                if (this.priceSearch.isFocused())
+                if (super.keyPressed(keyCode, scanCode, modifiers))
+                {
+                    info.setReturnValue(true);
+                }
+                else if (this.priceSearch.isFocused())
                 {
                     if (keyCode == 256)
                     {
                         this.priceSearch.setFocused2(false);
                     }
+                    info.setReturnValue(false);
                 }
                 else
                 {
-                    if (this.func_195363_d(keyCode, scanCode))
+                    if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
                     {
-                        info.setReturnValue(true);
-                    }
-                    else if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
-                    {
-                        if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
+                        if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                         {
-                            this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
-                            info.setReturnValue(true);
-                        }
-                        else if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
-                        {
-                            MixinContainerScreen.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                            this.viewRecipe(this.minecraft.player, this.hoveredSlot);
                             info.setReturnValue(true);
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
@@ -367,79 +346,14 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
                                 itemId = WordUtils.capitalize(itemId);
                                 this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
-
-                                this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(confirm ->
-                                {
-                                    if (confirm)
-                                    {
-                                        CommonUtils.openLink(this.fandomUrl);
-                                    }
-                                    this.minecraft.displayGuiScreen(this);
-                                }, this.fandomUrl, true));
+                                this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(this::openFandom, this.fandomUrl, true));
                                 info.setReturnValue(true);
                             }
+                            info.setReturnValue(false);
                         }
-                    }
-                    else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
-                    {
-                        info.setReturnValue(true);
-                    }
-
-                    if (keyCode == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))
-                    {
-                        this.minecraft.player.closeScreen();
-                        info.setReturnValue(true);
                     }
                 }
             }
-            else
-            {
-                if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
-                {
-                    if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
-                    {
-                        MixinContainerScreen.viewRecipe(this.minecraft.player, this.hoveredSlot);
-                        info.setReturnValue(true);
-                    }
-                    else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
-                    {
-                        ItemStack itemStack = this.hoveredSlot.getStack();
-
-                        if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
-                        {
-                            String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
-                            itemId = WordUtils.capitalize(itemId);
-                            this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
-
-                            this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(confirm ->
-                            {
-                                if (confirm)
-                                {
-                                    CommonUtils.openLink(this.fandomUrl);
-                                }
-                                this.minecraft.displayGuiScreen(this);
-                            }, this.fandomUrl, true));
-                            info.setReturnValue(true);
-                        }
-                    }
-                    else if (this.minecraft.gameSettings.keyBindDrop.isActiveAndMatches(mouseKey))
-                    {
-                        this.handleMouseClick(this.hoveredSlot, this.hoveredSlot.slotNumber, Screen.hasControlDown() ? 1 : 0, ClickType.THROW);
-                        info.setReturnValue(true);
-                    }
-                }
-
-                if (keyCode == 256 || this.minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey))
-                {
-                    this.minecraft.player.closeScreen();
-                    info.setReturnValue(true);
-                }
-                else if (this.func_195363_d(keyCode, scanCode))
-                {
-                    info.setReturnValue(true);
-                }
-            }
-            info.setReturnValue(true);
         }
     }
 
@@ -520,45 +434,38 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Override
     public void resize(Minecraft mc, int width, int height)
     {
-        super.resize(mc, width, height);
-
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
                 String text = this.inputField.getText();
-                this.init(mc, width, height);
+                boolean focus = this.inputField.isFocused();
+                super.resize(mc, width, height);
                 this.inputField.setText(text);
+                this.inputField.setFocused2(focus);
                 this.commandSuggestionHelper.init();
             }
-        }
-    }
-
-    @Override
-    protected void insertText(String newText, boolean shouldOverwrite)
-    {
-        super.insertText(newText, shouldOverwrite);
-
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
-        {
-            if (this.isChatableGui())
+            else if (this.isAuctionBrowser())
             {
-                if (shouldOverwrite)
-                {
-                    this.inputField.setText(newText);
-                }
-                else
-                {
-                    this.inputField.writeText(newText);
-                }
+                boolean focus = this.priceSearch.isFocused();
+                super.resize(mc, width, height);
+                this.priceSearch.setFocused2(focus);
             }
+            else
+            {
+                super.resize(mc, width, height);
+            }
+        }
+        else
+        {
+            super.resize(mc, width, height);
         }
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen && this.isChatableGui())
         {
             if (scrollDelta > 1.0D)
             {
@@ -569,7 +476,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 scrollDelta = -1.0D;
             }
 
-            if (this.commandSuggestionHelper != null && this.commandSuggestionHelper.onScroll(scrollDelta))
+            if (this.commandSuggestionHelper.onScroll(scrollDelta))
             {
                 return true;
             }
@@ -617,7 +524,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private boolean canViewSeller()
     {
         String title = this.title.getUnformattedComponentText();
-        return title.equals("Auctions Browser") || title.equals("Your Bids");
+        return title.equals("Auctions Browser") || title.equals("Your Bids") || title.equals("Auction View");
     }
 
     private void setCommandResponder()
@@ -837,7 +744,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    private static void viewRecipe(ClientPlayerEntity player, Slot slot)
+    private void viewRecipe(ClientPlayerEntity player, Slot slot)
     {
         if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
         {
@@ -849,5 +756,14 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 player.sendChatMessage("/viewrecipe " + itemId);
             }
         }
+    }
+
+    private void openFandom(boolean confirm)
+    {
+        if (confirm)
+        {
+            CommonUtils.openLink(this.fandomUrl);
+        }
+        this.minecraft.displayGuiScreen(this);
     }
 }
