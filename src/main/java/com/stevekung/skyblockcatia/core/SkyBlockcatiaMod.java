@@ -17,10 +17,11 @@ import com.google.gson.JsonSyntaxException;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
@@ -45,8 +46,8 @@ public class SkyBlockcatiaMod
     public static boolean isSkyblockAddonsLoaded;
     public static boolean isIngameAccountSwitcherLoaded;
 
-    private static boolean githubDown;
-    private static boolean noUUID;
+    public static boolean GITHUB_DOWN;
+    public static boolean NO_UUID_MATCHED;
     private static final List<String> HARDCODE_UUID = new ArrayList<>();
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
@@ -61,22 +62,24 @@ public class SkyBlockcatiaMod
 
         SkyBlockcatiaMod.nahee();
         ToastLog.setup();
-        
-        if (!DEVENV)//TODO Remove later
-        CommonUtils.runAsync(() ->
+
+        if (!DEVENV)
         {
-            for (String uuid : SUPPORTERS_UUID)
+            CommonUtils.runAsync(() ->
             {
-                try
+                for (String uuid : SUPPORTERS_UUID)
                 {
-                    SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                    try
+                    {
+                        SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
+            });
+        }
     }
 
     public SkyBlockcatiaMod()
@@ -92,15 +95,6 @@ public class SkyBlockcatiaMod
 
     private void phaseOne(FMLCommonSetupEvent event)
     {
-        //        if (noUUID)
-        //        {
-        //            throw new InvalidUUIDException();TODO
-        //        }
-        //        if (githubDown)
-        //        {
-        //            throw new WhitelistException();
-        //        }
-
         SkyBlockcatiaMod.CURRENT_UUID = GameProfileUtils.getUUID();
         KeyBindingHandler.init();
 
@@ -164,7 +158,7 @@ public class SkyBlockcatiaMod
 
             if (!DEVENV)
             {
-                SkyBlockcatiaMod.githubDown = true;
+                SkyBlockcatiaMod.GITHUB_DOWN = true;
             }
         }
 
@@ -178,7 +172,7 @@ public class SkyBlockcatiaMod
         {
             if (!DEVENV)
             {
-                SkyBlockcatiaMod.noUUID = true;
+                SkyBlockcatiaMod.NO_UUID_MATCHED = true;
             }
         }
     }
