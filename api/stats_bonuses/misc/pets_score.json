@@ -1,0 +1,26 @@
+[
+    {
+        "score": 0,
+        "magic_find": 0
+    },
+    {
+        "score": 10,
+        "magic_find": 1
+    },
+    {
+        "score": 25,
+        "magic_find": 2
+    },
+    {
+        "score": 50,
+        "magic_find": 3
+    },
+    {
+        "score": 85,
+        "magic_find": 4
+    },
+    {
+        "score": 125,
+        "magic_find": 5
+    }
+]
