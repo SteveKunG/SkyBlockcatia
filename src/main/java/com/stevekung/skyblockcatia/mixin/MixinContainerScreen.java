@@ -239,7 +239,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
         }
 
-        if (this.that instanceof ChestScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (this.isChatableGui())
             {
