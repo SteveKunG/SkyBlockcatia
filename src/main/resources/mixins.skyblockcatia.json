@@ -28,7 +28,8 @@
         "MixinPlayerController",
         "MixinPlayerRenderer",
         "MixinPlayerTabOverlayGui",
-        "MixinSimpleReloadableResourceManager"
+        "MixinSimpleReloadableResourceManager",
+        "MixinWallOrFloorItem"
     ],
     "injectors": {
         "defaultRequire": 1
