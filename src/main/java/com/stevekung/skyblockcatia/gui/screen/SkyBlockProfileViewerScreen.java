@@ -6,6 +6,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.time.StopWatch;
@@ -30,6 +32,7 @@ import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -123,7 +126,6 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.usernameTextField.setFocused2(true);
         this.usernameTextField.setText(this.username);
         this.usernameTextField.setResponder(text -> this.setCommandResponder());
-        this.setFocusedDefault(this.usernameTextField);
         this.checkButton.active = this.usernameTextField.getText().trim().length() > 0;
         this.checkButton.visible = !this.error;
         this.children.add(this.usernameTextField);
@@ -194,6 +196,13 @@ public class SkyBlockProfileViewerScreen extends Screen
     }
 
     @Override
+    @Nullable
+    public IGuiEventListener getFocused()
+    {
+        return this.usernameTextField;
+    }
+
+    @Override
     public void resize(Minecraft mc, int width, int height)
     {
         String s = this.usernameTextField.getText();
@@ -227,7 +236,7 @@ public class SkyBlockProfileViewerScreen extends Screen
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers)
     {
-        if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER)
+        if ((key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) && !StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
         {
             this.checkButton.onPress();
             return true;
@@ -314,10 +323,14 @@ public class SkyBlockProfileViewerScreen extends Screen
 
                 for (Widget button : this.buttons.stream().filter(button -> button instanceof SkyBlockProfileButton).collect(Collectors.toList()))
                 {
-                    if (button.isHovered())
+                    boolean hover = this.suggestionHelper.field_228108_q_ == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+                    button.visible = button.active = this.suggestionHelper.field_228108_q_ == null;
+
+                    if (hover)
                     {
-                        GuiUtils.drawHoveringText(Collections.singletonList(((SkyBlockProfileButton)button).getLastActive()), mouseX, mouseY, this.minecraft.getMainWindow().getWidth(), this.minecraft.getMainWindow().getHeight(), -1, this.font);
+                        GuiUtils.drawHoveringText(Collections.singletonList(((SkyBlockProfileButton)button).getLastActive()), mouseX, mouseY, this.width, this.height, -1, this.font);
                         RenderSystem.disableLighting();
+                        break;
                     }
                 }
             }

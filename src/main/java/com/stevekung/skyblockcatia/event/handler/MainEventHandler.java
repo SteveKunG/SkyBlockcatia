@@ -149,6 +149,7 @@ public class MainEventHandler
             {
                 GuiUtils.drawHoveringText(Collections.singletonList(((ItemButton)button).getName()), event.getMouseX(), event.getMouseY(), gui.width, gui.height, -1, this.mc.fontRenderer);
                 RenderSystem.disableLighting();
+                break;
             }
         }
 
