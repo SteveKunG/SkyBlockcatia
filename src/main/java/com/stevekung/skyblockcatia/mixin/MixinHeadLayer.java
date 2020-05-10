@@ -65,7 +65,7 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
 
             ((IHasHead)this.getEntityModel()).getModelHead().translateRotate(matrixStack);
 
-            if (item instanceof BlockItem && ((BlockItem)item).getBlock() instanceof AbstractSkullBlock)
+            if (item instanceof BlockItem && ((BlockItem)item).getBlock() instanceof AbstractSkullBlock && itemStack.hasTag())
             {
                 matrixStack.scale(1.1875F, -1.1875F, -1.1875F);
 
@@ -75,11 +75,6 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
                 }
 
                 matrixStack.translate(-0.5D, 0.0D, -0.5D);
-
-                if (!itemStack.hasTag())
-                {
-                    return;
-                }
 
                 ResourceLocation location = this.getDragonEyeTexture(itemStack.getTag().getCompound("ExtraAttributes").getString("id"));
 

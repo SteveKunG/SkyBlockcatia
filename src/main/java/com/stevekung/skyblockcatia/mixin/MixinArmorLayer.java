@@ -64,14 +64,9 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
         ItemStack itemStack = entity.getItemStackFromSlot(slot);
 
-        if (itemStack.getItem() instanceof ArmorItem)
+        if (itemStack.getItem() instanceof ArmorItem && itemStack.hasTag())
         {
             ArmorItem armorItem = (ArmorItem)itemStack.getItem();
-
-            if (itemStack.isEmpty() || !itemStack.hasTag())
-            {
-                return;
-            }
 
             if (armorItem.getEquipmentSlot() == slot)
             {

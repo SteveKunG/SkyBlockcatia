@@ -31,28 +31,26 @@ public abstract class MixinItemStackTileEntityRenderer
     @Inject(method = "render(Lnet/minecraft/item/ItemStack;Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;II)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/SkullTileEntityRenderer.render(Lnet/minecraft/util/Direction;FLnet/minecraft/block/SkullBlock$ISkullType;Lcom/mojang/authlib/GameProfile;FLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;I)V", shift = Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void renderDragonOverlay(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay, CallbackInfo info, Item item, Block block, GameProfile gameprofile)
     {
-        matrixStack.push();
-        matrixStack.translate(-0.5D, 0.0D, -0.5D);
-
-        if (!itemStack.hasTag())
-        {
-            return;
-        }
-
-        ResourceLocation location = this.getDragonEyeTexture(itemStack.getTag().getCompound("ExtraAttributes").getString("id"));
-
-        if (location != null)
+        if (itemStack.hasTag())
         {
             matrixStack.push();
-            matrixStack.translate(1.0D, 0.0D, 1.0D);
-            matrixStack.scale(-1.001F, -1.0F, 1.001F);
+            matrixStack.translate(-0.5D, 0.0D, -0.5D);
 
-            IVertexBuilder ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(location));
-            this.head.func_225603_a_(0.0F, 180.0F, 0.0F);
-            this.head.render(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            ResourceLocation location = this.getDragonEyeTexture(itemStack.getTag().getCompound("ExtraAttributes").getString("id"));
+
+            if (location != null)
+            {
+                matrixStack.push();
+                matrixStack.translate(1.0D, 0.0D, 1.0D);
+                matrixStack.scale(-1.001F, -1.0F, 1.001F);
+
+                IVertexBuilder ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(location));
+                this.head.func_225603_a_(0.0F, 180.0F, 0.0F);
+                this.head.render(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                matrixStack.pop();
+            }
             matrixStack.pop();
         }
-        matrixStack.pop();
     }
 
     private ResourceLocation getDragonEyeTexture(String id)
