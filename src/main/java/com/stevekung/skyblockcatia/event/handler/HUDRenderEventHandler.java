@@ -1,8 +1,9 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
@@ -12,6 +13,7 @@ import com.stevekung.skyblockcatia.utils.CoordsPair;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.ModDecimalFormat;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -121,7 +123,7 @@ public class HUDRenderEventHandler
                 return;
             }
 
-            List<CrosshairOverlay> crosshairInfo = new LinkedList<>();
+            List<CrosshairOverlay> crosshairInfo = new ArrayList<>();
             int center = 0;
 
             if (SBExtendedConfig.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
@@ -264,10 +266,7 @@ public class HUDRenderEventHandler
     private double getItemDelay(int base, long delay)
     {
         long now = System.currentTimeMillis();
-        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
-        symbols.setDecimalSeparator('.');
-        symbols.setGroupingSeparator('.');
-        DecimalFormat numberFormat = new DecimalFormat("##.#", symbols);
+        ModDecimalFormat numberFormat = new ModDecimalFormat("##.#");
         double seconds = base / 1000.0D - (now - delay) / 1000.0D;
 
         if (seconds >= 0.01D)

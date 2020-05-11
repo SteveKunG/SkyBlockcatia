@@ -51,6 +51,6 @@ public class SkyBlockcatiaConfig
     public static void onFileChange(ModConfig.Reloading event)
     {
         SBAPIUtils.setApiKey();
-        SkyBlockcatiaMod.LOGGER.info("Indicatia config just got changed on the file system");
+        SkyBlockcatiaMod.LOGGER.info("SkyBlockcatia config just got changed on the file system");
     }
 }

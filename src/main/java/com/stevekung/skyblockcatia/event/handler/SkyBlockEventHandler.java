@@ -15,6 +15,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.stevekung.indicatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
@@ -28,13 +29,13 @@ import com.stevekung.skyblockcatia.utils.ToastMode;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
@@ -208,7 +209,7 @@ public class SkyBlockEventHandler
         String message = event.getMessage().getUnformattedComponentText();
         boolean cancelMessage = false;
 
-        //if (InfoUtils.INSTANCE.isHypixel()) 
+        if (InfoUtils.INSTANCE.isHypixel()) 
         {
             // Common matcher
             Matcher nickMatcher = SkyBlockEventHandler.NICK_PATTERN.matcher(message);
@@ -642,35 +643,9 @@ public class SkyBlockEventHandler
         this.previousInventory = newInventory;
     }
 
-    public static ItemStack getSkillItemStack(String exp, String skill)
+    public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
     {
-        ItemStack itemStack;
-
-        switch (skill)
-        {
-        default:
-        case "Farming":
-            itemStack = new ItemStack(Items.DIAMOND_HOE);
-            break;
-        case "Mining":
-            itemStack = new ItemStack(Items.DIAMOND_PICKAXE);
-            break;
-        case "Combat":
-            itemStack = new ItemStack(Items.DIAMOND_SWORD);
-            break;
-        case "Foraging":
-            itemStack = new ItemStack(Items.DIAMOND_AXE);
-            break;
-        case "Fishing":
-            itemStack = new ItemStack(Items.FISHING_ROD);
-            break;
-        case "Enchanting":
-            itemStack = new ItemStack(Blocks.ENCHANTING_TABLE);
-            break;
-        case "Alchemy":
-            itemStack = new ItemStack(Items.BREWING_STAND);
-            break;
-        }
+        ItemStack itemStack = skill.getItemStack();
         itemStack.setDisplayName(JsonUtils.create(ColorUtils.stringToRGB("255,255,85").toColoredFont() + exp + " " + skill + " XP"));
         return itemStack;
     }

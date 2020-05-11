@@ -35,6 +35,7 @@ import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
+import com.stevekung.skyblockcatia.utils.skyblock.api.BonusStatTemplate;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
@@ -130,13 +131,13 @@ public class SkyBlockAPIViewerScreen extends Screen
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
-    private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
-    private final List<SkyBlockSkillInfo> skillRightList = new ArrayList<>();
+    private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
+    private final List<SBSkills.Info> skillRightList = new ArrayList<>();
     private final List<SkyBlockSlayerInfo> slayerInfo = new ArrayList<>();
     private final List<SkyBlockStats> sbKills = new ArrayList<>();
     private final List<SkyBlockStats> sbDeaths = new ArrayList<>();
     private final List<SkyBlockStats> sbOthers = new ArrayList<>();
-    private final List<CraftedMinion> sbCraftedMinions = new ArrayList<>();
+    private final List<SBMinions.CraftedInfo> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
     private final List<SBCollections> collections = new ArrayList<>();
@@ -537,7 +538,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                         int i = 0;
                         int height = this.height / 7;
 
-                        for (SkyBlockSkillInfo info : this.skillLeftList)
+                        for (SBSkills.Info info : this.skillLeftList)
                         {
                             int x = this.width / 2 - 120;
                             int y = height + 12;
@@ -549,7 +550,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                         i = 0;
 
-                        for (SkyBlockSkillInfo info : this.skillRightList)
+                        for (SBSkills.Info info : this.skillRightList)
                         {
                             int x = this.width / 2 + 30;
                             int y = height + 12;
@@ -1159,7 +1160,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void processCraftedMinions()
     {
-        for (SBMinions.MinionSlot minion : SBMinions.MINION_SLOTS)
+        for (SBMinions.Slot minion : SBMinions.MINION_SLOTS)
         {
             if (minion.getCurrentSlot() <= this.craftedMinionCount)
             {
@@ -1167,8 +1168,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
-        List<MinionLevel> minionLevels = new ArrayList<>();
-        List<MinionData> minionDatas = new ArrayList<>();
+        List<SBMinions.Info> minionLevels = new ArrayList<>();
+        List<SBMinions.Data> minionDatas = new ArrayList<>();
         int level = 1;
 
         for (SBMinions.Type minion : SBMinions.Type.VALUES)
@@ -1181,7 +1182,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     break;
                 }
             }
-            minionLevels.add(new MinionLevel(minion.name(), minion.getAltName(), minion.getPetItem(), level, minion.getMinionCategory()));
+            minionLevels.add(new SBMinions.Info(minion.name(), minion.getAltName(), minion.getPetItem(), level, minion.getMinionCategory()));
         }
 
         int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
@@ -1230,23 +1231,23 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
                 ++i;
             }
-            minionDatas.add(new MinionData(minionType, builder.toString()));
+            minionDatas.add(new SBMinions.Data(minionType, builder.toString()));
         }
 
-        List<CraftedMinion> farmingMinion = new ArrayList<>();
-        List<CraftedMinion> miningMinion = new ArrayList<>();
-        List<CraftedMinion> combatMinion = new ArrayList<>();
-        List<CraftedMinion> foragingMinion = new ArrayList<>();
-        List<CraftedMinion> fishingMinion = new ArrayList<>();
-        CraftedMinion dummy = new CraftedMinion(null, null, 0, null, ItemStack.EMPTY, null);
+        List<SBMinions.CraftedInfo> farmingMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> miningMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> combatMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> foragingMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> fishingMinion = new ArrayList<>();
+        SBMinions.CraftedInfo dummy = new SBMinions.CraftedInfo(null, null, 0, null, ItemStack.EMPTY, null);
         String displayName = null;
         ItemStack itemStack = ItemStack.EMPTY;
-        SkillType category = null;
-        Comparator<CraftedMinion> com = (cm1, cm2) -> new CompareToBuilder().append(cm1.getMinionName(), cm2.getMinionName()).build();
+        SBSkills.Type category = null;
+        Comparator<SBMinions.CraftedInfo> com = (cm1, cm2) -> new CompareToBuilder().append(cm1.getMinionName(), cm2.getMinionName()).build();
 
-        for (MinionData minionData : minionDatas)
+        for (SBMinions.Data minionData : minionDatas)
         {
-            for (MinionLevel minionLevel : minionLevels)
+            for (SBMinions.Info minionLevel : minionLevels)
             {
                 if (minionLevel.getMinionType().equals(minionData.getMinionType()))
                 {
@@ -1258,7 +1259,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
             }
 
-            CraftedMinion min = new CraftedMinion(minionData.getMinionType(), displayName, level, minionData.getCraftedTiers(), itemStack, category);
+            SBMinions.CraftedInfo min = new SBMinions.CraftedInfo(minionData.getMinionType(), displayName, level, minionData.getCraftedTiers(), itemStack, category);
 
             switch (category)
             {
@@ -1289,35 +1290,35 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (!farmingMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Farming", null, 0, null, ItemStack.EMPTY, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Farming", null, 0, null, ItemStack.EMPTY, null));
             this.sbCraftedMinions.addAll(farmingMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!miningMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Mining", null, 0, null, ItemStack.EMPTY, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Mining", null, 0, null, ItemStack.EMPTY, null));
             this.sbCraftedMinions.addAll(miningMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!combatMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Combat", null, 0, null, ItemStack.EMPTY, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Combat", null, 0, null, ItemStack.EMPTY, null));
             this.sbCraftedMinions.addAll(combatMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!foragingMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Foraging", null, 0, null, ItemStack.EMPTY, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Foraging", null, 0, null, ItemStack.EMPTY, null));
             this.sbCraftedMinions.addAll(foragingMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!fishingMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Fishing", null, 0, null, ItemStack.EMPTY, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Fishing", null, 0, null, ItemStack.EMPTY, null));
             this.sbCraftedMinions.addAll(fishingMinion);
             this.sbCraftedMinions.add(dummy);
         }
@@ -1492,7 +1493,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void getPets(JsonObject currentUserProfile)
     {
-        List<PetData> petData = new ArrayList<>();
+        List<SBPets.Data> petData = new ArrayList<>();
         JsonElement petsObj = currentUserProfile.get("pets");
 
         if (petsObj == null)
@@ -1516,7 +1517,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 String petRarity = element.getAsJsonObject().get("tier").getAsString();
                 ListNBT list = new ListNBT();
-                PetLevel level = this.checkPetLevel(exp, SBPets.Tier.valueOf(petRarity));
+                SBPets.Info level = this.checkPetLevel(exp, SBPets.Tier.valueOf(petRarity));
 
                 try
                 {
@@ -1526,7 +1527,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.GRAY + "[LVL " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + type.getSkillType().getName() + " Pet"))));
+                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + type.getType().getName() + " Pet"))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + (active ? TextFormatting.GREEN + "Active Pet" : TextFormatting.RED + "Inactive Pet")))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent())))));
@@ -1540,7 +1541,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + NumberUtils.format(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + petRarity + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
-                    petData.add(new PetData(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
 
                     switch (tier)
                     {
@@ -1569,12 +1570,12 @@ public class SkyBlockAPIViewerScreen extends Screen
                     itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.RED + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "UNKNOWN PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
-                    petData.add(new PetData(SBPets.Tier.COMMON, 0, false, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, false, Arrays.asList(itemStack)));
                     SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
                 }
                 petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).build());
             }
-            for (PetData data : petData)
+            for (SBPets.Data data : petData)
             {
                 SKYBLOCK_INV.add(new SkyBlockInventory(data.getItemStack(), SBInventoryGroup.PET));
             }
@@ -1582,7 +1583,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
-    private PetLevel checkPetLevel(float petExp, SBPets.Tier tier)
+    private SBPets.Info checkPetLevel(float petExp, SBPets.Tier tier)
     {
         ExpProgress[] progress = tier.getProgression();
         int totalPetTypeXp = 0;
@@ -1620,7 +1621,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             currentLvl = progress.length + 1;
             xpRequired = 0;
         }
-        return new PetLevel(currentLvl, levelToCheck, (int)currentXp, xpRequired, (int)petExp, totalPetTypeXp);
+        return new SBPets.Info(currentLvl, levelToCheck, (int)currentXp, xpRequired, (int)petExp, totalPetTypeXp);
     }
 
     private void applyBonuses()
@@ -2042,25 +2043,25 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void getSkills(JsonObject currentProfile)
     {
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_farming"), SkillType.FARMING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SkillType.FORAGING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SkillType.MINING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SkillType.FISHING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SkillType.RUNECRAFTING, ExpProgress.RUNECRAFTING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_farming"), SBSkills.Type.FARMING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SBSkills.Type.FORAGING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SBSkills.Type.MINING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SBSkills.Type.FISHING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SBSkills.Type.RUNECRAFTING, ExpProgress.RUNECRAFTING));
 
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SkillType.COMBAT));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SkillType.ENCHANTING));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_alchemy"), SkillType.ALCHEMY));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SkillType.TAMING));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SkillType.CARPENTRY));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SBSkills.Type.COMBAT));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SBSkills.Type.ENCHANTING));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_alchemy"), SBSkills.Type.ALCHEMY));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SBSkills.Type.TAMING));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SBSkills.Type.CARPENTRY));
 
         float avg = 0;
         int count = 0;
-        List<SkyBlockSkillInfo> skills = new ArrayList<>();
+        List<SBSkills.Info> skills = new ArrayList<>();
         skills.addAll(this.skillLeftList);
         skills.addAll(this.skillRightList);
 
-        for (SkyBlockSkillInfo skill : skills)
+        for (SBSkills.Info skill : skills)
         {
             avg += skill.getCurrentLvl() + skill.getSkillProgress();
             ++count;
@@ -2071,12 +2072,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private SkyBlockSkillInfo checkSkill(JsonElement element, SkillType type)
+    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type)
     {
         return this.checkSkill(element, type, ExpProgress.SKILL);
     }
 
-    private SkyBlockSkillInfo checkSkill(JsonElement element, SkillType type, ExpProgress[] progress)
+    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type, ExpProgress[] progress)
     {
         if (element != null)
         {
@@ -2121,20 +2122,20 @@ public class SkyBlockAPIViewerScreen extends Screen
                 currentXp = (int)(xpRequired - xpToNextLvl);
                 currentLvl = progress.length - 1;
             }
-            if (type != SkillType.RUNECRAFTING && type != SkillType.CARPENTRY)
+            if (type != SBSkills.Type.RUNECRAFTING && type != SBSkills.Type.CARPENTRY)
             {
                 skillProgress = Math.max(0, Math.min(currentXp / xpToNextLvl, 1));
             }
             this.setSkillLevel(type, currentLvl);
-            return new SkyBlockSkillInfo(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
+            return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
         }
         else
         {
-            return new SkyBlockSkillInfo(TextFormatting.RED + type.getName() + " is not available!", 0, 0, 0, 0, false);
+            return new SBSkills.Info(TextFormatting.RED + type.getName() + " is not available!", 0, 0, 0, 0, false);
         }
     }
 
-    private void setSkillLevel(SkillType type, int currentLevel)
+    private void setSkillLevel(SBSkills.Type type, int currentLevel)
     {
         switch (type)
         {
@@ -2517,121 +2518,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         AbstractGui.blit(left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
     }
 
-    class MinionLevel
-    {
-        private final String minionType;
-        private final String displayName;
-        private final ItemStack minionItem;
-        private final int minionMaxTier;
-        private final SkillType category;
-
-        public MinionLevel(String minionType, String displayName, ItemStack minionItem, int minionMaxTier, SkillType category)
-        {
-            this.minionType = minionType;
-            this.displayName = displayName;
-            this.minionItem = minionItem;
-            this.minionMaxTier = minionMaxTier;
-            this.category = category;
-        }
-
-        public String getMinionType()
-        {
-            return this.minionType;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public ItemStack getMinionItem()
-        {
-            return this.minionItem;
-        }
-
-        public int getMinionMaxTier()
-        {
-            return this.minionMaxTier;
-        }
-
-        public SkillType getMinionCategory()
-        {
-            return this.category;
-        }
-    }
-
-    class MinionData
-    {
-        private final String minionType;
-        private final String craftedTiers;
-
-        public MinionData(String minionType, String craftedTiers)
-        {
-            this.minionType = minionType;
-            this.craftedTiers = craftedTiers;
-        }
-
-        public String getMinionType()
-        {
-            return this.minionType;
-        }
-
-        public String getCraftedTiers()
-        {
-            return this.craftedTiers;
-        }
-    }
-
-    class CraftedMinion
-    {
-        private final String minionName;
-        private final String displayName;
-        private final int minionMaxTier;
-        private final String craftedTiers;
-        private final ItemStack minionItem;
-        private final SkillType category;
-
-        public CraftedMinion(String minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem, SkillType category)
-        {
-            this.minionName = minionName;
-            this.displayName = displayName;
-            this.minionMaxTier = minionMaxTier;
-            this.craftedTiers = craftedTiers;
-            this.minionItem = minionItem;
-            this.category = category;
-        }
-
-        public String getMinionName()
-        {
-            return this.minionName;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public int getMinionMaxTier()
-        {
-            return this.minionMaxTier;
-        }
-
-        public String getCraftedTiers()
-        {
-            return this.craftedTiers;
-        }
-
-        public ItemStack getMinionItem()
-        {
-            return this.minionItem;
-        }
-
-        public SkillType getMinionCategory()
-        {
-            return this.category;
-        }
-    }
-
     public class SkyBlockInventory
     {
         private final List<ItemStack> items;
@@ -2651,105 +2537,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         public SBInventoryGroup getGroup()
         {
             return this.group;
-        }
-    }
-
-    private class PetData
-    {
-        private final SBPets.Tier tier;
-        private final int currentLevel;
-        private final boolean isActive;
-        private final List<ItemStack> itemStack;
-
-        public PetData(SBPets.Tier tier, int currentLevel, boolean isActive, List<ItemStack> itemStack)
-        {
-            this.tier = tier;
-            this.currentLevel = currentLevel;
-            this.isActive = isActive;
-            this.itemStack = itemStack;
-        }
-
-        public SBPets.Tier getTier()
-        {
-            return this.tier;
-        }
-
-        public List<ItemStack> getItemStack()
-        {
-            return this.itemStack;
-        }
-
-        public int getCurrentLevel()
-        {
-            return this.currentLevel;
-        }
-
-        public boolean isActive()
-        {
-            return this.isActive;
-        }
-    }
-
-    private class PetLevel
-    {
-        private final int currentPetLevel;
-        private final int nextPetLevel;
-        private final int currentPetXp;
-        private final int xpRequired;
-        private final int petXp;
-        private final int totalPetTypeXp;
-
-        public PetLevel(int currentPetLevel, int nextPetLevel, int currentPetXp, int xpRequired, int petXp, int totalPetTypeXp)
-        {
-            this.currentPetLevel = currentPetLevel;
-            this.nextPetLevel = nextPetLevel;
-            this.currentPetXp = currentPetXp;
-            this.xpRequired = xpRequired;
-            this.petXp = petXp;
-            this.totalPetTypeXp = totalPetTypeXp;
-        }
-
-        public int getCurrentPetLevel()
-        {
-            return this.currentPetLevel;
-        }
-
-        public int getNextPetLevel()
-        {
-            return this.nextPetLevel;
-        }
-
-        public int getCurrentPetXp()
-        {
-            return this.currentPetXp;
-        }
-
-        public int getXpRequired()
-        {
-            return this.xpRequired;
-        }
-
-        public int getPetXp()
-        {
-            return this.petXp;
-        }
-
-        public int getTotalPetTypeXp()
-        {
-            return this.totalPetTypeXp;
-        }
-
-        public String getPercent()
-        {
-            if (this.xpRequired > 0)
-            {
-                float percent = this.currentPetXp * 100.0F / this.xpRequired;
-                return new DecimalFormat("##.#").format(percent) + "%";
-            }
-            else
-            {
-                return TextFormatting.AQUA + "MAX LEVEL";
-            }
         }
     }
 
@@ -2895,56 +2682,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
             }
             return this.value;
-        }
-    }
-
-    class SkyBlockSkillInfo
-    {
-        private final String name;
-        private final int currentXp;
-        private final int xpRequired;
-        private final int currentLvl;
-        private final float skillProgress;
-        private final boolean reachLimit;
-
-        public SkyBlockSkillInfo(String name, int currentXp, int xpRequired, int currentLvl, float skillProgress, boolean reachLimit)
-        {
-            this.name = name;
-            this.currentXp = currentXp;
-            this.xpRequired = xpRequired;
-            this.currentLvl = currentLvl;
-            this.skillProgress = skillProgress;
-            this.reachLimit = reachLimit;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        public int getCurrentXp()
-        {
-            return this.currentXp;
-        }
-
-        public int getXpRequired()
-        {
-            return this.xpRequired;
-        }
-
-        public int getCurrentLvl()
-        {
-            return this.currentLvl;
-        }
-
-        public float getSkillProgress()
-        {
-            return this.skillProgress;
-        }
-
-        public boolean isReachLimit()
-        {
-            return this.reachLimit;
         }
     }
 
@@ -3277,10 +3014,10 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     class SkyBlockCraftedMinions extends ScrollingListScreen
     {
-        private final List<CraftedMinion> craftMinions;
+        private final List<SBMinions.CraftedInfo> craftMinions;
         private final SkyBlockAPIViewerScreen parent;
 
-        public SkyBlockCraftedMinions(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<CraftedMinion> craftMinions)
+        public SkyBlockCraftedMinions(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBMinions.CraftedInfo> craftMinions)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.craftMinions = craftMinions;
@@ -3302,7 +3039,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
             else
             {
-                CraftedMinion craftedMinion = this.craftMinions.get(index);
+                SBMinions.CraftedInfo craftedMinion = this.craftMinions.get(index);
 
                 if (!craftedMinion.getMinionItem().isEmpty())
                 {
@@ -3319,281 +3056,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                 }
             }
-        }
-    }
-
-    public class BonusStatTemplate
-    {
-        private int health;
-        private int defense;
-        private int trueDefense;
-        private int effectiveHealth;
-        private int strength;
-        private int speed;
-        private int critChance;
-        private int critDamage;
-        private int intelligence;
-        private int seaCreatureChance;
-        private int magicFind;
-        private int petLuck;
-
-        public BonusStatTemplate(int health, int defense, int trueDefense, int effectiveHealth, int strength, int speed, int critChance, int critDamage, int intelligence, int seaCreatureChance, int magicFind, int petLuck)
-        {
-            this.health = health;
-            this.defense = defense;
-            this.trueDefense = trueDefense;
-            this.effectiveHealth = effectiveHealth;
-            this.strength = strength;
-            this.speed = speed;
-            this.critChance = critChance;
-            this.critDamage = critDamage;
-            this.intelligence = intelligence;
-            this.seaCreatureChance = seaCreatureChance;
-            this.magicFind = magicFind;
-            this.petLuck = petLuck;
-        }
-
-        public BonusStatTemplate add(BonusStatTemplate toAdd)
-        {
-            this.health += toAdd.health;
-            this.defense += toAdd.defense;
-            this.trueDefense += toAdd.trueDefense;
-            this.effectiveHealth += toAdd.effectiveHealth;
-            this.strength += toAdd.strength;
-            this.speed += toAdd.speed;
-            this.critChance += toAdd.critChance;
-            this.critDamage += toAdd.critDamage;
-            this.intelligence += toAdd.intelligence;
-            this.seaCreatureChance += toAdd.seaCreatureChance;
-            this.magicFind += toAdd.magicFind;
-            this.petLuck += toAdd.petLuck;
-            return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
-        }
-
-        public int getHealth()
-        {
-            return this.health;
-        }
-
-        public int getDefense()
-        {
-            if (this.defense <= 0)
-            {
-                return 0;
-            }
-            return this.defense;
-        }
-
-        public int getTrueDefense()
-        {
-            return this.trueDefense;
-        }
-
-        public int getEffectiveHealth()
-        {
-            return this.effectiveHealth;
-        }
-
-        public int getStrength()
-        {
-            return this.strength;
-        }
-
-        public int getSpeed()
-        {
-            return this.speed;
-        }
-
-        public int getCritChance()
-        {
-            if (this.critChance > 100)
-            {
-                return 100;
-            }
-            return this.critChance;
-        }
-
-        public int getCritDamage()
-        {
-            return this.critDamage;
-        }
-
-        public int getIntelligence()
-        {
-            return this.intelligence;
-        }
-
-        public int getSeaCreatureChance()
-        {
-            return this.seaCreatureChance;
-        }
-
-        public int getMagicFind()
-        {
-            return this.magicFind;
-        }
-
-        public int getPetLuck()
-        {
-            return this.petLuck;
-        }
-
-        public void setHealth(int health)
-        {
-            this.health = health;
-        }
-
-        public void setDefense(int defense)
-        {
-            this.defense = defense;
-        }
-
-        public void setTrueDefense(int trueDefense)
-        {
-            this.trueDefense = trueDefense;
-        }
-
-        public void setEffectiveHealth(int effectiveHealth)
-        {
-            this.effectiveHealth = effectiveHealth;
-        }
-
-        public void setStrength(int strength)
-        {
-            this.strength = strength;
-        }
-
-        public void setSpeed(int speed)
-        {
-            this.speed = speed;
-        }
-
-        public void setCritChance(int critChance)
-        {
-            this.critChance = critChance;
-        }
-
-        public void setCritDamage(int critDamage)
-        {
-            this.critDamage = critDamage;
-        }
-
-        public void setIntelligence(int intelligence)
-        {
-            this.intelligence = intelligence;
-        }
-
-        public void setSeaCreatureChance(int seaCreatureChance)
-        {
-            this.seaCreatureChance = seaCreatureChance;
-        }
-
-        public void setMagicFind(int magicFind)
-        {
-            this.magicFind = magicFind;
-        }
-
-        public void setPetLuck(int petLuck)
-        {
-            this.petLuck = petLuck;
-        }
-
-        public BonusStatTemplate addHealth(int health)
-        {
-            this.health += health;
-            return this;
-        }
-
-        public BonusStatTemplate addDefense(int defense)
-        {
-            this.defense += defense;
-            return this;
-        }
-
-        public BonusStatTemplate addTrueDefense(int trueDefense)
-        {
-            this.trueDefense += trueDefense;
-            return this;
-        }
-
-        public BonusStatTemplate addEffectiveHealth(int effectiveHealth)
-        {
-            this.effectiveHealth += effectiveHealth;
-            return this;
-        }
-
-        public BonusStatTemplate addStrength(int strength)
-        {
-            this.strength += strength;
-            return this;
-        }
-
-        public BonusStatTemplate addSpeed(int speed)
-        {
-            this.speed += speed;
-            return this;
-        }
-
-        public BonusStatTemplate addCritChance(int critChance)
-        {
-            this.critChance += critChance;
-            return this;
-        }
-
-        public BonusStatTemplate addCritDamage(int critDamage)
-        {
-            this.critDamage += critDamage;
-            return this;
-        }
-
-        public BonusStatTemplate addIntelligence(int intelligence)
-        {
-            this.intelligence += intelligence;
-            return this;
-        }
-
-        public BonusStatTemplate addSeaCreatureChance(int seaCreatureChance)
-        {
-            this.seaCreatureChance += seaCreatureChance;
-            return this;
-        }
-
-        public BonusStatTemplate addMagicFind(int magicFind)
-        {
-            this.magicFind += magicFind;
-            return this;
-        }
-
-        public BonusStatTemplate addPetLuck(int petLuck)
-        {
-            this.petLuck += petLuck;
-            return this;
-        }
-    }
-
-    public enum SkillType
-    {
-        FARMING("Farming"),
-        FORAGING("Foraging"),
-        MINING("Mining"),
-        FISHING("Fishing"),
-        COMBAT("Combat"),
-        ENCHANTING("Enchanting"),
-        ALCHEMY("Alchemy"),
-        RUNECRAFTING("Runecrafting"),
-        CARPENTRY("Carpentry"),
-        TAMING("Taming");
-
-        private final String name;
-
-        private SkillType(String name)
-        {
-            this.name = name;
-        }
-
-        public String getName()
-        {
-            return this.name;
         }
     }
 
