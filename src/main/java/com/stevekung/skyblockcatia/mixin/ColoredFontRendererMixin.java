@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.ThaiUtils;
 
@@ -62,10 +63,10 @@ public abstract class ColoredFontRendererMixin
         this.dropShadow = dropShadow;
     }
 
-    @ModifyVariable(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At("HEAD"))
+    @ModifyVariable(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At("HEAD"), argsOnly = true)
     private String renderString(String text)
     {
-        if (ExtendedConfig.instance.supportersFancyColor)
+        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.supportersFancyColor)
         {
             for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
             {
