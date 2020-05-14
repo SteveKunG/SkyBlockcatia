@@ -171,9 +171,9 @@ public class MainEventHandler
                         continue;
                     }
 
-                    if (itemStack.getDisplayName().getUnformattedComponentText().contains("SkyBlock Hub"))
+                    if (itemStack.getDisplayName().getString().contains("SkyBlock Hub"))
                     {
-                        String name = itemStack.getDisplayName().getUnformattedComponentText().substring(itemStack.getDisplayName().getUnformattedComponentText().indexOf("#"));
+                        String name = itemStack.getDisplayName().getString().substring(itemStack.getDisplayName().getString().indexOf("#"));
                         int lobbyNum = Integer.valueOf(name.substring(name.indexOf("#") + 1));
                         String lobbyCount = "";
                         int min = 0;
