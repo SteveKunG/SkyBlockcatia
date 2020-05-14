@@ -44,7 +44,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-@Mixin(Minecraft.class)
+@Mixin(value = Minecraft.class, priority = 500)
 public abstract class MinecraftMixin
 {
     private final Minecraft that = (Minecraft) (Object) this;

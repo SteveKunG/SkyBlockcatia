@@ -12,12 +12,13 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderFish;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 @Mixin(RenderFish.class)
-public abstract class RenderFishMixin extends Render<EntityFishHook>
+public abstract class RenderFishMixin extends Render<Entity>
 {
     public RenderFishMixin(RenderManager manager)
     {
@@ -25,15 +26,17 @@ public abstract class RenderFishMixin extends Render<EntityFishHook>
     }
 
     @Override
-    public void doRender(EntityFishHook entity, double x, double y, double z, float entityYaw, float partialTicks)
+    public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        EntityFishHook fish = (EntityFishHook)entity;
+
         if (ConfigManagerIN.enableOldFishingRodRenderModel)
         {
             GlStateManager.pushMatrix();
             GlStateManager.translate((float)x, (float)y, (float)z);
             GlStateManager.enableRescaleNormal();
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
-            this.bindEntityTexture(entity);
+            this.bindEntityTexture(fish);
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
@@ -47,37 +50,37 @@ public abstract class RenderFishMixin extends Render<EntityFishHook>
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
 
-            if (entity.angler != null)
+            if (fish.angler != null)
             {
-                float f7 = entity.angler.getSwingProgress(partialTicks);
+                float f7 = fish.angler.getSwingProgress(partialTicks);
                 float f8 = MathHelper.sin(MathHelper.sqrt_float(f7) * (float)Math.PI);
                 Vec3 vec3 = new Vec3(-0.5D, 0.03D, 0.8D);
-                vec3 = vec3.rotatePitch(-(entity.angler.prevRotationPitch + (entity.angler.rotationPitch - entity.angler.prevRotationPitch) * partialTicks) * (float)Math.PI / 180.0F);
-                vec3 = vec3.rotateYaw(-(entity.angler.prevRotationYaw + (entity.angler.rotationYaw - entity.angler.prevRotationYaw) * partialTicks) * (float)Math.PI / 180.0F);
+                vec3 = vec3.rotatePitch(-(fish.angler.prevRotationPitch + (fish.angler.rotationPitch - fish.angler.prevRotationPitch) * partialTicks) * (float)Math.PI / 180.0F);
+                vec3 = vec3.rotateYaw(-(fish.angler.prevRotationYaw + (fish.angler.rotationYaw - fish.angler.prevRotationYaw) * partialTicks) * (float)Math.PI / 180.0F);
                 vec3 = vec3.rotateYaw(f8 * 0.5F);
                 vec3 = vec3.rotatePitch(-f8 * 0.7F);
-                double d0 = entity.angler.prevPosX + (entity.angler.posX - entity.angler.prevPosX) * partialTicks + vec3.xCoord;
-                double d1 = entity.angler.prevPosY + (entity.angler.posY - entity.angler.prevPosY) * partialTicks + vec3.yCoord;
-                double d2 = entity.angler.prevPosZ + (entity.angler.posZ - entity.angler.prevPosZ) * partialTicks + vec3.zCoord;
-                double d3 = entity.angler.getEyeHeight();
+                double d0 = fish.angler.prevPosX + (fish.angler.posX - fish.angler.prevPosX) * partialTicks + vec3.xCoord;
+                double d1 = fish.angler.prevPosY + (fish.angler.posY - fish.angler.prevPosY) * partialTicks + vec3.yCoord;
+                double d2 = fish.angler.prevPosZ + (fish.angler.posZ - fish.angler.prevPosZ) * partialTicks + vec3.zCoord;
+                double d3 = fish.angler.getEyeHeight();
                 double dz = 0.0D;
 
-                if (this.renderManager.options != null && this.renderManager.options.thirdPersonView > 0 || entity.angler != Minecraft.getMinecraft().thePlayer)
+                if (this.renderManager.options != null && this.renderManager.options.thirdPersonView > 0 || fish.angler != Minecraft.getMinecraft().thePlayer)
                 {
-                    double xz = entity.angler.isSneaking() ? 0.775D : 0.9D;
-                    float f9 = (entity.angler.prevRenderYawOffset + (entity.angler.renderYawOffset - entity.angler.prevRenderYawOffset) * partialTicks) * (float)Math.PI / 180.0F;
+                    double xz = fish.angler.isSneaking() ? 0.775D : 0.9D;
+                    float f9 = (fish.angler.prevRenderYawOffset + (fish.angler.renderYawOffset - fish.angler.prevRenderYawOffset) * partialTicks) * (float)Math.PI / 180.0F;
                     double d4 = MathHelper.sin(f9);
                     double d6 = MathHelper.cos(f9);
-                    d0 = entity.angler.prevPosX + (entity.angler.posX - entity.angler.prevPosX) * partialTicks - d6 * 0.35D - d4 * xz;
-                    d1 = entity.angler.prevPosY + d3 + (entity.angler.posY - entity.angler.prevPosY) * partialTicks - 0.4D;
-                    d2 = entity.angler.prevPosZ + (entity.angler.posZ - entity.angler.prevPosZ) * partialTicks - d4 * 0.35D + d6 * xz;
-                    d3 = entity.angler.isSneaking() ? -0.45D : 0.0D;
-                    dz = entity.angler.isSneaking() ? 0.015D : 0.0D;
+                    d0 = fish.angler.prevPosX + (fish.angler.posX - fish.angler.prevPosX) * partialTicks - d6 * 0.35D - d4 * xz;
+                    d1 = fish.angler.prevPosY + d3 + (fish.angler.posY - fish.angler.prevPosY) * partialTicks - 0.4D;
+                    d2 = fish.angler.prevPosZ + (fish.angler.posZ - fish.angler.prevPosZ) * partialTicks - d4 * 0.35D + d6 * xz;
+                    d3 = fish.angler.isSneaking() ? -0.45D : 0.0D;
+                    dz = fish.angler.isSneaking() ? 0.015D : 0.0D;
                 }
 
-                double d13 = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks;
-                double d5 = entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks + 0.25D;
-                double d7 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
+                double d13 = fish.prevPosX + (fish.posX - fish.prevPosX) * partialTicks;
+                double d5 = fish.prevPosY + (fish.posY - fish.prevPosY) * partialTicks + 0.25D;
+                double d7 = fish.prevPosZ + (fish.posZ - fish.prevPosZ) * partialTicks;
                 double d9 = (float)(d0 - d13) + dz;
                 double d11 = (float)(d1 - d5) + d3;
                 double d12 = (float)(d2 - d7) + dz;
@@ -93,7 +96,7 @@ public abstract class RenderFishMixin extends Render<EntityFishHook>
                 tessellator.draw();
                 GlStateManager.enableLighting();
                 GlStateManager.enableTexture2D();
-                super.doRender(entity, x, y, z, entityYaw, partialTicks);
+                super.doRender(fish, x, y, z, entityYaw, partialTicks);
             }
         }
         else
@@ -102,7 +105,7 @@ public abstract class RenderFishMixin extends Render<EntityFishHook>
             GlStateManager.translate((float)x, (float)y, (float)z);
             GlStateManager.enableRescaleNormal();
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
-            this.bindEntityTexture(entity);
+            this.bindEntityTexture(fish);
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
@@ -116,34 +119,34 @@ public abstract class RenderFishMixin extends Render<EntityFishHook>
             GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
 
-            if (entity.angler != null)
+            if (fish.angler != null)
             {
-                float f7 = entity.angler.getSwingProgress(partialTicks);
+                float f7 = fish.angler.getSwingProgress(partialTicks);
                 float f8 = MathHelper.sin(MathHelper.sqrt_float(f7) * (float)Math.PI);
                 Vec3 vec3 = new Vec3(-0.36D, 0.03D, 0.35D);
-                vec3 = vec3.rotatePitch(-(entity.angler.prevRotationPitch + (entity.angler.rotationPitch - entity.angler.prevRotationPitch) * partialTicks) * (float)Math.PI / 180.0F);
-                vec3 = vec3.rotateYaw(-(entity.angler.prevRotationYaw + (entity.angler.rotationYaw - entity.angler.prevRotationYaw) * partialTicks) * (float)Math.PI / 180.0F);
+                vec3 = vec3.rotatePitch(-(fish.angler.prevRotationPitch + (fish.angler.rotationPitch - fish.angler.prevRotationPitch) * partialTicks) * (float)Math.PI / 180.0F);
+                vec3 = vec3.rotateYaw(-(fish.angler.prevRotationYaw + (fish.angler.rotationYaw - fish.angler.prevRotationYaw) * partialTicks) * (float)Math.PI / 180.0F);
                 vec3 = vec3.rotateYaw(f8 * 0.5F);
                 vec3 = vec3.rotatePitch(-f8 * 0.7F);
-                double d0 = entity.angler.prevPosX + (entity.angler.posX - entity.angler.prevPosX) * partialTicks + vec3.xCoord;
-                double d1 = entity.angler.prevPosY + (entity.angler.posY - entity.angler.prevPosY) * partialTicks + vec3.yCoord;
-                double d2 = entity.angler.prevPosZ + (entity.angler.posZ - entity.angler.prevPosZ) * partialTicks + vec3.zCoord;
-                double d3 = entity.angler.getEyeHeight();
+                double d0 = fish.angler.prevPosX + (fish.angler.posX - fish.angler.prevPosX) * partialTicks + vec3.xCoord;
+                double d1 = fish.angler.prevPosY + (fish.angler.posY - fish.angler.prevPosY) * partialTicks + vec3.yCoord;
+                double d2 = fish.angler.prevPosZ + (fish.angler.posZ - fish.angler.prevPosZ) * partialTicks + vec3.zCoord;
+                double d3 = fish.angler.getEyeHeight();
 
-                if (this.renderManager.options != null && this.renderManager.options.thirdPersonView > 0 || entity.angler != Minecraft.getMinecraft().thePlayer)
+                if (this.renderManager.options != null && this.renderManager.options.thirdPersonView > 0 || fish.angler != Minecraft.getMinecraft().thePlayer)
                 {
-                    float f9 = (entity.angler.prevRenderYawOffset + (entity.angler.renderYawOffset - entity.angler.prevRenderYawOffset) * partialTicks) * (float)Math.PI / 180.0F;
+                    float f9 = (fish.angler.prevRenderYawOffset + (fish.angler.renderYawOffset - fish.angler.prevRenderYawOffset) * partialTicks) * (float)Math.PI / 180.0F;
                     double d4 = MathHelper.sin(f9);
                     double d6 = MathHelper.cos(f9);
-                    d0 = entity.angler.prevPosX + (entity.angler.posX - entity.angler.prevPosX) * partialTicks - d6 * 0.35D - d4 * 0.8D;
-                    d1 = entity.angler.prevPosY + d3 + (entity.angler.posY - entity.angler.prevPosY) * partialTicks - 0.45D;
-                    d2 = entity.angler.prevPosZ + (entity.angler.posZ - entity.angler.prevPosZ) * partialTicks - d4 * 0.35D + d6 * 0.8D;
-                    d3 = entity.angler.isSneaking() ? -0.1875D : 0.0D;
+                    d0 = fish.angler.prevPosX + (fish.angler.posX - fish.angler.prevPosX) * partialTicks - d6 * 0.35D - d4 * 0.8D;
+                    d1 = fish.angler.prevPosY + d3 + (fish.angler.posY - fish.angler.prevPosY) * partialTicks - 0.45D;
+                    d2 = fish.angler.prevPosZ + (fish.angler.posZ - fish.angler.prevPosZ) * partialTicks - d4 * 0.35D + d6 * 0.8D;
+                    d3 = fish.angler.isSneaking() ? -0.1875D : 0.0D;
                 }
 
-                double d13 = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks;
-                double d5 = entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks + 0.25D;
-                double d7 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
+                double d13 = fish.prevPosX + (fish.posX - fish.prevPosX) * partialTicks;
+                double d5 = fish.prevPosY + (fish.posY - fish.prevPosY) * partialTicks + 0.25D;
+                double d7 = fish.prevPosZ + (fish.posZ - fish.prevPosZ) * partialTicks;
                 double d9 = (float)(d0 - d13);
                 double d11 = (float)(d1 - d5) + d3;
                 double d12 = (float)(d2 - d7);
@@ -160,7 +163,7 @@ public abstract class RenderFishMixin extends Render<EntityFishHook>
                 tessellator.draw();
                 GlStateManager.enableLighting();
                 GlStateManager.enableTexture2D();
-                super.doRender(entity, x, y, z, entityYaw, partialTicks);
+                super.doRender(fish, x, y, z, entityYaw, partialTicks);
             }
         }
     }
