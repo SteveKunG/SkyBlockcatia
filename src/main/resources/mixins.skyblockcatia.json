@@ -6,7 +6,6 @@
     "mixins": [
         "EntityPlayerSPMixin",
         "ItemRendererMixin",
-        "GuiMultiplayerMixin",
         "GuiNewChatMixin",
         "GuiPlayerTabOverlayMixin",
         "ServerListEntryNormalMixin",
@@ -30,7 +29,6 @@
         "RenderMixin",
         "RenderLightningBoltMixin",
         "MinecraftMixin",
-        "NetworkManagerMixin",
         "PlayerControllerMPMixin",
         "ItemFishingRodMixin",
         "TileEntitySignMixin",

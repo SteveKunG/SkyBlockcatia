@@ -4,12 +4,11 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import com.stevekung.skyblockcatia.utils.IModifiedSign;
 
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IChatComponent;
 
 @Mixin(TileEntitySign.class)
-public abstract class TileEntitySignMixin extends TileEntity implements IModifiedSign
+public abstract class TileEntitySignMixin implements IModifiedSign
 {
     private final TileEntitySign that = (TileEntitySign) (Object) this;
     private int selectionStart = -1;
