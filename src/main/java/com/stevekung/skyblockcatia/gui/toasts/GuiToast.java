@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
@@ -32,7 +31,7 @@ public class GuiToast extends Gui
 
     public void drawToast(ScaledResolution resolution)
     {
-        if (!this.mc.gameSettings.hideGUI && !this.mc.gameSettings.showDebugInfo)
+        if (!this.mc.gameSettings.hideGUI && !this.mc.gameSettings.showDebugInfo && !Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen())
         {
             RenderHelper.disableStandardItemLighting();
 
@@ -168,7 +167,6 @@ public class GuiToast extends Gui
         public boolean render(int x, int z)
         {
             long i = Minecraft.getSystemTime();
-            boolean shiftY = ConfigManagerIN.enableShortcutGameButton && Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen();
 
             if (this.animationTime == -1L)
             {
@@ -180,10 +178,8 @@ public class GuiToast extends Gui
                 this.visibleTime = i;
             }
 
-            float chatOffset = shiftY ? 41.0F : 0.0F;
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
-            GlStateManager.translate(0.0F, chatOffset, 0.0F);
             GlStateManager.translate(x - 160.0F * this.getVisibility(i), z * 32, 500 + z);
             IToast.Visibility itoast$visibility = this.toast.draw(GuiToast.this, i - this.visibleTime);
             GlStateManager.disableBlend();
