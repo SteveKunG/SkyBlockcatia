@@ -2332,6 +2332,11 @@ public class GuiSkyBlockData extends GuiScreen
             String statName = stat.getKey();
             float value = stat.getValue().getAsFloat();
 
+            if (statName.equals("highest_crit_damage"))
+            {
+                continue;
+            }
+
             if (statName.startsWith("kills"))
             {
                 this.sbKills.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
