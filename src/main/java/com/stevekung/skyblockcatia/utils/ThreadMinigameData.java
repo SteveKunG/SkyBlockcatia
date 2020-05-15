@@ -40,10 +40,19 @@ public class ThreadMinigameData extends Thread
                 for (JsonElement commandEle : minigame.getAsJsonArray("commands"))
                 {
                     JsonObject command = (JsonObject)commandEle;
+                    String uuid = "";
+                    String texture = "";
                     String displayName = command.get("name").getAsString();
                     String minigameCommand = command.get("command").getAsString();
                     boolean isMinigame = command.get("minigame").getAsBoolean();
-                    minigameCmds.add(new MinigameCommand(displayName, minigameCommand, isMinigame));
+
+                    if (command.has("uuid"))
+                    {
+                        uuid = command.get("uuid").getAsString();
+                        texture = command.get("texture").getAsString();
+                    }
+
+                    minigameCmds.add(new MinigameCommand(displayName, minigameCommand, isMinigame, uuid, texture));
                     minigameCmds.sort((minigame1, minigame2) -> !sort ? 1 : new CompareToBuilder().append(minigame1.isMinigame(), minigame2.isMinigame()).append(minigame1.getName(), minigame2.getName()).build());
                 }
                 MinigameData.addMinigameData(new MinigameData(name, minigameCmds));

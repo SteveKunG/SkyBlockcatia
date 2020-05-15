@@ -19,8 +19,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiChatExtended implements IGuiChat, IDropboxCallback
@@ -254,7 +256,13 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                 {
                     if (data.getName().equals(list.get(this.prevSelect)))
                     {
-                        gameBtn.add(new GuiButtonCustomize(width, command.getName(), command.getCommand(), command.isMinigame()));
+                        ItemStack skull = null;
+
+                        if (!StringUtils.isNullOrEmpty(command.getUUID()))
+                        {
+                            skull = RenderUtils.getSkullItemStack(command.getUUID(), command.getTexture());
+                        }
+                        gameBtn.add(new GuiButtonCustomize(width, command.getName(), command.getCommand(), command.isMinigame(), skull));
                     }
                 }
             }
