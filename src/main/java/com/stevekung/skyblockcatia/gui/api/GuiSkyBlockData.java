@@ -2322,6 +2322,7 @@ public class GuiSkyBlockData extends GuiScreen
         List<SkyBlockStats> auctions = new ArrayList<>();
         List<SkyBlockStats> fished = new ArrayList<>();
         List<SkyBlockStats> winter = new ArrayList<>();
+        List<SkyBlockStats> petMilestone = new ArrayList<>();
         List<SkyBlockStats> others = new ArrayList<>();
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
@@ -2362,6 +2363,10 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     winter.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
+                else if (statName.contains("pet_milestone"))
+                {
+                    petMilestone.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
+                }
                 else
                 {
                     others.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
@@ -2376,6 +2381,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
+        this.sortStats(petMilestone, "Pet Milestone");
         this.sortStats(others, "Others");
 
         if (auctions.size() > 2)
@@ -2389,6 +2395,10 @@ public class GuiSkyBlockData extends GuiScreen
         if (winter.size() > 2)
         {
             this.sbOthers.addAll(winter);
+        }
+        if (petMilestone.size() > 2)
+        {
+            this.sbOthers.addAll(petMilestone);
         }
         if (others.size() > 2)
         {
