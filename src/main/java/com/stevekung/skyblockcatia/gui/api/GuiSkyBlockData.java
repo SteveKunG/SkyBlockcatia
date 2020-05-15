@@ -2388,7 +2388,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
-        this.sortStats(petMilestone, "Pet Milestone");
+        this.sortStats(petMilestone, "Pet Milestones");
         this.sortStats(others, "Others");
 
         if (auctions.size() > 2)
