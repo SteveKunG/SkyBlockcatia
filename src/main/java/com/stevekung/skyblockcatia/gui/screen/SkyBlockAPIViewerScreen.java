@@ -1516,6 +1516,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 String petRarity = element.getAsJsonObject().get("tier").getAsString();
+                int candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
                 ListNBT list = new ListNBT();
                 SBPets.Info level = this.checkPetLevel(exp, SBPets.Tier.valueOf(petRarity));
 
@@ -1535,6 +1536,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                     if (level.getCurrentPetLevel() < 100)
                     {
                         list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Current EXP: " + TextFormatting.YELLOW + FORMAT.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired())))));
+                    }
+                    if (candyUsed > 0)
+                    {
+                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed))));
                     }
 
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
@@ -2174,12 +2179,18 @@ public class SkyBlockAPIViewerScreen extends Screen
         List<SkyBlockStats> auctions = new ArrayList<>();
         List<SkyBlockStats> fished = new ArrayList<>();
         List<SkyBlockStats> winter = new ArrayList<>();
+        List<SkyBlockStats> petMilestone = new ArrayList<>();
         List<SkyBlockStats> others = new ArrayList<>();
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
         {
             String statName = stat.getKey();
             float value = stat.getValue().getAsFloat();
+
+            if (statName.equals("highest_crit_damage"))
+            {
+                continue;
+            }
 
             if (statName.startsWith("kills"))
             {
@@ -2214,6 +2225,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     winter.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
+                else if (statName.contains("pet_milestone"))
+                {
+                    petMilestone.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
+                }
                 else
                 {
                     others.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
@@ -2228,6 +2243,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
+        this.sortStats(petMilestone, "Pet Milestones");
         this.sortStats(others, "Others");
 
         if (auctions.size() > 2)
@@ -2241,6 +2257,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (winter.size() > 2)
         {
             this.sbOthers.addAll(winter);
+        }
+        if (petMilestone.size() > 2)
+        {
+            this.sbOthers.addAll(petMilestone);
         }
         if (others.size() > 2)
         {

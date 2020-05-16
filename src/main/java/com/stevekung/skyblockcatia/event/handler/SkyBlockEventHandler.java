@@ -15,6 +15,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.stevekung.indicatia.config.ExtendedConfig;
 import com.stevekung.indicatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
@@ -70,6 +71,7 @@ public class SkyBlockEventHandler
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
+    private static final Pattern PET_CARE_PATTERN = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<day>[\\d]+) day(?:s){0,1} (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\u0027\\u25C6\\[\\] -]+";
@@ -217,6 +219,7 @@ public class SkyBlockEventHandler
             Matcher joinedPartyMatcher = SkyBlockEventHandler.JOINED_PARTY_PATTERN.matcher(message);
             Matcher uuidMatcher = SkyBlockEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = SkyBlockEventHandler.CHAT_PATTERN.matcher(message);
+            Matcher petCareMatcher = SkyBlockEventHandler.PET_CARE_PATTERN.matcher(message);
 
             // Item Drop matcher
             Matcher rareDropPattern = SkyBlockEventHandler.RARE_DROP_PATTERN.matcher(message);
@@ -262,10 +265,26 @@ public class SkyBlockEventHandler
                     SBAPIUtils.setApiKeyFromServer(uuidMatcher.group("uuid"));
                     ClientUtils.printClientMessage("Setting a new API Key!", TextFormatting.GREEN);
                 }
+                else if (petCareMatcher.matches())
+                {
+                    int day = Integer.parseInt(petCareMatcher.group("day"));
+                    int hour = Integer.parseInt(petCareMatcher.group("hour"));
+                    int minute = Integer.parseInt(petCareMatcher.group("minute"));
+                    int second = Integer.parseInt(petCareMatcher.group("second"));
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.DATE, day);
+                    calendar.add(Calendar.HOUR, hour);
+                    calendar.add(Calendar.MINUTE, minute);
+                    calendar.add(Calendar.SECOND, second);
+                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
+                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
+                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
+                }
 
                 if (SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
                 {
-                    com.stevekung.indicatia.config.ExtendedConfig.INSTANCE.chatMode = 0;
+                    ExtendedConfig.INSTANCE.chatMode = 0;
                     SBExtendedConfig.INSTANCE.save();
                 }
                 if (SBExtendedConfig.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
