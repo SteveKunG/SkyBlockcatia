@@ -50,7 +50,7 @@ public class ClientEventHandler
                 ClientEventHandler.ticksPaused++;
             }
         }
-        if (SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.CURRENT_UUID.toString().equals(GameProfileUtils.getUUID().toString()))
+        if (SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.CURRENT_UUID.toString().equals(GameProfileUtils.getUUID().toString()) && !(GameProfileUtils.getUsername().equals("MCCommanderz") || GameProfileUtils.getUsername().equals("TheWatcherz") || GameProfileUtils.getUsername().equals("BesutoKunG") || GameProfileUtils.getUsername().equals("iamcameraman")))
         {
             this.mc.shutdown();
         }
