@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
+import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public class GuiToast extends Gui
 
     public void drawToast(ScaledResolution resolution)
     {
-        if (!this.mc.gameSettings.hideGUI && !this.mc.gameSettings.showDebugInfo && !Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen())
+        if (!this.mc.gameSettings.hideGUI && !this.mc.gameSettings.showDebugInfo && !(ConfigManagerIN.enableShortcutGameButton && Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()))
         {
             RenderHelper.disableStandardItemLighting();
 
