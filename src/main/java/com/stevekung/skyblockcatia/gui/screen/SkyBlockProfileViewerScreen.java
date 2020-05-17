@@ -483,7 +483,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         if (profiles.entrySet().isEmpty())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, this.getLastSaveProfile(uuid, uuid));
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, -1);
             this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
             return;
         }
@@ -493,13 +493,14 @@ public class SkyBlockProfileViewerScreen extends Screen
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
+            boolean hasOneProfile = profiles.entrySet().size() == 1;
             String sbProfileId = profiles.get(entry.getKey()).getAsJsonObject().get("profile_id").getAsString();
             String profileName = profiles.get(entry.getKey()).getAsJsonObject().get("cute_name").getAsString();
             this.statusMessage = "Found " + TextFormatting.GOLD + "\"" + profileName + "\"" + TextFormatting.GRAY + " profile";
-            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, this.getLastSaveProfile(sbProfileId, uuid));
+            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
             SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
 
-            if (profiles.entrySet().size() == 1)
+            if (hasOneProfile)
             {
                 this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
                 break;
@@ -535,12 +536,19 @@ public class SkyBlockProfileViewerScreen extends Screen
         JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
         JsonElement profile = obj.get("profile");
 
-        if (profile == null)
+        if (profile == null || profile.isJsonNull())
         {
             return lastSave;
         }
 
-        JsonObject profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
+        JsonElement members = profile.getAsJsonObject().get("members");
+
+        if (members == null)
+        {
+            return lastSave;
+        }
+
+        JsonObject profiles = members.getAsJsonObject();
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet().stream().filter(entry -> entry.getKey().equals(uuid)).collect(Collectors.toList()))
         {
