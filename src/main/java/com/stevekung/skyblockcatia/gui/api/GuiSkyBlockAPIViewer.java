@@ -514,7 +514,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         if (profiles.entrySet().isEmpty())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, this.getLastSaveProfile(uuid, uuid));
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, -1);
             this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, callback));
             return;
         }
@@ -524,13 +524,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
+            boolean hasOneProfile = profiles.entrySet().size() == 1;
             String sbProfileId = profiles.get(entry.getKey()).getAsJsonObject().get("profile_id").getAsString();
             String profileName = profiles.get(entry.getKey()).getAsJsonObject().get("cute_name").getAsString();
             this.statusMessage = "Found " + EnumChatFormatting.GOLD + "\"" + profileName + "\"" + EnumChatFormatting.GRAY + " profile";
-            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, this.getLastSaveProfile(sbProfileId, uuid));
+            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
             GuiSBProfileButton button = new GuiSBProfileButton(i + 1000, this.width / 2 - 75, 75, 150, 20, callback);
 
-            if (profiles.entrySet().size() == 1)
+            if (hasOneProfile)
             {
                 this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, callback));
                 break;
@@ -567,12 +568,19 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
         JsonElement profile = obj.get("profile");
 
-        if (profile == null)
+        if (profile == null || profile.isJsonNull())
         {
             return lastSave;
         }
 
-        JsonObject profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
+        JsonElement members = profile.getAsJsonObject().get("members");
+
+        if (members == null)
+        {
+            return lastSave;
+        }
+
+        JsonObject profiles = members.getAsJsonObject();
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet().stream().filter(entry -> entry.getKey().equals(uuid)).collect(Collectors.toList()))
         {

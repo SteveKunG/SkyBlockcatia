@@ -1223,7 +1223,7 @@ public class GuiSkyBlockData extends GuiScreen
         JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
         JsonElement profile = obj.get("profile");
 
-        if (profile == null)
+        if (profile == null || profile.isJsonNull())
         {
             this.setErrorMessage("No API data returned, please try again later!");
             return;
@@ -1657,11 +1657,25 @@ public class GuiSkyBlockData extends GuiScreen
         {
             for (JsonElement element : pets)
             {
-                float exp = element.getAsJsonObject().get("exp").getAsFloat();
+                float exp = 0.0F;
+                String petRarity = SkyBlockPets.Tier.COMMON.name();
+                int candyUsed = 0;
+
+                if (element.getAsJsonObject().get("exp") != null)
+                {
+                    exp = element.getAsJsonObject().get("exp").getAsFloat();
+                }
+                if (element.getAsJsonObject().get("tier") != null)
+                {
+                    petRarity = element.getAsJsonObject().get("tier").getAsString();
+                }
+                if (element.getAsJsonObject().get("candyUsed") != null)
+                {
+                    candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
+                }
+
                 boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                 String petType = element.getAsJsonObject().get("type").getAsString();
-                String petRarity = element.getAsJsonObject().get("tier").getAsString();
-                int candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
                 NBTTagList list = new NBTTagList();
                 PetLevel level = this.checkPetLevel(exp, SkyBlockPets.Tier.valueOf(petRarity));
 
