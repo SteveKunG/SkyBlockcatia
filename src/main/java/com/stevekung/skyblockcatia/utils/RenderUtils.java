@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -63,28 +61,6 @@ public class RenderUtils
         compound.setTag("SkullOwner", properties);
         itemStack.setTagCompound(compound);
         return itemStack;
-    }
-
-    public static void drawRarity(Slot slot, IInventory lowerChestInventory)
-    {
-        if (lowerChestInventory != null)
-        {
-            String name = lowerChestInventory.getDisplayName().getUnformattedText();
-
-            if (name.equals("Auctions Browser") && slot.slotNumber >= 0 && slot.slotNumber <= 53)
-            {
-                return;
-            }
-            else if ((name.equals("Manage Auctions") || name.equals("Your Bids")) && slot.slotNumber >= 0 && slot.slotNumber <= 26)
-            {
-                return;
-            }
-            else if (name.endsWith("'s Auctions") && slot.slotNumber >= 0 && slot.slotNumber <= 35)
-            {
-                return;
-            }
-        }
-        RenderUtils.drawRarity(slot.getStack(), slot.xDisplayPosition, slot.yDisplayPosition);
     }
 
     public static void drawRarity(ItemStack itemStack, int xPos, int yPos)
