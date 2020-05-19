@@ -928,7 +928,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (SBExtendedConfig.INSTANCE.showItemRarity)
         {
-            SBRenderUtils.renderRarity(slot, null);
+            SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
         }
 
         this.itemRenderer.renderItemAndEffectIntoGUI(itemStack, i, j);

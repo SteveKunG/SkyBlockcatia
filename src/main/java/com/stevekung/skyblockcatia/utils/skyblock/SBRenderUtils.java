@@ -9,7 +9,6 @@ import com.stevekung.stevekungslib.utils.ColorUtils.RGB;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -39,26 +38,6 @@ public class SBRenderUtils
         compound.put("SkullOwner", properties);
         itemStack.setTag(compound);
         return itemStack;
-    }
-
-    public static void renderRarity(Slot slot, String title)
-    {
-        if (title != null)
-        {
-            if (title.equals("Auctions Browser") && slot.slotNumber >= 0 && slot.slotNumber <= 53)
-            {
-                return;
-            }
-            else if ((title.equals("Manage Auctions") || title.equals("Your Bids")) && slot.slotNumber >= 0 && slot.slotNumber <= 26)
-            {
-                return;
-            }
-            else if (title.endsWith("'s Auctions") && slot.slotNumber >= 0 && slot.slotNumber <= 35)
-            {
-                return;
-            }
-        }
-        SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
     }
 
     public static void renderRarity(ItemStack itemStack, int xPos, int yPos)

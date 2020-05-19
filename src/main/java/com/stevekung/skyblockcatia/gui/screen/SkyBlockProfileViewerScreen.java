@@ -407,7 +407,14 @@ public class SkyBlockProfileViewerScreen extends Screen
 
                     if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
                     {
-                        baseRankText = "MVP" + TextFormatting.valueOf(rankPlusColor.getAsString()) + "++";
+                        if (rankPlusColor != null)
+                        {
+                            baseRankText = "MVP" + TextFormatting.valueOf(rankPlusColor.getAsString()) + "++";
+                        }
+                        else
+                        {
+                            baseRankText = "MVP" + TextFormatting.RED + "++";
+                        }
                         color = TextFormatting.GOLD.toString();
                     }
                     else

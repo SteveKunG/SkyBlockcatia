@@ -407,14 +407,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         if (SBExtendedConfig.INSTANCE.showItemRarity)
         {
-            if (this.that instanceof ChestScreen)
-            {
-                SBRenderUtils.renderRarity(slot, this.title.getUnformattedComponentText());
-            }
-            else
-            {
-                SBRenderUtils.renderRarity(slot, null);
-            }
+            SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
         }
     }
 
