@@ -107,6 +107,54 @@ public class SBPets
         }
     }
 
+    public enum HeldItem
+    {
+        PET_ITEM_ALL_SKILLS_BOOST_COMMON("PET_ITEM_ALL_SKILLS_BOOST", TextFormatting.WHITE),
+        PET_ITEM_BIG_TEETH_COMMON("PET_ITEM_BIG_TEETH", TextFormatting.WHITE),
+        PET_ITEM_IRON_CLAWS_COMMON("PET_ITEM_IRON_CLAWS", TextFormatting.WHITE),
+        PET_ITEM_SHARPENED_CLAWS_UNCOMMON("PET_ITEM_SHARPENED_CLAWS", TextFormatting.GREEN),
+        PET_ITEM_HARDENED_SCALES_UNCOMMON("PET_ITEM_HARDENED_SCALES", TextFormatting.GREEN),
+        PET_ITEM_BUBBLEGUM(null, TextFormatting.BLUE),
+        PET_ITEM_LUCKY_CLOVER(null, TextFormatting.DARK_PURPLE),
+        PET_ITEM_TEXTBOOK(null, TextFormatting.GOLD),
+        PET_ITEM_SADDLE(null, TextFormatting.GREEN),
+        PET_ITEM_EXP_SHARE(null, TextFormatting.DARK_PURPLE),
+        PET_ITEM_TIER_BOOST(null, TextFormatting.GOLD),
+        PET_ITEM_COMBAT_SKILL_BOOST_COMMON("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.WHITE),
+        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.GREEN),
+        PET_ITEM_COMBAT_SKILL_BOOST_RARE("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.BLUE),
+        PET_ITEM_COMBAT_SKILL_BOOST_EPIC("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.DARK_PURPLE),
+        PET_ITEM_FISHING_SKILL_BOOST_COMMON("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.WHITE),
+        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.GREEN),
+        PET_ITEM_FISHING_SKILL_BOOST_RARE("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.BLUE),
+        PET_ITEM_FISHING_SKILL_BOOST_EPIC("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
+        PET_ITEM_FORAGING_SKILL_BOOST_COMMON("PET_ITEM_FORAGING_SKILL_BOOST", TextFormatting.WHITE),
+        PET_ITEM_FORAGING_SKILL_BOOST_EPIC("PET_ITEM_FORAGING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
+        PET_ITEM_MINING_SKILL_BOOST_COMMON("PET_ITEM_MINING_SKILL_BOOST", TextFormatting.WHITE),
+        PET_ITEM_MINING_SKILL_BOOST_RARE("PET_ITEM_MINING_SKILL_BOOST", TextFormatting.BLUE),
+        PET_ITEM_FARMING_SKILL_BOOST_COMMON("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.WHITE),
+        PET_ITEM_FARMING_SKILL_BOOST_RARE("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.BLUE);
+
+        private final String altName;
+        private final TextFormatting color;
+
+        private HeldItem(String altName, TextFormatting color)
+        {
+            this.altName = altName;
+            this.color = color;
+        }
+
+        public String getAltName()
+        {
+            return this.altName;
+        }
+
+        public TextFormatting getColor()
+        {
+            return this.color;
+        }
+    }
+
     public static class Info
     {
         private final int currentPetLevel;

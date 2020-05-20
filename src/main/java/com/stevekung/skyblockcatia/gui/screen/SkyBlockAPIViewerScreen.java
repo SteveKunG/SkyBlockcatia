@@ -35,10 +35,7 @@ import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
-import com.stevekung.skyblockcatia.utils.skyblock.api.BonusStatTemplate;
-import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
-import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
-import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
+import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
@@ -122,6 +119,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     private OthersViewButton othersButton = OthersViewButton.KILLS;
     private BasicInfoViewButton basicInfoButton = BasicInfoViewButton.INFO;
     private boolean updated;
+    private final ViewerData data = new ViewerData();
+    private int skillCount;
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -675,6 +674,22 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             if (view.button != null)
             {
+                if (view.button == ViewButton.SKILLS.button)
+                {
+                    if (!this.data.isHasSkills())
+                    {
+                        view.button.active = false;
+                        continue;
+                    }
+                }
+                if (view.button == ViewButton.SLAYERS.button)
+                {
+                    if (!this.data.isHasSlayers())
+                    {
+                        view.button.active = false;
+                        continue;
+                    }
+                }
                 view.button.active = this.viewButton != view;
             }
         }
@@ -689,6 +704,26 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (view.button != null)
             {
                 view.button.active = this.basicInfoButton != view;
+
+                if (view.button == BasicInfoViewButton.COLLECTIONS.button)
+                {
+                    if (!this.data.isHasCollections())
+                    {
+                        view.button.active = false;
+                        view.button.visible = visible;
+                        continue;
+                    }
+                }
+                if (view.button == BasicInfoViewButton.CRAFTED_MINIONS.button)
+                {
+                    if (!this.data.isHasMinions())
+                    {
+                        view.button.active = false;
+                        view.button.visible = visible;
+                        continue;
+                    }
+                }
+
                 view.button.visible = visible;
             }
         }
@@ -703,6 +738,35 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (view.button != null)
             {
                 view.button.active = this.othersButton != view;
+
+                if (view.button == OthersViewButton.KILLS.button)
+                {
+                    if (!this.data.isHasKills())
+                    {
+                        view.button.active = false;
+                        view.button.visible = visible;
+                        continue;
+                    }
+                }
+                if (view.button == OthersViewButton.DEATHS.button)
+                {
+                    if (!this.data.isHasDeaths())
+                    {
+                        view.button.active = false;
+                        view.button.visible = visible;
+                        continue;
+                    }
+                }
+                if (view.button == OthersViewButton.OTHER_STATS.button)
+                {
+                    if (!this.data.isHasOthers())
+                    {
+                        view.button.active = false;
+                        view.button.visible = visible;
+                        continue;
+                    }
+                }
+
                 view.button.visible = visible;
             }
         }
@@ -1114,6 +1178,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 break;
             }
         }
+        this.refreshViewButton(this.viewButton);
+        this.refreshBasicInfoViewButton(this.basicInfoButton, true);
+        this.refreshOthersViewButton(this.othersButton, false);
         this.loadingApi = false;
     }
 
@@ -1325,7 +1392,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (this.sbCraftedMinions.isEmpty())
         {
-            this.sbCraftedMinions.add(dummy);
+            this.data.setHasMinions(false);
         }
     }
 
@@ -1487,7 +1554,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            this.collections.add(dummyCollection);
+            this.data.setHasCollections(false);
         }
     }
 
@@ -1515,6 +1582,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 float exp = 0.0F;
                 String petRarity = SBPets.Tier.COMMON.name();
                 int candyUsed = 0;
+                SBPets.HeldItem heldItem = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
@@ -1528,15 +1596,25 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
                 }
+                if (element.getAsJsonObject().get("heldItem") != null && !element.getAsJsonObject().get("heldItem").isJsonNull())
+                {
+                    heldItem = SBPets.HeldItem.valueOf(element.getAsJsonObject().get("heldItem").getAsString());
+                }
 
+                SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
                 boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 ListNBT list = new ListNBT();
-                SBPets.Info level = this.checkPetLevel(exp, SBPets.Tier.valueOf(petRarity));
+
+                if (heldItem != null && heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST)
+                {
+                    tier = SBPets.Tier.values()[Math.min(SBPets.Tier.values().length - 1, tier.ordinal() + 1)];
+                }
+
+                SBPets.Info level = this.checkPetLevel(exp, tier);
 
                 try
                 {
-                    SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
                     TextFormatting rarity = tier.getTierColor();
                     SBPets.Type type = SBPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
@@ -1553,12 +1631,23 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     if (candyUsed > 0)
                     {
-                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed))));
+                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
+                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10))));
+                    }
+                    if (heldItem != null)
+                    {
+                        String heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.toString().toLowerCase().replace("pet_item_", "").replace("_", " "));
+
+                        if (heldItem.getAltName() != null)
+                        {
+                            heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase().replace("pet_item_", "").replace("_", " "));
+                        }
+                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Held Item: " + heldItemName))));
                     }
 
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + NumberUtils.format(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + petRarity + " PET"))));
+                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + tier + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
 
@@ -2089,6 +2178,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.skillAvg = SKILL_AVG.format(avg / count);
         }
+        if (this.skillCount == 0)
+        {
+            this.data.setHasSkills(false);
+        }
     }
 
     private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type)
@@ -2146,6 +2239,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 skillProgress = Math.max(0, Math.min(currentXp / xpToNextLvl, 1));
             }
             this.setSkillLevel(type, currentLvl);
+            this.skillCount += 1;
             return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
         }
         else
@@ -2280,6 +2374,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.sbOthers.addAll(others);
         }
+        this.data.setHasKills(this.sbKills.size() > 1);
+        this.data.setHasDeaths(this.sbDeaths.size() > 1);
+        this.data.setHasOthers(this.sbOthers.size() > 1);
     }
 
     private void sortStats(List<SkyBlockStats> list, String name)
@@ -2343,7 +2440,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         if (this.slayerInfo.isEmpty())
         {
-            this.slayerInfo.add(new SkyBlockSlayerInfo(TextFormatting.RED + "Empty Slayer data!"));
+            this.data.setHasSlayers(false);
         }
     }
 
@@ -2885,7 +2982,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
-            this.headerHeight = this.stats.size() == 1 ? 0 : 16;
+            this.headerHeight = 16;
         }
 
         @Override
@@ -2971,12 +3068,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         public Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockStats> stats, SkyBlockStats.Type type)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
-
-            if (stats.isEmpty())
-            {
-                stats.add(new SkyBlockStats("Empty " + type.name().toLowerCase() + " data!", 0.0F));
-            }
-
             this.stats = stats;
         }
 
@@ -2989,12 +3080,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         @Override
         protected void drawPanel(int index, int left, int right, int top)
         {
-            SkyBlockStats stat = this.stats.get(index);
-
-            this.fontRenderer.drawString(StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
-
-            if (this.stats.size() > 1)
+            if (!this.stats.isEmpty())
             {
+                SkyBlockStats stat = this.stats.get(index);
+                this.fontRenderer.drawString(StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
                 this.fontRenderer.drawString(stat.getValueByString(), right - this.fontRenderer.getStringWidth(stat.getValueByString()) - 10, top, index % 2 == 0 ? 16777215 : 9474192);
             }
         }
@@ -3021,26 +3110,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         @Override
         protected void drawPanel(int index, int left, int right, int top)
         {
-            if (this.collection.size() == 1)
+            SBCollections collection = this.collection.get(index);
+
+            if (!collection.getItemStack().isEmpty() && collection.getCollectionType() != null)
             {
-                this.fontRenderer.drawString(TextFormatting.RED + "Collection API is not available!", left + 4, top + 5, 16777215);
+                this.parent.drawItemStackSlot(left + 2, top, collection.getItemStack());
+                this.fontRenderer.drawString(collection.getItemStack().getDisplayName().getFormattedText() + " " + TextFormatting.GOLD + collection.getLevel(), left + 25, top + 6, 16777215);
+                this.fontRenderer.drawString(collection.getCollectionAmount(), right - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
-                SBCollections collection = this.collection.get(index);
-
-                if (!collection.getItemStack().isEmpty() && collection.getCollectionType() != null)
+                if (collection.getCollectionType() != null)
                 {
-                    this.parent.drawItemStackSlot(left + 2, top, collection.getItemStack());
-                    this.fontRenderer.drawString(collection.getItemStack().getDisplayName().getFormattedText() + " " + TextFormatting.GOLD + collection.getLevel(), left + 25, top + 6, 16777215);
-                    this.fontRenderer.drawString(collection.getCollectionAmount(), right - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
-                }
-                else
-                {
-                    if (collection.getCollectionType() != null)
-                    {
-                        this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
-                    }
+                    this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
                 }
             }
         }
@@ -3067,27 +3149,20 @@ public class SkyBlockAPIViewerScreen extends Screen
         @Override
         protected void drawPanel(int index, int left, int right, int top)
         {
-            if (this.craftMinions.size() == 1)
+            SBMinions.CraftedInfo craftedMinion = this.craftMinions.get(index);
+
+            if (!craftedMinion.getMinionItem().isEmpty())
             {
-                this.fontRenderer.drawString(TextFormatting.RED + "Crafted Minions is empty!", left + 4, top + 5, 16777215);
+                String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
+                this.parent.drawItemStackSlot(left + 2, top, craftedMinion.getMinionItem());
+                this.fontRenderer.drawString(name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), left + 25, top + 6, 16777215);
+                this.fontRenderer.drawString(craftedMinion.getCraftedTiers(), right - this.fontRenderer.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
-                SBMinions.CraftedInfo craftedMinion = this.craftMinions.get(index);
-
-                if (!craftedMinion.getMinionItem().isEmpty())
+                if (craftedMinion.getMinionName() != null)
                 {
-                    String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
-                    this.parent.drawItemStackSlot(left + 2, top, craftedMinion.getMinionItem());
-                    this.fontRenderer.drawString(name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), left + 25, top + 6, 16777215);
-                    this.fontRenderer.drawString(craftedMinion.getCraftedTiers(), right - this.fontRenderer.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
-                }
-                else
-                {
-                    if (craftedMinion.getMinionName() != null)
-                    {
-                        this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
-                    }
+                    this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
                 }
             }
         }
