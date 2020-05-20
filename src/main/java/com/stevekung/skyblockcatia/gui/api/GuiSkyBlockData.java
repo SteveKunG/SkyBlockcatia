@@ -1702,7 +1702,6 @@ public class GuiSkyBlockData extends GuiScreen
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (active ? EnumChatFormatting.GREEN + "Active Pet" : EnumChatFormatting.RED + "Inactive Pet")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
-                    list.appendTag(new NBTTagString(""));
 
                     if (level.getCurrentPetLevel() < 100)
                     {
@@ -1710,6 +1709,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (candyUsed > 0)
                     {
+                        list.appendTag(new NBTTagString(""));
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + "/10"));
                     }
                     if (heldItem != null)
