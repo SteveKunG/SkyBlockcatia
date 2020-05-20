@@ -97,6 +97,8 @@ public class GuiSkyBlockData extends GuiScreen
     private OthersViewButton othersButton = OthersViewButton.KILLS;
     private BasicInfoViewButton basicInfoButton = BasicInfoViewButton.INFO;
     private boolean updated;
+    private final ViewerData data = new ViewerData();
+    private int skillCount;
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -252,14 +254,70 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (viewType != null)
                 {
+                    if (button.id == ViewButton.SKILLS.id)
+                    {
+                        if (!this.data.isHasSkills())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (button.id == ViewButton.SLAYERS.id)
+                    {
+                        if (!this.data.isHasSlayers())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
                     button.enabled = this.viewButton != viewType;
                 }
                 if (basicInfoType != null)
                 {
+                    if (button.id == BasicInfoViewButton.COLLECTIONS.id)
+                    {
+                        if (!this.data.isHasCollections())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (button.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
+                    {
+                        if (!this.data.isHasMinions())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
                     button.enabled = this.basicInfoButton != basicInfoType;
                 }
                 if (othersType != null)
                 {
+                    if (button.id == OthersViewButton.KILLS.id)
+                    {
+                        if (!this.data.isHasKills())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (button.id == OthersViewButton.DEATHS.id)
+                    {
+                        if (!this.data.isHasDeaths())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (button.id == OthersViewButton.OTHER_STATS.id)
+                    {
+                        if (!this.data.isHasOthers())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
                     button.enabled = this.othersButton != othersType;
                 }
             }
@@ -339,6 +397,32 @@ public class GuiSkyBlockData extends GuiScreen
                 if (type2 != null)
                 {
                     viewButton.visible = true;
+
+                    if (viewButton.id == OthersViewButton.KILLS.id)
+                    {
+                        if (!this.data.isHasKills())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (viewButton.id == OthersViewButton.DEATHS.id)
+                    {
+                        if (!this.data.isHasDeaths())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (viewButton.id == OthersViewButton.OTHER_STATS.id)
+                    {
+                        if (!this.data.isHasOthers())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+
                     viewButton.enabled = this.othersButton != type2;
                 }
             }
@@ -678,11 +762,25 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (type2 != null)
                 {
+                    if (type2.id == ViewButton.SKILLS.id)
+                    {
+                        if (!this.data.isHasSkills())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (type2.id == ViewButton.SLAYERS.id)
+                    {
+                        if (!this.data.isHasSlayers())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
                     viewButton.enabled = this.viewButton != type2;
                 }
             }
-
-            this.updated = false;
 
             if (type.id == ViewButton.INFO.id)
             {
@@ -714,6 +812,23 @@ public class GuiSkyBlockData extends GuiScreen
                     if (type2 != null)
                     {
                         viewButton.visible = true;
+
+                        if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
+                        {
+                            if (!this.data.isHasCollections())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
+                        if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
+                        {
+                            if (!this.data.isHasMinions())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
                         viewButton.enabled = this.basicInfoButton != type2;
                     }
                 }
@@ -764,6 +879,31 @@ public class GuiSkyBlockData extends GuiScreen
                     if (type2 != null)
                     {
                         viewButton.visible = true;
+
+                        if (type2.id == OthersViewButton.KILLS.id)
+                        {
+                            if (!this.data.isHasKills())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
+                        if (type2.id == OthersViewButton.DEATHS.id)
+                        {
+                            if (!this.data.isHasDeaths())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
+                        if (type2.id == OthersViewButton.OTHER_STATS.id)
+                        {
+                            if (!this.data.isHasOthers())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
                         viewButton.enabled = this.othersButton != type2;
                     }
                 }
@@ -791,6 +931,30 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (type2 != null)
                 {
+                    if (type2.id == OthersViewButton.KILLS.id)
+                    {
+                        if (!this.data.isHasKills())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (type2.id == OthersViewButton.DEATHS.id)
+                    {
+                        if (!this.data.isHasDeaths())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (type2.id == OthersViewButton.OTHER_STATS.id)
+                    {
+                        if (!this.data.isHasOthers())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
                     viewButton.enabled = this.othersButton != type2;
                 }
             }
@@ -838,6 +1002,22 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (type2 != null)
                 {
+                    if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
+                    {
+                        if (!this.data.isHasCollections())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
+                    {
+                        if (!this.data.isHasMinions())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
                     viewButton.enabled = this.basicInfoButton != type2;
                 }
             }
@@ -1266,6 +1446,54 @@ public class GuiSkyBlockData extends GuiScreen
                 break;
             }
         }
+
+        for (GuiButton viewButton : this.buttonList)
+        {
+            ViewButton type2 = ViewButton.getTypeForButton(viewButton);
+
+            if (type2 != null)
+            {
+                if (type2.id == ViewButton.SKILLS.id)
+                {
+                    if (!this.data.isHasSkills())
+                    {
+                        viewButton.enabled = false;
+                        continue;
+                    }
+                }
+                if (type2.id == ViewButton.SLAYERS.id)
+                {
+                    if (!this.data.isHasSlayers())
+                    {
+                        viewButton.enabled = false;
+                    }
+                }
+            }
+        }
+        for (GuiButton viewButton : this.buttonList)
+        {
+            BasicInfoViewButton type2 = BasicInfoViewButton.getTypeForButton(viewButton);
+
+            if (type2 != null)
+            {
+                if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
+                {
+                    if (!this.data.isHasCollections())
+                    {
+                        viewButton.enabled = false;
+                        continue;
+                    }
+                }
+                if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
+                {
+                    if (!this.data.isHasMinions())
+                    {
+                        viewButton.enabled = false;
+                        continue;
+                    }
+                }
+            }
+        }
         this.loadingApi = false;
     }
 
@@ -1477,7 +1705,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         if (this.sbCraftedMinions.isEmpty())
         {
-            this.sbCraftedMinions.add(dummy);
+            this.data.setHasMinions(false);
         }
     }
 
@@ -1632,7 +1860,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         else
         {
-            this.collections.add(dummyCollection);
+            this.data.setHasCollections(false);
         }
     }
 
@@ -2259,6 +2487,10 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.skillAvg = SKILL_AVG.format(avg / count);
         }
+        if (this.skillCount == 0)
+        {
+            this.data.setHasSkills(false);
+        }
     }
 
     private SkyBlockSkillInfo checkSkill(JsonElement element, SkillType type)
@@ -2316,6 +2548,7 @@ public class GuiSkyBlockData extends GuiScreen
                 skillProgress = Math.max(0, Math.min(currentXp / xpToNextLvl, 1));
             }
             this.setSkillLevel(type, currentLvl);
+            this.skillCount += 1;
             return new SkyBlockSkillInfo(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
         }
         else
@@ -2450,6 +2683,9 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.sbOthers.addAll(others);
         }
+        this.data.setHasKills(this.sbKills.size() > 1);
+        this.data.setHasDeaths(this.sbDeaths.size() > 1);
+        this.data.setHasOthers(this.sbOthers.size() > 1);
     }
 
     private void sortStats(List<SkyBlockStats> list, String name)
@@ -2513,7 +2749,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         if (this.slayerInfo.isEmpty())
         {
-            this.slayerInfo.add(new SkyBlockSlayerInfo(EnumChatFormatting.RED + "Empty Slayer data!"));
+            this.data.setHasSlayers(false);
         }
     }
 
@@ -3354,15 +3590,7 @@ public class GuiSkyBlockData extends GuiScreen
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.stats = stats;
             this.parent = parent;
-
-            if (this.stats.size() == 1)
-            {
-                this.setHeaderInfo(false, 0);
-            }
-            else
-            {
-                this.setHeaderInfo(true, 16);
-            }
+            this.setHeaderInfo(true, 16);
         }
 
         @Override
@@ -3465,12 +3693,6 @@ public class GuiSkyBlockData extends GuiScreen
         public Others(GuiSkyBlockData parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockStats> stats, SkyBlockStats.Type type)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
-
-            if (stats.isEmpty())
-            {
-                stats.add(new SkyBlockStats("Empty " + type.name().toLowerCase() + " data!", 0.0F));
-            }
-
             this.stats = stats;
             this.parent = parent;
         }
@@ -3484,12 +3706,10 @@ public class GuiSkyBlockData extends GuiScreen
         @Override
         protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
         {
-            SkyBlockStats stat = this.stats.get(index);
-
-            this.parent.drawString(this.parent.mc.fontRendererObj, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
-
-            if (this.stats.size() > 1)
+            if (!this.stats.isEmpty())
             {
+                SkyBlockStats stat = this.stats.get(index);
+                this.parent.drawString(this.parent.mc.fontRendererObj, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
                 this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValueByString(), this.right - this.parent.mc.fontRendererObj.getStringWidth(stat.getValueByString()) - 10, top, index % 2 == 0 ? 16777215 : 9474192);
             }
         }
@@ -3528,26 +3748,19 @@ public class GuiSkyBlockData extends GuiScreen
         @Override
         protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
         {
-            if (this.collection.size() == 1)
+            SkyBlockCollection collection = this.collection.get(index);
+
+            if (collection.getItemStack() != null && collection.getCollectionType() != null)
             {
-                this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.RED + "Collection API is not available!", this.left + 4, top + 5, 16777215);
+                this.parent.drawItemStackSlot(this.left + 2, top, collection.getItemStack());
+                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.left + 25, top + 6, 16777215);
+                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.right - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
-                SkyBlockCollection collection = this.collection.get(index);
-
-                if (collection.getItemStack() != null && collection.getCollectionType() != null)
+                if (collection.getCollectionType() != null)
                 {
-                    this.parent.drawItemStackSlot(this.left + 2, top, collection.getItemStack());
-                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.left + 25, top + 6, 16777215);
-                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.right - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
-                }
-                else
-                {
-                    if (collection.getCollectionType() != null)
-                    {
-                        this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + collection.getCollectionType().getName(), this.left + 4, top + 5, 16777215);
-                    }
+                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + collection.getCollectionType().getName(), this.left + 4, top + 5, 16777215);
                 }
             }
         }
@@ -3586,27 +3799,20 @@ public class GuiSkyBlockData extends GuiScreen
         @Override
         protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
         {
-            if (this.craftMinions.size() == 1)
+            CraftedMinion craftedMinion = this.craftMinions.get(index);
+
+            if (craftedMinion.getMinionItem() != null)
             {
-                this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.RED + "Crafted Minions is empty!", this.left + 4, top + 5, 16777215);
+                String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
+                this.parent.drawItemStackSlot(this.left + 2, top, craftedMinion.getMinionItem());
+                this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.left + 25, top + 6, 16777215);
+                this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.right - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
-                CraftedMinion craftedMinion = this.craftMinions.get(index);
-
-                if (craftedMinion.getMinionItem() != null)
+                if (craftedMinion.getMinionName() != null)
                 {
-                    String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
-                    this.parent.drawItemStackSlot(this.left + 2, top, craftedMinion.getMinionItem());
-                    this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.left + 25, top + 6, 16777215);
-                    this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.right - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
-                }
-                else
-                {
-                    if (craftedMinion.getMinionName() != null)
-                    {
-                        this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.left + 4, top + 5, 16777215);
-                    }
+                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.left + 4, top + 5, 16777215);
                 }
             }
         }
