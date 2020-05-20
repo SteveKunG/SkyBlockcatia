@@ -48,6 +48,8 @@
         "TileEntityItemStackRendererMixin",
         "EntityMixin",
         "RenderItemMixin",
-        "EffectRendererMixin"
+        "EffectRendererMixin",
+        "ItemSkullMixin",
+        "ItemBlockMixin"
     ]
 }

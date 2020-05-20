@@ -49,6 +49,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -678,6 +679,22 @@ public class HypixelEventHandler
             }
         }
         catch (Exception e) {}
+    }
+
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
+        ItemStack itemStack = event.entityPlayer.getCurrentEquippedItem();
+
+        if (HypixelEventHandler.isSkyBlock && itemStack != null && itemStack.hasTagCompound() && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
+        {
+            NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
+
+            if (extraAttrib.getString("id").equals("SNOW_BLASTER"))
+            {
+                event.setCanceled(true);
+            }
+        }
     }
 
     private static void getHypixelNickedPlayer(Minecraft mc)
