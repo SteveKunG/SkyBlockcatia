@@ -104,4 +104,52 @@ public class SkyBlockPets
             return RenderUtils.getSkullItemStack(this.uuid, this.value);
         }
     }
+
+    public enum HeldItem
+    {
+        PET_ITEM_ALL_SKILLS_BOOST_COMMON("PET_ITEM_ALL_SKILLS_BOOST", EnumChatFormatting.WHITE),
+        PET_ITEM_BIG_TEETH_COMMON("PET_ITEM_BIG_TEETH", EnumChatFormatting.WHITE),
+        PET_ITEM_IRON_CLAWS_COMMON("PET_ITEM_IRON_CLAWS", EnumChatFormatting.WHITE),
+        PET_ITEM_SHARPENED_CLAWS_UNCOMMON("PET_ITEM_SHARPENED_CLAWS", EnumChatFormatting.GREEN),
+        PET_ITEM_HARDENED_SCALES_UNCOMMON("PET_ITEM_HARDENED_SCALES", EnumChatFormatting.GREEN),
+        PET_ITEM_BUBBLEGUM(null, EnumChatFormatting.BLUE),
+        PET_ITEM_LUCKY_CLOVER(null, EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_TEXTBOOK(null, EnumChatFormatting.GOLD),
+        PET_ITEM_SADDLE(null, EnumChatFormatting.GREEN),
+        PET_ITEM_EXP_SHARE(null, EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_TIER_BOOST(null, EnumChatFormatting.GOLD),
+        PET_ITEM_COMBAT_SKILL_BOOST_COMMON("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.WHITE),
+        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.GREEN),
+        PET_ITEM_COMBAT_SKILL_BOOST_RARE("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.BLUE),
+        PET_ITEM_COMBAT_SKILL_BOOST_EPIC("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_FISHING_SKILL_BOOST_COMMON("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.WHITE),
+        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.GREEN),
+        PET_ITEM_FISHING_SKILL_BOOST_RARE("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.BLUE),
+        PET_ITEM_FISHING_SKILL_BOOST_EPIC("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_FORAGING_SKILL_BOOST_COMMON("PET_ITEM_FORAGING_SKILL_BOOST", EnumChatFormatting.WHITE),
+        PET_ITEM_FORAGING_SKILL_BOOST_EPIC("PET_ITEM_FORAGING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_MINING_SKILL_BOOST_COMMON("PET_ITEM_MINING_SKILL_BOOST", EnumChatFormatting.WHITE),
+        PET_ITEM_MINING_SKILL_BOOST_RARE("PET_ITEM_MINING_SKILL_BOOST", EnumChatFormatting.BLUE),
+        PET_ITEM_FARMING_SKILL_BOOST_COMMON("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.WHITE),
+        PET_ITEM_FARMING_SKILL_BOOST_RARE("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.BLUE);
+
+        private final String altName;
+        private final EnumChatFormatting color;
+
+        private HeldItem(String altName, EnumChatFormatting color)
+        {
+            this.altName = altName;
+            this.color = color;
+        }
+
+        public String getAltName()
+        {
+            return this.altName;
+        }
+
+        public EnumChatFormatting getColor()
+        {
+            return this.color;
+        }
+    }
 }

@@ -1660,6 +1660,7 @@ public class GuiSkyBlockData extends GuiScreen
                 float exp = 0.0F;
                 String petRarity = SkyBlockPets.Tier.COMMON.name();
                 int candyUsed = 0;
+                SkyBlockPets.HeldItem heldItem = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
@@ -1673,15 +1674,25 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
                 }
+                if (element.getAsJsonObject().get("heldItem") != null && !element.getAsJsonObject().get("heldItem").isJsonNull())
+                {
+                    heldItem = SkyBlockPets.HeldItem.valueOf(element.getAsJsonObject().get("heldItem").getAsString());
+                }
 
+                SkyBlockPets.Tier tier = SkyBlockPets.Tier.valueOf(petRarity);
                 boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 NBTTagList list = new NBTTagList();
-                PetLevel level = this.checkPetLevel(exp, SkyBlockPets.Tier.valueOf(petRarity));
+
+                if (heldItem != null && heldItem == SkyBlockPets.HeldItem.PET_ITEM_TIER_BOOST)
+                {
+                    tier = SkyBlockPets.Tier.values()[Math.min(SkyBlockPets.Tier.values().length - 1, tier.ordinal() + 1)];
+                }
+
+                PetLevel level = this.checkPetLevel(exp, tier);
 
                 try
                 {
-                    SkyBlockPets.Tier tier = SkyBlockPets.Tier.valueOf(petRarity);
                     EnumChatFormatting rarity = tier.getTierColor();
                     SkyBlockPets.Type type = SkyBlockPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
@@ -1691,6 +1702,7 @@ public class GuiSkyBlockData extends GuiScreen
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (active ? EnumChatFormatting.GREEN + "Active Pet" : EnumChatFormatting.RED + "Inactive Pet")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
+                    list.appendTag(new NBTTagString(""));
 
                     if (level.getCurrentPetLevel() < 100)
                     {
@@ -1698,12 +1710,22 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (candyUsed > 0)
                     {
-                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed));
+                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + "/10"));
+                    }
+                    if (heldItem != null)
+                    {
+                        String heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.toString().toLowerCase().replace("pet_item_", "").replace("_", " "));
+
+                        if (heldItem.getAltName() != null)
+                        {
+                            heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase().replace("pet_item_", "").replace("_", " "));
+                        }
+                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + heldItemName));
                     }
 
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.format(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
-                    list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + petRarity + " PET"));
+                    list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                     petData.add(new PetData(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
 
