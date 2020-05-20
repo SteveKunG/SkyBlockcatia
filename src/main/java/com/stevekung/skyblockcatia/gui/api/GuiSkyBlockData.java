@@ -1938,7 +1938,7 @@ public class GuiSkyBlockData extends GuiScreen
                     if (candyUsed > 0)
                     {
                         list.appendTag(new NBTTagString(""));
-                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + "/10"));
+                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + 10));
                     }
                     if (heldItem != null)
                     {
