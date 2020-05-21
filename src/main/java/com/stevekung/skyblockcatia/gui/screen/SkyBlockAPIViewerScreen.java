@@ -258,6 +258,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.setCurrentGroup(SBInventoryGroup.GROUPS[i]);
         this.guiLeft = (this.width - this.xSize) / 2 + 50;
         this.guiTop = (this.height - this.ySize) / 2 + 10;
+
+        if (this.error)
+        {
+            this.updateErrorButton();
+        }
     }
 
     @Override
@@ -799,9 +804,15 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.error = true;
         this.loadingApi = false;
         this.errorMessage = message;
+        this.updateErrorButton();
+    }
+
+    private void updateErrorButton()
+    {
         this.backButton.visible = false;
         this.doneButton.x = this.width / 2 - 75;
         this.doneButton.y = this.height / 4 + 132;
+        this.doneButton.setMessage(LangUtils.translate("gui.back"));
 
         for (Widget button : this.buttons)
         {
@@ -1151,10 +1162,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         this.processCraftedMinions();
+        String checkUUID = this.uuid;
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
+            checkUUID = userUUID;
 
             if (userUUID.equals(this.uuid))
             {
@@ -1178,6 +1191,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                 break;
             }
         }
+
+        if (!checkUUID.equals(this.uuid))
+        {
+            this.setErrorMessage("Current Player UUID not matched Profile UUID, please try again later!");
+            return;
+        }
+
         this.refreshViewButton(this.viewButton);
         this.refreshBasicInfoViewButton(this.basicInfoButton, true);
         this.refreshOthersViewButton(this.othersButton, false);

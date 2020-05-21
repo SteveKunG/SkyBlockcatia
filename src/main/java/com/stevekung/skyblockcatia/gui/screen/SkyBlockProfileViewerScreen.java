@@ -314,7 +314,7 @@ public class SkyBlockProfileViewerScreen extends Screen
                 this.suggestionHelper.render(mouseX, mouseY);
                 this.usernameTextField.render(mouseX, mouseY, partialTicks);
 
-                if (this.suggestionHelper.field_228108_q_ == null && StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
+                if (this.suggestionHelper.field_228108_q_ == null && StringUtils.isNullOrEmpty(this.usernameTextField.getText()) && !this.usernameTextField.isFocused())
                 {
                     this.drawString(this.font, "Enter username", this.width / 2 - 71, 51, 10526880);
                 }
