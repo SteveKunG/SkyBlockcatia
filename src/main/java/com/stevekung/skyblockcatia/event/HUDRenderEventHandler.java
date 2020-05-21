@@ -245,11 +245,12 @@ public class HUDRenderEventHandler
                 {
                     int golemStage = 0;
 
-                    for (int headPos = 1; headPos < 5; headPos++)
+                    for (int headPos = 0; headPos < 5; headPos++)
                     {
                         if (this.mc.theWorld.getBlockState(new BlockPos(-689, 5 + headPos, -273)).getBlock() == Blocks.skull)
                         {
                             golemStage = headPos + 1;
+                            break;
                         }
                     }
 
