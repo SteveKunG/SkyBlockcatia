@@ -10,6 +10,7 @@
         "MixinArmorLayer",
         "MixinBlockItem",
         "MixinBossOverlayGui",
+        "MixinChatScreen",
         "MixinClientModLoader",
         "MixinClientPlayerEntity",
         "MixinContainerScreen",
