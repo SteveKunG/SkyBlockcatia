@@ -978,7 +978,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (itemStack.isEmpty())
         {
-            Pair<ResourceLocation, ResourceLocation> pair = slot.func_225517_c_();
+            Pair<ResourceLocation, ResourceLocation> pair = slot.getBackground();
 
             if (pair != null)
             {
