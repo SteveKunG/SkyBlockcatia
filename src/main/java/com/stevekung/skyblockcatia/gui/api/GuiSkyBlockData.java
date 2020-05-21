@@ -427,6 +427,11 @@ public class GuiSkyBlockData extends GuiScreen
                 }
             }
         }
+
+        if (this.error)
+        {
+            this.updateErrorButton();
+        }
     }
 
     @Override
@@ -1051,9 +1056,15 @@ public class GuiSkyBlockData extends GuiScreen
         this.error = true;
         this.loadingApi = false;
         this.errorMessage = message;
+        this.updateErrorButton();
+    }
+
+    private void updateErrorButton()
+    {
         this.backButton.visible = false;
         this.doneButton.xPosition = this.width / 2 - 75;
         this.doneButton.yPosition = this.height / 4 + 132;
+        this.doneButton.displayString = LangUtils.translate("gui.back");
 
         for (GuiButton button : this.buttonList)
         {
@@ -1419,10 +1430,12 @@ public class GuiSkyBlockData extends GuiScreen
         }
 
         this.processCraftedMinions();
+        String checkUUID = this.uuid;
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
+            checkUUID = userUUID;
 
             if (userUUID.equals(this.uuid))
             {
@@ -1445,6 +1458,12 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID);
                 break;
             }
+        }
+
+        if (!checkUUID.equals(this.uuid))
+        {
+            this.setErrorMessage("Current Player UUID not matched Profile UUID, please try again later!");
+            return;
         }
 
         for (GuiButton viewButton : this.buttonList)
