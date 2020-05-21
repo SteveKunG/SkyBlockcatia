@@ -341,7 +341,7 @@ public class SkyBlockEventHandler
 
                             if (!name.isEmpty())
                             {
-                                ITextComponent chat = event.getMessage().shallowCopy();
+                                ITextComponent chat = event.getMessage().deepCopy();
                                 chat.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/p " + name));
                                 event.setMessage(chat);
                             }
