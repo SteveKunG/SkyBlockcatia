@@ -9,7 +9,6 @@ version="2.0.0"
 displayName="SkyBlockcatia"
 description="SkyBlock API and helper!"
 displayURL="https://minecraft.curseforge.com/projects/skyblockcatia"
-logoFile=""
 authors="SteveKunG"
 
 [[dependencies.skyblockcatia]]

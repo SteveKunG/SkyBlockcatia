@@ -51,7 +51,7 @@ public abstract class MixinDownloadingTexture
             nativeimage.copyAreaRGBA(52, 20, -8, 32, 4, 12, true, false);
         }
 
-        if (!SkyBlockcatiaConfig.GENERAL.enableSkinRenderingFix.get())
+        if (SkyBlockcatiaConfig.GENERAL.enableSkinRenderingFix.get())
         {
             nativeImage.copyAreaRGBA(4, 16, 16, 32, 4, 4, true, false);
             nativeImage.copyAreaRGBA(8, 16, 16, 32, 4, 4, true, false);
