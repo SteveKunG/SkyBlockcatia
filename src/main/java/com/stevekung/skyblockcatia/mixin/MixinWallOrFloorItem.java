@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -36,26 +37,12 @@ public abstract class MixinWallOrFloorItem extends BlockItem
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand)
     {
-        if (SkyBlockEventHandler.isSkyBlock)
-        {
-            return ActionResult.resultSuccess(player.getHeldItem(hand));
-        }
-        else
-        {
-            return super.onItemRightClick(world, player, hand);
-        }
+        return SBItemUtils.getBlockedItem(player.getHeldItem(hand), player, super.onItemRightClick(world, player, hand));
     }
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context)
     {
-        if (SkyBlockEventHandler.isSkyBlock)
-        {
-            return ActionResultType.SUCCESS;
-        }
-        else
-        {
-            return super.onItemUse(context);
-        }
+        return SBItemUtils.getBlockedItemResult(context.getItem(), context.getPlayer(), super.onItemUse(context));
     }
 }

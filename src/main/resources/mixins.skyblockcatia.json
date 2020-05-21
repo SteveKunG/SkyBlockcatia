@@ -8,6 +8,7 @@
     "mixins": [],
     "client": [
         "MixinArmorLayer",
+        "MixinBlockItem",
         "MixinBossOverlayGui",
         "MixinClientModLoader",
         "MixinClientPlayerEntity",
