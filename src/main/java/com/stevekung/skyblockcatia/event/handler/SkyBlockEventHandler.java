@@ -209,7 +209,7 @@ public class SkyBlockEventHandler
             return;
         }
 
-        String message = event.getMessage().getUnformattedComponentText();
+        String message = event.getMessage().getString();
         boolean cancelMessage = false;
 
         if (InfoUtils.INSTANCE.isHypixel()) 
