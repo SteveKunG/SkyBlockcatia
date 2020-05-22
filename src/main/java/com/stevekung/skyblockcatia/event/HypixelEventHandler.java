@@ -139,7 +139,7 @@ public class HypixelEventHandler
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
                         String scoreText = this.keepLettersAndNumbersOnly(EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName())));
 
-                        if (scoreText.startsWith("Dragon Health: "))
+                        if (scoreText.startsWith("Dragon HP: "))
                         {
                             try
                             {
