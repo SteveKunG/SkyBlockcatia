@@ -5,6 +5,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 
@@ -100,6 +103,8 @@ public class SkyBlockcatiaMod
                 }
             }
         });
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 30, TimeUnit.SECONDS);
     }
 
     public static final Block.SoundType CROPS = new Block.SoundType("crops", 1.0F, 1.0F)

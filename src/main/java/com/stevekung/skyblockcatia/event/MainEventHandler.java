@@ -1,17 +1,21 @@
 package com.stevekung.skyblockcatia.event;
 
+import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -78,6 +82,7 @@ public class MainEventHandler
     private static long sneakTimeOld;
     private static boolean sneakingOld;
     public static String playerToView;
+    public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
 
     public MainEventHandler()
     {
@@ -478,6 +483,30 @@ public class MainEventHandler
             }
         }
     }
+
+    public static void getBazaarData()
+    {
+        try
+        {
+            URL url = new URL(SkyBlockAPIUtils.BAZAAR);
+            JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            JsonElement lastUpdated = obj.get("lastUpdated");
+
+            for (Map.Entry<String, JsonElement> product : obj.get("products").getAsJsonObject().entrySet())
+            {
+                JsonElement quickStatus = product.getValue().getAsJsonObject().get("quick_status");
+                JsonElement buyPrice = quickStatus.getAsJsonObject().get("buyPrice");
+                JsonElement sellPrice = quickStatus.getAsJsonObject().get("sellPrice");
+                BAZAAR_DATA.put(product.getKey(), new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                BAZAAR_DATA.computeIfPresent(product.getKey(), (k, v) -> new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     private static void getRealTimeServerPing(ServerData server)
     {

@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.event;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -644,21 +645,41 @@ public class HypixelEventHandler
             if (event.itemStack.hasTagCompound())
             {
                 NBTTagCompound extraAttrib = event.itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
+                int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
+                DecimalFormat format = new DecimalFormat("#,###.#");
 
                 if (extraAttrib.hasKey("timestamp"))
                 {
-                    int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
                     DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
                     Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
                     String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
                     event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.GRAY + "Obtained: " + EnumChatFormatting.RESET + formatted);
                 }
-            }
-        }
-        catch (Exception e) {}
+                for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
+                {
+                    BazaarData.Product product = entry.getValue().getProduct();
 
-        try
-        {
+                    if (extraAttrib.getString("id").equals(entry.getKey()))
+                    {
+                        if (ClientUtils.isShiftKeyDown())
+                        {
+                            event.toolTip.add(event.toolTip.size() - toAdd, "Last Update: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
+                            event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(64 * product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(64 * product.getSellPrice()) + " coins");
+
+                            if (event.itemStack.stackSize < 64)
+                            {
+                                event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(event.itemStack.stackSize * product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(event.itemStack.stackSize * product.getSellPrice()) + " coins");
+                            }
+
+                            event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
+                        }
+                        else
+                        {
+                            event.toolTip.add(event.toolTip.size() - toAdd, "Press <SHIFT> to view Bazaar Buy/Sell");
+                        }
+                    }
+                }
+            }
             for (String tooltip : event.toolTip)
             {
                 String lore = EnumChatFormatting.getTextWithoutFormattingCodes(tooltip);
