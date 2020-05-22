@@ -663,7 +663,7 @@ public class HypixelEventHandler
                     {
                         if (ClientUtils.isShiftKeyDown())
                         {
-                            event.toolTip.add(event.toolTip.size() - toAdd, "Last Update: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
+                            event.toolTip.add(event.toolTip.size() - toAdd, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
                             event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(64 * product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(64 * product.getSellPrice()) + " coins");
 
                             if (event.itemStack.stackSize < 64)
