@@ -16,11 +16,19 @@
         "magic_find": 3
     },
     {
-        "score": 85,
+        "score": 75,
         "magic_find": 4
     },
     {
-        "score": 125,
+        "score": 100,
         "magic_find": 5
+    },
+    {
+        "score": 130,
+        "magic_find": 6
+    },
+    {
+        "score": 175,
+        "magic_find": 7
     }
 ]
