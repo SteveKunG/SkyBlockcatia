@@ -252,6 +252,31 @@ public class HUDRenderEventHandler
                             golemStage = headPos + 1;
                             break;
                         }
+                        if (this.mc.theWorld.getBlockState(new BlockPos(-644, 5 + headPos, -269)).getBlock() == Blocks.skull)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.theWorld.getBlockState(new BlockPos(-678, 5 + headPos, -332)).getBlock() == Blocks.skull)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.theWorld.getBlockState(new BlockPos(-639, 5 + headPos, -328)).getBlock() == Blocks.skull)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.theWorld.getBlockState(new BlockPos(-649, 5 + headPos, -219)).getBlock() == Blocks.skull)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.theWorld.getBlockState(new BlockPos(-727, 5 + headPos, -284)).getBlock() == Blocks.skull)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
                     }
 
                     String color = ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageValueColor).toColoredFont();
