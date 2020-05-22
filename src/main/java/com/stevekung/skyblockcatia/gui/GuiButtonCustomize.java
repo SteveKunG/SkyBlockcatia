@@ -47,7 +47,6 @@ public class GuiButtonCustomize extends GuiButton
                 RenderHelper.enableGUIStandardItemLighting();
                 GlStateManager.enableLighting();
                 mc.getRenderItem().renderItemAndEffectIntoGUI(this.skull, this.xPosition + 2, this.yPosition + 2);
-                RenderHelper.enableGUIStandardItemLighting();
             }
         }
     }
