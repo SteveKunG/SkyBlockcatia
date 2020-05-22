@@ -1,7 +1,5 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
@@ -22,9 +20,9 @@ public class VisitIslandToast implements IToast
     private final ItemStack itemStack;
     private final String name;
 
-    public VisitIslandToast(String name, UUID uuid)
+    public VisitIslandToast(String name)
     {
-        this.itemStack = VisitIslandToast.getPlayerHead(uuid, name);
+        this.itemStack = VisitIslandToast.getPlayerHead(name);
         this.name = name;
     }
 
@@ -40,11 +38,11 @@ public class VisitIslandToast implements IToast
         return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
 
-    private static ItemStack getPlayerHead(UUID uuid, String name)
+    private static ItemStack getPlayerHead(String name)
     {
         ItemStack itemStack = new ItemStack(Items.skull, 1, 3);
         NBTTagCompound compound = new NBTTagCompound();
-        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(uuid, name));
+        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(null, name));
         compound.removeTag("SkullOwner");
         compound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), profile));
         itemStack.setTagCompound(compound);

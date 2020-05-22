@@ -1,7 +1,5 @@
 package com.stevekung.skyblockcatia.event;
 
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -9,12 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.config.ToastMode;
@@ -823,22 +817,7 @@ public class HypixelEventHandler
 
     private static void addVisitingToast(String name)
     {
-        CommonUtils.runAsync(() ->
-        {
-            try
-            {
-                URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
-                JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-                String rawName = obj.get("name").getAsString();
-                String rawUUID = obj.get("id").getAsString();
-                String uuid = rawUUID.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
-                HUDRenderEventHandler.INSTANCE.getToastGui().add(new VisitIslandToast(rawName, UUID.fromString(uuid)));
-            }
-            catch (Throwable e)
-            {
-                e.printStackTrace();
-            }
-        });
+        CommonUtils.runAsync(() -> HUDRenderEventHandler.INSTANCE.getToastGui().add(new VisitIslandToast(name)));
     }
 
     private static void replaceEventEstimateTime(String lore, Calendar calendar, List<String> tooltip, List<String> dates, String replacedText)
