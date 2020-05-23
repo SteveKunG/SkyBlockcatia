@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 
@@ -80,6 +83,8 @@ public class SkyBlockcatiaMod
                 }
             });
         }
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 30, TimeUnit.SECONDS);
     }
 
     public SkyBlockcatiaMod()

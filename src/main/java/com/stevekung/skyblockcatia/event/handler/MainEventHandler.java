@@ -1,18 +1,28 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
+import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.stevekungslib.utils.CalendarUtils;
 import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -28,8 +38,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderNameplateEvent;
@@ -50,6 +63,7 @@ public class MainEventHandler
     public static String playerToView;
     public static final List<String> SKYBLOCK_PACK_16 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (16x)", "v8O1.8 Hypixel Skyblock Pack(16x)", "v9F1.8 Hypixel Skyblock Pack (16x)", "v9O1.8 Hypixel Skyblock Pack (16x)", "vXF16x_Skyblock_Pack_1.8.9", "vXO16x_Skyblock_Pack_1.8.9"));
     public static final List<String> SKYBLOCK_PACK_32 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (x32)", "v8O1.8 Hypixel Skyblock Pack (32x)", "v9F1.8 Hypixel Skyblock Pack (32x)", "v9.1O1.8 Hypixel Skyblock Pack (32x)", "vXF32x_Skyblock_Pack_1.8.9", "vXO32x_Skyblock_Pack_1.8.9"));
+    public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
 
     public MainEventHandler()
     {
@@ -271,6 +285,47 @@ public class MainEventHandler
             {
                 menu.splashText = "Happy birthday, SteveKunG!";
             }
+        }
+    }
+
+    public static void getBazaarData()
+    {
+        if (!SBExtendedConfig.INSTANCE.bazaarOnTooltips)
+        {
+            return;
+        }
+
+        if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
+        {
+            ClientUtils.printClientMessage("Couldn't get bazaar data, Empty text in the Config!", TextFormatting.RED);
+            ClientUtils.printClientMessage(JsonUtils.create("Make sure you're in the Hypixel!").applyTextStyle(TextFormatting.YELLOW).appendSibling(JsonUtils.create(" Click Here to create an API key").applyTextStyle(TextFormatting.GOLD).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
+            return;
+        }
+        if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
+        {
+            ClientUtils.printClientMessage("Invalid UUID for Hypixel API Key!", TextFormatting.RED);
+            ClientUtils.printClientMessage("Example UUID pattern: " + UUID.randomUUID(), TextFormatting.YELLOW);
+            return;
+        }
+
+        try
+        {
+            URL url = new URL(SBAPIUtils.BAZAAR);
+            JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            JsonElement lastUpdated = obj.get("lastUpdated");
+
+            for (Map.Entry<String, JsonElement> product : obj.get("products").getAsJsonObject().entrySet())
+            {
+                JsonElement quickStatus = product.getValue().getAsJsonObject().get("quick_status");
+                JsonElement buyPrice = quickStatus.getAsJsonObject().get("buyPrice");
+                JsonElement sellPrice = quickStatus.getAsJsonObject().get("sellPrice");
+                BAZAAR_DATA.put(product.getKey(), new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                BAZAAR_DATA.computeIfPresent(product.getKey(), (k, v) -> new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 

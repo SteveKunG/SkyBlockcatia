@@ -1,20 +1,15 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.IOUtils;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.stevekung.indicatia.config.ExtendedConfig;
 import com.stevekung.indicatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
@@ -31,8 +26,8 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
+import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
@@ -67,7 +62,7 @@ public class SkyBlockEventHandler
     private static final Pattern JOINED_PARTY_PATTERN = Pattern.compile("(?<name>\\w+) joined the party!");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
     private static final Pattern NICK_PATTERN = Pattern.compile("^You are now nicked as (?<nick>\\w+)!");
-    private static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+    public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
@@ -147,7 +142,7 @@ public class SkyBlockEventHandler
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
                         String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.formatMemberName(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getFormattedText()).replaceAll("");
 
-                        if (scoreText.startsWith("Dragon Health: "))
+                        if (scoreText.startsWith("Dragon HP: "))
                         {
                             try
                             {
@@ -595,14 +590,49 @@ public class SkyBlockEventHandler
             if (event.getItemStack().hasTag())
             {
                 CompoundNBT extraAttrib = event.getItemStack().getTag().getCompound("ExtraAttributes");
+                int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
+                DecimalFormat format = new DecimalFormat("#,###.#");
 
                 if (extraAttrib.contains("timestamp"))
                 {
-                    int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
                     DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
                     Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
                     String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
                     event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Obtained: " + TextFormatting.RESET + formatted).applyTextStyle(TextFormatting.GRAY));
+                }
+                if (SBExtendedConfig.INSTANCE.bazaarOnTooltips)
+                {
+                    for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
+                    {
+                        BazaarData.Product product = entry.getValue().getProduct();
+
+                        if (extraAttrib.getString("id").equals(entry.getKey()))
+                        {
+                            if (ClientUtils.isShiftKeyDown())
+                            {
+                                double buyStack = 64 * product.getBuyPrice();
+                                double sellStack = 64 * product.getSellPrice();
+                                double buyCurrent = event.getItemStack().getCount() * product.getBuyPrice();
+                                double sellCurrent = event.getItemStack().getCount() * product.getSellPrice();
+                                double sellStackTax = sellStack * 0.01;
+                                double sellCurrentTax = sellCurrent * 0.01;
+                                double sellOneTax = product.getSellPrice() * 0.01;
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Stack): " + TextFormatting.GOLD + format.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellStack - sellStackTax) + " coins"));
+
+                                if (event.getItemStack().getCount() > 1 && event.getItemStack().getCount() < 64)
+                                {
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Current): " + TextFormatting.GOLD + format.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellCurrent - sellCurrentTax) + " coins"));
+                                }
+
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (One): " + TextFormatting.GOLD + format.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(product.getSellPrice() - sellOneTax) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(entry.getValue().getLastUpdated())));
+                            }
+                            else
+                            {
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Press <SHIFT> to view Bazaar Buy/Sell").applyTextStyle(TextFormatting.GRAY));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -698,22 +728,7 @@ public class SkyBlockEventHandler
 
     private static void addVisitingToast(Minecraft mc, String name)
     {
-        CommonUtils.runAsync(() ->
-        {
-            try
-            {
-                URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + name);
-                JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-                String rawName = obj.get("name").getAsString();
-                String rawUUID = obj.get("id").getAsString();
-                String uuid = rawUUID.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5");
-                //TODO mc.getToastGui().add(new VisitIslandToast(rawName, UUID.fromString(uuid)));
-            }
-            catch (Throwable e)
-            {
-                e.printStackTrace();
-            }
-        });
+        //CommonUtils.runAsync(() -> mc.getToastGui().add(new VisitIslandToast(name)));
     }
 
     private static void replaceEventEstimateTime(String lore, Calendar calendar, List<ITextComponent> tooltip, List<ITextComponent> dates, String replacedText)

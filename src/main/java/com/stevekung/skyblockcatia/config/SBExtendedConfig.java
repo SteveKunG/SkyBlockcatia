@@ -55,6 +55,7 @@ public class SBExtendedConfig
     public boolean disableBlockParticles = false;
     public boolean supportersFancyColor = false;
     public boolean golemStageTracker = false;
+    public boolean bazaarOnTooltips = false;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -86,6 +87,7 @@ public class SBExtendedConfig
     public static final BooleanConfigOption DISABLE_BLOCK_PARTICLES = new BooleanConfigOption("disable_block_particles", config -> config.disableBlockParticles, (config, value) -> config.disableBlockParticles = value);
     public static final BooleanConfigOption SUPPORTERS_FANCY_COLOR = new BooleanConfigOption("supporters_fancy_color", config -> config.supportersFancyColor, (config, value) -> config.supportersFancyColor = value);
     public static final BooleanConfigOption GOLEM_STAGE_TRACKER = new BooleanConfigOption("golem_stage_tracker", config -> config.golemStageTracker, (config, value) -> config.golemStageTracker = value);
+    public static final BooleanConfigOption BAZAAR_ON_TOOLTIPS = new BooleanConfigOption("bazaar_on_tooltips", config -> config.bazaarOnTooltips, (config, value) -> config.bazaarOnTooltips = value);
 
 
     public static final StringConfigOption VISIT_ISLAND_DISPLAY_MODE = new StringConfigOption("visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey()));
@@ -141,6 +143,7 @@ public class SBExtendedConfig
             this.disableBlockParticles = this.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = this.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
             this.golemStageTracker = this.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
+            this.bazaarOnTooltips = this.getBoolean(nbt, "BazaarOnTooltips", this.bazaarOnTooltips);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -195,6 +198,7 @@ public class SBExtendedConfig
             nbt.putBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.putBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.putBoolean("GolemStageTracker", this.golemStageTracker);
+            nbt.putBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());

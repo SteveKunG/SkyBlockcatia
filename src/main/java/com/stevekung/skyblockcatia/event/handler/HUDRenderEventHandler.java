@@ -178,6 +178,31 @@ public class HUDRenderEventHandler
                             golemStage = headPos + 1;
                             break;
                         }
+                        if (this.mc.world.getBlockState(new BlockPos(-644, 5 + headPos, -269)).getBlock() == Blocks.PLAYER_HEAD)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.world.getBlockState(new BlockPos(-678, 5 + headPos, -332)).getBlock() == Blocks.PLAYER_HEAD)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.world.getBlockState(new BlockPos(-639, 5 + headPos, -328)).getBlock() == Blocks.PLAYER_HEAD)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.world.getBlockState(new BlockPos(-649, 5 + headPos, -219)).getBlock() == Blocks.PLAYER_HEAD)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
+                        if (this.mc.world.getBlockState(new BlockPos(-727, 5 + headPos, -284)).getBlock() == Blocks.PLAYER_HEAD)
+                        {
+                            golemStage = headPos + 1;
+                            break;
+                        }
                     }
                     String color = ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.golemStageValueColor).toColoredFont();
                     rightInfo.add(ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
