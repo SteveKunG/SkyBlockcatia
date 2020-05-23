@@ -715,7 +715,7 @@ public class HypixelEventHandler
         {
             NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
 
-            if (extraAttrib.getString("id").equals("SNOW_BLASTER"))
+            if (extraAttrib.getString("id").equals("SNOW_BLASTER") || extraAttrib.getString("id").equals("SNOW_CANNON"))
             {
                 event.setCanceled(true);
             }

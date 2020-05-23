@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class SkyBlockItemUtils
 {
-    private static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER");
+    private static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER", "SNOW_CANNON");
     private static final ImmutableList<String> CLICKABLE = ImmutableList.of("WEIRD_TUBA");
 
     public static ItemStack getBlockedItem(ItemStack itemStack, EntityPlayer player)
