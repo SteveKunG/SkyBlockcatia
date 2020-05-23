@@ -43,6 +43,7 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.DISABLE_BLOCK_PARTICLES);
         OPTIONS.add(ExtendedConfig.Options.SUPPORTERS_FANCY_COLOR);
         OPTIONS.add(ExtendedConfig.Options.GOLEM_STAGE_TRACKER);
+        OPTIONS.add(ExtendedConfig.Options.BAZAAR_ON_TOOLTIPS);
     }
 
     public GuiHypixelSettings(GuiScreen parent)

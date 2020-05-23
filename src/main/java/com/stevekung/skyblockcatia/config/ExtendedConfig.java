@@ -146,6 +146,7 @@ public class ExtendedConfig
     public int itemRarityOpacity = 75;
     public int auctionBidConfirmValue = 500000;
     public boolean supportersFancyColor = false;
+    public boolean bazaarOnTooltips = false;
 
     private ExtendedConfig() {}
 
@@ -281,6 +282,7 @@ public class ExtendedConfig
             this.disableBlockParticles = ExtendedConfig.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = ExtendedConfig.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
             this.golemStageTracker = ExtendedConfig.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
+            this.bazaarOnTooltips = ExtendedConfig.getBoolean(nbt, "BazaarOnTooltips", this.bazaarOnTooltips);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -407,6 +409,7 @@ public class ExtendedConfig
             nbt.setBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.setBoolean("GolemStageTracker", this.golemStageTracker);
+            nbt.setBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
@@ -741,6 +744,10 @@ public class ExtendedConfig
         {
             this.golemStageTracker = !this.golemStageTracker;
         }
+        else if (options == ExtendedConfig.Options.BAZAAR_ON_TOOLTIPS)
+        {
+            this.bazaarOnTooltips = !this.bazaarOnTooltips;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1042,6 +1049,8 @@ public class ExtendedConfig
             return this.supportersFancyColor;
         case GOLEM_STAGE_TRACKER:
             return this.golemStageTracker;
+        case BAZAAR_ON_TOOLTIPS:
+            return this.bazaarOnTooltips;
         default:
             return false;
         }
@@ -1237,6 +1246,7 @@ public class ExtendedConfig
         DISABLE_BLOCK_PARTICLES(false, true),
         SUPPORTERS_FANCY_COLOR(false, true),
         GOLEM_STAGE_TRACKER(false, true),
+        BAZAAR_ON_TOOLTIPS(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

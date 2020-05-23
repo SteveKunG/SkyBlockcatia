@@ -655,27 +655,37 @@ public class HypixelEventHandler
                     String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
                     event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.GRAY + "Obtained: " + EnumChatFormatting.RESET + formatted);
                 }
-                for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
+                if (ExtendedConfig.instance.bazaarOnTooltips)
                 {
-                    BazaarData.Product product = entry.getValue().getProduct();
-
-                    if (extraAttrib.getString("id").equals(entry.getKey()))
+                    for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                     {
-                        if (ClientUtils.isShiftKeyDown())
-                        {
-                            event.toolTip.add(event.toolTip.size() - toAdd, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
-                            event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(64 * product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(64 * product.getSellPrice()) + " coins");
+                        BazaarData.Product product = entry.getValue().getProduct();
 
-                            if (event.itemStack.stackSize < 64)
+                        if (extraAttrib.getString("id").equals(entry.getKey()))
+                        {
+                            if (ClientUtils.isShiftKeyDown())
                             {
-                                event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(event.itemStack.stackSize * product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(event.itemStack.stackSize * product.getSellPrice()) + " coins");
-                            }
+                                double buyStack = 64 * product.getBuyPrice();
+                                double sellStack = 64 * product.getSellPrice();
+                                double buyCurrent = event.itemStack.stackSize * product.getBuyPrice();
+                                double sellCurrent = event.itemStack.stackSize * product.getSellPrice();
+                                double sellStackTax = sellStack * 0.01;
+                                double sellCurrentTax = sellCurrent * 0.01;
+                                double sellOneTax = product.getSellPrice() * 0.01;
+                                event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(buyStack) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellStack - sellStackTax) + " coins");
 
-                            event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
-                        }
-                        else
-                        {
-                            event.toolTip.add(event.toolTip.size() - toAdd, "Press <SHIFT> to view Bazaar Buy/Sell");
+                                if (event.itemStack.stackSize > 1 && event.itemStack.stackSize < 64)
+                                {
+                                    event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(buyCurrent) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellCurrent - sellCurrentTax) + " coins");
+                                }
+
+                                event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice() - sellOneTax) + " coins");
+                                event.toolTip.add(event.toolTip.size() - toAdd, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
+                            }
+                            else
+                            {
+                                event.toolTip.add(event.toolTip.size() - toAdd, "Press <SHIFT> to view Bazaar Buy/Sell");
+                            }
                         }
                     }
                 }

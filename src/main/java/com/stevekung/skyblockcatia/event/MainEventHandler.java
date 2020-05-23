@@ -486,6 +486,11 @@ public class MainEventHandler
 
     public static void getBazaarData()
     {
+        if (!ExtendedConfig.instance.bazaarOnTooltips)
+        {
+            return;
+        }
+
         try
         {
             URL url = new URL(SkyBlockAPIUtils.BAZAAR);
@@ -506,7 +511,6 @@ public class MainEventHandler
             e.printStackTrace();
         }
     }
-
 
     private static void getRealTimeServerPing(ServerData server)
     {
