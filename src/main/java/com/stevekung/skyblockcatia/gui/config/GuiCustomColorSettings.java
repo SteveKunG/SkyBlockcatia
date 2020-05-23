@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.gui.config;
 
 import java.io.IOException;
 
+import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
 import net.minecraft.client.gui.GuiButton;
@@ -21,6 +22,16 @@ public class GuiCustomColorSettings extends GuiScreen
     {
         this.buttonList.add(new GuiButton(100, this.width / 2 - 155, this.height / 6 - 12, 150, 20, LangUtils.translate("extended_config.render_info_custom_color.title")));
         this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height / 6 + 168, LangUtils.translate("gui.done")));
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException
+    {
+        if (keyCode == 1)
+        {
+            ExtendedConfig.instance.save();
+            this.mc.displayGuiScreen(this.parent);
+        }
     }
 
     @Override

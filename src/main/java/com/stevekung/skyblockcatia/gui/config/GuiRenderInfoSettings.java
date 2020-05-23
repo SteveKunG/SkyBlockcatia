@@ -67,8 +67,8 @@ public class GuiRenderInfoSettings extends GuiScreen
         if (keyCode == 1)
         {
             ExtendedConfig.instance.save();
+            this.mc.displayGuiScreen(this.parent);
         }
-        super.keyTyped(typedChar, keyCode);
     }
 
     @Override
