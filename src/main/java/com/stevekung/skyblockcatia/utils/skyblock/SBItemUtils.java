@@ -12,7 +12,7 @@ import net.minecraft.util.Hand;
 
 public class SBItemUtils
 {
-    public static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER");
+    public static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER", "SNOW_CANNON");
     public static final ImmutableList<String> CLICKABLE = ImmutableList.of("WEIRD_TUBA");
 
     public static ActionResult<ItemStack> getBlockedItem(ItemStack itemStack, PlayerEntity player, ActionResult<ItemStack> defaultValue)
