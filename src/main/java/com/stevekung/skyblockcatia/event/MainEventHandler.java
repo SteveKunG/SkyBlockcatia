@@ -28,6 +28,7 @@ import com.stevekung.skyblockcatia.gui.config.GuiExtendedConfig;
 import com.stevekung.skyblockcatia.gui.config.GuiRenderPreview;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -38,6 +39,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -55,10 +57,7 @@ import net.minecraft.network.status.client.C01PacketPing;
 import net.minecraft.network.status.server.S00PacketServerInfo;
 import net.minecraft.network.status.server.S01PacketPong;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.*;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -488,6 +487,19 @@ public class MainEventHandler
     {
         if (!ExtendedConfig.instance.bazaarOnTooltips)
         {
+            return;
+        }
+
+        if (StringUtils.isNullOrEmpty(ConfigManagerIN.hypixelApiKey))
+        {
+            ClientUtils.printClientMessage("Couldn't get bazaar data, Empty text in the Config!", JsonUtils.red());
+            ClientUtils.printClientMessage(JsonUtils.create("Make sure you're in the Hypixel!").setChatStyle(JsonUtils.yellow()).appendSibling(JsonUtils.create(" Click Here to create an API key").setChatStyle(JsonUtils.gold().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
+            return;
+        }
+        if (!ConfigManagerIN.hypixelApiKey.matches(HypixelEventHandler.UUID_PATTERN_STRING))
+        {
+            ClientUtils.printClientMessage("Invalid UUID for Hypixel API Key!", JsonUtils.red());
+            ClientUtils.printClientMessage("Example UUID pattern: " + UUID.randomUUID(), JsonUtils.yellow());
             return;
         }
 
