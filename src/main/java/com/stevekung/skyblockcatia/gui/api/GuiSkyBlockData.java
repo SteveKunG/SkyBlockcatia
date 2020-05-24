@@ -2628,7 +2628,7 @@ public class GuiSkyBlockData extends GuiScreen
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
         {
             String statName = stat.getKey();
-            float value = stat.getValue().getAsFloat();
+            double value = stat.getValue().getAsDouble();
 
             if (statName.equals("highest_crit_damage"))
             {
