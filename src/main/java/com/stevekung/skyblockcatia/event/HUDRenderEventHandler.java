@@ -1,8 +1,9 @@
 package com.stevekung.skyblockcatia.event;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
@@ -506,10 +507,7 @@ public class HUDRenderEventHandler
     private double getItemDelay(int base, long delay)
     {
         long now = System.currentTimeMillis();
-        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
-        symbols.setDecimalSeparator('.');
-        symbols.setGroupingSeparator('.');
-        DecimalFormat numberFormat = new DecimalFormat("##.#", symbols);
+        ModDecimalFormat numberFormat = new ModDecimalFormat("##.#");
         double seconds = base / 1000.0D - (now - delay) / 1000.0D;
 
         if (seconds >= 0.01D)

@@ -2367,6 +2367,10 @@ public class GuiSkyBlockData extends GuiScreen
         {
             firstJoinMillis = firstJoin.getAsLong();
         }
+        if (this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4")) // special case for me :D
+        {
+            firstJoinMillis = 1565111612000L;
+        }
 
         String heath = ColorUtils.stringToRGB("239,83,80").toColoredFont();
         String defense = ColorUtils.stringToRGB("156,204,101").toColoredFont();
@@ -2406,8 +2410,12 @@ public class GuiSkyBlockData extends GuiScreen
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
-        String lastLogout = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH).format(lastSaveDate);
-        String firstJoinDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH).format(firstJoinDate);
+        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        logoutDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String lastLogout = logoutDate.format(lastSaveDate);
+        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        joinDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
         this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? CommonUtils.getRelativeTime(firstJoinDate.getTime()) : EnumChatFormatting.RED + "No first join data!"));
         this.infoList.add(new SkyBlockInfo("Joined (Date)", firstJoinMillis != -1 ? firstJoinDateFormat : EnumChatFormatting.RED + "No first join data!"));
