@@ -2411,10 +2411,9 @@ public class GuiSkyBlockData extends GuiScreen
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
         SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
-        logoutDate.setTimeZone(TimeZone.getTimeZone("GMT"));
         String lastLogout = logoutDate.format(lastSaveDate);
         SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
-        joinDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+        joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
         String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
         this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? CommonUtils.getRelativeTime(firstJoinDate.getTime()) : EnumChatFormatting.RED + "No first join data!"));
