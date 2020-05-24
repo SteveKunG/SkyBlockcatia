@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 @Mixin(Item.class)
@@ -29,9 +30,14 @@ public abstract class ItemMixin
     @Inject(method = "onItemRightClick(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;)Lnet/minecraft/item/ItemStack;", cancellable = true, at = @At("HEAD"))
     private void onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, CallbackInfoReturnable<ItemStack> info)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (HypixelEventHandler.isSkyBlock && itemStack != null && itemStack.hasTagCompound())
         {
-            SkyBlockItemUtils.getClickableItem(itemStack, player, null);
+            NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
+
+            if (SkyBlockItemUtils.CLICKABLE.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
+            {
+                player.swingItem();
+            }
         }
     }
 }
