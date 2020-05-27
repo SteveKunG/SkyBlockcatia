@@ -405,6 +405,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         System.out.println("monthlyPackageRank: " + monthlyPackageRank);
         JsonElement monthlyRankColor = jsonPlayer.getAsJsonObject().get("monthlyRankColor");
         System.out.println("monthlyRankColor: " + monthlyRankColor);
+        JsonElement prefix = jsonPlayer.getAsJsonObject().get("prefix");
+        System.out.println("prefix: " + prefix);
 
         String baseRankText = "";
         String rankPlus = "";
@@ -445,7 +447,15 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                         {
                             baseRankText = "MVP" + EnumChatFormatting.RED + "++";
                         }
-                        color = EnumChatFormatting.GOLD.toString();
+
+                        if (monthlyRankColor != null)
+                        {
+                            color = EnumChatFormatting.valueOf(monthlyRankColor.getAsString()).toString();
+                        }
+                        else
+                        {
+                            color = EnumChatFormatting.GOLD.toString();
+                        }
                     }
                     else
                     {
@@ -477,7 +487,15 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
                 {
                     baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
-                    color = EnumChatFormatting.GOLD.toString();
+
+                    if (monthlyRankColor != null)
+                    {
+                        color = EnumChatFormatting.valueOf(monthlyRankColor.getAsString()).toString();
+                    }
+                    else
+                    {
+                        color = EnumChatFormatting.GOLD.toString();
+                    }
                 }
             }
         }
@@ -488,13 +506,20 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
         this.username = jsonPlayer.getAsJsonObject().get("displayname").getAsString();
 
-        if (!baseRankText.isEmpty())
+        if (prefix != null)
         {
-            this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.username;
+            this.displayName = prefix.getAsString() + " " + this.username;
         }
         else
         {
-            this.displayName = HypixelRank.Base.NONE.getColor() + this.username;
+            if (!baseRankText.isEmpty())
+            {
+                this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.username;
+            }
+            else
+            {
+                this.displayName = HypixelRank.Base.NONE.getColor() + this.username;
+            }
         }
 
         JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
