@@ -68,6 +68,8 @@ public class SkyBlockEventHandler
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
     private static final Pattern PET_CARE_PATTERN_1 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<day>[\\d]+) day(?:s){0,1} (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
     private static final Pattern PET_CARE_PATTERN_2 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
+    private static final Pattern PET_CARE_PATTERN_3 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
+    private static final Pattern PET_CARE_PATTERN_4 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<second>[\\d]+) second(?:s){0,1}.");
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\u0027\\u25C6\\[\\] -]+";
@@ -217,6 +219,8 @@ public class SkyBlockEventHandler
             Matcher chatMatcher = SkyBlockEventHandler.CHAT_PATTERN.matcher(message);
             Matcher petCareMatcher1 = SkyBlockEventHandler.PET_CARE_PATTERN_1.matcher(message);
             Matcher petCareMatcher2 = SkyBlockEventHandler.PET_CARE_PATTERN_2.matcher(message);
+            Matcher petCareMatcher3 = SkyBlockEventHandler.PET_CARE_PATTERN_3.matcher(message);
+            Matcher petCareMatcher4 = SkyBlockEventHandler.PET_CARE_PATTERN_4.matcher(message);
 
             // Item Drop matcher
             Matcher rareDropPattern = SkyBlockEventHandler.RARE_DROP_PATTERN.matcher(message);
@@ -287,6 +291,28 @@ public class SkyBlockEventHandler
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.HOUR, hour);
                     calendar.add(Calendar.MINUTE, minute);
+                    calendar.add(Calendar.SECOND, second);
+                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
+                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
+                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
+                }
+                else if (petCareMatcher3.matches())
+                {
+                    int minute = Integer.parseInt(petCareMatcher3.group("minute"));
+                    int second = Integer.parseInt(petCareMatcher3.group("second"));
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.MINUTE, minute);
+                    calendar.add(Calendar.SECOND, second);
+                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
+                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
+                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
+                }
+                else if (petCareMatcher4.matches())
+                {
+                    int second = Integer.parseInt(petCareMatcher4.group("second"));
+
+                    Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.SECOND, second);
                     String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
                     String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
@@ -614,17 +640,14 @@ public class SkyBlockEventHandler
                                 double sellStack = 64 * product.getSellPrice();
                                 double buyCurrent = event.getItemStack().getCount() * product.getBuyPrice();
                                 double sellCurrent = event.getItemStack().getCount() * product.getSellPrice();
-                                double sellStackTax = sellStack * 0.01;
-                                double sellCurrentTax = sellCurrent * 0.01;
-                                double sellOneTax = product.getSellPrice() * 0.01;
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Stack): " + TextFormatting.GOLD + format.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellStack - sellStackTax) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Stack): " + TextFormatting.GOLD + format.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellStack) + " coins"));
 
                                 if (event.getItemStack().getCount() > 1 && event.getItemStack().getCount() < 64)
                                 {
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Current): " + TextFormatting.GOLD + format.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellCurrent - sellCurrentTax) + " coins"));
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Current): " + TextFormatting.GOLD + format.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellCurrent) + " coins"));
                                 }
 
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (One): " + TextFormatting.GOLD + format.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(product.getSellPrice() - sellOneTax) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (One): " + TextFormatting.GOLD + format.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(product.getSellPrice()) + " coins"));
                                 event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(entry.getValue().getLastUpdated())));
                             }
                             else

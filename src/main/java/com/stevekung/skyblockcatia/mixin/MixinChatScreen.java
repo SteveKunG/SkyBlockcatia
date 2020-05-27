@@ -31,6 +31,15 @@ public abstract class MixinChatScreen extends Screen
                 info.setReturnValue(true);
             }
         }
+        if (mouseButton == 2)
+        {
+            ITextComponent component = this.minecraft.ingameGUI.getChatGUI().getTextComponent(mouseX, mouseY);
+
+            if (component != null && this.handleComponentMiddleClick(component))
+            {
+                info.setReturnValue(true);
+            }
+        }
     }
 
     private boolean handleComponentRightClicked(ITextComponent component)
@@ -42,6 +51,21 @@ public abstract class MixinChatScreen extends Screen
             if (clickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND)
             {
                 this.insertText(clickEvent.getValue().replace("/p", "/visit"), true);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleComponentMiddleClick(ITextComponent component)
+    {
+        ClickEvent clickEvent = component.getStyle().getClickEvent();
+
+        if (clickEvent != null)
+        {
+            if (clickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND)
+            {
+                this.sendMessage(clickEvent.getValue().replace("/p", "/sbapi"), false);
             }
             return true;
         }

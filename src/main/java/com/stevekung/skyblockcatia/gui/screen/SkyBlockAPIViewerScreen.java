@@ -124,7 +124,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
-    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense): (?<value>(?:\\+|\\-)[0-9,]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,]+ HP\\)){0,1})|(?: \\(\\+[0-9,]+\\))|(?: \\(\\w+ \\+[0-9,]+(?:\\%){0,1}\\))){0,1}");
+    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,]+ HP\\)){0,1})|(?: \\(\\+[0-9,]+\\))|(?: \\(\\w+ \\+[0-9,]+(?:\\%){0,1}\\))){0,1}");
     private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###,###,###");
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
@@ -2059,6 +2059,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             firstJoinMillis = firstJoin.getAsLong();
         }
+        if (this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4")) // special case for me :D
+        {
+            firstJoinMillis = 1565111612000L;
+        }
 
         String heath = ColorUtils.stringToRGB("239,83,80").toColoredFont();
         String defense = ColorUtils.stringToRGB("156,204,101").toColoredFont();
@@ -2098,8 +2102,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
-        String lastLogout = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH).format(lastSaveDate);
-        String firstJoinDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH).format(firstJoinDate);
+        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        String lastLogout = logoutDate.format(lastSaveDate);
+        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
+        String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
         this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? TimeUtils.getRelativeTime(firstJoinDate.getTime()) : TextFormatting.RED + "No first join data!"));
         this.infoList.add(new SkyBlockInfo("Joined (Date)", firstJoinMillis != -1 ? firstJoinDateFormat : TextFormatting.RED + "No first join data!"));
@@ -2313,7 +2320,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
         {
             String statName = stat.getKey();
-            float value = stat.getValue().getAsFloat();
+            double value = stat.getValue().getAsDouble();
 
             if (statName.equals("highest_crit_damage"))
             {

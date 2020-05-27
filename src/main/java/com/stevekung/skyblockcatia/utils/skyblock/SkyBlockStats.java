@@ -7,10 +7,10 @@ import net.minecraft.util.text.TextFormatting;
 public class SkyBlockStats
 {
     private String name;
-    private final float value;
+    private final double value;
     private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###.#");
 
-    public SkyBlockStats(String name, float value)
+    public SkyBlockStats(String name, double value)
     {
         this.name = name;
         this.value = value;
@@ -21,7 +21,7 @@ public class SkyBlockStats
         return this.name;
     }
 
-    public float getValue()
+    public double getValue()
     {
         return this.value;
     }
@@ -34,7 +34,7 @@ public class SkyBlockStats
         }
         else if (this.name.contains("Race"))
         {
-            float seconds = this.value / 1000.0F;
+            double seconds = this.value / 1000.0D;
             return FORMAT.format(seconds) + " seconds";
         }
         return FORMAT.format(this.value);

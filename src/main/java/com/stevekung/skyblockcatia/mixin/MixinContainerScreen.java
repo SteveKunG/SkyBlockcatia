@@ -619,7 +619,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     int slotRight = slotLeft + 16;
                     int slotBottom = slotTop + 16;
                     String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
-                    Matcher matcher = Pattern.compile("(?:Top|Starting) bid: (?<coin>[0-9,]+) coins").matcher(lore);
+                    Matcher matcher = Pattern.compile("(?:(?:Top|Starting) bid|Buy it now): (?<coin>[0-9,]+) coins").matcher(lore);
                     int red = ColorUtils.to32BitColor(128, 255, 85, 85);
                     int green = ColorUtils.to32BitColor(128, 85, 255, 85);
                     int yellow = ColorUtils.to32BitColor(128, 255, 255, 85);
@@ -675,6 +675,10 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                     this.checkCondition(moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, yellow, red);
                                 }
                                 else if (lore.startsWith("Starting bid:"))
+                                {
+                                    this.checkCondition(moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
+                                }
+                                else if (lore.startsWith("Buy it now:"))
                                 {
                                     this.checkCondition(moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
                                 }

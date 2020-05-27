@@ -375,6 +375,8 @@ public class SkyBlockProfileViewerScreen extends Screen
         System.out.println("monthlyPackageRank: " + monthlyPackageRank);
         JsonElement monthlyRankColor = jsonPlayer.getAsJsonObject().get("monthlyRankColor");
         System.out.println("monthlyRankColor: " + monthlyRankColor);
+        JsonElement prefix = jsonPlayer.getAsJsonObject().get("prefix");
+        System.out.println("prefix: " + prefix);
 
         String baseRankText = "";
         String rankPlus = "";
@@ -415,7 +417,15 @@ public class SkyBlockProfileViewerScreen extends Screen
                         {
                             baseRankText = "MVP" + TextFormatting.RED + "++";
                         }
-                        color = TextFormatting.GOLD.toString();
+
+                        if (monthlyRankColor != null)
+                        {
+                            color = TextFormatting.valueOf(monthlyRankColor.getAsString()).toString();
+                        }
+                        else
+                        {
+                            color = TextFormatting.GOLD.toString();
+                        }
                     }
                     else
                     {
@@ -447,7 +457,15 @@ public class SkyBlockProfileViewerScreen extends Screen
                 if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
                 {
                     baseRankText = "MVP" + TextFormatting.valueOf(rankPlusColor.getAsString()) + "++";
-                    color = TextFormatting.GOLD.toString();
+
+                    if (monthlyRankColor != null)
+                    {
+                        color = TextFormatting.valueOf(monthlyRankColor.getAsString()).toString();
+                    }
+                    else
+                    {
+                        color = TextFormatting.GOLD.toString();
+                    }
                 }
             }
         }
@@ -458,13 +476,20 @@ public class SkyBlockProfileViewerScreen extends Screen
 
         this.username = jsonPlayer.getAsJsonObject().get("displayname").getAsString();
 
-        if (!baseRankText.isEmpty())
+        if (prefix != null)
         {
-            this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.username;
+            this.displayName = prefix.getAsString() + " " + this.username;
         }
         else
         {
-            this.displayName = HypixelRank.Base.NONE.getColor() + this.username;
+            if (!baseRankText.isEmpty())
+            {
+                this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.username;
+            }
+            else
+            {
+                this.displayName = HypixelRank.Base.NONE.getColor() + this.username;
+            }
         }
 
         JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
