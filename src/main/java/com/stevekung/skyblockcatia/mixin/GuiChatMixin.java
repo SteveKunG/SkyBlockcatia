@@ -61,6 +61,15 @@ public abstract class GuiChatMixin extends GuiScreen
                 info.cancel();
             }
         }
+        if (mouseButton == 2)
+        {
+            IChatComponent component = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
+
+            if (this.handleComponentMiddleClick(component))
+            {
+                info.cancel();
+            }
+        }
     }
 
     @Override
@@ -94,6 +103,28 @@ public abstract class GuiChatMixin extends GuiScreen
                 if (clickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND)
                 {
                     this.setText(clickEvent.getValue().replace("/p", "/visit"), true);
+                }
+                return true;
+            }
+            return false;
+        }
+    }
+    
+    private boolean handleComponentMiddleClick(IChatComponent component)
+    {
+        if (component == null)
+        {
+            return false;
+        }
+        else
+        {
+            ClickEvent clickEvent = component.getChatStyle().getChatClickEvent();
+
+            if (clickEvent != null)
+            {
+                if (clickEvent.getAction() == ClickEvent.Action.SUGGEST_COMMAND)
+                {
+                    this.sendChatMessage(clickEvent.getValue().replace("/p", "/sbapi"), false);
                 }
                 return true;
             }
