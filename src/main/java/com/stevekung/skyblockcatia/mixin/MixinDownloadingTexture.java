@@ -13,16 +13,10 @@ import net.minecraft.client.renderer.texture.NativeImage;
 public abstract class MixinDownloadingTexture
 {
     @Shadow
-    private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height)
-    {
-        throw new Error();
-    }
+    private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height) {}
 
     @Shadow
-    private static void setAreaOpaque(NativeImage image, int x, int y, int width, int height)
-    {
-        throw new Error();
-    }
+    private static void setAreaOpaque(NativeImage image, int x, int y, int width, int height) {}
 
     @Overwrite
     private static NativeImage processLegacySkin(NativeImage nativeImage)

@@ -1,12 +1,11 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import java.text.DecimalFormat;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 
 import net.minecraft.item.ItemStack;
 
 public class SBCollections
 {
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###");
     private final ItemStack itemStack;
     private final Type type;
     private final int value;
@@ -42,7 +41,7 @@ public class SBCollections
 
     public String getCollectionAmount()
     {
-        return FORMAT.format(this.value);
+        return NumberUtils.NUMBER_FORMAT.format(this.value);
     }
 
     public enum ItemId

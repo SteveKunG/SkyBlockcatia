@@ -1,7 +1,6 @@
 package com.stevekung.skyblockcatia.event.handler;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -30,6 +29,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
@@ -617,7 +617,6 @@ public class SkyBlockEventHandler
             {
                 CompoundNBT extraAttrib = event.getItemStack().getTag().getCompound("ExtraAttributes");
                 int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
-                DecimalFormat format = new DecimalFormat("#,###.#");
 
                 if (extraAttrib.contains("timestamp"))
                 {
@@ -640,14 +639,14 @@ public class SkyBlockEventHandler
                                 double sellStack = 64 * product.getSellPrice();
                                 double buyCurrent = event.getItemStack().getCount() * product.getBuyPrice();
                                 double sellCurrent = event.getItemStack().getCount() * product.getSellPrice();
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Stack): " + TextFormatting.GOLD + format.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellStack) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Stack): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
 
                                 if (event.getItemStack().getCount() > 1 && event.getItemStack().getCount() < 64)
                                 {
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Current): " + TextFormatting.GOLD + format.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(sellCurrent) + " coins"));
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Current): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
                                 }
 
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (One): " + TextFormatting.GOLD + format.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + format.format(product.getSellPrice()) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (One): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
                                 event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(entry.getValue().getLastUpdated())));
                             }
                             else

@@ -1,9 +1,9 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -209,7 +209,7 @@ public class SBPets
             if (this.xpRequired > 0)
             {
                 float percent = this.currentPetXp * 100.0F / this.xpRequired;
-                return new DecimalFormat("##.#").format(percent) + "%";
+                return NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(percent) + "%";
             }
             else
             {

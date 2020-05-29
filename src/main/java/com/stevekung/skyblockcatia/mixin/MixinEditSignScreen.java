@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -15,7 +16,6 @@ import com.stevekung.stevekungslib.utils.NumberUtils;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.ITextComponent;
 
@@ -28,11 +28,6 @@ public abstract class MixinEditSignScreen extends Screen
     private SignSelectionList withdrawSelector;
     private SignSelectionList depositSelector;
     private SignSelectionList bazaarOrderSelector;
-
-    @Shadow
-    @Final
-    @Mutable
-    public SignTileEntity tileSign;
 
     public MixinEditSignScreen(ITextComponent title)
     {
@@ -75,7 +70,7 @@ public abstract class MixinEditSignScreen extends Screen
     @Inject(method = "removed()V", at = @At("HEAD"))
     private void removed(CallbackInfo info)
     {
-        this.tileSign.markDirty();
+        this.that.tileSign.markDirty();
 
         if (SBExtendedConfig.INSTANCE.auctionBidConfirm && this.isAuctionSign())
         {
@@ -114,7 +109,7 @@ public abstract class MixinEditSignScreen extends Screen
     @Overwrite
     private void close()
     {
-        String text = this.tileSign.signText[0].getString();
+        String text = this.that.tileSign.signText[0].getString();
 
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -181,33 +176,33 @@ public abstract class MixinEditSignScreen extends Screen
 
     private void confirmSign()
     {
-        this.tileSign.markDirty();
-        SignSelectionList.processSignData(this.tileSign);
+        this.that.tileSign.markDirty();
+        SignSelectionList.processSignData(this.that.tileSign);
         this.minecraft.displayGuiScreen(null);
     }
 
     private boolean isAuctionSign()
     {
-        return this.tileSign.signText[2].getString().equals("Your auction") && this.tileSign.signText[3].getString().equals("starting bid");
+        return this.that.tileSign.signText[2].getString().equals("Your auction") && this.that.tileSign.signText[3].getString().equals("starting bid");
     }
 
     private boolean isAuctionQuery()
     {
-        return this.tileSign.signText[3].getString().equals("Enter query");
+        return this.that.tileSign.signText[3].getString().equals("Enter query");
     }
 
     private boolean isBankWithdraw()
     {
-        return this.tileSign.signText[2].getString().equals("Enter the amount") && this.tileSign.signText[3].getString().equals("to withdraw");
+        return this.that.tileSign.signText[2].getString().equals("Enter the amount") && this.that.tileSign.signText[3].getString().equals("to withdraw");
     }
 
     private boolean isBankDeposit()
     {
-        return this.tileSign.signText[2].getString().equals("Enter the amount") && this.tileSign.signText[3].getString().equals("to deposit");
+        return this.that.tileSign.signText[2].getString().equals("Enter the amount") && this.that.tileSign.signText[3].getString().equals("to deposit");
     }
 
     private boolean isBarzaarOrder()
     {
-        return this.tileSign.signText[2].getString().equals("Enter amount") && this.tileSign.signText[3].getString().equals("to order");
+        return this.that.tileSign.signText[2].getString().equals("Enter amount") && this.that.tileSign.signText[3].getString().equals("to order");
     }
 }

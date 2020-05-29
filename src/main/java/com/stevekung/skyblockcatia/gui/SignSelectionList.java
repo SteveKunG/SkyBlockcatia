@@ -48,9 +48,9 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
             test.remove(test.size() - 1);
             this.list.remove(test.size() - 1);
         }*/
-        for (int i = 0; i < list.size(); ++i)
+        for (Entry element : list)
         {
-            this.addEntry(new Entry(list.get(i).getValue(), parent));
+            this.addEntry(new Entry(element.getValue(), parent));
         }
         Collections.reverse(this.children());
     }

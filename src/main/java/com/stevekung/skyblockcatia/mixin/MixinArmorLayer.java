@@ -30,8 +30,7 @@ import net.minecraft.util.math.MathHelper;
 @Mixin(ArmorLayer.class)
 public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedModel<T>, A extends BipedModel<T>> extends LayerRenderer<T, M>
 {
-    @Shadow
-    public abstract A getModelFromSlot(EquipmentSlotType slot);
+    private final ArmorLayer<T, M, A> that = (ArmorLayer) (Object) this;
 
     @Shadow
     protected abstract void setModelSlotVisible(A modelIn, EquipmentSlotType slot);
@@ -70,7 +69,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
             if (armorItem.getEquipmentSlot() == slot)
             {
-                A model = this.getModelFromSlot(slot);
+                A model = this.that.getModelFromSlot(slot);
                 ResourceLocation location = this.getArmorType(itemStack.getTag().getCompound("ExtraAttributes").getString("id"), this.isLegSlot(slot));
                 model = this.getArmorModelHook(entity, itemStack, slot, model);
                 ((BipedModel)this.getEntityModel()).setModelAttributes(model);

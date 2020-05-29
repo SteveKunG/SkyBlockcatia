@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -125,9 +124,6 @@ public class SkyBlockAPIViewerScreen extends Screen
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,]+ HP\\)){0,1})|(?: \\(\\+[0-9,]+\\))|(?: \\(\\w+ \\+[0-9,]+(?:\\%){0,1}\\))){0,1}");
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###,###,###");
-    private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
-    private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
@@ -573,8 +569,8 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
                 else if (this.currentSlot instanceof SlayerStats)
                 {
-                    String total1 = TextFormatting.GRAY + "Total Amount Spent: " + TextFormatting.YELLOW + FORMAT.format(this.slayerTotalAmountSpent);
-                    String total2 = TextFormatting.GRAY + "Total Slayer XP: " + TextFormatting.YELLOW + FORMAT.format(this.totalSlayerXp);
+                    String total1 = TextFormatting.GRAY + "Total Amount Spent: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.slayerTotalAmountSpent);
+                    String total2 = TextFormatting.GRAY + "Total Slayer XP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.totalSlayerXp);
                     this.drawString(this.font, total1, this.width - this.font.getStringWidth(total1) - 60, this.height - 36, 16777215);
                     this.drawString(this.font, total2, this.width - this.font.getStringWidth(total2) - 60, this.height - 46, 16777215);
                 }
@@ -941,9 +937,8 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.glMultiTexCoord2f(33986, 240.0F, 240.0F);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        for (int i1 = 0; i1 < this.skyBlockContainer.inventorySlots.size(); ++i1)
+        for (Slot slot : this.skyBlockContainer.inventorySlots)
         {
-            Slot slot = this.skyBlockContainer.inventorySlots.get(i1);
             this.drawSlot(slot);
 
             if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isEnabled())
@@ -966,10 +961,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
-        for (int i1 = 0; i1 < this.skyBlockArmorContainer.inventorySlots.size(); ++i1)
+        for (Slot slot : this.skyBlockArmorContainer.inventorySlots)
         {
-            Slot slot = this.skyBlockArmorContainer.inventorySlots.get(i1);
-
             if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isEnabled())
             {
                 this.hoveredSlot = slot;
@@ -1647,7 +1640,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                     if (level.getCurrentPetLevel() < 100)
                     {
-                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Current EXP: " + TextFormatting.YELLOW + FORMAT.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired())))));
+                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Current EXP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired())))));
                     }
                     if (candyUsed > 0)
                     {
@@ -1984,7 +1977,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                             try
                             {
-                                valueInt = NUMBER_FORMAT_WITH_SYMBOL.parse(value).intValue();
+                                valueInt = NumberUtils.NUMBER_FORMAT_WITH_OPERATORS.parse(value).intValue();
                             }
                             catch (Exception e) {}
 
@@ -2118,13 +2111,13 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (banking != null)
         {
             double balance = banking.getAsJsonObject().get("balance").getAsDouble();
-            this.infoList.add(new SkyBlockInfo("Banking Account", FORMAT.format(balance)));
+            this.infoList.add(new SkyBlockInfo("Banking Account", NumberUtils.NUMBER_FORMAT.format(balance)));
         }
         else
         {
             this.infoList.add(new SkyBlockInfo("Banking Account", TextFormatting.RED + "API is not enabled!"));
         }
-        this.infoList.add(new SkyBlockInfo("Purse", FORMAT.format(coins)));
+        this.infoList.add(new SkyBlockInfo("Purse", NumberUtils.NUMBER_FORMAT.format(coins)));
     }
 
     private BonusStatTemplate getFairySouls(int fairySouls)
@@ -2203,7 +2196,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         if (avg > 0)
         {
-            this.skillAvg = SKILL_AVG.format(avg / count);
+            this.skillAvg = NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(avg / count);
         }
         if (this.skillCount == 0)
         {
@@ -2491,10 +2484,8 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.player = new SBFakePlayerEntity(this.minecraft.world, this.profile);
         SkyBlockAPIViewerScreen.renderSecondLayer = true;
 
-        for (int i = 0; i < this.armorItems.size(); i++)
+        for (ItemStack armor : this.armorItems)
         {
-            ItemStack armor = this.armorItems.get(i);
-
             if (armor.isEmpty())
             {
                 continue;
@@ -2554,11 +2545,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.setSlayerSkillLevel(type, slayerLvl);
 
             list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + type.getName() + " Slayer: " + TextFormatting.YELLOW + "LVL " + slayerLvl));
-            list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "EXP: " + TextFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? FORMAT.format(playerSlayerXp) : FORMAT.format(playerSlayerXp) + TextFormatting.DARK_PURPLE + "/" + TextFormatting.LIGHT_PURPLE + FORMAT.format(xpRequired))));
+            list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "EXP: " + TextFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? NumberUtils.NUMBER_FORMAT.format(playerSlayerXp) : NumberUtils.NUMBER_FORMAT.format(playerSlayerXp) + TextFormatting.DARK_PURPLE + "/" + TextFormatting.LIGHT_PURPLE + NumberUtils.NUMBER_FORMAT.format(xpRequired))));
 
             if (xpToNextLvl != 0)
             {
-                list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "XP to " + TextFormatting.YELLOW + "LVL " + levelToCheck + ": " + TextFormatting.LIGHT_PURPLE + FORMAT.format(xpToNextLvl)));
+                list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "XP to " + TextFormatting.YELLOW + "LVL " + levelToCheck + ": " + TextFormatting.LIGHT_PURPLE + NumberUtils.NUMBER_FORMAT.format(xpToNextLvl)));
             }
 
             list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl));
@@ -2573,7 +2564,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
             this.slayerTotalAmountSpent += amount;
             this.totalSlayerXp += playerSlayerXp;
-            list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "Amount Spent: " + TextFormatting.YELLOW + FORMAT.format(amount)));
+            list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "Amount Spent: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(amount)));
             list.add(SkyBlockSlayerInfo.empty());
             return list;
         }
@@ -2633,7 +2624,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private String formatSlayerKill(int kills)
     {
-        return FORMAT.format(kills) + " kill" + (kills <= 1 ? "" : "s");
+        return NumberUtils.NUMBER_FORMAT.format(kills) + " kill" + (kills <= 1 ? "" : "s");
     }
 
     private static void drawEntityOnScreen(int posX, int posY, int scale, LivingEntity entity)

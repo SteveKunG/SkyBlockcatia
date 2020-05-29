@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.text.WordUtils;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -71,15 +70,6 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     // Auction
     private NumberWidget priceSearch;
 
-    @Shadow
-    protected int guiLeft;
-
-    @Shadow
-    protected int guiTop;
-
-    @Shadow
-    protected Slot hoveredSlot;
-
     public MixinContainerScreen(T screenContainer, PlayerInventory inv, ITextComponent title)
     {
         super(title);
@@ -93,7 +83,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             if (this.isAuctionBrowser())
             {
                 this.minecraft.keyboardListener.enableRepeatEvents(true);
-                this.priceSearch = new NumberWidget(this.font, this.guiLeft + 180, this.guiTop + 40, 100, 20);
+                this.priceSearch = new NumberWidget(this.font, this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 100, 20);
                 this.priceSearch.setText(MainEventHandler.auctionPrice);
                 this.priceSearch.setCanLoseFocus(true);
                 this.children.add(this.priceSearch);
@@ -115,7 +105,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
             if (this.isPeopleAuction())
             {
-                this.addButton(new Button(this.guiLeft + 180, this.guiTop + 70, 70, 20, "Copy Seller", button ->
+                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 70, 70, 20, "Copy Seller", button ->
                 {
                     String title = this.title.getUnformattedComponentText();
                     ClientUtils.printClientMessage(JsonUtils.create("Copied seller auction command!").applyTextStyle(TextFormatting.GREEN));
@@ -208,7 +198,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
             if (this.priceSearch != null && this.isAuctionBrowser())
             {
-                this.drawString(this.font, "Search for price:", this.guiLeft + 180, this.guiTop + 26, 10526880);
+                this.drawString(this.font, "Search for price:", this.that.getGuiLeft() + 180, this.that.getGuiTop() + 26, 10526880);
                 this.priceSearch.render(mouseX, mouseY, partialTicks);
             }
         }
@@ -217,16 +207,16 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "keyPressed(III)Z", cancellable = true, at = @At("HEAD"))
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info)
     {
-        if (!this.isChatableGui() && !this.isAuctionBrowser() && this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+        if (!this.isChatableGui() && !this.isAuctionBrowser() && this.that.getSlotUnderMouse() != null && this.that.getSlotUnderMouse().getHasStack())
         {
             if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
             {
-                this.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                this.viewRecipe(this.minecraft.player, this.that.getSlotUnderMouse());
                 info.setReturnValue(true);
             }
             else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
             {
-                ItemStack itemStack = this.hoveredSlot.getStack();
+                ItemStack itemStack = this.that.getSlotUnderMouse().getStack();
 
                 if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                 {
@@ -289,16 +279,16 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 }
                 else
                 {
-                    if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+                    if (this.that.getSlotUnderMouse() != null && this.that.getSlotUnderMouse().getHasStack())
                     {
                         if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                         {
-                            this.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                            this.viewRecipe(this.minecraft.player, this.that.getSlotUnderMouse());
                             info.setReturnValue(true);
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
                         {
-                            ItemStack itemStack = this.hoveredSlot.getStack();
+                            ItemStack itemStack = this.that.getSlotUnderMouse().getStack();
 
                             if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                             {
@@ -329,16 +319,16 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 }
                 else
                 {
-                    if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
+                    if (this.that.getSlotUnderMouse() != null && this.that.getSlotUnderMouse().getHasStack())
                     {
                         if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
                         {
-                            this.viewRecipe(this.minecraft.player, this.hoveredSlot);
+                            this.viewRecipe(this.minecraft.player, this.that.getSlotUnderMouse());
                             info.setReturnValue(true);
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKey().getKeyCode())
                         {
-                            ItemStack itemStack = this.hoveredSlot.getStack();
+                            ItemStack itemStack = this.that.getSlotUnderMouse().getStack();
 
                             if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                             {
