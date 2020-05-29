@@ -24,7 +24,6 @@ public abstract class MixinDownloadingTexture
         throw new Error();
     }
 
-    @SuppressWarnings("resource")
     @Overwrite
     private static NativeImage processLegacySkin(NativeImage nativeImage)
     {
