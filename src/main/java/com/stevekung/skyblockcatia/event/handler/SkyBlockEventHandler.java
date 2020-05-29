@@ -9,15 +9,15 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.stevekung.indicatia.config.ExtendedConfig;
-import com.stevekung.indicatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
+import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.ToastMode;
@@ -35,6 +35,7 @@ import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -209,7 +210,7 @@ public class SkyBlockEventHandler
         String message = event.getMessage().getString();
         boolean cancelMessage = false;
 
-        if (InfoUtils.INSTANCE.isHypixel()) 
+        if (this.isHypixel()) 
         {
             // Common matcher
             Matcher nickMatcher = SkyBlockEventHandler.NICK_PATTERN.matcher(message);
@@ -319,10 +320,9 @@ public class SkyBlockEventHandler
                     ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
                 }
 
-                if (SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
+                if (SkyBlockcatiaMod.isIndicatiaLoaded && SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
                 {
-                    ExtendedConfig.INSTANCE.chatMode = 0;
-                    SBExtendedConfig.INSTANCE.save();
+                    IndicatiaIntegration.savePartyChat();
                 }
                 if (SBExtendedConfig.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
@@ -746,6 +746,12 @@ public class SkyBlockEventHandler
             copy.add(item.copy());
         }
         return copy;
+    }
+
+    private boolean isHypixel()
+    {
+        ServerData server = this.mc.getCurrentServerData();
+        return server != null && server.serverIP.contains("hypixel");
     }
 
     private static void addVisitingToast(Minecraft mc, String name)

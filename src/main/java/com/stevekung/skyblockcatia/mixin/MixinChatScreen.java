@@ -1,14 +1,12 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import java.lang.reflect.Field;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.indicatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screen.ChatScreen;
@@ -50,18 +48,9 @@ public abstract class MixinChatScreen extends Screen
     @Override
     public void sendMessage(String text)
     {
-        if (ExtendedConfig.INSTANCE.chatMode == SkyBlockcatiaMod.SKYBLOCK_COOP.ordinal())
+        if (SkyBlockcatiaMod.isIndicatiaLoaded)
         {
-            try
-            {
-                Field field = SkyBlockcatiaMod.SKYBLOCK_COOP.getClass().getDeclaredField("command");
-                field.setAccessible(true);
-                this.sendMessage(field.get(SkyBlockcatiaMod.SKYBLOCK_COOP) + " " + text, true);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            this.sendMessage(IndicatiaIntegration.sendMessage(text), true);
         }
         else
         {

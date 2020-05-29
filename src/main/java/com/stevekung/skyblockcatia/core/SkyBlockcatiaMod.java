@@ -17,7 +17,6 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.stevekung.indicatia.gui.screen.IndicatiaChatScreen.ChatMode;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
@@ -35,7 +34,6 @@ import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -50,6 +48,7 @@ public class SkyBlockcatiaMod
 
     public static boolean isSkyblockAddonsLoaded;
     public static boolean isIngameAccountSwitcherLoaded;
+    public static boolean isIndicatiaLoaded;
 
     public static boolean GITHUB_DOWN;
     public static boolean NO_UUID_MATCHED;
@@ -58,7 +57,6 @@ public class SkyBlockcatiaMod
     private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
     public static UUID CURRENT_UUID;
     private static boolean DEVENV = true;
-    public static final ChatMode SKYBLOCK_COOP = ChatMode.create("SKYBLOCK_COOP", "menu.chat_mode.sb_coop_chat", TextFormatting.AQUA, 31, 98, 28, 20, "COOP", "/cc");
 
     static
     {
@@ -99,6 +97,7 @@ public class SkyBlockcatiaMod
 
         SkyBlockcatiaMod.isSkyblockAddonsLoaded = ModList.get().isLoaded("skyblockaddons");
         SkyBlockcatiaMod.isIngameAccountSwitcherLoaded = ModList.get().isLoaded("IngameAccountSwitcher");
+        SkyBlockcatiaMod.isIndicatiaLoaded = ModList.get().isLoaded("indicatia");
     }
 
     private void phaseOne(FMLCommonSetupEvent event)

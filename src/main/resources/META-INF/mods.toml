@@ -7,14 +7,14 @@ issueTrackerURL="https://github.com/SteveKunG/SkyBlockcatia/issues"
 modId="skyblockcatia"
 version="2.0.0"
 displayName="SkyBlockcatia"
-description="SkyBlock API and helper!"
+description="SkyBlock utilities and helper!"
 displayURL="https://minecraft.curseforge.com/projects/skyblockcatia"
 authors="SteveKunG"
 
 [[dependencies.skyblockcatia]]
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[31.2.0,)"
     ordering="NONE"
     side="CLIENT"
 
@@ -22,5 +22,19 @@ authors="SteveKunG"
     modId="minecraft"
     mandatory=true
     versionRange="[1.15.2]"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.skyblockcatia]]
+    modId="stevekungs_lib"
+    mandatory=true
+    versionRange="[3.0.7,)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.skyblockcatia]]
+    modId="indicatia"
+    mandatory=false
+    versionRange="[3.0.5,)"
     ordering="NONE"
     side="CLIENT"
