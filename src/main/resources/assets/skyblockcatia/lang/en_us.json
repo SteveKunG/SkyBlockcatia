@@ -59,6 +59,7 @@
     "gui.close": "Close",
     "gui.sb_collections": "Collections",
     "gui.sb_crafted_minions": "Crafted Minions",
+    "menu.chat_mode.sb_coop_chat": "Skyblock Coop",
 
     "_comment": "SKYBLOCK INVENTORY",
     "skyblock_group.inventory": "Inventory",
