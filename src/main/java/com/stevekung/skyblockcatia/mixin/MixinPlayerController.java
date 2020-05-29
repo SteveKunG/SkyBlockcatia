@@ -1,9 +1,6 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -27,15 +24,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 @Mixin(PlayerController.class)
 public class MixinPlayerController
 {
-    @Shadow
-    @Final
-    @Mutable
-    private Minecraft mc;
-
     @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/math/BlockPos;)Z", at = @At(value = "INVOKE", target = "net/minecraft/world/World.getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/IFluidState;", shift = Shift.BEFORE))
     private void onPlayerDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> info)
     {
-        CommonUtils.post(new ClientBlockBreakEvent(this.mc.world, pos));
+        CommonUtils.post(new ClientBlockBreakEvent(Minecraft.getInstance().world, pos));
     }
 
     @Inject(method = "func_217292_a(Lnet/minecraft/client/entity/player/ClientPlayerEntity;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/util/Hand;Lnet/minecraft/util/math/BlockRayTraceResult;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/entity/player/ClientPlayerEntity.getHeldItem(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;", shift = Shift.AFTER))
