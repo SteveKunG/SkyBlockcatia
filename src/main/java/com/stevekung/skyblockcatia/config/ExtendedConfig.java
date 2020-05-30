@@ -410,6 +410,7 @@ public class ExtendedConfig
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.setBoolean("GolemStageTracker", this.golemStageTracker);
             nbt.setBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
+            nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
