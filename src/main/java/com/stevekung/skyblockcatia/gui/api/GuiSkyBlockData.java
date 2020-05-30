@@ -102,7 +102,7 @@ public class GuiSkyBlockData extends GuiScreen
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
-    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,]+ HP\\)){0,1})|(?: \\(\\+[0-9,]+\\))|(?: \\(\\w+ \\+[0-9,]+(?:\\%){0,1}\\))){0,1}");
+    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,.]+ HP\\)){0,1})|(?: \\(\\+[0-9,.]+\\))|(?: \\(\\w+ \\+[0-9,.]+(?:\\%){0,1}\\))){0,1}");
     private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###,###,###");
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
@@ -2128,17 +2128,17 @@ public class GuiSkyBlockData extends GuiScreen
 
     private BonusStatTemplate calculateSkillBonus(PlayerStatsBonus.IBonusTemplate[] bonus, int skillLevel)
     {
-        int healthTemp = 0;
-        int defenseTemp = 0;
-        int trueDefenseTemp = 0;
-        int strengthTemp = 0;
-        int speedTemp = 0;
-        int critChanceTemp = 0;
-        int critDamageTemp = 0;
-        int intelligenceTemp = 0;
-        int seaCreatureChanceTemp = 0;
-        int magicFindTemp = 0;
-        int petLuckTemp = 0;
+        double healthTemp = 0;
+        double defenseTemp = 0;
+        double trueDefenseTemp = 0;
+        double strengthTemp = 0;
+        double speedTemp = 0;
+        double critChanceTemp = 0;
+        double critDamageTemp = 0;
+        double intelligenceTemp = 0;
+        double seaCreatureChanceTemp = 0;
+        double magicFindTemp = 0;
+        double petLuckTemp = 0;
 
         for (int i = 0; i < bonus.length; ++i)
         {
@@ -2161,17 +2161,17 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (levelToCheck <= skillLevel)
             {
-                int health = bonus[i].getHealth();
-                int defense = bonus[i].getDefense();
-                int trueDefense = bonus[i].getTrueDefense();
-                int strength = bonus[i].getStrength();
-                int speed = bonus[i].getSpeed();
-                int critChance = bonus[i].getCritChance();
-                int critDamage = bonus[i].getCritDamage();
-                int intelligence = bonus[i].getIntelligence();
-                int seaCreatureChance = bonus[i].getSeaCreatureChance();
-                int magicFind = bonus[i].getMagicFind();
-                int petLuck = bonus[i].getPetLuck();
+                double health = bonus[i].getHealth();
+                double defense = bonus[i].getDefense();
+                double trueDefense = bonus[i].getTrueDefense();
+                double strength = bonus[i].getStrength();
+                double speed = bonus[i].getSpeed();
+                double critChance = bonus[i].getCritChance();
+                double critDamage = bonus[i].getCritDamage();
+                double intelligence = bonus[i].getIntelligence();
+                double seaCreatureChance = bonus[i].getSeaCreatureChance();
+                double magicFind = bonus[i].getMagicFind();
+                double petLuck = bonus[i].getPetLuck();
 
                 for (int level = levelToCheck; level <= skillLevel; level++)
                 {
@@ -2233,17 +2233,17 @@ public class GuiSkyBlockData extends GuiScreen
 
     private void getItemStats(List<ItemStack> inventory, boolean armor)
     {
-        int healthTemp = 0;
-        int defenseTemp = 0;
-        int trueDefenseTemp = 0;
-        int strengthTemp = 0;
-        int speedTemp = 0;
-        int critChanceTemp = 0;
-        int critDamageTemp = 0;
-        int intelligenceTemp = 0;
-        int seaCreatureChanceTemp = 0;
-        int magicFindTemp = 0;
-        int petLuckTemp = 0;
+        double healthTemp = 0;
+        double defenseTemp = 0;
+        double trueDefenseTemp = 0;
+        double strengthTemp = 0;
+        double speedTemp = 0;
+        double critChanceTemp = 0;
+        double critDamageTemp = 0;
+        double intelligenceTemp = 0;
+        double seaCreatureChanceTemp = 0;
+        double magicFindTemp = 0;
+        double petLuckTemp = 0;
 
         for (ItemStack itemStack : inventory)
         {
@@ -2287,48 +2287,48 @@ public class GuiSkyBlockData extends GuiScreen
                             {
                                 String type = matcher.group("type");
                                 String value = matcher.group("value").replace(",", "");
-                                int valueInt = 0;
+                                double valueD = 0;
 
                                 try
                                 {
-                                    valueInt = NUMBER_FORMAT_WITH_SYMBOL.parse(value).intValue();
+                                    valueD = NUMBER_FORMAT_WITH_SYMBOL.parse(value).doubleValue();
                                 }
                                 catch (Exception e) {}
 
                                 switch (type)
                                 {
                                 case "Health":
-                                    healthTemp += valueInt;
+                                    healthTemp += valueD;
                                     break;
                                 case "Defense":
-                                    defenseTemp += valueInt;
+                                    defenseTemp += valueD;
                                     break;
                                 case "True Defense":
-                                    trueDefenseTemp += valueInt;
+                                    trueDefenseTemp += valueD;
                                     break;
                                 case "Strength":
-                                    strengthTemp += valueInt;
+                                    strengthTemp += valueD;
                                     break;
                                 case "Speed":
-                                    speedTemp += valueInt;
+                                    speedTemp += valueD;
                                     break;
                                 case "Crit Chance":
-                                    critChanceTemp += valueInt;
+                                    critChanceTemp += valueD;
                                     break;
                                 case "Crit Damage":
-                                    critDamageTemp += valueInt;
+                                    critDamageTemp += valueD;
                                     break;
                                 case "Intelligence":
-                                    intelligenceTemp += valueInt;
+                                    intelligenceTemp += valueD;
                                     break;
                                 case "Sea Creature Chance":
-                                    seaCreatureChanceTemp += valueInt;
+                                    seaCreatureChanceTemp += valueD;
                                     break;
                                 case "Magic Find":
-                                    magicFindTemp += valueInt;
+                                    magicFindTemp += valueD;
                                     break;
                                 case "Pet Luck":
-                                    petLuckTemp += valueInt;
+                                    petLuckTemp += valueD;
                                     break;
                                 }
                             }
@@ -2393,18 +2393,18 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SkyBlockAPIUtils.MAX_FAIRY_SOULS));
         this.infoList.add(new SkyBlockInfo("", ""));
-        this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + this.allStat.getHealth()));
-        this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + this.allStat.getEffectiveHealth()));
-        this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + this.allStat.getDefense()));
-        this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + this.allStat.getTrueDefense()));
-        this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + this.allStat.getStrength()));
-        this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + this.allStat.getSpeed()));
-        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + this.allStat.getCritChance()));
-        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + this.allStat.getCritDamage()));
-        this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + this.allStat.getIntelligence()));
-        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + this.allStat.getSeaCreatureChance()));
-        this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + this.allStat.getMagicFind()));
-        this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + this.allStat.getPetLuck()));
+        this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + SKILL_AVG.format(this.allStat.getHealth())));
+        this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + SKILL_AVG.format(this.allStat.getEffectiveHealth())));
+        this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + SKILL_AVG.format(this.allStat.getDefense())));
+        this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + SKILL_AVG.format(this.allStat.getTrueDefense())));
+        this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + SKILL_AVG.format(this.allStat.getStrength())));
+        this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + SKILL_AVG.format(this.allStat.getSpeed())));
+        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + SKILL_AVG.format(this.allStat.getCritChance())));
+        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + SKILL_AVG.format(this.allStat.getCritDamage())));
+        this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + SKILL_AVG.format(this.allStat.getIntelligence())));
+        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + SKILL_AVG.format(this.allStat.getSeaCreatureChance())));
+        this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
+        this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
 
         this.infoList.add(new SkyBlockInfo("", ""));
 
@@ -2437,18 +2437,18 @@ public class GuiSkyBlockData extends GuiScreen
 
     private BonusStatTemplate getFairySouls(int fairySouls)
     {
-        int healthBase = 0;
-        int defenseBase = 0;
-        int strengthBase = 0;
-        int speedBase = 0;
+        double healthBase = 0;
+        double defenseBase = 0;
+        double strengthBase = 0;
+        double speedBase = 0;
 
         for (PlayerStatsBonus.FairySouls progress : PlayerStatsBonus.FAIRY_SOULS)
         {
             int soulToCheck = progress.getCount();
-            int health = progress.getHealth();
-            int defense = progress.getDefense();
-            int strength = progress.getStrength();
-            int speed = progress.getSpeed();
+            double health = progress.getHealth();
+            double defense = progress.getDefense();
+            double strength = progress.getStrength();
+            double speed = progress.getSpeed();
 
             if (soulToCheck <= fairySouls)
             {
@@ -2463,12 +2463,12 @@ public class GuiSkyBlockData extends GuiScreen
 
     private BonusStatTemplate getMagicFindFromPets(int petsScore)
     {
-        int magicFindBase = 0;
+        double magicFindBase = 0;
 
         for (PlayerStatsBonus.PetsScore score : PlayerStatsBonus.PETS_SCORE)
         {
             int scoreToCheck = score.getScore();
-            int magicFind = score.getMagicFind();
+            double magicFind = score.getMagicFind();
 
             if (scoreToCheck <= petsScore)
             {
@@ -3858,20 +3858,20 @@ public class GuiSkyBlockData extends GuiScreen
 
     public class BonusStatTemplate
     {
-        private int health;
-        private int defense;
-        private int trueDefense;
-        private int effectiveHealth;
-        private int strength;
-        private int speed;
-        private int critChance;
-        private int critDamage;
-        private int intelligence;
-        private int seaCreatureChance;
-        private int magicFind;
-        private int petLuck;
+        private double health;
+        private double defense;
+        private double trueDefense;
+        private double effectiveHealth;
+        private double strength;
+        private double speed;
+        private double critChance;
+        private double critDamage;
+        private double intelligence;
+        private double seaCreatureChance;
+        private double magicFind;
+        private double petLuck;
 
-        public BonusStatTemplate(int health, int defense, int trueDefense, int effectiveHealth, int strength, int speed, int critChance, int critDamage, int intelligence, int seaCreatureChance, int magicFind, int petLuck)
+        public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double intelligence, double seaCreatureChance, double magicFind, double petLuck)
         {
             this.health = health;
             this.defense = defense;
@@ -3904,12 +3904,12 @@ public class GuiSkyBlockData extends GuiScreen
             return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
         }
 
-        public int getHealth()
+        public double getHealth()
         {
             return this.health;
         }
 
-        public int getDefense()
+        public double getDefense()
         {
             if (this.defense <= 0)
             {
@@ -3918,27 +3918,27 @@ public class GuiSkyBlockData extends GuiScreen
             return this.defense;
         }
 
-        public int getTrueDefense()
+        public double getTrueDefense()
         {
             return this.trueDefense;
         }
 
-        public int getEffectiveHealth()
+        public double getEffectiveHealth()
         {
             return this.effectiveHealth;
         }
 
-        public int getStrength()
+        public double getStrength()
         {
             return this.strength;
         }
 
-        public int getSpeed()
+        public double getSpeed()
         {
             return this.speed;
         }
 
-        public int getCritChance()
+        public double getCritChance()
         {
             if (this.critChance > 100)
             {
@@ -3947,158 +3947,158 @@ public class GuiSkyBlockData extends GuiScreen
             return this.critChance;
         }
 
-        public int getCritDamage()
+        public double getCritDamage()
         {
             return this.critDamage;
         }
 
-        public int getIntelligence()
+        public double getIntelligence()
         {
             return this.intelligence;
         }
 
-        public int getSeaCreatureChance()
+        public double getSeaCreatureChance()
         {
             return this.seaCreatureChance;
         }
 
-        public int getMagicFind()
+        public double getMagicFind()
         {
             return this.magicFind;
         }
 
-        public int getPetLuck()
+        public double getPetLuck()
         {
             return this.petLuck;
         }
 
-        public void setHealth(int health)
+        public void setHealth(double health)
         {
             this.health = health;
         }
 
-        public void setDefense(int defense)
+        public void setDefense(double defense)
         {
             this.defense = defense;
         }
 
-        public void setTrueDefense(int trueDefense)
+        public void setTrueDefense(double trueDefense)
         {
             this.trueDefense = trueDefense;
         }
 
-        public void setEffectiveHealth(int effectiveHealth)
+        public void setEffectiveHealth(double effectiveHealth)
         {
             this.effectiveHealth = effectiveHealth;
         }
 
-        public void setStrength(int strength)
+        public void setStrength(double strength)
         {
             this.strength = strength;
         }
 
-        public void setSpeed(int speed)
+        public void setSpeed(double speed)
         {
             this.speed = speed;
         }
 
-        public void setCritChance(int critChance)
+        public void setCritChance(double critChance)
         {
             this.critChance = critChance;
         }
 
-        public void setCritDamage(int critDamage)
+        public void setCritDamage(double critDamage)
         {
             this.critDamage = critDamage;
         }
 
-        public void setIntelligence(int intelligence)
+        public void setIntelligence(double intelligence)
         {
             this.intelligence = intelligence;
         }
 
-        public void setSeaCreatureChance(int seaCreatureChance)
+        public void setSeaCreatureChance(double seaCreatureChance)
         {
             this.seaCreatureChance = seaCreatureChance;
         }
 
-        public void setMagicFind(int magicFind)
+        public void setMagicFind(double magicFind)
         {
             this.magicFind = magicFind;
         }
 
-        public void setPetLuck(int petLuck)
+        public void setPetLuck(double petLuck)
         {
             this.petLuck = petLuck;
         }
 
-        public BonusStatTemplate addHealth(int health)
+        public BonusStatTemplate addHealth(double health)
         {
             this.health += health;
             return this;
         }
 
-        public BonusStatTemplate addDefense(int defense)
+        public BonusStatTemplate addDefense(double defense)
         {
             this.defense += defense;
             return this;
         }
 
-        public BonusStatTemplate addTrueDefense(int trueDefense)
+        public BonusStatTemplate addTrueDefense(double trueDefense)
         {
             this.trueDefense += trueDefense;
             return this;
         }
 
-        public BonusStatTemplate addEffectiveHealth(int effectiveHealth)
+        public BonusStatTemplate addEffectiveHealth(double effectiveHealth)
         {
             this.effectiveHealth += effectiveHealth;
             return this;
         }
 
-        public BonusStatTemplate addStrength(int strength)
+        public BonusStatTemplate addStrength(double strength)
         {
             this.strength += strength;
             return this;
         }
 
-        public BonusStatTemplate addSpeed(int speed)
+        public BonusStatTemplate addSpeed(double speed)
         {
             this.speed += speed;
             return this;
         }
 
-        public BonusStatTemplate addCritChance(int critChance)
+        public BonusStatTemplate addCritChance(double critChance)
         {
             this.critChance += critChance;
             return this;
         }
 
-        public BonusStatTemplate addCritDamage(int critDamage)
+        public BonusStatTemplate addCritDamage(double critDamage)
         {
             this.critDamage += critDamage;
             return this;
         }
 
-        public BonusStatTemplate addIntelligence(int intelligence)
+        public BonusStatTemplate addIntelligence(double intelligence)
         {
             this.intelligence += intelligence;
             return this;
         }
 
-        public BonusStatTemplate addSeaCreatureChance(int seaCreatureChance)
+        public BonusStatTemplate addSeaCreatureChance(double seaCreatureChance)
         {
             this.seaCreatureChance += seaCreatureChance;
             return this;
         }
 
-        public BonusStatTemplate addMagicFind(int magicFind)
+        public BonusStatTemplate addMagicFind(double magicFind)
         {
             this.magicFind += magicFind;
             return this;
         }
 
-        public BonusStatTemplate addPetLuck(int petLuck)
+        public BonusStatTemplate addPetLuck(double petLuck)
         {
             this.petLuck += petLuck;
             return this;
