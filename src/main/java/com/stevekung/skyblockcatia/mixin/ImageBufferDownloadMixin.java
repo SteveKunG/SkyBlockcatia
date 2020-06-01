@@ -41,11 +41,14 @@ public abstract class ImageBufferDownloadMixin
         {
             if (ConfigManagerIN.enableSkinRenderingFix)
             {
+                this.imageWidth = 64;
+                this.imageHeight = 64;
+                BufferedImage bufferedimage = new BufferedImage(this.imageWidth, this.imageHeight, 2);
+                Graphics graphics = bufferedimage.getGraphics();
+                graphics.drawImage(image, 0, 0, null);
+
                 if (image.getHeight() == 32)
                 {
-                    BufferedImage bufferedimage = new BufferedImage(64, 64, 2);
-                    Graphics graphics = bufferedimage.getGraphics();
-                    graphics.drawImage(image, 0, 0, null);
                     graphics.drawImage(bufferedimage, 24, 48, 20, 52, 4, 16, 8, 20, null);
                     graphics.drawImage(bufferedimage, 28, 48, 24, 52, 8, 16, 12, 20, null);
                     graphics.drawImage(bufferedimage, 20, 52, 16, 64, 8, 20, 12, 32, null);
@@ -59,6 +62,16 @@ public abstract class ImageBufferDownloadMixin
                     graphics.drawImage(bufferedimage, 44, 52, 40, 64, 40, 20, 44, 32, null);
                     graphics.drawImage(bufferedimage, 48, 52, 44, 64, 52, 20, 56, 32, null);
                     graphics.dispose();
+                    this.imageData = ((DataBufferInt)bufferedimage.getRaster().getDataBuffer()).getData();
+                    this.setAreaOpaque(0, 0, 32, 16);
+                    this.setAreaTransparent(32, 0, 64, 32);
+                    this.setAreaOpaque(0, 16, 64, 32);
+                    this.setAreaTransparent(0, 32, 16, 48);
+                    this.setAreaTransparent(16, 32, 40, 48);
+                    this.setAreaTransparent(40, 32, 56, 48);
+                    this.setAreaTransparent(0, 48, 16, 64);
+                    this.setAreaOpaque(16, 48, 48, 64);
+                    this.setAreaTransparent(48, 48, 64, 64);
                     return bufferedimage;
                 }
                 return image;
