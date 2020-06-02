@@ -41,6 +41,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -727,6 +728,20 @@ public class HypixelEventHandler
             }
         }
         catch (Exception e) {}
+    }
+
+    @SubscribeEvent
+    public void onRenderLivingSpecialPre(RenderLivingEvent.Specials.Pre event)
+    {
+        if (event.entity.getDisplayName() != null)
+        {
+            String name = event.entity.getDisplayName().getFormattedText();
+
+            if (name.contains("Sven Pup"))
+            {
+                event.setCanceled(true);
+            }
+        }
     }
 
     @SubscribeEvent
