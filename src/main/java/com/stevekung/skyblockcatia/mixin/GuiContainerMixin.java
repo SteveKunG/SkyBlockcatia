@@ -21,6 +21,7 @@ import com.google.common.collect.ObjectArrays;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.MainEventHandler;
 import com.stevekung.skyblockcatia.gui.GuiNumberField;
+import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockAPIViewer;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
@@ -98,6 +99,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             if (this.isPeopleAuction(chest.lowerChestInventory))
             {
                 this.buttonList.add(new GuiButton(155, this.guiLeft + 180, this.guiTop + 70, 70, 20, "Copy Seller"));
+                this.buttonList.add(new GuiButton(156, this.guiLeft + 180, this.guiTop + 92, 70, 20, "View API"));
             }
         }
     }
@@ -374,6 +376,11 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                 String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
                 ClientUtils.printClientMessage(JsonUtils.create("Copied seller auction command!").setChatStyle(JsonUtils.green()));
                 GuiScreen.setClipboardString("/ah " + text.replace(text.substring(text.indexOf('\'')), ""));
+            }
+            else if (button.id == 156)
+            {
+                String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
+                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), ""));
             }
         }
     }
