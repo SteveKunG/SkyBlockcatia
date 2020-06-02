@@ -22,7 +22,8 @@ public class SkyBlockInventoryTabs
     public static final SkyBlockInventoryTabs FISHING = new SkyBlockInventoryTabs(4, "fishing", Items.fishing_rod);
     public static final SkyBlockInventoryTabs QUIVER = new SkyBlockInventoryTabs(5, "quiver", Items.arrow);
     public static final SkyBlockInventoryTabs CANDY = new SkyBlockInventoryTabs(6, "candy", RenderUtils.getSkullItemStack("906876f2-55d9-3965-9e57-f5732c765617", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTUwZjcxMmU4NzdkZmQ5MTBjOTdmMzgxOWEyMDBhMDVkNDllZTZiODNiNTkyNjg2ZTA5OWI5ZWNkNDQzZjIyOCJ9fX0="));
-    public static final SkyBlockInventoryTabs PET = new SkyBlockInventoryTabs(7, "pet", Items.bone);
+    public static final SkyBlockInventoryTabs WARDROBE = new SkyBlockInventoryTabs(7, "wardrobe", Items.leather_chestplate);
+    public static final SkyBlockInventoryTabs PET = new SkyBlockInventoryTabs(8, "pet", Items.bone);
     private final int index;
     private final String label;
     private String texture = "items";

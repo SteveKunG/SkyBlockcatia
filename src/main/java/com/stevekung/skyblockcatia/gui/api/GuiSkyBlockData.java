@@ -1210,9 +1210,8 @@ public class GuiSkyBlockData extends GuiScreen
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, k / 1.0F, l / 1.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        for (int i1 = 0; i1 < this.skyBlockContainer.inventorySlots.size(); ++i1)
+        for (Slot slot : this.skyBlockContainer.inventorySlots)
         {
-            Slot slot = this.skyBlockContainer.inventorySlots.get(i1);
             this.drawSlot(slot);
 
             if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())
@@ -1235,10 +1234,8 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
 
-        for (int i1 = 0; i1 < this.skyBlockArmorContainer.inventorySlots.size(); ++i1)
+        for (Slot slot : this.skyBlockArmorContainer.inventorySlots)
         {
-            Slot slot = this.skyBlockArmorContainer.inventorySlots.get(i1);
-
             if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())
             {
                 this.theSlot = slot;
@@ -1456,6 +1453,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getItemStats(this.inventoryToStats, false);
                 this.getItemStats(this.armorItems, true);
                 this.applyBonuses();
+
                 this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0));
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID);
                 break;
@@ -2747,6 +2745,7 @@ public class GuiSkyBlockData extends GuiScreen
         SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.FISHING_BAG), SkyBlockInventoryTabs.FISHING));
         SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.QUIVER), SkyBlockInventoryTabs.QUIVER));
         SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.CANDY), SkyBlockInventoryTabs.CANDY));
+        SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.WARDROBE), SkyBlockInventoryTabs.WARDROBE));
 
         this.inventoryToStats.addAll(mainInventory);
         this.inventoryToStats.addAll(accessoryInventory);
@@ -2791,10 +2790,8 @@ public class GuiSkyBlockData extends GuiScreen
         this.player = new EntityOtherFakePlayer(this.mc.theWorld, this.profile);
         GuiSkyBlockData.renderSecondLayer = true;
 
-        for (int i = 0; i < this.armorItems.size(); i++)
+        for (ItemStack armor : this.armorItems)
         {
-            ItemStack armor = this.armorItems.get(i);
-
             if (armor == null)
             {
                 continue;
