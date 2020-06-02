@@ -74,9 +74,9 @@ public class MainEventHandler
     private static final ThreadPoolExecutor REALTIME_PINGER = new ScheduledThreadPoolExecutor(5, new ThreadFactoryBuilder().setNameFormat("Real Time Server Pinger #%d").setDaemon(true).build());
     private long lastPinger = -1L;
     private long lastButtonClick = -1;
-    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Runic Pedestal"));
+    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options"));
     public static String auctionPrice = "";
-    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
+    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
     public static boolean showChat;
     private static long sneakTimeOld;
     private static boolean sneakingOld;
@@ -233,16 +233,15 @@ public class MainEventHandler
         {
             if (event.gui instanceof GuiInventory)
             {
-                GuiButton craftingButton = new GuiButtonItem(1000, width + 10, height + 86, width + 70, Item.getItemFromBlock(Blocks.crafting_table));
-                craftingButton.visible = HypixelEventHandler.SKY_BLOCK_LOCATION.isHub();
-                event.buttonList.add(craftingButton);
-                event.buttonList.add(new GuiButtonItem(999, width - 9, height + 86, width + 51, Item.getItemFromBlock(Blocks.ender_chest)));
+                event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, Item.getItemFromBlock(Blocks.ender_chest)));
+                event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, Item.getItemFromBlock(Blocks.crafting_table)));
+                event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, Items.bone, true, "Pets"));
+                event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, Items.leather_chestplate, true, "Wardrobe"));
             }
             else if (event.gui instanceof GuiChest)
             {
                 GuiChest chest = (GuiChest)event.gui;
                 IInventory lowerChestInventory = chest.lowerChestInventory;
-                GuiButton craftingButton = new GuiButtonItem(1000, width + 88, height + 65, Item.getItemFromBlock(Blocks.crafting_table), HypixelEventHandler.SKY_BLOCK_LOCATION.isHub());
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, lowerChestInventory))
                 {
@@ -251,20 +250,19 @@ public class MainEventHandler
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory))
                 {
-                    event.buttonList.add(new GuiButtonItem(999, width + 88, height + 47, Item.getItemFromBlock(Blocks.ender_chest)));
-                    event.buttonList.add(craftingButton);
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 65, width + 88, Items.nether_star, HypixelEventHandler.SKY_BLOCK_LOCATION.isShopOutsideHub(), "SkyBlock Menu"));
+                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table)));
+                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, Item.getItemFromBlock(Blocks.ender_chest)));
+                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 85, width + 88, Items.nether_star, true, "SkyBlock Menu"));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Craft Item"))
                 {
-                    event.buttonList.add(new GuiButtonItem(999, width + 88, height + 47, Item.getItemFromBlock(Blocks.ender_chest)));
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 65, Items.nether_star, "SkyBlock Menu"));
+                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, Item.getItemFromBlock(Blocks.ender_chest)));
+                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, Items.nether_star, "SkyBlock Menu"));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
                 {
-                    craftingButton = new GuiButtonItem(1000, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table), HypixelEventHandler.SKY_BLOCK_LOCATION.isHub());
-                    event.buttonList.add(craftingButton);
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + (HypixelEventHandler.SKY_BLOCK_LOCATION.isHub() ? 65 : 47), Items.nether_star, "SkyBlock Menu"));
+                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table)));
+                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, Items.nether_star, "SkyBlock Menu"));
                 }
             }
         }
@@ -316,17 +314,25 @@ public class MainEventHandler
         {
             if (now - this.lastButtonClick > 100L)
             {
-                if (event.button.id == 999)
+                if (event.button.id == 1000)
                 {
                     this.mc.thePlayer.sendChatMessage("/enderchest");
                 }
-                else if (event.button.id == 1000)
-                {
-                    this.mc.thePlayer.sendChatMessage("/viewcraftingtable");
-                }
                 else if (event.button.id == 1001)
                 {
-                    this.mc.thePlayer.sendChatMessage("/sbmenu");
+                    this.mc.thePlayer.sendChatMessage("/craft");
+                }
+                else if (event.button.id == 1002)
+                {
+                    this.mc.thePlayer.sendChatMessage("/pets");
+                }
+                else if (event.button.id == 1003)
+                {
+                    this.mc.thePlayer.sendChatMessage("/wardrobe");
+                }
+                else if (event.button.id == 1004)
+                {
+                    this.mc.thePlayer.sendChatMessage("/viewsbmenu");
                 }
                 this.lastButtonClick = now;
             }
