@@ -52,6 +52,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     private boolean waitingOnAutocomplete;
     private int autocompleteIndex;
     private List<String> foundPlayerNames = new ArrayList<>();
+    private String guild = "";
 
     public GuiSkyBlockAPIViewer(GuiState state)
     {
@@ -289,7 +290,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             {
                 if (!this.profiles.isEmpty())
                 {
-                    this.drawCenteredString(this.fontRendererObj, this.displayName + EnumChatFormatting.GOLD + " Profile(s)", this.width / 2, 30, 16777215);
+                    this.drawCenteredString(this.fontRendererObj, this.displayName + EnumChatFormatting.GOLD + " Profiles" + this.guild, this.width / 2, 30, 16777215);
                 }
 
                 this.usernameTextField.drawTextBox();
@@ -525,6 +526,16 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
         String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
 
+        URL urlGuild = new URL(SkyBlockAPIUtils.GUILD + uuid);
+        JsonObject objGuild = new JsonParser().parse(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonElement guild = objGuild.get("guild");
+
+        if (!guild.isJsonNull())
+        {
+            String guildName = guild.getAsJsonObject().get("name").getAsString();
+            this.guild = EnumChatFormatting.YELLOW + " Guild: " + EnumChatFormatting.GOLD + guildName;
+        }
+
         if (stats == null)
         {
             this.setErrorMessage("Couldn't get stats from API, Please try again later!");
@@ -546,7 +557,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         if (profiles.entrySet().isEmpty())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, -1);
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, this.guild, uuid, profile, -1);
             this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, callback));
             return;
         }
@@ -560,7 +571,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             String sbProfileId = profiles.get(entry.getKey()).getAsJsonObject().get("profile_id").getAsString();
             String profileName = profiles.get(entry.getKey()).getAsJsonObject().get("cute_name").getAsString();
             this.statusMessage = "Found " + EnumChatFormatting.GOLD + "\"" + profileName + "\"" + EnumChatFormatting.GRAY + " profile";
-            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
+            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, this.guild, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
             GuiSBProfileButton button = new GuiSBProfileButton(i + 1000, this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)

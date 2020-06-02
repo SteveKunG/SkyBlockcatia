@@ -86,6 +86,7 @@ public class GuiSkyBlockData extends GuiScreen
     private final String sbProfileName;
     private final String username;
     private final String displayName;
+    private final String guild;
     private final String uuid;
     private final GameProfile profile;
     private final StopWatch watch = new StopWatch();
@@ -172,6 +173,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.sbProfileName = callback.getProfileName();
         this.username = callback.getUsername();
         this.displayName = callback.getDisplayName();
+        this.guild = callback.getGuild();
         this.uuid = callback.getUUID();
         this.profile = callback.getGameProfile();
 
@@ -584,7 +586,7 @@ public class GuiSkyBlockData extends GuiScreen
                     this.currentSlot.drawScreen(mouseX, mouseY, partialTicks);
                 }
 
-                this.drawCenteredString(this.fontRendererObj, this.displayName + EnumChatFormatting.GOLD + " Profile: " + this.sbProfileName, this.width / 2, 29, 16777215);
+                this.drawCenteredString(this.fontRendererObj, this.displayName + EnumChatFormatting.YELLOW + " Profile: " + EnumChatFormatting.GOLD + this.sbProfileName + this.guild, this.width / 2, 29, 16777215);
 
                 if (this.currentSlot instanceof EmptyStats)
                 {

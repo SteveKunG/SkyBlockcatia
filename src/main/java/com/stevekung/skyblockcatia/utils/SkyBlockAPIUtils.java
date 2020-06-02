@@ -26,6 +26,7 @@ public class SkyBlockAPIUtils
     public static String SKYBLOCK_PROFILE;
     public static String SKYBLOCK_AUCTION;
     public static String BAZAAR;
+    public static String GUILD;
 
     public static void setApiKey()
     {
@@ -35,6 +36,7 @@ public class SkyBlockAPIUtils
         SKYBLOCK_PROFILE = "https://api.hypixel.net/skyblock/profile?key=" + API_KEY + "&profile=";
         SKYBLOCK_AUCTION = "https://api.hypixel.net/skyblock/auction?key=" + API_KEY + "&profile=";
         BAZAAR = "https://api.hypixel.net/skyblock/bazaar?key=" + API_KEY;
+        GUILD = "https://api.hypixel.net/guild?key=" + API_KEY + "&player=";
     }
 
     public static void setApiKeyFromServer(String uuid)
