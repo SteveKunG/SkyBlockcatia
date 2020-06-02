@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class NumberUtils
 {
     private static final NavigableMap<Long, String> SUFFIXES = new TreeMap<>();
@@ -45,11 +43,6 @@ public class NumberUtils
 
     public static boolean isNumeric(CharSequence cs)
     {
-        if (StringUtils.isEmpty(cs))
-        {
-            return false;
-        }
-
         int sz = cs.length();
 
         for (int i = 0; i < sz; i++)
@@ -64,11 +57,6 @@ public class NumberUtils
 
     public static boolean isNumericWithKM(CharSequence cs)
     {
-        if (StringUtils.isEmpty(cs))
-        {
-            return false;
-        }
-
         int sz = cs.length();
 
         for (int i = 0; i < sz; i++)

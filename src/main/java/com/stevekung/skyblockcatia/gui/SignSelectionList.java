@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,11 +28,13 @@ import net.minecraft.util.ResourceLocation;
 
 public class SignSelectionList extends GuiListExtended
 {
-    public static final List<Entry> AUCTION_PRICES = new ArrayList<>();
+    public static final List<Entry> AUCTION_STARTING_BID_PRICES = new ArrayList<>();
+    public static final List<Entry> AUCTION_BID_PRICES = new ArrayList<>();
     public static final List<Entry> AUCTION_QUERIES = new ArrayList<>();
     public static final List<Entry> BANK_WITHDRAW = new ArrayList<>();
     public static final List<Entry> BANK_DEPOSIT = new ArrayList<>();
     public static final List<Entry> BAZAAR_ORDER = new ArrayList<>();
+    public static final List<Entry> BAZAAR_PRICE = new ArrayList<>();
     private int selectedSlotIndex = -1;
     private final List<SignSelectionList.Entry> list;
     private final String title;
@@ -84,13 +85,7 @@ public class SignSelectionList extends GuiListExtended
     @Override
     public int getListWidth()
     {
-        if (this.list.isEmpty())
-        {
-            return 0;
-        }
-        Entry max = Collections.max(this.list, Comparator.comparing(text -> text.getValue().length()));
-        int length = this.mc.fontRendererObj.getStringWidth(max.getValue()) + 24;
-        return length;
+        return 100;
     }
 
     @Override
@@ -137,39 +132,16 @@ public class SignSelectionList extends GuiListExtended
 
     public static void clearAll()
     {
-        SignSelectionList.AUCTION_PRICES.clear();
+        SignSelectionList.AUCTION_STARTING_BID_PRICES.clear();
+        SignSelectionList.AUCTION_BID_PRICES.clear();
         SignSelectionList.AUCTION_QUERIES.clear();
         SignSelectionList.BANK_WITHDRAW.clear();
         SignSelectionList.BANK_DEPOSIT.clear();
         SignSelectionList.BAZAAR_ORDER.clear();
+        SignSelectionList.BAZAAR_PRICE.clear();
     }
 
-    public static List<Entry> getAuctionPrice()
-    {
-        return SignSelectionList.AUCTION_PRICES;
-    }
-
-    public static List<Entry> getAuctionQuery()
-    {
-        return SignSelectionList.AUCTION_QUERIES;
-    }
-
-    public static List<Entry> getBankWithdraw()
-    {
-        return SignSelectionList.BANK_WITHDRAW;
-    }
-
-    public static List<Entry> getBankDeposit()
-    {
-        return SignSelectionList.BANK_DEPOSIT;
-    }
-
-    public static List<Entry> getBazaarOrder()
-    {
-        return SignSelectionList.BAZAAR_ORDER;
-    }
-
-    private class Entry implements GuiListExtended.IGuiListEntry
+    public class Entry implements GuiListExtended.IGuiListEntry
     {
         private final Minecraft mc;
         private final String value;

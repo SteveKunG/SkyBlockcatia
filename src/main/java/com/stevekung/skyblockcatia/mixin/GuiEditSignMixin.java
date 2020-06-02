@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.mixin;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,11 +32,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 {
     private final GuiEditSign that = (GuiEditSign) (Object) this;
     private TextInputUtil textInputUtil;
-    private SignSelectionList auctionPriceSelector;
-    private SignSelectionList auctionQuerySelector;
-    private SignSelectionList withdrawSelector;
-    private SignSelectionList depositSelector;
-    private SignSelectionList bazaarOrderSelector;
+    private SignSelectionList globalSelector;
 
     @Shadow
     private int editLine;
@@ -50,25 +47,47 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
         if (HypixelEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign())
+            List<SignSelectionList.Entry> list = null;
+            String title = null;
+
+            if (this.isAuctionStartBidSign())
             {
-                this.auctionPriceSelector = new SignSelectionList(this.mc, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.AUCTION_PRICES, "Select price");
+                list = SignSelectionList.AUCTION_STARTING_BID_PRICES;
+                title = "Select price";
+            }
+            if (this.isAuctionPrice())
+            {
+                list = SignSelectionList.AUCTION_BID_PRICES;
+                title = "Select bid price";
             }
             if (this.isAuctionQuery())
             {
-                this.auctionQuerySelector = new SignSelectionList(this.mc, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.AUCTION_QUERIES, "Select query");
+                list = SignSelectionList.AUCTION_QUERIES;
+                title = "Select query";
             }
             if (this.isBankWithdraw())
             {
-                this.withdrawSelector = new SignSelectionList(this.mc, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.BANK_WITHDRAW, "Select withdraw");
+                list = SignSelectionList.BANK_WITHDRAW;
+                title = "Select withdraw";
             }
             if (this.isBankDeposit())
             {
-                this.depositSelector = new SignSelectionList(this.mc, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.BANK_DEPOSIT, "Select deposit");
+                list = SignSelectionList.BANK_DEPOSIT;
+                title = "Select deposit";
             }
-            if (this.isBarzaarOrder())
+            if (this.isBazaarOrder())
             {
-                this.bazaarOrderSelector = new SignSelectionList(this.mc, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.BAZAAR_ORDER, "Bazaar Order");
+                list = SignSelectionList.BAZAAR_ORDER;
+                title = "Select bazaar order";
+            }
+            if (this.isBazaarPrice())
+            {
+                list = SignSelectionList.BAZAAR_PRICE;
+                title = "Select bazaar price";
+            }
+            if (list != null && title != null)
+            {
+                this.globalSelector = new SignSelectionList(this.mc, this.width + 200, this.height, 64, this.height - 64, list, title);
             }
         }
     }
@@ -84,36 +103,22 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
             if (!StringUtils.isNullOrEmpty(text))
             {
-                if (NumberUtils.isNumericWithKM(text))
+                if (NumberUtils.isNumericWithKM(text) && (this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                 {
-                    if (this.isBankWithdraw())
-                    {
-                        this.withdrawSelector.add(text);
-                    }
-                    if (this.isBankDeposit())
-                    {
-                        this.depositSelector.add(text);
-                    }
+                    this.globalSelector.add(text);
                 }
-                if (NumberUtils.isNumeric(text))
+                else if (NumberUtils.isNumeric(text) && this.isBazaarOrder())
                 {
-                    if (this.isAuctionSign())
-                    {
-                        this.auctionPriceSelector.add(text);
-                    }
-                    if (this.isBarzaarOrder())
-                    {
-                        this.bazaarOrderSelector.add(text);
-                    }
+                    this.globalSelector.add(text);
                 }
-                if (this.isAuctionQuery())
+                else if (this.isAuctionQuery())
                 {
-                    this.auctionQuerySelector.add(text);
+                    this.globalSelector.add(text);
                 }
             }
         }
 
-        if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionSign()))
+        if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionStartBidSign()))
         {
             SignSelectionList.processSignData(this.that.tileSign);
         }
@@ -128,7 +133,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
             {
                 String text = this.that.tileSign.signText[0].getUnformattedText();
 
-                if (ExtendedConfig.instance.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionSign())
+                if (ExtendedConfig.instance.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
                 {
                     int price = Integer.parseInt(text);
 
@@ -176,25 +181,9 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
         if (HypixelEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign())
+            if (this.globalSelector != null)
             {
-                this.auctionPriceSelector.mouseClicked(mouseX, mouseY, mouseButton);
-            }
-            if (this.isAuctionQuery())
-            {
-                this.auctionQuerySelector.mouseClicked(mouseX, mouseY, mouseButton);
-            }
-            if (this.isBankWithdraw())
-            {
-                this.withdrawSelector.mouseClicked(mouseX, mouseY, mouseButton);
-            }
-            if (this.isBankDeposit())
-            {
-                this.depositSelector.mouseClicked(mouseX, mouseY, mouseButton);
-            }
-            if (this.isBarzaarOrder())
-            {
-                this.bazaarOrderSelector.mouseClicked(mouseX, mouseY, mouseButton);
+                this.globalSelector.mouseClicked(mouseX, mouseY, mouseButton);
             }
         }
     }
@@ -206,25 +195,9 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
         if (HypixelEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign())
+            if (this.globalSelector != null)
             {
-                this.auctionPriceSelector.mouseReleased(mouseX, mouseY, state);
-            }
-            if (this.isAuctionQuery())
-            {
-                this.auctionQuerySelector.mouseReleased(mouseX, mouseY, state);
-            }
-            if (this.isBankWithdraw())
-            {
-                this.withdrawSelector.mouseReleased(mouseX, mouseY, state);
-            }
-            if (this.isBankDeposit())
-            {
-                this.depositSelector.mouseReleased(mouseX, mouseY, state);
-            }
-            if (this.isBarzaarOrder())
-            {
-                this.bazaarOrderSelector.mouseReleased(mouseX, mouseY, state);
+                this.globalSelector.mouseReleased(mouseX, mouseY, state);
             }
         }
     }
@@ -236,25 +209,9 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
         if (HypixelEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign())
+            if (this.globalSelector != null)
             {
-                this.auctionPriceSelector.handleMouseInput();
-            }
-            if (this.isAuctionQuery())
-            {
-                this.auctionQuerySelector.handleMouseInput();
-            }
-            if (this.isBankWithdraw())
-            {
-                this.withdrawSelector.handleMouseInput();
-            }
-            if (this.isBankDeposit())
-            {
-                this.depositSelector.handleMouseInput();
-            }
-            if (this.isBarzaarOrder())
-            {
-                this.bazaarOrderSelector.handleMouseInput();
+                this.globalSelector.handleMouseInput();
             }
         }
     }
@@ -317,25 +274,9 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
         if (HypixelEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign() && SignSelectionList.getAuctionPrice().size() > 0)
+            if (this.globalSelector != null)
             {
-                this.auctionPriceSelector.drawScreen(mouseX, mouseY, partialTicks);
-            }
-            if (this.isAuctionQuery() && SignSelectionList.getAuctionQuery().size() > 0)
-            {
-                this.auctionQuerySelector.drawScreen(mouseX, mouseY, partialTicks);
-            }
-            if (this.isBankWithdraw() && SignSelectionList.getBankWithdraw().size() > 0)
-            {
-                this.withdrawSelector.drawScreen(mouseX, mouseY, partialTicks);
-            }
-            if (this.isBankDeposit() && SignSelectionList.getBankDeposit().size() > 0)
-            {
-                this.depositSelector.drawScreen(mouseX, mouseY, partialTicks);
-            }
-            if (this.isBarzaarOrder() && SignSelectionList.getBazaarOrder().size() > 0)
-            {
-                this.bazaarOrderSelector.drawScreen(mouseX, mouseY, partialTicks);
+                this.globalSelector.drawScreen(mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -366,9 +307,19 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
         }
     }
 
-    private boolean isAuctionSign()
+    private boolean isAuctionStartBidSign()
     {
         return this.that.tileSign.signText[2].getUnformattedText().equals("Your auction") && this.that.tileSign.signText[3].getUnformattedText().equals("starting bid");
+    }
+
+    private boolean isAuctionPrice()
+    {
+        return this.that.tileSign.signText[2].getUnformattedText().equals("auction bid") && this.that.tileSign.signText[3].getUnformattedText().equals("amount");
+    }
+
+    private boolean isBazaarPrice()
+    {
+        return this.that.tileSign.signText[2].getUnformattedText().equals("Enter price") && this.that.tileSign.signText[3].getUnformattedText().equals("big nerd");
     }
 
     private boolean isAuctionQuery()
@@ -386,7 +337,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
         return this.that.tileSign.signText[2].getUnformattedText().equals("Enter the amount") && this.that.tileSign.signText[3].getUnformattedText().equals("to deposit");
     }
 
-    private boolean isBarzaarOrder()
+    private boolean isBazaarOrder()
     {
         return this.that.tileSign.signText[2].getUnformattedText().equals("Enter amount") && this.that.tileSign.signText[3].getUnformattedText().equals("to order");
     }
