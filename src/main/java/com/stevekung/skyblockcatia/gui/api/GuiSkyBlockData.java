@@ -474,11 +474,11 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (button.id == 0)
             {
-                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.SEARCH, this.username, this.displayName, this.profiles) : null);
+                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null);
             }
             else if (button.id == 1)
             {
-                this.mc.displayGuiScreen(this.profiles.size() == 0 ? new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.EMPTY, this.username, this.displayName) : new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.SEARCH, this.username, this.displayName, this.profiles));
+                this.mc.displayGuiScreen(this.profiles.size() == 0 ? new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.EMPTY, this.username, this.displayName, this.guild) : new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
             }
         }
     }

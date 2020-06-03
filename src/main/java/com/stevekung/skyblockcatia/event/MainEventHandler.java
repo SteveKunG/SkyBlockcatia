@@ -176,7 +176,7 @@ public class MainEventHandler
             }
             if (MainEventHandler.playerToView != null)
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, MainEventHandler.playerToView, ""));
+                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
                 MainEventHandler.playerToView = null;
             }
         }

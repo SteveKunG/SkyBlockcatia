@@ -380,7 +380,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             else if (button.id == 156)
             {
                 String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), ""));
+                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
             }
         }
     }

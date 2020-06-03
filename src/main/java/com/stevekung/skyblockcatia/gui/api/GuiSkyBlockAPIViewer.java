@@ -56,15 +56,15 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
     public GuiSkyBlockAPIViewer(GuiState state)
     {
-        this(state, "", "");
+        this(state, "", "", "");
     }
 
-    public GuiSkyBlockAPIViewer(GuiState state, String username, String displayName)
+    public GuiSkyBlockAPIViewer(GuiState state, String username, String displayName, String guild)
     {
-        this(state, username, displayName, null);
+        this(state, username, displayName, guild, null);
     }
 
-    public GuiSkyBlockAPIViewer(GuiState state, String username, String displayName, List<ProfileDataCallback> profiles)
+    public GuiSkyBlockAPIViewer(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
     {
         if (state == GuiState.SEARCH)
         {
@@ -75,6 +75,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         this.fromError = state == GuiState.ERROR;
         this.displayName = displayName;
         this.username = username;
+        this.guild = guild;
     }
 
     @Override
@@ -208,7 +209,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             }
             else if (button.id == 1)
             {
-                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiState.ERROR, this.username, this.displayName) : null);
+                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiState.ERROR, this.username, this.displayName, this.guild) : null);
             }
         }
     }
