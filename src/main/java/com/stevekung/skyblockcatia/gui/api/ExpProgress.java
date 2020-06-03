@@ -8,7 +8,7 @@ import com.stevekung.skyblockcatia.utils.CurlExecutor;
 public class ExpProgress
 {
     private final int level;
-    private final float xp;
+    private final double xp;
     public static ExpProgress[] SKILL;
     public static ExpProgress[] ZOMBIE_SLAYER;
     public static ExpProgress[] SPIDER_SLAYER;
@@ -21,7 +21,7 @@ public class ExpProgress
     public static ExpProgress[] PET_LEGENDARY;
     private static final Gson GSON = new Gson();
 
-    public ExpProgress(int level, float xp)
+    public ExpProgress(int level, double xp)
     {
         this.level = level;
         this.xp = xp;
@@ -32,7 +32,7 @@ public class ExpProgress
         return this.level;
     }
 
-    public float getXp()
+    public double getXp()
     {
         return this.xp;
     }

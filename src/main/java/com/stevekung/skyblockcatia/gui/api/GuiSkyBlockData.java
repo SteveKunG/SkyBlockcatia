@@ -104,7 +104,7 @@ public class GuiSkyBlockData extends GuiScreen
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,.]+ HP\\)){0,1})|(?: \\(\\+[0-9,.]+\\))|(?: \\(\\w+ \\+[0-9,.]+(?:\\%){0,1}\\))){0,1}");
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###,###,###");
+    private static final DecimalFormat FORMAT = new DecimalFormat("#,###.#");
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
     public static boolean renderSecondLayer;
@@ -1163,7 +1163,7 @@ public class GuiSkyBlockData extends GuiScreen
     }
 
     // Render
-    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, int playerXp, int xpRequired, int currentLvl, boolean reachLimit)
+    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
     {
         this.mc.getTextureManager().bindTexture(XP_BARS);
         GlStateManager.color(0.5F, 1.0F, 0.0F, 1.0F);
@@ -1182,11 +1182,11 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.fontRendererObj, NumberUtils.format(playerXp), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.fontRendererObj, NumberUtils.format((long)playerXp), xText, yText + 10, 16777215);
             }
             else
             {
-                this.drawCenteredString(this.fontRendererObj, NumberUtils.format(playerXp) + "/" + NumberUtils.format(xpRequired), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.fontRendererObj, NumberUtils.format((long)playerXp) + "/" + NumberUtils.format(xpRequired), xText, yText + 10, 16777215);
             }
         }
         else
@@ -1904,14 +1904,14 @@ public class GuiSkyBlockData extends GuiScreen
         {
             for (JsonElement element : pets)
             {
-                float exp = 0.0F;
+                double exp = 0.0D;
                 String petRarity = SkyBlockPets.Tier.COMMON.name();
                 int candyUsed = 0;
                 SkyBlockPets.HeldItem heldItem = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
-                    exp = element.getAsJsonObject().get("exp").getAsFloat();
+                    exp = element.getAsJsonObject().get("exp").getAsDouble();
                 }
                 if (element.getAsJsonObject().get("tier") != null)
                 {
@@ -1956,7 +1956,6 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (candyUsed > 0)
                     {
-                        list.appendTag(new NBTTagString(""));
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + 10));
                     }
                     if (heldItem != null)
@@ -2016,7 +2015,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
-    private PetLevel checkPetLevel(float petExp, SkyBlockPets.Tier tier)
+    private PetLevel checkPetLevel(double petExp, SkyBlockPets.Tier tier)
     {
         ExpProgress[] progress = tier.getProgression();
         int totalPetTypeXp = 0;
@@ -2024,8 +2023,8 @@ public class GuiSkyBlockData extends GuiScreen
         int currentLvl = 0;
         int levelToCheck = 0;
         int xpTotal = 0;
-        float xpToNextLvl = 0;
-        float currentXp = 0;
+        double xpToNextLvl = 0;
+        double currentXp = 0;
 
         for (int x = 0; x < progress.length; ++x)
         {
@@ -2046,7 +2045,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         if (levelToCheck < progress.length)
         {
-            xpToNextLvl = MathHelper.ceiling_float_int(xpTotal - petExp);
+            xpToNextLvl = MathHelper.ceiling_double_int(xpTotal - petExp);
             currentXp = xpRequired - xpToNextLvl;
         }
         else
@@ -2063,6 +2062,10 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.allStat.addDefense(5);
             this.allStat.addStrength(5);
+        }
+        if (this.checkSkyBlockItem(this.inventoryToStats, "MELODY_HAIR") == 1)
+        {
+            this.allStat.addIntelligence(26);
         }
         if (this.checkSkyBlockItem(this.armorItems, "LAPIS_ARMOR_") == 4)
         {
@@ -2099,6 +2102,18 @@ public class GuiSkyBlockData extends GuiScreen
         if (this.checkSkyBlockItem(this.armorItems, "FAIRY_") == 4)
         {
             this.allStat.addSpeed(10);
+        }
+        if (this.checkSkyBlockItem(this.armorItems, "CHEAP_TUXEDO_") == 3)
+        {
+            this.allStat.setHealth(75);
+        }
+        if (this.checkSkyBlockItem(this.armorItems, "FANCY_TUXEDO_") == 3)
+        {
+            this.allStat.setHealth(150);
+        }
+        if (this.checkSkyBlockItem(this.armorItems, "ELEGANT_TUXEDO_") == 3)
+        {
+            this.allStat.setHealth(250);
         }
     }
 
@@ -2347,7 +2362,7 @@ public class GuiSkyBlockData extends GuiScreen
         JsonElement lastSave = currentProfile.get("last_save");
         JsonElement firstJoin = currentProfile.get("first_join");
         int deathCounts = 0;
-        float coins = 0.0F;
+        double coins = 0.0D;
         long lastSaveMillis = -1;
         long firstJoinMillis = -1;
 
@@ -2357,7 +2372,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         if (purse != null)
         {
-            coins = purse.getAsFloat();
+            coins = purse.getAsDouble();
         }
         if (lastSave != null)
         {
@@ -2498,7 +2513,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SkillType.TAMING));
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SkillType.CARPENTRY));
 
-        float avg = 0;
+        double avg = 0.0D;
         int count = 0;
         List<SkyBlockSkillInfo> skills = new ArrayList<>();
         skills.addAll(this.skillLeftList);
@@ -2528,14 +2543,14 @@ public class GuiSkyBlockData extends GuiScreen
     {
         if (element != null)
         {
-            int playerXp = (int)element.getAsFloat();
+            double playerXp = element.getAsDouble();
             int xpRequired = 0;
             int currentLvl = 0;
             int levelToCheck = 0;
-            int xpTotal = 0;
-            float xpToNextLvl = 0;
-            int currentXp = 0;
-            float skillProgress = 0;
+            double xpTotal = 0;
+            double xpToNextLvl = 0;
+            double currentXp = 0;
+            double skillProgress = 0;
 
             for (int x = 0; x < progress.length; ++x)
             {
@@ -3207,7 +3222,7 @@ public class GuiSkyBlockData extends GuiScreen
         {
             if (this.xpRequired > 0)
             {
-                float percent = this.currentPetXp * 100.0F / this.xpRequired;
+                double percent = this.currentPetXp * 100.0D / this.xpRequired;
                 return new DecimalFormat("##.#").format(percent) + "%";
             }
             else
@@ -3368,13 +3383,13 @@ public class GuiSkyBlockData extends GuiScreen
     class SkyBlockSkillInfo
     {
         private final String name;
-        private final int currentXp;
+        private final double currentXp;
         private final int xpRequired;
         private final int currentLvl;
-        private final float skillProgress;
+        private final double skillProgress;
         private final boolean reachLimit;
 
-        public SkyBlockSkillInfo(String name, int currentXp, int xpRequired, int currentLvl, float skillProgress, boolean reachLimit)
+        public SkyBlockSkillInfo(String name, double currentXp, int xpRequired, int currentLvl, double skillProgress, boolean reachLimit)
         {
             this.name = name;
             this.currentXp = currentXp;
@@ -3389,7 +3404,7 @@ public class GuiSkyBlockData extends GuiScreen
             return this.name;
         }
 
-        public int getCurrentXp()
+        public double getCurrentXp()
         {
             return this.currentXp;
         }
@@ -3404,7 +3419,7 @@ public class GuiSkyBlockData extends GuiScreen
             return this.currentLvl;
         }
 
-        public float getSkillProgress()
+        public double getSkillProgress()
         {
             return this.skillProgress;
         }
