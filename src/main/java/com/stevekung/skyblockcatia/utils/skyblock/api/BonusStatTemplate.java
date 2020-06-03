@@ -2,20 +2,20 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 public class BonusStatTemplate
 {
-    private int health;
-    private int defense;
-    private int trueDefense;
-    private int effectiveHealth;
-    private int strength;
-    private int speed;
-    private int critChance;
-    private int critDamage;
-    private int intelligence;
-    private int seaCreatureChance;
-    private int magicFind;
-    private int petLuck;
+    private double health;
+    private double defense;
+    private double trueDefense;
+    private double effectiveHealth;
+    private double strength;
+    private double speed;
+    private double critChance;
+    private double critDamage;
+    private double intelligence;
+    private double seaCreatureChance;
+    private double magicFind;
+    private double petLuck;
 
-    public BonusStatTemplate(int health, int defense, int trueDefense, int effectiveHealth, int strength, int speed, int critChance, int critDamage, int intelligence, int seaCreatureChance, int magicFind, int petLuck)
+    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double intelligence, double seaCreatureChance, double magicFind, double petLuck)
     {
         this.health = health;
         this.defense = defense;
@@ -48,12 +48,12 @@ public class BonusStatTemplate
         return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
     }
 
-    public int getHealth()
+    public double getHealth()
     {
         return this.health;
     }
 
-    public int getDefense()
+    public double getDefense()
     {
         if (this.defense <= 0)
         {
@@ -62,27 +62,27 @@ public class BonusStatTemplate
         return this.defense;
     }
 
-    public int getTrueDefense()
+    public double getTrueDefense()
     {
         return this.trueDefense;
     }
 
-    public int getEffectiveHealth()
+    public double getEffectiveHealth()
     {
         return this.effectiveHealth;
     }
 
-    public int getStrength()
+    public double getStrength()
     {
         return this.strength;
     }
 
-    public int getSpeed()
+    public double getSpeed()
     {
         return this.speed;
     }
 
-    public int getCritChance()
+    public double getCritChance()
     {
         if (this.critChance > 100)
         {
@@ -91,158 +91,158 @@ public class BonusStatTemplate
         return this.critChance;
     }
 
-    public int getCritDamage()
+    public double getCritDamage()
     {
         return this.critDamage;
     }
 
-    public int getIntelligence()
+    public double getIntelligence()
     {
         return this.intelligence;
     }
 
-    public int getSeaCreatureChance()
+    public double getSeaCreatureChance()
     {
         return this.seaCreatureChance;
     }
 
-    public int getMagicFind()
+    public double getMagicFind()
     {
         return this.magicFind;
     }
 
-    public int getPetLuck()
+    public double getPetLuck()
     {
         return this.petLuck;
     }
 
-    public void setHealth(int health)
+    public void setHealth(double health)
     {
         this.health = health;
     }
 
-    public void setDefense(int defense)
+    public void setDefense(double defense)
     {
         this.defense = defense;
     }
 
-    public void setTrueDefense(int trueDefense)
+    public void setTrueDefense(double trueDefense)
     {
         this.trueDefense = trueDefense;
     }
 
-    public void setEffectiveHealth(int effectiveHealth)
+    public void setEffectiveHealth(double effectiveHealth)
     {
         this.effectiveHealth = effectiveHealth;
     }
 
-    public void setStrength(int strength)
+    public void setStrength(double strength)
     {
         this.strength = strength;
     }
 
-    public void setSpeed(int speed)
+    public void setSpeed(double speed)
     {
         this.speed = speed;
     }
 
-    public void setCritChance(int critChance)
+    public void setCritChance(double critChance)
     {
         this.critChance = critChance;
     }
 
-    public void setCritDamage(int critDamage)
+    public void setCritDamage(double critDamage)
     {
         this.critDamage = critDamage;
     }
 
-    public void setIntelligence(int intelligence)
+    public void setIntelligence(double intelligence)
     {
         this.intelligence = intelligence;
     }
 
-    public void setSeaCreatureChance(int seaCreatureChance)
+    public void setSeaCreatureChance(double seaCreatureChance)
     {
         this.seaCreatureChance = seaCreatureChance;
     }
 
-    public void setMagicFind(int magicFind)
+    public void setMagicFind(double magicFind)
     {
         this.magicFind = magicFind;
     }
 
-    public void setPetLuck(int petLuck)
+    public void setPetLuck(double petLuck)
     {
         this.petLuck = petLuck;
     }
 
-    public BonusStatTemplate addHealth(int health)
+    public BonusStatTemplate addHealth(double health)
     {
         this.health += health;
         return this;
     }
 
-    public BonusStatTemplate addDefense(int defense)
+    public BonusStatTemplate addDefense(double defense)
     {
         this.defense += defense;
         return this;
     }
 
-    public BonusStatTemplate addTrueDefense(int trueDefense)
+    public BonusStatTemplate addTrueDefense(double trueDefense)
     {
         this.trueDefense += trueDefense;
         return this;
     }
 
-    public BonusStatTemplate addEffectiveHealth(int effectiveHealth)
+    public BonusStatTemplate addEffectiveHealth(double effectiveHealth)
     {
         this.effectiveHealth += effectiveHealth;
         return this;
     }
 
-    public BonusStatTemplate addStrength(int strength)
+    public BonusStatTemplate addStrength(double strength)
     {
         this.strength += strength;
         return this;
     }
 
-    public BonusStatTemplate addSpeed(int speed)
+    public BonusStatTemplate addSpeed(double speed)
     {
         this.speed += speed;
         return this;
     }
 
-    public BonusStatTemplate addCritChance(int critChance)
+    public BonusStatTemplate addCritChance(double critChance)
     {
         this.critChance += critChance;
         return this;
     }
 
-    public BonusStatTemplate addCritDamage(int critDamage)
+    public BonusStatTemplate addCritDamage(double critDamage)
     {
         this.critDamage += critDamage;
         return this;
     }
 
-    public BonusStatTemplate addIntelligence(int intelligence)
+    public BonusStatTemplate addIntelligence(double intelligence)
     {
         this.intelligence += intelligence;
         return this;
     }
 
-    public BonusStatTemplate addSeaCreatureChance(int seaCreatureChance)
+    public BonusStatTemplate addSeaCreatureChance(double seaCreatureChance)
     {
         this.seaCreatureChance += seaCreatureChance;
         return this;
     }
 
-    public BonusStatTemplate addMagicFind(int magicFind)
+    public BonusStatTemplate addMagicFind(double magicFind)
     {
         this.magicFind += magicFind;
         return this;
     }
 
-    public BonusStatTemplate addPetLuck(int petLuck)
+    public BonusStatTemplate addPetLuck(double petLuck)
     {
         this.petLuck += petLuck;
         return this;

@@ -75,9 +75,9 @@ public class PlayerStatsBonus
     public class Farming implements IBonusTemplate
     {
         private final int level;
-        private final int health;
+        private final double health;
 
-        public Farming(int level, int health)
+        public Farming(int level, double health)
         {
             this.level = level;
             this.health = health;
@@ -90,7 +90,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getHealth()
+        public double getHealth()
         {
             return this.health;
         }
@@ -99,9 +99,9 @@ public class PlayerStatsBonus
     public class Foraging implements IBonusTemplate
     {
         private final int level;
-        private final int strength;
+        private final double strength;
 
-        public Foraging(int level, int strength)
+        public Foraging(int level, double strength)
         {
             this.level = level;
             this.strength = strength;
@@ -114,7 +114,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getStrength()
+        public double getStrength()
         {
             return this.strength;
         }
@@ -123,9 +123,9 @@ public class PlayerStatsBonus
     public class Mining implements IBonusTemplate
     {
         private final int level;
-        private final int defense;
+        private final double defense;
 
-        public Mining(int level, int defense)
+        public Mining(int level, double defense)
         {
             this.level = level;
             this.defense = defense;
@@ -138,7 +138,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getDefense()
+        public double getDefense()
         {
             return this.defense;
         }
@@ -147,9 +147,9 @@ public class PlayerStatsBonus
     public class Fishing implements IBonusTemplate
     {
         private final int level;
-        private final int health;
+        private final double health;
 
-        public Fishing(int level, int health)
+        public Fishing(int level, double health)
         {
             this.level = level;
             this.health = health;
@@ -162,7 +162,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getHealth()
+        public double getHealth()
         {
             return this.health;
         }
@@ -172,9 +172,9 @@ public class PlayerStatsBonus
     {
         private final int level;
         @SerializedName("crit_chance")
-        private final int critChance;
+        private final double critChance;
 
-        public Combat(int level, int critChance)
+        public Combat(int level, double critChance)
         {
             this.level = level;
             this.critChance = critChance;
@@ -187,7 +187,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getCritChance()
+        public double getCritChance()
         {
             return this.critChance;
         }
@@ -196,9 +196,9 @@ public class PlayerStatsBonus
     public class Enchanting implements IBonusTemplate
     {
         private final int level;
-        private final int intelligence;
+        private final double intelligence;
 
-        public Enchanting(int level, int intelligence)
+        public Enchanting(int level, double intelligence)
         {
             this.level = level;
             this.intelligence = intelligence;
@@ -211,7 +211,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getIntelligence()
+        public double getIntelligence()
         {
             return this.intelligence;
         }
@@ -220,9 +220,9 @@ public class PlayerStatsBonus
     public class Alchemy implements IBonusTemplate
     {
         private final int level;
-        private final int intelligence;
+        private final double intelligence;
 
-        public Alchemy(int level, int intelligence)
+        public Alchemy(int level, double intelligence)
         {
             this.level = level;
             this.intelligence = intelligence;
@@ -235,7 +235,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getIntelligence()
+        public double getIntelligence()
         {
             return this.intelligence;
         }
@@ -245,9 +245,9 @@ public class PlayerStatsBonus
     {
         private final int level;
         @SerializedName("pet_luck")
-        private final int petLuck;
+        private final double petLuck;
 
-        public Taming(int level, int petLuck)
+        public Taming(int level, double petLuck)
         {
             this.level = level;
             this.petLuck = petLuck;
@@ -260,7 +260,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getPetLuck()
+        public double getPetLuck()
         {
             return this.petLuck;
         }
@@ -269,9 +269,9 @@ public class PlayerStatsBonus
     public class ZombieSlayer implements IBonusTemplate
     {
         private final int level;
-        private final int health;
+        private final double health;
 
-        public ZombieSlayer(int level, int health)
+        public ZombieSlayer(int level, double health)
         {
             this.level = level;
             this.health = health;
@@ -284,7 +284,7 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getHealth()
+        public double getHealth()
         {
             return this.health;
         }
@@ -294,11 +294,11 @@ public class PlayerStatsBonus
     {
         private final int level;
         @SerializedName("crit_chance")
-        private final int critChance;
+        private final double critChance;
         @SerializedName("crit_damage")
-        private final int critDamage;
+        private final double critDamage;
 
-        public SpiderSlayer(int level, int critChance, int critDamage)
+        public SpiderSlayer(int level, double critChance, double critDamage)
         {
             this.level = level;
             this.critChance = critChance;
@@ -312,13 +312,13 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getCritChance()
+        public double getCritChance()
         {
             return this.critChance;
         }
 
         @Override
-        public int getCritDamage()
+        public double getCritDamage()
         {
             return this.critDamage;
         }
@@ -327,12 +327,12 @@ public class PlayerStatsBonus
     public class WolfSlayer implements IBonusTemplate
     {
         private final int level;
-        private final int health;
-        private final int speed;
+        private final double health;
+        private final double speed;
         @SerializedName("crit_damage")
-        private final int critDamage;
+        private final double critDamage;
 
-        public WolfSlayer(int level, int health, int speed, int critDamage)
+        public WolfSlayer(int level, double health, double speed, double critDamage)
         {
             this.level = level;
             this.health = health;
@@ -347,19 +347,19 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getHealth()
+        public double getHealth()
         {
             return this.health;
         }
 
         @Override
-        public int getSpeed()
+        public double getSpeed()
         {
             return this.speed;
         }
 
         @Override
-        public int getCritDamage()
+        public double getCritDamage()
         {
             return this.critDamage;
         }
@@ -368,12 +368,12 @@ public class PlayerStatsBonus
     public class FairySouls implements IBonusTemplate
     {
         private final int count;
-        private final int health;
-        private final int defense;
-        private final int strength;
-        private final int speed;
+        private final double health;
+        private final double defense;
+        private final double strength;
+        private final double speed;
 
-        public FairySouls(int count, int health, int defense, int strength, int speed)
+        public FairySouls(int count, double health, double defense, double strength, double speed)
         {
             this.count = count;
             this.health = health;
@@ -388,25 +388,25 @@ public class PlayerStatsBonus
         }
 
         @Override
-        public int getHealth()
+        public double getHealth()
         {
             return this.health;
         }
 
         @Override
-        public int getDefense()
+        public double getDefense()
         {
             return this.defense;
         }
 
         @Override
-        public int getStrength()
+        public double getStrength()
         {
             return this.strength;
         }
 
         @Override
-        public int getSpeed()
+        public double getSpeed()
         {
             return this.speed;
         }
@@ -416,9 +416,9 @@ public class PlayerStatsBonus
     {
         private final int score;
         @SerializedName("magic_find")
-        private final int magicFind;
+        private final double magicFind;
 
-        public PetsScore(int score, int magicFind)
+        public PetsScore(int score, double magicFind)
         {
             this.score = score;
             this.magicFind = magicFind;
@@ -429,7 +429,7 @@ public class PlayerStatsBonus
             return this.score;
         }
 
-        public int getMagicFind()
+        public double getMagicFind()
         {
             return this.magicFind;
         }
@@ -442,57 +442,57 @@ public class PlayerStatsBonus
             return 0;
         }
 
-        default int getHealth()
+        default double getHealth()
         {
             return 0;
         }
 
-        default int getDefense()
+        default double getDefense()
         {
             return 0;
         }
 
-        default int getTrueDefense()
+        default double getTrueDefense()
         {
             return 0;
         }
 
-        default int getStrength()
+        default double getStrength()
         {
             return 0;
         }
 
-        default int getSpeed()
+        default double getSpeed()
         {
             return 0;
         }
 
-        default int getCritChance()
+        default double getCritChance()
         {
             return 0;
         }
 
-        default int getCritDamage()
+        default double getCritDamage()
         {
             return 0;
         }
 
-        default int getIntelligence()
+        default double getIntelligence()
         {
             return 0;
         }
 
-        default int getSeaCreatureChance()
+        default double getSeaCreatureChance()
         {
             return 0;
         }
 
-        default int getMagicFind()
+        default double getMagicFind()
         {
             return 0;
         }
 
-        default int getPetLuck()
+        default double getPetLuck()
         {
             return 0;
         }

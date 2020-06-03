@@ -208,7 +208,7 @@ public class SBPets
         {
             if (this.xpRequired > 0)
             {
-                float percent = this.currentPetXp * 100.0F / this.xpRequired;
+                double percent = this.currentPetXp * 100.0D / this.xpRequired;
                 return NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(percent) + "%";
             }
             else

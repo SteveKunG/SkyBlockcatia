@@ -26,12 +26,15 @@ import net.minecraft.util.Util;
 
 public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
 {
-    public static final List<Entry> AUCTION_PRICES = new ArrayList<>();
+    public static final List<Entry> AUCTION_STARTING_BID_PRICES = new ArrayList<>();
+    public static final List<Entry> AUCTION_BID_PRICES = new ArrayList<>();
     public static final List<Entry> AUCTION_QUERIES = new ArrayList<>();
     public static final List<Entry> BANK_WITHDRAW = new ArrayList<>();
     public static final List<Entry> BANK_DEPOSIT = new ArrayList<>();
     public static final List<Entry> BAZAAR_ORDER = new ArrayList<>();
+    public static final List<Entry> BAZAAR_PRICE = new ArrayList<>();
     private final String title;
+    private final List<SignSelectionList.Entry> list;
     private final EditSignScreen parent;
 
     public SignSelectionList(EditSignScreen parent, int width, int height, int top, int bottom, List<SignSelectionList.Entry> list, String title)
@@ -40,6 +43,7 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
         this.title = title;
         this.parent = parent;
         list = list.stream().distinct().collect(Collectors.toList());
+        this.list = list;
 
         /*List<Entry> test = this.list.stream().distinct().collect(Collectors.toList());TODO
 
@@ -82,21 +86,23 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
         this.minecraft.fontRenderer.drawString(this.title + ":", k, this.y0 - 12, 16777215);
     }
 
-    public void add(List<Entry> toAdd, String value, EditSignScreen parent)
+    public void add(String value, EditSignScreen parent)
     {
-        toAdd.add(new Entry(value, parent));
+        this.list.add(new Entry(value, parent));
     }
 
     public static void clearAll()
     {
-        SignSelectionList.AUCTION_PRICES.clear();
+        SignSelectionList.AUCTION_STARTING_BID_PRICES.clear();
+        SignSelectionList.AUCTION_BID_PRICES.clear();
         SignSelectionList.AUCTION_QUERIES.clear();
         SignSelectionList.BANK_WITHDRAW.clear();
         SignSelectionList.BANK_DEPOSIT.clear();
         SignSelectionList.BAZAAR_ORDER.clear();
+        SignSelectionList.BAZAAR_PRICE.clear();
     }
 
-    class Entry extends ExtendedList.AbstractListEntry<SignSelectionList.Entry>
+    public class Entry extends ExtendedList.AbstractListEntry<SignSelectionList.Entry>
     {
         private final Minecraft mc;
         private final EditSignScreen parent;

@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.mixin;
 
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,11 +25,7 @@ import net.minecraft.util.text.ITextComponent;
 public abstract class MixinEditSignScreen extends Screen
 {
     private final EditSignScreen that = (EditSignScreen) (Object) this;
-    private SignSelectionList auctionPriceSelector;
-    private SignSelectionList auctionQuerySelector;
-    private SignSelectionList withdrawSelector;
-    private SignSelectionList depositSelector;
-    private SignSelectionList bazaarOrderSelector;
+    private SignSelectionList globalSelector;
 
     public MixinEditSignScreen(ITextComponent title)
     {
@@ -39,30 +37,47 @@ public abstract class MixinEditSignScreen extends Screen
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign())
+            List<SignSelectionList.Entry> list = null;
+            String title = null;
+
+            if (this.isAuctionStartBidSign())
             {
-                this.auctionPriceSelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.AUCTION_PRICES, "Select price");
-                this.children.add(this.auctionPriceSelector);
+                list = SignSelectionList.AUCTION_STARTING_BID_PRICES;
+                title = "Select price";
+            }
+            if (this.isAuctionPrice())
+            {
+                list = SignSelectionList.AUCTION_BID_PRICES;
+                title = "Select bid price";
             }
             if (this.isAuctionQuery())
             {
-                this.auctionQuerySelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.AUCTION_QUERIES, "Select query");
-                this.children.add(this.auctionQuerySelector);
+                list = SignSelectionList.AUCTION_QUERIES;
+                title = "Select query";
             }
             if (this.isBankWithdraw())
             {
-                this.withdrawSelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.BANK_WITHDRAW, "Select withdraw");
-                this.children.add(this.withdrawSelector);
+                list = SignSelectionList.BANK_WITHDRAW;
+                title = "Select withdraw";
             }
             if (this.isBankDeposit())
             {
-                this.depositSelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.BANK_DEPOSIT, "Select deposit");
-                this.children.add(this.depositSelector);
+                list = SignSelectionList.BANK_DEPOSIT;
+                title = "Select deposit";
             }
-            if (this.isBarzaarOrder())
+            if (this.isBazaarOrder())
             {
-                this.bazaarOrderSelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, SignSelectionList.BAZAAR_ORDER, "Bazaar Order");
-                this.children.add(this.bazaarOrderSelector);
+                list = SignSelectionList.BAZAAR_ORDER;
+                title = "Select bazaar order";
+            }
+            if (this.isBazaarPrice())
+            {
+                list = SignSelectionList.BAZAAR_PRICE;
+                title = "Select bazaar price";
+            }
+            if (list != null && title != null)
+            {
+                this.globalSelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, list, title);
             }
         }
     }
@@ -72,7 +87,7 @@ public abstract class MixinEditSignScreen extends Screen
     {
         this.that.tileSign.markDirty();
 
-        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && this.isAuctionSign())
+        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && this.isAuctionStartBidSign())
         {
             info.cancel();
         }
@@ -83,25 +98,9 @@ public abstract class MixinEditSignScreen extends Screen
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            if (this.isAuctionSign())
+            if (this.globalSelector != null)
             {
-                this.auctionPriceSelector.render(mouseX, mouseY, partialTicks);
-            }
-            if (this.isAuctionQuery())
-            {
-                this.auctionQuerySelector.render(mouseX, mouseY, partialTicks);
-            }
-            if (this.isBankWithdraw())
-            {
-                this.withdrawSelector.render(mouseX, mouseY, partialTicks);
-            }
-            if (this.isBankDeposit())
-            {
-                this.depositSelector.render(mouseX, mouseY, partialTicks);
-            }
-            if (this.isBarzaarOrder())
-            {
-                this.bazaarOrderSelector.render(mouseX, mouseY, partialTicks);
+                this.globalSelector.render(mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -115,36 +114,22 @@ public abstract class MixinEditSignScreen extends Screen
         {
             if (!StringUtils.isNullOrEmpty(text))
             {
-                if (SBNumberUtils.isNumericWithKM(text))
+                if (SBNumberUtils.isNumericWithKM(text) && (this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                 {
-                    if (this.isBankWithdraw())
-                    {
-                        this.withdrawSelector.add(SignSelectionList.BANK_WITHDRAW, text, this.that);
-                    }
-                    if (this.isBankDeposit())
-                    {
-                        this.depositSelector.add(SignSelectionList.BANK_DEPOSIT, text, this.that);
-                    }
+                    this.globalSelector.add(text, this.that);
                 }
-                if (NumberUtils.isNumeric(text))
+                else if (NumberUtils.isNumeric(text) && this.isBazaarOrder())
                 {
-                    if (this.isAuctionSign())
-                    {
-                        this.auctionPriceSelector.add(SignSelectionList.AUCTION_PRICES, text, this.that);
-                    }
-                    if (this.isBarzaarOrder())
-                    {
-                        this.bazaarOrderSelector.add(SignSelectionList.BAZAAR_ORDER, text, this.that);
-                    }
+                    this.globalSelector.add(text, this.that);
                 }
-                if (this.isAuctionQuery())
+                else if (this.isAuctionQuery())
                 {
-                    this.auctionQuerySelector.add(SignSelectionList.AUCTION_QUERIES, text, this.that);
+                    this.globalSelector.add(text, this.that);
                 }
             }
         }
 
-        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionSign())
+        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
         {
             int price = Integer.parseInt(text);
 
@@ -181,9 +166,19 @@ public abstract class MixinEditSignScreen extends Screen
         this.minecraft.displayGuiScreen(null);
     }
 
-    private boolean isAuctionSign()
+    private boolean isAuctionStartBidSign()
     {
         return this.that.tileSign.signText[2].getString().equals("Your auction") && this.that.tileSign.signText[3].getString().equals("starting bid");
+    }
+
+    private boolean isAuctionPrice()
+    {
+        return this.that.tileSign.signText[2].getString().equals("auction bid") && this.that.tileSign.signText[3].getString().equals("amount");
+    }
+
+    private boolean isBazaarPrice()
+    {
+        return this.that.tileSign.signText[2].getString().equals("Enter price") && this.that.tileSign.signText[3].getString().equals("big nerd");
     }
 
     private boolean isAuctionQuery()
@@ -201,7 +196,7 @@ public abstract class MixinEditSignScreen extends Screen
         return this.that.tileSign.signText[2].getString().equals("Enter the amount") && this.that.tileSign.signText[3].getString().equals("to deposit");
     }
 
-    private boolean isBarzaarOrder()
+    private boolean isBazaarOrder()
     {
         return this.that.tileSign.signText[2].getString().equals("Enter amount") && this.that.tileSign.signText[3].getString().equals("to order");
     }

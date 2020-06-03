@@ -18,6 +18,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
 import com.stevekung.skyblockcatia.utils.SearchMode;
@@ -110,6 +111,11 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     String title = this.title.getUnformattedComponentText();
                     ClientUtils.printClientMessage(JsonUtils.create("Copied seller auction command!").applyTextStyle(TextFormatting.GREEN));
                     this.minecraft.keyboardListener.setClipboardString("/ah " + title.replace(title.substring(title.indexOf('\'')), ""));
+                }));
+                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 92, 70, 20, "View API", button ->
+                {
+                    String title = this.title.getUnformattedComponentText();
+                    this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
         }

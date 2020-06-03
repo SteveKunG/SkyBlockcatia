@@ -50,10 +50,12 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -62,7 +64,6 @@ public class SkyBlockEventHandler
     private static final Pattern CUSTOM_FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-Z]");
     private static final Pattern JOINED_PARTY_PATTERN = Pattern.compile("(?<name>\\w+) joined the party!");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
-    private static final Pattern NICK_PATTERN = Pattern.compile("^You are now nicked as (?<nick>\\w+)!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
@@ -78,7 +79,7 @@ public class SkyBlockEventHandler
     private static final Pattern RARE_DROP_PATTERN = Pattern.compile("RARE DROP! " + DROP_PATTERN + " ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
     private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("RARE DROP! \\u0028" + DROP_PATTERN + "\\u0029 ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
     private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>VERY RARE|CRAZY RARE) DROP!  \\u0028" + DROP_PATTERN + "\\u0029 ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
-    private static final Pattern DRAGON_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
+    private static final Pattern BOSS_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
 
     // Fish catch stuff
     private static final Pattern FISH_CATCH_PATTERN = Pattern.compile("(?<type>GOOD|GREAT) CATCH! You found a " + DROP_PATTERN + ".");
@@ -213,7 +214,6 @@ public class SkyBlockEventHandler
         if (this.isHypixel()) 
         {
             // Common matcher
-            Matcher nickMatcher = SkyBlockEventHandler.NICK_PATTERN.matcher(message);
             Matcher visitIslandMatcher = SkyBlockEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
             Matcher joinedPartyMatcher = SkyBlockEventHandler.JOINED_PARTY_PATTERN.matcher(message);
             Matcher uuidMatcher = SkyBlockEventHandler.UUID_PATTERN.matcher(message);
@@ -225,7 +225,7 @@ public class SkyBlockEventHandler
 
             // Item Drop matcher
             Matcher rareDropPattern = SkyBlockEventHandler.RARE_DROP_PATTERN.matcher(message);
-            Matcher dragonDropPattern = SkyBlockEventHandler.DRAGON_DROP_PATTERN.matcher(message);
+            Matcher bossDropPattern = SkyBlockEventHandler.BOSS_DROP_PATTERN.matcher(message);
 
             // Fish catch matcher
             Matcher fishCatchPattern = SkyBlockEventHandler.FISH_CATCH_PATTERN.matcher(message);
@@ -449,10 +449,10 @@ public class SkyBlockEventHandler
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
-                        else if (dragonDropPattern.matches())
+                        else if (bossDropPattern.matches())
                         {
-                            String name = dragonDropPattern.group("item");
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), ToastUtils.DropType.DRAGON_DROP, ToastType.DROP));
+                            String name = bossDropPattern.group("item");
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), ToastUtils.DropType.BOSS_DROP, ToastType.DROP));
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
@@ -548,7 +548,7 @@ public class SkyBlockEventHandler
 
                 if (this.mc.player.connection.getPlayerInfoMap().stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName().getString())))
                 {
-                    this.mc.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, player.getDisplayName().getString(), ""));
+                    this.mc.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, player.getDisplayName().getString(), "", ""));
                 }
                 else
                 {
@@ -676,6 +676,20 @@ public class SkyBlockEventHandler
             }
         }
         catch (Exception e) {}
+    }
+
+    @SubscribeEvent
+    public void onRenderNameplate(RenderNameplateEvent event)
+    {
+        if (event.getEntity().getDisplayName() != null)
+        {
+            String name = event.getEntity().getDisplayName().getFormattedText();
+
+            if (name.contains("Sven Pup"))
+            {
+                event.setResult(Result.DENY);
+            }
+        }
     }
 
     private static void addFishLoot(Matcher matcher)

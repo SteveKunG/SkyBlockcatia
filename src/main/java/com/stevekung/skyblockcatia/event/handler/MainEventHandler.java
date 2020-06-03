@@ -56,9 +56,9 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class MainEventHandler
 {
     private final Minecraft mc;
-    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Runic Pedestal"));
+    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options"));
     public static String auctionPrice = "";
-    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
+    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
     public static boolean showChat;
     public static String playerToView;
     public static final List<String> SKYBLOCK_PACK_16 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (16x)", "v8O1.8 Hypixel Skyblock Pack(16x)", "v9F1.8 Hypixel Skyblock Pack (16x)", "v9O1.8 Hypixel Skyblock Pack (16x)", "vXF16x_Skyblock_Pack_1.8.9", "vXO16x_Skyblock_Pack_1.8.9"));
@@ -95,7 +95,7 @@ public class MainEventHandler
         {
             if (MainEventHandler.playerToView != null)
             {
-                this.mc.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, MainEventHandler.playerToView, ""));
+                this.mc.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
                 MainEventHandler.playerToView = null;
             }
         }
@@ -112,17 +112,16 @@ public class MainEventHandler
         {
             if (gui instanceof InventoryScreen)
             {
-                ItemButton craftingButton = new ItemButton(width + 28, height + 86, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/viewcraftingtable"));
-                craftingButton.visible = SkyBlockEventHandler.SKY_BLOCK_LOCATION.isHub();
                 event.removeWidget(event.getWidgetList().get(0));
-                event.addWidget(craftingButton);
                 event.addWidget(new ItemButton(width + 9, height + 86, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
+                event.addWidget(new ItemButton(width + 28, height + 86, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/craft")));
+                event.addWidget(new ItemButton(width + 47, height + 86, Items.BONE, true, "Pets", button -> this.mc.player.sendChatMessage("/pets")));
+                event.addWidget(new ItemButton(width + 66, height + 86, Items.LEATHER_CHESTPLATE, true, "Wardrobe", button -> this.mc.player.sendChatMessage("/wardrobe")));
             }
             else if (gui instanceof ChestScreen)
             {
                 ChestScreen chest = (ChestScreen)gui;
                 ITextComponent title = chest.getTitle();
-                ItemButton craftingButton = new ItemButton(width + 88, height + 65, Blocks.CRAFTING_TABLE.asItem(), SkyBlockEventHandler.SKY_BLOCK_LOCATION.isHub(), button -> this.mc.player.sendChatMessage("/viewcraftingtable"));
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, title))
                 {
@@ -131,20 +130,19 @@ public class MainEventHandler
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, title))
                 {
-                    event.addWidget(new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
-                    event.addWidget(craftingButton);
-                    event.addWidget(new ItemButton(width + 88, height + 65, Items.NETHER_STAR, SkyBlockEventHandler.SKY_BLOCK_LOCATION.isShopOutsideHub(), "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
+                    event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/craft")));
+                    event.addWidget(new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
+                    event.addWidget(new ItemButton(width + 88, height + 85, Items.NETHER_STAR, SkyBlockEventHandler.SKY_BLOCK_LOCATION.isShopOutsideHub(), "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
                 }
                 else if (title.getUnformattedComponentText().equals("Craft Item"))
                 {
                     event.addWidget(new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
-                    event.addWidget(new ItemButton(width + 88, height + 65, Items.NETHER_STAR, "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
+                    event.addWidget(new ItemButton(width + 88, height + 66, Items.NETHER_STAR, "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
                 }
                 else if (title.getUnformattedComponentText().equals("Ender Chest"))
                 {
-                    craftingButton = new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE.asItem(), SkyBlockEventHandler.SKY_BLOCK_LOCATION.isHub(), button -> this.mc.player.sendChatMessage("/viewcraftingtable"));
-                    event.addWidget(craftingButton);
-                    event.addWidget(new ItemButton(width + 88, height + (SkyBlockEventHandler.SKY_BLOCK_LOCATION.isHub() ? 65 : 47), Items.NETHER_STAR, "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
+                    event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/craft")));
+                    event.addWidget(new ItemButton(width + 88, height + 66, Items.NETHER_STAR, "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
                 }
             }
         }
@@ -155,7 +153,7 @@ public class MainEventHandler
     {
         Screen gui = event.getGui();
 
-        for (Widget button : gui.buttons.stream().filter(button -> button instanceof ItemButton).collect(Collectors.toList()))
+        for (Widget button : gui.buttons.stream().filter(button -> button != null && button instanceof ItemButton).collect(Collectors.toList()))
         {
             boolean hover = event.getMouseX() >= button.x && event.getMouseY() >= button.y && event.getMouseX() < button.x + button.getWidth() && event.getMouseY() < button.y + button.getHeight();
 

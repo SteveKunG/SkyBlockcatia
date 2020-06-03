@@ -53,13 +53,13 @@ public class SBSkills
     public static class Info
     {
         private final String name;
-        private final int currentXp;
+        private final double currentXp;
         private final int xpRequired;
         private final int currentLvl;
-        private final float skillProgress;
+        private final double skillProgress;
         private final boolean reachLimit;
 
-        public Info(String name, int currentXp, int xpRequired, int currentLvl, float skillProgress, boolean reachLimit)
+        public Info(String name, double currentXp, int xpRequired, int currentLvl, double skillProgress, boolean reachLimit)
         {
             this.name = name;
             this.currentXp = currentXp;
@@ -74,7 +74,7 @@ public class SBSkills
             return this.name;
         }
 
-        public int getCurrentXp()
+        public double getCurrentXp()
         {
             return this.currentXp;
         }
@@ -89,7 +89,7 @@ public class SBSkills
             return this.currentLvl;
         }
 
-        public float getSkillProgress()
+        public double getSkillProgress()
         {
             return this.skillProgress;
         }

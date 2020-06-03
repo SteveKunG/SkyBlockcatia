@@ -110,6 +110,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final String sbProfileName;
     private final String username;
     private final String displayName;
+    private final String guild;
     private final String uuid;
     private final GameProfile profile;
     private final StopWatch watch = new StopWatch();
@@ -123,7 +124,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
-    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,]+ HP\\)){0,1})|(?: \\(\\+[0-9,]+\\))|(?: \\(\\w+ \\+[0-9,]+(?:\\%){0,1}\\))){0,1}");
+    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,.]+ HP\\)){0,1})|(?: \\(\\+[0-9,.]+\\))|(?: \\(\\w+ \\+[0-9,.]+(?:\\%){0,1}\\))){0,1}");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
@@ -189,6 +190,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.sbProfileName = callback.getProfileName();
         this.username = callback.getUsername();
         this.displayName = callback.getDisplayName();
+        this.guild = callback.getGuild();
         this.uuid = callback.getUUID();
         this.profile = callback.getGameProfile();
 
@@ -221,8 +223,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             });
         }
 
-        this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.profiles) : null)));
-        this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back"), button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.EMPTY, this.username, this.displayName) : new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.profiles))));
+        this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null)));
+        this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back"), button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.EMPTY, this.username, this.displayName, this.guild) : new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
         Button infoButton = ViewButton.INFO.button = new Button(this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_info"), button -> this.performedInfo(ViewButton.INFO));
         infoButton.active = false;
         this.addButton(infoButton);
@@ -485,7 +487,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.currentSlot.render(mouseX, mouseY, partialTicks);
                 }
 
-                this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profile: " + this.sbProfileName, this.width / 2, 29, 16777215);
+                this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profile: " + this.sbProfileName + this.guild, this.width / 2, 29, 16777215);
 
                 if (this.currentSlot != null && this.currentSlot instanceof EmptyStats)
                 {
@@ -893,7 +895,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     // Render
-    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, int playerXp, int xpRequired, int currentLvl, boolean reachLimit)
+    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
     {
         this.minecraft.getTextureManager().bindTexture(XP_BARS);
         RenderSystem.color4f(0.5F, 1.0F, 0.0F, 1.0F);
@@ -912,11 +914,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.font, NumberUtils.format(playerXp), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.font, NumberUtils.format((long)playerXp), xText, yText + 10, 16777215);
             }
             else
             {
-                this.drawCenteredString(this.font, NumberUtils.format(playerXp) + "/" + NumberUtils.format(xpRequired), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.font, NumberUtils.format((long)playerXp) + "/" + NumberUtils.format(xpRequired), xText, yText + 10, 16777215);
             }
         }
         else
@@ -1592,14 +1594,14 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             for (JsonElement element : pets)
             {
-                float exp = 0.0F;
+                double exp = 0.0D;
                 String petRarity = SBPets.Tier.COMMON.name();
                 int candyUsed = 0;
                 SBPets.HeldItem heldItem = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
-                    exp = element.getAsJsonObject().get("exp").getAsFloat();
+                    exp = element.getAsJsonObject().get("exp").getAsDouble();
                 }
                 if (element.getAsJsonObject().get("tier") != null)
                 {
@@ -1644,7 +1646,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     if (candyUsed > 0)
                     {
-                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
                         list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10))));
                     }
                     if (heldItem != null)
@@ -1704,7 +1705,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
-    private SBPets.Info checkPetLevel(float petExp, SBPets.Tier tier)
+    private SBPets.Info checkPetLevel(double petExp, SBPets.Tier tier)
     {
         ExpProgress[] progress = tier.getProgression();
         int totalPetTypeXp = 0;
@@ -1712,8 +1713,8 @@ public class SkyBlockAPIViewerScreen extends Screen
         int currentLvl = 0;
         int levelToCheck = 0;
         int xpTotal = 0;
-        float xpToNextLvl = 0;
-        float currentXp = 0;
+        double xpToNextLvl = 0;
+        double currentXp = 0;
 
         for (int x = 0; x < progress.length; ++x)
         {
@@ -1752,6 +1753,10 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.allStat.addDefense(5);
             this.allStat.addStrength(5);
         }
+        if (this.checkSkyBlockItem(this.inventoryToStats, "MELODY_HAIR") == 1)
+        {
+            this.allStat.addIntelligence(26);
+        }
         if (this.checkSkyBlockItem(this.armorItems, "LAPIS_ARMOR_") == 4)
         {
             this.allStat.addHealth(60);
@@ -1788,6 +1793,18 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.allStat.addSpeed(10);
         }
+        if (this.checkSkyBlockItem(this.armorItems, "CHEAP_TUXEDO_") == 3)
+        {
+            this.allStat.setHealth(75);
+        }
+        if (this.checkSkyBlockItem(this.armorItems, "FANCY_TUXEDO_") == 3)
+        {
+            this.allStat.setHealth(150);
+        }
+        if (this.checkSkyBlockItem(this.armorItems, "ELEGANT_TUXEDO_") == 3)
+        {
+            this.allStat.setHealth(250);
+        }
     }
 
     private void calculatePlayerStats(JsonObject currentProfile)
@@ -1816,17 +1833,17 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private BonusStatTemplate calculateSkillBonus(PlayerStatsBonus.IBonusTemplate[] bonus, int skillLevel)
     {
-        int healthTemp = 0;
-        int defenseTemp = 0;
-        int trueDefenseTemp = 0;
-        int strengthTemp = 0;
-        int speedTemp = 0;
-        int critChanceTemp = 0;
-        int critDamageTemp = 0;
-        int intelligenceTemp = 0;
-        int seaCreatureChanceTemp = 0;
-        int magicFindTemp = 0;
-        int petLuckTemp = 0;
+        double healthTemp = 0;
+        double defenseTemp = 0;
+        double trueDefenseTemp = 0;
+        double strengthTemp = 0;
+        double speedTemp = 0;
+        double critChanceTemp = 0;
+        double critDamageTemp = 0;
+        double intelligenceTemp = 0;
+        double seaCreatureChanceTemp = 0;
+        double magicFindTemp = 0;
+        double petLuckTemp = 0;
 
         for (int i = 0; i < bonus.length; ++i)
         {
@@ -1849,17 +1866,17 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (levelToCheck <= skillLevel)
             {
-                int health = bonus[i].getHealth();
-                int defense = bonus[i].getDefense();
-                int trueDefense = bonus[i].getTrueDefense();
-                int strength = bonus[i].getStrength();
-                int speed = bonus[i].getSpeed();
-                int critChance = bonus[i].getCritChance();
-                int critDamage = bonus[i].getCritDamage();
-                int intelligence = bonus[i].getIntelligence();
-                int seaCreatureChance = bonus[i].getSeaCreatureChance();
-                int magicFind = bonus[i].getMagicFind();
-                int petLuck = bonus[i].getPetLuck();
+                double health = bonus[i].getHealth();
+                double defense = bonus[i].getDefense();
+                double trueDefense = bonus[i].getTrueDefense();
+                double strength = bonus[i].getStrength();
+                double speed = bonus[i].getSpeed();
+                double critChance = bonus[i].getCritChance();
+                double critDamage = bonus[i].getCritDamage();
+                double intelligence = bonus[i].getIntelligence();
+                double seaCreatureChance = bonus[i].getSeaCreatureChance();
+                double magicFind = bonus[i].getMagicFind();
+                double petLuck = bonus[i].getPetLuck();
 
                 for (int level = levelToCheck; level <= skillLevel; level++)
                 {
@@ -1921,17 +1938,17 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void getItemStats(List<ItemStack> inventory, boolean armor)
     {
-        int healthTemp = 0;
-        int defenseTemp = 0;
-        int trueDefenseTemp = 0;
-        int strengthTemp = 0;
-        int speedTemp = 0;
-        int critChanceTemp = 0;
-        int critDamageTemp = 0;
-        int intelligenceTemp = 0;
-        int seaCreatureChanceTemp = 0;
-        int magicFindTemp = 0;
-        int petLuckTemp = 0;
+        double healthTemp = 0;
+        double defenseTemp = 0;
+        double trueDefenseTemp = 0;
+        double strengthTemp = 0;
+        double speedTemp = 0;
+        double critChanceTemp = 0;
+        double critDamageTemp = 0;
+        double intelligenceTemp = 0;
+        double seaCreatureChanceTemp = 0;
+        double magicFindTemp = 0;
+        double petLuckTemp = 0;
 
         for (ItemStack itemStack : inventory)
         {
@@ -1948,6 +1965,14 @@ public class SkyBlockAPIViewerScreen extends Screen
                 else if (itemId.equals("SPEED_TALISMAN"))
                 {
                     this.allStat.addSpeed(1);
+                }
+                else if (itemId.equals("SPEED_RING"))
+                {
+                    this.allStat.addSpeed(3);
+                }
+                else if (itemId.equals("SPEED_ARTIFACT"))
+                {
+                    this.allStat.addSpeed(5);
                 }
                 else if (itemId.equals("NEW_YEAR_CAKE_BAG"))
                 {
@@ -1973,48 +1998,48 @@ public class SkyBlockAPIViewerScreen extends Screen
                         {
                             String type = matcher.group("type");
                             String value = matcher.group("value").replace(",", "");
-                            int valueInt = 0;
+                            int valueD = 0;
 
                             try
                             {
-                                valueInt = NumberUtils.NUMBER_FORMAT_WITH_OPERATORS.parse(value).intValue();
+                                valueD = NumberUtils.NUMBER_FORMAT_WITH_OPERATORS.parse(value).intValue();
                             }
                             catch (Exception e) {}
 
                             switch (type)
                             {
                             case "Health":
-                                healthTemp += valueInt;
+                                healthTemp += valueD;
                                 break;
                             case "Defense":
-                                defenseTemp += valueInt;
+                                defenseTemp += valueD;
                                 break;
                             case "True Defense":
-                                trueDefenseTemp += valueInt;
+                                trueDefenseTemp += valueD;
                                 break;
                             case "Strength":
-                                strengthTemp += valueInt;
+                                strengthTemp += valueD;
                                 break;
                             case "Speed":
-                                speedTemp += valueInt;
+                                speedTemp += valueD;
                                 break;
                             case "Crit Chance":
-                                critChanceTemp += valueInt;
+                                critChanceTemp += valueD;
                                 break;
                             case "Crit Damage":
-                                critDamageTemp += valueInt;
+                                critDamageTemp += valueD;
                                 break;
                             case "Intelligence":
-                                intelligenceTemp += valueInt;
+                                intelligenceTemp += valueD;
                                 break;
                             case "Sea Creature Chance":
-                                seaCreatureChanceTemp += valueInt;
+                                seaCreatureChanceTemp += valueD;
                                 break;
                             case "Magic Find":
-                                magicFindTemp += valueInt;
+                                magicFindTemp += valueD;
                                 break;
                             case "Pet Luck":
-                                petLuckTemp += valueInt;
+                                petLuckTemp += valueD;
                                 break;
                             }
                         }
@@ -2032,7 +2057,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         JsonElement lastSave = currentProfile.get("last_save");
         JsonElement firstJoin = currentProfile.get("first_join");
         int deathCounts = 0;
-        float coins = 0.0F;
+        double coins = 0.0D;
         long lastSaveMillis = -1;
         long firstJoinMillis = -1;
 
@@ -2042,7 +2067,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         if (purse != null)
         {
-            coins = purse.getAsFloat();
+            coins = purse.getAsDouble();
         }
         if (lastSave != null)
         {
@@ -2078,18 +2103,18 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
         this.infoList.add(new SkyBlockInfo("", ""));
-        this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + this.allStat.getHealth()));
-        this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + this.allStat.getEffectiveHealth()));
-        this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + this.allStat.getDefense()));
-        this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + this.allStat.getTrueDefense()));
-        this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + this.allStat.getStrength()));
-        this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + this.allStat.getSpeed()));
-        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + this.allStat.getCritChance()));
-        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + this.allStat.getCritDamage()));
-        this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + this.allStat.getIntelligence()));
-        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + this.allStat.getSeaCreatureChance()));
-        this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + this.allStat.getMagicFind()));
-        this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + this.allStat.getPetLuck()));
+        this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getHealth())));
+        this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getEffectiveHealth())));
+        this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getDefense())));
+        this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getTrueDefense())));
+        this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getStrength())));
+        this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSpeed())));
+        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritChance())));
+        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritDamage())));
+        this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getIntelligence())));
+        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSeaCreatureChance())));
+        this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getMagicFind())));
+        this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getPetLuck())));
 
         this.infoList.add(new SkyBlockInfo("", ""));
 
@@ -2111,29 +2136,29 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (banking != null)
         {
             double balance = banking.getAsJsonObject().get("balance").getAsDouble();
-            this.infoList.add(new SkyBlockInfo("Banking Account", NumberUtils.NUMBER_FORMAT.format(balance)));
+            this.infoList.add(new SkyBlockInfo("Banking Account", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(balance)));
         }
         else
         {
             this.infoList.add(new SkyBlockInfo("Banking Account", TextFormatting.RED + "API is not enabled!"));
         }
-        this.infoList.add(new SkyBlockInfo("Purse", NumberUtils.NUMBER_FORMAT.format(coins)));
+        this.infoList.add(new SkyBlockInfo("Purse", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(coins)));
     }
 
     private BonusStatTemplate getFairySouls(int fairySouls)
     {
-        int healthBase = 0;
-        int defenseBase = 0;
-        int strengthBase = 0;
-        int speedBase = 0;
+        double healthBase = 0;
+        double defenseBase = 0;
+        double strengthBase = 0;
+        double speedBase = 0;
 
         for (PlayerStatsBonus.FairySouls progress : PlayerStatsBonus.FAIRY_SOULS)
         {
             int soulToCheck = progress.getCount();
-            int health = progress.getHealth();
-            int defense = progress.getDefense();
-            int strength = progress.getStrength();
-            int speed = progress.getSpeed();
+            double health = progress.getHealth();
+            double defense = progress.getDefense();
+            double strength = progress.getStrength();
+            double speed = progress.getSpeed();
 
             if (soulToCheck <= fairySouls)
             {
@@ -2148,12 +2173,12 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private BonusStatTemplate getMagicFindFromPets(int petsScore)
     {
-        int magicFindBase = 0;
+        double magicFindBase = 0;
 
         for (PlayerStatsBonus.PetsScore score : PlayerStatsBonus.PETS_SCORE)
         {
             int scoreToCheck = score.getScore();
-            int magicFind = score.getMagicFind();
+            double magicFind = score.getMagicFind();
 
             if (scoreToCheck <= petsScore)
             {
@@ -2183,7 +2208,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SBSkills.Type.TAMING));
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SBSkills.Type.CARPENTRY));
 
-        float avg = 0;
+        double avg = 0.0D;
         int count = 0;
         List<SBSkills.Info> skills = new ArrayList<>();
         skills.addAll(this.skillLeftList);
@@ -2213,14 +2238,14 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         if (element != null)
         {
-            int playerXp = (int)element.getAsFloat();
+            double playerXp = element.getAsDouble();
             int xpRequired = 0;
             int currentLvl = 0;
             int levelToCheck = 0;
-            int xpTotal = 0;
-            float xpToNextLvl = 0;
-            int currentXp = 0;
-            float skillProgress = 0;
+            double xpTotal = 0;
+            double xpToNextLvl = 0;
+            double currentXp = 0;
+            double skillProgress = 0;
 
             for (int x = 0; x < progress.length; ++x)
             {
@@ -2430,6 +2455,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, SBInventoryType.FISHING_BAG), SBInventoryGroup.FISHING));
         SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, SBInventoryType.QUIVER), SBInventoryGroup.QUIVER));
         SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, SBInventoryType.CANDY), SBInventoryGroup.CANDY));
+        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, SBInventoryType.WARDROBE), SBInventoryGroup.WARDROBE));
 
         this.inventoryToStats.addAll(mainInventory);
         this.inventoryToStats.addAll(accessoryInventory);

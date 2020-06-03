@@ -2,9 +2,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -36,6 +34,7 @@ public class SBAPIUtils
     public static String SKYBLOCK_PROFILE;
     public static String SKYBLOCK_AUCTION;
     public static String BAZAAR;
+    public static String GUILD;
 
     public static void setApiKey()
     {
@@ -45,6 +44,7 @@ public class SBAPIUtils
         SKYBLOCK_PROFILE = "https://api.hypixel.net/skyblock/profile?key=" + API_KEY + "&profile=";
         SKYBLOCK_AUCTION = "https://api.hypixel.net/skyblock/auction?key=" + API_KEY + "&profile=";
         BAZAAR = "https://api.hypixel.net/skyblock/bazaar?key=" + API_KEY;
+        GUILD = "https://api.hypixel.net/guild?key=" + API_KEY + "&player=";
     }
 
     public static void setApiKeyFromServer(String uuid)
@@ -125,7 +125,24 @@ public class SBAPIUtils
         }
         else
         {
-            itemId = ItemIntIDToString.getItem(oldItemId);
+            try
+            {
+                String itemId2 = SBAPIUtils.getKey(BlockStateFlatternEntities.MAP, (int)oldItemId);
+                String newItemReg2 = ItemStackDataFlattening.updateItem(itemId2, damage);
+
+                if (newItemReg2 != null)
+                {
+                    itemId = EntityRenaming1510.ITEM_RENAME_MAP.getOrDefault(newItemReg2, newItemReg2);
+                }
+                else
+                {
+                    itemId = itemId2;
+                }
+            }
+            catch (NoSuchElementException e)
+            {
+                itemId = ItemIntIDToString.getItem(oldItemId);
+            }
 
             if (itemId.equals("minecraft:potion"))
             {
@@ -183,5 +200,10 @@ public class SBAPIUtils
             newNbt.put("tag", sbTag);
         }
         return ItemStack.read(newNbt);
+    }
+
+    private static <K, V> K getKey(Map<K, V> map, V value)
+    {
+        return map.keySet().stream().filter(key -> value.equals(map.get(key))).findFirst().get();
     }
 }

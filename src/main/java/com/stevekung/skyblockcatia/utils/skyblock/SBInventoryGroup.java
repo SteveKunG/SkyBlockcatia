@@ -24,7 +24,8 @@ public class SBInventoryGroup
     public static final SBInventoryGroup FISHING = new SBInventoryGroup(4, "fishing", Items.FISHING_ROD);
     public static final SBInventoryGroup QUIVER = new SBInventoryGroup(5, "quiver", Items.ARROW);
     public static final SBInventoryGroup CANDY = new SBInventoryGroup(6, "candy", SBRenderUtils.getSkullItemStack("906876f2-55d9-3965-9e57-f5732c765617", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTUwZjcxMmU4NzdkZmQ5MTBjOTdmMzgxOWEyMDBhMDVkNDllZTZiODNiNTkyNjg2ZTA5OWI5ZWNkNDQzZjIyOCJ9fX0="));
-    public static final SBInventoryGroup PET = new SBInventoryGroup(7, "pet", Items.BONE);
+    public static final SBInventoryGroup WARDROBE = new SBInventoryGroup(7, "wardrobe", Items.LEATHER_CHESTPLATE);
+    public static final SBInventoryGroup PET = new SBInventoryGroup(8, "pet", Items.BONE);
     private final int index;
     private final String label;
     private String texture = "items";

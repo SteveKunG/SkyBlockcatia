@@ -59,18 +59,19 @@ public class SkyBlockProfileViewerScreen extends Screen
     private final StopWatch watch = new StopWatch();
     private boolean fromError;
     private PlayerNameSuggestionHelper suggestionHelper;
+    private String guild = "";
 
     public SkyBlockProfileViewerScreen(GuiState state)
     {
-        this(state, "", "");
+        this(state, "", "", "");
     }
 
-    public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName)
+    public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName, String guild)
     {
-        this(state, username, displayName, null);
+        this(state, username, displayName, guild, null);
     }
 
-    public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName, List<ProfileDataCallback> profiles)
+    public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
     {
         super(JsonUtils.create("API Viewer"));
 
@@ -83,6 +84,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.fromError = state == GuiState.ERROR;
         this.displayName = displayName;
         this.username = username;
+        this.guild = guild;
     }
 
     @Override
@@ -120,7 +122,7 @@ public class SkyBlockProfileViewerScreen extends Screen
                 }
             });
         } ));
-        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(GuiState.ERROR, this.username, this.displayName) : null)));
+        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(GuiState.ERROR, this.username, this.displayName, this.guild) : null)));
         this.usernameTextField = new RightClickTextFieldWidget(this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused2(true);
@@ -308,7 +310,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             {
                 if (!this.profiles.isEmpty())
                 {
-                    this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profile(s)", this.width / 2, 30, 16777215);
+                    this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profiles" + this.guild, this.width / 2, 30, 16777215);
                 }
 
                 this.suggestionHelper.render(mouseX, mouseY);
@@ -495,6 +497,16 @@ public class SkyBlockProfileViewerScreen extends Screen
         JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
         String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
 
+        URL urlGuild = new URL(SBAPIUtils.GUILD + uuid);
+        JsonObject objGuild = new JsonParser().parse(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonElement guild = objGuild.get("guild");
+
+        if (!guild.isJsonNull())
+        {
+            String guildName = guild.getAsJsonObject().get("name").getAsString();
+            this.guild = TextFormatting.YELLOW + " Guild: " + TextFormatting.GOLD + guildName;
+        }
+
         if (stats == null)
         {
             this.setErrorMessage("Couldn't get stats from API, Please try again later!");
@@ -515,7 +527,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         if (profiles.entrySet().isEmpty())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, uuid, profile, -1);
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, this.guild, uuid, profile, -1);
             this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
             return;
         }
@@ -529,7 +541,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             String sbProfileId = profiles.get(entry.getKey()).getAsJsonObject().get("profile_id").getAsString();
             String profileName = profiles.get(entry.getKey()).getAsJsonObject().get("cute_name").getAsString();
             this.statusMessage = "Found " + TextFormatting.GOLD + "\"" + profileName + "\"" + TextFormatting.GRAY + " profile";
-            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
+            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, this.guild, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
             SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)
