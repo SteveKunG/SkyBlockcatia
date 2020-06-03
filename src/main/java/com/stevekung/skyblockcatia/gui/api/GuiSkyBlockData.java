@@ -104,7 +104,8 @@ public class GuiSkyBlockData extends GuiScreen
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\(\\+[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ \\+[0-9,.]+ HP\\)){0,1})|(?: \\(\\+[0-9,.]+\\))|(?: \\(\\w+ \\+[0-9,.]+(?:\\%){0,1}\\))){0,1}");
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###.#");
+    private static final DecimalFormat FORMAT = new DecimalFormat("#,###");
+    private static final DecimalFormat FORMAT_2 = new DecimalFormat("#,###.#");
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
     public static boolean renderSecondLayer;
@@ -2441,13 +2442,13 @@ public class GuiSkyBlockData extends GuiScreen
         if (banking != null)
         {
             double balance = banking.getAsJsonObject().get("balance").getAsDouble();
-            this.infoList.add(new SkyBlockInfo("Banking Account", FORMAT.format(balance)));
+            this.infoList.add(new SkyBlockInfo("Banking Account", FORMAT_2.format(balance)));
         }
         else
         {
             this.infoList.add(new SkyBlockInfo("Banking Account", EnumChatFormatting.RED + "API is not enabled!"));
         }
-        this.infoList.add(new SkyBlockInfo("Purse", FORMAT.format(coins)));
+        this.infoList.add(new SkyBlockInfo("Purse", FORMAT_2.format(coins)));
     }
 
     private BonusStatTemplate getFairySouls(int fairySouls)
