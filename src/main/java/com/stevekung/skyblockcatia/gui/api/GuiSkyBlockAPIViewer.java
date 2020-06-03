@@ -238,8 +238,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         }
         else
         {
-            this.actionPerformed(this.checkButton);
-            this.usernameTextField.setFocused(false);
+            if (!this.loadingApi)
+            {
+                this.actionPerformed(this.checkButton);
+                this.usernameTextField.setFocused(false);
+            }
         }
     }
 

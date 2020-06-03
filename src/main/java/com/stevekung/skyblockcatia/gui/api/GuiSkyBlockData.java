@@ -510,12 +510,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         if (keyCode == 1)
         {
-            this.mc.displayGuiScreen(null);
-
-            if (this.mc.currentScreen == null)
-            {
-                this.mc.setIngameFocus();
-            }
+            this.actionPerformed(this.backButton);
         }
     }
 
