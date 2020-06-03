@@ -2277,6 +2277,14 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     this.allStat.addSpeed(1);
                 }
+                else if (itemId.equals("SPEED_RING"))
+                {
+                    this.allStat.addSpeed(3);
+                }
+                else if (itemId.equals("SPEED_ARTIFACT"))
+                {
+                    this.allStat.addSpeed(5);
+                }
                 else if (itemId.equals("NEW_YEAR_CAKE_BAG"))
                 {
                     this.getHealthFromCake(extraAttrib);
