@@ -77,7 +77,7 @@ public class ToastUtils
         RARE_DROP("RARE DROP!", "255,170,0"),
         PET_DROP("PET DROP!", "255,170,0"),
         DRAGON_CRYSTAL_FRAGMENT("RARE DROP!", "170,0,170"),
-        DRAGON_DROP("DRAGON DROP!", "127,255,212"),
+        BOSS_DROP("BOSS DROP!", "127,255,212"),
         GOOD_CATCH("GOOD CATCH!", "255,170,0"),
         GREAT_CATCH("GREAT CATCH!", "170,0,170"),
         GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0"),
@@ -112,7 +112,7 @@ public class ToastUtils
 
         public boolean isSpecialDrop()
         {
-            return this == DRAGON_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER;
+            return this == BOSS_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER;
         }
 
         public boolean isFishingCoins()
