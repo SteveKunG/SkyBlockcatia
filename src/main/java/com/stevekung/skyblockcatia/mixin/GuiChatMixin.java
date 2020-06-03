@@ -109,7 +109,7 @@ public abstract class GuiChatMixin extends GuiScreen
             return false;
         }
     }
-    
+
     private boolean handleComponentMiddleClick(IChatComponent component)
     {
         if (component == null)

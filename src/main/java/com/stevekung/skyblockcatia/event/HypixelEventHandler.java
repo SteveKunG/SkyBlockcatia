@@ -804,10 +804,8 @@ public class HypixelEventHandler
 
         if (this.previousInventory != null)
         {
-            for (int i = 0; i < newInventory.size(); i++)
+            for (ItemStack newItem : newInventory)
             {
-                ItemStack newItem = newInventory.get(i);
-
                 if (newItem != null)
                 {
                     String newItemName = EnumChatFormatting.getTextWithoutFormattingCodes(newItem.getDisplayName());
