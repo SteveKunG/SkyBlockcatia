@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.event;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -13,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -517,14 +517,25 @@ public class MainEventHandler
 
             for (Map.Entry<String, JsonElement> product : obj.get("products").getAsJsonObject().entrySet())
             {
-                JsonElement quickStatus = product.getValue().getAsJsonObject().get("quick_status");
+                String productName = product.getKey();
+                JsonElement currentProduct = product.getValue();
+                JsonElement quickStatus = currentProduct.getAsJsonObject().get("quick_status");
                 JsonElement buyPrice = quickStatus.getAsJsonObject().get("buyPrice");
                 JsonElement sellPrice = quickStatus.getAsJsonObject().get("sellPrice");
-                BAZAAR_DATA.put(product.getKey(), new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
-                BAZAAR_DATA.computeIfPresent(product.getKey(), (k, v) -> new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                JsonArray buyArray = currentProduct.getAsJsonObject().get("buy_summary").getAsJsonArray();
+                JsonArray sellArray = currentProduct.getAsJsonObject().get("sell_summary").getAsJsonArray();
+
+                if (sellArray.size() == 0 && buyArray.size() == 0)
+                {
+                    BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                }
+                else
+                {
+                    BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyArray.get(0).getAsJsonObject().get("pricePerUnit").getAsDouble(), sellArray.get(0).getAsJsonObject().get("pricePerUnit").getAsDouble())));
+                }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }
