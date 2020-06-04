@@ -525,7 +525,7 @@ public class MainEventHandler
                 JsonArray buyArray = currentProduct.getAsJsonObject().get("buy_summary").getAsJsonArray();
                 JsonArray sellArray = currentProduct.getAsJsonObject().get("sell_summary").getAsJsonArray();
 
-                if (sellArray.size() == 0 && buyArray.size() == 0)
+                if (sellArray.size() == 0 && buyArray.size() == 0 || sellArray.size() == 0 || buyArray.size() == 0)
                 {
                     BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
                 }
