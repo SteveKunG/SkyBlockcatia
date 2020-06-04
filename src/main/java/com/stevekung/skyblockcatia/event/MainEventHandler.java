@@ -74,7 +74,7 @@ public class MainEventHandler
     private static final ThreadPoolExecutor REALTIME_PINGER = new ScheduledThreadPoolExecutor(5, new ThreadFactoryBuilder().setNameFormat("Real Time Server Pinger #%d").setDaemon(true).build());
     private long lastPinger = -1L;
     private long lastButtonClick = -1;
-    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options"));
+    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Backpack", "Chest"));
     public static String auctionPrice = "";
     public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
     public static boolean showChat;
@@ -248,7 +248,7 @@ public class MainEventHandler
                     event.buttonList.add(new GuiButton(500, width - 108, height + 190, 20, 20, "C"));
                 }
 
-                if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory))
+                if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
                 {
                     event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table)));
                     event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, Item.getItemFromBlock(Blocks.ender_chest)));

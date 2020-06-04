@@ -570,11 +570,15 @@ public class HypixelEventHandler
             }
             else if (KeyBindingHandler.KEY_SB_CRAFTING_TABLE.isKeyDown())
             {
-                this.mc.thePlayer.sendChatMessage("/viewcraftingtable");
+                this.mc.thePlayer.sendChatMessage("/craft");
             }
             else if (KeyBindingHandler.KEY_SB_MENU.isKeyDown())
             {
                 this.mc.thePlayer.sendChatMessage("/sbmenu");
+            }
+            else if (KeyBindingHandler.KEY_SB_VIEW_RECIPE.isKeyDown() && this.mc.currentScreen == null)
+            {
+                this.mc.thePlayer.sendChatMessage("/recipes");
             }
         }
 
