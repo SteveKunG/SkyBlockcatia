@@ -79,6 +79,7 @@ public class SkyBlockcatiaMod
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
     public static UUID CURRENT_UUID;
+    public static boolean isDevelopment;
 
     static
     {
@@ -86,23 +87,34 @@ public class SkyBlockcatiaMod
         HARDCODE_UUID.add("d362e682-9f61-4a10-8d73-ad540d235fad"); // Lnwdeen
         HARDCODE_UUID.add("5669d719-e494-47f5-9362-0ece491d0875"); // Badify
 
+        try
+        {
+            SkyBlockcatiaMod.isDevelopment = Launch.classLoader.getClassBytes("net.minecraft.world.World") != null;
+        }
+        catch (Exception e) {}
+
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
-        SkyBlockcatiaMod.nahee();
-        CommonUtils.runAsync(() ->
+
+        if (!isDevelopment)
         {
-            for (String uuid : SUPPORTERS_UUID)
+            SkyBlockcatiaMod.nahee();
+            CommonUtils.runAsync(() ->
             {
-                try
+                for (String uuid : SUPPORTERS_UUID)
                 {
-                    SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                    try
+                    {
+                        SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
+            });
+        }
+
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
