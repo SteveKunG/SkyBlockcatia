@@ -101,6 +101,10 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                 this.buttonList.add(new GuiButton(155, this.guiLeft + 180, this.guiTop + 70, 70, 20, "Copy Seller"));
                 this.buttonList.add(new GuiButton(156, this.guiLeft + 180, this.guiTop + 92, 70, 20, "View API"));
             }
+            if (this.isPeopleProfile(chest.lowerChestInventory))
+            {
+                this.buttonList.add(new GuiButton(156, this.guiLeft + 180, this.guiTop + 40, 70, 20, "View API"));
+            }
         }
     }
 
@@ -636,6 +640,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     {
         String name = lowerChestInventory.getDisplayName().getUnformattedText();
         return name.endsWith("'s Auctions");
+    }
+
+    private boolean isPeopleProfile(IInventory lowerChestInventory)
+    {
+        String name = lowerChestInventory.getDisplayName().getUnformattedText();
+        return name.endsWith("'s Profile");
     }
 
     // GuiChat stuff
