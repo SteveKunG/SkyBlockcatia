@@ -238,19 +238,23 @@ public class SkyBlockProfileViewerScreen extends Screen
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers)
     {
-        if ((key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) && !StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
+        if (!this.loadingApi)
         {
-            this.checkButton.onPress();
-            return true;
+            if ((key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) && !StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
+            {
+                this.checkButton.onPress();
+                return true;
+            }
+            else if (this.suggestionHelper.onKeyPressed(key, scanCode, modifiers))
+            {
+                return true;
+            }
+            else
+            {
+                return super.keyPressed(key, scanCode, modifiers);
+            }
         }
-        else if (this.suggestionHelper.onKeyPressed(key, scanCode, modifiers))
-        {
-            return true;
-        }
-        else
-        {
-            return super.keyPressed(key, scanCode, modifiers);
-        }
+        return false;
     }
 
     @Override

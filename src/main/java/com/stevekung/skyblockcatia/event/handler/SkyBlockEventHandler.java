@@ -520,11 +520,15 @@ public class SkyBlockEventHandler
             }
             else if (KeyBindingHandler.KEY_SB_CRAFTING_TABLE.isKeyDown())
             {
-                this.mc.player.sendChatMessage("/viewcraftingtable");
+                this.mc.player.sendChatMessage("/craft");
             }
             else if (KeyBindingHandler.KEY_SB_MENU.isKeyDown())
             {
                 this.mc.player.sendChatMessage("/sbmenu");
+            }
+            else if (KeyBindingHandler.KEY_SB_VIEW_RECIPE.isKeyDown() && this.mc.currentScreen == null)
+            {
+                this.mc.player.sendChatMessage("/recipes");
             }
         }
 

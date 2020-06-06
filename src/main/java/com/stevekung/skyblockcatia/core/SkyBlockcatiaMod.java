@@ -85,7 +85,7 @@ public class SkyBlockcatiaMod
             });
         }
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 30, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
 
     public SkyBlockcatiaMod()

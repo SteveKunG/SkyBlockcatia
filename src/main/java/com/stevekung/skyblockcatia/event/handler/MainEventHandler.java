@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -8,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -56,7 +56,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class MainEventHandler
 {
     private final Minecraft mc;
-    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options"));
+    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Backpack", "Chest"));
     public static String auctionPrice = "";
     public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
     public static boolean showChat;
@@ -128,7 +128,7 @@ public class MainEventHandler
                     event.addWidget(new Button(width - 108, height + 190, 20, 20, "C", button -> MainEventHandler.showChat = !MainEventHandler.showChat));
                 }
 
-                if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, title))
+                if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, title) && !title.getUnformattedComponentText().equals("Ender Chest"))
                 {
                     event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/craft")));
                     event.addWidget(new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
@@ -314,14 +314,25 @@ public class MainEventHandler
 
             for (Map.Entry<String, JsonElement> product : obj.get("products").getAsJsonObject().entrySet())
             {
-                JsonElement quickStatus = product.getValue().getAsJsonObject().get("quick_status");
+                String productName = product.getKey();
+                JsonElement currentProduct = product.getValue();
+                JsonElement quickStatus = currentProduct.getAsJsonObject().get("quick_status");
                 JsonElement buyPrice = quickStatus.getAsJsonObject().get("buyPrice");
                 JsonElement sellPrice = quickStatus.getAsJsonObject().get("sellPrice");
-                BAZAAR_DATA.put(product.getKey(), new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
-                BAZAAR_DATA.computeIfPresent(product.getKey(), (k, v) -> new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                JsonArray buyArray = currentProduct.getAsJsonObject().get("buy_summary").getAsJsonArray();
+                JsonArray sellArray = currentProduct.getAsJsonObject().get("sell_summary").getAsJsonArray();
+
+                if (sellArray.size() == 0 && buyArray.size() == 0 || sellArray.size() == 0 || buyArray.size() == 0)
+                {
+                    BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                }
+                else
+                {
+                    BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyArray.get(0).getAsJsonObject().get("pricePerUnit").getAsDouble(), sellArray.get(0).getAsJsonObject().get("pricePerUnit").getAsDouble())));
+                }
             }
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

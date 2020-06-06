@@ -118,6 +118,14 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
+            if (this.isPeopleProfile())
+            {
+                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, "View API", button ->
+                {
+                    String title = this.title.getUnformattedComponentText();
+                    this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
+                }));
+            }
         }
     }
 
@@ -501,6 +509,12 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         String title = this.title.getUnformattedComponentText();
         return title.endsWith("'s Auctions");
+    }
+
+    private boolean isPeopleProfile()
+    {
+        String title = this.title.getUnformattedComponentText();
+        return title.endsWith("'s Profile");
     }
 
     private boolean isChatableGui()
