@@ -56,7 +56,7 @@ public class GuiButtonItem extends GuiButton
         this.visible = condition;
         this.customName = customName;
 
-        if (!SkyBlockcatiaMod.isVanillaEnhancementsLoaded)
+        if (!(SkyBlockcatiaMod.isVanillaEnhancementsLoaded || SkyBlockcatiaMod.isPatcherLoaded))
         {
             boolean hasVisibleEffect = false;
 

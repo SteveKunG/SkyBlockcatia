@@ -5,7 +5,6 @@ skyblockcatia_key_binding_settings=Key Binding Settings
 
 # CONFIG DESCRIPTION
 gui.config.skyblockcatia.blockhit_animation=Improve smooth hand action animation from 1.7.
-gui.config.skyblockcatia.fast_chat=Disable chat background rendering.
 gui.config.skyblockcatia.custom_player_list=Show response time as number instead.
 gui.config.skyblockcatia.smooth_eye_height=Improve player eye height (Camera View) if sneaking.
 gui.config.skyblockcatia.alternate_player_model=This will implement transparent skin from 1.9.
