@@ -15,6 +15,7 @@ import net.minecraft.client.audio.SoundManager;
 @Mixin(SoundManager.class)
 public abstract class SoundManagerMixin
 {
+    private final SoundManager that = (SoundManager) (Object) this;
     private List<String> pausedSounds = new ArrayList<>();
 
     @Shadow
@@ -25,16 +26,13 @@ public abstract class SoundManagerMixin
     @Shadow
     private SoundManager.SoundSystemStarterThread sndSystem;
 
-    @Shadow
-    public abstract boolean isSoundPlaying(ISound sound);
-
     @Overwrite
     public void pauseAllSounds()
     {
         for (Map.Entry<String, ISound> entry : this.playingSounds.entrySet())
         {
             String sound = entry.getKey();
-            boolean flag = this.isSoundPlaying(entry.getValue());
+            boolean flag = this.that.isSoundPlaying(entry.getValue());
 
             if (flag)
             {

@@ -13,7 +13,6 @@ import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
-import com.stevekung.skyblockcatia.utils.ThaiUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 
@@ -21,7 +20,7 @@ import net.minecraft.client.gui.FontRenderer;
 public abstract class ColoredFontRendererMixin
 {
     private boolean dropShadow;
-    private int state = 0;
+    private int state;
     private int redN;
     private int greenN;
     private int blueN;
@@ -48,13 +47,13 @@ public abstract class ColoredFontRendererMixin
     @Shadow
     private static boolean isFormatColor(char colorChar)
     {
-        throw new Error();
+        return false;
     }
 
     @Shadow
     private static boolean isFormatSpecial(char formatChar)
     {
-        throw new Error();
+        return false;
     }
 
     @Inject(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At("HEAD"))
@@ -79,7 +78,7 @@ public abstract class ColoredFontRendererMixin
         return text;
     }
 
-    @Inject(method = "renderDefaultChar(IZ)F", at = @At("HEAD"))
+    @Inject(method = "renderDefaultChar(IZ)F", cancellable = true, at = @At("HEAD"))
     private void renderDefaultChar(int ch, boolean italic, CallbackInfoReturnable info)
     {
         if (ch >= MARKER && ch <= MARKER + 255)
@@ -126,42 +125,6 @@ public abstract class ColoredFontRendererMixin
     @Overwrite
     protected float renderUnicodeChar(char ch, boolean italic)
     {
-        int th = this.glyphWidth[ch] & 255;
-
-        if (ThaiUtils.isSpecialThaiChar(ch))
-        {
-            float posYShift = 0.0F;
-            float height = 2.99F;
-            this.loadGlyphTexture(0x0E);
-
-            if (ThaiUtils.isLowerThaiChar(ch))
-            {
-                height = 1.99F;
-                posYShift = 6.0F;
-            }
-
-            float heightX2 = height * 2;
-            float startTexcoordX = th >>> 4;
-            float charWidth = (th & 15) + 1;
-            float texcoordX = ch % 16 * 16 + startTexcoordX;
-            float texcoordY = (ch & 255) / 16 * 16 + posYShift * 2;
-            float texcoordXEnd = charWidth - startTexcoordX - 0.02F;
-            float skew = italic ? 1.0F : 0.0F;
-            float posX = this.posX - ((charWidth - startTexcoordX) / 2.0F + 0.5F);
-            float posY = this.posY + posYShift;
-
-            GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-            GL11.glTexCoord2f(texcoordX / 256.0F, texcoordY / 256.0F);
-            GL11.glVertex3f(posX + skew, posY, 0.0F);
-            GL11.glTexCoord2f(texcoordX / 256.0F, (texcoordY + heightX2) / 256.0F);
-            GL11.glVertex3f(posX - skew, posY + height, 0.0F);
-            GL11.glTexCoord2f((texcoordX + texcoordXEnd) / 256.0F, texcoordY / 256.0F);
-            GL11.glVertex3f(posX + texcoordXEnd / 2.0F + skew, posY, 0.0F);
-            GL11.glTexCoord2f((texcoordX + texcoordXEnd) / 256.0F, (texcoordY + heightX2) / 256.0F);
-            GL11.glVertex3f(posX + texcoordXEnd / 2.0F - skew, posY + height, 0.0F);
-            GL11.glEnd();
-            return 0.0F;
-        }
         if (ch >= MARKER && ch <= MARKER + 255)
         {
             int value = ch & 255;
