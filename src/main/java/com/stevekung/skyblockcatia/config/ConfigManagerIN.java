@@ -25,7 +25,6 @@ public class ConfigManagerIN
     public static boolean enableBlockhitAnimation;
     public static boolean enableAdditionalBlockhitAnimation;
     public static boolean enableOldArmorRender;
-    public static boolean enableFastChatRender;
     public static boolean enableCustomPlayerList;
     public static boolean enableCustomServerSelectionGui;
     public static boolean enableConfirmToDisconnect;
@@ -97,11 +96,6 @@ public class ConfigManagerIN
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Armor Hurt Overlay", false);
         ConfigManagerIN.enableOldArmorRender = prop.getBoolean();
         prop.comment = LangUtils.translate("gui.config.skyblockcatia.old_armor_render");
-        propOrder.add(prop.getName());
-
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Fast Chat Render", false);
-        ConfigManagerIN.enableFastChatRender = prop.getBoolean();
-        prop.comment = LangUtils.translate("gui.config.skyblockcatia.fast_chat");
         propOrder.add(prop.getName());
 
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Custom Player List", false);
