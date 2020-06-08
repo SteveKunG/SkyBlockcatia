@@ -627,7 +627,13 @@ public class GuiSkyBlockData extends GuiScreen
 
                 super.drawScreen(mouseX, mouseY, partialTicks);
 
-                if (this.currentSlot instanceof EmptyStats)
+                if (this.currentSlot instanceof InfoStats)
+                {
+                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    GlStateManager.enableDepth();
+                    GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.player);
+                }
+                else if (this.currentSlot instanceof EmptyStats)
                 {
                     EmptyStats stat = (EmptyStats)this.currentSlot;
 
@@ -3611,8 +3617,8 @@ public class GuiSkyBlockData extends GuiScreen
         protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
         {
             SkyBlockInfo stat = this.stats.get(index);
-            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getTitle(), this.left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
-            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValue(), this.right - this.parent.mc.fontRendererObj.getStringWidth(stat.getValue()) - 10, top, index % 2 == 0 ? 16777215 : 9474192);
+            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getTitle(), this.parent.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
+            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValue(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValue()) + 195, top, index % 2 == 0 ? 16777215 : 9474192);
         }
 
         @Override
