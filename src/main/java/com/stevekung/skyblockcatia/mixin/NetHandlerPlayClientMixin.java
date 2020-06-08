@@ -15,8 +15,6 @@ import net.minecraft.network.play.server.S3APacketTabComplete;
 @Mixin(NetHandlerPlayClient.class)
 public abstract class NetHandlerPlayClientMixin
 {
-    private final NetHandlerPlayClient that = (NetHandlerPlayClient) (Object) this;
-
     @Shadow
     private Minecraft gameController;
 
