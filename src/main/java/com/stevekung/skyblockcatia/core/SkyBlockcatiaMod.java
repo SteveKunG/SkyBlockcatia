@@ -17,10 +17,7 @@ import com.google.common.io.Files;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.stevekung.skyblockcatia.command.CommandApiViewer;
-import com.stevekung.skyblockcatia.command.CommandMojangStatusCheck;
-import com.stevekung.skyblockcatia.command.CommandProfile;
-import com.stevekung.skyblockcatia.command.CommandSkyBlockcatia;
+import com.stevekung.skyblockcatia.command.*;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
@@ -196,6 +193,7 @@ public class SkyBlockcatiaMod
         ClientUtils.registerCommand(new CommandSkyBlockcatia());
         ClientUtils.registerCommand(new CommandProfile());
         ClientUtils.registerCommand(new CommandApiViewer());
+        ClientUtils.registerCommand(new CommandBazaarViewer());
     }
 
     @EventHandler
