@@ -2831,67 +2831,71 @@ public class GuiSkyBlockData extends GuiScreen
         List<SkyBlockSlayerInfo> list = new ArrayList<>();
         ExpProgress[] progress = type.getProgress();
         JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase());
-        JsonElement xp = slayer.getAsJsonObject().get("xp");
 
-        if (xp != null)
+        if (slayer != null)
         {
-            int playerSlayerXp = xp.getAsInt();
-            int xpRequired = 0;
-            int slayerLvl = 0;
-            int levelToCheck = 0;
-            int xpToNextLvl = 0;
+            JsonElement xp = slayer.getAsJsonObject().get("xp");
 
-            for (ExpProgress skill : progress)
+            if (xp != null)
             {
-                int slayerXp = (int)skill.getXp();
+                int playerSlayerXp = xp.getAsInt();
+                int xpRequired = 0;
+                int slayerLvl = 0;
+                int levelToCheck = 0;
+                int xpToNextLvl = 0;
 
-                if (slayerXp <= playerSlayerXp)
+                for (ExpProgress skill : progress)
                 {
-                    levelToCheck = skill.getLevel();
+                    int slayerXp = (int)skill.getXp();
 
-                    if (levelToCheck < progress.length)
+                    if (slayerXp <= playerSlayerXp)
                     {
-                        xpRequired = (int)progress[levelToCheck].getXp();
+                        levelToCheck = skill.getLevel();
+
+                        if (levelToCheck < progress.length)
+                        {
+                            xpRequired = (int)progress[levelToCheck].getXp();
+                        }
+                        ++slayerLvl;
                     }
-                    ++slayerLvl;
                 }
+
+                if (levelToCheck < progress.length)
+                {
+                    levelToCheck += 1;
+                    xpToNextLvl = xpRequired - playerSlayerXp;
+                }
+                else
+                {
+                    levelToCheck = progress.length;
+                }
+
+                this.setSlayerSkillLevel(type, slayerLvl);
+
+                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + type.getName() + " Slayer: " + EnumChatFormatting.YELLOW + "LVL " + slayerLvl));
+                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "EXP: " + EnumChatFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? FORMAT.format(playerSlayerXp) : FORMAT.format(playerSlayerXp) + EnumChatFormatting.DARK_PURPLE + "/" + EnumChatFormatting.LIGHT_PURPLE + FORMAT.format(xpRequired))));
+
+                if (xpToNextLvl != 0)
+                {
+                    list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "XP to " + EnumChatFormatting.YELLOW + "LVL " + levelToCheck + ": " + EnumChatFormatting.LIGHT_PURPLE + FORMAT.format(xpToNextLvl)));
+                }
+
+                list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl));
+                int amount = 0;
+
+                for (int i = 1; i <= 4; i++)
+                {
+                    JsonElement kill = slayer.getAsJsonObject().get("boss_kills_tier_" + (i - 1));
+                    int kills = this.getSlayerKill(kill);
+                    amount += this.getSlayerPrice(kills, i - 1);
+                    list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "Tier " + i + ": " + EnumChatFormatting.YELLOW + this.formatSlayerKill(this.getSlayerKill(kill))));
+                }
+                this.slayerTotalAmountSpent += amount;
+                this.totalSlayerXp += playerSlayerXp;
+                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "Amount Spent: " + EnumChatFormatting.YELLOW + FORMAT.format(amount)));
+                list.add(SkyBlockSlayerInfo.empty());
+                return list;
             }
-
-            if (levelToCheck < progress.length)
-            {
-                levelToCheck += 1;
-                xpToNextLvl = xpRequired - playerSlayerXp;
-            }
-            else
-            {
-                levelToCheck = progress.length;
-            }
-
-            this.setSlayerSkillLevel(type, slayerLvl);
-
-            list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + type.getName() + " Slayer: " + EnumChatFormatting.YELLOW + "LVL " + slayerLvl));
-            list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "EXP: " + EnumChatFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? FORMAT.format(playerSlayerXp) : FORMAT.format(playerSlayerXp) + EnumChatFormatting.DARK_PURPLE + "/" + EnumChatFormatting.LIGHT_PURPLE + FORMAT.format(xpRequired))));
-
-            if (xpToNextLvl != 0)
-            {
-                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "XP to " + EnumChatFormatting.YELLOW + "LVL " + levelToCheck + ": " + EnumChatFormatting.LIGHT_PURPLE + FORMAT.format(xpToNextLvl)));
-            }
-
-            list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl));
-            int amount = 0;
-
-            for (int i = 1; i <= 4; i++)
-            {
-                JsonElement kill = slayer.getAsJsonObject().get("boss_kills_tier_" + (i - 1));
-                int kills = this.getSlayerKill(kill);
-                amount += this.getSlayerPrice(kills, i - 1);
-                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "Tier " + i + ": " + EnumChatFormatting.YELLOW + this.formatSlayerKill(this.getSlayerKill(kill))));
-            }
-            this.slayerTotalAmountSpent += amount;
-            this.totalSlayerXp += playerSlayerXp;
-            list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "Amount Spent: " + EnumChatFormatting.YELLOW + FORMAT.format(amount)));
-            list.add(SkyBlockSlayerInfo.empty());
-            return list;
         }
         return new ArrayList<>();
     }
