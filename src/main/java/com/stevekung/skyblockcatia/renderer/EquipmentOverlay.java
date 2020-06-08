@@ -87,10 +87,6 @@ public class EquipmentOverlay
         GlStateManager.enableDepth();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(itemStack, x, y);
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableBlend();
-        GlStateManager.disableDepth();
-        RenderHelper.disableStandardItemLighting();
     }
 
     private static String getArmorDurabilityStatus(ItemStack itemStack)
