@@ -112,9 +112,6 @@ public class SkyBlockcatiaMod
                 }
             });
         }
-
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
 
     public static final Block.SoundType CROPS = new Block.SoundType("crops", 1.0F, 1.0F)
@@ -235,6 +232,8 @@ public class SkyBlockcatiaMod
                 e.printStackTrace();
             }
         });
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
 
         if (ClientUtils.isEffectiveClient())
         {
