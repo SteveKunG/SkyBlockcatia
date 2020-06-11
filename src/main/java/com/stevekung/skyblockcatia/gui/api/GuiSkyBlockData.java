@@ -2621,7 +2621,7 @@ public class GuiSkyBlockData extends GuiScreen
                 currentXp = playerXp - xpTotal;
             }
 
-            if (currentXp <= 0 && levelToCheck <= progress.length) // fix for skill level almost reach to limit
+            if (currentXp < 0 && levelToCheck <= progress.length) // fix for skill level almost reach to limit
             {
                 xpToNextLvl = xpTotal - playerXp;
                 currentXp = (int)(xpRequired - xpToNextLvl);
