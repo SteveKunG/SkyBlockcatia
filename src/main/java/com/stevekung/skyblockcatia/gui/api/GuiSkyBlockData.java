@@ -2133,6 +2133,7 @@ public class GuiSkyBlockData extends GuiScreen
             this.allStat.setIntelligence((int)Math.round(this.allStat.getIntelligence() * 1.05D));
             this.allStat.setSeaCreatureChance((int)Math.round(this.allStat.getSeaCreatureChance() * 1.05D));
             this.allStat.setMagicFind((int)Math.round(this.allStat.getMagicFind() * 1.05D));
+            this.allStat.setPetLuck((int)Math.round(this.allStat.getPetLuck() * 1.05D));
         }
         if (this.checkSkyBlockItem(this.armorItems, "FAIRY_") == 4)
         {
@@ -2336,7 +2337,7 @@ public class GuiSkyBlockData extends GuiScreen
                             String lastLore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(list.tagCount() - 1));
                             Matcher matcher = STATS_PATTERN.matcher(lore);
 
-                            if (!armor && (lastLore.endsWith(" BOOTS") || lastLore.endsWith(" LEGGINGS") || lastLore.endsWith(" CHESTPLATE") || lastLore.endsWith(" HELMET") || !lastLore.endsWith(" ACCESSORY")))
+                            if (!armor && (lastLore.endsWith(" BOOTS") || lastLore.endsWith(" LEGGINGS") || lastLore.endsWith(" CHESTPLATE") || lastLore.endsWith(" HELMET")))
                             {
                                 continue;
                             }
