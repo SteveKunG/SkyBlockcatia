@@ -9,10 +9,10 @@ import com.stevekung.skyblockcatia.utils.RenderUtils;
 import codes.biscuit.skyblockaddons.SkyblockAddons;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook;
+import codes.biscuit.skyblockaddons.core.Feature;
 import codes.biscuit.skyblockaddons.utils.Backpack;
 import codes.biscuit.skyblockaddons.utils.BackpackColor;
 import codes.biscuit.skyblockaddons.utils.EnumUtils;
-import codes.biscuit.skyblockaddons.utils.Feature;
 import codes.biscuit.skyblockaddons.utils.nifty.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -32,7 +32,7 @@ public class SkyBlockAddonsBackpack
     public void drawBackpacks(GuiSkyBlockData gui, int mouseX, int mouseY, float partialTicks)
     {
         SkyblockAddons main = SkyblockAddons.getInstance();
-        Backpack backpack = main.getUtils().getBackpackToRender();
+        Backpack backpack = main.getUtils().getBackpackToPreview();
         Minecraft mc = Minecraft.getMinecraft();
 
         if (backpack != null)
@@ -169,7 +169,7 @@ public class SkyBlockAddonsBackpack
             }
             if (!GuiContainerHook.isFreezeBackpack())
             {
-                main.getUtils().setBackpackToRender(null);
+                main.getUtils().setBackpackToPreview(null);
             }
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
@@ -192,7 +192,7 @@ public class SkyBlockAddonsBackpack
             if (keyCode == 1 || keyCode == Minecraft.getMinecraft().gameSettings.keyBindInventory.getKeyCode())
             {
                 GuiContainerHook.setFreezeBackpack(false);
-                main.getUtils().setBackpackToRender(null);
+                main.getUtils().setBackpackToPreview(null);
                 SkyBlockAddonsBackpack.mouseXFreeze = 0;
                 SkyBlockAddonsBackpack.mouseYFreeze = 0;
             }
@@ -219,7 +219,7 @@ public class SkyBlockAddonsBackpack
             setLastBackpackFreezeKeyMethod.setAccessible(true);
             setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
             GuiContainerHook.setFreezeBackpack(false);
-            main.getUtils().setBackpackToRender(null);
+            main.getUtils().setBackpackToPreview(null);
             SkyBlockAddonsBackpack.mouseXFreeze = 0;
             SkyBlockAddonsBackpack.mouseYFreeze = 0;
         }
