@@ -33,6 +33,7 @@ import com.stevekung.skyblockcatia.utils.JsonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerAddress;
 import net.minecraft.client.multiplayer.ServerData;
@@ -117,14 +118,14 @@ public class MainEventHandler
                     }
                 }
 
-                //XXX DEBUG HEAD
-                if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiChest && Keyboard.isKeyDown(Keyboard.KEY_F7))
+                //XXX DEBUG
+                if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer && Keyboard.isKeyDown(Keyboard.KEY_F7))
                 {
-                    GuiChest chest = (GuiChest)this.mc.currentScreen;
+                    GuiContainer chest = (GuiContainer)this.mc.currentScreen;
 
                     if (chest.theSlot != null && chest.theSlot.getStack() != null && chest.theSlot.getStack().hasTagCompound())
                     {
-                        GuiScreen.setClipboardString(chest.theSlot.getStack().getTagCompound().getCompoundTag("SkullOwner").toString());
+                        GuiScreen.setClipboardString(chest.theSlot.getStack().getTagCompound().toString());
                     }
                 }
             }
