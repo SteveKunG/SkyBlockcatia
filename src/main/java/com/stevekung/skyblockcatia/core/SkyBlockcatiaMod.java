@@ -73,6 +73,7 @@ public class SkyBlockcatiaMod
 
     private static boolean githubDown;
     private static boolean noUUID;
+    public static boolean noCurl;
     private static final List<String> HARDCODE_UUID = new ArrayList<>();
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
@@ -81,9 +82,14 @@ public class SkyBlockcatiaMod
 
     static
     {
-        HARDCODE_UUID.add("dd436eb4-01e3-4541-bc85-4a899c879304"); // _Okto
-        HARDCODE_UUID.add("d362e682-9f61-4a10-8d73-ad540d235fad"); // Lnwdeen
-        HARDCODE_UUID.add("5669d719-e494-47f5-9362-0ece491d0875"); // Badify
+        HARDCODE_UUID.add("84b5eb0f-11d8-464b-881d-4bba203cc77b");
+        HARDCODE_UUID.add("e2d72023-34b9-45c2-825b-63ae2d1b2f36");
+        HARDCODE_UUID.add("4675476a-46e5-45ee-89a5-010dc02996d9");
+        HARDCODE_UUID.add("f1dfdd47-6e03-4c2d-b766-e414c7b77f10");
+        HARDCODE_UUID.add("07e864c4-90d6-4c86-8df2-adf98a843e9e");
+        HARDCODE_UUID.add("2cd88ad0-89b1-4ca7-907e-78066fe36b08");
+        HARDCODE_UUID.add("f81a81c1-92fc-4714-b8ed-f811e6c61550");
+        HARDCODE_UUID.add("266513e1-6c83-4d87-bbc5-d3934f9ca329");
 
         try
         {
@@ -96,19 +102,22 @@ public class SkyBlockcatiaMod
 
         if (!isDevelopment)
         {
-            SkyBlockcatiaMod.nahee();
+            SkyBlockcatiaMod.kuy();
             CommonUtils.runAsync(() ->
             {
-                for (String uuid : SUPPORTERS_UUID)
+                try
                 {
-                    try
+                    BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                    String inputLine;
+
+                    while ((inputLine = reader.readLine()) != null)
                     {
-                        SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                        SUPPORTERS_NAME.add(inputLine);
                     }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             });
         }
@@ -161,11 +170,15 @@ public class SkyBlockcatiaMod
     {
         if (noUUID)
         {
-            throw new InvalidUUIDException();
+            throw new WhitelistException();
         }
         if (githubDown)
         {
-            throw new WhitelistException();
+            throw new GitHubDownException();
+        }
+        if (noCurl)
+        {
+            throw new NoCurlException();
         }
 
         SkyBlockcatiaMod.CURRENT_UUID = GameProfileUtils.getUUID();
@@ -260,7 +273,7 @@ public class SkyBlockcatiaMod
     @EventHandler
     public void onFingerprintViolation(FMLFingerprintViolationEvent event)
     {
-        if ((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+        if (isDevelopment)
         {
             LoggerIN.info("Development environment detected! Ignore certificate check.");
         }
@@ -354,7 +367,7 @@ public class SkyBlockcatiaMod
         }
     }
 
-    private static void nahee()
+    private static void kuy()
     {
         List<String> uuidList = new ArrayList<>();
 
@@ -372,7 +385,7 @@ public class SkyBlockcatiaMod
         {
             e.printStackTrace();
 
-            if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+            if (!isDevelopment)
             {
                 SkyBlockcatiaMod.githubDown = true;
             }
@@ -386,17 +399,10 @@ public class SkyBlockcatiaMod
             return GameProfileUtils.getUUID().toString().equals(text);
         }))
         {
-            if (!(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+            if (!isDevelopment)
             {
                 SkyBlockcatiaMod.noUUID = true;
             }
         }
-    }
-
-    private static String getName(String uuid) throws JsonSyntaxException, IOException
-    {
-        URL url = new URL("https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names");
-        JsonArray array = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonArray();
-        return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
     }
 }

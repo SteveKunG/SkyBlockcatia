@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+
 public class CurlExecutor
 {
     public static BufferedReader execute(String path) throws Exception
@@ -20,6 +22,7 @@ public class CurlExecutor
         }
         catch (Exception e)
         {
+            SkyBlockcatiaMod.noCurl = true;
             e.printStackTrace();
         }
         return null;

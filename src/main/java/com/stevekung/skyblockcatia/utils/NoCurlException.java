@@ -4,7 +4,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiErrorScreen;
 import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 
-public class WhitelistException extends CustomModLoadingErrorDisplayException
+public class NoCurlException extends CustomModLoadingErrorDisplayException
 {
     @Override
     public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
@@ -15,8 +15,8 @@ public class WhitelistException extends CustomModLoadingErrorDisplayException
         errorScreen.drawDefaultBackground();
         int offset = 75;
 
-        errorScreen.drawCenteredString(fontRenderer, "SkyBlockcatia couldn't find a matched UUID in our database", errorScreen.width / 2, offset, 0xFFFFFF);
+        errorScreen.drawCenteredString(fontRenderer, "SkyBlockcatia detected no cURL module installed on your windows", errorScreen.width / 2, offset, 0xFFFFFF);
         offset += 20;
-        errorScreen.drawCenteredString(fontRenderer, "Make sure you have already tell your IGN in #ign-verify! :)", errorScreen.width / 2, offset, 0xFFFFFF);
+        errorScreen.drawCenteredString(fontRenderer, "Please install cURL before using this mod!", errorScreen.width / 2, offset, 0xFFFFFF);
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiErrorScreen;
 import net.minecraftforge.fml.client.CustomModLoadingErrorDisplayException;
 
-public class InvalidUUIDException extends CustomModLoadingErrorDisplayException
+public class GitHubDownException extends CustomModLoadingErrorDisplayException
 {
     @Override
     public void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer) {}
@@ -15,8 +15,8 @@ public class InvalidUUIDException extends CustomModLoadingErrorDisplayException
         errorScreen.drawDefaultBackground();
         int offset = 75;
 
-        errorScreen.drawCenteredString(fontRenderer, "SkyBlockcatia couldn't find a matched UUID in our database", errorScreen.width / 2, offset, 0xFFFFFF);
+        errorScreen.drawCenteredString(fontRenderer, "SkyBlockcatia couldn't connect to GitHub database", errorScreen.width / 2, offset, 0xFFFFFF);
         offset += 20;
-        errorScreen.drawCenteredString(fontRenderer, "Make sure you have already tell your IGN in #ign-verify! :)", errorScreen.width / 2, offset, 0xFFFFFF);
+        errorScreen.drawCenteredString(fontRenderer, "Please restart your game or check website status: https://www.githubstatus.com/", errorScreen.width / 2, offset, 0xFFFFFF);
     }
 }
