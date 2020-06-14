@@ -70,7 +70,7 @@ public class SkyBlockcatiaMod
     public static boolean noCurl;
     private static final List<String> HARDCODE_UUID = new ArrayList<>();
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
-    private static final List<String> SUPPORTERS_UUID = new ArrayList<>();
+    public static final List<String> SUPPORTERS_UUID = new ArrayList<>();
     public static UUID CURRENT_UUID;
     public static boolean isDevelopment;
 

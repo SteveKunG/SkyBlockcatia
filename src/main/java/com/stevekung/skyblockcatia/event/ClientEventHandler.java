@@ -3,7 +3,6 @@ package com.stevekung.skyblockcatia.event;
 import java.util.Random;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 import com.stevekung.skyblockcatia.utils.GuiChatRegistry;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
@@ -50,7 +49,7 @@ public class ClientEventHandler
                 ClientEventHandler.ticksPaused++;
             }
         }
-        if (SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.CURRENT_UUID.toString().equals(GameProfileUtils.getUUID().toString()) && !(GameProfileUtils.getUsername().equals("MCCommanderz") || GameProfileUtils.getUsername().equals("TheWatcherz") || GameProfileUtils.getUsername().equals("BesutoKunG") || GameProfileUtils.getUsername().equals("iamcameraman")))
+        if (SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.SUPPORTERS_UUID.stream().anyMatch(uuid -> SkyBlockcatiaMod.CURRENT_UUID.toString().equals(uuid)))
         {
             this.mc.shutdown();
         }
@@ -76,8 +75,8 @@ public class ClientEventHandler
         EntityPlayer player = event.player;
         ItemStack itemStack = event.pickedUp.getEntityItem();
         ChatStyle hoverStyle = JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString())));
-//        String magic = rand.nextBoolean() ? " (+" + rand.nextInt(100) + "% Magic Find!)" : "";
-//        String magic = " (+" + 100 + "% Magic Find!)";
+        //        String magic = rand.nextBoolean() ? " (+" + rand.nextInt(100) + "% Magic Find!)" : "";
+        //        String magic = " (+" + 100 + "% Magic Find!)";
         String magic = "";
 
         // Pet Level Up
@@ -92,7 +91,7 @@ public class ClientEventHandler
         {
         case 0:
         default:
-//            player.addChatComponentMessage(JsonUtils.create("RARE DROP! (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
+            //            player.addChatComponentMessage(JsonUtils.create("RARE DROP! (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
             player.addChatComponentMessage(JsonUtils.create("RARE DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(magic)));
             break;
         case 1:
