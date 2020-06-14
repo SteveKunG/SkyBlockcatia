@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.mixin;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.MainEventHandler;
@@ -44,7 +44,9 @@ import net.minecraftforge.client.ClientCommandHandler;
 public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
 {
     private final GuiContainer that = (GuiContainer) (Object) this;
-    private static final List<String> IGNORE_ITEMS = new ArrayList<>(Arrays.asList(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation"));
+    private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice", "Anvil");
+    private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
+    private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(EnumChatFormatting.GREEN + "Go Back", EnumChatFormatting.RED + "Close", EnumChatFormatting.GREEN + "Previous Page", EnumChatFormatting.GREEN + "Next Page");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -299,9 +301,9 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     @Inject(method = "handleMouseClick(Lnet/minecraft/inventory/Slot;III)V", cancellable = true, at = @At("HEAD"))
     private void handleMouseClick(Slot slot, int slotId, int clickedButton, int clickType, CallbackInfo info)
     {
-        if (slotId != -999 && slotId != -1)
+        if (slot != null)
         {
-            ItemStack itemStack = this.that.inventorySlots.getSlot(slotId).getStack();
+            ItemStack itemStack = slot.getStack();
 
             if (itemStack != null)
             {
@@ -309,38 +311,58 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                 {
                     info.cancel();
                 }
-            }
-        }
-
-        if (this.that instanceof GuiChest)
-        {
-            GuiChest chest = (GuiChest)this.that;
-
-            if (slot != null && clickedButton == 2 && clickType == 3 && this.canViewSeller(chest.lowerChestInventory))
-            {
-                if (slot.getStack() != null && slot.getStack().hasTagCompound())
+                if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("ExtraAttributes"))
                 {
-                    NBTTagCompound compound = slot.getStack().getTagCompound().getCompoundTag("display");
+                    String id = itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id");
 
-                    if (compound.getTagId("Lore") == 9)
+                    if (id.equals("SKYBLOCK_MENU"))
                     {
-                        NBTTagList list = compound.getTagList("Lore", 8);
+                        this.mc.playerController.windowClick(this.that.inventorySlots.windowId, slotId, 2, 3, this.mc.thePlayer);
+                        info.cancel();
+                    }
+                }
+            }
 
-                        if (list.tagCount() > 0)
+            if (this.that instanceof GuiChest)
+            {
+                GuiChest chest = (GuiChest)this.that;
+
+                if (itemStack != null)
+                {
+                    String name = itemStack.getDisplayName();
+
+                    if (clickedButton == 0 && clickType == 0 && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, chest.lowerChestInventory) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
+                    {
+                        this.mc.playerController.windowClick(this.that.inventorySlots.windowId, slotId, 2, 3, this.mc.thePlayer);
+                        info.cancel();
+                    }
+                    if (clickedButton == 2 && clickType == 3 && this.canViewSeller(chest.lowerChestInventory))
+                    {
+                        if (itemStack.hasTagCompound())
                         {
-                            for (int j1 = 0; j1 < list.tagCount(); ++j1)
-                            {
-                                String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+                            NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
 
-                                if (lore.startsWith("Seller: "))
+                            if (compound.getTagId("Lore") == 9)
+                            {
+                                NBTTagList list = compound.getTagList("Lore", 8);
+
+                                if (list.tagCount() > 0)
                                 {
-                                    this.mc.thePlayer.sendChatMessage("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
+                                    for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                                    {
+                                        String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+
+                                        if (lore.startsWith("Seller: "))
+                                        {
+                                            this.mc.thePlayer.sendChatMessage("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
+                                        }
+                                    }
                                 }
                             }
                         }
+                        info.cancel();
                     }
                 }
-                info.cancel();
             }
         }
     }

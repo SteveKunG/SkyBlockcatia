@@ -634,7 +634,7 @@ public class MainEventHandler
         return defaultEyeHeight;
     }
 
-    private static boolean isSuitableForGUI(List<String> invList, IInventory lowerChestInventory)
+    public static boolean isSuitableForGUI(List<String> invList, IInventory lowerChestInventory)
     {
         return invList.stream().anyMatch(invName -> lowerChestInventory.getDisplayName().getUnformattedText().contains(invName));
     }
