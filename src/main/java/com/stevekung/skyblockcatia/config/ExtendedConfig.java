@@ -147,6 +147,8 @@ public class ExtendedConfig
     public int auctionBidConfirmValue = 500000;
     public boolean supportersFancyColor = false;
     public boolean bazaarOnTooltips = false;
+    public boolean ignoreBushHitbox = false;
+    public boolean onlyMineableHitbox = false;
 
     private ExtendedConfig() {}
 
@@ -283,6 +285,8 @@ public class ExtendedConfig
             this.supportersFancyColor = ExtendedConfig.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
             this.golemStageTracker = ExtendedConfig.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
             this.bazaarOnTooltips = ExtendedConfig.getBoolean(nbt, "BazaarOnTooltips", this.bazaarOnTooltips);
+            this.ignoreBushHitbox = ExtendedConfig.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
+            this.onlyMineableHitbox = ExtendedConfig.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -410,6 +414,8 @@ public class ExtendedConfig
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.setBoolean("GolemStageTracker", this.golemStageTracker);
             nbt.setBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
+            nbt.setBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
+            nbt.setBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
@@ -749,6 +755,14 @@ public class ExtendedConfig
         {
             this.bazaarOnTooltips = !this.bazaarOnTooltips;
         }
+        else if (options == ExtendedConfig.Options.IGNORE_BUSH_HITBOX)
+        {
+            this.ignoreBushHitbox = !this.ignoreBushHitbox;
+        }
+        else if (options == ExtendedConfig.Options.ONLY_MINEABLE_HITBOX)
+        {
+            this.onlyMineableHitbox = !this.onlyMineableHitbox;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1052,6 +1066,10 @@ public class ExtendedConfig
             return this.golemStageTracker;
         case BAZAAR_ON_TOOLTIPS:
             return this.bazaarOnTooltips;
+        case IGNORE_BUSH_HITBOX:
+            return this.ignoreBushHitbox;
+        case ONLY_MINEABLE_HITBOX:
+            return this.onlyMineableHitbox;
         default:
             return false;
         }
@@ -1248,6 +1266,8 @@ public class ExtendedConfig
         SUPPORTERS_FANCY_COLOR(false, true),
         GOLEM_STAGE_TRACKER(false, true),
         BAZAAR_ON_TOOLTIPS(false, true),
+        IGNORE_BUSH_HITBOX(false, true),
+        ONLY_MINEABLE_HITBOX(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

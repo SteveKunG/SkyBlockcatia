@@ -175,6 +175,8 @@ disable_block_particles.extended_config=Disable Block Particles
 supporters_fancy_color.extended_config=Fancy Color for Supporters
 golem_stage_tracker.extended_config=Golem Stage Tracker
 bazaar_on_tooltips.extended_config=Bazaar on Tooltips
+ignore_bush_hitbox.extended_config=Ignore Bush Hitbox
+only_mineable_hitbox.extended_config=Only Mineable Block Hitbox
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

@@ -823,7 +823,7 @@ public class HypixelEventHandler
                         {
                             if (drop.getToastType() == ToastType.DROP)
                             {
-//                                if (ItemDropsToast.updateValue(HUDRenderEventHandler.INSTANCE.getToastGui(), drop.getType(), newItem, drop.getMagicFind()))
+                                //                                if (ItemDropsToast.updateValue(HUDRenderEventHandler.INSTANCE.getToastGui(), drop.getType(), newItem, drop.getMagicFind()))
                                 if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                 {
                                     iterator.remove();

@@ -46,6 +46,7 @@
         "RenderItemMixin",
         "EffectRendererMixin",
         "ItemSkullMixin",
+        "BlockMixin",
         "ItemBlockMixin"
     ]
 }
