@@ -15,11 +15,6 @@ public interface IToast<T>
         return NO_TOKEN;
     }
 
-    default boolean equal(T toast)
-    {
-        return true;
-    }
-
     public static enum Visibility
     {
         SHOW("skyblockcatia:ui.toast.in"),

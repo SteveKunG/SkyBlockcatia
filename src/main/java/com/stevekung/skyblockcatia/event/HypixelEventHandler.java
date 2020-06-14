@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.config.ToastMode;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockAPIViewer;
 import com.stevekung.skyblockcatia.gui.toasts.*;
@@ -234,7 +235,7 @@ public class HypixelEventHandler
         String message = event.message.getUnformattedText();
         boolean cancelMessage = false;
 
-        if (InfoUtils.INSTANCE.isHypixel())
+        if (InfoUtils.INSTANCE.isHypixel() || SkyBlockcatiaMod.isDevelopment)
         {
             // Common matcher
             Matcher nickMatcher = HypixelEventHandler.NICK_PATTERN.matcher(message);
@@ -269,7 +270,7 @@ public class HypixelEventHandler
             Matcher petLevelUpPattern = HypixelEventHandler.PET_LEVEL_UP_PATTERN.matcher(message);
             Matcher petDropPattern = HypixelEventHandler.PET_DROP_PATTERN.matcher(message);
 
-            if (event.type == 0)
+            if (event.type == 0 || SkyBlockcatiaMod.isDevelopment)
             {
                 if (message.contains("Illegal characters in chat") || message.contains("A kick occurred in your connection"))
                 {
@@ -379,7 +380,7 @@ public class HypixelEventHandler
                     this.mc.thePlayer.sendChatMessage("/p leave");
                 }
 
-                if (HypixelEventHandler.isSkyBlock)
+                if (HypixelEventHandler.isSkyBlock || SkyBlockcatiaMod.isDevelopment)
                 {
                     if (ExtendedConfig.instance.currentServerDay && message.startsWith("Sending to server"))
                     {
@@ -822,6 +823,7 @@ public class HypixelEventHandler
                         {
                             if (drop.getToastType() == ToastType.DROP)
                             {
+//                                if (ItemDropsToast.updateValue(HUDRenderEventHandler.INSTANCE.getToastGui(), drop.getType(), newItem, drop.getMagicFind()))
                                 if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                 {
                                     iterator.remove();

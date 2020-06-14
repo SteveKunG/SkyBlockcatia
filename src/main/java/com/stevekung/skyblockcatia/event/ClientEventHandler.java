@@ -65,7 +65,7 @@ public class ClientEventHandler
     @SubscribeEvent
     public void onItemPickedUpTest(PlayerEvent.ItemPickupEvent event)
     {
-        boolean enable = false;
+        boolean enable = SkyBlockcatiaMod.isDevelopment;
 
         if (!enable)
         {
@@ -76,7 +76,9 @@ public class ClientEventHandler
         EntityPlayer player = event.player;
         ItemStack itemStack = event.pickedUp.getEntityItem();
         ChatStyle hoverStyle = JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString())));
-        String magic = rand.nextBoolean() ? " (+" + rand.nextInt(100) + "% Magic Find!)" : "";
+//        String magic = rand.nextBoolean() ? " (+" + rand.nextInt(100) + "% Magic Find!)" : "";
+//        String magic = " (+" + 100 + "% Magic Find!)";
+        String magic = "";
 
         // Pet Level Up
         /*String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse"};
@@ -90,7 +92,8 @@ public class ClientEventHandler
         {
         case 0:
         default:
-            player.addChatComponentMessage(JsonUtils.create("RARE DROP! (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
+//            player.addChatComponentMessage(JsonUtils.create("RARE DROP! (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("RARE DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(magic)));
             break;
         case 1:
             player.addChatComponentMessage(JsonUtils.create("RARE DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(magic)));

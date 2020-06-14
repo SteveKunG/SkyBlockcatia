@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,7 @@ public class GuiToast extends Gui
 
     public void drawToast(ScaledResolution resolution)
     {
-        if (!this.mc.gameSettings.hideGUI && !this.mc.gameSettings.showDebugInfo && !(ConfigManagerIN.enableShortcutGameButton && Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()))
+        if (!this.mc.gameSettings.hideGUI && !this.mc.gameSettings.showDebugInfo && !(ConfigManagerIN.enableShortcutGameButton && Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) || SkyBlockcatiaMod.isDevelopment)
         {
             RenderHelper.disableStandardItemLighting();
 
@@ -108,20 +109,14 @@ public class GuiToast extends Gui
         {
             if (ins != null && clazz.isAssignableFrom(ins.getToast().getClass()) && ins.getToast().getType().equals(obj))
             {
-                if (ins.getToast().equal(ins.getToast()))
-                {
-                    return (T)ins.getToast();
-                }
+                return (T)ins.getToast();
             }
         }
         for (IToast toast : this.toastsQueue)
         {
             if (clazz.isAssignableFrom(toast.getClass()) && toast.getType().equals(obj))
             {
-                if (toast.equal(toast))
-                {
-                    return (T)toast;
-                }
+                return (T)toast;
             }
         }
         return null;
