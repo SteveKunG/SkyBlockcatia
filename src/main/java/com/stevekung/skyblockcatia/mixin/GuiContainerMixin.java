@@ -645,7 +645,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     private boolean isPeopleProfile(IInventory lowerChestInventory)
     {
         String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.endsWith("'s Profile");
+        return name.endsWith("'s Profile") || name.endsWith("' Profile");
     }
 
     // GuiChat stuff
