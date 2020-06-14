@@ -1,5 +1,6 @@
 package com.stevekung.skyblockcatia.renderer;
 
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.util.*;
 
@@ -194,26 +195,40 @@ public class HUDInfo
 
     public static String getCurrentGameTime(Minecraft mc)
     {
-        if (HypixelEventHandler.isSkyBlock && SkyBlockcatiaMod.isSkyblockAddonsLoaded)
+        if (HypixelEventHandler.isSkyBlock)
         {
-            StringBuilder builder = new StringBuilder();
-
-            try
+            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
             {
-                Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
-                Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
-                Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
-                Object getCurrentDate = getUtils.getClass().getDeclaredMethod("getCurrentDate").invoke(getUtils);
-                Class<?> date = getCurrentDate.getClass(); // SkyblockDate
-                builder.append(date.getDeclaredMethod("getHour").invoke(getCurrentDate));
-                builder.append(":");
-                int minute = (int)date.getDeclaredMethod("getMinute").invoke(getCurrentDate);
-                builder.append(minute == 0 ? "0" + minute : minute);
-                builder.append(HypixelEventHandler.SKYBLOCK_AMPM);
+                StringBuilder builder = new StringBuilder();
+
+                try
+                {
+                    Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
+                    Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
+                    Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
+                    Object getCurrentDate = getUtils.getClass().getDeclaredMethod("getCurrentDate").invoke(getUtils);
+                    Class<?> date = getCurrentDate.getClass(); // SkyblockDate
+                    Field hourField = date.getDeclaredField("hour");
+                    Field minuteField = date.getDeclaredField("minute");
+                    Field periodField = date.getDeclaredField("period");
+                    hourField.setAccessible(true);
+                    minuteField.setAccessible(true);
+                    periodField.setAccessible(true);
+
+                    builder.append(hourField.get(getCurrentDate));
+                    builder.append(":");
+                    int minute = (int)minuteField.get(getCurrentDate);
+                    builder.append(minute == 0 ? "0" + minute : minute);
+                    builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase());
+                }
+                catch (Exception e) {}
+                String currentTime = ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
+                return ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeColor).toColoredFont() + "Skyblock Time: " + currentTime + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
             }
-            catch (Exception e) {}
-            String currentTime = ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
-            return ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeColor).toColoredFont() + "SkyBlock Time: " + currentTime;
+            else
+            {
+                return InfoUtils.INSTANCE.getCurrentGameTime(mc.theWorld.getWorldTime() % 24000) + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
+            }
         }
         return InfoUtils.INSTANCE.getCurrentGameTime(mc.theWorld.getWorldTime() % 24000);
     }
