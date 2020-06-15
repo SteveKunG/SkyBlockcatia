@@ -279,7 +279,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     if (button.id == ViewButton.SKILLS.id)
                     {
-                        if (!this.data.isHasSkills())
+                        if (!this.data.hasSkills())
                         {
                             button.enabled = false;
                             continue;
@@ -287,7 +287,15 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (button.id == ViewButton.SLAYERS.id)
                     {
-                        if (!this.data.isHasSlayers())
+                        if (!this.data.hasSlayers())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (button.id == ViewButton.OTHERS.id)
+                    {
+                        if (!this.data.hasOthersTab())
                         {
                             button.enabled = false;
                             continue;
@@ -299,7 +307,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     if (button.id == BasicInfoViewButton.COLLECTIONS.id)
                     {
-                        if (!this.data.isHasCollections())
+                        if (!this.data.hasCollections())
                         {
                             button.enabled = false;
                             continue;
@@ -307,7 +315,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (button.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
                     {
-                        if (!this.data.isHasMinions())
+                        if (!this.data.hasMinions())
                         {
                             button.enabled = false;
                             continue;
@@ -319,7 +327,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     if (button.id == OthersViewButton.KILLS.id)
                     {
-                        if (!this.data.isHasKills())
+                        if (!this.data.hasKills())
                         {
                             button.enabled = false;
                             continue;
@@ -327,7 +335,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (button.id == OthersViewButton.DEATHS.id)
                     {
-                        if (!this.data.isHasDeaths())
+                        if (!this.data.hasDeaths())
                         {
                             button.enabled = false;
                             continue;
@@ -335,7 +343,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (button.id == OthersViewButton.OTHER_STATS.id)
                     {
-                        if (!this.data.isHasOthers())
+                        if (!this.data.hasOthers())
                         {
                             button.enabled = false;
                             continue;
@@ -423,7 +431,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                     if (viewButton.id == OthersViewButton.KILLS.id)
                     {
-                        if (!this.data.isHasKills())
+                        if (!this.data.hasKills())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -431,7 +439,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (viewButton.id == OthersViewButton.DEATHS.id)
                     {
-                        if (!this.data.isHasDeaths())
+                        if (!this.data.hasDeaths())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -439,7 +447,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (viewButton.id == OthersViewButton.OTHER_STATS.id)
                     {
-                        if (!this.data.isHasOthers())
+                        if (!this.data.hasOthers())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -806,7 +814,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     if (type2.id == ViewButton.SKILLS.id)
                     {
-                        if (!this.data.isHasSkills())
+                        if (!this.data.hasSkills())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -814,7 +822,15 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (type2.id == ViewButton.SLAYERS.id)
                     {
-                        if (!this.data.isHasSlayers())
+                        if (!this.data.hasSlayers())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (type2.id == ViewButton.OTHERS.id)
+                    {
+                        if (!this.data.hasOthersTab())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -857,7 +873,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                         if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
                         {
-                            if (!this.data.isHasCollections())
+                            if (!this.data.hasCollections())
                             {
                                 viewButton.enabled = false;
                                 continue;
@@ -865,7 +881,7 @@ public class GuiSkyBlockData extends GuiScreen
                         }
                         if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
                         {
-                            if (!this.data.isHasMinions())
+                            if (!this.data.hasMinions())
                             {
                                 viewButton.enabled = false;
                                 continue;
@@ -924,7 +940,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                         if (type2.id == OthersViewButton.KILLS.id)
                         {
-                            if (!this.data.isHasKills())
+                            if (!this.data.hasKills())
                             {
                                 viewButton.enabled = false;
                                 continue;
@@ -932,7 +948,7 @@ public class GuiSkyBlockData extends GuiScreen
                         }
                         if (type2.id == OthersViewButton.DEATHS.id)
                         {
-                            if (!this.data.isHasDeaths())
+                            if (!this.data.hasDeaths())
                             {
                                 viewButton.enabled = false;
                                 continue;
@@ -940,7 +956,7 @@ public class GuiSkyBlockData extends GuiScreen
                         }
                         if (type2.id == OthersViewButton.OTHER_STATS.id)
                         {
-                            if (!this.data.isHasOthers())
+                            if (!this.data.hasOthers())
                             {
                                 viewButton.enabled = false;
                                 continue;
@@ -975,7 +991,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     if (type2.id == OthersViewButton.KILLS.id)
                     {
-                        if (!this.data.isHasKills())
+                        if (!this.data.hasKills())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -983,7 +999,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (type2.id == OthersViewButton.DEATHS.id)
                     {
-                        if (!this.data.isHasDeaths())
+                        if (!this.data.hasDeaths())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -991,7 +1007,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (type2.id == OthersViewButton.OTHER_STATS.id)
                     {
-                        if (!this.data.isHasOthers())
+                        if (!this.data.hasOthers())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -1046,7 +1062,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
                     {
-                        if (!this.data.isHasCollections())
+                        if (!this.data.hasCollections())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -1054,7 +1070,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
                     {
-                        if (!this.data.isHasMinions())
+                        if (!this.data.hasMinions())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -1509,7 +1525,7 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 if (type2.id == ViewButton.SKILLS.id)
                 {
-                    if (!this.data.isHasSkills())
+                    if (!this.data.hasSkills())
                     {
                         viewButton.enabled = false;
                         continue;
@@ -1517,9 +1533,18 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 if (type2.id == ViewButton.SLAYERS.id)
                 {
-                    if (!this.data.isHasSlayers())
+                    if (!this.data.hasSlayers())
                     {
                         viewButton.enabled = false;
+                        continue;
+                    }
+                }
+                if (type2.id == ViewButton.OTHERS.id)
+                {
+                    if (!this.data.hasOthersTab())
+                    {
+                        viewButton.enabled = false;
+                        continue;
                     }
                 }
             }
@@ -1532,7 +1557,7 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
                 {
-                    if (!this.data.isHasCollections())
+                    if (!this.data.hasCollections())
                     {
                         viewButton.enabled = false;
                         continue;
@@ -1540,7 +1565,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
                 {
-                    if (!this.data.isHasMinions())
+                    if (!this.data.hasMinions())
                     {
                         viewButton.enabled = false;
                         continue;
@@ -2768,9 +2793,15 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.sbOthers.addAll(others);
         }
+
         this.data.setHasKills(this.sbKills.size() > 1);
         this.data.setHasDeaths(this.sbDeaths.size() > 1);
         this.data.setHasOthers(this.sbOthers.size() > 1);
+
+        if (!this.data.hasKills() && !this.data.hasDeaths() && !this.data.hasOthers())
+        {
+            this.data.setHasOthersTab(false);
+        }
     }
 
     private void sortStats(List<SkyBlockStats> list, String name)

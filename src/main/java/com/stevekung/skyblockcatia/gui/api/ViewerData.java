@@ -9,6 +9,7 @@ public class ViewerData
     private boolean hasSlayers = true;
     private boolean hasCollections = true;
     private boolean hasMinions = true;
+    private boolean hasOthersTab = true;
 
     public void setHasKills(boolean hasKills)
     {
@@ -45,38 +46,48 @@ public class ViewerData
         this.hasMinions = hasMinions;
     }
 
-    public boolean isHasKills()
+    public void setHasOthersTab(boolean hasOthersTab)
+    {
+        this.hasOthersTab = hasOthersTab;
+    }
+
+    public boolean hasKills()
     {
         return this.hasKills;
     }
 
-    public boolean isHasDeaths()
+    public boolean hasDeaths()
     {
         return this.hasDeaths;
     }
 
-    public boolean isHasOthers()
+    public boolean hasOthers()
     {
         return this.hasOthers;
     }
 
-    public boolean isHasSkills()
+    public boolean hasSkills()
     {
         return this.hasSkills;
     }
 
-    public boolean isHasSlayers()
+    public boolean hasSlayers()
     {
         return this.hasSlayers;
     }
 
-    public boolean isHasCollections()
+    public boolean hasCollections()
     {
         return this.hasCollections;
     }
 
-    public boolean isHasMinions()
+    public boolean hasMinions()
     {
         return this.hasMinions;
+    }
+
+    public boolean hasOthersTab()
+    {
+        return this.hasOthersTab;
     }
 }
