@@ -1,7 +1,5 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
@@ -58,7 +57,9 @@ import net.minecraftforge.common.util.Constants;
 public abstract class MixinContainerScreen<T extends Container> extends Screen implements ITradeScreen
 {
     private final ContainerScreen that = (ContainerScreen) (Object) this;
-    private static final List<String> IGNORE_ITEMS = new ArrayList<>(Arrays.asList(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation"));
+    private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice", "Anvil");
+    private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
+    private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close", TextFormatting.GREEN + "Previous Page", TextFormatting.GREEN + "Next Page");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -363,23 +364,38 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     @Inject(method = "handleMouseClick(Lnet/minecraft/inventory/container/Slot;IILnet/minecraft/inventory/container/ClickType;)V", cancellable = true, at = @At("HEAD"))
     private void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo info)
     {
-        if (SkyBlockEventHandler.isSkyBlock)
+        if (slot != null && SkyBlockEventHandler.isSkyBlock)
         {
-            if (slotId != -999 && slotId != -1)
-            {
-                ItemStack itemStack = this.that.getContainer().getSlot(slotId).getStack();
+            ItemStack itemStack = slot.getStack();
 
-                if (!itemStack.isEmpty())
+            if (!itemStack.isEmpty())
+            {
+                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
-                    if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                    info.cancel();
+                }
+                if (itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
+                {
+                    String id = itemStack.getTag().getCompound("ExtraAttributes").getString("id");
+
+                    if (id.equals("SKYBLOCK_MENU"))
                     {
+                        this.minecraft.playerController.windowClick(that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
                         info.cancel();
                     }
                 }
             }
+
             if (this.that instanceof ChestScreen)
             {
-                if (slot != null && mouseButton == 2 && type == ClickType.CLONE && this.canViewSeller())
+                String name = itemStack.getDisplayName().getFormattedText();
+
+                if (mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
+                {
+                    this.minecraft.playerController.windowClick(that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
+                    info.cancel();
+                }
+                if (mouseButton == 2 && type == ClickType.CLONE && this.canViewSeller())
                 {
                     if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
                     {
@@ -514,7 +530,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private boolean isPeopleProfile()
     {
         String title = this.title.getUnformattedComponentText();
-        return title.endsWith("'s Profile");
+        return title.endsWith("'s Profile") || title.endsWith("' Profile");
     }
 
     private boolean isChatableGui()

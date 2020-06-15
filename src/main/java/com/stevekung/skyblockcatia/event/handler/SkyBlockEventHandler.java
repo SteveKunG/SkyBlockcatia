@@ -629,7 +629,7 @@ public class SkyBlockEventHandler
                     String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
                     event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Obtained: " + TextFormatting.RESET + formatted).applyTextStyle(TextFormatting.GRAY));
                 }
-                if (SBExtendedConfig.INSTANCE.bazaarOnTooltips)
+                if (SBExtendedConfig.INSTANCE.bazaarOnItemTooltip)
                 {
                     for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                     {

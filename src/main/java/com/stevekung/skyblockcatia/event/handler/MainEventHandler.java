@@ -132,7 +132,7 @@ public class MainEventHandler
                 {
                     event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/craft")));
                     event.addWidget(new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
-                    event.addWidget(new ItemButton(width + 88, height + 85, Items.NETHER_STAR, SkyBlockEventHandler.SKY_BLOCK_LOCATION.isShopOutsideHub(), "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
+                    event.addWidget(new ItemButton(width + 88, height + 85, Items.NETHER_STAR, true, "SkyBlock Menu", button -> this.mc.player.sendChatMessage("/sbmenu")));
                 }
                 else if (title.getUnformattedComponentText().equals("Craft Item"))
                 {
@@ -288,7 +288,7 @@ public class MainEventHandler
 
     public static void getBazaarData()
     {
-        if (!SBExtendedConfig.INSTANCE.bazaarOnTooltips)
+        if (!SBExtendedConfig.INSTANCE.bazaarOnItemTooltip)
         {
             return;
         }
@@ -338,7 +338,7 @@ public class MainEventHandler
         }
     }
 
-    private static <T extends Container> boolean isSuitableForGUI(List<String> invList, ITextComponent title)
+    public static <T extends Container> boolean isSuitableForGUI(List<String> invList, ITextComponent title)
     {
         return invList.stream().anyMatch(invName -> title.getUnformattedComponentText().contains(invName));
     }

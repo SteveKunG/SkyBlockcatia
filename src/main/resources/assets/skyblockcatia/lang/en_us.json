@@ -40,11 +40,17 @@
     "disable_block_particles.extended_config": "Disable Block Particles",
     "supporters_fancy_color.extended_config": "Fancy Color for Supporters",
     "golem_stage_tracker.extended_config": "Golem Stage Tracker",
+    "bazaar_on_item_tooltip.extended_config": "Bazaar on Item Tooltip",
+    "ignore_bush_hitbox.extended_config": "Ignore Bush Hitbox",
+    "only_mineable_hitbox.extended_config": "Only Mineable Block Hitbox",
 
     "_comment": "MESSAGE",
     "message.check": "Check",
     "message.bid_confirm_title": "Bid Confirmation",
     "message.bid_confirm": "Are you sure really want to do this?",
+
+    "_comment": "COMMAND",
+    "commands.sbbazaar.id_not_found": "Couldn't find matched Skyblock Item ID!",
 
     "_comment": "GUI",
     "gui.sb_view_info": "Info",

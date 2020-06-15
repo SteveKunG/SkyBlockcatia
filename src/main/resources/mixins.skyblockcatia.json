@@ -8,6 +8,7 @@
     "mixins": [],
     "client": [
         "MixinArmorLayer",
+        "MixinBlock",
         "MixinBlockItem",
         "MixinBossOverlayGui",
         "MixinChatScreen",
@@ -16,6 +17,7 @@
         "MixinContainerScreen",
         "MixinDownloadingTexture",
         "MixinEditSignScreen",
+        "MixinEntityRendererManager",
         "MixinFarmlandBlock",
         "MixinFishingRodItem",
         "MixinFontRenderer",

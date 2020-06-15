@@ -17,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
@@ -46,8 +47,6 @@ public class SkyBlockcatiaMod
     public static final String MOD_ID = "skyblockcatia";
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
 
-    public static boolean isSkyblockAddonsLoaded;
-    public static boolean isIngameAccountSwitcherLoaded;
     public static boolean isIndicatiaLoaded;
 
     public static boolean GITHUB_DOWN;
@@ -84,8 +83,6 @@ public class SkyBlockcatiaMod
                 }
             });
         }
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
 
     public SkyBlockcatiaMod()
@@ -95,8 +92,6 @@ public class SkyBlockcatiaMod
         CommonUtils.addModListener(this::phaseOne);
         CommonUtils.addModListener(this::loadComplete);
 
-        SkyBlockcatiaMod.isSkyblockAddonsLoaded = ModList.get().isLoaded("skyblockaddons");
-        SkyBlockcatiaMod.isIngameAccountSwitcherLoaded = ModList.get().isLoaded("IngameAccountSwitcher");
         SkyBlockcatiaMod.isIndicatiaLoaded = ModList.get().isLoaded("indicatia");
     }
 
@@ -111,6 +106,7 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new SkyBlockEventHandler());
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
+        ClientCommands.register(new BazaarViewerCommand());
     }
 
     private void loadComplete(FMLLoadCompleteEvent event)
@@ -143,6 +139,8 @@ public class SkyBlockcatiaMod
                 e.printStackTrace();
             }
         });
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
 
     private static void nahee()

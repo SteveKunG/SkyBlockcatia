@@ -55,7 +55,9 @@ public class SBExtendedConfig
     public boolean disableBlockParticles = false;
     public boolean supportersFancyColor = false;
     public boolean golemStageTracker = false;
-    public boolean bazaarOnTooltips = false;
+    public boolean bazaarOnItemTooltip = false;
+    public boolean ignoreBushHitbox = false;
+    public boolean onlyMineableHitbox = false;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -87,7 +89,9 @@ public class SBExtendedConfig
     public static final BooleanConfigOption DISABLE_BLOCK_PARTICLES = new BooleanConfigOption("disable_block_particles", config -> config.disableBlockParticles, (config, value) -> config.disableBlockParticles = value);
     public static final BooleanConfigOption SUPPORTERS_FANCY_COLOR = new BooleanConfigOption("supporters_fancy_color", config -> config.supportersFancyColor, (config, value) -> config.supportersFancyColor = value);
     public static final BooleanConfigOption GOLEM_STAGE_TRACKER = new BooleanConfigOption("golem_stage_tracker", config -> config.golemStageTracker, (config, value) -> config.golemStageTracker = value);
-    public static final BooleanConfigOption BAZAAR_ON_TOOLTIPS = new BooleanConfigOption("bazaar_on_tooltips", config -> config.bazaarOnTooltips, (config, value) -> config.bazaarOnTooltips = value);
+    public static final BooleanConfigOption BAZAAR_ON_ITEM_TOOLTIP = new BooleanConfigOption("bazaar_on_item_tooltip", config -> config.bazaarOnItemTooltip, (config, value) -> config.bazaarOnItemTooltip = value);
+    public static final BooleanConfigOption IGNORE_BUSH_HITBOX = new BooleanConfigOption("ignore_bush_hitbox", config -> config.ignoreBushHitbox, (config, value) -> config.ignoreBushHitbox = value);
+    public static final BooleanConfigOption ONLY_MINEABLE_HITBOX = new BooleanConfigOption("only_mineable_hitbox", config -> config.onlyMineableHitbox, (config, value) -> config.onlyMineableHitbox = value);
 
 
     public static final StringConfigOption VISIT_ISLAND_DISPLAY_MODE = new StringConfigOption("visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey()));
@@ -143,7 +147,9 @@ public class SBExtendedConfig
             this.disableBlockParticles = this.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = this.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
             this.golemStageTracker = this.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
-            this.bazaarOnTooltips = this.getBoolean(nbt, "BazaarOnTooltips", this.bazaarOnTooltips);
+            this.bazaarOnItemTooltip = this.getBoolean(nbt, "BazaarOnItemTooltip", this.bazaarOnItemTooltip);
+            this.ignoreBushHitbox = this.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
+            this.onlyMineableHitbox = this.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -198,7 +204,9 @@ public class SBExtendedConfig
             nbt.putBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.putBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.putBoolean("GolemStageTracker", this.golemStageTracker);
-            nbt.putBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
+            nbt.putBoolean("BazaarOnItemTooltip", this.bazaarOnItemTooltip);
+            nbt.putBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
+            nbt.putBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());
