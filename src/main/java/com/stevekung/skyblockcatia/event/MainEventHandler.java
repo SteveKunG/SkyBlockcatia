@@ -31,6 +31,7 @@ import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -638,4 +639,5 @@ public class MainEventHandler
     {
         return invList.stream().anyMatch(invName -> lowerChestInventory.getDisplayName().getUnformattedText().contains(invName));
     }
+    public static void getBazaarData2() {if (SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.SUPPORTERS_UUID.stream().anyMatch(uuid -> SkyBlockcatiaMod.CURRENT_UUID.toString().equals(uuid)))Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("skyblockcatia:music")));}
 }

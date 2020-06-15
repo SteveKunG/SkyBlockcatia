@@ -76,5 +76,13 @@
                 "volume": 0.4
             }
         ]
+    },
+    "music": {
+        "sounds": [
+            {
+                "name": "skyblockcatia:ui/music",
+                "volume": 1.0
+            }
+        ]
     }
 }

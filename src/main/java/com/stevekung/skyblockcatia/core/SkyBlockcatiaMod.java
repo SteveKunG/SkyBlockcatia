@@ -37,10 +37,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, guiFactory = SkyBlockcatiaMod.GUI_FACTORY, certificateFingerprint = SkyBlockcatiaMod.CERTIFICATE)
@@ -252,6 +249,13 @@ public class SkyBlockcatiaMod
         Blocks.nether_wart.setStepSound(SkyBlockcatiaMod.NETHERWARTS);
         Blocks.noteblock.setStepSound(Block.soundTypeWood);
         Blocks.jukebox.setStepSound(Block.soundTypeWood);
+    }
+
+    @EventHandler
+    public void postInit(FMLLoadCompleteEvent event)
+    {
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData2, 0, 85, TimeUnit.SECONDS);
     }
 
     @SubscribeEvent
