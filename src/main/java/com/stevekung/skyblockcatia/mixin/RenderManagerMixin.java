@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.AxisAlignedBB;
 
 @Mixin(RenderManager.class)
@@ -51,7 +52,7 @@ public abstract class RenderManagerMixin
     @Inject(method = "renderDebugBoundingBox(Lnet/minecraft/entity/Entity;DDDFF)V", cancellable = true, at = @At("HEAD"))
     private void renderDebugBoundingBox(Entity entity, double x, double y, double z, float f1, float partialTicks, CallbackInfo info)
     {
-        if (ExtendedConfig.instance.showDragonHitboxOnly && !(entity instanceof EntityDragon) && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION == SkyBlockLocation.DRAGON_NEST)
+        if (ExtendedConfig.instance.showDragonHitboxOnly && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal) && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION == SkyBlockLocation.DRAGON_NEST)
         {
             info.cancel();
         }
