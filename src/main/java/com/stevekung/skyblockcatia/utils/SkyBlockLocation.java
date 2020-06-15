@@ -48,7 +48,13 @@ public enum SkyBlockLocation
     SPIDER_DEN("Spider's Den", ImmutableList.of(BlockMetadata.create(Blocks.gravel))),
 
     GOLD_MINE("Gold Mine", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.coal_ore), BlockMetadata.create(Blocks.iron_ore), BlockMetadata.create(Blocks.gold_ore))),
-    GUNPOWDER_MINES("Gunpowder Mines", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.coal_ore), BlockMetadata.create(Blocks.iron_ore), BlockMetadata.create(Blocks.gold_ore), BlockMetadata.create(Blocks.lapis_ore), BlockMetadata.create(Blocks.emerald_ore), BlockMetadata.create(Blocks.diamond_ore), BlockMetadata.create(Blocks.diamond_block), BlockMetadata.create(Blocks.obsidian))),
+    DEEP_CAVERNS("Deep Caverns", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone))),
+    GUNPOWDER_MINES("Gunpowder Mines", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.coal_ore), BlockMetadata.create(Blocks.iron_ore), BlockMetadata.create(Blocks.gold_ore))),
+    LAPIS_QUARRY("Lapis Quarry", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.lapis_ore))),
+    PIGMENS_DEN("Pigmen's Den", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.redstone_ore))),
+    SLIMEHILL("Slimehill", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.emerald_ore))),
+    DIAMOND_RESERVE("Diamond Reserve", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.diamond_ore))),
+    OBSIDIAN_SANCTUARY("Obsidian Sanctuary", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.diamond_ore), BlockMetadata.create(Blocks.diamond_block), BlockMetadata.create(Blocks.obsidian))),
 
     THE_END("The End", ImmutableList.of(BlockMetadata.create(Blocks.end_stone), BlockMetadata.create(Blocks.obsidian))),
     DRAGON_NEST("Dragon's Nest", ImmutableList.of(BlockMetadata.create(Blocks.end_stone), BlockMetadata.create(Blocks.obsidian))),
