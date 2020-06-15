@@ -26,14 +26,14 @@ public class PlayerNameSuggestionHelper extends CommandSuggestionHelper
         if (!this.field_228110_s_)
         {
             this.field_228095_d_.setSuggestion(null);
-            this.field_228108_q_ = null;
+            this.suggestions = null;
         }
 
         this.field_228103_l_.clear();
         int i = this.field_228095_d_.getCursorPosition();
         String s1 = text.substring(0, i);
         int k = CommandSuggestionHelper.func_228121_a_(s1);
-        Collection<String> collection = this.field_228093_b_.player.connection.getSuggestionProvider().getPlayerNames();
-        this.field_228107_p_ = ISuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k));
+        Collection<String> collection = this.mc.player.connection.getSuggestionProvider().getPlayerNames();
+        this.suggestionsFuture = ISuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k));
     }
 }
