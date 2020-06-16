@@ -2708,6 +2708,10 @@ public class GuiSkyBlockData extends GuiScreen
         List<SkyBlockStats> winter = new ArrayList<>();
         List<SkyBlockStats> petMilestone = new ArrayList<>();
         List<SkyBlockStats> others = new ArrayList<>();
+        List<SkyBlockStats> mobKills = new ArrayList<>();
+        List<SkyBlockStats> seaCreatures = new ArrayList<>();
+        List<SkyBlockStats> dragons = new ArrayList<>();
+        int emperorKills = 0; // special case
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
         {
@@ -2721,7 +2725,26 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (statName.startsWith("kills"))
             {
-                this.sbKills.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                if (statName.contains("sea_walker") || statName.contains("pond_squid") || statName.contains("night_squid") || statName.contains("frozen_steve") || statName.contains("grinch") || statName.contains("yeti") || statName.contains("frosty_the_snowman") || statName.contains("sea_guardian") || statName.contains("sea_archer") || statName.contains("sea_witch") || statName.contains("chicken_deep") || statName.contains("catfish")
+                        || statName.contains("sea_leech") || statName.contains("deep_sea_protector") || statName.contains("water_hydra") || statName.contains("skeleton_emperor") || statName.contains("guardian_defender") || statName.contains("guardian_emperor") || statName.contains("carrot_king"))
+                {
+                    if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
+                    {
+                        emperorKills += value;
+                    }
+                    else
+                    {
+                        seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                    }
+                }
+                else if (statName.contains("dragon"))
+                {
+                    dragons.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                }
+                else
+                {
+                    mobKills.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                }
             }
             else if (statName.startsWith("deaths"))
             {
@@ -2763,7 +2786,11 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
 
-        this.sbKills.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
+        if (emperorKills > 0)
+        {
+            seaCreatures.add(new SkyBlockStats("Sea Emperor kills", emperorKills)); // special case
+        }
+
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
         auctions.add(0, new SkyBlockStats(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + "Auctions", 0.0F));
@@ -2772,6 +2799,23 @@ public class GuiSkyBlockData extends GuiScreen
         this.sortStats(winter, "Winter Event");
         this.sortStats(petMilestone, "Pet Milestones");
         this.sortStats(others, "Others");
+
+        this.sortStatsByValue(mobKills, "Mob Kills");
+        this.sortStatsByValue(dragons, "Dragon Kills");
+        this.sortStatsByValue(seaCreatures, "Sea Creature Kills");
+
+        if (mobKills.size() > 2)
+        {
+            this.sbKills.addAll(mobKills);
+        }
+        if (dragons.size() > 2)
+        {
+            this.sbKills.addAll(dragons);
+        }
+        if (seaCreatures.size() > 2)
+        {
+            this.sbKills.addAll(seaCreatures);
+        }
 
         if (auctions.size() > 2)
         {
@@ -2807,6 +2851,13 @@ public class GuiSkyBlockData extends GuiScreen
     private void sortStats(List<SkyBlockStats> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
+        list.add(0, new SkyBlockStats(null, 0.0F));
+        list.add(1, new SkyBlockStats(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + name, 0.0F));
+    }
+
+    private void sortStatsByValue(List<SkyBlockStats> list, String name)
+    {
+        list.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         list.add(0, new SkyBlockStats(null, 0.0F));
         list.add(1, new SkyBlockStats(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + name, 0.0F));
     }
