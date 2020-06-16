@@ -255,7 +255,7 @@ public class SkyBlockcatiaMod
     public void postInit(FMLLoadCompleteEvent event)
     {
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData2, 0, 85, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData2, 2, 85, TimeUnit.SECONDS);
     }
 
     @SubscribeEvent
