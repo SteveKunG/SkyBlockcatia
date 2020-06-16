@@ -500,7 +500,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
 
                 super.render(mouseX, mouseY, partialTicks);
-                
+
                 if (this.currentSlot != null)
                 {
                     if (this.currentSlot instanceof InfoStats)
@@ -2354,6 +2354,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         List<SkyBlockStats> winter = new ArrayList<>();
         List<SkyBlockStats> petMilestone = new ArrayList<>();
         List<SkyBlockStats> others = new ArrayList<>();
+        List<SkyBlockStats> mobKills = new ArrayList<>();
+        List<SkyBlockStats> seaCreatures = new ArrayList<>();
+        List<SkyBlockStats> dragons = new ArrayList<>();
+        int emperorKills = 0; // special case
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
         {
@@ -2367,7 +2371,26 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (statName.startsWith("kills"))
             {
-                this.sbKills.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                if (statName.contains("sea_walker") || statName.contains("pond_squid") || statName.contains("night_squid") || statName.contains("frozen_steve") || statName.contains("grinch") || statName.contains("yeti") || statName.contains("frosty_the_snowman") || statName.contains("sea_guardian") || statName.contains("sea_archer") || statName.contains("sea_witch") || statName.contains("chicken_deep") || statName.contains("catfish")
+                        || statName.contains("sea_leech") || statName.contains("deep_sea_protector") || statName.contains("water_hydra") || statName.contains("skeleton_emperor") || statName.contains("guardian_defender") || statName.contains("guardian_emperor") || statName.contains("carrot_king"))
+                {
+                    if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
+                    {
+                        emperorKills += value;
+                    }
+                    else
+                    {
+                        seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                    }
+                }
+                else if (statName.contains("dragon"))
+                {
+                    dragons.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                }
+                else
+                {
+                    mobKills.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                }
             }
             else if (statName.startsWith("deaths"))
             {
@@ -2409,7 +2432,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
-        this.sbKills.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
+        if (emperorKills > 0)
+        {
+            seaCreatures.add(new SkyBlockStats("Sea Emperor kills", emperorKills)); // special case
+        }
+
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
         auctions.add(0, new SkyBlockStats(new StringTextComponent("Auctions").applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
@@ -2418,6 +2445,23 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.sortStats(winter, "Winter Event");
         this.sortStats(petMilestone, "Pet Milestones");
         this.sortStats(others, "Others");
+
+        this.sortStatsByValue(mobKills, "Mob Kills");
+        this.sortStatsByValue(dragons, "Dragon Kills");
+        this.sortStatsByValue(seaCreatures, "Sea Creature Kills");
+
+        if (mobKills.size() > 2)
+        {
+            this.sbKills.addAll(mobKills);
+        }
+        if (dragons.size() > 2)
+        {
+            this.sbKills.addAll(dragons);
+        }
+        if (seaCreatures.size() > 2)
+        {
+            this.sbKills.addAll(seaCreatures);
+        }
 
         if (auctions.size() > 2)
         {
@@ -2453,6 +2497,13 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void sortStats(List<SkyBlockStats> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
+        list.add(0, new SkyBlockStats(null, 0.0F));
+        list.add(1, new SkyBlockStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+    }
+
+    private void sortStatsByValue(List<SkyBlockStats> list, String name)
+    {
+        list.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         list.add(0, new SkyBlockStats(null, 0.0F));
         list.add(1, new SkyBlockStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
     }
@@ -3086,21 +3137,21 @@ public class SkyBlockAPIViewerScreen extends Screen
                     zombie.setItemStackToSlot(EquipmentSlotType.LEGS, leggings);
                     zombie.setItemStackToSlot(EquipmentSlotType.FEET, boots);
                     zombie.setItemStackToSlot(EquipmentSlotType.MAINHAND, heldItem);
-                    SkyBlockAPIViewerScreen.renderEntity(left + 80, top + 60, 40, zombie);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, zombie);
                 }
                 else if (stat.getText().equals("Spider"))
                 {
                     SpiderEntity spider = new SpiderEntity(EntityType.SPIDER, this.world);
                     CaveSpiderEntity cave = new CaveSpiderEntity(EntityType.CAVE_SPIDER, this.world);
-                    SkyBlockAPIViewerScreen.renderEntity(left + 80, top + 40, 40, cave);
-                    SkyBlockAPIViewerScreen.renderEntity(left + 80, top + 60, 40, spider);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 40, 40, cave);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, spider);
                     RenderSystem.blendFunc(770, 771);
                 }
                 else
                 {
                     WolfEntity wolf = new WolfEntity(EntityType.WOLF, this.world);
                     wolf.setAngry(true);
-                    SkyBlockAPIViewerScreen.renderEntity(left + 80, top + 60, 40, wolf);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, wolf);
                 }
 
                 this.mc.getTextureManager().bindTexture(XP_BARS);
@@ -3111,11 +3162,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int playerSlayerXp = Integer.valueOf(xpSplit[0]);
                 int xpRequired = Integer.valueOf(xpSplit[1]);
                 int filled = Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
-                AbstractGui.blit(right - 120, top, 0, 0, 91, 5, 91, 10);
+                AbstractGui.blit(SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
                 if (filled > 0)
                 {
-                    AbstractGui.blit(right - 120, top, 0, 5, filled, 5, 91, 10);
+                    AbstractGui.blit(SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
                 }
 
                 RenderSystem.enableBlend();
@@ -3124,11 +3175,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             default:
                 if (this.getSize() == 1)
                 {
-                    this.fontRenderer.drawString(stat.getText(), left + 8, top, 16777215);
+                    this.fontRenderer.drawString(stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
                 }
                 else
                 {
-                    this.fontRenderer.drawString(stat.getText(), right - this.fontRenderer.getStringWidth(stat.getText()) - 30, top, 16777215);
+                    this.fontRenderer.drawString(stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getText()) + 180, top, 16777215);
                 }
                 break;
             }
@@ -3157,8 +3208,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (!this.stats.isEmpty())
             {
                 SkyBlockStats stat = this.stats.get(index);
-                this.fontRenderer.drawString(StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
-                this.fontRenderer.drawString(stat.getValueByString(), right - this.fontRenderer.getStringWidth(stat.getValueByString()) - 10, top, index % 2 == 0 ? 16777215 : 9474192);
+                this.fontRenderer.drawString(StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                this.fontRenderer.drawString(stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
             }
         }
     }
@@ -3188,15 +3239,15 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (!collection.getItemStack().isEmpty() && collection.getCollectionType() != null)
             {
-                this.parent.drawItemStackSlot(left + 2, top, collection.getItemStack());
-                this.fontRenderer.drawString(collection.getItemStack().getDisplayName().getFormattedText() + " " + TextFormatting.GOLD + collection.getLevel(), left + 25, top + 6, 16777215);
-                this.fontRenderer.drawString(collection.getCollectionAmount(), right - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
+                this.fontRenderer.drawString(collection.getItemStack().getDisplayName().getFormattedText() + " " + TextFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
+                this.fontRenderer.drawString(collection.getCollectionAmount(), this.parent.guiLeft - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (collection.getCollectionType() != null)
                 {
-                    this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
+                    this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }
             }
         }
@@ -3228,15 +3279,15 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (!craftedMinion.getMinionItem().isEmpty())
             {
                 String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
-                this.parent.drawItemStackSlot(left + 2, top, craftedMinion.getMinionItem());
-                this.fontRenderer.drawString(name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), left + 25, top + 6, 16777215);
-                this.fontRenderer.drawString(craftedMinion.getCraftedTiers(), right - this.fontRenderer.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
+                this.fontRenderer.drawString(name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
+                this.fontRenderer.drawString(craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.fontRenderer.getStringWidth(craftedMinion.getCraftedTiers()) + 192, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (craftedMinion.getMinionName() != null)
                 {
-                    this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), left + 4, top + 5, 16777215);
+                    this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
         }

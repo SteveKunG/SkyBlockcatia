@@ -48,7 +48,13 @@ public enum SBLocation
     SPIDER_DEN("Spider's Den", ImmutableList.of(Blocks.GRAVEL)),
 
     GOLD_MINE("Gold Mine", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE)),
-    GUNPOWDER_MINES("Gunpowder Mines", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE, Blocks.DIAMOND_ORE, Blocks.DIAMOND_BLOCK, Blocks.OBSIDIAN)),
+    DEEP_CAVERNS("Deep Caverns", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
+    GUNPOWDER_MINES("Gunpowder Mines", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE)),
+    LAPIS_QUARRY("Lapis Quarry", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.LAPIS_ORE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE)),
+    PIGMENS_DEN("Pigmen's Den", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.REDSTONE_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE)),
+    SLIMEHILL("Slimehill", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.EMERALD_ORE, Blocks.REDSTONE_ORE, Blocks.DIAMOND_ORE)),
+    DIAMOND_RESERVE("Diamond Reserve", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE)),
+    OBSIDIAN_SANCTUARY("Obsidian Sanctuary", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.DIAMOND_ORE, Blocks.DIAMOND_BLOCK, Blocks.OBSIDIAN)),
 
     THE_END("The End", ImmutableList.of(Blocks.END_STONE, Blocks.OBSIDIAN)),
     DRAGON_NEST("Dragon's Nest", ImmutableList.of(Blocks.END_STONE, Blocks.OBSIDIAN)),

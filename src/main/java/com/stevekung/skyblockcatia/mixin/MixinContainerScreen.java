@@ -59,7 +59,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private final ContainerScreen that = (ContainerScreen) (Object) this;
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice", "Anvil");
     private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
-    private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close", TextFormatting.GREEN + "Previous Page", TextFormatting.GREEN + "Next Page");
+    private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
