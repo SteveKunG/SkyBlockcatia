@@ -3790,21 +3790,21 @@ public class GuiSkyBlockData extends GuiScreen
                     zombie.setCurrentItemOrArmor(2, leggings);
                     zombie.setCurrentItemOrArmor(3, chestplate);
                     zombie.setCurrentItemOrArmor(4, helmet);
-                    GuiSkyBlockData.drawEntityOnScreen(this.left + 80, top + 60, 40, zombie);
+                    GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, zombie);
                 }
                 else if (stat.getText().equals("Spider"))
                 {
                     EntitySpider spider = new EntitySpider(this.parent.mc.theWorld);
                     EntityCaveSpider cave = new EntityCaveSpider(this.parent.mc.theWorld);
-                    GuiSkyBlockData.drawEntityOnScreen(this.left + 80, top + 40, 40, cave);
-                    GuiSkyBlockData.drawEntityOnScreen(this.left + 80, top + 60, 40, spider);
+                    GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
+                    GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
                     GlStateManager.blendFunc(770, 771);
                 }
                 else
                 {
                     EntityWolf wolf = new EntityWolf(this.parent.mc.theWorld);
                     wolf.setAngry(true);
-                    GuiSkyBlockData.drawEntityOnScreen(this.left + 80, top + 60, 40, wolf);
+                    GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
                 }
 
                 this.parent.mc.getTextureManager().bindTexture(XP_BARS);
@@ -3816,11 +3816,11 @@ public class GuiSkyBlockData extends GuiScreen
                 int xpRequired = Integer.valueOf(xpSplit[1]);
 
                 int filled = Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
-                Gui.drawModalRectWithCustomSizedTexture(this.right - 120, top, 0, 0, 91, 5, 91, 10);
+                Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
                 if (filled > 0)
                 {
-                    Gui.drawModalRectWithCustomSizedTexture(this.right - 120, top, 0, 5, filled, 5, 91, 10);
+                    Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
                 }
 
                 GlStateManager.enableBlend();
@@ -3829,11 +3829,11 @@ public class GuiSkyBlockData extends GuiScreen
             default:
                 if (this.getSize() == 1)
                 {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.left + 8, top, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.parent.guiLeft + 200, top, 16777215);
                 }
                 else
                 {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.right - this.parent.mc.fontRendererObj.getStringWidth(stat.getText()) - 30, top, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getText()) + 180, top, 16777215);
                 }
                 break;
             }
@@ -3879,8 +3879,8 @@ public class GuiSkyBlockData extends GuiScreen
             if (!this.stats.isEmpty())
             {
                 SkyBlockStats stat = this.stats.get(index);
-                this.parent.drawString(this.parent.mc.fontRendererObj, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.left + 3, top, index % 2 == 0 ? 16777215 : 9474192);
-                this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValueByString(), this.right - this.parent.mc.fontRendererObj.getStringWidth(stat.getValueByString()) - 10, top, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawString(this.parent.mc.fontRendererObj, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.parent.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValueByString(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
             }
         }
 
@@ -3922,15 +3922,15 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (collection.getItemStack() != null && collection.getCollectionType() != null)
             {
-                this.parent.drawItemStackSlot(this.left + 2, top, collection.getItemStack());
-                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.left + 25, top + 6, 16777215);
-                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.right - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) - 10, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
+                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
+                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (collection.getCollectionType() != null)
                 {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + collection.getCollectionType().getName(), this.left + 4, top + 5, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }
             }
         }
@@ -3974,15 +3974,15 @@ public class GuiSkyBlockData extends GuiScreen
             if (craftedMinion.getMinionItem() != null)
             {
                 String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
-                this.parent.drawItemStackSlot(this.left + 2, top, craftedMinion.getMinionItem());
-                this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.left + 25, top + 6, 16777215);
-                this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.right - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) - 20, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
+                this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
+                this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) + 192, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (craftedMinion.getMinionName() != null)
                 {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.left + 4, top + 5, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
         }
