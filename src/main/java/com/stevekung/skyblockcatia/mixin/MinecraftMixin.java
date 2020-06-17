@@ -13,7 +13,9 @@ import com.stevekung.skyblockcatia.utils.LoggerIN;
 import com.stevekung.skyblockcatia.utils.SkyBlockAPIUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -85,5 +87,14 @@ public abstract class MinecraftMixin
             return key.isPressed() && this.that.thePlayer.isSneaking();
         }
         return key.isPressed();
+    }
+
+    @Redirect(method = "runTick()V", at = @At(value = "INVOKE", target = "net/minecraft/client/entity/EntityPlayerSP.sendHorseInventory()V"))
+    private void openPlayerInventory(EntityPlayerSP player)
+    {
+        if (HypixelEventHandler.isSkyBlock)
+        {
+            this.that.displayGuiScreen(new GuiInventory(player));
+        }
     }
 }
