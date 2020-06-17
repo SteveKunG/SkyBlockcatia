@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.ClientResourcePackInfo;
@@ -44,16 +44,16 @@ public abstract class MixinSimpleReloadableResourceManager
                 String packName = entry.getResourcePack().getName();
                 String packDesc = entry.getDescription().getUnformattedComponentText();
 
-                if (MainEventHandler.SKYBLOCK_PACK_16.stream().anyMatch(name -> packName.contains(name)))
+                if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
                 {
                     SkyBlockEventHandler.skyBlockPackResolution = "16";
                 }
-                if (MainEventHandler.SKYBLOCK_PACK_32.stream().anyMatch(name -> packName.contains(name)))
+                if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
                 {
                     SkyBlockEventHandler.skyBlockPackResolution = "32";
                 }
 
-                if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && packDesc.contains("by Hypixel Packs HQ"))
+                if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
                 {
                     SkyBlockEventHandler.foundSkyBlockPack = true;
                     found = true;

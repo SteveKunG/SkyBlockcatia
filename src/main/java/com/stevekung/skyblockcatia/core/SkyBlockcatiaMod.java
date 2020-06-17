@@ -1,9 +1,6 @@
 package com.stevekung.skyblockcatia.core;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,11 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.IOUtils;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
@@ -59,27 +51,36 @@ public class SkyBlockcatiaMod
 
     static
     {
-        HARDCODE_UUID.add("dd436eb4-01e3-4541-bc85-4a899c879304"); // _Okto
-        HARDCODE_UUID.add("d362e682-9f61-4a10-8d73-ad540d235fad"); // Lnwdeen
-        HARDCODE_UUID.add("5669d719-e494-47f5-9362-0ece491d0875"); // Badify
+        HARDCODE_UUID.add("84b5eb0f-11d8-464b-881d-4bba203cc77b");
+        HARDCODE_UUID.add("e2d72023-34b9-45c2-825b-63ae2d1b2f36");
+        HARDCODE_UUID.add("4675476a-46e5-45ee-89a5-010dc02996d9");
+        HARDCODE_UUID.add("f1dfdd47-6e03-4c2d-b766-e414c7b77f10");
+        HARDCODE_UUID.add("07e864c4-90d6-4c86-8df2-adf98a843e9e");
+        HARDCODE_UUID.add("2cd88ad0-89b1-4ca7-907e-78066fe36b08");
+        HARDCODE_UUID.add("f81a81c1-92fc-4714-b8ed-f811e6c61550");
+        HARDCODE_UUID.add("266513e1-6c83-4d87-bbc5-d3934f9ca329");
 
-        SkyBlockcatiaMod.nahee();
+        SkyBlockcatiaMod.kuy();
         ToastLog.setup();
+        SBAPIUtils.getSupportedPackNames();
 
         if (!DEVENV)
         {
             CommonUtils.runAsync(() ->
             {
-                for (String uuid : SUPPORTERS_UUID)
+                try
                 {
-                    try
+                    BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                    String inputLine;
+
+                    while ((inputLine = reader.readLine()) != null)
                     {
-                        SUPPORTERS_NAME.add(SkyBlockcatiaMod.getName(uuid));
+                        SUPPORTERS_NAME.add(inputLine);
                     }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             });
         }
@@ -143,7 +144,7 @@ public class SkyBlockcatiaMod
         exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
 
-    private static void nahee()
+    private static void kuy()
     {
         List<String> uuidList = new ArrayList<>();
 
@@ -180,12 +181,5 @@ public class SkyBlockcatiaMod
                 SkyBlockcatiaMod.NO_UUID_MATCHED = true;
             }
         }
-    }
-
-    private static String getName(String uuid) throws JsonSyntaxException, IOException
-    {
-        URL url = new URL("https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names");
-        JsonArray array = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonArray();
-        return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
     }
 }

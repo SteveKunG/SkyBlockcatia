@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.MaxFairySouls;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 
@@ -29,6 +30,7 @@ public class SBAPIUtils
 {
     private static final Gson GSON = new Gson();
     public static int MAX_FAIRY_SOULS;
+    public static SupportedPack PACKS;
     private static String API_KEY;
     public static String PLAYER_NAME;
     public static String SKYBLOCK_PROFILE;
@@ -63,6 +65,18 @@ public class SBAPIUtils
         {
             e.printStackTrace();
             MAX_FAIRY_SOULS = 194;
+        }
+    }
+
+    public static void getSupportedPackNames()
+    {
+        try
+        {
+            PACKS = GSON.fromJson(CurlExecutor.execute("pack_name.json"), SupportedPack.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
