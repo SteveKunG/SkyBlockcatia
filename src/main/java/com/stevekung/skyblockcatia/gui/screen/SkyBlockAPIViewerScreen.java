@@ -318,6 +318,12 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Override
+    public void onClose()
+    {
+        this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
+    }
+
+    @Override
     public IGuiEventListener getFocused()
     {
         if (this.currentSlot != null)
