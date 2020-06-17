@@ -1,9 +1,5 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +10,7 @@ import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.utils.LoggerIN;
+import com.stevekung.skyblockcatia.utils.SkyBlockAPIUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -26,8 +23,6 @@ import net.minecraft.entity.boss.EntityDragon;
 public abstract class MinecraftMixin
 {
     private final Minecraft that = (Minecraft) (Object) this;
-    private static final List<String> SKYBLOCK_PACK_16 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (16x)", "v8O1.8 Hypixel Skyblock Pack(16x)", "v9F1.8 Hypixel Skyblock Pack (16x)", "v9O1.8 Hypixel Skyblock Pack (16x)", "vXF16x_Skyblock_Pack_1.8.9", "vXO16x_Skyblock_Pack_1.8.9"));
-    private static final List<String> SKYBLOCK_PACK_32 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (x32)", "v8O1.8 Hypixel Skyblock Pack (32x)", "v9F1.8 Hypixel Skyblock Pack (32x)", "v9.1O1.8 Hypixel Skyblock Pack (32x)", "vXF32x_Skyblock_Pack_1.8.9", "vXO32x_Skyblock_Pack_1.8.9"));
 
     @Inject(method = "runGameLoop()V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/EntityRenderer.updateCameraAndRender(FJ)V", shift = At.Shift.AFTER))
     private void runGameLoop(CallbackInfo info)
@@ -45,11 +40,11 @@ public abstract class MinecraftMixin
             String packName = entry.getResourcePack().getPackName();
             String packDesc = entry.getTexturePackDescription();
 
-            if (SKYBLOCK_PACK_16.stream().anyMatch(name -> packName.contains(name)))
+            if (SkyBlockAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
             {
                 HypixelEventHandler.skyBlockPackResolution = "16";
             }
-            if (SKYBLOCK_PACK_32.stream().anyMatch(name -> packName.contains(name)))
+            if (SkyBlockAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
             {
                 HypixelEventHandler.skyBlockPackResolution = "32";
             }

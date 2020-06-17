@@ -21,6 +21,7 @@ public class SkyBlockAPIUtils
 {
     private static final Gson GSON = new Gson();
     public static int MAX_FAIRY_SOULS;
+    public static SupportedPack PACKS;
     private static String API_KEY;
     public static String PLAYER_NAME;
     public static String SKYBLOCK_PROFILE;
@@ -57,6 +58,18 @@ public class SkyBlockAPIUtils
         {
             e.printStackTrace();
             MAX_FAIRY_SOULS = 194;
+        }
+    }
+
+    public static void getSupportedPackNames()
+    {
+        try
+        {
+            PACKS = GSON.fromJson(CurlExecutor.execute("pack_name.json"), SupportedPack.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 

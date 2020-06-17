@@ -90,6 +90,7 @@ public class SkyBlockcatiaMod
 
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
+        SkyBlockAPIUtils.getSupportedPackNames();
 
         if (!isDevelopment)
         {
