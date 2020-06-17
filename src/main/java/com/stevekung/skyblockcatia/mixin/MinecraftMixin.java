@@ -49,7 +49,7 @@ public abstract class MinecraftMixin
                 HypixelEventHandler.skyBlockPackResolution = "32";
             }
 
-            if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && packDesc.contains("by Hypixel Packs HQ"))
+            if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
             {
                 HypixelEventHandler.foundSkyBlockPack = true;
                 found = true;
