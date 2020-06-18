@@ -73,6 +73,10 @@ public class LayerGlowingTexture implements LayerRenderer<EntityLivingBase>
             {
                 texture = "strong";
             }
+            else if (id.equals("HOLY_DRAGON_HELMET"))
+            {
+                texture = "holy";
+            }
 
             if (texture.isEmpty())
             {

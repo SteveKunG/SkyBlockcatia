@@ -193,6 +193,10 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
         {
             texture = "strong";
         }
+        else if (id.startsWith("HOLY_DRAGON"))
+        {
+            texture = "holy";
+        }
 
         String s1 = String.format("skyblockcatia:textures/model/armor/" + HypixelEventHandler.skyBlockPackResolution + "/%s_layer_%d.png", texture, armorSlot == 2 ? 2 : 1);
         return texture.isEmpty() ? null : new ResourceLocation(s1);

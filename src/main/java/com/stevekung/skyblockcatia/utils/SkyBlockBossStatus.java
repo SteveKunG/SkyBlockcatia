@@ -47,6 +47,10 @@ public class SkyBlockBossStatus
             {
                 type = DragonType.YOUNG;
             }
+            else if (name.equals("Holy Dragon"))
+            {
+                type = DragonType.HOLY;
+            }
             SkyBlockBossStatus.healthScale = HypixelEventHandler.dragonHealth / type.getMaxHealth();
             SkyBlockBossStatus.bossName = displayData.getDisplayName().getFormattedText();
         }
@@ -64,7 +68,8 @@ public class SkyBlockBossStatus
         SUPERIOR(10000000),
         UNSTABLE(6000000),
         WISE(6000000),
-        YOUNG(5000000);
+        YOUNG(5000000),
+        HOLY(0);
 
         private final float maxHealth;
 
