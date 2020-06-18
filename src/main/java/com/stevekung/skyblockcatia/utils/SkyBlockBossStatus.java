@@ -62,13 +62,13 @@ public class SkyBlockBossStatus
 
     enum DragonType
     {
-        OLD(10000000),
-        PROTECTOR(7500000),
-        STRONG(7500000),
-        SUPERIOR(10000000),
-        UNSTABLE(6000000),
-        WISE(6000000),
-        YOUNG(5000000),
+        OLD(15000000),
+        PROTECTOR(9000000),
+        STRONG(9000000),
+        SUPERIOR(12000000),
+        UNSTABLE(9000000),
+        WISE(9000000),
+        YOUNG(7500000),
         HOLY(0);
 
         private final float maxHealth;
