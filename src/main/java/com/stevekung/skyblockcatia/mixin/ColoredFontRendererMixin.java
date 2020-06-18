@@ -69,7 +69,7 @@ public abstract class ColoredFontRendererMixin
         {
             for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
             {
-                if (text.contains(name))
+                if (text != null && text.contains(name))
                 {
                     text = text.replaceAll("\\u00a7[0-9a-fbr]" + name + "|\\u00a7[rb]" + name + "\\u00a7r|\\b" + name + "\\b", ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
                 }
