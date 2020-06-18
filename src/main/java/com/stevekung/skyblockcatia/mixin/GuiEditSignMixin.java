@@ -27,7 +27,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
 
-@Mixin(GuiEditSign.class)
+@Mixin(value = GuiEditSign.class, priority = 500)
 public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 {
     private final GuiEditSign that = (GuiEditSign) (Object) this;
