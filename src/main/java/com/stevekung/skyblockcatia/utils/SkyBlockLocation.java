@@ -58,6 +58,9 @@ public enum SkyBlockLocation
 
     THE_END("The End", ImmutableList.of(BlockMetadata.create(Blocks.end_stone), BlockMetadata.create(Blocks.obsidian))),
     DRAGON_NEST("Dragon's Nest", ImmutableList.of(BlockMetadata.create(Blocks.end_stone), BlockMetadata.create(Blocks.obsidian))),
+
+    JERRY_WORKSHOP("Jerry's Workshop", ImmutableList.of(BlockMetadata.create(Blocks.ice))),
+    JERRY_POND("Jerry Pond", ImmutableList.of(BlockMetadata.create(Blocks.ice))),
     ;
 
     private final String location;
