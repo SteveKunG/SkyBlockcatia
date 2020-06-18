@@ -177,6 +177,7 @@ golem_stage_tracker.extended_config=Golem Stage Tracker
 bazaar_on_tooltips.extended_config=Bazaar on Tooltips
 ignore_bush_hitbox.extended_config=Ignore Bush Hitbox
 only_mineable_hitbox.extended_config=Only Mineable Block Hitbox
+ignore_interact_invisible_armor_stand.extended_config=Ignore Invisible Armor Stand
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

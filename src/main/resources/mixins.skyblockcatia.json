@@ -47,6 +47,7 @@
         "EffectRendererMixin",
         "ItemSkullMixin",
         "BlockMixin",
-        "ItemBlockMixin"
+        "ItemBlockMixin",
+        "EntityArmorStandMixin"
     ]
 }

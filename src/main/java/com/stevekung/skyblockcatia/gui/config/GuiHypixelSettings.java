@@ -46,6 +46,7 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.BAZAAR_ON_TOOLTIPS);
         OPTIONS.add(ExtendedConfig.Options.IGNORE_BUSH_HITBOX);
         OPTIONS.add(ExtendedConfig.Options.ONLY_MINEABLE_HITBOX);
+        OPTIONS.add(ExtendedConfig.Options.IGNORE_INTERACT_INVISIBLE_ARMOR_STAND);
     }
 
     public GuiHypixelSettings(GuiScreen parent)
