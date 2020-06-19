@@ -150,6 +150,8 @@ public class ExtendedConfig
     public boolean ignoreBushHitbox = false;
     public boolean onlyMineableHitbox = false;
     public boolean ignoreInteractInvisibleArmorStand = false;
+    public boolean automaticOpenMaddox = false;
+    public boolean sneakToTradeOtherPlayerIsland = true;
 
     private ExtendedConfig() {}
 
@@ -289,6 +291,8 @@ public class ExtendedConfig
             this.ignoreBushHitbox = ExtendedConfig.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
             this.onlyMineableHitbox = ExtendedConfig.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
             this.ignoreInteractInvisibleArmorStand = ExtendedConfig.getBoolean(nbt, "IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
+            this.automaticOpenMaddox = ExtendedConfig.getBoolean(nbt, "AutomaticOpenMaddox", this.automaticOpenMaddox);
+            this.sneakToTradeOtherPlayerIsland = ExtendedConfig.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -419,6 +423,8 @@ public class ExtendedConfig
             nbt.setBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
             nbt.setBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
             nbt.setBoolean("IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
+            nbt.setBoolean("AutomaticOpenMaddox", this.automaticOpenMaddox);
+            nbt.setBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
@@ -770,6 +776,14 @@ public class ExtendedConfig
         {
             this.ignoreInteractInvisibleArmorStand = !this.ignoreInteractInvisibleArmorStand;
         }
+        else if (options == ExtendedConfig.Options.AUTOMATIC_OPEN_MADDOX)
+        {
+            this.automaticOpenMaddox = !this.automaticOpenMaddox;
+        }
+        else if (options == ExtendedConfig.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND)
+        {
+            this.sneakToTradeOtherPlayerIsland = !this.sneakToTradeOtherPlayerIsland;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1079,6 +1093,10 @@ public class ExtendedConfig
             return this.onlyMineableHitbox;
         case IGNORE_INTERACT_INVISIBLE_ARMOR_STAND:
             return this.ignoreInteractInvisibleArmorStand;
+        case AUTOMATIC_OPEN_MADDOX:
+            return this.automaticOpenMaddox;
+        case SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND:
+            return this.sneakToTradeOtherPlayerIsland;
         default:
             return false;
         }
@@ -1278,6 +1296,8 @@ public class ExtendedConfig
         IGNORE_BUSH_HITBOX(false, true),
         ONLY_MINEABLE_HITBOX(false, true),
         IGNORE_INTERACT_INVISIBLE_ARMOR_STAND(false, true),
+        AUTOMATIC_OPEN_MADDOX(false, true),
+        SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

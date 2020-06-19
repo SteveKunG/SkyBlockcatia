@@ -47,6 +47,8 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.IGNORE_BUSH_HITBOX);
         OPTIONS.add(ExtendedConfig.Options.ONLY_MINEABLE_HITBOX);
         OPTIONS.add(ExtendedConfig.Options.IGNORE_INTERACT_INVISIBLE_ARMOR_STAND);
+        OPTIONS.add(ExtendedConfig.Options.AUTOMATIC_OPEN_MADDOX);
+        OPTIONS.add(ExtendedConfig.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND);
     }
 
     public GuiHypixelSettings(GuiScreen parent)

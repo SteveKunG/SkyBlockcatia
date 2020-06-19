@@ -219,6 +219,33 @@ public class HypixelEventHandler
                             event.setCanceled(true);
                         }
                     }
+                    if (this.mc.thePlayer.isSneaking() && ExtendedConfig.instance.sneakToTradeOtherPlayerIsland)
+                    {
+                        ScoreObjective scoreObj = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+                        Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
+                        Collection<Score> collection = scoreboard.getSortedScores(scoreObj);
+                        List<Score> list = Lists.newArrayList(collection.stream().filter(score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")).collect(Collectors.toList()));
+
+                        if (list.size() > 15)
+                        {
+                            collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
+                        }
+                        else
+                        {
+                            collection = list;
+                        }
+
+                        for (Score score1 : collection)
+                        {
+                            ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
+                            String scoreText = this.keepLettersAndNumbersOnly(EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName())));
+
+                            if (scoreText.endsWith("'s Island"))
+                            {
+                                this.mc.thePlayer.sendChatMessage("/trade " + player.getName());
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -378,6 +405,16 @@ public class HypixelEventHandler
                 if (ExtendedConfig.instance.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
                     this.mc.thePlayer.sendChatMessage("/p leave");
+                }
+                if (ExtendedConfig.instance.automaticOpenMaddox)
+                {
+                    for (IChatComponent component : event.message.getSiblings())
+                    {
+                        if (message.contains("[OPEN MENU]") && component.getChatStyle().getChatClickEvent() != null)
+                        {
+                            this.mc.thePlayer.sendChatMessage(component.getChatStyle().getChatClickEvent().getValue());
+                        }
+                    }
                 }
 
                 if (HypixelEventHandler.isSkyBlock || SkyBlockcatiaMod.isDevelopment)
