@@ -2004,7 +2004,7 @@ public class GuiSkyBlockData extends GuiScreen
                     SkyBlockPets.Type type = SkyBlockPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
 
-                    itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "[LVL " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
+                    itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + type.getSkillType().getName() + " Pet"));
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (active ? EnumChatFormatting.GREEN + "Active Pet" : EnumChatFormatting.RED + "Inactive Pet")));
