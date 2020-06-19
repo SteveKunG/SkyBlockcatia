@@ -115,7 +115,7 @@ public class RenderUtils
         }
     }
 
-    private static void renderRarity(int xPos, int yPos, RGB color)
+    public static void renderRarity(int xPos, int yPos, RGB color)
     {
         float alpha = ExtendedConfig.instance.itemRarityOpacity / 100.0F;
         GlStateManager.disableLighting();
