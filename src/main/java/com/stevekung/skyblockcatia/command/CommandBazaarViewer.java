@@ -39,7 +39,8 @@ public class CommandBazaarViewer extends ClientCommandBase
                 BazaarData data = MainEventHandler.BAZAAR_DATA.get(args[0]);
                 ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(data.getLastUpdated()));
                 ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Product: " + EnumChatFormatting.GOLD + args[0]);
-                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell: " + EnumChatFormatting.GOLD + format.format(data.getProduct().getBuyPrice()) + "/" + format.format(data.getProduct().getSellPrice()));
+                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(data.getProduct().getBuyPrice() * 64.0D) + "/" + format.format(data.getProduct().getSellPrice() * 64.0D));
+                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(data.getProduct().getBuyPrice()) + "/" + format.format(data.getProduct().getSellPrice()));
             }
             else
             {
