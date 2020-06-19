@@ -1,8 +1,11 @@
 package com.stevekung.skyblockcatia.mixin;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -423,6 +426,70 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/RenderItem.renderItemAndEffectIntoGUI(Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER))
+    private void renderAnvilLevel(Slot slot, CallbackInfo info)
+    {
+        if (this.that instanceof GuiChest)
+        {
+            GuiChest chest = (GuiChest)this.that;
+            int i = 0;
+            int j = 0;
+            String levelString = "";
+
+            if (chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Anvil"))//XXX
+            {
+                Slot anvilSlot = this.that.inventorySlots.inventorySlots.get(31);
+                ItemStack itemStack = this.that.inventorySlots.inventorySlots.get(22).getStack();
+                i = anvilSlot.xDisplayPosition;
+                j = anvilSlot.yDisplayPosition;
+
+                if (itemStack != null && itemStack.hasTagCompound())
+                {
+                    NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
+
+                    if (compound.getTagId("Lore") == 9)
+                    {
+                        NBTTagList list = compound.getTagList("Lore", 8);
+
+                        if (list.tagCount() > 0)
+                        {
+                            for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                            {
+                                String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+
+                                if (lore.endsWith("Exp Levels"))
+                                {
+                                    int level = 0;
+
+                                    try
+                                    {
+                                        level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replace(" Exp Levels", "")).intValue();
+                                    }
+                                    catch (ParseException e) {}
+
+                                    if (this.mc.thePlayer.experienceLevel < level)
+                                    {
+                                        levelString = EnumChatFormatting.RED + String.valueOf(level);
+                                    }
+                                    else
+                                    {
+                                        levelString = EnumChatFormatting.GREEN + String.valueOf(level);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                GlStateManager.pushMatrix();
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableBlend();
+                this.drawCenteredString(this.mc.fontRendererObj, levelString, i + 8, j + 4, 0);
+                GlStateManager.popMatrix();
             }
         }
     }
