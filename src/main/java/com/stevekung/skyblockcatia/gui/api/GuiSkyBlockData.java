@@ -2016,6 +2016,7 @@ public class GuiSkyBlockData extends GuiScreen
                             SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase());
                             ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
                             itemStack.setStackDisplayName(slayerDrops.getDisplayName());
+                            itemStack.getTagCompound().setTag("ench", new NBTTagList());
                             sacks.add(itemStack);
                         }
                     }
