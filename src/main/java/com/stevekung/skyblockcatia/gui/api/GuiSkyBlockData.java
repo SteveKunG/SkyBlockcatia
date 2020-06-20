@@ -34,6 +34,7 @@ import com.stevekung.skyblockcatia.integration.SkyBlockAddonsBackpack;
 import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -132,8 +133,8 @@ public class GuiSkyBlockData extends GuiScreen
 
     // Info & Inventory
     private static final int SIZE = 36;
-    private static final InventoryBasic TEMP_INVENTORY = new InventoryBasic("tmp", true, GuiSkyBlockData.SIZE);
-    private static final InventoryBasic TEMP_ARMOR_INVENTORY = new InventoryBasic("tmp", true, 4);
+    private static final InventoryExtended TEMP_INVENTORY = new InventoryExtended(GuiSkyBlockData.SIZE);
+    private static final InventoryExtended TEMP_ARMOR_INVENTORY = new InventoryExtended(4);
     static final List<SkyBlockInventory> SKYBLOCK_INV = new ArrayList<>();
     private int selectedTabIndex = SkyBlockInventoryTabs.INVENTORY.getTabIndex();
     private float currentScroll;
@@ -1300,7 +1301,6 @@ public class GuiSkyBlockData extends GuiScreen
         int i = slot.xDisplayPosition;
         int j = slot.yDisplayPosition;
         ItemStack itemStack = slot.getStack();
-        String s = null;
         this.zLevel = 100.0F;
         this.itemRender.zLevel = 100.0F;
 
@@ -1325,9 +1325,33 @@ public class GuiSkyBlockData extends GuiScreen
         }
 
         this.itemRender.renderItemAndEffectIntoGUI(itemStack, i, j);
-        this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, itemStack, i, j, s);
+        this.renderItemOverlayIntoGUI(itemStack, i, j);
         this.itemRender.zLevel = 0.0F;
         this.zLevel = 0.0F;
+    }
+
+    private void renderItemOverlayIntoGUI(ItemStack itemStack, int xPosition, int yPosition)
+    {
+        if (itemStack != null)
+        {
+            if (itemStack.stackSize != 1)
+            {
+                FontRenderer fontRenderer = this.fontRendererObj;
+                String stackSize = String.valueOf(NumberUtils.format(itemStack.stackSize));
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableBlend();
+
+                if (itemStack.stackSize >= 100)
+                {
+                    fontRenderer = ColorUtils.unicodeFontRenderer;
+                }
+
+                fontRenderer.drawStringWithShadow(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+            }
+        }
     }
 
     private boolean renderTabsHoveringText(SkyBlockInventoryTabs tab, int mouseX, int mouseY)
@@ -1499,6 +1523,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getInventories(currentUserProfile);
                 this.getPets(currentUserProfile);
                 this.getCollections(currentUserProfile);
+                this.getSacks(currentUserProfile);
                 this.createFakePlayer();
                 this.calculatePlayerStats(currentUserProfile);
                 this.getItemStats(this.inventoryToStats, false);
@@ -1941,6 +1966,77 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.data.setHasCollections(false);
         }
+    }
+
+    private void getSacks(JsonObject currentProfile)
+    {
+        List<ItemStack> sacks = new ArrayList<>();
+
+        try
+        {
+            JsonElement sacksCounts = currentProfile.get("sacks_counts");
+
+            if (sacksCounts != null)
+            {
+                for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
+                {
+                    int count = sackEntry.getValue().getAsInt();
+                    String sackId = sackEntry.getKey().toLowerCase();
+
+                    for (SkyBlockCollection.ItemId sbItem : SkyBlockCollection.ItemId.VALUES)
+                    {
+                        String sbItemId = sbItem.name().toLowerCase();
+
+                        if (sackId.contains(sbItemId))
+                        {
+                            sackId = sackId.replace(sbItemId, sbItem.getMinecraftId());
+                        }
+                    }
+
+                    String[] split = sackId.split(":");
+                    String itemId = split[0];
+                    int meta = 0;
+
+                    try
+                    {
+                        meta = Integer.parseInt(split[1]);
+                    }
+                    catch (Exception e) {}
+
+                    Item item = Item.getByNameOrId(itemId);
+
+                    if (count > 1)
+                    {
+                        if (item != null)
+                        {
+                            sacks.add(new ItemStack(item, count, meta));
+                        }
+                        else
+                        {
+                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase());
+                            ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
+                            itemStack.setStackDisplayName(slayerDrops.getDisplayName());
+                            sacks.add(itemStack);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ItemStack barrier = new ItemStack(Blocks.barrier);
+                barrier.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + "Sacks is not available!");
+
+                for (int i = 0; i < 36; ++i)
+                {
+                    sacks.add(barrier);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SkyBlockInventoryTabs.SACKS));
     }
 
     private void getPets(JsonObject currentUserProfile)
@@ -4298,6 +4394,46 @@ public class GuiSkyBlockData extends GuiScreen
         public ExpProgress[] getProgress()
         {
             return this.progress;
+        }
+    }
+
+    private static class InventoryExtended extends InventoryBasic
+    {
+        public InventoryExtended(int slotCount)
+        {
+            super("tmp", false, slotCount);
+        }
+
+        @Override
+        public int getInventoryStackLimit()
+        {
+            return 20160;
+        }
+    }
+
+    private enum SlayerDrops
+    {
+        TARANTULA_WEB(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Tarantula Web", Item.getItemFromBlock(Blocks.web)),
+        REVENANT_FLESH(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Revenant Flesh", Items.rotten_flesh),
+        WOLF_TOOTH(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Wolf Tooth", Items.ghast_tear);
+
+        private final String displayName;
+        private final Item baseItem;
+
+        private SlayerDrops(String displayName, Item baseItem)
+        {
+            this.displayName = displayName;
+            this.baseItem = baseItem;
+        }
+
+        public String getDisplayName()
+        {
+            return this.displayName;
+        }
+
+        public Item getBaseItem()
+        {
+            return this.baseItem;
         }
     }
 
