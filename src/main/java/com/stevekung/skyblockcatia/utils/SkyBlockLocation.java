@@ -7,32 +7,32 @@ import net.minecraft.init.Blocks;
 
 public enum SkyBlockLocation
 {
-    NONE("None", ImmutableList.of()),
-    YOUR_ISLAND("Your Island", ImmutableList.of()),
+    NONE("None"),
+    YOUR_ISLAND("Your Island"),
 
     // Public Island
     VILLAGE("Village", ImmutableList.of(BlockMetadata.create(Blocks.red_flower), BlockMetadata.create(Blocks.yellow_flower))),
     FARM("Farm", ImmutableList.of(BlockMetadata.create(Blocks.wheat))),
     COAL_MINE("Coal Mine", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.coal_ore))),
     FOREST("Forest", ImmutableList.of(BlockMetadata.create(Blocks.log), BlockMetadata.create(Blocks.leaves))),
-    RUINS("Ruins", ImmutableList.of()),
+    RUINS("Ruins"),
     MOUNTAIN("Mountain", ImmutableList.of(BlockMetadata.create(Blocks.carrots))),
-    HIGH_LEVEL("High Level", ImmutableList.of()),
-    GRAVEYARD("Graveyard", ImmutableList.of()),
-    WILDERNESS("Wilderness", ImmutableList.of()),
-    FISHERMAN_HUT("Fisherman's Hut", ImmutableList.of()),
-    COLOSSEUM("Colosseum", ImmutableList.of()),
-    BAZAAR_ALLEY("Bazaar Alley", ImmutableList.of()),
-    CATACOMBS_ENTRANCE("Catacombs Entrance", ImmutableList.of()),
+    HIGH_LEVEL("High Level"),
+    GRAVEYARD("Graveyard"),
+    WILDERNESS("Wilderness"),
+    FISHERMAN_HUT("Fisherman's Hut"),
+    COLOSSEUM("Colosseum"),
+    BAZAAR_ALLEY("Bazaar Alley"),
+    CATACOMBS_ENTRANCE("Catacombs Entrance"),
 
     // Public Island building
     FLOWER_HOUSE("Flower House", ImmutableList.of(BlockMetadata.create(Blocks.red_flower), BlockMetadata.create(Blocks.yellow_flower))),
-    LIBRARY("Library", ImmutableList.of()),
-    BANK("Bank", ImmutableList.of()),
-    AUCTION_HOUSE("Auction House", ImmutableList.of()),
-    TAVERN("Tavern", ImmutableList.of()),
-    FASHION_SHOP("Fashion Shop", ImmutableList.of()),
-    WIZARD_TOWER("Wizard Tower", ImmutableList.of()),
+    LIBRARY("Library"),
+    BANK("Bank"),
+    AUCTION_HOUSE("Auction House"),
+    TAVERN("Tavern"),
+    FASHION_SHOP("Fashion Shop"),
+    WIZARD_TOWER("Wizard Tower"),
 
     THE_BARN("The Barn", ImmutableList.of(BlockMetadata.create(Blocks.wheat), BlockMetadata.create(Blocks.carrots), BlockMetadata.create(Blocks.potatoes), BlockMetadata.create(Blocks.pumpkin), BlockMetadata.create(Blocks.melon_block))),
     MUSHROOM_DESERT("Mushroom Desert", ImmutableList.of(BlockMetadata.create(Blocks.cocoa), BlockMetadata.create(Blocks.reeds), BlockMetadata.create(Blocks.red_mushroom), BlockMetadata.create(Blocks.brown_mushroom), BlockMetadata.create(Blocks.red_mushroom_block), BlockMetadata.create(Blocks.brown_mushroom_block), BlockMetadata.create(Blocks.cactus))),
@@ -65,6 +65,11 @@ public enum SkyBlockLocation
 
     private final String location;
     private final ImmutableList<BlockMetadata> mineableList;
+
+    private SkyBlockLocation(String location)
+    {
+        this(location, ImmutableList.of());
+    }
 
     private SkyBlockLocation(String location, ImmutableList<BlockMetadata> mineableList)
     {
