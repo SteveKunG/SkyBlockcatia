@@ -15,6 +15,7 @@ import com.stevekung.skyblockcatia.renderer.TileEntityEnchantedSkullRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelHumanoidHead;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,6 +32,7 @@ import net.minecraft.util.ResourceLocation;
 public abstract class LayerCustomHeadMixin
 {
     private final ModelSkeletonHead humanoidHead = new ModelHumanoidHead();
+    private final ModelPlayer playerModel = new ModelPlayer(0.0F, false);
 
     @Shadow
     @Final
@@ -50,6 +52,11 @@ public abstract class LayerCustomHeadMixin
 
     @Inject(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", at = @At("RETURN"))
     private void renderGlowingLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info)
+    {
+        this.renderGlowingArmor(entity, partialTicks);
+    }
+
+    private void renderGlowingArmor(EntityLivingBase entity, float partialTicks)
     {
         if (!ExtendedConfig.instance.glowingDragonArmor)
         {
@@ -101,6 +108,10 @@ public abstract class LayerCustomHeadMixin
             else if (id.equals("HOLY_DRAGON_HELMET"))
             {
                 texture = "holy";
+            }
+            else if (id.equals("DIVER_HELMET"))
+            {
+                texture = "diver_head";
             }
 
             if (texture.isEmpty())
