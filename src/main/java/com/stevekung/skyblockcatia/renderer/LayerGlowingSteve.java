@@ -23,6 +23,7 @@ public class LayerGlowingSteve implements LayerRenderer<EntityLivingBase>
     {
         if (entity.getName().equals("SteveKunG"))
         {
+            GlStateManager.pushMatrix();
             ResourceLocation resource = new ResourceLocation("skyblockcatia:textures/entity/stevekung.png");
 
             GlStateManager.enableBlend();
@@ -44,6 +45,7 @@ public class LayerGlowingSteve implements LayerRenderer<EntityLivingBase>
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
             GlStateManager.depthMask(true);
             GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
         }
     }
 

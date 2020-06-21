@@ -121,6 +121,7 @@ public abstract class LayerCustomHeadMixin
 
             ResourceLocation resource = new ResourceLocation("skyblockcatia:textures/entity/" + texture + ".png");
 
+            GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.disableAlpha();
             GlStateManager.blendFunc(1, 1);
@@ -154,6 +155,7 @@ public abstract class LayerCustomHeadMixin
             GlStateManager.disableBlend();
             GlStateManager.enableAlpha();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+            GlStateManager.popMatrix();
         }
     }
 }
