@@ -48,6 +48,7 @@
         "ItemSkullMixin",
         "BlockMixin",
         "ItemBlockMixin",
-        "EntityArmorStandMixin"
+        "EntityArmorStandMixin",
+        "LayerHeldBlockMixin"
     ]
 }

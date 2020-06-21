@@ -49,6 +49,7 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.IGNORE_INTERACT_INVISIBLE_ARMOR_STAND);
         OPTIONS.add(ExtendedConfig.Options.AUTOMATIC_OPEN_MADDOX);
         OPTIONS.add(ExtendedConfig.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND);
+        OPTIONS.add(ExtendedConfig.Options.MAKE_SPECIAL_ZEALOT_HELD_GOLD);
     }
 
     public GuiHypixelSettings(GuiScreen parent)
