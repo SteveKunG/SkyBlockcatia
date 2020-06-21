@@ -8,15 +8,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData;
+import com.stevekung.skyblockcatia.renderer.LayerGlowingSteve;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
 @Mixin(RenderPlayer.class)
 public abstract class RenderPlayerMixin
 {
+    private final RenderPlayer that = (RenderPlayer) (Object) this;
+
+    @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/RenderManager;Z)V", at = @At("RETURN"))
+    private void init(RenderManager renderManager, boolean useSmallArms, CallbackInfo info)
+    {
+        this.that.addLayer(new LayerGlowingSteve(this.that));
+    }
+
     @Inject(method = "doRender(Lnet/minecraft/client/entity/AbstractClientPlayer;DDDFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/RenderPlayer.setModelVisibilities(Lnet/minecraft/client/entity/AbstractClientPlayer;)V", shift = At.Shift.AFTER))
     private void renderPre(AbstractClientPlayer entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info)
     {
