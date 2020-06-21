@@ -1,115 +1,148 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import java.util.UUID;
-
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.authlib.GameProfile;
+import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.renderer.TileEntityEnchantedSkullRenderer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelHumanoidHead;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
+import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.StringUtils;
+import net.minecraft.util.ResourceLocation;
 
-@SuppressWarnings("deprecation")
 @Mixin(LayerCustomHead.class)
 public abstract class LayerCustomHeadMixin
 {
+    private final ModelSkeletonHead humanoidHead = new ModelHumanoidHead();
+
     @Shadow
     @Final
     @Mutable
     private ModelRenderer field_177209_a;
 
-    @Overwrite
-    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    @Redirect(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/TileEntitySkullRenderer.renderSkull(FFFLnet/minecraft/util/EnumFacing;FILcom/mojang/authlib/GameProfile;I)V"))
+    private void renderEnchantedSkull(TileEntitySkullRenderer renderer, float x, float y, float z, EnumFacing facing, float rotation, int meta, GameProfile profile, int p_180543_8_, EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
         ItemStack itemstack = entity.getCurrentArmor(3);
 
         if (itemstack != null && itemstack.getItem() != null)
         {
-            Item item = itemstack.getItem();
-            Minecraft minecraft = Minecraft.getMinecraft();
-            GlStateManager.pushMatrix();
+            TileEntityEnchantedSkullRenderer.INSTANCE.renderSkull(x, y, z, facing, rotation, meta, profile, partialTicks, itemstack.hasEffect(), entity);
+        }
+    }
+
+    @Inject(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", at = @At("RETURN"))
+    private void renderGlowingLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info)
+    {
+        if (!ExtendedConfig.instance.glowingDragonArmor)
+        {
+            return;
+        }
+
+        ItemStack itemstack = entity.getCurrentArmor(3);
+
+        if (itemstack != null && itemstack.getItem() == Items.skull)
+        {
+            String texture = "";
+
+            /*if (entity instanceof net.minecraft.client.entity.EntityPlayerSP)
+            {
+                System.out.println(itemstack.getTagCompound());
+            }*/
+
+            if (!itemstack.hasTagCompound())
+            {
+                return;
+            }
+
+            String id = itemstack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id");
+
+            if (id.equals("SUPERIOR_DRAGON_HELMET"))
+            {
+                texture = "superior";
+            }
+            else if (id.equals("WISE_DRAGON_HELMET"))
+            {
+                texture = "wise";
+            }
+            else if (id.equals("YOUNG_DRAGON_HELMET"))
+            {
+                texture = "young";
+            }
+            else if (id.equals("OLD_DRAGON_HELMET") || id.equals("PROTECTOR_DRAGON_HELMET"))
+            {
+                texture = "white_eye";
+            }
+            else if (id.equals("UNSTABLE_DRAGON_HELMET"))
+            {
+                texture = "unstable";
+            }
+            else if (id.equals("STRONG_DRAGON_HELMET"))
+            {
+                texture = "strong";
+            }
+            else if (id.equals("HOLY_DRAGON_HELMET"))
+            {
+                texture = "holy";
+            }
+
+            if (texture.isEmpty())
+            {
+                return;
+            }
+
+            ResourceLocation resource = new ResourceLocation("skyblockcatia:textures/entity/" + texture + ".png");
+
+            GlStateManager.enableBlend();
+            GlStateManager.disableAlpha();
+            GlStateManager.blendFunc(1, 1);
+            GlStateManager.disableLighting();
+            GlStateManager.depthMask(!entity.isInvisible());
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 128.0F, 128.0F);
+            GlStateManager.enableLighting();
 
             if (entity.isSneaking())
             {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
             }
 
-            boolean flag = entity instanceof EntityVillager || entity instanceof EntityZombie && ((EntityZombie)entity).isVillager();
-
-            if (!flag && entity.isChild())
-            {
-                float f = 2.0F;
-                float f1 = 1.4F;
-                GlStateManager.scale(f1 / f, f1 / f, f1 / f);
-                GlStateManager.translate(0.0F, 16.0F * scale, 0.0F);
-            }
-
             this.field_177209_a.postRender(0.0625F);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-            if (item instanceof ItemBlock)
-            {
-                float f2 = 0.625F;
-                GlStateManager.translate(0.0F, -0.25F, 0.0F);
-                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.scale(f2, -f2, -f2);
+            float f3 = 1.1875F;
+            GlStateManager.scale(f3, -f3, -f3);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+            GlStateManager.enableAlpha();
+            Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
+            this.humanoidHead.render(null, 0.0F, 0.0F, 0.0F, 180.0F, 0.0F, 0.0625F);
 
-                if (flag)
-                {
-                    GlStateManager.translate(0.0F, 0.1875F, 0.0F);
-                }
-                minecraft.getItemRenderer().renderItem(entity, itemstack, ItemCameraTransforms.TransformType.HEAD);
-            }
-            else if (item == Items.skull)
-            {
-                float f3 = 1.1875F;
-                GlStateManager.scale(f3, -f3, -f3);
+            int i = entity.getBrightnessForRender(partialTicks);
+            int j = i % 65536;
+            int k = i / 65536;
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
 
-                if (flag)
-                {
-                    GlStateManager.translate(0.0F, 0.0625F, 0.0F);
-                }
-
-                GameProfile gameprofile = null;
-
-                if (itemstack.hasTagCompound())
-                {
-                    NBTTagCompound nbttagcompound = itemstack.getTagCompound();
-
-                    if (nbttagcompound.hasKey("SkullOwner", 10))
-                    {
-                        gameprofile = NBTUtil.readGameProfileFromNBT(nbttagcompound.getCompoundTag("SkullOwner"));
-                    }
-                    else if (nbttagcompound.hasKey("SkullOwner", 8))
-                    {
-                        String s = nbttagcompound.getString("SkullOwner");
-
-                        if (!StringUtils.isNullOrEmpty(s))
-                        {
-                            gameprofile = TileEntitySkull.updateGameprofile(new GameProfile((UUID)null, s));
-                            nbttagcompound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameprofile));
-                        }
-                    }
-                }
-                TileEntityEnchantedSkullRenderer.INSTANCE.renderSkull(-0.5F, 0.0F, -0.5F, EnumFacing.UP, 180.0F, itemstack.getMetadata(), gameprofile, partialTicks, itemstack.hasEffect(), entity);
-            }
-            GlStateManager.popMatrix();
+            GlStateManager.depthMask(true);
+            GlStateManager.disableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         }
     }
 }
