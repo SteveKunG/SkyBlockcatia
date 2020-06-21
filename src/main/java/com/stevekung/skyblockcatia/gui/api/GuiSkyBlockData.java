@@ -4414,7 +4414,7 @@ public class GuiSkyBlockData extends GuiScreen
 
     private enum SlayerDrops
     {
-        TARANTULA_WEB(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Tarantula Web", Item.getItemFromBlock(Blocks.web)),
+        TARANTULA_WEB(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Tarantula Web", Items.string),
         REVENANT_FLESH(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Revenant Flesh", Items.rotten_flesh),
         WOLF_TOOTH(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Wolf Tooth", Items.ghast_tear);
 
