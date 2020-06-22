@@ -440,7 +440,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             int j = 0;
             String levelString = "";
 
-            if (chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Anvil"))//XXX
+            if (chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Anvil"))
             {
                 Slot anvilSlot = this.that.inventorySlots.inventorySlots.get(31);
                 ItemStack itemStack = this.that.inventorySlots.inventorySlots.get(22).getStack();

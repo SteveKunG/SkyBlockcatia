@@ -348,7 +348,7 @@ public class MainEventHandler
     @SubscribeEvent
     public void onPostGuiDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event)
     {
-        for (GuiButton button : event.gui.buttonList.stream().filter(button -> button instanceof GuiButtonItem).collect(Collectors.toList()))
+        for (GuiButton button : event.gui.buttonList.stream().filter(button -> button != null && button instanceof GuiButtonItem).collect(Collectors.toList()))
         {
             boolean hover = event.mouseX >= button.xPosition && event.mouseY >= button.yPosition && event.mouseX < button.xPosition + button.width && event.mouseY < button.yPosition + button.height;
 
