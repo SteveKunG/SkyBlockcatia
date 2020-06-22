@@ -43,6 +43,8 @@
     "bazaar_on_item_tooltip.extended_config": "Bazaar on Item Tooltip",
     "ignore_bush_hitbox.extended_config": "Ignore Bush Hitbox",
     "only_mineable_hitbox.extended_config": "Only Mineable Block Hitbox",
+    "ignore_interact_invisible_armor_stand.extended_config": "Ignore Invisible Armor Stand",
+    "make_special_zealot_held_gold.extended_config": "Make Special Zealot held Gold Block",
 
     "_comment": "MESSAGE",
     "message.check": "Check",
@@ -51,6 +53,7 @@
 
     "_comment": "COMMAND",
     "commands.sbbazaar.id_not_found": "Couldn't find matched Skyblock Item ID!",
+    "commands.sbbazaar.empty_data": "Empty Bazaar Data!",
 
     "_comment": "GUI",
     "gui.sb_view_info": "Info",
@@ -76,5 +79,6 @@
     "skyblock_group.quiver": "Quiver",
     "skyblock_group.candy": "Candy Bag",
     "skyblock_group.wardrobe": "Wardrobe",
-    "skyblock_group.pet": "Pets"
+    "skyblock_group.pet": "Pets",
+    "skyblock_group.sacks": "Sacks"
 }

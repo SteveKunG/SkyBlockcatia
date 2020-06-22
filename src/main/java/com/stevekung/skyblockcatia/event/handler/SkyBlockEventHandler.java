@@ -7,8 +7,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.stevekung.indicatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -201,6 +204,39 @@ public class SkyBlockEventHandler
     }
 
     @SubscribeEvent
+    public void onMouseClick(InputEvent.MouseInputEvent event)
+    {
+        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && this.mc.pointedEntity != null && this.mc.pointedEntity instanceof RemoteClientPlayerEntity && this.mc.player.isSneaking() && InfoUtils.INSTANCE.isHypixel() && SBExtendedConfig.INSTANCE.sneakToTradeOtherPlayerIsland)
+        {
+            RemoteClientPlayerEntity player = (RemoteClientPlayerEntity)this.mc.pointedEntity;
+            ScoreObjective scoreObj = this.mc.world.getScoreboard().getObjectiveInDisplaySlot(1);
+            Scoreboard scoreboard = this.mc.world.getScoreboard();
+            Collection<Score> collection = scoreboard.getSortedScores(scoreObj);
+            List<Score> list = Lists.newArrayList(collection.stream().filter(score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")).collect(Collectors.toList()));
+
+            if (list.size() > 15)
+            {
+                collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
+            }
+            else
+            {
+                collection = list;
+            }
+
+            for (Score score1 : collection)
+            {
+                ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
+                String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.formatMemberName(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getFormattedText()).replaceAll("");
+
+                if (scoreText.endsWith("'s Island"))
+                {
+                    this.mc.player.sendChatMessage("/trade " + player.getName().getUnformattedComponentText());
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onClientChatReceived(ClientChatReceivedEvent event)
     {
         if (event.getMessage() == null)
@@ -327,6 +363,16 @@ public class SkyBlockEventHandler
                 if (SBExtendedConfig.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
                     this.mc.player.sendChatMessage("/p leave");
+                }
+                if (SBExtendedConfig.INSTANCE.automaticOpenMaddox)
+                {
+                    for (ITextComponent component : event.getMessage().getSiblings())
+                    {
+                        if (message.contains("[OPEN MENU]") && component.getStyle().getClickEvent() != null)
+                        {
+                            this.mc.player.sendChatMessage(component.getStyle().getClickEvent().getValue());
+                        }
+                    }
                 }
 
                 if (SkyBlockEventHandler.isSkyBlock)

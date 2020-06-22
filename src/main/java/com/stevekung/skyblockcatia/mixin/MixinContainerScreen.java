@@ -1,6 +1,9 @@
 package com.stevekung.skyblockcatia.mixin;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,7 @@ import com.stevekung.skyblockcatia.utils.SearchMode;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.client.gui.NumberWidget;
 import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.ColorUtils.RGB;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
@@ -60,6 +64,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice", "Anvil");
     private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
     private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close");
+    private static final Pattern PET_MENU_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or])[\\w ]+");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -380,7 +385,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                     if (id.equals("SKYBLOCK_MENU"))
                     {
-                        this.minecraft.playerController.windowClick(that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
+                        this.minecraft.playerController.windowClick(this.that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
                         info.cancel();
                     }
                 }
@@ -392,7 +397,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                 if (mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
                 {
-                    this.minecraft.playerController.windowClick(that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
+                    this.minecraft.playerController.windowClick(this.that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
                     info.cancel();
                 }
                 if (mouseButton == 2 && type == ClickType.CLONE && this.canViewSeller())
@@ -428,6 +433,113 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         if (SBExtendedConfig.INSTANCE.showItemRarity)
         {
             SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
+
+            if (this.that instanceof ChestScreen)
+            {
+                if (this.getTitle().getUnformattedComponentText().matches("\\(\\d+\\/\\d+\\) Pets"))
+                {
+                    if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
+                    {
+                        Matcher matcher = PET_MENU_PATTERN.matcher(slot.getStack().getDisplayName().getFormattedText());
+
+                        if (matcher.matches())
+                        {
+                            String color = matcher.group("color");
+                            RGB common = ColorUtils.stringToRGB("255,255,255");
+                            RGB uncommon = ColorUtils.stringToRGB("85,255,85");
+                            RGB rare = ColorUtils.stringToRGB("85,85,255");
+                            RGB epic = ColorUtils.stringToRGB("170,0,170");
+                            RGB legendary = ColorUtils.stringToRGB("255,170,0");
+                            RGB special = ColorUtils.stringToRGB("255,85,255");
+
+                            if (color.equals(TextFormatting.WHITE.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, common);
+                            }
+                            else if (color.equals(TextFormatting.GREEN.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, uncommon);
+                            }
+                            else if (color.equals(TextFormatting.BLUE.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, rare);
+                            }
+                            else if (color.equals(TextFormatting.DARK_PURPLE.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, epic);
+                            }
+                            else if (color.equals(TextFormatting.GOLD.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, legendary);
+                            }
+                            else if (color.equals(TextFormatting.LIGHT_PURPLE.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, special);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER))
+    private void renderAnvilLevel(Slot slot, CallbackInfo info)
+    {
+        if (this.that instanceof ChestScreen)
+        {
+            int i = 0;
+            int j = 0;
+            String levelString = "";
+
+            if (this.getTitle().getUnformattedComponentText().equals("Anvil"))
+            {
+                Slot anvilSlot = this.that.getContainer().inventorySlots.get(31);
+                ItemStack itemStack = this.that.getContainer().inventorySlots.get(22).getStack();
+                i = anvilSlot.xPos;
+                j = anvilSlot.yPos;
+
+                if (!itemStack.isEmpty() && itemStack.hasTag())
+                {
+                    CompoundNBT compound = itemStack.getTag().getCompound("display");
+
+                    if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
+                    {
+                        ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
+
+                        for (int j1 = 0; j1 < list.size(); ++j1)
+                        {
+                            String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
+
+                            if (lore.endsWith("Exp Levels"))
+                            {
+                                int level = 0;
+
+                                try
+                                {
+                                    level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replace(" Exp Levels", "")).intValue();
+                                }
+                                catch (ParseException e) {}
+
+                                if (this.minecraft.player.experienceLevel < level)
+                                {
+                                    levelString = TextFormatting.RED + String.valueOf(level);
+                                }
+                                else
+                                {
+                                    levelString = TextFormatting.GREEN + String.valueOf(level);
+                                }
+                            }
+                        }
+                    }
+                }
+                RenderSystem.pushMatrix();
+                RenderSystem.disableDepthTest();
+                RenderSystem.translatef(0.0F, 0.0F, 300.0F);
+                this.drawCenteredString(this.font, levelString, i + 8, j + 4, 0);
+                RenderSystem.enableDepthTest();
+                RenderSystem.popMatrix();
+            }
         }
     }
 
@@ -436,7 +548,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isRenderBids())
+            if (MainEventHandler.bidHighlight && this.isRenderBids())
             {
                 this.renderBids(slot);
             }

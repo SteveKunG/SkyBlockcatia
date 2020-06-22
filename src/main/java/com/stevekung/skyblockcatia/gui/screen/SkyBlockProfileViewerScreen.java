@@ -238,7 +238,7 @@ public class SkyBlockProfileViewerScreen extends Screen
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers)
     {
-        if (!this.loadingApi)
+        if (!this.loadingApi && !this.error)
         {
             if ((key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) && !StringUtils.isNullOrEmpty(this.usernameTextField.getText()))
             {

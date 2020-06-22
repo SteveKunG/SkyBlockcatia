@@ -8,6 +8,7 @@
     "mixins": [],
     "client": [
         "MixinArmorLayer",
+        "MixinArmorStandEntity",
         "MixinBlock",
         "MixinBlockItem",
         "MixinBossOverlayGui",
@@ -23,6 +24,7 @@
         "MixinFontRenderer",
         "MixinGameRenderer",
         "MixinHeadLayer",
+        "MixinHeldBlockLayer",
         "MixinIngameGui",
         "MixinItem",
         "MixinItemStackTileEntityRenderer",

@@ -33,6 +33,7 @@ import net.minecraft.util.ResourceLocation;
 @Mixin(HeadLayer.class)
 public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityModel<T> & IHasHead> extends LayerRenderer<T, M>
 {
+    private static final ResourceLocation DIVER = new ResourceLocation("skyblockcatia:textures/entity/diver_head.png");
     private final GenericHeadModel head = new HumanoidHeadModel();
 
     public MixinHeadLayer(IEntityRenderer<T, M> renderer)
@@ -97,6 +98,6 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
     private ResourceLocation getDragonEyeTexture(String id)
     {
         DragonType dragonType = DragonType.getDragonTypeById(id);
-        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/entity/" + (dragonType.isWhiteEye() ? "white_eye" : dragonType.getShortName()) + ".png") : null;
+        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/entity/" + (dragonType.isWhiteEye() ? "white_eye" : dragonType.getShortName()) + ".png") : id.equals("DIVER_HELMET") ? DIVER : null;
     }
 }

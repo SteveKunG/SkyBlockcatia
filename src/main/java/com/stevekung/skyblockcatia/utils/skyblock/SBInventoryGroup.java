@@ -16,7 +16,7 @@ import net.minecraft.potion.Potions;
 
 public class SBInventoryGroup
 {
-    public static SBInventoryGroup[] GROUPS = new SBInventoryGroup[8];
+    public static SBInventoryGroup[] GROUPS = new SBInventoryGroup[9];
     public static final SBInventoryGroup INVENTORY = new SBInventoryGroup(0, "inventory", Blocks.CHEST).setBackgroundImageName("player_inventory");
     public static final SBInventoryGroup ENDER_CHEST = new SBInventoryGroup(1, "ender_chest", Blocks.ENDER_CHEST);
     public static final SBInventoryGroup ACCESSORY = new SBInventoryGroup(2, "accessory", Items.EMERALD);
@@ -26,6 +26,7 @@ public class SBInventoryGroup
     public static final SBInventoryGroup CANDY = new SBInventoryGroup(6, "candy", SBRenderUtils.getSkullItemStack("906876f2-55d9-3965-9e57-f5732c765617", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTUwZjcxMmU4NzdkZmQ5MTBjOTdmMzgxOWEyMDBhMDVkNDllZTZiODNiNTkyNjg2ZTA5OWI5ZWNkNDQzZjIyOCJ9fX0="));
     public static final SBInventoryGroup WARDROBE = new SBInventoryGroup(7, "wardrobe", Items.LEATHER_CHESTPLATE);
     public static final SBInventoryGroup PET = new SBInventoryGroup(8, "pet", Items.BONE);
+    public static final SBInventoryGroup SACKS = new SBInventoryGroup(9, "sacks", SBRenderUtils.getSkullItemStack("e2334248-bd14-37cd-8800-088f9aa8ead5", "ewogICJ0aW1lc3RhbXAiIDogMTU5MTMxMDU4NTYwOSwKICAicHJvZmlsZUlkIiA6ICI0MWQzYWJjMmQ3NDk0MDBjOTA5MGQ1NDM0ZDAzODMxYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJNZWdha2xvb24iLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODBhMDc3ZTI0OGQxNDI3NzJlYTgwMDg2NGY4YzU3OGI5ZDM2ODg1YjI5ZGFmODM2YjY0YTcwNjg4MmI2ZWMxMCIKICAgIH0KICB9Cn0="));
     private final int index;
     private final String label;
     private String texture = "items";

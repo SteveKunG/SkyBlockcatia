@@ -89,7 +89,7 @@ public class SBRenderUtils
         }
     }
 
-    private static void renderRarity(int xPos, int yPos, RGB color)
+    public static void renderRarity(int xPos, int yPos, RGB color)
     {
         float alpha = SBExtendedConfig.INSTANCE.itemRarityOpacity / 100.0F;
         RenderSystem.disableLighting();

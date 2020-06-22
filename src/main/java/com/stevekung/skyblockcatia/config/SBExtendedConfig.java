@@ -16,6 +16,7 @@ import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraftforge.common.util.Constants;
 
 public class SBExtendedConfig
 {
@@ -58,6 +59,10 @@ public class SBExtendedConfig
     public boolean bazaarOnItemTooltip = false;
     public boolean ignoreBushHitbox = false;
     public boolean onlyMineableHitbox = false;
+    public boolean ignoreInteractInvisibleArmorStand = false;
+    public boolean automaticOpenMaddox = false;
+    public boolean sneakToTradeOtherPlayerIsland = true;
+    public boolean makeSpecialZealotHeldGold = true;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -92,6 +97,10 @@ public class SBExtendedConfig
     public static final BooleanConfigOption BAZAAR_ON_ITEM_TOOLTIP = new BooleanConfigOption("bazaar_on_item_tooltip", config -> config.bazaarOnItemTooltip, (config, value) -> config.bazaarOnItemTooltip = value);
     public static final BooleanConfigOption IGNORE_BUSH_HITBOX = new BooleanConfigOption("ignore_bush_hitbox", config -> config.ignoreBushHitbox, (config, value) -> config.ignoreBushHitbox = value);
     public static final BooleanConfigOption ONLY_MINEABLE_HITBOX = new BooleanConfigOption("only_mineable_hitbox", config -> config.onlyMineableHitbox, (config, value) -> config.onlyMineableHitbox = value);
+    public static final BooleanConfigOption IGNORE_INTERACT_INVISIBLE_ARMOR_STAND = new BooleanConfigOption("ignore_interact_invisible_armor_stand", config -> config.ignoreInteractInvisibleArmorStand, (config, value) -> config.ignoreInteractInvisibleArmorStand = value);
+    public static final BooleanConfigOption AUTOMATIC_OPEN_MADDOX = new BooleanConfigOption("automatic_open_maddox", config -> config.automaticOpenMaddox, (config, value) -> config.automaticOpenMaddox = value);
+    public static final BooleanConfigOption SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND = new BooleanConfigOption("sneak_to_trade_other_player_island", config -> config.sneakToTradeOtherPlayerIsland, (config, value) -> config.sneakToTradeOtherPlayerIsland = value);
+    public static final BooleanConfigOption MAKE_SPECIAL_ZEALOT_HELD_GOLD = new BooleanConfigOption("make_special_zealot_held_gold", config -> config.makeSpecialZealotHeldGold, (config, value) -> config.makeSpecialZealotHeldGold = value);
 
 
     public static final StringConfigOption VISIT_ISLAND_DISPLAY_MODE = new StringConfigOption("visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey()));
@@ -150,6 +159,10 @@ public class SBExtendedConfig
             this.bazaarOnItemTooltip = this.getBoolean(nbt, "BazaarOnItemTooltip", this.bazaarOnItemTooltip);
             this.ignoreBushHitbox = this.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
             this.onlyMineableHitbox = this.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
+            this.ignoreInteractInvisibleArmorStand = this.getBoolean(nbt, "IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
+            this.automaticOpenMaddox = this.getBoolean(nbt, "AutomaticOpenMaddox", this.automaticOpenMaddox);
+            this.sneakToTradeOtherPlayerIsland = this.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
+            this.makeSpecialZealotHeldGold = this.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -207,6 +220,10 @@ public class SBExtendedConfig
             nbt.putBoolean("BazaarOnItemTooltip", this.bazaarOnItemTooltip);
             nbt.putBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
             nbt.putBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
+            nbt.putBoolean("IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
+            nbt.putBoolean("AutomaticOpenMaddox", this.automaticOpenMaddox);
+            nbt.putBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
+            nbt.putBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());
@@ -257,7 +274,7 @@ public class SBExtendedConfig
 
     private boolean getBoolean(CompoundNBT nbt, String key, boolean defaultValue)
     {
-        if (nbt.contains(key, 99))
+        if (nbt.contains(key, Constants.NBT.TAG_ANY_NUMERIC))
         {
             return nbt.getBoolean(key);
         }
@@ -269,7 +286,7 @@ public class SBExtendedConfig
 
     private int getInteger(CompoundNBT nbt, String key, int defaultValue)
     {
-        if (nbt.contains(key, 99))
+        if (nbt.contains(key, Constants.NBT.TAG_ANY_NUMERIC))
         {
             return nbt.getInt(key);
         }
@@ -281,7 +298,7 @@ public class SBExtendedConfig
 
     private String getString(CompoundNBT nbt, String key, String defaultValue)
     {
-        if (nbt.contains(key, 8))
+        if (nbt.contains(key, Constants.NBT.TAG_STRING))
         {
             return nbt.getString(key);
         }

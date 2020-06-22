@@ -21,7 +21,7 @@ public class ItemButton extends Button
     private static final ResourceLocation TEXTURE = new ResourceLocation("skyblockcatia:textures/gui/blank.png");
     private final Item item;
     private final Minecraft mc;
-    private final String customName;
+    private String customName;
 
     public ItemButton(int xPos, int yPos, Item item, Button.IPressable onPress)
     {
@@ -71,8 +71,19 @@ public class ItemButton extends Button
         this.mc.getItemRenderer().renderItemAndEffectIntoGUI(itemStack, this.x + 1, this.y + 1);
     }
 
+    @Override
+    public void onPress()
+    {
+        this.onPress.onPress(this);
+    }
+
     public String getName()
     {
         return this.customName;
+    }
+
+    public void setName(String name)
+    {
+        this.customName = name;
     }
 }

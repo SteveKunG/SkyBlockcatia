@@ -43,15 +43,13 @@ import com.stevekung.stevekungslib.utils.client.RenderUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityType;
@@ -148,8 +146,8 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     // Info & Inventory
     private static final int SIZE = 36;
-    private static final Inventory TEMP_INVENTORY = new Inventory(SkyBlockAPIViewerScreen.SIZE);
-    private static final Inventory TEMP_ARMOR_INVENTORY = new Inventory(4);
+    private static final ExtendedInventory TEMP_INVENTORY = new ExtendedInventory(SkyBlockAPIViewerScreen.SIZE);
+    private static final ExtendedInventory TEMP_ARMOR_INVENTORY = new ExtendedInventory(4);
     public static final List<SkyBlockInventory> SKYBLOCK_INV = new ArrayList<>();
     private int selectedTabIndex = SBInventoryGroup.INVENTORY.getIndex();
     private float currentScroll;
@@ -1003,7 +1001,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         int i = slot.xPos;
         int j = slot.yPos;
         ItemStack itemStack = slot.getStack();
-        String s = null;
         this.setBlitOffset(100);
         this.itemRenderer.zLevel = 100.0F;
 
@@ -1027,9 +1024,33 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         this.itemRenderer.renderItemAndEffectIntoGUI(itemStack, i, j);
-        this.itemRenderer.renderItemOverlayIntoGUI(this.font, itemStack, i, j, s);
+        this.renderItemOverlayIntoGUI(itemStack, i, j);
         this.itemRenderer.zLevel = 0.0F;
         this.setBlitOffset(0);
+    }
+
+    private void renderItemOverlayIntoGUI(ItemStack itemStack, int xPosition, int yPosition)
+    {
+        if (!itemStack.isEmpty())
+        {
+            MatrixStack matrixstack = new MatrixStack();
+
+            if (itemStack.getCount() != 1)
+            {
+                FontRenderer fontRenderer = this.font;
+                String stackSize = String.valueOf(NumberUtils.format(itemStack.getCount()));
+
+                if (itemStack.getCount() >= 100)
+                {
+                    fontRenderer = ClientUtils.unicodeFontRenderer;
+                }
+
+                matrixstack.translate(0.0D, 0.0D, this.itemRenderer.zLevel + 200.0F);
+                IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+                fontRenderer.renderString(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215, true, matrixstack.getLast().getMatrix(), irendertypebuffer$impl, false, 0, 15728880);
+                irendertypebuffer$impl.finish();
+            }
+        }
     }
 
     private boolean renderGroupsHoveringText(SBInventoryGroup group, int mouseX, int mouseY)
@@ -1201,6 +1222,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 this.getInventories(currentUserProfile);
                 this.getPets(currentUserProfile);
                 this.getCollections(currentUserProfile);
+                this.getSacks(currentUserProfile);
                 this.createFakePlayer();
                 this.calculatePlayerStats(currentUserProfile);
                 this.getItemStats(this.inventoryToStats, false);
@@ -1598,6 +1620,90 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
+    private void getSacks(JsonObject currentProfile)
+    {
+        List<ItemStack> sacks = new ArrayList<>();
+
+        try
+        {
+            JsonElement sacksCounts = currentProfile.get("sacks_counts");
+
+            if (sacksCounts != null)
+            {
+                for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
+                {
+                    int count = sackEntry.getValue().getAsInt();
+                    String sackId = sackEntry.getKey().toLowerCase();
+
+                    for (SBCollections.ItemId sbItem : SBCollections.ItemId.VALUES)
+                    {
+                        String sbItemId = sbItem.name().toLowerCase();
+
+                        if (sackId.contains(sbItemId))
+                        {
+                            sackId = sackId.replace(sbItemId, sbItem.getMinecraftId());
+                        }
+                    }
+
+                    String[] split = sackId.split(":");
+                    String itemId = split[0];
+                    int meta = 0;
+
+                    try
+                    {
+                        meta = Integer.parseInt(split[1]);
+                    }
+                    catch (Exception e) {}
+
+                    String newItemReg = ItemStackDataFlattening.updateItem("minecraft:" + itemId, meta);
+
+                    if (newItemReg != null)
+                    {
+                        itemId = EntityRenaming1510.ITEM_RENAME_MAP.getOrDefault(newItemReg, newItemReg);
+                    }
+
+                    if (itemId.equals("revenant_flesh") || itemId.equals("tarantula_web") || itemId.equals("wolf_tooth"))
+                    {
+                        SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase());
+                        ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
+                        itemStack.setDisplayName(JsonUtils.create(slayerDrops.getDisplayName()));
+                        ListNBT listEnch = new ListNBT();
+                        listEnch.add(new CompoundNBT());
+                        itemStack.getTag().put("Enchantments", listEnch);
+                        sacks.add(itemStack);
+                    }
+                    else
+                    {
+                        Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+
+                        if (count > 1)
+                        {
+                            if (item != null)
+                            {
+                                sacks.add(new ItemStack(item, count));
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ItemStack barrier = new ItemStack(Blocks.BARRIER);
+                barrier.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.RED + "Sacks is not available!"));
+
+                for (int i = 0; i < 36; ++i)
+                {
+                    sacks.add(barrier);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SBInventoryGroup.SACKS));
+    }
+
     private void getPets(JsonObject currentUserProfile)
     {
         List<SBPets.Data> petData = new ArrayList<>();
@@ -1659,7 +1765,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     SBPets.Type type = SBPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
 
-                    itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.GRAY + "[LVL " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
+                    itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + type.getType().getName() + " Pet"))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + (active ? TextFormatting.GREEN + "Active Pet" : TextFormatting.RED + "Inactive Pet")))));
@@ -3322,6 +3428,46 @@ public class SkyBlockAPIViewerScreen extends Screen
         public ExpProgress[] getProgress()
         {
             return this.progress;
+        }
+    }
+
+    private enum SlayerDrops
+    {
+        TARANTULA_WEB(TextFormatting.RESET + "" + TextFormatting.GREEN + "Tarantula Web", Items.STRING),
+        REVENANT_FLESH(TextFormatting.RESET + "" + TextFormatting.GREEN + "Revenant Flesh", Items.ROTTEN_FLESH),
+        WOLF_TOOTH(TextFormatting.RESET + "" + TextFormatting.GREEN + "Wolf Tooth", Items.GHAST_TEAR);
+
+        private final String displayName;
+        private final Item baseItem;
+
+        private SlayerDrops(String displayName, Item baseItem)
+        {
+            this.displayName = displayName;
+            this.baseItem = baseItem;
+        }
+
+        public String getDisplayName()
+        {
+            return this.displayName;
+        }
+
+        public Item getBaseItem()
+        {
+            return this.baseItem;
+        }
+    }
+
+    private static class ExtendedInventory extends Inventory
+    {
+        public ExtendedInventory(int slotCount)
+        {
+            super(slotCount);
+        }
+
+        @Override
+        public int getInventoryStackLimit()
+        {
+            return 20160;
         }
     }
 
