@@ -84,6 +84,7 @@ public class MainEventHandler
     private static boolean sneakingOld;
     public static String playerToView;
     public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
+    public static boolean bidHighlight = true;
 
     public MainEventHandler()
     {
@@ -266,6 +267,11 @@ public class MainEventHandler
                     event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table)));
                     event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, Items.nether_star, "SkyBlock Menu"));
                 }
+                else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser"))
+                {
+                    String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, Item.getItemFromBlock(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
+                }
             }
         }
         if (event.gui instanceof GuiControls)
@@ -341,6 +347,12 @@ public class MainEventHandler
             if (event.button.id == 500)
             {
                 MainEventHandler.showChat = !MainEventHandler.showChat;
+            }
+            else if (event.button.id == 1005)
+            {
+                MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
+                String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                ((GuiButtonItem)event.button).setName("Toggle Bid Highlight: " + bid);
             }
         }
     }

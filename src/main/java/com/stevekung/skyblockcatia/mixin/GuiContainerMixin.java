@@ -501,7 +501,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isRenderBids(chest.lowerChestInventory))
+            if (MainEventHandler.bidHighlight && this.isRenderBids(chest.lowerChestInventory))
             {
                 this.drawBids(slot);
             }

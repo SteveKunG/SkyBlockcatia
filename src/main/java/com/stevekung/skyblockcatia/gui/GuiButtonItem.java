@@ -24,7 +24,7 @@ public class GuiButtonItem extends GuiButton
     private final int potionX;
     private final Item item;
     private final Minecraft mc;
-    private final String customName;
+    private String customName;
 
     public GuiButtonItem(int buttonID, int xPos, int yPos, Item item)
     {
@@ -119,5 +119,10 @@ public class GuiButtonItem extends GuiButton
     public String getName()
     {
         return this.customName;
+    }
+
+    public void setName(String name)
+    {
+        this.customName = name;
     }
 }
