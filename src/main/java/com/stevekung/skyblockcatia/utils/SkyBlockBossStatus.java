@@ -68,8 +68,8 @@ public class SkyBlockBossStatus
         SUPERIOR(12000000),
         UNSTABLE(9000000),
         WISE(9000000),
-        YOUNG(7500000),
-        HOLY(0);
+        YOUNG(5000000),
+        HOLY(5000000);
 
         private final float maxHealth;
 

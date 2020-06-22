@@ -487,8 +487,8 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                 GlStateManager.pushMatrix();
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
-                GlStateManager.disableBlend();
                 this.drawCenteredString(this.mc.fontRendererObj, levelString, i + 8, j + 4, 0);
+                GlStateManager.enableDepth();
                 GlStateManager.popMatrix();
             }
         }
