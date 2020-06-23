@@ -128,9 +128,9 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
     private final List<SBSkills.Info> skillRightList = new ArrayList<>();
     private final List<SkyBlockSlayerInfo> slayerInfo = new ArrayList<>();
-    private final List<SkyBlockStats> sbKills = new ArrayList<>();
-    private final List<SkyBlockStats> sbDeaths = new ArrayList<>();
-    private final List<SkyBlockStats> sbOthers = new ArrayList<>();
+    private final List<SBStats> sbKills = new ArrayList<>();
+    private final List<SBStats> sbDeaths = new ArrayList<>();
+    private final List<SBStats> sbOthers = new ArrayList<>();
     private final List<SBMinions.CraftedInfo> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
@@ -658,22 +658,22 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void performedOthers(OthersViewButton othersButton)
     {
-        SkyBlockStats.Type statType = SkyBlockStats.Type.KILLS;
-        List<SkyBlockStats> list = null;
+        SBStats.Type statType = SBStats.Type.KILLS;
+        List<SBStats> list = null;
 
         switch (othersButton)
         {
         default:
         case KILLS:
-            statType = SkyBlockStats.Type.KILLS;
+            statType = SBStats.Type.KILLS;
             list = this.sbKills;
             break;
         case DEATHS:
-            statType = SkyBlockStats.Type.DEATHS;
+            statType = SBStats.Type.DEATHS;
             list = this.sbDeaths;
             break;
         case OTHER_STATS:
-            statType = SkyBlockStats.Type.OTHERS;
+            statType = SBStats.Type.OTHERS;
             list = this.sbOthers;
             break;
         }
@@ -2461,14 +2461,14 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void getStats(JsonObject currentProfile)
     {
         JsonObject stats = currentProfile.get("stats").getAsJsonObject();
-        List<SkyBlockStats> auctions = new ArrayList<>();
-        List<SkyBlockStats> fished = new ArrayList<>();
-        List<SkyBlockStats> winter = new ArrayList<>();
-        List<SkyBlockStats> petMilestone = new ArrayList<>();
-        List<SkyBlockStats> others = new ArrayList<>();
-        List<SkyBlockStats> mobKills = new ArrayList<>();
-        List<SkyBlockStats> seaCreatures = new ArrayList<>();
-        List<SkyBlockStats> dragons = new ArrayList<>();
+        List<SBStats> auctions = new ArrayList<>();
+        List<SBStats> fished = new ArrayList<>();
+        List<SBStats> winter = new ArrayList<>();
+        List<SBStats> petMilestone = new ArrayList<>();
+        List<SBStats> others = new ArrayList<>();
+        List<SBStats> mobKills = new ArrayList<>();
+        List<SBStats> seaCreatures = new ArrayList<>();
+        List<SBStats> dragons = new ArrayList<>();
         int emperorKills = 0; // special case
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
@@ -2492,21 +2492,21 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     else
                     {
-                        seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                        seaCreatures.add(new SBStats(this.replaceStatsString(statName, "kills"), value));
                     }
                 }
                 else if (statName.contains("dragon"))
                 {
-                    dragons.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                    dragons.add(new SBStats(this.replaceStatsString(statName, "kills"), value));
                 }
                 else
                 {
-                    mobKills.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                    mobKills.add(new SBStats(this.replaceStatsString(statName, "kills"), value));
                 }
             }
             else if (statName.startsWith("deaths"))
             {
-                this.sbDeaths.add(new SkyBlockStats(this.replaceStatsString(statName, "deaths"), value));
+                this.sbDeaths.add(new SBStats(this.replaceStatsString(statName, "deaths"), value));
             }
             else
             {
@@ -2523,35 +2523,35 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 if (statName.contains("auctions"))
                 {
-                    auctions.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    auctions.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
                 else if (statName.contains("items_fished") || statName.contains("shredder"))
                 {
-                    fished.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    fished.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
                 else if (statName.contains("gifts") || statName.contains("most_winter"))
                 {
-                    winter.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    winter.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
                 else if (statName.contains("pet_milestone"))
                 {
-                    petMilestone.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
+                    petMilestone.add(new SBStats(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
                 }
                 else
                 {
-                    others.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    others.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
             }
         }
 
         if (emperorKills > 0)
         {
-            seaCreatures.add(new SkyBlockStats("Sea Emperor kills", emperorKills)); // special case
+            seaCreatures.add(new SBStats("Sea Emperor kills", emperorKills)); // special case
         }
 
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        auctions.add(0, new SkyBlockStats(new StringTextComponent("Auctions").applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+        auctions.add(0, new SBStats(new StringTextComponent("Auctions").applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
@@ -2606,18 +2606,18 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void sortStats(List<SkyBlockStats> list, String name)
+    private void sortStats(List<SBStats> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        list.add(0, new SkyBlockStats(null, 0.0F));
-        list.add(1, new SkyBlockStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+        list.add(0, new SBStats(null, 0.0F));
+        list.add(1, new SBStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
     }
 
-    private void sortStatsByValue(List<SkyBlockStats> list, String name)
+    private void sortStatsByValue(List<SBStats> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
-        list.add(0, new SkyBlockStats(null, 0.0F));
-        list.add(1, new SkyBlockStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+        list.add(0, new SBStats(null, 0.0F));
+        list.add(1, new SBStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
     }
 
     private long checkSkyBlockItem(List<ItemStack> list, String type)
@@ -3300,9 +3300,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     class Others extends ScrollingListScreen
     {
-        private final List<SkyBlockStats> stats;
+        private final List<SBStats> stats;
 
-        public Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockStats> stats, SkyBlockStats.Type type)
+        public Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBStats> stats, SBStats.Type type)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3319,7 +3319,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             if (!this.stats.isEmpty())
             {
-                SkyBlockStats stat = this.stats.get(index);
+                SBStats stat = this.stats.get(index);
                 this.fontRenderer.drawString(StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
                 this.fontRenderer.drawString(stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
             }

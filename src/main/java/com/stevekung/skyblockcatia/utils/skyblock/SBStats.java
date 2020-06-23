@@ -4,12 +4,12 @@ import com.stevekung.stevekungslib.utils.NumberUtils;
 
 import net.minecraft.util.text.TextFormatting;
 
-public class SkyBlockStats
+public class SBStats
 {
     private String name;
     private final double value;
 
-    public SkyBlockStats(String name, double value)
+    public SBStats(String name, double value)
     {
         this.name = name;
         this.value = value;
