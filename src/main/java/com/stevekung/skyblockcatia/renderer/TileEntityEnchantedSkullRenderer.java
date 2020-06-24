@@ -138,23 +138,29 @@ public class TileEntityEnchantedSkullRenderer
         }
 
         mc.getTextureManager().bindTexture(ENCHANTED_ITEM_GLINT_RES);
-        GlStateManager.enableBlend();
         GlStateManager.depthFunc(514);
         GlStateManager.depthMask(false);
-        float f1 = 0.5F;
-        GlStateManager.color(f1, f1, f1, 1.0F);
 
         if (entity != null && ConfigManagerIN.enable1_15ArmorEnchantedGlint)
         {
-            float light = 128.0F;
+            float light = 240.0F;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, light, light);
         }
 
         for (int i = 0; i < 2; ++i)
         {
             GlStateManager.disableLighting();
-            GlStateManager.blendFunc(ConfigManagerIN.enable1_15ArmorEnchantedGlint ? 770 : 768, 1);
-            GlStateManager.color(0.38F, 0.19F, 0.608F, ConfigManagerIN.enable1_15ArmorEnchantedGlint ? 0.5F : 1.0F);
+            GlStateManager.blendFunc(768, 1);
+
+            if (ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+            {
+                GlStateManager.color(0.5608F, 0.3408F, 0.8608F, 1.0F);
+            }
+            else
+            {
+                GlStateManager.color(0.38F, 0.19F, 0.608F, 1.0F);
+            }
+
             GlStateManager.matrixMode(5890);
             GlStateManager.loadIdentity();
             float f3 = 0.33333334F;
@@ -179,6 +185,5 @@ public class TileEntityEnchantedSkullRenderer
         GlStateManager.enableLighting();
         GlStateManager.depthMask(true);
         GlStateManager.depthFunc(515);
-        GlStateManager.disableBlend();
     }
 }

@@ -2,6 +2,8 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
@@ -16,5 +18,11 @@ public abstract class RenderItemMixin
     private ModelResourceLocation setNewFishingRodModel(String p_i46081_1_, String p_i46081_2_)
     {
         return ConfigManagerIN.enableOldFishingRodRenderModel ? new ModelResourceLocation("skyblockcatia:fishing_rod_cast", "inventory") : new ModelResourceLocation(p_i46081_1_, p_i46081_2_);
+    }
+
+    @ModifyConstant(method = "renderEffect(Lnet/minecraft/client/resources/model/IBakedModel;)V", constant = @Constant(intValue = -8372020))
+    private int setGlintColor(int defaultValue)
+    {
+        return ConfigManagerIN.enable1_15ArmorEnchantedGlint ? -7383333 : defaultValue;
     }
 }
