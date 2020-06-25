@@ -138,8 +138,11 @@ public class TileEntityEnchantedSkullRenderer
         }
 
         mc.getTextureManager().bindTexture(ENCHANTED_ITEM_GLINT_RES);
+        GlStateManager.enableBlend();
         GlStateManager.depthFunc(514);
         GlStateManager.depthMask(false);
+        float f1 = 0.5F;
+        GlStateManager.color(f1, f1, f1, 1.0F);
 
         if (entity != null && ConfigManagerIN.enable1_15ArmorEnchantedGlint)
         {
@@ -185,5 +188,6 @@ public class TileEntityEnchantedSkullRenderer
         GlStateManager.enableLighting();
         GlStateManager.depthMask(true);
         GlStateManager.depthFunc(515);
+        GlStateManager.disableBlend();
     }
 }
