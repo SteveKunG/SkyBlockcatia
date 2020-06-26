@@ -2687,12 +2687,17 @@ public class GuiSkyBlockData extends GuiScreen
 
         for (SkyBlockSkillInfo skill : skills)
         {
+            if (skill.getName().equals("Runecrafting") || skill.getName().equals("Carpentry"))
+            {
+                continue;
+            }
             avg += skill.getCurrentLvl() + skill.getSkillProgress();
             ++count;
         }
         if (avg > 0)
         {
-            this.skillAvg = SKILL_AVG.format(avg / count);
+            double realAvg = avg / count;
+            this.skillAvg = realAvg > 50 ? String.valueOf(50) : SKILL_AVG.format(realAvg);
         }
         if (this.skillCount == 0)
         {
