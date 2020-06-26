@@ -165,7 +165,7 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
                 }
                 SignSelectionList.this.setSelected(this);
                 sign.setText(0, JsonUtils.create(this.value));
-                ((EditSignScreen)this.mc.currentScreen).textInputUtil.func_216899_b();
+                ((EditSignScreen)this.mc.currentScreen).textInputUtil.putCursorAtEnd();
                 this.lastClicked = Util.milliTime();
                 return true;
             }

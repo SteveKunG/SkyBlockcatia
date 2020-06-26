@@ -937,11 +937,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.font, NumberUtils.format((long)playerXp), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.font, NumberUtils.formatCompact((long)playerXp), xText, yText + 10, 16777215);
             }
             else
             {
-                this.drawCenteredString(this.font, NumberUtils.format((long)playerXp) + "/" + NumberUtils.format(xpRequired), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.font, NumberUtils.formatCompact((long)playerXp) + "/" + NumberUtils.formatCompact(xpRequired), xText, yText + 10, 16777215);
             }
         }
         else
@@ -1038,7 +1038,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (itemStack.getCount() != 1)
             {
                 FontRenderer fontRenderer = this.font;
-                String stackSize = String.valueOf(NumberUtils.format(itemStack.getCount()));
+                String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.getCount()));
 
                 if (itemStack.getCount() >= 100)
                 {
@@ -1791,7 +1791,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
 
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + NumberUtils.format(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
+                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + NumberUtils.formatCompact(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + tier + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
