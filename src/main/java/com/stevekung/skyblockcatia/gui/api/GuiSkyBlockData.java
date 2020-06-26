@@ -1234,11 +1234,11 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.fontRendererObj, NumberUtils.format((long)playerXp), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.fontRendererObj, NumberUtils.formatCompact((long)playerXp), xText, yText + 10, 16777215);
             }
             else
             {
-                this.drawCenteredString(this.fontRendererObj, NumberUtils.format((long)playerXp) + "/" + NumberUtils.format(xpRequired), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.fontRendererObj, NumberUtils.formatCompact((long)playerXp) + "/" + NumberUtils.formatCompact(xpRequired), xText, yText + 10, 16777215);
             }
         }
         else
@@ -1337,7 +1337,7 @@ public class GuiSkyBlockData extends GuiScreen
             if (itemStack.stackSize != 1)
             {
                 FontRenderer fontRenderer = this.fontRendererObj;
-                String stackSize = String.valueOf(NumberUtils.format(itemStack.stackSize));
+                String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.stackSize));
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
                 GlStateManager.disableBlend();
@@ -2127,7 +2127,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
 
                     list.appendTag(new NBTTagString(""));
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.format(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatCompact(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
                     list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                     petData.add(new PetData(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
