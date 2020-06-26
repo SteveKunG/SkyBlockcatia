@@ -61,7 +61,7 @@ import net.minecraftforge.common.util.Constants;
 public abstract class MixinContainerScreen<T extends Container> extends Screen implements ITradeScreen
 {
     private final ContainerScreen that = (ContainerScreen) (Object) this;
-    private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice", "Anvil");
+    private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
     private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
     private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close");
     private static final Pattern PET_MENU_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or])[\\w ]+");
@@ -436,7 +436,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
             if (this.that instanceof ChestScreen)
             {
-                if (this.getTitle().getUnformattedComponentText().matches("\\(\\d+\\/\\d+\\) Pets"))
+                if (this.getTitle().getUnformattedComponentText().matches("\\(\\d+\\/\\d+\\) Pets") || this.getTitle().getUnformattedComponentText().equals("Pets"))
                 {
                     if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
                     {
