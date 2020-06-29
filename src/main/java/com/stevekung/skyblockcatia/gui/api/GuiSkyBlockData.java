@@ -2009,7 +2009,9 @@ public class GuiSkyBlockData extends GuiScreen
                     {
                         if (item != null)
                         {
-                            sacks.add(new ItemStack(item, count, meta));
+                            ItemStack itemStack = new ItemStack(item, count, meta);
+                            this.addSackItemStackCount(itemStack, count);
+                            sacks.add(itemStack);
                         }
                         else
                         {
@@ -2017,6 +2019,7 @@ public class GuiSkyBlockData extends GuiScreen
                             ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
                             itemStack.setStackDisplayName(slayerDrops.getDisplayName());
                             itemStack.getTagCompound().setTag("ench", new NBTTagList());
+                            this.addSackItemStackCount(itemStack, count);
                             sacks.add(itemStack);
                         }
                     }
@@ -2038,6 +2041,22 @@ public class GuiSkyBlockData extends GuiScreen
             e.printStackTrace();
         }
         SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SkyBlockInventoryTabs.SACKS));
+    }
+
+    private void addSackItemStackCount(ItemStack itemStack, int count)
+    {
+        if (count >= 1000)
+        {
+            itemStack.setTagCompound(new NBTTagCompound());
+
+            if (!itemStack.getTagCompound().hasKey("display", 10))
+            {
+                itemStack.getTagCompound().setTag("display", new NBTTagCompound());
+            }
+            NBTTagList itemCount = new NBTTagList();
+            itemCount.appendTag(new NBTTagString(EnumChatFormatting.RESET + "Item Count: " + EnumChatFormatting.GRAY + FORMAT.format(count)));
+            itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", itemCount);
+        }
     }
 
     private void getPets(JsonObject currentUserProfile)
