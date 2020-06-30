@@ -21,7 +21,7 @@ public class LayerGlowingSteve implements LayerRenderer<EntityLivingBase>
     @Override
     public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
     {
-        if (entity.getName().equals("SteveKunG"))
+        if (!entity.isInvisible() && entity.getName().equals("SteveKunG"))
         {
             GlStateManager.pushMatrix();
             ResourceLocation resource = new ResourceLocation("skyblockcatia:textures/entity/stevekung.png");
@@ -29,7 +29,7 @@ public class LayerGlowingSteve implements LayerRenderer<EntityLivingBase>
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(1, 1);
             GlStateManager.disableLighting();
-            GlStateManager.depthMask(!entity.isInvisible());
+            GlStateManager.depthMask(false);
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 86.0F, 86.0F);
             GlStateManager.enableLighting();
 
