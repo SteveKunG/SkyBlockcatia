@@ -3,6 +3,8 @@ package com.stevekung.skyblockcatia.gui.api;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
@@ -110,6 +112,7 @@ public class GuiSkyBlockData extends GuiScreen
     private static final DecimalFormat FORMAT_2 = new DecimalFormat("#,###.#");
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
+    private static final DecimalFormat SKILL_AVG1 = new DecimalFormat("##.##");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
@@ -2710,13 +2713,13 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 continue;
             }
-            avg += skill.getCurrentLvl() + skill.getSkillProgress();
+            avg += skill.getCurrentLvl();
             ++count;
         }
         if (avg > 0)
         {
             double realAvg = avg / count;
-            this.skillAvg = realAvg > 50 ? String.valueOf(50) : SKILL_AVG.format(realAvg);
+            this.skillAvg = realAvg > 50 ? String.valueOf(50) : new BigDecimal(realAvg).setScale(2, RoundingMode.HALF_UP).toString();
         }
         if (this.skillCount == 0)
         {
