@@ -57,7 +57,7 @@ public class SkyBlockAPIUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            MAX_FAIRY_SOULS = 194;
+            MAX_FAIRY_SOULS = 198;
         }
     }
 
