@@ -159,7 +159,7 @@ public class GuiSkyBlockData extends GuiScreen
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
-    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 20, 50, 100, 20, 10, 0);
+    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 100, 20, 10, 0);
 
     // GuiContainer fields
     private int xSize;
