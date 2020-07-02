@@ -557,6 +557,10 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.actionPerformed(this.backButton);
         }
+        else if (keyCode == 63)
+        {
+            this.mc.displayGuiScreen(new GuiSkyBlockData(profiles, new ProfileDataCallback(sbProfileId, sbProfileName, this.username, this.displayName, this.guild, uuid, profile, -1)));
+        }
     }
 
     @Override
