@@ -4301,7 +4301,7 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.critDamage = critDamage;
         }
-        
+
         public void setAttackSpeed(double attackSpeed)
         {
             this.attackSpeed = attackSpeed;
@@ -4374,7 +4374,7 @@ public class GuiSkyBlockData extends GuiScreen
             this.critDamage += critDamage;
             return this;
         }
-        
+
         public BonusStatTemplate addAttackSpeed(double attackSpeed)
         {
             this.attackSpeed += attackSpeed;
