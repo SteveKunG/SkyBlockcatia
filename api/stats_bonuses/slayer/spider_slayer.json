@@ -8,7 +8,11 @@
         "crit_damage": 2
     },
     {
-        "level": 9,
-        "crit_chance": 3
+        "level": 7,
+        "crit_chance": 1
+    },
+    {
+        "level": 8,
+        "crit_damage": 3
     }
 ]
