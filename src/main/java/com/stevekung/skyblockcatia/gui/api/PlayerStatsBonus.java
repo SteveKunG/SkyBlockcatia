@@ -478,6 +478,11 @@ public class PlayerStatsBonus
         {
             return 0;
         }
+        
+        default double getAttackSpeed()
+        {
+            return 0;
+        }
 
         default double getIntelligence()
         {
