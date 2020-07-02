@@ -559,7 +559,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         else if (keyCode == 63)
         {
-            this.mc.displayGuiScreen(new GuiSkyBlockData(profiles, new ProfileDataCallback(sbProfileId, sbProfileName, this.username, this.displayName, this.guild, uuid, profile, -1)));
+            this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.guild, this.uuid, this.profile, -1)));
         }
     }
 
@@ -2272,16 +2272,16 @@ public class GuiSkyBlockData extends GuiScreen
         }
         if (this.checkSkyBlockItem(this.armorItems, "SUPERIOR_DRAGON_") == 4)
         {
-            this.allStat.setHealth((int)Math.round(this.allStat.getHealth() * 1.05D));
-            this.allStat.setDefense((int)Math.round(this.allStat.getDefense() * 1.05D));
-            this.allStat.setStrength((int)Math.round(this.allStat.getStrength() * 1.05D));
-            this.allStat.setSpeed((int)Math.round(this.allStat.getSpeed() * 1.05D));
-            this.allStat.setCritChance((int)Math.round(this.allStat.getCritChance() * 1.05D));
-            this.allStat.setCritDamage((int)Math.round(this.allStat.getCritDamage() * 1.05D));
-            this.allStat.setIntelligence((int)Math.round(this.allStat.getIntelligence() * 1.05D));
-            this.allStat.setSeaCreatureChance((int)Math.round(this.allStat.getSeaCreatureChance() * 1.05D));
-            this.allStat.setMagicFind((int)Math.round(this.allStat.getMagicFind() * 1.05D));
-            this.allStat.setPetLuck((int)Math.round(this.allStat.getPetLuck() * 1.05D));
+            this.allStat.setHealth(Math.round(this.allStat.getHealth() * 1.05D));
+            this.allStat.setDefense(Math.round(this.allStat.getDefense() * 1.05D));
+            this.allStat.setStrength(Math.round(this.allStat.getStrength() * 1.05D));
+            this.allStat.setSpeed(Math.round(this.allStat.getSpeed() * 1.05D));
+            this.allStat.setCritChance(Math.round(this.allStat.getCritChance() * 1.05D));
+            this.allStat.setCritDamage(Math.round(this.allStat.getCritDamage() * 1.05D));
+            this.allStat.setIntelligence(Math.round(this.allStat.getIntelligence() * 1.05D));
+            this.allStat.setSeaCreatureChance(Math.round(this.allStat.getSeaCreatureChance() * 1.05D));
+            this.allStat.setMagicFind(Math.round(this.allStat.getMagicFind() * 1.05D));
+            this.allStat.setPetLuck(Math.round(this.allStat.getPetLuck() * 1.05D));
         }
         if (this.checkSkyBlockItem(this.armorItems, "FAIRY_") == 4)
         {
