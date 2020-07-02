@@ -61,6 +61,8 @@ public enum SkyBlockLocation
 
     JERRY_WORKSHOP("Jerry's Workshop", ImmutableList.of(BlockMetadata.create(Blocks.ice))),
     JERRY_POND("Jerry Pond", ImmutableList.of(BlockMetadata.create(Blocks.ice))),
+
+    DUNGEON_HUB("Dungeon Hub"),
     ;
 
     private final String location;
