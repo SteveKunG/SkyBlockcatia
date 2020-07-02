@@ -400,18 +400,12 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         }
 
         JsonElement newPackageRank = jsonPlayer.getAsJsonObject().get("newPackageRank"); // base rank
-        System.out.println("newPackageRank: " + newPackageRank);
         JsonElement rank = jsonPlayer.getAsJsonObject().get("rank"); // rank priority NORMAL/YOUTUBER
-        System.out.println("rank: " + rank);
         JsonElement rankPlusColor = jsonPlayer.getAsJsonObject().get("rankPlusColor");
-        System.out.println("rankPlusColor: " + rankPlusColor);
 
         JsonElement monthlyPackageRank = jsonPlayer.getAsJsonObject().get("monthlyPackageRank");
-        System.out.println("monthlyPackageRank: " + monthlyPackageRank);
         JsonElement monthlyRankColor = jsonPlayer.getAsJsonObject().get("monthlyRankColor");
-        System.out.println("monthlyRankColor: " + monthlyRankColor);
         JsonElement prefix = jsonPlayer.getAsJsonObject().get("prefix");
-        System.out.println("prefix: " + prefix);
 
         String baseRankText = "";
         String rankPlus = "";
