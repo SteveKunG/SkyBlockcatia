@@ -2542,7 +2542,6 @@ public class GuiSkyBlockData extends GuiScreen
                                     petLuckTemp += valueD;
                                     break;
                                 case "Bonus Attack Speed":
-                                    System.out.println(valueD);
                                     attackSpeedTemp += valueD;
                                     break;
                                 }
@@ -3791,7 +3790,8 @@ public class GuiSkyBlockData extends GuiScreen
         FARMING_1("The Barn"),
         FARMING_2("Mushroom Desert"),
         FORAGING_1("The Park"),
-        WINTER("Jerry's Workshop");
+        WINTER("Jerry's Workshop"),
+        DUNGEON_HUB("Dungeon Hub");
 
         private final String name;
         protected static final IslandLocation[] VALUES = IslandLocation.values();
