@@ -5,10 +5,7 @@ import java.io.BufferedReader;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.api.ExpProgress;
 import com.stevekung.skyblockcatia.gui.api.PlayerStatsBonus;
-import com.stevekung.skyblockcatia.utils.CommonUtils;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
-import com.stevekung.skyblockcatia.utils.SkyBlockAPIUtils;
-import com.stevekung.skyblockcatia.utils.SkyBlockMinion;
+import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -24,6 +21,7 @@ public class CommandRefreshApiData extends ClientCommandBase
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
+        ClientUtils.printClientMessage("Processing refresh API data...", JsonUtils.green());
         SkyBlockcatiaMod.SUPPORTERS_NAME.clear();
 
         CommonUtils.runAsync(() ->
@@ -55,10 +53,12 @@ public class CommandRefreshApiData extends ClientCommandBase
                 }
                 SkyBlockAPIUtils.getFairySouls();
                 SkyBlockMinion.getMinionSlotFromRemote();
+                ClientUtils.printClientMessage("Finishing refresh API data!", JsonUtils.green());
             }
             catch (Exception e)
             {
                 e.printStackTrace();
+                ClientUtils.printClientMessage("Found a problem while refreshing API data, See log for more info", JsonUtils.red());
             }
         });
     }
