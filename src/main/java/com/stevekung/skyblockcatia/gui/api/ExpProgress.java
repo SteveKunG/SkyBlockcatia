@@ -1,9 +1,7 @@
 package com.stevekung.skyblockcatia.gui.api;
 
-import java.io.BufferedReader;
-
 import com.google.gson.Gson;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.ApiDataExecutor;
 
 public class ExpProgress
 {
@@ -37,10 +35,16 @@ public class ExpProgress
         return this.xp;
     }
 
-    public static ExpProgress[] getXpProgressFromRemote(Type type) throws Exception
+    public static ExpProgress[] getXpProgressFromRemote(Type type)
     {
-        BufferedReader in = CurlExecutor.execute("api/exp_progress/" + type + ".json");
-        return GSON.fromJson(in, ExpProgress[].class);
+        try
+        {
+            return GSON.fromJson(ApiDataExecutor.execute("exp_progress/" + type + ".json"), ExpProgress[].class);
+        }
+        catch (Exception e)
+        {
+            return new ExpProgress[] { new ExpProgress(0, 0) };
+        }
     }
 
     public enum Type

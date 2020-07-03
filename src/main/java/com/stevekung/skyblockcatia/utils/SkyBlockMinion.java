@@ -1,7 +1,5 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.io.BufferedReader;
-
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData.SkillType;
@@ -13,13 +11,20 @@ public class SkyBlockMinion
     private static final Gson GSON = new Gson();
     public static SkyBlockMinion.MinionSlot[] MINION_SLOTS;
 
-    public static void getMinionSlotFromRemote() throws Exception
+    public static void getMinionSlotFromRemote()
     {
-        BufferedReader in = CurlExecutor.execute("api/minion_slots.json");
-        MINION_SLOTS = GSON.fromJson(in, SkyBlockMinion.MinionSlot[].class);
+        try
+        {
+            MINION_SLOTS = GSON.fromJson(ApiDataExecutor.execute("minion_slots.json"), SkyBlockMinion.MinionSlot[].class);
+        }
+        catch (Exception e)
+        {
+            MINION_SLOTS = new SkyBlockMinion.MinionSlot[] { new SkyBlockMinion.MinionSlot(5, 24) };
+            e.printStackTrace();
+        }
     }
 
-    public class MinionSlot
+    public static class MinionSlot
     {
         @SerializedName("current_slot")
         private final int currentSlot;

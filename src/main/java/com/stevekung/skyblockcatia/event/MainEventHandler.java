@@ -651,5 +651,5 @@ public class MainEventHandler
     {
         return invList.stream().anyMatch(invName -> lowerChestInventory.getDisplayName().getUnformattedText().contains(invName));
     }
-    public static void getBazaarData2() {if (!GameProfileUtils.isSteveKunG() && (SkyBlockcatiaMod.CURRENT_UUID == null || SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.SUPPORTERS_UUID.stream().anyMatch(uuid -> SkyBlockcatiaMod.CURRENT_UUID.toString().equals(uuid))))Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("skyblockcatia:music")));}
+    public static void getBazaarData2() {if (!GameProfileUtils.isSteveKunG() && (SkyBlockcatiaMod.CURRENT_UUID == null || SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.SUPPORTERS_UUID.stream().anyMatch(uuid -> SkyBlockcatiaMod.CURRENT_UUID.toString().equals(uuid)))){Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("skyblockcatia:music")));}}
 }

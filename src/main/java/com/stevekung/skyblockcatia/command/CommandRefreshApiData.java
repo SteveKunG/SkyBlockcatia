@@ -28,7 +28,7 @@ public class CommandRefreshApiData extends ClientCommandBase
         {
             try
             {
-                BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                BufferedReader reader = ApiDataExecutor.execute("SKYBLOCKCATIA_USERNAME");
                 String inputLine;
 
                 while ((inputLine = reader.readLine()) != null)
@@ -53,7 +53,7 @@ public class CommandRefreshApiData extends ClientCommandBase
                 }
                 SkyBlockAPIUtils.getFairySouls();
                 SkyBlockMinion.getMinionSlotFromRemote();
-                ClientUtils.printClientMessage("Finishing refresh API data!", JsonUtils.green());
+                ClientUtils.printClientMessage("Refresh API data finished!", JsonUtils.green());
             }
             catch (Exception e)
             {
