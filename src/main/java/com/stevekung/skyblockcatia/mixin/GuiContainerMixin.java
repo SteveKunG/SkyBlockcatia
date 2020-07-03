@@ -397,7 +397,8 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                             RGB rare = ColorUtils.stringToRGB("85,85,255");
                             RGB epic = ColorUtils.stringToRGB("170,0,170");
                             RGB legendary = ColorUtils.stringToRGB("255,170,0");
-                            RGB special = ColorUtils.stringToRGB("255,85,255");
+                            RGB mythic = ColorUtils.stringToRGB("255,85,255");
+                            RGB special = ColorUtils.stringToRGB("255,85,85");
 
                             if (color.equals(EnumChatFormatting.WHITE.toString()))
                             {
@@ -420,6 +421,10 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                                 RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, legendary);
                             }
                             else if (color.equals(EnumChatFormatting.LIGHT_PURPLE.toString()))
+                            {
+                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, mythic);
+                            }
+                            else if (color.equals(EnumChatFormatting.RED.toString()))
                             {
                                 RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, special);
                             }
