@@ -272,6 +272,14 @@ public class MainEventHandler
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                     event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, Item.getItemFromBlock(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
                 }
+                else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Wardrobe"))
+                {
+                    event.buttonList.add(new GuiButtonItem(1002, width + 88, height + 47, width + 89, Items.bone, true, "Pets"));
+                }
+                else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Pets"))
+                {
+                    event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, Items.leather_chestplate, true, "Wardrobe"));
+                }
             }
         }
         if (event.gui instanceof GuiControls)
