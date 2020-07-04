@@ -87,6 +87,14 @@ public class SkyBlockAPIUtils
 
                 for (int i = type == SkyBlockInventoryType.INVENTORY ? 9 : 0; i < list.tagCount(); ++i)
                 {
+                    // workaround for dummy slot
+                    if (type == SkyBlockInventoryType.ACCESSORY_BAG || type == SkyBlockInventoryType.POTION_BAG || type == SkyBlockInventoryType.FISHING_BAG || type == SkyBlockInventoryType.QUIVER)
+                    {
+                        if (i >= 45)
+                        {
+                            break;
+                        }
+                    }
                     itemStack.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
                 }
                 if (type == SkyBlockInventoryType.INVENTORY)
