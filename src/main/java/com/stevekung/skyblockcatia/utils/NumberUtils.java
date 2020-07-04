@@ -11,7 +11,7 @@ public class NumberUtils
 
     static
     {
-        SUFFIXES.put(1_000L, "k");
+        SUFFIXES.put(1_000L, "K");
         SUFFIXES.put(1_000_000L, "M");
         SUFFIXES.put(1_000_000_000L, "G");
         SUFFIXES.put(1_000_000_000_000L, "T");
@@ -71,7 +71,7 @@ public class NumberUtils
 
     public static String formatWithM(int number)
     {
-        char[] suffix = {' ', 'k', 'M', 'B', 'T', 'P', 'E'};
+        char[] suffix = {' ', 'K', 'M', 'B', 'T', 'P', 'E'};
         long numValue = number;
         int value = (int) Math.floor(Math.log10(numValue));
         int base = value / 3;
