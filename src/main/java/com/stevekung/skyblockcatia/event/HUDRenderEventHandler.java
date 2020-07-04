@@ -288,7 +288,7 @@ public class HUDRenderEventHandler
                     rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
                 }
 
-                if (ExtendedConfig.instance.lobbyPlayerCount)
+                if (ExtendedConfig.instance.lobbyPlayerCount && !this.mc.isSingleplayer())
                 {
                     List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
                     list = list.subList(0, Math.min(list.size(), 80));
