@@ -3,7 +3,6 @@ package com.stevekung.skyblockcatia.utils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -53,12 +52,12 @@ public class SkyBlockAPIUtils
     {
         try
         {
-            MAX_FAIRY_SOULS = GSON.fromJson(ApiDataExecutor.execute("stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
+            MAX_FAIRY_SOULS = GSON.fromJson(CurlExecutor.execute("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
         }
         catch (Exception e)
         {
-            MAX_FAIRY_SOULS = 201;
             e.printStackTrace();
+            MAX_FAIRY_SOULS = 201;
         }
     }
 
@@ -66,11 +65,10 @@ public class SkyBlockAPIUtils
     {
         try
         {
-            PACKS = GSON.fromJson(ApiDataExecutor.execute("pack_name.json"), SupportedPack.class);
+            PACKS = GSON.fromJson(CurlExecutor.execute("pack_name.json"), SupportedPack.class);
         }
         catch (Exception e)
         {
-            PACKS = new SupportedPack(Arrays.asList("16"), Arrays.asList("32"));
             e.printStackTrace();
         }
     }

@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.utils.ApiDataExecutor;
+import com.stevekung.skyblockcatia.utils.CurlExecutor;
 
 public class PlayerStatsBonus
 {
@@ -25,7 +25,7 @@ public class PlayerStatsBonus
 
     public static void getBonusFromRemote(Type type) throws Exception
     {
-        BufferedReader in = ApiDataExecutor.execute("stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
+        BufferedReader in = CurlExecutor.execute("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
 
         switch (type)
         {

@@ -99,7 +99,7 @@ public class SkyBlockcatiaMod
             {
                 try
                 {
-                    BufferedReader reader = ApiDataExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                    BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
                     String inputLine;
 
                     while ((inputLine = reader.readLine()) != null)
@@ -373,7 +373,7 @@ public class SkyBlockcatiaMod
 
         try
         {
-            BufferedReader reader = ApiDataExecutor.execute("SKYBLOCKCATIA_UUID");
+            BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_UUID");
             String inputLine;
 
             while ((inputLine = reader.readLine()) != null)
