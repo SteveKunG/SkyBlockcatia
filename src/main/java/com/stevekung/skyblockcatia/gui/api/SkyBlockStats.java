@@ -8,7 +8,7 @@ public class SkyBlockStats
 {
     private String name;
     private final double value;
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###,###.#");
+    private static final DecimalFormat FORMAT = new DecimalFormat("#,###.#");
 
     public SkyBlockStats(String name, double value)
     {
@@ -34,8 +34,7 @@ public class SkyBlockStats
         }
         else if (this.name.contains("Race") || this.name.contains("Best Time"))
         {
-            double seconds = this.value / 1000.0D;
-            return FORMAT.format(seconds) + " seconds";
+            return String.format("%1$TM:%1$TS.%1$TL", (long)this.value);
         }
         return FORMAT.format(this.value);
     }
