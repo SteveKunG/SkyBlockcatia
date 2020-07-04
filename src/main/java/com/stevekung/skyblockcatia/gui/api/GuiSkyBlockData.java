@@ -21,6 +21,7 @@ import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -76,6 +77,7 @@ public class GuiSkyBlockData extends GuiScreen
     private static final ResourceLocation INVENTORY_TABS = new ResourceLocation("skyblockcatia:textures/gui/tabs.png");
     private static final ResourceLocation XP_BARS = new ResourceLocation("skyblockcatia:textures/gui/skill_xp_bar.png");
     private static final String[] REVENANT_HORROR_HEAD = new String[] {"0862e0b0-a14f-3f93-894f-013502936b59", "eyJ0aW1lc3RhbXAiOjE1Njg0NTc0MjAxMzcsInByb2ZpbGVJZCI6IjQxZDNhYmMyZDc0OTQwMGM5MDkwZDU0MzRkMDM4MzFiIiwicHJvZmlsZU5hbWUiOiJNZWdha2xvb24iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RiYWQ5OWVkM2M4MjBiNzk3ODE5MGFkMDhhOTM0YTY4ZGZhOTBkOTk4NjgyNWRhMWM5N2Y2ZjIxZjQ5YWQ2MjYifX19"};
+    private static final Set<String> SEA_CREATURES = Sets.newHashSet("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
 
     // Based stuff
     private boolean firstLoad;
@@ -2848,7 +2850,10 @@ public class GuiSkyBlockData extends GuiScreen
         List<SkyBlockStats> mobKills = new ArrayList<>();
         List<SkyBlockStats> seaCreatures = new ArrayList<>();
         List<SkyBlockStats> dragons = new ArrayList<>();
-        int emperorKills = 0; // special case
+
+        // special case
+        int emperorKills = 0;
+        int deepMonsterKills = 0;
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet())
         {
@@ -2862,19 +2867,26 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (statName.startsWith("kills"))
             {
-                if (statName.contains("sea_walker") || statName.contains("pond_squid") || statName.contains("night_squid") || statName.contains("frozen_steve") || statName.contains("grinch") || statName.contains("yeti") || statName.contains("frosty_the_snowman") || statName.contains("sea_guardian") || statName.contains("sea_archer") || statName.contains("sea_witch") || statName.contains("chicken_deep") || statName.contains("catfish")
-                        || statName.contains("sea_leech") || statName.contains("deep_sea_protector") || statName.contains("water_hydra") || statName.contains("skeleton_emperor") || statName.contains("guardian_defender") || statName.contains("guardian_emperor") || statName.contains("carrot_king"))
+                for (String sc : SEA_CREATURES)
                 {
-                    if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
+                    if (statName.contains(sc))
                     {
-                        emperorKills += value;
-                    }
-                    else
-                    {
-                        seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                        if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
+                        {
+                            emperorKills += value;
+                        }
+                        else if (statName.contains("chicken_deep") || statName.contains("zombie_deep"))
+                        {
+                            deepMonsterKills += value;
+                        }
+                        else
+                        {
+                            seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
+                        }
                     }
                 }
-                else if (statName.contains("dragon"))
+
+                if (statName.contains("dragon"))
                 {
                     dragons.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
                 }
@@ -2923,9 +2935,14 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
 
+        // special case
         if (emperorKills > 0)
         {
-            seaCreatures.add(new SkyBlockStats("Sea Emperor kills", emperorKills)); // special case
+            seaCreatures.add(new SkyBlockStats("Sea Emperor kills", emperorKills));
+        }
+        if (deepMonsterKills > 0)
+        {
+            seaCreatures.add(new SkyBlockStats("Monster of the Deep kills", deepMonsterKills));
         }
 
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
