@@ -153,6 +153,7 @@ public class ExtendedConfig
     public boolean automaticOpenMaddox = false;
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
+    public boolean lobbyPlayerCount = false;
 
     private ExtendedConfig() {}
 
@@ -295,6 +296,7 @@ public class ExtendedConfig
             this.automaticOpenMaddox = ExtendedConfig.getBoolean(nbt, "AutomaticOpenMaddox", this.automaticOpenMaddox);
             this.sneakToTradeOtherPlayerIsland = ExtendedConfig.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             this.makeSpecialZealotHeldGold = ExtendedConfig.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
+            this.lobbyPlayerCount = ExtendedConfig.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -428,6 +430,7 @@ public class ExtendedConfig
             nbt.setBoolean("AutomaticOpenMaddox", this.automaticOpenMaddox);
             nbt.setBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             nbt.setBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
+            nbt.setBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
@@ -791,6 +794,10 @@ public class ExtendedConfig
         {
             this.makeSpecialZealotHeldGold = !this.makeSpecialZealotHeldGold;
         }
+        else if (options == ExtendedConfig.Options.LOBBY_PLAYER_COUNT)
+        {
+            this.lobbyPlayerCount = !this.lobbyPlayerCount;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1106,6 +1113,8 @@ public class ExtendedConfig
             return this.sneakToTradeOtherPlayerIsland;
         case MAKE_SPECIAL_ZEALOT_HELD_GOLD:
             return this.makeSpecialZealotHeldGold;
+        case LOBBY_PLAYER_COUNT:
+            return this.lobbyPlayerCount;
         default:
             return false;
         }
@@ -1308,6 +1317,7 @@ public class ExtendedConfig
         AUTOMATIC_OPEN_MADDOX(false, true),
         SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND(false, true),
         MAKE_SPECIAL_ZEALOT_HELD_GOLD(false, true),
+        LOBBY_PLAYER_COUNT(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

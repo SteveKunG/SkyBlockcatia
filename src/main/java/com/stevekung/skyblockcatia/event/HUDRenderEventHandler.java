@@ -1,11 +1,10 @@
 package com.stevekung.skyblockcatia.event;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Ordering;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.EnumEquipment;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
@@ -15,6 +14,7 @@ import com.stevekung.skyblockcatia.handler.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.handler.GrapplingHookEvent;
 import com.stevekung.skyblockcatia.renderer.HUDInfo;
 import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEndPortalFrame;
@@ -23,13 +23,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.init.Blocks;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.*;
+import net.minecraft.world.WorldSettings;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -51,6 +54,7 @@ public class HUDRenderEventHandler
     private Set<CoordsPair> recentlyLoadedChunks = new HashSet<>();
     private static final ImmutableList<AxisAlignedBB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AxisAlignedBB(-609, 9, -303, -631, 5, -320), new AxisAlignedBB(-622, 5, -321, -640, 5, -334), new AxisAlignedBB(-631, 7, -293, -648, 7, -312), new AxisAlignedBB(-658, 8, -308, -672, 7, -320), new AxisAlignedBB(-709, 9, -325, -694, 10, -315), new AxisAlignedBB(-702, 10, -303, -738, 5, -261), new AxisAlignedBB(-705, 5, -257, -678, 5, -296), new AxisAlignedBB(-657, 5, -210, -624, 8, -242), new AxisAlignedBB(-625, 7, -256, -662, 5, -286));
     private static final ImmutableList<BlockPos> END_PORTAL_FRAMES = ImmutableList.of(new BlockPos(-669, 9, -277), new BlockPos(-669, 9, -275), new BlockPos(-670, 9, -278), new BlockPos(-672, 9, -278), new BlockPos(-673, 9, -277), new BlockPos(-673, 9, -275), new BlockPos(-672, 9, -274), new BlockPos(-670, 9, -274));
+    private static final Ordering<NetworkPlayerInfo> field_175252_a = Ordering.from(new PlayerComparator());
 
     public HUDRenderEventHandler()
     {
@@ -282,6 +286,13 @@ public class HUDRenderEventHandler
 
                     String color = ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageValueColor).toColoredFont();
                     rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
+                }
+
+                if (ExtendedConfig.instance.lobbyPlayerCount)
+                {
+                    List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
+                    list = list.subList(0, Math.min(list.size(), 80));
+                    rightInfo.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(list.size())).setChatStyle(JsonUtils.green())).getFormattedText());
                 }
 
                 // equipments
@@ -536,6 +547,17 @@ public class HUDRenderEventHandler
         public String getDelay()
         {
             return String.valueOf(this.delay);
+        }
+    }
+
+    static class PlayerComparator implements Comparator<NetworkPlayerInfo>
+    {
+        @Override
+        public int compare(NetworkPlayerInfo p_compare_1_, NetworkPlayerInfo p_compare_2_)
+        {
+            ScorePlayerTeam scoreplayerteam = p_compare_1_.getPlayerTeam();
+            ScorePlayerTeam scoreplayerteam1 = p_compare_2_.getPlayerTeam();
+            return ComparisonChain.start().compareTrueFirst(p_compare_1_.getGameType() != WorldSettings.GameType.SPECTATOR, p_compare_2_.getGameType() != WorldSettings.GameType.SPECTATOR).compare(scoreplayerteam != null ? scoreplayerteam.getRegisteredName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getRegisteredName() : "").compare(p_compare_1_.getGameProfile().getName(), p_compare_2_.getGameProfile().getName()).result();
         }
     }
 }

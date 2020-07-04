@@ -50,6 +50,7 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.AUTOMATIC_OPEN_MADDOX);
         OPTIONS.add(ExtendedConfig.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND);
         OPTIONS.add(ExtendedConfig.Options.MAKE_SPECIAL_ZEALOT_HELD_GOLD);
+        OPTIONS.add(ExtendedConfig.Options.LOBBY_PLAYER_COUNT);
     }
 
     public GuiHypixelSettings(GuiScreen parent)
