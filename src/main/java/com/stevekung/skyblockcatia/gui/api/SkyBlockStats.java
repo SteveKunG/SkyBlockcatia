@@ -32,7 +32,7 @@ public class SkyBlockStats
         {
             return "";
         }
-        else if (this.name.contains("Race"))
+        else if (this.name.contains("Race") || this.name.contains("Best Time"))
         {
             double seconds = this.value / 1000.0D;
             return FORMAT.format(seconds) + " seconds";

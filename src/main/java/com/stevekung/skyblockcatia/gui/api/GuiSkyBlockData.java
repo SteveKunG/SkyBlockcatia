@@ -2850,6 +2850,7 @@ public class GuiSkyBlockData extends GuiScreen
         List<SkyBlockStats> mobKills = new ArrayList<>();
         List<SkyBlockStats> seaCreatures = new ArrayList<>();
         List<SkyBlockStats> dragons = new ArrayList<>();
+        List<SkyBlockStats> race = new ArrayList<>();
 
         // special case
         int emperorKills = 0;
@@ -2928,6 +2929,10 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     petMilestone.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
                 }
+                else if (statName.contains("race") || statName.contains("dungeon_hub"))
+                {
+                    race.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("dungeon_hub_", "").replace("_", " ")), value));
+                }
                 else
                 {
                     others.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
@@ -2952,6 +2957,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
         this.sortStats(petMilestone, "Pet Milestones");
+        this.sortStats(race, "Races");
         this.sortStats(others, "Others");
 
         this.sortStatsByValue(mobKills, "Mob Kills");
@@ -2986,6 +2992,10 @@ public class GuiSkyBlockData extends GuiScreen
         if (petMilestone.size() > 2)
         {
             this.sbOthers.addAll(petMilestone);
+        }
+        if (race.size() > 2)
+        {
+            this.sbOthers.addAll(race);
         }
         if (others.size() > 2)
         {
@@ -4033,8 +4043,15 @@ public class GuiSkyBlockData extends GuiScreen
         {
             if (!this.stats.isEmpty())
             {
+                FontRenderer font = this.parent.mc.fontRendererObj;
                 SkyBlockStats stat = this.stats.get(index);
-                this.parent.drawString(this.parent.mc.fontRendererObj, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.parent.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+
+                if (!StringUtils.isNullOrEmpty(stat.getName()) && this.parent.mc.fontRendererObj.getStringWidth(stat.getName()) > 200)
+                {
+                    font = ColorUtils.unicodeFontRenderer;
+                }
+
+                this.parent.drawString(font, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.parent.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
                 this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValueByString(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
             }
         }
