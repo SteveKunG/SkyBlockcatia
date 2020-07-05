@@ -91,27 +91,27 @@ public class SkyBlockcatiaMod
         SkyBlockcatiaMod.initProfileFile();
         LoggerIN.setup();
         SkyBlockAPIUtils.getSupportedPackNames();
+        CommonUtils.runAsync(() ->
+        {
+            try
+            {
+                BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                String inputLine;
+
+                while ((inputLine = reader.readLine()) != null)
+                {
+                    SUPPORTERS_NAME.add(inputLine);
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        });
 
         if (!isDevelopment)
         {
             SkyBlockcatiaMod.kuy();
-            CommonUtils.runAsync(() ->
-            {
-                try
-                {
-                    BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
-                    String inputLine;
-
-                    while ((inputLine = reader.readLine()) != null)
-                    {
-                        SUPPORTERS_NAME.add(inputLine);
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            });
         }
     }
 

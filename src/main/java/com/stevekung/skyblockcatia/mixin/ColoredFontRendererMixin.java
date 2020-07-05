@@ -1,5 +1,8 @@
 package com.stevekung.skyblockcatia.mixin;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -71,7 +74,15 @@ public abstract class ColoredFontRendererMixin
             {
                 if (text != null && text.contains(name))
                 {
-                    text = text.replaceAll("\\u00a7[0-9a-fbr]" + name + "|\\u00a7[rb]" + name + "\\u00a7r|\\b" + name + "\\b", ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
+                    String namePatt = "(?:(?:\\u00a7[0-9a-fbr])\\B(?:" + name + ")\\b)|(?:\\u00a7[rb]" + name + "\\u00a7r)|\\b" + name + "\\b";
+                    Pattern prevColor = Pattern.compile("(?:.*\\B(?:(?<color>\\u00a7[0-9a-fbr])" + name + ")\\b.*)");
+                    Matcher prevColorMat = prevColor.matcher(text);
+
+                    if (prevColorMat.matches())
+                    {
+                        return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + prevColorMat.group("color"));
+                    }
+                    return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
                 }
             }
         }
