@@ -184,6 +184,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 this.username = this.usernameTextField.getText();
                 this.profiles.clear();
                 this.profileButtonList.clear();
+                this.guild = "";
                 this.loadingApi = true;
 
                 CommonUtils.runAsync(() ->
