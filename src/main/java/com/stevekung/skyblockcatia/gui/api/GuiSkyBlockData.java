@@ -20,8 +20,9 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -77,8 +78,6 @@ public class GuiSkyBlockData extends GuiScreen
     private static final ResourceLocation INVENTORY_TABS = new ResourceLocation("skyblockcatia:textures/gui/tabs.png");
     private static final ResourceLocation XP_BARS = new ResourceLocation("skyblockcatia:textures/gui/skill_xp_bar.png");
     private static final String[] REVENANT_HORROR_HEAD = new String[] {"0862e0b0-a14f-3f93-894f-013502936b59", "eyJ0aW1lc3RhbXAiOjE1Njg0NTc0MjAxMzcsInByb2ZpbGVJZCI6IjQxZDNhYmMyZDc0OTQwMGM5MDkwZDU0MzRkMDM4MzFiIiwicHJvZmlsZU5hbWUiOiJNZWdha2xvb24iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RiYWQ5OWVkM2M4MjBiNzk3ODE5MGFkMDhhOTM0YTY4ZGZhOTBkOTk4NjgyNWRhMWM5N2Y2ZjIxZjQ5YWQ2MjYifX19"};
-    private static final Set<String> SEA_CREATURES = Sets.newHashSet("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
-
     // Based stuff
     private boolean firstLoad;
     private boolean loadingApi = true;
@@ -115,6 +114,9 @@ public class GuiSkyBlockData extends GuiScreen
     private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
     private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
     private static final DecimalFormat SKILL_AVG1 = new DecimalFormat("##.##");
+    private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
+    private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
+    private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold").put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder").build();
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
@@ -1622,13 +1624,7 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (gameType.getAsString().equals("SKYBLOCK"))
             {
-                for (IslandLocation location : IslandLocation.VALUES)
-                {
-                    if (mode.getAsString().equals(location.name().toLowerCase()))
-                    {
-                        locationText = location.getName();
-                    }
-                }
+                locationText = CURRENT_LOCATION_MAP.getOrDefault(mode.getAsString(), mode.getAsString());
             }
         }
         return locationText;
@@ -2902,16 +2898,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else
             {
-                try
-                {
-                    SkyBlockOtherStats statsNew = SkyBlockOtherStats.valueOf(statName.toUpperCase());
-
-                    if (statName.equals(statsNew.name().toLowerCase()))
-                    {
-                        statName = statsNew.getNewName();
-                    }
-                }
-                catch (Exception e) {}
+                statName = RENAMED_STATS_MAP.getOrDefault(statName, statName);
 
                 if (statName.contains("auctions"))
                 {
@@ -3770,68 +3757,6 @@ public class GuiSkyBlockData extends GuiScreen
         public enum Type
         {
             TEXT, XP_AND_MOB;
-        }
-    }
-
-    private enum SkyBlockOtherStats
-    {
-        AUCTIONS_BOUGHT_COMMON("common_auctions_bought"),
-        AUCTIONS_BOUGHT_EPIC("epic_auctions_bought"),
-        AUCTIONS_BOUGHT_LEGENDARY("legendary_auctions_bought"),
-        AUCTIONS_BOUGHT_RARE("rare_auctions_bought"),
-        AUCTIONS_BOUGHT_SPECIAL("special_auctions_bought"),
-        AUCTIONS_BOUGHT_UNCOMMON("uncommon_auctions_bought"),
-        AUCTIONS_SOLD_COMMON("common_auctions_sold"),
-        AUCTIONS_SOLD_EPIC("epic_auctions_sold"),
-        AUCTIONS_SOLD_LEGENDARY("legendary_auctions_sold"),
-        AUCTIONS_SOLD_RARE("rare_auctions_sold"),
-        AUCTIONS_SOLD_SPECIAL("special_auctions_sold"),
-        AUCTIONS_SOLD_UNCOMMON("uncommon_auctions_sold"),
-        ITEMS_FISHED_LARGE_TREASURE("large_treasure_items_fished"),
-        ITEMS_FISHED_NORMAL("normal_items_fished"),
-        ITEMS_FISHED_TREASURE("treasure_items_fished"),
-        SHREDDER_BAIT("bait_used_with_shredder");
-
-        private final String newName;
-
-        private SkyBlockOtherStats(String newName)
-        {
-            this.newName = newName;
-        }
-
-        public String getNewName()
-        {
-            return this.newName;
-        }
-    }
-
-    private enum IslandLocation
-    {
-        DYNAMIC("Private Island"),
-        HUB("Hub"),
-        MINING_1("Gold Mine"),
-        MINING_2("Deep Caverns"),
-        COMBAT_1("Spider's Den"),
-        COMBAT_2("Blazing Fortress"),
-        COMBAT_3("The End"),
-        FARMING_1("The Barn"),
-        FARMING_2("Mushroom Desert"),
-        FORAGING_1("The Park"),
-        WINTER("Jerry's Workshop"),
-        DUNGEON_HUB("Dungeon Hub"),
-        DUNGEON("Dungeon");
-
-        private final String name;
-        protected static final IslandLocation[] VALUES = IslandLocation.values();
-
-        private IslandLocation(String name)
-        {
-            this.name = name;
-        }
-
-        public String getName()
-        {
-            return this.name;
         }
     }
 
