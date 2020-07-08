@@ -3818,7 +3818,8 @@ public class GuiSkyBlockData extends GuiScreen
         FARMING_2("Mushroom Desert"),
         FORAGING_1("The Park"),
         WINTER("Jerry's Workshop"),
-        DUNGEON_HUB("Dungeon Hub");
+        DUNGEON_HUB("Dungeon Hub"),
+        DUNGEON("Dungeon");
 
         private final String name;
         protected static final IslandLocation[] VALUES = IslandLocation.values();
