@@ -127,7 +127,7 @@ public class SkyBlockMinion
             return this.category;
         }
 
-        public ItemStack getPetItem()
+        public ItemStack getMinionItem()
         {
             return RenderUtils.getSkullItemStack(this.uuid, this.value);
         }

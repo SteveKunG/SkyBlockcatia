@@ -1679,7 +1679,7 @@ public class GuiSkyBlockData extends GuiScreen
                     break;
                 }
             }
-            minionLevels.add(new MinionLevel(minion.name(), minion.getAltName(), minion.getPetItem(), level, minion.getMinionCategory()));
+            minionLevels.add(new MinionLevel(minion.name(), minion.getAltName(), minion.getMinionItem(), level, minion.getMinionCategory()));
         }
 
         int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
