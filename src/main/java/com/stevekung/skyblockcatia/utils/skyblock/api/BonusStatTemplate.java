@@ -10,12 +10,13 @@ public class BonusStatTemplate
     private double speed;
     private double critChance;
     private double critDamage;
+    private double attackSpeed;
     private double intelligence;
     private double seaCreatureChance;
     private double magicFind;
     private double petLuck;
 
-    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double intelligence, double seaCreatureChance, double magicFind, double petLuck)
+    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck)
     {
         this.health = health;
         this.defense = defense;
@@ -25,6 +26,7 @@ public class BonusStatTemplate
         this.speed = speed;
         this.critChance = critChance;
         this.critDamage = critDamage;
+        this.attackSpeed = attackSpeed;
         this.intelligence = intelligence;
         this.seaCreatureChance = seaCreatureChance;
         this.magicFind = magicFind;
@@ -41,11 +43,12 @@ public class BonusStatTemplate
         this.speed += toAdd.speed;
         this.critChance += toAdd.critChance;
         this.critDamage += toAdd.critDamage;
+        this.attackSpeed += toAdd.attackSpeed;
         this.intelligence += toAdd.intelligence;
         this.seaCreatureChance += toAdd.seaCreatureChance;
         this.magicFind += toAdd.magicFind;
         this.petLuck += toAdd.petLuck;
-        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
+        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
     }
 
     public double getHealth()
@@ -94,6 +97,11 @@ public class BonusStatTemplate
     public double getCritDamage()
     {
         return this.critDamage;
+    }
+
+    public double getAttackSpeed()
+    {
+        return this.attackSpeed;
     }
 
     public double getIntelligence()
@@ -154,6 +162,11 @@ public class BonusStatTemplate
     public void setCritDamage(double critDamage)
     {
         this.critDamage = critDamage;
+    }
+
+    public void setAttackSpeed(double attackSpeed)
+    {
+        this.attackSpeed = attackSpeed;
     }
 
     public void setIntelligence(double intelligence)
@@ -221,6 +234,12 @@ public class BonusStatTemplate
     public BonusStatTemplate addCritDamage(double critDamage)
     {
         this.critDamage += critDamage;
+        return this;
+    }
+
+    public BonusStatTemplate addAttackSpeed(double attackSpeed)
+    {
+        this.attackSpeed += attackSpeed;
         return this;
     }
 

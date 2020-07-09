@@ -61,6 +61,8 @@ public enum SBLocation
 
     JERRY_WORKSHOP("Jerry's Workshop", ImmutableList.of(Blocks.ICE)),
     JERRY_POND("Jerry Pond", ImmutableList.of(Blocks.ICE)),
+
+    DUNGEON_HUB("Dungeon Hub"),
     ;
 
     public static final SBLocation[] VALUES = SBLocation.values();

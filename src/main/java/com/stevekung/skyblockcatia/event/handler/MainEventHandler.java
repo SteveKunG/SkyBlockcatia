@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
@@ -20,6 +21,8 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.stevekungslib.utils.CalendarUtils;
 import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -35,8 +38,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderNameplateEvent;
@@ -52,7 +58,7 @@ public class MainEventHandler
     private final Minecraft mc;
     private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Backpack", "Chest"));
     public static String auctionPrice = "";
-    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal"));
+    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal", "Reforge Accessory Bag"));
     public static boolean showChat;
     public static String playerToView;
     public static final List<String> SKYBLOCK_PACK_16 = new ArrayList<>(Arrays.asList("v8F1.8 Hypixel Skyblock Pack (16x)", "v8O1.8 Hypixel Skyblock Pack(16x)", "v9F1.8 Hypixel Skyblock Pack (16x)", "v9O1.8 Hypixel Skyblock Pack (16x)", "vXF16x_Skyblock_Pack_1.8.9", "vXO16x_Skyblock_Pack_1.8.9"));
@@ -147,6 +153,14 @@ public class MainEventHandler
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
                         ((ItemButton)button).setName("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF"));
                     }));
+                }
+                else if (title.getUnformattedComponentText().contains("Wardrobe"))
+                {
+                    event.addWidget(new ItemButton(width + 88, height + 47, Items.BONE, true, "Pets", button -> this.mc.player.sendChatMessage("/pets")));
+                }
+                else if (title.getUnformattedComponentText().contains("Pets"))
+                {
+                    event.addWidget(new ItemButton(width + 88, height + 47, Items.LEATHER_CHESTPLATE, true, "Wardrobe", button -> this.mc.player.sendChatMessage("/wardrobe")));
                 }
             }
         }
@@ -292,23 +306,23 @@ public class MainEventHandler
 
     public static void getBazaarData()
     {
-//        if (!SBExtendedConfig.INSTANCE.bazaarOnItemTooltip)
-//        {
-//            return;
-//        }
-//
-//        if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
-//        {
-//            ClientUtils.printClientMessage("Couldn't get bazaar data, Empty text in the Config!", TextFormatting.RED);
-//            ClientUtils.printClientMessage(JsonUtils.create("Make sure you're in the Hypixel!").applyTextStyle(TextFormatting.YELLOW).appendSibling(JsonUtils.create(" Click Here to create an API key").applyTextStyle(TextFormatting.GOLD).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
-//            return;
-//        }
-//        if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
-//        {
-//            ClientUtils.printClientMessage("Invalid UUID for Hypixel API Key!", TextFormatting.RED);
-//            ClientUtils.printClientMessage("Example UUID pattern: " + UUID.randomUUID(), TextFormatting.YELLOW);
-//            return;
-//        }
+        if (!SBExtendedConfig.INSTANCE.bazaarOnItemTooltip)
+        {
+            return;
+        }
+
+        if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
+        {
+            ClientUtils.printClientMessage("Couldn't get bazaar data, Empty text in the Config!", TextFormatting.RED);
+            ClientUtils.printClientMessage(JsonUtils.create("Make sure you're in the Hypixel!").applyTextStyle(TextFormatting.YELLOW).appendSibling(JsonUtils.create(" Click Here to create an API key").applyTextStyle(TextFormatting.GOLD).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
+            return;
+        }
+        if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
+        {
+            ClientUtils.printClientMessage("Invalid UUID for Hypixel API Key!", TextFormatting.RED);
+            ClientUtils.printClientMessage("Example UUID pattern: " + UUID.randomUUID(), TextFormatting.YELLOW);
+            return;
+        }
 
         try
         {

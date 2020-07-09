@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Ordering;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.stevekungslib.utils.JsonUtils;
 
 import net.minecraft.client.Minecraft;
@@ -43,16 +44,26 @@ public abstract class MixinPlayerTabOverlayGui
     @Inject(method = "render(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At("HEAD"))
     private void injectPlayerCount(int width, Scoreboard scoreboard, @Nullable ScoreObjective scoreObjective, CallbackInfo info)
     {
-        List<NetworkPlayerInfo> list = ENTRY_ORDERING.sortedCopy(this.mc.player.connection.getPlayerInfoMap());
-        list = list.subList(0, Math.min(list.size(), 80));
-        this.playerCount = list.size();
+        if (SBExtendedConfig.INSTANCE.lobbyPlayerCount)
+        {
+            List<NetworkPlayerInfo> list = ENTRY_ORDERING.sortedCopy(this.mc.player.connection.getPlayerInfoMap());
+            list = list.subList(0, Math.min(list.size(), 80));
+            this.playerCount = list.size();
+        }
     }
 
     @Redirect(method = "render(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.listFormattedStringToWidth(Ljava/lang/String;I)Ljava/util/List;", ordinal = 0))
     private List<String> addLobbyPlayerCount(FontRenderer fontRenderer, String str, int wrapWidth)
     {
-        List<String> origin = new CopyOnWriteArrayList<>(fontRenderer.listFormattedStringToWidth(str, wrapWidth));
-        origin.add(JsonUtils.create("Lobby Players Count: ").applyTextStyle(TextFormatting.GOLD).appendSibling(JsonUtils.create(String.valueOf(this.playerCount)).applyTextStyle(TextFormatting.GREEN)).getFormattedText());
-        return origin;
+        if (SBExtendedConfig.INSTANCE.lobbyPlayerCount)
+        {
+            List<String> origin = new CopyOnWriteArrayList<>(fontRenderer.listFormattedStringToWidth(str, wrapWidth));
+            origin.add(JsonUtils.create("Lobby Players Count: ").applyTextStyle(TextFormatting.GOLD).appendSibling(JsonUtils.create(String.valueOf(this.playerCount)).applyTextStyle(TextFormatting.GREEN)).getFormattedText());
+            return origin;
+        }
+        else
+        {
+            return fontRenderer.listFormattedStringToWidth(str, wrapWidth);
+        }
     }
 }

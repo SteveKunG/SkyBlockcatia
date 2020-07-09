@@ -31,10 +31,9 @@ public class SBStats
         {
             return "";
         }
-        else if (this.name.contains("Race"))
+        else if (this.name.contains("Race") || this.name.contains("Best Time"))
         {
-            double seconds = this.value / 1000.0D;
-            return NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(seconds) + " seconds";
+            return String.format("%1$TM:%1$TS.%1$TL", (long)this.value);
         }
         return NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.value);
     }

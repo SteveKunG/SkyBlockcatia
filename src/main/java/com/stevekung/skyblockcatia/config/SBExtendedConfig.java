@@ -63,6 +63,7 @@ public class SBExtendedConfig
     public boolean automaticOpenMaddox = false;
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
+    public boolean lobbyPlayerCount = false;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -101,6 +102,7 @@ public class SBExtendedConfig
     public static final BooleanConfigOption AUTOMATIC_OPEN_MADDOX = new BooleanConfigOption("automatic_open_maddox", config -> config.automaticOpenMaddox, (config, value) -> config.automaticOpenMaddox = value);
     public static final BooleanConfigOption SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND = new BooleanConfigOption("sneak_to_trade_other_player_island", config -> config.sneakToTradeOtherPlayerIsland, (config, value) -> config.sneakToTradeOtherPlayerIsland = value);
     public static final BooleanConfigOption MAKE_SPECIAL_ZEALOT_HELD_GOLD = new BooleanConfigOption("make_special_zealot_held_gold", config -> config.makeSpecialZealotHeldGold, (config, value) -> config.makeSpecialZealotHeldGold = value);
+    public static final BooleanConfigOption LOBBY_PLAYER_COUNT  = new BooleanConfigOption("lobby_player_count", config -> config.lobbyPlayerCount, (config, value) -> config.lobbyPlayerCount = value);
 
 
     public static final StringConfigOption VISIT_ISLAND_DISPLAY_MODE = new StringConfigOption("visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey()));
@@ -163,6 +165,7 @@ public class SBExtendedConfig
             this.automaticOpenMaddox = this.getBoolean(nbt, "AutomaticOpenMaddox", this.automaticOpenMaddox);
             this.sneakToTradeOtherPlayerIsland = this.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             this.makeSpecialZealotHeldGold = this.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
+            this.lobbyPlayerCount = this.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -224,6 +227,7 @@ public class SBExtendedConfig
             nbt.putBoolean("AutomaticOpenMaddox", this.automaticOpenMaddox);
             nbt.putBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             nbt.putBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
+            nbt.putBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());

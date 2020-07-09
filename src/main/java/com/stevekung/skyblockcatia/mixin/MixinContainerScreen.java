@@ -450,7 +450,8 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                             RGB rare = ColorUtils.stringToRGB("85,85,255");
                             RGB epic = ColorUtils.stringToRGB("170,0,170");
                             RGB legendary = ColorUtils.stringToRGB("255,170,0");
-                            RGB special = ColorUtils.stringToRGB("255,85,255");
+                            RGB mythic = ColorUtils.stringToRGB("255,85,255");
+                            RGB special = ColorUtils.stringToRGB("255,85,85");
 
                             if (color.equals(TextFormatting.WHITE.toString()))
                             {
@@ -473,6 +474,10 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 SBRenderUtils.renderRarity(slot.xPos, slot.yPos, legendary);
                             }
                             else if (color.equals(TextFormatting.LIGHT_PURPLE.toString()))
+                            {
+                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, mythic);
+                            }
+                            else if (color.equals(TextFormatting.RED.toString()))
                             {
                                 SBRenderUtils.renderRarity(slot.xPos, slot.yPos, special);
                             }

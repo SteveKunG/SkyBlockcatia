@@ -45,6 +45,7 @@
     "only_mineable_hitbox.extended_config": "Only Mineable Block Hitbox",
     "ignore_interact_invisible_armor_stand.extended_config": "Ignore Invisible Armor Stand",
     "make_special_zealot_held_gold.extended_config": "Make Special Zealot held Gold Block",
+    "lobby_player_count.extended_config": "Lobby Player Count",
 
     "_comment": "MESSAGE",
     "message.check": "Check",

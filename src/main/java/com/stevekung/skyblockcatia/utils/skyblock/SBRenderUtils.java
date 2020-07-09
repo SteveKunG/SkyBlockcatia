@@ -58,7 +58,9 @@ public class SBRenderUtils
                     RGB rare = ColorUtils.stringToRGB("85,85,255");
                     RGB epic = ColorUtils.stringToRGB("170,0,170");
                     RGB legendary = ColorUtils.stringToRGB("255,170,0");
-                    RGB special = ColorUtils.stringToRGB("255,85,255");
+                    RGB mythic = ColorUtils.stringToRGB("255,85,255");
+                    RGB special = ColorUtils.stringToRGB("255,85,85");
+                    RGB verySpecial = ColorUtils.stringToRGB("170,0,0");
 
                     if (lore.startsWith(TextFormatting.WHITE + "" + TextFormatting.BOLD + "COMMON"))
                     {
@@ -80,9 +82,17 @@ public class SBRenderUtils
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, legendary);
                     }
-                    else if (lore.startsWith(TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + "SPECIAL"))
+                    else if (lore.startsWith(TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + "MYTHIC"))
+                    {
+                        SBRenderUtils.renderRarity(xPos, yPos, mythic);
+                    }
+                    else if (lore.startsWith(TextFormatting.RED + "" + TextFormatting.BOLD + "SPECIAL"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, special);
+                    }
+                    else if (lore.startsWith(TextFormatting.RED + "" + TextFormatting.BOLD + "VERY SPECIAL"))
+                    {
+                        SBRenderUtils.renderRarity(xPos, yPos, verySpecial);
                     }
                 }
             }

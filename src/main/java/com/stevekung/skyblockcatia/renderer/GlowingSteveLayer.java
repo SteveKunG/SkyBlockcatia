@@ -22,7 +22,7 @@ public class GlowingSteveLayer extends LayerRenderer<AbstractClientPlayerEntity,
     @Override
     public void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, AbstractClientPlayerEntity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
     {
-        if (entity.getName().getString().equals("SteveKunG"))
+        if (!entity.isInvisible() && entity.getName().getString().equals("SteveKunG"))
         {
             float time = entity.ticksExisted + partialTicks;
             float alpha = (MathHelper.sin(time / 24) + 1F) / 2F + 0.15F;

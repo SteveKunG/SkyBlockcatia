@@ -127,7 +127,7 @@ public class SBMinions
             return this.category;
         }
 
-        public ItemStack getPetItem()
+        public ItemStack getMinionItem()
         {
             return SBRenderUtils.getSkullItemStack(this.uuid, this.value);
         }

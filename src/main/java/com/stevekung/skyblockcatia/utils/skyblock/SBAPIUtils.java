@@ -64,7 +64,7 @@ public class SBAPIUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            MAX_FAIRY_SOULS = 194;
+            MAX_FAIRY_SOULS = 201;
         }
     }
 
@@ -94,6 +94,14 @@ public class SBAPIUtils
 
                 for (int i = type == SBInventoryType.INVENTORY ? 9 : 0; i < list.size(); ++i)
                 {
+                    // workaround for dummy slot
+                    if (type == SBInventoryType.ACCESSORY_BAG || type == SBInventoryType.POTION_BAG || type == SBInventoryType.FISHING_BAG || type == SBInventoryType.QUIVER)
+                    {
+                        if (i >= 45)
+                        {
+                            break;
+                        }
+                    }
                     itemStack.add(SBAPIUtils.flatteningItemStack(list.getCompound(i)));
                 }
                 if (type == SBInventoryType.INVENTORY)
