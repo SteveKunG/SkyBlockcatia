@@ -137,6 +137,8 @@ public class GuiSkyBlockData extends GuiScreen
     private EntityOtherFakePlayer player;
     private String skillAvg;
     private int petScore;
+    private int activeSlayerTier;
+    private SlayerType activeSlayerType;
 
     // Info & Inventory
     private static final int SIZE = 36;
@@ -765,6 +767,12 @@ public class GuiSkyBlockData extends GuiScreen
                     String total2 = EnumChatFormatting.GRAY + "Total Slayer XP: " + EnumChatFormatting.YELLOW + FORMAT.format(this.totalSlayerXp);
                     this.drawString(this.fontRendererObj, total1, this.width - this.fontRendererObj.getStringWidth(total1) - 60, this.height - 36, 16777215);
                     this.drawString(this.fontRendererObj, total2, this.width - this.fontRendererObj.getStringWidth(total2) - 60, this.height - 46, 16777215);
+
+                    if (this.activeSlayerType != null)
+                    {
+                        this.drawString(this.fontRendererObj, EnumChatFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
+                        this.drawString(this.fontRendererObj, EnumChatFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
+                    }
                 }
                 else if (this.currentSlot instanceof SkyBlockCraftedMinions)
                 {
@@ -3046,6 +3054,20 @@ public class GuiSkyBlockData extends GuiScreen
     private void getSlayerInfo(JsonObject currentProfile)
     {
         JsonElement slayerBosses = currentProfile.get("slayer_bosses");
+        JsonElement slayerQuest = currentProfile.get("slayer_quest");
+
+        if (slayerQuest != null)
+        {
+            try
+            {
+                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase());
+                this.activeSlayerTier = 1 + slayerQuest.getAsJsonObject().get("tier").getAsInt();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
 
         if (slayerBosses != null)
         {
