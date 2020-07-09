@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -2304,6 +2305,19 @@ public class GuiSkyBlockData extends GuiScreen
         if (this.checkSkyBlockItem(this.armorItems, "ELEGANT_TUXEDO_") == 3)
         {
             this.allStat.setHealth(250);
+        }
+        for (ItemStack itemStack : this.armorItems.stream().filter(armor -> armor != null && armor.hasTagCompound() && armor.getTagCompound().getCompoundTag("ExtraAttributes").getString("modifier").equals("renowned")).collect(Collectors.toList()))
+        {
+            this.allStat.setHealth(Math.round(this.allStat.getHealth() * 1.01D));
+            this.allStat.setDefense(Math.round(this.allStat.getDefense() * 1.01D));
+            this.allStat.setStrength(Math.round(this.allStat.getStrength() * 1.01D));
+            this.allStat.setSpeed(Math.round(this.allStat.getSpeed() * 1.01D));
+            this.allStat.setCritChance(Math.round(this.allStat.getCritChance() * 1.01D));
+            this.allStat.setCritDamage(Math.round(this.allStat.getCritDamage() * 1.01D));
+            this.allStat.setIntelligence(Math.round(this.allStat.getIntelligence() * 1.01D));
+            this.allStat.setSeaCreatureChance(Math.round(this.allStat.getSeaCreatureChance() * 1.01D));
+            this.allStat.setMagicFind(Math.round(this.allStat.getMagicFind() * 1.01D));
+            this.allStat.setPetLuck(Math.round(this.allStat.getPetLuck() * 1.01D));
         }
     }
 
