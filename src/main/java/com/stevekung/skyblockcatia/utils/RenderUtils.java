@@ -107,7 +107,7 @@ public class RenderUtils
                         {
                             RenderUtils.renderRarity(xPos, yPos, legendary);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.LIGHT_PURPLE + "" + EnumChatFormatting.BOLD + "MYTHIC"))
+                        else if (lore.startsWith(EnumChatFormatting.LIGHT_PURPLE + "" + EnumChatFormatting.BOLD + "MYTHIC") || lore.startsWith(EnumChatFormatting.LIGHT_PURPLE + "" + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED + "a" + EnumChatFormatting.RESET + " " + EnumChatFormatting.LIGHT_PURPLE + EnumChatFormatting.BOLD + EnumChatFormatting.LIGHT_PURPLE + EnumChatFormatting.BOLD + "MYTHIC"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, mythic);
                         }
@@ -115,7 +115,7 @@ public class RenderUtils
                         {
                             RenderUtils.renderRarity(xPos, yPos, special);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "VERY SPECIAL"))
+                        else if (lore.startsWith(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED + "a" + EnumChatFormatting.RESET + " " + EnumChatFormatting.RED + EnumChatFormatting.BOLD + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "VERY SPECIAL"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, verySpecial);
                         }
