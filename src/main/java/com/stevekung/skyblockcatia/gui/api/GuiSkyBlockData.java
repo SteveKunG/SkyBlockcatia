@@ -2324,13 +2324,19 @@ public class GuiSkyBlockData extends GuiScreen
     private void calculatePlayerStats(JsonObject currentProfile)
     {
         JsonElement fairySouls = currentProfile.get("fairy_souls_collected");
+        JsonElement fairyExchangesEle = currentProfile.get("fairy_exchanges");
+        int fairyExchanges = 0;
 
         if (fairySouls != null)
         {
             this.totalFairySouls = fairySouls.getAsInt();
         }
+        if (fairyExchangesEle != null)
+        {
+            fairyExchanges = fairyExchangesEle.getAsInt();
+        }
 
-        this.allStat.add(this.getFairySouls(this.totalFairySouls));
+        this.allStat.add(this.getFairySouls(fairyExchanges));
         this.allStat.add(this.getMagicFindFromPets(this.petScore));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FARMING, this.farmingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FORAGING, this.foragingLevel));
@@ -2509,7 +2515,7 @@ public class GuiSkyBlockData extends GuiScreen
                             String lastLore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(list.tagCount() - 1));
                             Matcher matcher = STATS_PATTERN.matcher(lore);
 
-                            if (!armor && (lastLore.endsWith(" BOOTS") || lastLore.endsWith(" LEGGINGS") || lastLore.endsWith(" CHESTPLATE") || lastLore.endsWith(" HELMET")))
+                            if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY")))
                             {
                                 continue;
                             }
@@ -2634,11 +2640,11 @@ public class GuiSkyBlockData extends GuiScreen
         this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + SKILL_AVG.format(this.allStat.getTrueDefense())));
         this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + SKILL_AVG.format(this.allStat.getStrength())));
         this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + SKILL_AVG.format(this.allStat.getSpeed())));
-        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + SKILL_AVG.format(this.allStat.getCritChance())));
-        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + SKILL_AVG.format(this.allStat.getCritDamage())));
-        this.infoList.add(new SkyBlockInfo(attackSpeed + "\u2694 Attack Speed", attackSpeed + SKILL_AVG.format(this.allStat.getAttackSpeed())));
+        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + SKILL_AVG.format(this.allStat.getCritChance()) + "%"));
+        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + SKILL_AVG.format(this.allStat.getCritDamage()) + "%"));
+        this.infoList.add(new SkyBlockInfo(attackSpeed + "\u2694 Attack Speed", attackSpeed + SKILL_AVG.format(this.allStat.getAttackSpeed()) + "%"));
         this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + SKILL_AVG.format(this.allStat.getIntelligence())));
-        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + SKILL_AVG.format(this.allStat.getSeaCreatureChance())));
+        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + SKILL_AVG.format(this.allStat.getSeaCreatureChance()) + "%"));
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
 
@@ -2652,7 +2658,7 @@ public class GuiSkyBlockData extends GuiScreen
         joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
         String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
-        this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? CommonUtils.getRelativeTime(firstJoinDate.getTime()) : EnumChatFormatting.RED + "No first join data!"));
+        this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? CommonUtils.getRelativeTime(firstJoinDate.getTime()) + " (" + CommonUtils.getRelativeDay(firstJoinDate.getTime()) + ")" : EnumChatFormatting.RED + "No first join data!"));
         this.infoList.add(new SkyBlockInfo("Joined (Date)", firstJoinMillis != -1 ? firstJoinDateFormat : EnumChatFormatting.RED + "No first join data!"));
         this.infoList.add(new SkyBlockInfo("Last Updated", lastSaveMillis != -1 ? String.valueOf(lastSaveDate.getTime()) : EnumChatFormatting.RED + "No last save data!"));
         this.infoList.add(new SkyBlockInfo("Last Updated (Date)", lastSaveMillis != -1 ? lastLogout : EnumChatFormatting.RED + "No last save data!"));
@@ -2671,30 +2677,20 @@ public class GuiSkyBlockData extends GuiScreen
         this.infoList.add(new SkyBlockInfo("Purse", FORMAT_2.format(coins)));
     }
 
-    private BonusStatTemplate getFairySouls(int fairySouls)
+    private BonusStatTemplate getFairySouls(int fairyExchanges)
     {
         double healthBase = 0;
         double defenseBase = 0;
         double strengthBase = 0;
-        double speedBase = 0;
+        double speed = Math.floor(fairyExchanges / 10);
 
-        for (PlayerStatsBonus.FairySouls progress : PlayerStatsBonus.FAIRY_SOULS)
+        for (int i = 0; i < fairyExchanges; i++)
         {
-            int soulToCheck = progress.getCount();
-            double health = progress.getHealth();
-            double defense = progress.getDefense();
-            double strength = progress.getStrength();
-            double speed = progress.getSpeed();
-
-            if (soulToCheck <= fairySouls)
-            {
-                healthBase += health;
-                defenseBase += defense;
-                strengthBase += strength;
-                speedBase += speed;
-            }
+            healthBase += 3 + Math.floor(i / 2);
+            defenseBase += (i + 1) % 5 == 0 ? 2 : 1;
+            strengthBase += (i + 1) % 5 == 0 ? 2 : 1;
         }
-        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0, 0, 0, 0, 0);
+        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speed, 0, 0, 0, 0, 0, 0, 0);
     }
 
     private BonusStatTemplate getMagicFindFromPets(int petsScore)
@@ -3907,7 +3903,7 @@ public class GuiSkyBlockData extends GuiScreen
                 if (stat.getText().equals("Zombie"))
                 {
                     EntityZombie zombie = new EntityZombie(this.parent.mc.theWorld);
-                    ItemStack heldItem = new ItemStack(Items.diamond_hoe);
+                    ItemStack heldItem = new ItemStack(Items.diamond_hoe).setStackDisplayName("Reaper Scythe");
                     ItemStack helmet = RenderUtils.getSkullItemStack(GuiSkyBlockData.REVENANT_HORROR_HEAD[0], GuiSkyBlockData.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.diamond_chestplate);
                     ItemStack leggings = new ItemStack(Items.chainmail_leggings);

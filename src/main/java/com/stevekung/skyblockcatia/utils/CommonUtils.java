@@ -141,6 +141,15 @@ public class CommonUtils
         }
     }
 
+    public static String getRelativeDay(long timeDiff)
+    {
+        timeDiff = timeDiff / 1000;
+        long current = System.currentTimeMillis() / 1000;
+        long timeElapsed = current - timeDiff;
+        int days = Math.round(timeElapsed / 86400);
+        return days + " day" + (days == 1 ? "" : "s");
+    }
+
     private static String convertCorrectTime(int time, String text, boolean an)
     {
         return (time == 1 ? an ? "an" : "a" : time) + " " + text + (time == 1 ? "" : "s") + " ago";
