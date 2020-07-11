@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +50,7 @@ public class LoggerIN
 
     public static void logToast(Object object)
     {
-        String message = object == null ? "null" : object.toString();
+        String message = object == null ? "null" : StringEscapeUtils.escapeJava(object.toString());
         String preLine = new SimpleDateFormat("[HH:mm:ss]").format(new Date()) + " [" + Level.DEBUG.name() + "] ";
 
         for (String line : message.split("\\n"))
