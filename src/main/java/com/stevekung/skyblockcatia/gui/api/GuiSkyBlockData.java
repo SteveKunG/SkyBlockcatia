@@ -2160,7 +2160,7 @@ public class GuiSkyBlockData extends GuiScreen
                     }
 
                     list.appendTag(new NBTTagString(""));
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatCompact(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
                     list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                     petData.add(new PetData(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
@@ -2212,7 +2212,7 @@ public class GuiSkyBlockData extends GuiScreen
         int xpRequired = 0;
         int currentLvl = 0;
         int levelToCheck = 0;
-        int xpTotal = 0;
+        double xpTotal = 0;
         double xpToNextLvl = 0;
         double currentXp = 0;
 
@@ -2243,7 +2243,7 @@ public class GuiSkyBlockData extends GuiScreen
             currentLvl = progress.length + 1;
             xpRequired = 0;
         }
-        return new PetLevel(currentLvl, levelToCheck, (int)currentXp, xpRequired, (int)petExp, totalPetTypeXp);
+        return new PetLevel(currentLvl, levelToCheck, currentXp, xpRequired, petExp, totalPetTypeXp);
     }
 
     private void applyBonuses()
@@ -3486,12 +3486,12 @@ public class GuiSkyBlockData extends GuiScreen
     {
         private final int currentPetLevel;
         private final int nextPetLevel;
-        private final int currentPetXp;
+        private final double currentPetXp;
         private final int xpRequired;
-        private final int petXp;
+        private final double petXp;
         private final int totalPetTypeXp;
 
-        public PetLevel(int currentPetLevel, int nextPetLevel, int currentPetXp, int xpRequired, int petXp, int totalPetTypeXp)
+        public PetLevel(int currentPetLevel, int nextPetLevel, double currentPetXp, int xpRequired, double petXp, int totalPetTypeXp)
         {
             this.currentPetLevel = currentPetLevel;
             this.nextPetLevel = nextPetLevel;
@@ -3511,7 +3511,7 @@ public class GuiSkyBlockData extends GuiScreen
             return this.nextPetLevel;
         }
 
-        public int getCurrentPetXp()
+        public double getCurrentPetXp()
         {
             return this.currentPetXp;
         }
@@ -3521,7 +3521,7 @@ public class GuiSkyBlockData extends GuiScreen
             return this.xpRequired;
         }
 
-        public int getPetXp()
+        public double getPetXp()
         {
             return this.petXp;
         }
