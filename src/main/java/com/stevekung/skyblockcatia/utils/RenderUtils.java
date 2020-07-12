@@ -87,35 +87,35 @@ public class RenderUtils
                         RGB special = ColorUtils.stringToRGB("255,85,85");
                         RGB verySpecial = ColorUtils.stringToRGB("170,0,0");
 
-                        if (lore.startsWith(EnumChatFormatting.WHITE + "" + EnumChatFormatting.BOLD + "COMMON"))
+                        if (RenderUtils.checkRarityString(lore, EnumChatFormatting.WHITE, "COMMON"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, common);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.GREEN + "" + EnumChatFormatting.BOLD + "UNCOMMON"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.GREEN, "UNCOMMON"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, uncommon);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.BLUE + "" + EnumChatFormatting.BOLD + "RARE"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.BLUE, "RARE"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, rare);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.DARK_PURPLE + "" + EnumChatFormatting.BOLD + "EPIC"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.DARK_PURPLE, "EPIC"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, epic);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.GOLD + "" + EnumChatFormatting.BOLD + "LEGENDARY"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.GOLD, "LEGENDARY"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, legendary);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.LIGHT_PURPLE + "" + EnumChatFormatting.BOLD + "MYTHIC") || lore.startsWith(EnumChatFormatting.LIGHT_PURPLE + "" + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED + "a" + EnumChatFormatting.RESET + " " + EnumChatFormatting.LIGHT_PURPLE + EnumChatFormatting.BOLD + EnumChatFormatting.LIGHT_PURPLE + EnumChatFormatting.BOLD + "MYTHIC"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.LIGHT_PURPLE, "MYTHIC"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, mythic);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "SPECIAL"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.RED, "SPECIAL"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, special);
                         }
-                        else if (lore.startsWith(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED + "a" + EnumChatFormatting.RESET + " " + EnumChatFormatting.RED + EnumChatFormatting.BOLD + EnumChatFormatting.RED + EnumChatFormatting.BOLD + "VERY SPECIAL"))
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.RED, "VERY SPECIAL"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, verySpecial);
                         }
@@ -141,5 +141,10 @@ public class RenderUtils
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         GlStateManager.disableAlpha();
+    }
+
+    private static boolean checkRarityString(String lore, EnumChatFormatting color, String text)
+    {
+        return lore.startsWith(color + "" + EnumChatFormatting.BOLD + text) || lore.startsWith(color + "" + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED + "a" + EnumChatFormatting.RESET + " " + color + EnumChatFormatting.BOLD + color + EnumChatFormatting.BOLD + text);
     }
 }
