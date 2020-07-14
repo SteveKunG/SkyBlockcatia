@@ -1,15 +1,12 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,7 +49,7 @@ public class LoggerIN
 
     public static void logToast(Object object)
     {
-        String message = object == null ? "null" : StringEscapeUtils.escapeJava(object.toString());
+        String message = object == null ? "null" : object.toString();
         String preLine = new SimpleDateFormat("[HH:mm:ss]").format(new Date()) + " [" + Level.DEBUG.name() + "] ";
 
         for (String line : message.split("\\n"))
@@ -74,7 +71,7 @@ public class LoggerIN
         try
         {
             logFile.createNewFile();
-            logWriter = new PrintWriter(new FileWriter(logFile));
+            logWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(logFile), StandardCharsets.UTF_8));
         }
         catch (IOException e)
         {
