@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -63,9 +65,11 @@ public class LoggerIN
 
     public static void setup()
     {
-        File logDirectory = new File("./logs/skyblockcatia/");
+        File logDirectory = new File("./logs/skyblockcatia/" + GameProfileUtils.getUUID().toString() + "/");
         logDirectory.mkdirs();
-        logFile = new File(logDirectory, "skyblockcatia-toast.log");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+        LocalDateTime now = LocalDateTime.now();  
+        logFile = new File(logDirectory, dtf.format(now) + "-toast.log");
 
         try
         {
