@@ -2163,7 +2163,7 @@ public class GuiSkyBlockData extends GuiScreen
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
                     list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
-                    petData.add(new PetData(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
+                    petData.add(new PetData(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 
                     switch (tier)
                     {
@@ -2192,10 +2192,10 @@ public class GuiSkyBlockData extends GuiScreen
                     itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "UNKNOWN PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
-                    petData.add(new PetData(SkyBlockPets.Tier.COMMON, 0, false, Arrays.asList(itemStack)));
+                    petData.add(new PetData(SkyBlockPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
                     LoggerIN.warning("Found an unknown pet! type: {}", petType);
                 }
-                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).build());
+                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getCurrentXp(), o1.getCurrentXp()).build());
             }
             for (PetData data : petData)
             {
@@ -2225,20 +2225,22 @@ public class GuiSkyBlockData extends GuiScreen
                 xpTotal += progress[x].getXp();
                 currentLvl = x + 1;
                 levelToCheck = progress[x].getLevel() + 1;
-
-                if (levelToCheck <= progress.length)
-                {
-                    xpRequired = (int)progress[x].getXp();
-                }
+                xpRequired = (int)progress[x].getXp();
             }
         }
 
-        if (levelToCheck < progress.length)
+        if (currentLvl < progress.length)
         {
             xpToNextLvl = MathHelper.ceiling_double_int(xpTotal - petExp);
             currentXp = xpRequired - xpToNextLvl;
         }
-        else
+        else if (currentLvl == progress.length)
+        {
+            xpToNextLvl = MathHelper.ceiling_double_int(Math.abs(xpTotal - petExp));
+            currentXp = xpRequired - xpToNextLvl;
+        }
+
+        if (petExp > xpTotal)
         {
             currentLvl = progress.length + 1;
             xpRequired = 0;
@@ -3450,13 +3452,15 @@ public class GuiSkyBlockData extends GuiScreen
     {
         private final SkyBlockPets.Tier tier;
         private final int currentLevel;
+        private final double currentXp;
         private final boolean isActive;
         private final List<ItemStack> itemStack;
 
-        public PetData(SkyBlockPets.Tier tier, int currentLevel, boolean isActive, List<ItemStack> itemStack)
+        public PetData(SkyBlockPets.Tier tier, int currentLevel, double currentXp, boolean isActive, List<ItemStack> itemStack)
         {
             this.tier = tier;
             this.currentLevel = currentLevel;
+            this.currentXp = currentXp;
             this.isActive = isActive;
             this.itemStack = itemStack;
         }
@@ -3474,6 +3478,11 @@ public class GuiSkyBlockData extends GuiScreen
         public int getCurrentLevel()
         {
             return this.currentLevel;
+        }
+
+        public double getCurrentXp()
+        {
+            return this.currentXp;
         }
 
         public boolean isActive()
