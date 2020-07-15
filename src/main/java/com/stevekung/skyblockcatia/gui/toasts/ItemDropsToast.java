@@ -110,32 +110,4 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
         EquipmentOverlay.renderItem(itemStack, 8, 8);
         return delta >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
-    //
-    //    @Override
-    //    public boolean equal(ItemDropsToast toast)
-    //    {
-    //        System.out.println(this.hasMagicFind == toast.hasMagicFind);
-    //        return this.hasMagicFind == toast.hasMagicFind;
-    //    }
-
-    public static void updateValue(GuiToast toastGui, ToastUtils.DropType rarity, int value, ItemStack itemStack, String object)
-    {
-        try
-        {
-            ItemDropsToast toast = toastGui.getToast(ItemDropsToast.class, NO_TOKEN);
-
-            if (toast == null)
-            {
-                //                toastGui.add(toastClass.getDeclaredConstructor(int.class, ItemStack.class, String.class, ToastUtils.DropType.class).newInstance(value, itemStack, object, rarity));
-            }
-            else
-            {
-                //                toast.addValue(value);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 }

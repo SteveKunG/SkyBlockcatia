@@ -56,7 +56,7 @@ public class NumericToast implements IToast<NumericToast>
         ToastUtils.ItemDrop drop = this.output;
         String value = FORMAT.format(this.value);
         ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : HypixelEventHandler.getSkillItemStack(value, this.object);
-        String itemName = this.isCoins ? ColorUtils.stringToRGB("255,223,0").toColoredFont() + value + " Coins" : this.isPet ? EnumChatFormatting.GREEN + itemStack.getDisplayName() + " is now level " + EnumChatFormatting.BLUE + value + EnumChatFormatting.GREEN + "!" : itemStack.getDisplayName();
+        String itemName = this.isCoins ? ColorUtils.stringToRGB("255,223,0").toColoredFont() + value + " Coins" : this.isPet ? EnumChatFormatting.GREEN + itemStack.getDisplayName() + EnumChatFormatting.GREEN + " is now level " + EnumChatFormatting.BLUE + value + EnumChatFormatting.GREEN + "!" : itemStack.getDisplayName();
         toastGui.mc.getTextureManager().bindTexture(this.texture);
         GlStateManager.color(1.0F, 1.0F, 1.0F);
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 160, 32, 160, 32);
@@ -66,20 +66,24 @@ public class NumericToast implements IToast<NumericToast>
         return delta - this.firstDrawTime >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
 
-    //    @Override
-    //    public boolean equal(NumericToast toast)
-    //    {
-    //        System.out.println(this.output.getType() == toast.output.getType());
-    //        return this.output.getType() == toast.output.getType();
-    //    }
-
     public void addValue(int value)
     {
         this.value += value;
         this.hasNewValue = true;
     }
 
+    public void setValue(int value)
+    {
+        this.value = value;
+        this.hasNewValue = true;
+    }
+
     public static void addValueOrUpdate(GuiToast toastGui, ToastUtils.DropType rarity, int value, ItemStack itemStack, String object)
+    {
+        NumericToast.addValueOrUpdate(toastGui, rarity, value, itemStack, object, false);
+    }
+
+    public static void addValueOrUpdate(GuiToast toastGui, ToastUtils.DropType rarity, int value, ItemStack itemStack, String object, boolean set)
     {
         try
         {
@@ -92,7 +96,14 @@ public class NumericToast implements IToast<NumericToast>
             }
             else
             {
-                toast.addValue(value);
+                if (set)
+                {
+                    toast.setValue(value);
+                }
+                else
+                {
+                    toast.addValue(value);
+                }
             }
         }
         catch (Exception e)

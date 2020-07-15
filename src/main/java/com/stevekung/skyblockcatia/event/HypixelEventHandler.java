@@ -63,17 +63,14 @@ public class HypixelEventHandler
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + HypixelEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
-    private static final Pattern PET_CARE_PATTERN_1 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<day>[\\d]+) day(?:s){0,1} (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
-    private static final Pattern PET_CARE_PATTERN_2 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
-    private static final Pattern PET_CARE_PATTERN_3 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
-    private static final Pattern PET_CARE_PATTERN_4 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<second>[\\d]+) second(?:s){0,1}.");
+    private static final Pattern PET_CARE_PATTERN = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).");
 
     // Item Drop Stuff
-    private static final String ITEM_PATTERN = "[\\w\\u0027\\u25C6\\[\\] -]+";
-    private static final String DROP_PATTERN = "(?<item>" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
-    private static final Pattern RARE_DROP_PATTERN = Pattern.compile("RARE DROP! " + DROP_PATTERN + " ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
-    private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("RARE DROP! \\u0028" + DROP_PATTERN + "\\u0029 ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
-    private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>VERY RARE|CRAZY RARE) DROP!  \\u0028" + DROP_PATTERN + "\\u0029 ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
+    private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
+    private static final String DROP_PATTERN = "(?<item>(?:\\u00a7r\\u00a7[0-9a-fk-or]){0,1}" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
+    private static final Pattern RARE_DROP_PATTERN = Pattern.compile("\\u00a7r\\u00a76\\u00a7lRARE DROP! " + DROP_PATTERN + " ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
+    private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("\\u00a7r\\u00a7b\\u00a7lRARE DROP! \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\) ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
+    private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>\\u00a7r\\u00a79\\u00a7lVERY RARE|\\u00a7r\\u00a75\\u00a7lVERY RARE|\\u00a7r\\u00a7d\\u00a7lCRAZY RARE) DROP!  \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\) ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
     private static final Pattern BOSS_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
 
     // Fish catch stuff
@@ -87,7 +84,7 @@ public class HypixelEventHandler
     private static final Pattern SANTA_TIER_PATTERN = Pattern.compile("SANTA TIER! " + DROP_PATTERN + " gift with " + RANKED_PATTERN + "!");
 
     // Pet
-    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("Your (?<name>[\\w ]+) levelled up to level (?<level>\\d+)!");
+    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("§r§aYour (?<name>\\u00a7r\\u00a7[0-9a-fk-or][\\w ]+) §r§alevelled up to level §r§9(?<level>\\d+)§r§a!§r");
     private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
 
     private static final List<String> LEFT_PARTY_MESSAGE = new ArrayList<>(Arrays.asList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left."));
@@ -263,6 +260,11 @@ public class HypixelEventHandler
         String message = event.message.getUnformattedText();
         boolean cancelMessage = false;
 
+        if (this.mc.isSingleplayer() && SkyBlockcatiaMod.isDevelopment)
+        {
+            formattedMessage = message;
+        }
+
         if (InfoUtils.INSTANCE.isHypixel() || SkyBlockcatiaMod.isDevelopment)
         {
             // Common matcher
@@ -271,13 +273,10 @@ public class HypixelEventHandler
             Matcher joinedPartyMatcher = HypixelEventHandler.JOINED_PARTY_PATTERN.matcher(message);
             Matcher uuidMatcher = HypixelEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = HypixelEventHandler.CHAT_PATTERN.matcher(message);
-            Matcher petCareMatcher1 = HypixelEventHandler.PET_CARE_PATTERN_1.matcher(message);
-            Matcher petCareMatcher2 = HypixelEventHandler.PET_CARE_PATTERN_2.matcher(message);
-            Matcher petCareMatcher3 = HypixelEventHandler.PET_CARE_PATTERN_3.matcher(message);
-            Matcher petCareMatcher4 = HypixelEventHandler.PET_CARE_PATTERN_4.matcher(message);
+            Matcher petCareMatcher = HypixelEventHandler.PET_CARE_PATTERN.matcher(message);
 
             // Item Drop matcher
-            Matcher rareDropPattern = HypixelEventHandler.RARE_DROP_PATTERN.matcher(message);
+            Matcher rareDropPattern = HypixelEventHandler.RARE_DROP_PATTERN.matcher(formattedMessage);
             Matcher bossDropPattern = HypixelEventHandler.BOSS_DROP_PATTERN.matcher(message);
 
             // Fish catch matcher
@@ -285,8 +284,8 @@ public class HypixelEventHandler
             Matcher coinsCatchPattern = HypixelEventHandler.COINS_CATCH_PATTERN.matcher(message);
 
             // Slayer Drop matcher
-            Matcher rareDropBracketPattern = HypixelEventHandler.RARE_DROP_WITH_BRACKET_PATTERN.matcher(message);
-            Matcher rareDrop2SpaceBracketPattern = HypixelEventHandler.RARE_DROP_2_SPACE_PATTERN.matcher(message);
+            Matcher rareDropBracketPattern = HypixelEventHandler.RARE_DROP_WITH_BRACKET_PATTERN.matcher(formattedMessage);
+            Matcher rareDrop2SpaceBracketPattern = HypixelEventHandler.RARE_DROP_2_SPACE_PATTERN.matcher(formattedMessage);
 
             // Gift matcher
             Matcher coinsGiftPattern = HypixelEventHandler.COINS_GIFT_PATTERN.matcher(message);
@@ -295,10 +294,10 @@ public class HypixelEventHandler
             Matcher santaTierPattern = HypixelEventHandler.SANTA_TIER_PATTERN.matcher(message);
 
             // Pet
-            Matcher petLevelUpPattern = HypixelEventHandler.PET_LEVEL_UP_PATTERN.matcher(message);
+            Matcher petLevelUpPattern = HypixelEventHandler.PET_LEVEL_UP_PATTERN.matcher(formattedMessage);
             Matcher petDropPattern = HypixelEventHandler.PET_DROP_PATTERN.matcher(message);
 
-            if (event.type == 0 || SkyBlockcatiaMod.isDevelopment)
+            if (event.type == 0 || event.type == 0 && SkyBlockcatiaMod.isDevelopment)
             {
                 if (message.contains("Illegal characters in chat") || message.contains("A kick occurred in your connection"))
                 {
@@ -345,53 +344,34 @@ public class HypixelEventHandler
                     SkyBlockAPIUtils.setApiKeyFromServer(uuidMatcher.group("uuid"));
                     ClientUtils.printClientMessage("Setting a new API Key!", JsonUtils.green());
                 }
-                else if (petCareMatcher1.matches())
+                else if (petCareMatcher.matches())
                 {
-                    int day = Integer.parseInt(petCareMatcher1.group("day"));
-                    int hour = Integer.parseInt(petCareMatcher1.group("hour"));
-                    int minute = Integer.parseInt(petCareMatcher1.group("minute"));
-                    int second = Integer.parseInt(petCareMatcher1.group("second"));
+                    int day = 0;
+                    int hour = 0;
+                    int minute = 0;
+                    int second = 0;
+
+                    if (petCareMatcher.group("day") != null)
+                    {
+                        day = Integer.parseInt(petCareMatcher.group("day"));
+                    }
+                    if (petCareMatcher.group("hour") != null)
+                    {
+                        hour = Integer.parseInt(petCareMatcher.group("hour"));
+                    }
+                    if (petCareMatcher.group("minute") != null)
+                    {
+                        minute = Integer.parseInt(petCareMatcher.group("minute"));
+                    }
+                    if (petCareMatcher.group("second") != null)
+                    {
+                        second = Integer.parseInt(petCareMatcher.group("second"));
+                    }
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, day);
                     calendar.add(Calendar.HOUR, hour);
                     calendar.add(Calendar.MINUTE, minute);
-                    calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).setChatStyle(JsonUtils.green()));
-                }
-                else if (petCareMatcher2.matches())
-                {
-                    int hour = Integer.parseInt(petCareMatcher2.group("hour"));
-                    int minute = Integer.parseInt(petCareMatcher2.group("minute"));
-                    int second = Integer.parseInt(petCareMatcher2.group("second"));
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.HOUR, hour);
-                    calendar.add(Calendar.MINUTE, minute);
-                    calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).setChatStyle(JsonUtils.green()));
-                }
-                else if (petCareMatcher3.matches())
-                {
-                    int minute = Integer.parseInt(petCareMatcher3.group("minute"));
-                    int second = Integer.parseInt(petCareMatcher3.group("second"));
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.MINUTE, minute);
-                    calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).setChatStyle(JsonUtils.green()));
-                }
-                else if (petCareMatcher4.matches())
-                {
-                    int second = Integer.parseInt(petCareMatcher4.group("second"));
-
-                    Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.SECOND, second);
                     String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
                     String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
@@ -550,7 +530,7 @@ public class HypixelEventHandler
                             String type = rareDropBracketPattern.group("type");
                             String name = rareDropBracketPattern.group("item");
                             String magicFind = rareDropBracketPattern.group(3);
-                            ToastUtils.DropType dropType = type.equals("VERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
+                            ToastUtils.DropType dropType = type.startsWith("\u00a7r\u00a79\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : type.startsWith("\u00a7r\u00a75\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_PURPLE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
                             HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), magicFind, dropType, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
@@ -575,7 +555,7 @@ public class HypixelEventHandler
                             String level = petLevelUpPattern.group("level");
                             ItemStack itemStack = new ItemStack(Items.bone);
                             itemStack.setStackDisplayName(name);
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet");
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -857,21 +837,34 @@ public class HypixelEventHandler
                     {
                         ToastUtils.ItemDropCheck drop = iterator.next();
 
-                        if (drop.getName().equals(newItemName))
+                        if (drop.getType() == ToastUtils.DropType.PET_DROP)
                         {
-                            if (drop.getToastType() == ToastType.DROP)
+                            System.out.println(drop.getName());
+                            System.out.println(newItemName);
+                            
+                            if (("[Lvl 1] " + drop.getName()).equals(newItemName))
                             {
-                                //                                if (ItemDropsToast.updateValue(HUDRenderEventHandler.INSTANCE.getToastGui(), drop.getType(), newItem, drop.getMagicFind()))
                                 if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
-                                {
-                                    iterator.remove();
-                                }
+                                iterator.remove();
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (drop.getName().equals(newItemName))
                             {
-                                if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                if (drop.getToastType() == ToastType.DROP)
                                 {
-                                    iterator.remove();
+                                    if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    {
+                                        iterator.remove();
+                                    }
+                                }
+                                else
+                                {
+                                    if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                    {
+                                        iterator.remove();
+                                    }
                                 }
                             }
                         }

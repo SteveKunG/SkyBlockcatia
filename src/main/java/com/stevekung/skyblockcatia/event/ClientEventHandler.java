@@ -13,6 +13,7 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -75,42 +76,46 @@ public class ClientEventHandler
         EntityPlayer player = event.player;
         ItemStack itemStack = event.pickedUp.getEntityItem();
         ChatStyle hoverStyle = JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString())));
-        //        String magic = rand.nextBoolean() ? " (+" + rand.nextInt(100) + "% Magic Find!)" : "";
-        //        String magic = " (+" + 100 + "% Magic Find!)";
-        String magic = "";
+        String magic = rand.nextBoolean() ? " §r§b(+" + rand.nextInt(100) + "% Magic Find!)§r" : "";
+        char formatter = EnumChatFormatting.values()[new Random().nextInt(EnumChatFormatting.values().length)].formattingCode;
 
         // Pet Level Up
-        /*String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse"};
-        player.addChatComponentMessage(JsonUtils.create("Your " + pet[rand.nextInt(pet.length)] + " levelled up to level " + rand.nextInt(50) + "!"));*/
+        //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse"};
+        //player.addChatComponentMessage(JsonUtils.create("§r§aYour §r§" + formatter + pet[rand.nextInt(pet.length)] + " §r§alevelled up to level §r§9" + rand.nextInt(100) + "§r§a!§r"));
 
         // Pet Drop
-        //player.addChatComponentMessage(JsonUtils.create("PET DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString()))))).appendSibling(JsonUtils.create(magic)));
+        //player.addChatComponentMessage(JsonUtils.create("PET DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName().replace("[Lvl 1] ", "")).setChatStyle(JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString()))))).appendSibling(JsonUtils.create(EnumChatFormatting.getTextWithoutFormattingCodes(magic))));
 
+        
         // Rare Drop with or without bracket
-        switch (rand.nextInt(2))
+        /*switch (rand.nextInt(2))
         {
         case 0:
         default:
-            //            player.addChatComponentMessage(JsonUtils.create("RARE DROP! (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
-            player.addChatComponentMessage(JsonUtils.create("RARE DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(magic)));
+            String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
+            player.addChatComponentMessage(JsonUtils.create(test));
             break;
         case 1:
-            player.addChatComponentMessage(JsonUtils.create("RARE DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(magic)));
+            test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
+            player.addChatComponentMessage(JsonUtils.create(test));
             break;
-        }
+        }*/
 
         // Slayer Drop
-        /*switch (rand.nextInt(3))
+        /*switch (rand.nextInt(4))
         {
         case 0:
         default:
-            player.addChatComponentMessage(JsonUtils.create("RARE DROP! (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§b§lRARE DROP! §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         case 1:
-            player.addChatComponentMessage(JsonUtils.create("VERY RARE DROP!  (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§9§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         case 2:
-            player.addChatComponentMessage(JsonUtils.create("CRAZY RARE DROP!  (").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§5§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            break;
+        case 3:
+            player.addChatComponentMessage(JsonUtils.create("§r§d§lCRAZY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         }*/
 
