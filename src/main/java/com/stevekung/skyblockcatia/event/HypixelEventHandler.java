@@ -297,7 +297,7 @@ public class HypixelEventHandler
             Matcher petLevelUpPattern = HypixelEventHandler.PET_LEVEL_UP_PATTERN.matcher(formattedMessage);
             Matcher petDropPattern = HypixelEventHandler.PET_DROP_PATTERN.matcher(message);
 
-            if (event.type == 0 || event.type == 0 && SkyBlockcatiaMod.isDevelopment)
+            if (event.type == 0 || this.mc.isSingleplayer() && SkyBlockcatiaMod.isDevelopment)
             {
                 if (message.contains("Illegal characters in chat") || message.contains("A kick occurred in your connection"))
                 {

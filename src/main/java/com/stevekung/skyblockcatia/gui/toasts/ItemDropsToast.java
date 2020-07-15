@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.nio.FloatBuffer;
 
+import com.stevekung.skyblockcatia.event.ClientEventHandler;
 import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
@@ -71,7 +72,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
                 GlStateManager.matrixMode(5890);
                 GlStateManager.loadIdentity();
                 GlStateManager.scale(0.2F, 0.2F, 0.2F);
-                GlStateManager.translate(0.0F, delta / 100 * (0.001F + i * 0.003F) * 20.0F, 0.0F);
+                GlStateManager.translate(0.0F, ClientEventHandler.renderPartialTicks / 2 * (0.004F + i * 0.003F) * 20.0F, 0.0F);
                 GlStateManager.matrixMode(5888);
 
                 toastGui.mc.getTextureManager().bindTexture(MAGIC_FIND_GLINT);

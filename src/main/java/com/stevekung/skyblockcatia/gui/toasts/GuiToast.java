@@ -176,10 +176,11 @@ public class GuiToast extends Gui
 
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
             GlStateManager.translate(x - 160.0F * this.getVisibility(i), z * 32, 500 + z);
             IToast.Visibility itoast$visibility = this.toast.draw(GuiToast.this, i - this.visibleTime);
             GlStateManager.disableBlend();
-            GlStateManager.enableAlpha();
             GlStateManager.popMatrix();
 
             if (itoast$visibility != this.visibility)
