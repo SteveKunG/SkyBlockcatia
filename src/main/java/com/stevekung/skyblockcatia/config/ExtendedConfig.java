@@ -154,6 +154,7 @@ public class ExtendedConfig
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
     public boolean lobbyPlayerCount = false;
+    public boolean displayItemAbilityMaxUsed = false;
 
     private ExtendedConfig() {}
 
@@ -297,6 +298,7 @@ public class ExtendedConfig
             this.sneakToTradeOtherPlayerIsland = ExtendedConfig.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             this.makeSpecialZealotHeldGold = ExtendedConfig.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             this.lobbyPlayerCount = ExtendedConfig.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
+            this.displayItemAbilityMaxUsed = ExtendedConfig.getBoolean(nbt, "DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -432,6 +434,7 @@ public class ExtendedConfig
             nbt.setBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             nbt.setBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
+            nbt.setBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
@@ -798,6 +801,10 @@ public class ExtendedConfig
         {
             this.lobbyPlayerCount = !this.lobbyPlayerCount;
         }
+        else if (options == ExtendedConfig.Options.DISPLAY_ITEM_ABILITY_MAX_USED)
+        {
+            this.displayItemAbilityMaxUsed = !this.displayItemAbilityMaxUsed;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1115,6 +1122,8 @@ public class ExtendedConfig
             return this.makeSpecialZealotHeldGold;
         case LOBBY_PLAYER_COUNT:
             return this.lobbyPlayerCount;
+        case DISPLAY_ITEM_ABILITY_MAX_USED:
+            return this.displayItemAbilityMaxUsed;
         default:
             return false;
         }
@@ -1318,6 +1327,7 @@ public class ExtendedConfig
         SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND(false, true),
         MAKE_SPECIAL_ZEALOT_HELD_GOLD(false, true),
         LOBBY_PLAYER_COUNT(false, true),
+        DISPLAY_ITEM_ABILITY_MAX_USED(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

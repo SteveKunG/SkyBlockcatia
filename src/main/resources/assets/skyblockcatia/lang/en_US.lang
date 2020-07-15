@@ -182,6 +182,7 @@ automatic_open_maddox.extended_config=Automatic Open Maddox
 sneak_to_trade_other_player_island.extended_config=Sneak to trade other player island
 make_special_zealot_held_gold.extended_config=Make Special Zealot held Gold Block
 lobby_player_count.extended_config=Lobby Player Count
+display_item_ability_max_used.extended_config=Display Max Used of Item Ability
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

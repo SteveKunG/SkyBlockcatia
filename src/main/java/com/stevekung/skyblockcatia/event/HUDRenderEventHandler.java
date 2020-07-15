@@ -8,10 +8,12 @@ import com.google.common.collect.Ordering;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.EnumEquipment;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.config.GuiRenderPreview;
 import com.stevekung.skyblockcatia.gui.toasts.GuiToast;
 import com.stevekung.skyblockcatia.handler.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.handler.GrapplingHookEvent;
+import com.stevekung.skyblockcatia.integration.sba.SBAMana;
 import com.stevekung.skyblockcatia.renderer.HUDInfo;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
@@ -30,6 +32,9 @@ import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldSettings;
@@ -142,6 +147,44 @@ public class HUDRenderEventHandler
             if (this.mc.gameSettings.showDebugInfo || this.mc.thePlayer == null && this.mc.theWorld == null || this.mc.currentScreen instanceof GuiRenderPreview)
             {
                 return;
+            }
+
+            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && ExtendedConfig.instance.displayItemAbilityMaxUsed && this.mc.thePlayer.getCurrentEquippedItem() != null)
+            {
+                ItemStack itemStack = this.mc.thePlayer.getCurrentEquippedItem();
+
+                if (itemStack.hasTagCompound())
+                {
+                    NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
+
+                    if (compound.getTagId("Lore") == 9)
+                    {
+                        NBTTagList list = compound.getTagList("Lore", 8);
+
+                        if (list.tagCount() > 0)
+                        {
+                            for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                            {
+                                String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+
+                                if (lore.startsWith("Mana Cost: "))
+                                {
+                                    int count = SBAMana.INSTANCE.getMana() / Integer.parseInt(lore.replace("Mana Cost: ", ""));
+
+                                    if (count > 0)
+                                    {
+                                        String usedCount = EnumChatFormatting.AQUA + String.valueOf(count);
+                                        float fontHeight = this.mc.fontRendererObj.FONT_HEIGHT + 1;
+                                        float width = event.resolution.getScaledWidth() / 2 + 1.0625F;
+                                        float height = event.resolution.getScaledHeight() / 2 - 24 + fontHeight;
+                                        this.mc.fontRendererObj.drawString(usedCount, width - this.mc.fontRendererObj.getStringWidth(usedCount) / 2, height, 16777215, true);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             List<CrosshairOverlay> crosshairInfo = new LinkedList<>();

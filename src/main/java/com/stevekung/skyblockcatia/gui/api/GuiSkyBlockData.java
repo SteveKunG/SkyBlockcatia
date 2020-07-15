@@ -35,7 +35,7 @@ import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.integration.SkyBlockAddonsBackpack;
+import com.stevekung.skyblockcatia.integration.sba.SBABackpack;
 import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.Minecraft;
@@ -548,7 +548,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     String itemId = extraAttrib.getString("id");
 
-                    if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockAddonsBackpack.INSTANCE.isFreezeBackpack())
+                    if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
                     {
                         return;
                     }
@@ -558,7 +558,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
         {
-            SkyBlockAddonsBackpack.INSTANCE.keyTyped(keyCode);
+            SBABackpack.INSTANCE.keyTyped(keyCode);
         }
         if (keyCode == 1)
         {
@@ -725,7 +725,7 @@ public class GuiSkyBlockData extends GuiScreen
                         }
                         if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
                         {
-                            SkyBlockAddonsBackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
+                            SBABackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
                         }
                     }
                     else
@@ -1193,7 +1193,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
         {
-            SkyBlockAddonsBackpack.INSTANCE.clearRenderBackpack();
+            SBABackpack.INSTANCE.clearRenderBackpack();
         }
         this.selectedTabIndex = tab.getTabIndex();
         ContainerSkyBlock container = this.skyBlockContainer;
@@ -1290,7 +1290,7 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 this.theSlot = slot;
 
-                if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockAddonsBackpack.INSTANCE.isFreezeBackpack())
+                if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
                 {
                     continue;
                 }
