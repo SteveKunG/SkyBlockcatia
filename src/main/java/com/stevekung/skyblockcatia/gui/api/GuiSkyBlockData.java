@@ -34,6 +34,7 @@ import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
+import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.integration.sba.SBABackpack;
 import com.stevekung.skyblockcatia.utils.*;
@@ -106,6 +107,8 @@ public class GuiSkyBlockData extends GuiScreen
     private boolean updated;
     private final ViewerData data = new ViewerData();
     private int skillCount;
+    private GuiScrollingList errorInfo;
+    private List<String> errorList = new ArrayList<>();
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -234,8 +237,13 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 catch (Throwable e)
                 {
-                    this.setErrorMessage(e.getStackTrace()[0].toString());
-                    e.printStackTrace();
+                    this.errorList.add(e.getClass().getName() + ": " + e.getMessage());
+
+                    for (StackTraceElement test : e.getStackTrace())
+                    {
+                        this.errorList.add(test.toString());
+                    }
+                    this.setErrorMessage("", true);
                 }
             });
         }
@@ -363,6 +371,7 @@ public class GuiSkyBlockData extends GuiScreen
                     button.enabled = this.othersButton != othersType;
                 }
             }
+            this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.width, this.height, this.errorList);
             this.updated = true;
         }
 
@@ -628,7 +637,15 @@ public class GuiSkyBlockData extends GuiScreen
             if (this.error)
             {
                 this.drawCenteredString(this.fontRendererObj, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
-                this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+
+                if (this.errorInfo != null)
+                {
+                    this.errorInfo.drawScreen(mouseX, mouseY, partialTicks);
+                }
+                else
+                {
+                    this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                }
                 super.drawScreen(mouseX, mouseY, partialTicks);
             }
             else
@@ -1125,12 +1142,20 @@ public class GuiSkyBlockData extends GuiScreen
         }
     }
 
-    private void setErrorMessage(String message)
+    private void setErrorMessage(String message, boolean errorList)
     {
         this.error = true;
         this.loadingApi = false;
-        this.errorMessage = message;
         this.updateErrorButton();
+
+        if (errorList)
+        {
+            this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.width, this.height, this.errorList);
+        }
+        else
+        {
+            this.errorMessage = message;
+        }
     }
 
     private void updateErrorButton()
@@ -1510,7 +1535,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         if (profile == null || profile.isJsonNull())
         {
-            this.setErrorMessage("No API data returned, please try again later!");
+            this.setErrorMessage("No API data returned, please try again later!", false);
             return;
         }
 
@@ -1558,7 +1583,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         if (!checkUUID.equals(this.uuid))
         {
-            this.setErrorMessage("Current Player UUID not matched Profile UUID, please try again later!");
+            this.setErrorMessage("Current Player UUID not matched Profile UUID, please try again later!", false);
             return;
         }
 

@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
+import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.GuiButtonSearch;
 import com.stevekung.skyblockcatia.gui.GuiRightClickTextField;
 import com.stevekung.skyblockcatia.gui.GuiSBProfileButton;
@@ -29,6 +30,7 @@ import net.minecraft.network.play.client.C14PacketTabComplete;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.*;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
@@ -53,6 +55,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     private int autocompleteIndex;
     private List<String> foundPlayerNames = new ArrayList<>();
     private String guild = "";
+    private GuiScrollingList errorInfo;
+    private List<String> errorList = new ArrayList<>();
 
     public GuiSkyBlockAPIViewer(GuiState state)
     {
@@ -126,8 +130,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 }
                 catch (Throwable e)
                 {
-                    this.setErrorMessage(e.getStackTrace()[0].toString());
-                    e.printStackTrace();
+                    this.errorList.add(e.getClass().getName() + ": " + e.getMessage());
+
+                    for (StackTraceElement test : e.getStackTrace())
+                    {
+                        this.errorList.add(test.toString());
+                    }
+                    this.setErrorMessage("", true);
                 }
             });
         }
@@ -203,8 +212,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                     }
                     catch (Throwable e)
                     {
-                        this.setErrorMessage(e.getStackTrace()[0].toString());
-                        e.printStackTrace();
+                        this.errorList.add(e.getClass().getName() + ": " + e.getMessage());
+
+                        for (StackTraceElement test : e.getStackTrace())
+                        {
+                            this.errorList.add(test.toString());
+                        }
+                        this.setErrorMessage("", true);
                     }
                 });
             }
@@ -288,7 +302,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
             if (this.error)
             {
-                this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                if (this.errorInfo != null)
+                {
+                    this.errorInfo.drawScreen(mouseX, mouseY, partialTicks);
+                }
+                else
+                {
+                    this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                }
                 super.drawScreen(mouseX, mouseY, partialTicks);
             }
             else
@@ -377,7 +398,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     {
         if (!this.username.matches("\\w+"))
         {
-            this.setErrorMessage("Invalid Username Pattern!");
+            this.setErrorMessage("Invalid Username Pattern!", false);
             return;
         }
 
@@ -388,7 +409,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
         if (!obj.get("success").getAsBoolean())
         {
-            this.setErrorMessage(obj.get("cause").getAsString());
+            this.setErrorMessage(obj.get("cause").getAsString(), false);
             return;
         }
 
@@ -396,7 +417,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
         if (jsonPlayer.isJsonNull())
         {
-            this.setErrorMessage("Player not found!");
+            this.setErrorMessage("Player not found!", false);
             return;
         }
 
@@ -441,7 +462,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                     {
                         if (rankPlusColor != null)
                         {
-                            baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
+                            baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString() + "asdasd") + "++";
                         }
                         else
                         {
@@ -537,7 +558,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
         if (stats == null)
         {
-            this.setErrorMessage("Couldn't get stats from API, Please try again later!");
+            this.setErrorMessage("Couldn't get stats from API, Please try again later!", false);
             return;
         }
 
@@ -545,7 +566,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
         if (jsonSkyBlock == null)
         {
-            this.setErrorMessage("Player has not played SkyBlock yet!");
+            this.setErrorMessage("Player has not played SkyBlock yet!", false);
             return;
         }
 
@@ -637,13 +658,21 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         return lastSave;
     }
 
-    private void setErrorMessage(String message)
+    private void setErrorMessage(String message, boolean errorList)
     {
         this.error = true;
         this.loadingApi = false;
-        this.errorMessage = message;
         this.checkButton.visible = !this.error;
         this.closeButton.displayString = LangUtils.translate("gui.back");
+
+        if (errorList)
+        {
+            this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.width, this.height, this.errorList);
+        }
+        else
+        {
+            this.errorMessage = message;
+        }
     }
 
     private void autocompletePlayerNames()
