@@ -127,7 +127,7 @@ public class HUDRenderEventHandler
         }
         if (ExtendedConfig.instance.zealotRespawnCooldown)
         {
-            zealotRespawnDelay = this.getItemDelay(15000, this.lastZealotRespawn);
+            zealotRespawnDelay = this.getItemDelay(11000, this.lastZealotRespawn);
         }
 
         if (event.type == RenderGameOverlayEvent.ElementType.HOTBAR || event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
@@ -496,7 +496,7 @@ public class HUDRenderEventHandler
                     {
                         long now = System.currentTimeMillis();
 
-                        if (now - this.lastZealotRespawn > 15000L)
+                        if (now - this.lastZealotRespawn > 11000L)
                         {
                             this.lastZealotRespawn = now;
                         }
