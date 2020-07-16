@@ -67,7 +67,7 @@ public class HypixelEventHandler
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
-    private static final String DROP_PATTERN = "(?<item>(?:\\u00a7r\\u00a7[0-9a-fk-or]){0,1}" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
+    private static final String DROP_PATTERN = "(?<item>(?:\\u00a7r\\u00a7[0-9a-fk-or]){0,1}(?:\\u00a7[0-9a-fk-or]){0,1}" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
     private static final Pattern RARE_DROP_PATTERN = Pattern.compile("\\u00a7r\\u00a76\\u00a7lRARE DROP! " + DROP_PATTERN + "(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
     private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("\\u00a7r\\u00a7b\\u00a7lRARE DROP! \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\)(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
     private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>\\u00a7r\\u00a79\\u00a7lVERY RARE|\\u00a7r\\u00a75\\u00a7lVERY RARE|\\u00a7r\\u00a7d\\u00a7lCRAZY RARE) DROP!  \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\)(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
@@ -486,14 +486,14 @@ public class HypixelEventHandler
                             String type = itemDropGiftPattern.group("type");
                             String name = itemDropGiftPattern.group("item");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), rarity, ToastUtils.ToastType.GIFT));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, rarity, ToastUtils.ToastType.GIFT));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = ToastMode.getById(ExtendedConfig.instance.giftToastMode).equalsIgnoreCase("toast");
                         }
                         else if (santaTierPattern.matches())
                         {
                             String name = santaTierPattern.group("item");
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), ToastUtils.DropType.SANTA_TIER, ToastUtils.ToastType.GIFT));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.SANTA_TIER, ToastUtils.ToastType.GIFT));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = ToastMode.getById(ExtendedConfig.instance.giftToastMode).equalsIgnoreCase("toast");
                         }
@@ -514,14 +514,14 @@ public class HypixelEventHandler
                         {
                             String name = rareDropPattern.group("item");
                             String magicFind = rareDropPattern.group("mf");
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
                         else if (bossDropPattern.matches())
                         {
                             String name = bossDropPattern.group("item");
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), ToastUtils.DropType.BOSS_DROP, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.BOSS_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -531,7 +531,7 @@ public class HypixelEventHandler
                             String name = rareDropBracketPattern.group("item");
                             String magicFind = rareDropBracketPattern.group(3);
                             ToastUtils.DropType dropType = type.startsWith("\u00a7r\u00a79\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : type.startsWith("\u00a7r\u00a75\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_PURPLE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), magicFind, dropType, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, dropType, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -539,7 +539,7 @@ public class HypixelEventHandler
                         {
                             String name = rareDrop2SpaceBracketPattern.group("item");
                             String magicFind = rareDrop2SpaceBracketPattern.group(2);
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -563,7 +563,7 @@ public class HypixelEventHandler
                         {
                             String name = petDropPattern.group("item");
                             String magicFind = petDropPattern.group("mf");
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), magicFind, ToastUtils.DropType.PET_DROP, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.PET_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -815,7 +815,7 @@ public class HypixelEventHandler
     {
         String dropType = matcher.group("type");
         String name = matcher.group("item");
-        HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(EnumChatFormatting.getTextWithoutFormattingCodes(name), dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
+        HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
     }
 
     /**
@@ -824,53 +824,89 @@ public class HypixelEventHandler
     private void getInventoryDifference(ItemStack[] currentInventory)
     {
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
+        Map<String, ItemDropDiff> previousInventoryMap = new HashMap<>();
+        Map<String, ItemDropDiff> newInventoryMap = new HashMap<>();
 
         if (this.previousInventory != null)
         {
-            for (ItemStack newItem : newInventory)
+            for (int i = 0; i < newInventory.size(); i++)
             {
+                ItemStack previousItem = this.previousInventory.get(i);
+                ItemStack newItem = newInventory.get(i);
+
+                if (previousItem != null)
+                {
+                    int amount = previousInventoryMap.getOrDefault(previousItem.getDisplayName(), new ItemDropDiff(previousItem, 0)).count + previousItem.stackSize;
+                    previousInventoryMap.put(previousItem.getDisplayName(), new ItemDropDiff(previousItem, amount));
+                }
                 if (newItem != null)
                 {
-                    String newItemName = EnumChatFormatting.getTextWithoutFormattingCodes(newItem.getDisplayName());
+                    int amount = newInventoryMap.getOrDefault(newItem.getDisplayName(), new ItemDropDiff(newItem, 0)).count + newItem.stackSize;
+                    newInventoryMap.put(newItem.getDisplayName(), new ItemDropDiff(newItem, amount));
+                }
+            }
 
-                    for (Iterator<ToastUtils.ItemDropCheck> iterator = HypixelEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
+            Set<String> keySet = new HashSet<>(previousInventoryMap.keySet());
+            keySet.addAll(newInventoryMap.keySet());
+
+            keySet.forEach(key ->
+            {
+                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(new ItemStack(Blocks.air), 0));
+                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(new ItemStack(Blocks.air), 0));
+                int diff = newDiff.count - previousDiff.count;
+
+                if (diff != 0)
+                {
+                    ItemStack newItem = newDiff.itemStack;
+
+                    if (newItem != null)
                     {
-                        ToastUtils.ItemDropCheck drop = iterator.next();
+                        for (Iterator<ToastUtils.ItemDropCheck> iterator = HypixelEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
+                        {
+                            ToastUtils.ItemDropCheck drop = iterator.next();
 
-                        if (drop.getType() == ToastUtils.DropType.PET_DROP)
-                        {
-                            System.out.println(drop.getName());
-                            System.out.println(newItemName);
-                            
-                            if (("[Lvl 1] " + drop.getName()).equals(newItemName))
+                            if (drop.getType() == ToastUtils.DropType.PET_DROP)
                             {
-                                if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
-                                iterator.remove();
-                            }
-                        }
-                        else
-                        {
-                            if (drop.getName().equals(newItemName))
-                            {
-                                if (drop.getToastType() == ToastType.DROP)
+                                if (("[Lvl 1] " + drop.getName()).equals(key))
                                 {
+                                    newItem.stackSize = diff;
+
                                     if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                     {
                                         iterator.remove();
                                     }
                                 }
-                                else
+                            }
+                            else
+                            {
+                                if (drop.getName().equals(key))
                                 {
-                                    if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                    newItem.stackSize = diff;
+
+                                    if (drop.getToastType() == ToastType.DROP)
                                     {
-                                        iterator.remove();
+                                        if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                        {
+                                            iterator.remove();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                        {
+                                            iterator.remove();
+                                        }
                                     }
                                 }
+                            }
+                            if (iterator.hasNext() && System.currentTimeMillis() > drop.getTimestamp())
+                            {
+                                iterator.remove();
                             }
                         }
                     }
                 }
-            }
+            });
         }
         this.previousInventory = newInventory;
     }
@@ -1139,6 +1175,18 @@ public class HypixelEventHandler
         public String getValue()
         {
             return this.value;
+        }
+    }
+
+    class ItemDropDiff
+    {
+        final ItemStack itemStack;
+        final int count;
+
+        public ItemDropDiff(ItemStack itemStack, int count)
+        {
+            this.itemStack = itemStack;
+            this.count = count;
         }
     }
 }

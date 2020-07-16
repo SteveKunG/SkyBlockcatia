@@ -36,12 +36,14 @@ public class ToastUtils
         private String magicFind;
         private final ToastUtils.DropType type;
         private final ToastUtils.ToastType toastType;
+        private final long timestamp;
 
         public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType)
         {
             this.name = name;
             this.type = type;
             this.toastType = toastType;
+            this.timestamp = System.currentTimeMillis();
         }
 
         public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType)
@@ -52,7 +54,7 @@ public class ToastUtils
 
         public String getName()
         {
-            return this.name.replaceAll("\\s+$", "");
+            return this.name.replaceAll("\\s+$", "").replace("\u00a7r", "");
         }
 
         @Nullable
@@ -69,6 +71,11 @@ public class ToastUtils
         public ToastUtils.ToastType getToastType()
         {
             return this.toastType;
+        }
+
+        public long getTimestamp()
+        {
+            return this.timestamp;
         }
     }
 

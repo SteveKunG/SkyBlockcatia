@@ -7,6 +7,7 @@ import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -109,6 +110,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
         RenderHelper.enableGUIStandardItemLighting();
 
         EquipmentOverlay.renderItem(itemStack, 8, 8);
+        Minecraft.getMinecraft().getRenderItem().renderItemOverlayIntoGUI(toastGui.mc.fontRendererObj, itemStack, 8, 8, null);
         return delta >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
 }
