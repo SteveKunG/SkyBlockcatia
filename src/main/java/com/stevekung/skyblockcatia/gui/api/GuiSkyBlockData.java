@@ -2265,7 +2265,7 @@ public class GuiSkyBlockData extends GuiScreen
             currentXp = xpRequired - xpToNextLvl;
         }
 
-        if (petExp > xpTotal)
+        if (petExp >= xpTotal || currentXp >= xpRequired)
         {
             currentLvl = progress.length + 1;
             xpRequired = 0;
