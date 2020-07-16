@@ -2771,7 +2771,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         for (SkyBlockSkillInfo skill : skills)
         {
-            if (skill.getName().equals("Runecrafting") || skill.getName().equals("Carpentry"))
+            if (skill.getName().contains("Runecrafting") || skill.getName().contains("Carpentry"))
             {
                 continue;
             }
