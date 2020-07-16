@@ -19,7 +19,6 @@ public class GuiHypixelSettings extends GuiScreen
     static
     {
         OPTIONS.add(ExtendedConfig.Options.RIGHT_CLICK_ADD_PARTY);
-        OPTIONS.add(ExtendedConfig.Options.ADD_PARTY_VISIT_ISLAND);
         OPTIONS.add(ExtendedConfig.Options.JUNGLE_AXE_COOLDOWN);
         OPTIONS.add(ExtendedConfig.Options.GRAPPLING_HOOK_COOLDOWN);
         OPTIONS.add(ExtendedConfig.Options.ZEALOT_RESPAWN_COOLDOWN);
@@ -42,7 +41,6 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.AUCTION_BID_CONFIRM_VALUE);
         OPTIONS.add(ExtendedConfig.Options.DISABLE_BLOCK_PARTICLES);
         OPTIONS.add(ExtendedConfig.Options.SUPPORTERS_FANCY_COLOR);
-        OPTIONS.add(ExtendedConfig.Options.GOLEM_STAGE_TRACKER);
         OPTIONS.add(ExtendedConfig.Options.BAZAAR_ON_TOOLTIPS);
         OPTIONS.add(ExtendedConfig.Options.IGNORE_BUSH_HITBOX);
         OPTIONS.add(ExtendedConfig.Options.ONLY_MINEABLE_HITBOX);

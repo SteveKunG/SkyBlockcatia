@@ -289,48 +289,6 @@ public class HUDRenderEventHandler
                     rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
                 }
 
-                if (ExtendedConfig.instance.golemStageTracker && HypixelEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
-                {
-                    int golemStage = 0;
-
-                    for (int headPos = 0; headPos < 5; headPos++)
-                    {
-                        if (this.mc.theWorld.getBlockState(new BlockPos(-689, 5 + headPos, -273)).getBlock() == Blocks.skull)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.theWorld.getBlockState(new BlockPos(-644, 5 + headPos, -269)).getBlock() == Blocks.skull)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.theWorld.getBlockState(new BlockPos(-678, 5 + headPos, -332)).getBlock() == Blocks.skull)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.theWorld.getBlockState(new BlockPos(-639, 5 + headPos, -328)).getBlock() == Blocks.skull)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.theWorld.getBlockState(new BlockPos(-649, 5 + headPos, -219)).getBlock() == Blocks.skull)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.theWorld.getBlockState(new BlockPos(-727, 5 + headPos, -284)).getBlock() == Blocks.skull)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                    }
-
-                    String color = ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageValueColor).toColoredFont();
-                    rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
-                }
-
                 if (ExtendedConfig.instance.lobbyPlayerCount && !this.mc.isSingleplayer())
                 {
                     List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());

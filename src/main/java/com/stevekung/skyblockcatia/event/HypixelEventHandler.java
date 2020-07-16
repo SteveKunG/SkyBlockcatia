@@ -42,7 +42,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -56,7 +55,6 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 public class HypixelEventHandler
 {
     private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/']");
-    private static final Pattern JOINED_PARTY_PATTERN = Pattern.compile("(?<name>\\w+) joined the party!");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
     private static final Pattern NICK_PATTERN = Pattern.compile("^You are now nicked as (?<nick>\\w+)!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
@@ -93,7 +91,6 @@ public class HypixelEventHandler
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
     public static SkyBlockLocation SKY_BLOCK_LOCATION = SkyBlockLocation.YOUR_ISLAND;
-    private static final List<String> PARTY_LIST = new ArrayList<>();
     public static String SKYBLOCK_AMPM = "";
     public static float dragonHealth;
     private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new ArrayList<>();
@@ -270,7 +267,6 @@ public class HypixelEventHandler
             // Common matcher
             Matcher nickMatcher = HypixelEventHandler.NICK_PATTERN.matcher(message);
             Matcher visitIslandMatcher = HypixelEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
-            Matcher joinedPartyMatcher = HypixelEventHandler.JOINED_PARTY_PATTERN.matcher(message);
             Matcher uuidMatcher = HypixelEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = HypixelEventHandler.CHAT_PATTERN.matcher(message);
             Matcher petCareMatcher = HypixelEventHandler.PET_CARE_PATTERN.matcher(message);
@@ -322,17 +318,7 @@ public class HypixelEventHandler
                         HypixelEventHandler.addVisitingToast(name);
                         LoggerIN.logToast(formattedMessage);
                     }
-
                     cancelMessage = ToastMode.getById(ExtendedConfig.instance.visitIslandToastMode).equalsIgnoreCase("toast") || ToastMode.getById(ExtendedConfig.instance.visitIslandToastMode).equalsIgnoreCase("disabled");
-
-                    if (ExtendedConfig.instance.addPartyVisitIsland && !HypixelEventHandler.PARTY_LIST.stream().anyMatch(pname -> name.equals(pname)))
-                    {
-                        this.mc.thePlayer.sendChatMessage("/p " + name);
-                    }
-                }
-                else if (joinedPartyMatcher.matches())
-                {
-                    HypixelEventHandler.PARTY_LIST.add(joinedPartyMatcher.group("name"));
                 }
                 else if (nickMatcher.matches())
                 {
@@ -751,20 +737,6 @@ public class HypixelEventHandler
             }
         }
         catch (Exception e) {}
-    }
-
-    @SubscribeEvent
-    public void onRenderLivingSpecialPre(RenderLivingEvent.Specials.Pre event)
-    {
-        if (event.entity.getDisplayName() != null)
-        {
-            String name = event.entity.getDisplayName().getFormattedText();
-
-            if (name.contains("Sven Pup"))
-            {
-                event.setCanceled(true);
-            }
-        }
     }
 
     @SubscribeEvent

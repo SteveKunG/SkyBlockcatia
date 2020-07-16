@@ -40,7 +40,6 @@ public class GuiRenderInfoCustomColorSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.GRAPPLING_HOOK_COOLDOWN_COLOR);
         OPTIONS.add(ExtendedConfig.Options.ZEALOT_RESPAWN_COOLDOWN_COLOR);
         OPTIONS.add(ExtendedConfig.Options.PLACED_SUMMONING_EYE_COLOR);
-        OPTIONS.add(ExtendedConfig.Options.GOLEM_STAGE_COLOR);
 
         OPTIONS.add(ExtendedConfig.Options.FPS_VALUE_COLOR);
         OPTIONS.add(ExtendedConfig.Options.FPS_26_AND_40_COLOR);
@@ -59,7 +58,6 @@ public class GuiRenderInfoCustomColorSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.GAME_WEATHER_VALUE_COLOR);
         OPTIONS.add(ExtendedConfig.Options.MOON_PHASE_VALUE_COLOR);
         OPTIONS.add(ExtendedConfig.Options.PLACED_SUMMONING_EYE_VALUE_COLOR);
-        OPTIONS.add(ExtendedConfig.Options.GOLEM_STAGE_VALUE_COLOR);
     }
 
     public GuiRenderInfoCustomColorSettings(GuiScreen parent)
