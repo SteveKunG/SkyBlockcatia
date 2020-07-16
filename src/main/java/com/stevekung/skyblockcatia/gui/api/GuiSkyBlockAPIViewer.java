@@ -462,7 +462,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                     {
                         if (rankPlusColor != null)
                         {
-                            baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString() + "asdasd") + "++";
+                            baseRankText = "MVP" + EnumChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
                         }
                         else
                         {
