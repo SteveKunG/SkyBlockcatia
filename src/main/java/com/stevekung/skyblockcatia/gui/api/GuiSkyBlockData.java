@@ -1279,7 +1279,7 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.fontRendererObj, NumberUtils.formatCompact((long)playerXp), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.fontRendererObj, NumberUtils.formatWithM(playerXp), xText, yText + 10, 16777215);
             }
             else
             {
