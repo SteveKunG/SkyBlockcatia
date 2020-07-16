@@ -445,7 +445,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             int j = 0;
             String levelString = "";
 
-            if (chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Anvil"))
+            if (chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Anvil") || chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Reforge Item"))
             {
                 Slot anvilSlot = this.that.inventorySlots.inventorySlots.get(31);
                 ItemStack itemStack = this.that.inventorySlots.inventorySlots.get(22).getStack();
@@ -466,13 +466,13 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                             {
                                 String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
 
-                                if (lore.endsWith("Exp Levels"))
+                                if (lore.endsWith("Exp Levels") || lore.endsWith("Exp Level"))
                                 {
                                     int level = 0;
 
                                     try
                                     {
-                                        level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replace(" Exp Levels", "")).intValue();
+                                        level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
                                     }
                                     catch (ParseException e) {}
 
@@ -484,6 +484,20 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                                     {
                                         levelString = EnumChatFormatting.GREEN + String.valueOf(level);
                                     }
+                                    break;
+                                }
+                                else if (lore.endsWith("Coins") || lore.endsWith("Coin"))
+                                {
+                                    int coin = 0;
+
+                                    try
+                                    {
+                                        coin = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
+                                    }
+                                    catch (ParseException e) {}
+
+                                    levelString = EnumChatFormatting.GOLD + String.valueOf(coin);
+                                    break;
                                 }
                             }
                         }
