@@ -553,7 +553,7 @@ public class HypixelEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            ItemStack itemStack = new ItemStack(Items.bone);
+                            ItemStack itemStack = SkyBlockPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).toUpperCase()).getPetItem();
                             itemStack.setStackDisplayName(name);
                             NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             LoggerIN.logToast(formattedMessage);
