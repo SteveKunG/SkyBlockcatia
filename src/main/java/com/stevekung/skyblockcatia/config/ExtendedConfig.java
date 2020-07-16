@@ -155,6 +155,7 @@ public class ExtendedConfig
     public boolean makeSpecialZealotHeldGold = true;
     public boolean lobbyPlayerCount = false;
     public boolean displayItemAbilityMaxUsed = false;
+    public boolean preventScrollHotbarWhileFightDragon = false;
 
     private ExtendedConfig() {}
 
@@ -299,6 +300,7 @@ public class ExtendedConfig
             this.makeSpecialZealotHeldGold = ExtendedConfig.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             this.lobbyPlayerCount = ExtendedConfig.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
             this.displayItemAbilityMaxUsed = ExtendedConfig.getBoolean(nbt, "DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
+            this.preventScrollHotbarWhileFightDragon = ExtendedConfig.getBoolean(nbt, "PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -435,6 +437,7 @@ public class ExtendedConfig
             nbt.setBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
+            nbt.setBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
@@ -805,6 +808,10 @@ public class ExtendedConfig
         {
             this.displayItemAbilityMaxUsed = !this.displayItemAbilityMaxUsed;
         }
+        else if (options == ExtendedConfig.Options.PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON)
+        {
+            this.preventScrollHotbarWhileFightDragon = !this.preventScrollHotbarWhileFightDragon;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1124,6 +1131,8 @@ public class ExtendedConfig
             return this.lobbyPlayerCount;
         case DISPLAY_ITEM_ABILITY_MAX_USED:
             return this.displayItemAbilityMaxUsed;
+        case PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON:
+            return this.preventScrollHotbarWhileFightDragon;
         default:
             return false;
         }
@@ -1328,6 +1337,7 @@ public class ExtendedConfig
         MAKE_SPECIAL_ZEALOT_HELD_GOLD(false, true),
         LOBBY_PLAYER_COUNT(false, true),
         DISPLAY_ITEM_ABILITY_MAX_USED(false, true),
+        PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

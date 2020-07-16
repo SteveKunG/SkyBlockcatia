@@ -183,6 +183,7 @@ sneak_to_trade_other_player_island.extended_config=Sneak to trade other player i
 make_special_zealot_held_gold.extended_config=Make Special Zealot held Gold Block
 lobby_player_count.extended_config=Lobby Player Count
 display_item_ability_max_used.extended_config=Display Max Used of Item Ability
+prevent_scroll_hotbar_while_fight_dragon.extended_config=Prevent Scroll Hotbar while Fighting Dragon
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

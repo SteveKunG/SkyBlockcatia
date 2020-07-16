@@ -52,6 +52,7 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.MAKE_SPECIAL_ZEALOT_HELD_GOLD);
         OPTIONS.add(ExtendedConfig.Options.LOBBY_PLAYER_COUNT);
         OPTIONS.add(ExtendedConfig.Options.DISPLAY_ITEM_ABILITY_MAX_USED);
+        OPTIONS.add(ExtendedConfig.Options.PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON);
     }
 
     public GuiHypixelSettings(GuiScreen parent)

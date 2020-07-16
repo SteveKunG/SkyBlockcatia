@@ -20,6 +20,7 @@ import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.player.InventoryPlayer;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin
@@ -95,6 +96,25 @@ public abstract class MinecraftMixin
         if (HypixelEventHandler.isSkyBlock)
         {
             this.that.displayGuiScreen(new GuiInventory(player));
+        }
+    }
+
+    @Redirect(method = "runTick()V", at = @At(value = "INVOKE", target = "net/minecraft/entity/player/InventoryPlayer.changeCurrentItem(I)V"))
+    private void changeCurrentItem(InventoryPlayer invPlayer, int slot)
+    {
+        boolean foundDragon = false;
+
+        for (Entity entity : this.that.theWorld.loadedEntityList)
+        {
+            if (entity instanceof EntityDragon)
+            {
+                foundDragon = true;
+                break;
+            }
+        }
+        if (!(HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.preventScrollHotbarWhileFightDragon && foundDragon))
+        {
+            invPlayer.changeCurrentItem(slot);
         }
     }
 }
