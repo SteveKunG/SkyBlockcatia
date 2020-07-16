@@ -2454,10 +2454,16 @@ public class GuiSkyBlockData extends GuiScreen
     private void getHealthFromCake(NBTTagCompound extraAttrib)
     {
         List<ItemStack> itemStack1 = new ArrayList<>();
+        byte[] cakeData = extraAttrib.getByteArray("new_year_cake_bag_data");
+
+        if (cakeData.length == 0)
+        {
+            return;
+        }
 
         try
         {
-            NBTTagCompound compound1 = CompressedStreamTools.readCompressed(new ByteArrayInputStream(extraAttrib.getByteArray("new_year_cake_bag_data")));
+            NBTTagCompound compound1 = CompressedStreamTools.readCompressed(new ByteArrayInputStream(cakeData));
             NBTTagList list = compound1.getTagList("i", 10);
             List<Integer> cakeYears = new ArrayList<>();
 
