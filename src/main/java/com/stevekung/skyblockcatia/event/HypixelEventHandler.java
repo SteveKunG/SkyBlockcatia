@@ -84,7 +84,7 @@ public class HypixelEventHandler
     private static final Pattern SANTA_TIER_PATTERN = Pattern.compile("SANTA TIER! " + DROP_PATTERN + " gift with " + RANKED_PATTERN + "!");
 
     // Pet
-    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("§r§aYour (?<name>\\u00a7r\\u00a7[0-9a-fk-or][\\w ]+) §r§alevelled up to level §r§9(?<level>\\d+)§r§a!§r");
+    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("\\u00a7r\\u00a7aYour (?<name>\\u00a7r\\u00a7[0-9a-fk-or][\\w ]+) \\u00a7r\\u00a7alevelled up to level \\u00a7r\\u00a79(?<level>\\d+)\\u00a7r\\u00a7a!\\u00a7r");
     private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
 
     private static final List<String> LEFT_PARTY_MESSAGE = new ArrayList<>(Arrays.asList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left."));
