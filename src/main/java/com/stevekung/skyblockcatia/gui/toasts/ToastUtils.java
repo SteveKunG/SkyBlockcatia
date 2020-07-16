@@ -37,18 +37,30 @@ public class ToastUtils
         private final ToastUtils.DropType type;
         private final ToastUtils.ToastType toastType;
         private final long timestamp;
+        private boolean formatting;
 
-        public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType)
+        public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType, boolean formatting)
         {
             this.name = name;
             this.type = type;
             this.toastType = toastType;
             this.timestamp = System.currentTimeMillis();
+            this.formatting = formatting;
         }
-
+        
+        public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType)
+        {
+            this(name, type, toastType, false);
+        }
+        
         public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType)
         {
-            this(name, type, toastType);
+            this(name, magicFind, type, toastType, false);
+        }
+
+        public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType, boolean formatting)
+        {
+            this(name, type, toastType, formatting);
             this.magicFind = magicFind;
         }
 
@@ -76,6 +88,11 @@ public class ToastUtils
         public long getTimestamp()
         {
             return this.timestamp;
+        }
+
+        public boolean hasFormatting()
+        {
+            return this.formatting;
         }
     }
 

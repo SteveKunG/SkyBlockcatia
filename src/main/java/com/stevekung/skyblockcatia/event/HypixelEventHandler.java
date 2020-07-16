@@ -429,7 +429,9 @@ public class HypixelEventHandler
                     {
                         if (fishCatchPattern.matches())
                         {
-                            HypixelEventHandler.addFishLoot(fishCatchPattern);
+                            String dropType = fishCatchPattern.group("type");
+                            String name = fishCatchPattern.group("item");
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = ToastMode.getById(ExtendedConfig.instance.fishCatchToastMode).equalsIgnoreCase("toast");
                         }
@@ -500,7 +502,7 @@ public class HypixelEventHandler
                         {
                             String name = rareDropPattern.group("item");
                             String magicFind = rareDropPattern.group("mf");
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP, true));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -517,7 +519,7 @@ public class HypixelEventHandler
                             String name = rareDropBracketPattern.group("item");
                             String magicFind = rareDropBracketPattern.group(3);
                             ToastUtils.DropType dropType = type.startsWith("\u00a7r\u00a79\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : type.startsWith("\u00a7r\u00a75\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_PURPLE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, dropType, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, dropType, ToastType.DROP, true));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -525,7 +527,7 @@ public class HypixelEventHandler
                         {
                             String name = rareDrop2SpaceBracketPattern.group("item");
                             String magicFind = rareDrop2SpaceBracketPattern.group(2);
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP, true));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -783,13 +785,6 @@ public class HypixelEventHandler
         return LETTERS_NUMBERS.matcher(text).replaceAll("");
     }
 
-    private static void addFishLoot(Matcher matcher)
-    {
-        String dropType = matcher.group("type");
-        String name = matcher.group("item");
-        HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
-    }
-
     /**
      * Credit to codes.biscuit.skyblockaddons.utils.InventoryUtils
      */
@@ -851,7 +846,12 @@ public class HypixelEventHandler
                             }
                             else
                             {
-                                if (drop.getName().equals(key))
+                                if (!drop.hasFormatting())
+                                {
+                                    key = EnumChatFormatting.getTextWithoutFormattingCodes(key);
+                                }
+
+                                if (drop.getName().equals(key) || (drop.getType() == ToastUtils.DropType.GOOD_CATCH || drop.getType() == ToastUtils.DropType.GREAT_CATCH) && drop.getName().equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.stackSize = diff;
 
