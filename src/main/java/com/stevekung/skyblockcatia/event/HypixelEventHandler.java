@@ -793,6 +793,7 @@ public class HypixelEventHandler
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
         Map<String, ItemDropDiff> previousInventoryMap = new HashMap<>();
         Map<String, ItemDropDiff> newInventoryMap = new HashMap<>();
+        HypixelEventHandler.ITEM_DROP_CHECK_LIST.removeIf(drop -> this.removeUndisplayedToast(drop));
 
         if (this.previousInventory != null)
         {
@@ -831,10 +832,11 @@ public class HypixelEventHandler
                         for (Iterator<ToastUtils.ItemDropCheck> iterator = HypixelEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
                         {
                             ToastUtils.ItemDropCheck drop = iterator.next();
+                            String dropName = drop.getName();
 
                             if (drop.getType() == ToastUtils.DropType.PET_DROP)
                             {
-                                if (("[Lvl 1] " + drop.getName()).equals(key))
+                                if (("[Lvl 1] " + dropName).equals(key))
                                 {
                                     newItem.stackSize = diff;
 
@@ -846,12 +848,12 @@ public class HypixelEventHandler
                             }
                             else
                             {
-                                if (!drop.hasFormatting())
+                                if (!drop.hasFormatting() && !SkyBlockcatiaMod.isDevelopment)
                                 {
                                     key = EnumChatFormatting.getTextWithoutFormattingCodes(key);
                                 }
 
-                                if (drop.getName().equals(key) || (drop.getType() == ToastUtils.DropType.GOOD_CATCH || drop.getType() == ToastUtils.DropType.GREAT_CATCH) && drop.getName().equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
+                                if (dropName.equals(key) || (drop.getType() == ToastUtils.DropType.GOOD_CATCH || drop.getType() == ToastUtils.DropType.GREAT_CATCH) && dropName.equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.stackSize = diff;
 
@@ -871,16 +873,22 @@ public class HypixelEventHandler
                                     }
                                 }
                             }
-                            if (iterator.hasNext() && System.currentTimeMillis() > drop.getTimestamp())
-                            {
-                                iterator.remove();
-                            }
                         }
                     }
                 }
             });
         }
         this.previousInventory = newInventory;
+    }
+
+    private boolean removeUndisplayedToast(ToastUtils.ItemDropCheck drop)
+    {
+        if (System.currentTimeMillis() > drop.getTimestamp() + 10000L)
+        {
+            LoggerIN.logToast("You got " + drop.getName() + " but it doesn't show on toast!");
+            return true;
+        }
+        return false;
     }
 
     public static ItemStack getSkillItemStack(String exp, String skill)
