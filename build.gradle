@@ -49,6 +49,7 @@ dependencies {
         exclude module: "commons-io"
         exclude module: "log4j-core"
     }
+    compile files("libs/SkyblockAddons-1.5.2-for-MC-1.8.9.jar")
 }
 
 repositories {
