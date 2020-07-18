@@ -111,6 +111,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
 
         EquipmentOverlay.renderItem(itemStack, 8, 8);
         Minecraft.getMinecraft().getRenderItem().renderItemOverlayIntoGUI(toastGui.mc.fontRendererObj, itemStack, 8, 8, null);
+        GlStateManager.disableLighting();
         return delta >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
 }
