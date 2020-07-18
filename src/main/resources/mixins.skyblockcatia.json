@@ -49,6 +49,7 @@
         "BlockMixin",
         "ItemBlockMixin",
         "EntityArmorStandMixin",
-        "LayerHeldBlockMixin"
+        "LayerHeldBlockMixin",
+        "EntityFirework_OverlayFXMixin"
     ]
 }
