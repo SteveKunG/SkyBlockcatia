@@ -63,6 +63,7 @@ public enum SkyBlockLocation
     JERRY_POND("Jerry Pond", ImmutableList.of(BlockMetadata.create(Blocks.ice))),
 
     DUNGEON_HUB("Dungeon Hub"),
+    DUNGEON("Dungeon"),
     ;
 
     private final String location;
@@ -92,6 +93,11 @@ public enum SkyBlockLocation
     public boolean isTheEnd()
     {
         return this == SkyBlockLocation.THE_END || this == SkyBlockLocation.DRAGON_NEST;
+    }
+
+    public boolean ignore()
+    {
+        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.DUNGEON;
     }
 
     public static class BlockMetadata

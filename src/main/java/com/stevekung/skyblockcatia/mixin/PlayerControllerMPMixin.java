@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.handler.ClientBlockBreakEvent;
-import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -31,7 +30,7 @@ public class PlayerControllerMPMixin
     @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z", cancellable = true, at = @At("HEAD"))
     private void onPlayerDestroyBlock(BlockPos pos, EnumFacing facing, CallbackInfoReturnable info)
     {
-        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND)
+        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && !HypixelEventHandler.SKY_BLOCK_LOCATION.ignore())
         {
             IBlockState state = this.mc.theWorld.getBlockState(pos);
 
@@ -45,7 +44,7 @@ public class PlayerControllerMPMixin
     @Inject(method = "clickBlock(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z", cancellable = true, at = @At("HEAD"))
     private void clickBlock(BlockPos pos, EnumFacing facing, CallbackInfoReturnable info)
     {
-        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND)
+        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && !HypixelEventHandler.SKY_BLOCK_LOCATION.ignore())
         {
             IBlockState state = this.mc.theWorld.getBlockState(pos);
 

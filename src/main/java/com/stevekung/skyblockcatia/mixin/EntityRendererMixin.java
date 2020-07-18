@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -58,7 +57,7 @@ public abstract class EntityRendererMixin
     @Inject(method = "isDrawBlockOutline()Z", cancellable = true, at = @At("HEAD"))
     private void isDrawBlockOutline(CallbackInfoReturnable info)
     {
-        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND)
+        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && !HypixelEventHandler.SKY_BLOCK_LOCATION.ignore())
         {
             if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
