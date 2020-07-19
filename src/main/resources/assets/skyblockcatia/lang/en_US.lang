@@ -211,14 +211,14 @@ message.bid_confirm_title=Bid Confirmation
 message.bid_confirm=Are you sure really want to do this?
 
 # GUI
-gui.sb_view_info=Info
+gui.sb_view_player=Player
 gui.sb_view_skills=Skills
 gui.sb_view_slayers=Slayers
 gui.sb_view_others=Others
 gui.sb_others.kills=Kills
 gui.sb_others.deaths=Deaths
 gui.sb_others.others_stats=Other Stats
-gui.sb_basic_info=Basic Info
+gui.sb_player_stats=Stats
 gui.sb_inventory=Inventory
 gui.close=Close
 gui.sb_collections=Collections
