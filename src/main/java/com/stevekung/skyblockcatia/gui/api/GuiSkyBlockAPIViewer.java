@@ -605,7 +605,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 {
                     continue;
                 }
-                lastSave = entry.getValue().getAsJsonObject().get("last_save").getAsLong();
+                JsonElement lastSaveEle = entry.getValue().getAsJsonObject().get("last_save");
+                lastSave = lastSaveEle == null ? -1 : lastSaveEle.getAsLong();
             }
 
             availableProfile = profile.getAsJsonObject();
