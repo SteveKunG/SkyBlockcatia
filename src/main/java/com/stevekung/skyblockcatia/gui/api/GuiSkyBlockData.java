@@ -88,7 +88,8 @@ public class GuiSkyBlockData extends GuiScreen
     private String statusMessage;
     private GuiButton doneButton;
     private GuiButton backButton;
-    private final List<ProfileDataCallback> profiles;
+    private JsonObject skyblockProfiles;
+    private List<ProfileDataCallback> profiles;
     private final String sbProfileId;
     private final String sbProfileName;
     private final String username;
@@ -189,6 +190,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.skyBlockContainer = new ContainerSkyBlock();
         this.skyBlockArmorContainer = new ContainerArmor();
         this.profiles = profiles;
+        this.skyblockProfiles = callback.getSkyblockProfile();
         this.sbProfileId = callback.getProfileId();
         this.sbProfileName = callback.getProfileName();
         this.username = callback.getUsername();
@@ -232,16 +234,21 @@ public class GuiSkyBlockData extends GuiScreen
                     this.watch.start();
                     this.getPlayerData();
                     this.watch.stop();
-                    LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
+
+                    if (this.skyblockProfiles == null)
+                    {
+                        LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
+                    }
+
                     this.watch.reset();
                 }
                 catch (Throwable e)
                 {
-                    this.errorList.add(e.getClass().getName() + ": " + e.getMessage());
+                    this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
 
-                    for (StackTraceElement test : e.getStackTrace())
+                    for (StackTraceElement stack : e.getStackTrace())
                     {
-                        this.errorList.add(test.toString());
+                        this.errorList.add("at " + stack.toString());
                     }
                     this.setErrorMessage("", true);
                     e.printStackTrace();
@@ -372,7 +379,10 @@ public class GuiSkyBlockData extends GuiScreen
                     button.enabled = this.othersButton != othersType;
                 }
             }
-            this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.width, this.height, this.errorList);
+            if (this.errorInfo != null)
+            {
+                this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.width, this.height, this.errorList);
+            }
             this.updated = true;
         }
 
@@ -576,6 +586,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
         else if (keyCode == 63)
         {
+            this.skyblockProfiles = null;
             this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.guild, this.uuid, this.profile, -1)));
         }
     }
@@ -1529,19 +1540,28 @@ public class GuiSkyBlockData extends GuiScreen
     private void getPlayerData() throws IOException
     {
         this.statusMessage = "Getting Player Data";
+        JsonObject profiles = null;
+        JsonElement banking = null;
 
-        URL url = new URL(SkyBlockAPIUtils.SKYBLOCK_PROFILE + this.sbProfileId);
-        JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-        JsonElement profile = obj.get("profile");
-
-        if (profile == null || profile.isJsonNull())
+        if (this.skyblockProfiles == null)
         {
-            this.setErrorMessage("No API data returned, please try again later!", false);
-            return;
-        }
+            URL url = new URL(SkyBlockAPIUtils.SKYBLOCK_PROFILE + this.sbProfileId);
+            JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            JsonElement profile = obj.get("profile");
 
-        JsonObject profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
-        JsonElement banking = profile.getAsJsonObject().get("banking");
+            if (profile == null || profile.isJsonNull())
+            {
+                this.setErrorMessage("No API data returned, please try again later!", false);
+                return;
+            }
+            profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
+            banking = profile.getAsJsonObject().get("banking");
+        }
+        else
+        {
+            profiles = this.skyblockProfiles.get("members").getAsJsonObject();
+            banking = this.skyblockProfiles.get("banking");
+        }
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {

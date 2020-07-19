@@ -24,7 +24,9 @@ public class SkyBlockAPIUtils
     public static SupportedPack PACKS;
     private static String API_KEY;
     public static String PLAYER_NAME;
+    public static String PLAYER_UUID;
     public static String SKYBLOCK_PROFILE;
+    public static String SKYBLOCK_PROFILES;
     public static String SKYBLOCK_AUCTION;
     public static String BAZAAR;
     public static String GUILD;
@@ -34,7 +36,9 @@ public class SkyBlockAPIUtils
         LoggerIN.info("Setting an API Key");
         SkyBlockAPIUtils.API_KEY = ConfigManagerIN.hypixelApiKey;
         PLAYER_NAME = "https://api.hypixel.net/player?key=" + API_KEY + "&name=";
+        PLAYER_UUID = "https://api.hypixel.net/player?key=" + API_KEY + "&uuid=";
         SKYBLOCK_PROFILE = "https://api.hypixel.net/skyblock/profile?key=" + API_KEY + "&profile=";
+        SKYBLOCK_PROFILES = "https://api.hypixel.net/skyblock/profiles?key=" + API_KEY + "&uuid=";
         SKYBLOCK_AUCTION = "https://api.hypixel.net/skyblock/auction?key=" + API_KEY + "&profile=";
         BAZAAR = "https://api.hypixel.net/skyblock/bazaar?key=" + API_KEY;
         GUILD = "https://api.hypixel.net/guild?key=" + API_KEY + "&player=";

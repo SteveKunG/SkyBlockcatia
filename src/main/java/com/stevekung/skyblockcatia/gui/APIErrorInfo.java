@@ -1,8 +1,7 @@
 package com.stevekung.skyblockcatia.gui;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,7 +16,13 @@ public class APIErrorInfo extends GuiScrollingList
     public APIErrorInfo(GuiScreen parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<String> error)
     {
         super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
-        this.error = error;
+        List<String> errorList = new ArrayList<>();
+
+        for (String errorLog : error)
+        {
+            errorList.addAll(parent.mc.fontRendererObj.listFormattedStringToWidth(errorLog, parentWidth - 100));
+        }
+        this.error = errorList;
         this.parent = parent;
     }
 
@@ -31,7 +36,7 @@ public class APIErrorInfo extends GuiScrollingList
     protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
     {
         String stat = this.error.get(index);
-        this.parent.drawString(ColorUtils.unicodeFontRenderer, EnumChatFormatting.RED + "" + (index == 0 ? EnumChatFormatting.BOLD + "" + EnumChatFormatting.UNDERLINE: "") + stat, 40, top, 16777215);
+        this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.RED + stat, 30, top, 16777215);
     }
 
     @Override

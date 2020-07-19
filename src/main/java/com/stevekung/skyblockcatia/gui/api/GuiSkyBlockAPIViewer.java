@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -12,6 +11,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.ObjectArrays;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -39,7 +39,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     private GuiRightClickTextField usernameTextField;
     private GuiButtonSearch checkButton;
     private GuiButton closeButton;
-    private String username = "";
+    private String input = "";
     private String displayName = "";
     private boolean openFromPlayer;
     private boolean loadingApi;
@@ -78,7 +78,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         this.openFromPlayer = state == GuiState.PLAYER;
         this.fromError = state == GuiState.ERROR;
         this.displayName = displayName;
-        this.username = username;
+        this.input = username;
         this.guild = guild;
     }
 
@@ -97,7 +97,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         this.usernameTextField = new GuiRightClickTextField(2, this.fontRendererObj, this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused(true);
-        this.usernameTextField.setText(this.username);
+        this.usernameTextField.setText(this.input);
         this.checkButton.enabled = this.usernameTextField.getText().trim().length() > 0;
         this.checkButton.visible = !this.error;
 
@@ -107,7 +107,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         }
         if (this.fromError)
         {
-            this.usernameTextField.setText(this.username);
+            this.usernameTextField.setText(this.input);
         }
 
         if (this.openFromPlayer)
@@ -130,11 +130,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 }
                 catch (Throwable e)
                 {
-                    this.errorList.add(e.getClass().getName() + ": " + e.getMessage());
+                    this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
 
-                    for (StackTraceElement test : e.getStackTrace())
+                    for (StackTraceElement stack : e.getStackTrace())
                     {
-                        this.errorList.add(test.toString());
+                        this.errorList.add("at " + stack.toString());
                     }
                     this.setErrorMessage("", true);
                     e.printStackTrace();
@@ -169,6 +169,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 ++i2;
             }
         }
+        if (this.errorInfo != null)
+        {
+            this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.width, this.height, this.errorList);
+        }
     }
 
     @Override
@@ -191,7 +195,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         {
             if (button.id == 0)
             {
-                this.username = this.usernameTextField.getText();
+                this.input = this.usernameTextField.getText();
                 this.profiles.clear();
                 this.profileButtonList.clear();
                 this.guild = "";
@@ -213,11 +217,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                     }
                     catch (Throwable e)
                     {
-                        this.errorList.add(e.getClass().getName() + ": " + e.getMessage());
+                        this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
 
-                        for (StackTraceElement test : e.getStackTrace())
+                        for (StackTraceElement stack : e.getStackTrace())
                         {
-                            this.errorList.add(test.toString());
+                            this.errorList.add("at " + stack.toString());
                         }
                         this.setErrorMessage("", true);
                         e.printStackTrace();
@@ -226,7 +230,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             }
             else if (button.id == 1)
             {
-                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiState.ERROR, this.username, this.displayName, this.guild) : null);
+                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiState.ERROR, this.input, this.displayName, this.guild) : null);
             }
         }
     }
@@ -251,6 +255,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             if (keyCode == 1)
             {
                 this.actionPerformed(this.closeButton);
+            }
+            else if (keyCode == 63 && !this.profiles.isEmpty())
+            {
+                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiState.PLAYER, this.input, this.displayName, this.guild));
             }
         }
         else
@@ -398,15 +406,27 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
     private void checkAPI() throws IOException
     {
-        if (!this.username.matches("\\w+"))
+        URL url = null;
+
+        if (this.input.length() == 32)
         {
-            this.setErrorMessage("Invalid Username Pattern!", false);
-            return;
+            url = new URL(SkyBlockAPIUtils.PLAYER_UUID + this.input);
+        }
+        else
+        {
+            if (!this.input.matches("\\w+"))
+            {
+                this.setErrorMessage("Invalid Username Pattern!", false);
+                return;
+            }
+            else
+            {
+                url = new URL(SkyBlockAPIUtils.PLAYER_NAME + this.input);
+            }
         }
 
         this.statusMessage = "Getting Hypixel API";
 
-        URL url = new URL(SkyBlockAPIUtils.PLAYER_NAME + this.username);
         JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
 
         if (!obj.get("success").getAsBoolean())
@@ -527,27 +547,25 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             e.printStackTrace();
         }
 
-        this.username = jsonPlayer.getAsJsonObject().get("displayname").getAsString();
+        this.input = jsonPlayer.getAsJsonObject().get("displayname").getAsString();
 
         if (prefix != null)
         {
-            this.displayName = prefix.getAsString() + " " + this.username;
+            this.displayName = prefix.getAsString() + " " + this.input;
         }
         else
         {
             if (!baseRankText.isEmpty())
             {
-                this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.username;
+                this.displayName = color + "[" + baseRankText + rankPlus + color + "] " + this.input;
             }
             else
             {
-                this.displayName = HypixelRank.Base.NONE.getColor() + this.username;
+                this.displayName = HypixelRank.Base.NONE.getColor() + this.input;
             }
         }
 
-        JsonElement stats = jsonPlayer.getAsJsonObject().get("stats");
         String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
-
         URL urlGuild = new URL(SkyBlockAPIUtils.GUILD + uuid);
         JsonObject objGuild = new JsonParser().parse(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
         JsonElement guild = objGuild.get("guild");
@@ -558,42 +576,40 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             this.guild = EnumChatFormatting.YELLOW + " Guild: " + EnumChatFormatting.GOLD + guildName;
         }
 
-        if (stats == null)
-        {
-            this.setErrorMessage("Couldn't get stats from API, Please try again later!", false);
-            return;
-        }
+        URL urlSB = new URL(SkyBlockAPIUtils.SKYBLOCK_PROFILES + uuid);
+        JsonObject objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonElement sbProfile = objSB.get("profiles");
+        GameProfile gameProfile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
 
-        JsonElement jsonSkyBlock = stats.getAsJsonObject().get("SkyBlock");
-
-        if (jsonSkyBlock == null)
-        {
-            this.setErrorMessage("Player has not played SkyBlock yet!", false);
-            return;
-        }
-
-        JsonObject profiles = jsonSkyBlock.getAsJsonObject().get("profiles").getAsJsonObject();
-        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.username));
-        int i = 0;
-
-        if (profiles.entrySet().isEmpty())
+        if (sbProfile.isJsonNull())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.username, this.displayName, this.guild, uuid, profile, -1);
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.input, this.displayName, this.guild, uuid, gameProfile, -1);
             this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, callback));
             return;
         }
 
-        this.statusMessage = "Getting SkyBlock profiles";
+        JsonArray profilesList = sbProfile.getAsJsonArray();
+        int i = 0;
         List<GuiSBProfileButton> buttons = new ArrayList<>();
 
-        for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
+        for (JsonElement profile : profilesList)
         {
-            boolean hasOneProfile = profiles.entrySet().size() == 1;
-            String sbProfileId = profiles.get(entry.getKey()).getAsJsonObject().get("profile_id").getAsString();
-            String profileName = profiles.get(entry.getKey()).getAsJsonObject().get("cute_name").getAsString();
-            this.statusMessage = "Found " + EnumChatFormatting.GOLD + "\"" + profileName + "\"" + EnumChatFormatting.GRAY + " profile";
-            ProfileDataCallback callback = new ProfileDataCallback(sbProfileId, profileName, this.username, this.displayName, this.guild, uuid, profile, hasOneProfile ? -1 : this.getLastSaveProfile(sbProfileId, uuid));
+            boolean hasOneProfile = profilesList.size() == 1;
+            long lastSave = -1;
+            JsonObject availableProfile = null;
+
+            for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
+            {
+                if (!entry.getKey().equals(uuid))
+                {
+                    continue;
+                }
+                lastSave = entry.getValue().getAsJsonObject().get("last_save").getAsLong();
+            }
+
+            availableProfile = profile.getAsJsonObject();
+            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
             GuiSBProfileButton button = new GuiSBProfileButton(i + 1000, this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)
@@ -622,42 +638,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             this.profileButtonList.add(button);
             ++i2;
         }
-        this.usernameTextField.setText(this.username);
+        this.usernameTextField.setText(this.input);
         this.loadingApi = false;
-    }
-
-    private long getLastSaveProfile(String currentProfileId, String uuid) throws IOException
-    {
-        long lastSave = -1;
-        URL url = new URL(SkyBlockAPIUtils.SKYBLOCK_PROFILE + currentProfileId);
-        JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-        JsonElement profile = obj.get("profile");
-
-        if (profile == null || profile.isJsonNull())
-        {
-            return lastSave;
-        }
-
-        JsonElement members = profile.getAsJsonObject().get("members");
-
-        if (members == null)
-        {
-            return lastSave;
-        }
-
-        JsonObject profiles = members.getAsJsonObject();
-
-        for (Map.Entry<String, JsonElement> entry : profiles.entrySet().stream().filter(entry -> entry.getKey().equals(uuid)).collect(Collectors.toList()))
-        {
-            JsonObject currentUserProfile = profiles.get(entry.getKey()).getAsJsonObject();
-            JsonElement lastSaveJson = currentUserProfile.get("last_save");
-
-            if (lastSaveJson != null)
-            {
-                lastSave = lastSaveJson.getAsLong();
-            }
-        }
-        return lastSave;
     }
 
     private void setErrorMessage(String message, boolean errorList)
