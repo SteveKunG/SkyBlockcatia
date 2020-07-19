@@ -61,7 +61,7 @@ public class NumberUtils
 
         for (int i = 0; i < sz; i++)
         {
-            if (!Character.isDigit(cs.charAt(i)) && !(cs.charAt(i) == 'k' || cs.charAt(i) == 'm' || cs.charAt(i) == 'K' || cs.charAt(i) == 'M'))
+            if (!Character.isDigit(cs.charAt(i)) && !(cs.charAt(i) == 'k' || cs.charAt(i) == 'm'))
             {
                 return false;
             }
