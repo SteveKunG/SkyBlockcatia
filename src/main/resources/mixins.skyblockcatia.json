@@ -38,6 +38,7 @@
         "NetHandlerPlayClientMixin",
         "RenderManagerMixin",
         "NetworkPlayerInfoMixin",
+        "RenderDragonMixin",
         "RenderGuardianMixin",
         "ImageBufferDownloadMixin",
         "LayerCustomHeadMixin",
