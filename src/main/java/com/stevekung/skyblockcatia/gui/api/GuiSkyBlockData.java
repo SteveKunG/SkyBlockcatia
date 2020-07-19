@@ -244,6 +244,7 @@ public class GuiSkyBlockData extends GuiScreen
                         this.errorList.add(test.toString());
                     }
                     this.setErrorMessage("", true);
+                    e.printStackTrace();
                 }
             });
         }

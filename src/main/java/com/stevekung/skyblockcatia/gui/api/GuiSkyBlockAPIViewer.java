@@ -137,6 +137,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                         this.errorList.add(test.toString());
                     }
                     this.setErrorMessage("", true);
+                    e.printStackTrace();
                 }
             });
         }
@@ -219,6 +220,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                             this.errorList.add(test.toString());
                         }
                         this.setErrorMessage("", true);
+                        e.printStackTrace();
                     }
                 });
             }
