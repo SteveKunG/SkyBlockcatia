@@ -370,13 +370,13 @@ public class HUDRenderEventHandler
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.enableBlend();
 
-                if (SkyBlockBossStatus.bossName != null && SkyBlockBossStatus.renderBossBar)
+                if (SkyBlockBossBar.bossName != null && SkyBlockBossBar.renderBossBar)
                 {
                     ScaledResolution res = new ScaledResolution(this.mc);
                     int i = res.getScaledWidth();
                     int j = 182;
                     int k = i / 2 - j / 2;
-                    int l = (int)(SkyBlockBossStatus.healthScale * (j + 1));
+                    int l = (int)(SkyBlockBossBar.healthScale * (j + 1));
                     int i1 = 12;
 
                     if (ConfigManagerIN.enableRenderBossHealthBar)
@@ -388,7 +388,7 @@ public class HUDRenderEventHandler
                             this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 79, l, 5);
                         }
                     }
-                    String name = SkyBlockBossStatus.bossName;
+                    String name = SkyBlockBossBar.bossName;
                     this.mc.ingameGUI.getFontRenderer().drawStringWithShadow(name, i / 2 - this.mc.ingameGUI.getFontRenderer().getStringWidth(name) / 2, i1 - 10, 16777215);
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     this.mc.getTextureManager().bindTexture(Gui.icons);

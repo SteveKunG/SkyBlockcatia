@@ -64,6 +64,8 @@ public class HypixelEventHandler
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
     private static final Pattern PET_CARE_PATTERN = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).");
+    private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("\\u00a7r                           \\u00a7r\\u00a76\\u00a7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
+    private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
@@ -190,7 +192,7 @@ public class HypixelEventHandler
                     {
                         HypixelEventHandler.SKY_BLOCK_LOCATION = SkyBlockLocation.NONE;
                     }
-                    SkyBlockBossStatus.renderBossBar = foundDrag;
+                    SkyBlockBossBar.renderBossBar = foundDrag;
                 }
             }
         }
@@ -272,6 +274,8 @@ public class HypixelEventHandler
             Matcher uuidMatcher = HypixelEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = HypixelEventHandler.CHAT_PATTERN.matcher(message);
             Matcher petCareMatcher = HypixelEventHandler.PET_CARE_PATTERN.matcher(message);
+            Matcher dragonDownMatcher = HypixelEventHandler.DRAGON_DOWN_PATTERN.matcher(formattedMessage);
+            Matcher dragonSpawnedMatcher = HypixelEventHandler.DRAGON_SPAWNED_PATTERN.matcher(formattedMessage);
 
             // Item Drop matcher
             Matcher rareDropPattern = HypixelEventHandler.RARE_DROP_PATTERN.matcher(formattedMessage);
@@ -400,6 +404,21 @@ public class HypixelEventHandler
                                 ClientUtils.printClientMessage(JsonUtils.create("Current server day: ").setChatStyle(JsonUtils.yellow().setBold(true)).appendSibling(JsonUtils.create(String.valueOf(day)).setChatStyle(JsonUtils.style().setBold(false).setColor(dayColor))));
                             }
                         }, 2500);
+                    }
+                    if (dragonDownMatcher.matches())
+                    {
+                        SkyBlockBossBar.renderBossBar = false;
+                        SkyBlockBossBar.bossName = null;
+                        SkyBlockBossBar.healthScale = 0;
+                        HypixelEventHandler.dragonHealth = 0;
+                    }
+                    if (dragonSpawnedMatcher.matches())
+                    {
+                        String dragon = dragonSpawnedMatcher.group("dragon");
+                        SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase());
+                        SkyBlockBossBar.renderBossBar = true;
+                        SkyBlockBossBar.healthScale = HypixelEventHandler.dragonHealth / type.getMaxHealth();
+                        SkyBlockBossBar.bossName = EnumChatFormatting.RED + type.getName();
                     }
 
                     if (chatMatcher.matches())
@@ -646,9 +665,9 @@ public class HypixelEventHandler
         if (event.entity == this.mc.thePlayer)
         {
             this.previousInventory = null;
-            SkyBlockBossStatus.renderBossBar = false;
-            SkyBlockBossStatus.bossName = null;
-            SkyBlockBossStatus.healthScale = 0;
+            SkyBlockBossBar.renderBossBar = false;
+            SkyBlockBossBar.bossName = null;
+            SkyBlockBossBar.healthScale = 0;
             HypixelEventHandler.dragonHealth = 0;
             ITEM_DROP_CHECK_LIST.clear();
 
@@ -664,9 +683,9 @@ public class HypixelEventHandler
     {
         SignSelectionList.clearAll();
         HypixelEventHandler.dragonHealth = 0;
-        SkyBlockBossStatus.renderBossBar = false;
-        SkyBlockBossStatus.bossName = null;
-        SkyBlockBossStatus.healthScale = 0;
+        SkyBlockBossBar.renderBossBar = false;
+        SkyBlockBossBar.bossName = null;
+        SkyBlockBossBar.healthScale = 0;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
