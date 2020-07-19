@@ -8,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
@@ -86,7 +88,7 @@ public class HypixelEventHandler
     private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
 
     private static final List<String> LEFT_PARTY_MESSAGE = new ArrayList<>(Arrays.asList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left."));
-
+    private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("\u25C6 Ice Rune", "\u25C6 Ice Rune I").build();
     public static boolean isSkyBlock = false;
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
@@ -502,7 +504,7 @@ public class HypixelEventHandler
                         {
                             String name = rareDropPattern.group("item");
                             String magicFind = rareDropPattern.group("mf");
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP, true));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -519,7 +521,7 @@ public class HypixelEventHandler
                             String name = rareDropBracketPattern.group("item");
                             String magicFind = rareDropBracketPattern.group(3);
                             ToastUtils.DropType dropType = type.startsWith("\u00a7r\u00a79\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : type.startsWith("\u00a7r\u00a75\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_PURPLE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, dropType, ToastType.DROP, true));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, dropType, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -527,7 +529,7 @@ public class HypixelEventHandler
                         {
                             String name = rareDrop2SpaceBracketPattern.group("item");
                             String magicFind = rareDrop2SpaceBracketPattern.group(2);
-                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP, true));
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -848,12 +850,9 @@ public class HypixelEventHandler
                             }
                             else
                             {
-                                if (!drop.hasFormatting() && !SkyBlockcatiaMod.isDevelopment)
-                                {
-                                    key = EnumChatFormatting.getTextWithoutFormattingCodes(key);
-                                }
+                                dropName = RENAMED_DROP.getOrDefault(dropName, dropName);
 
-                                if (dropName.equals(key) || (drop.getType() == ToastUtils.DropType.GOOD_CATCH || drop.getType() == ToastUtils.DropType.GREAT_CATCH) && dropName.equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
+                                if (dropName.equals(key) || !drop.getType().hasFormat() && dropName.equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.stackSize = diff;
 

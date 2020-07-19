@@ -86,20 +86,10 @@ public class ClientEventHandler
         // Pet Drop
         //player.addChatComponentMessage(JsonUtils.create("PET DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName().replace("[Lvl 1] ", "")).setChatStyle(JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString()))))).appendSibling(JsonUtils.create(EnumChatFormatting.getTextWithoutFormattingCodes(magic))));
 
-        
-        // Rare Drop with or without bracket
-        /*switch (rand.nextInt(2))
-        {
-        case 0:
-        default:
-            String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
-            player.addChatComponentMessage(JsonUtils.create(test));
-            break;
-        case 1:
-            test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
-            player.addChatComponentMessage(JsonUtils.create(test));
-            break;
-        }*/
+        // Rare Drop
+        //String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
+        //String test = "§r§6§lRARE DROP! " + "§r" + itemStack.getDisplayName() + magic;
+        //player.addChatComponentMessage(JsonUtils.create(test));
 
         // Slayer Drop
         /*switch (rand.nextInt(4))

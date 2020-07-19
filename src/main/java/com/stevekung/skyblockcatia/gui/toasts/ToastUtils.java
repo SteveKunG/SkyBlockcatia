@@ -37,30 +37,18 @@ public class ToastUtils
         private final ToastUtils.DropType type;
         private final ToastUtils.ToastType toastType;
         private final long timestamp;
-        private boolean formatting;
 
-        public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType, boolean formatting)
+        public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType)
         {
             this.name = name;
             this.type = type;
             this.toastType = toastType;
             this.timestamp = System.currentTimeMillis();
-            this.formatting = formatting;
-        }
-        
-        public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType)
-        {
-            this(name, type, toastType, false);
-        }
-        
-        public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType)
-        {
-            this(name, magicFind, type, toastType, false);
         }
 
-        public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType, boolean formatting)
+        public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType)
         {
-            this(name, type, toastType, formatting);
+            this(name, type, toastType);
             this.magicFind = magicFind;
         }
 
@@ -88,11 +76,6 @@ public class ToastUtils
         public long getTimestamp()
         {
             return this.timestamp;
-        }
-
-        public boolean hasFormatting()
-        {
-            return this.formatting;
         }
     }
 
@@ -133,6 +116,11 @@ public class ToastUtils
         public String getColor()
         {
             return ColorUtils.stringToRGB(this.color).toColoredFont();
+        }
+
+        public boolean hasFormat()
+        {
+            return this == RARE_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP;
         }
 
         public boolean isSpecialDrop()
