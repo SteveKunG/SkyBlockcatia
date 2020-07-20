@@ -64,8 +64,8 @@ public class LoggerIN
     {
         File logDirectory = new File("./logs/skyblockcatia/" + GameProfileUtils.getUUID().toString() + "/");
         logDirectory.mkdirs();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
-        LocalDateTime now = LocalDateTime.now();  
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
         logFile = new File(logDirectory, dtf.format(now) + "-toast.log");
 
         try
