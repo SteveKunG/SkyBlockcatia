@@ -18,7 +18,7 @@ public class SkyBlockItemUtils
         {
             NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
 
-            if (BLACKLIST.stream().anyMatch(id -> !extraAttrib.getString("id").equals(id)))
+            if (!BLACKLIST.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
             {
                 player.swingItem();
             }
