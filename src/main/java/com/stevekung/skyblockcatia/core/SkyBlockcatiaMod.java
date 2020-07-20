@@ -293,6 +293,7 @@ public class SkyBlockcatiaMod
         info.credits = "Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible";
         info.url = SkyBlockcatiaMod.URL;
         info.authorList = Arrays.asList("SteveKunG");
+        info.logoFile = "assets/skyblockcatia/logo.png";
     }
 
     private static void loadProfileOption()
