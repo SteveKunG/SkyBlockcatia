@@ -413,11 +413,7 @@ public class HypixelEventHandler
                     }
                     if (dragonDownMatcher.matches())
                     {
-                        SkyBlockBossBar.renderBossBar = false;
-                        SkyBlockBossBar.bossName = null;
-                        SkyBlockBossBar.healthScale = 0;
-                        HypixelEventHandler.dragonHealth = 0;
-                        this.dragonType = null;
+                        this.clearBossData();
                     }
                     if (dragonSpawnedMatcher.matches())
                     {
@@ -672,11 +668,7 @@ public class HypixelEventHandler
         if (event.entity == this.mc.thePlayer)
         {
             this.previousInventory = null;
-            SkyBlockBossBar.renderBossBar = false;
-            SkyBlockBossBar.bossName = null;
-            SkyBlockBossBar.healthScale = 0;
-            HypixelEventHandler.dragonHealth = 0;
-            this.dragonType = null;
+            this.clearBossData();
             ITEM_DROP_CHECK_LIST.clear();
 
             if (GameProfileUtils.getUUID().toString().equals("a8fe118d-f808-4625-aafa-1ce7cacbf451"))///XXX KUY
@@ -690,11 +682,7 @@ public class HypixelEventHandler
     public void onDisconnectedFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         SignSelectionList.clearAll();
-        this.dragonType = null;
-        HypixelEventHandler.dragonHealth = 0;
-        SkyBlockBossBar.renderBossBar = false;
-        SkyBlockBossBar.bossName = null;
-        SkyBlockBossBar.healthScale = 0;
+        this.clearBossData();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -916,6 +904,15 @@ public class HypixelEventHandler
             return true;
         }
         return false;
+    }
+
+    private void clearBossData()
+    {
+        SkyBlockBossBar.renderBossBar = false;
+        SkyBlockBossBar.bossName = null;
+        SkyBlockBossBar.healthScale = 0;
+        HypixelEventHandler.dragonHealth = 0;
+        this.dragonType = null;
     }
 
     public static ItemStack getSkillItemStack(String exp, String skill)
