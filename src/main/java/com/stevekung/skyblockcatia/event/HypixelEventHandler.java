@@ -99,6 +99,7 @@ public class HypixelEventHandler
     public static float dragonHealth;
     private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new ArrayList<>();
     private List<ItemStack> previousInventory;
+    private SkyBlockBossBar.DragonType dragonType;
     private final Minecraft mc;
 
     public HypixelEventHandler()
@@ -147,6 +148,11 @@ public class HypixelEventHandler
                             try
                             {
                                 HypixelEventHandler.dragonHealth = Float.valueOf(scoreText.replaceAll("[^\\d]", ""));
+
+                                if (this.dragonType != null)
+                                {
+                                    SkyBlockBossBar.healthScale = HypixelEventHandler.dragonHealth / this.dragonType.getMaxHealth();
+                                }
                                 foundDrag = true;
                                 break;
                             }
@@ -411,14 +417,15 @@ public class HypixelEventHandler
                         SkyBlockBossBar.bossName = null;
                         SkyBlockBossBar.healthScale = 0;
                         HypixelEventHandler.dragonHealth = 0;
+                        this.dragonType = null;
                     }
                     if (dragonSpawnedMatcher.matches())
                     {
                         String dragon = dragonSpawnedMatcher.group("dragon");
                         SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase());
                         SkyBlockBossBar.renderBossBar = true;
-                        SkyBlockBossBar.healthScale = HypixelEventHandler.dragonHealth / type.getMaxHealth();
                         SkyBlockBossBar.bossName = EnumChatFormatting.RED + type.getName();
+                        this.dragonType = type;
                     }
 
                     if (chatMatcher.matches())
@@ -669,6 +676,7 @@ public class HypixelEventHandler
             SkyBlockBossBar.bossName = null;
             SkyBlockBossBar.healthScale = 0;
             HypixelEventHandler.dragonHealth = 0;
+            this.dragonType = null;
             ITEM_DROP_CHECK_LIST.clear();
 
             if (GameProfileUtils.getUUID().toString().equals("a8fe118d-f808-4625-aafa-1ce7cacbf451"))///XXX KUY
@@ -682,6 +690,7 @@ public class HypixelEventHandler
     public void onDisconnectedFromServerEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         SignSelectionList.clearAll();
+        this.dragonType = null;
         HypixelEventHandler.dragonHealth = 0;
         SkyBlockBossBar.renderBossBar = false;
         SkyBlockBossBar.bossName = null;
