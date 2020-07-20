@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.mutable.MutableInt;
 
+// Credit to SkyblockAddons but I can't find source code reference
 public class CoordsPair
 {
     private MutableInt x;

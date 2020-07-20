@@ -289,7 +289,8 @@ public class SkyBlockcatiaMod
         info.modId = SkyBlockcatiaMod.MOD_ID;
         info.name = SkyBlockcatiaMod.NAME;
         info.version = SkyBlockcatiaMod.VERSION;
-        info.description = "Simple in-game info and utilities!";
+        info.description = "Useful Hypixel Skyblock features, QOL and In-game API Viewer!";
+        info.credits = "Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible";
         info.url = SkyBlockcatiaMod.URL;
         info.authorList = Arrays.asList("SteveKunG");
     }
