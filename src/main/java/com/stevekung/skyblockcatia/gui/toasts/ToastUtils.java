@@ -97,7 +97,9 @@ public class ToastUtils
         SWEET_GIFT("SWEET GIFT!", "255,255,85"),
         RARE_GIFT("RARE GIFT!", "85,85,255"),
         SANTA_TIER("SANTA GIFT!", "255,85,85"),
-        PET_LEVEL_UP("PET LEVEL UP!", "85,85,255");
+        PET_LEVEL_UP("PET LEVEL UP!", "85,85,255"),
+        DUNGEON_QUALITY_DROP("DUNGEON DROP!", "255,69,0"),
+        ;
 
         private final String name;
         private final String color;
@@ -125,7 +127,7 @@ public class ToastUtils
 
         public boolean isSpecialDrop()
         {
-            return this == BOSS_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER;
+            return this == BOSS_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER || this == DUNGEON_QUALITY_DROP;
         }
 
         public boolean isFishingCoins()

@@ -185,5 +185,9 @@ public class ClientEventHandler
             player.addChatComponentMessage(JsonUtils.create("GREAT CATCH! You found a ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("!")));
             break;
         }*/
+
+        // Dungeon Drop
+        //String test = "You found a Top Quality Item! " + itemStack.getDisplayName();
+        //player.addChatComponentMessage(JsonUtils.create(test));
     }
 }
