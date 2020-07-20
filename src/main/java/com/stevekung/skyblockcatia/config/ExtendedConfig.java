@@ -119,8 +119,7 @@ public class ExtendedConfig
     public boolean jungleAxeCooldown = true;
     public boolean grapplingHookCooldown = true;
     public boolean zealotRespawnCooldown = false;
-    public boolean glowingDragonArmor = false;
-    public String hypixelNickName = "";
+    public boolean glowingDragonArmor = true;
     public int selectedHypixelMinigame = 0;
     public int hypixelMinigameScrollPos = 0;
     public int visitIslandToastMode = 2;
@@ -136,21 +135,21 @@ public class ExtendedConfig
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
     public boolean currentServerDay = true;
-    public boolean lobbyPlayerViewer = false;
+    public boolean lobbyPlayerViewer = true;
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
     public int itemRarityOpacity = 75;
     public int auctionBidConfirmValue = 500000;
-    public boolean supportersFancyColor = false;
-    public boolean bazaarOnTooltips = false;
+    public boolean supportersFancyColor = true;
+    public boolean bazaarOnTooltips = true;
     public boolean ignoreBushHitbox = false;
     public boolean onlyMineableHitbox = false;
-    public boolean ignoreInteractInvisibleArmorStand = false;
+    public boolean ignoreInteractInvisibleArmorStand = true;
     public boolean automaticOpenMaddox = false;
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
-    public boolean lobbyPlayerCount = false;
-    public boolean displayItemAbilityMaxUsed = false;
+    public boolean lobbyPlayerCount = true;
+    public boolean displayItemAbilityMaxUsed = true;
     public boolean preventScrollHotbarWhileFightDragon = false;
 
     private ExtendedConfig() {}
@@ -263,7 +262,6 @@ public class ExtendedConfig
 
             // Hypixel
             this.rightClickToAddParty = ExtendedConfig.getBoolean(nbt, "RightClickToAddParty", this.rightClickToAddParty);
-            this.hypixelNickName = ExtendedConfig.getString(nbt, "HypixelNickName", this.hypixelNickName);
             this.selectedHypixelMinigame = ExtendedConfig.getInteger(nbt, "SelectedHypixelMinigame", this.selectedHypixelMinigame);
             this.hypixelMinigameScrollPos = ExtendedConfig.getInteger(nbt, "HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             this.itemRarityOpacity = ExtendedConfig.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
@@ -426,7 +424,6 @@ public class ExtendedConfig
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
             nbt.setBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
-            nbt.setString("HypixelNickName", this.hypixelNickName);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             nbt.setInteger("ItemRarityOpacity", this.itemRarityOpacity);

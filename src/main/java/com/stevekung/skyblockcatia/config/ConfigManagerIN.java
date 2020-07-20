@@ -135,11 +135,11 @@ public class ConfigManagerIN
         prop.comment = LangUtils.translate("gui.config.skyblockcatia.alternate_player_model");
         propOrder.add(prop.getName());
 
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Chat Mode", true);
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Chat Mode", false);
         ConfigManagerIN.enableChatMode = prop.getBoolean();
         propOrder.add(prop.getName());
 
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Skin Rendering Fix (EXPERIMENTAL)", false).setRequiresMcRestart(true);
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Skin Rendering Fix", false).setRequiresMcRestart(true);
         ConfigManagerIN.enableSkinRenderingFix = prop.getBoolean();
         propOrder.add(prop.getName());
 
@@ -160,7 +160,7 @@ public class ConfigManagerIN
         ConfigManagerIN.enable1_15ArmorEnchantedGlint = prop.getBoolean();
         propOrder.add(prop.getName());
 
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Movement Handler", true);
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Movement Handler", false);
         prop.comment = LangUtils.translate("gui.config.skyblockcatia.movement_handler");
         ConfigManagerIN.enableMovementHandler = prop.getBoolean();
         propOrder.add(prop.getName());
