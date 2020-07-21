@@ -101,7 +101,6 @@ public class SkyBlockcatiaMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-
         SkyBlockcatiaMod.init(event.getModMetadata());
         ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingHandler.init();
