@@ -9,8 +9,6 @@ import com.stevekung.skyblockcatia.utils.RenderUtils;
 import codes.biscuit.skyblockaddons.SkyblockAddons;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook;
-import codes.biscuit.skyblockaddons.core.Feature;
-import codes.biscuit.skyblockaddons.utils.EnumUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,12 +28,28 @@ public class SBABackpack
     {
         try
         {
+            Minecraft mc = Minecraft.getMinecraft();
             Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
+            Class<?> feature = Class.forName("codes.biscuit.skyblockaddons.core.Feature");
             Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
             Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
+            Object getConfigValues = getInstance.getClass().getDeclaredMethod("getConfigValues").invoke(getInstance);
             Object getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
-            SkyblockAddons main = SkyblockAddons.getInstance();
-            Minecraft mc = Minecraft.getMinecraft();
+            Method featureValues = feature.getDeclaredMethod("values");
+            Object colorBackpack = null;
+
+            for (Object obj : (Object[])featureValues.invoke(null))
+            {
+                try
+                {
+                    if (obj.toString().equals("MAKE_BACKPACK_INVENTORIES_COLORED"))
+                    {
+                        colorBackpack = obj;
+                        break;
+                    }
+                }
+                catch (Exception e) {}
+            }
 
             if (getBackpackToPreview != null)
             {
@@ -52,7 +66,7 @@ public class SBABackpack
                     SBABackpack.mouseYFreeze = mouseY;
                 }
 
-                if (main.getConfigValues().getBackpackStyle() == EnumUtils.BackpackStyle.GUI)
+                if (getConfigValues.getClass().getDeclaredMethod("getBackpackStyle").invoke(getConfigValues).toString().equals("GUI"))
                 {
                     mc.getTextureManager().bindTexture(CHEST_GUI_TEXTURE);
                     int rows = length/9;
@@ -61,7 +75,7 @@ public class SBABackpack
                     GlStateManager.translate(0,0,300);
                     int textColor = 4210752;
 
-                    if (main.getConfigValues().isEnabled(Feature.MAKE_BACKPACK_INVENTORIES_COLORED))
+                    if (colorBackpack != null && (boolean)getConfigValues.getClass().getDeclaredMethod("isEnabled", feature).invoke(getConfigValues, colorBackpack))
                     {
                         Object backpackColor = backpackClass.getDeclaredMethod("getBackpackColor").invoke(getBackpackToPreview);
                         Class<?> backpackColorClass = backpackColor.getClass();
@@ -173,7 +187,8 @@ public class SBABackpack
                 }
                 if (!GuiContainerHook.isFreezeBackpack())
                 {
-                    main.getUtils().setBackpackToPreview(null);
+                    Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", backpackClass);
+                    setBackpack.invoke(getUtils, new Object[] { null });
                 }
                 GlStateManager.enableLighting();
                 GlStateManager.enableDepth();
@@ -198,7 +213,16 @@ public class SBABackpack
             if (keyCode == 1 || keyCode == Minecraft.getMinecraft().gameSettings.keyBindInventory.getKeyCode())
             {
                 GuiContainerHook.setFreezeBackpack(false);
-                main.getUtils().setBackpackToPreview(null);
+                Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
+                Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
+                Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
+                Object getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
+
+                if (getBackpackToPreview != null)
+                {
+                    Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
+                    setBackpack.invoke(getUtils, new Object[] { null });
+                }
                 SBABackpack.mouseXFreeze = 0;
                 SBABackpack.mouseYFreeze = 0;
             }
@@ -220,12 +244,20 @@ public class SBABackpack
     {
         try
         {
-            SkyblockAddons main = SkyblockAddons.getInstance();
             Method setLastBackpackFreezeKeyMethod = GuiScreenHook.class.getDeclaredMethod("setLastBackpackFreezeKey", long.class);
             setLastBackpackFreezeKeyMethod.setAccessible(true);
             setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
             GuiContainerHook.setFreezeBackpack(false);
-            main.getUtils().setBackpackToPreview(null);
+            Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
+            Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
+            Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
+            Object getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
+
+            if (getBackpackToPreview != null)
+            {
+                Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
+                setBackpack.invoke(getUtils, new Object[] { null });
+            }
             SBABackpack.mouseXFreeze = 0;
             SBABackpack.mouseYFreeze = 0;
         }
