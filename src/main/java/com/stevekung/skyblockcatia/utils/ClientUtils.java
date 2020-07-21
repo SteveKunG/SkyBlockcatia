@@ -37,21 +37,9 @@ public class ClientUtils
         Minecraft.getMinecraft().ingameGUI.setRecordPlaying(message, false);
     }
 
-    public static void setOverlayMessage(String message, int delay)
-    {
-        Minecraft.getMinecraft().ingameGUI.setRecordPlaying(message, false);
-        Minecraft.getMinecraft().ingameGUI.recordPlayingUpFor = delay;
-    }
-
     public static void setOverlayMessage(IChatComponent component)
     {
         Minecraft.getMinecraft().ingameGUI.setRecordPlaying(component.getFormattedText(), false);
-    }
-
-    public static void setOverlayMessage(IChatComponent component, int delay)
-    {
-        Minecraft.getMinecraft().ingameGUI.setRecordPlaying(component.getFormattedText(), false);
-        Minecraft.getMinecraft().ingameGUI.recordPlayingUpFor = delay;
     }
 
     public static void printClientMessage(String text)

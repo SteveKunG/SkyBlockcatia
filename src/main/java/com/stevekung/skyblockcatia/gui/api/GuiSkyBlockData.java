@@ -518,7 +518,7 @@ public class GuiSkyBlockData extends GuiScreen
         TEMP_INVENTORY.clear();
         TEMP_ARMOR_INVENTORY.clear();
         SKYBLOCK_INV.clear();
-        this.mc.getNetHandler().playerInfoMap.values().removeIf(network -> ((IViewerLoader)network).isLoadedFromViewer());
+        this.mc.getNetHandler().getPlayerInfoMap().removeIf(network -> ((IViewerLoader)network).isLoadedFromViewer());
         GuiSkyBlockData.renderSecondLayer = false;
 
         if (SkyBlockcatiaMod.isPatcherLoaded)

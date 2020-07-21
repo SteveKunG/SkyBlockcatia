@@ -2,7 +2,9 @@ package com.stevekung.skyblockcatia.core;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,10 +26,8 @@ import com.stevekung.skyblockcatia.gui.api.PlayerStatsBonus;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.*;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,7 +37,10 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, guiFactory = SkyBlockcatiaMod.GUI_FACTORY, certificateFingerprint = SkyBlockcatiaMod.CERTIFICATE)
@@ -62,26 +65,11 @@ public class SkyBlockcatiaMod
     public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
     public static boolean isPatcherLoaded = Loader.isModLoaded("patcher");
 
-    private static boolean githubDown;
-    private static boolean noUUID;
-    public static boolean noCurl;
-    private static final List<String> HARDCODE_UUID = new ArrayList<>();
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
-    public static final List<String> SUPPORTERS_UUID = new ArrayList<>();
-    public static UUID CURRENT_UUID;
     public static boolean isDevelopment;
 
     static
     {
-        HARDCODE_UUID.add("84b5eb0f-11d8-464b-881d-4bba203cc77b");
-        HARDCODE_UUID.add("e2d72023-34b9-45c2-825b-63ae2d1b2f36");
-        HARDCODE_UUID.add("4675476a-46e5-45ee-89a5-010dc02996d9");
-        HARDCODE_UUID.add("f1dfdd47-6e03-4c2d-b766-e414c7b77f10");
-        HARDCODE_UUID.add("07e864c4-90d6-4c86-8df2-adf98a843e9e");
-        HARDCODE_UUID.add("2cd88ad0-89b1-4ca7-907e-78066fe36b08");
-        HARDCODE_UUID.add("f81a81c1-92fc-4714-b8ed-f811e6c61550");
-        HARDCODE_UUID.add("266513e1-6c83-4d87-bbc5-d3934f9ca329");
-
         try
         {
             SkyBlockcatiaMod.isDevelopment = Launch.classLoader.getClassBytes("net.minecraft.world.World") != null;
@@ -108,72 +96,12 @@ public class SkyBlockcatiaMod
                 e.printStackTrace();
             }
         });
-
-        if (!isDevelopment)
-        {
-            SkyBlockcatiaMod.kuy();
-        }
     }
-
-    public static final Block.SoundType CROPS = new Block.SoundType("crops", 1.0F, 1.0F)
-    {
-        @Override
-        public String getBreakSound()
-        {
-            return "skyblockcatia:block.crop.break";
-        }
-
-        @Override
-        public String getPlaceSound()
-        {
-            return "";
-        }
-
-        @Override
-        public String getStepSound()
-        {
-            return "step.grass";
-        }
-    };
-
-    public static final Block.SoundType NETHERWARTS = new Block.SoundType("netherwart", 1.0F, 1.0F)
-    {
-        @Override
-        public String getBreakSound()
-        {
-            return "skyblockcatia:block.nether_wart.break";
-        }
-
-        @Override
-        public String getPlaceSound()
-        {
-            return "";
-        }
-
-        @Override
-        public String getStepSound()
-        {
-            return "step.grass";
-        }
-    };
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        if (noUUID)
-        {
-            throw new WhitelistException();
-        }
-        if (githubDown)
-        {
-            throw new GitHubDownException();
-        }
-        if (noCurl)
-        {
-            throw new NoCurlException();
-        }
 
-        SkyBlockcatiaMod.CURRENT_UUID = GameProfileUtils.getUUID();
         SkyBlockcatiaMod.init(event.getModMetadata());
         ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingHandler.init();
@@ -245,19 +173,6 @@ public class SkyBlockcatiaMod
         {
             ColorUtils.init();
         }
-        Blocks.wheat.setStepSound(SkyBlockcatiaMod.CROPS);
-        Blocks.carrots.setStepSound(SkyBlockcatiaMod.CROPS);
-        Blocks.potatoes.setStepSound(SkyBlockcatiaMod.CROPS);
-        Blocks.nether_wart.setStepSound(SkyBlockcatiaMod.NETHERWARTS);
-        Blocks.noteblock.setStepSound(Block.soundTypeWood);
-        Blocks.jukebox.setStepSound(Block.soundTypeWood);
-    }
-
-    @EventHandler
-    public void postInit(FMLLoadCompleteEvent event)
-    {
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData2, 2, 85, TimeUnit.SECONDS);
     }
 
     @SubscribeEvent
@@ -365,45 +280,6 @@ public class SkyBlockcatiaMod
             {
                 LoggerIN.error("Failed to save profile");
                 e.printStackTrace();
-            }
-        }
-    }
-
-    private static void kuy()
-    {
-        List<String> uuidList = new ArrayList<>();
-
-        try
-        {
-            BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_UUID");
-            String inputLine;
-
-            while ((inputLine = reader.readLine()) != null)
-            {
-                uuidList.add(inputLine);
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-
-            if (!isDevelopment)
-            {
-                SkyBlockcatiaMod.githubDown = true;
-            }
-        }
-
-        uuidList.addAll(HARDCODE_UUID);
-        SUPPORTERS_UUID.addAll(uuidList);
-
-        if (!uuidList.stream().anyMatch(text ->
-        {
-            return GameProfileUtils.getUUID().toString().equals(text);
-        }))
-        {
-            if (!isDevelopment)
-            {
-                SkyBlockcatiaMod.noUUID = true;
             }
         }
     }
