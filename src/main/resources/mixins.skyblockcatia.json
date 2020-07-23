@@ -19,7 +19,6 @@
         "RenderPlayerMixin",
         "EntityRendererMixin",
         "TileEntitySkullRendererMixin",
-        "BlockFarmlandMixin",
         "RenderWitherMixin",
         "SoundManagerMixin",
         "ItemMixin",
