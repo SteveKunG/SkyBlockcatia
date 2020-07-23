@@ -12,8 +12,13 @@ buildscript {
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
     }
+}
+
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
 def mcVersion = project.mc_version
@@ -82,6 +87,13 @@ mixin {
     add sourceSets.main, "mixins.skyblockcatia.refmap.json"
 }
 
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+	baseName = "SkyBlockcatia-" + mcVersion
+    exclude "test/**"
+    classifier = "sources"
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     from(configurations.provided.asFileTree.files.collect { it.isDirectory() ? it : zipTree(it) }) {
@@ -93,8 +105,31 @@ task deobfJar(type: Jar) {
             "TweakOrder": "0",
             "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
     )
+    exclude "test/**"
     baseName = "SkyBlockcatia-" + mcVersion
     classifier = "deobf"
+}
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+}
+
+curseforge {
+    apiKey = project.skyblockcatia_api
+    project {
+        id = "397441"
+        changelog = "First public release!"
+        changelogType = "text"
+        releaseType = "release"
+        addGameVersion mcVersion
+
+        mainArtifact(jar) {
+            displayName = "SkyBlockcatia-" + mcVersion + "-" + version
+        }
+        addArtifact sourcesJar
+        addArtifact deobfJar
+    }
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {

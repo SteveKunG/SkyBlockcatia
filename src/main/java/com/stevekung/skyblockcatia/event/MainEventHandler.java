@@ -291,7 +291,7 @@ public class MainEventHandler
         {
             event.buttonList.removeIf(button -> button.id == 107);
         }
-        if (event.gui instanceof GuiMainMenu)
+        if (!SkyBlockcatiaMod.isPatcherLoaded && event.gui instanceof GuiMainMenu)
         {
             int j = event.gui.height / 4 + 48;
             event.buttonList.removeIf(button -> button.id == 14 || button.id == 6);

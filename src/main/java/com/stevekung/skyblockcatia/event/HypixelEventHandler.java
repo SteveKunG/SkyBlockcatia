@@ -668,11 +668,6 @@ public class HypixelEventHandler
             this.previousInventory = null;
             this.clearBossData();
             ITEM_DROP_CHECK_LIST.clear();
-
-            if (GameProfileUtils.getUUID().toString().equals("a8fe118d-f808-4625-aafa-1ce7cacbf451"))///XXX KUY
-            {
-                this.mc.shutdown();
-            }
         }
     }
 
