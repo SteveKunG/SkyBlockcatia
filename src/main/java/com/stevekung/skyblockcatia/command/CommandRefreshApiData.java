@@ -28,7 +28,7 @@ public class CommandRefreshApiData extends ClientCommandBase
         {
             try
             {
-                BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                BufferedReader reader = DataGetter.get("SKYBLOCKCATIA_USERNAME");
                 String inputLine;
 
                 while ((inputLine = reader.readLine()) != null)

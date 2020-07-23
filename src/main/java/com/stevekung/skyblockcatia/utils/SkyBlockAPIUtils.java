@@ -56,7 +56,7 @@ public class SkyBlockAPIUtils
     {
         try
         {
-            MAX_FAIRY_SOULS = GSON.fromJson(CurlExecutor.execute("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
+            MAX_FAIRY_SOULS = GSON.fromJson(DataGetter.get("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
         }
         catch (Exception e)
         {
@@ -69,7 +69,7 @@ public class SkyBlockAPIUtils
     {
         try
         {
-            PACKS = GSON.fromJson(CurlExecutor.execute("pack_name.json"), SupportedPack.class);
+            PACKS = GSON.fromJson(DataGetter.get("pack_name.json"), SupportedPack.class);
         }
         catch (Exception e)
         {

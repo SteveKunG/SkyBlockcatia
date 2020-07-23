@@ -15,7 +15,7 @@ public class SkyBlockMinion
 
     public static void getMinionSlotFromRemote() throws Exception
     {
-        BufferedReader in = CurlExecutor.execute("api/minion_slots.json");
+        BufferedReader in = DataGetter.get("api/minion_slots.json");
         MINION_SLOTS = GSON.fromJson(in, SkyBlockMinion.MinionSlot[].class);
     }
 
