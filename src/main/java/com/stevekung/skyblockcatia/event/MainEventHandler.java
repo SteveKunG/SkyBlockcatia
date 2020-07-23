@@ -33,7 +33,6 @@ import com.stevekung.skyblockcatia.utils.JsonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerAddress;
 import net.minecraft.client.multiplayer.ServerData;
@@ -116,17 +115,6 @@ public class MainEventHandler
                         {
                             this.mc.thePlayer.swingItem();
                         }
-                    }
-                }
-
-                //XXX DEBUG
-                if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer && Keyboard.isKeyDown(Keyboard.KEY_F7))
-                {
-                    GuiContainer chest = (GuiContainer)this.mc.currentScreen;
-
-                    if (chest.getSlotUnderMouse() != null && chest.getSlotUnderMouse().getStack() != null && chest.getSlotUnderMouse().getStack().hasTagCompound())
-                    {
-                        GuiScreen.setClipboardString(chest.getSlotUnderMouse().getStack().getTagCompound().toString());
                     }
                 }
             }
