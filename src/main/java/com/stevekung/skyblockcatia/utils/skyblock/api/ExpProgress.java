@@ -3,7 +3,7 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 import java.io.BufferedReader;
 
 import com.google.gson.Gson;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.DataGetter;
 
 public class ExpProgress
 {
@@ -39,7 +39,7 @@ public class ExpProgress
 
     public static ExpProgress[] getXpProgressFromRemote(Type type) throws Exception
     {
-        BufferedReader in = CurlExecutor.execute("api/exp_progress/" + type + ".json");
+        BufferedReader in = DataGetter.get("api/exp_progress/" + type + ".json");
         return GSON.fromJson(in, ExpProgress[].class);
     }
 

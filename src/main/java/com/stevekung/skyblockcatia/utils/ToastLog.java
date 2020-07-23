@@ -1,10 +1,10 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.apache.logging.log4j.Level;
@@ -32,14 +32,16 @@ public class ToastLog
 
     public static void setup()
     {
-        File logDirectory = new File("./logs/skyblockcatia/");
+        File logDirectory = new File("./logs/skyblockcatia/" + GameProfileUtils.getUUID().toString() + "/");
         logDirectory.mkdirs();
-        logFile = new File(logDirectory, "skyblockcatia-toast.log");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        logFile = new File(logDirectory, dtf.format(now) + "-toast.log");
 
         try
         {
             logFile.createNewFile();
-            logWriter = new PrintWriter(new FileWriter(logFile));
+            logWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(logFile), StandardCharsets.UTF_8));
         }
         catch (IOException e)
         {

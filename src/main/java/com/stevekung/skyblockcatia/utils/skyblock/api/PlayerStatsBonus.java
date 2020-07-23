@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.DataGetter;
 
 public class PlayerStatsBonus
 {
@@ -19,13 +19,12 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
     public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
     public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
-    public static PlayerStatsBonus.FairySouls[] FAIRY_SOULS;
     public static PlayerStatsBonus.PetsScore[] PETS_SCORE;
     private static final Gson GSON = new Gson();
 
     public static void getBonusFromRemote(Type type) throws Exception
     {
-        BufferedReader in = CurlExecutor.execute("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
+        BufferedReader in = DataGetter.get("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
 
         switch (type)
         {
@@ -58,9 +57,6 @@ public class PlayerStatsBonus
             break;
         case WOLF_SLAYER:
             WOLF_SLAYER = GSON.fromJson(in, PlayerStatsBonus.WolfSlayer[].class);
-            break;
-        case FAIRY_SOULS:
-            FAIRY_SOULS = GSON.fromJson(in, PlayerStatsBonus.FairySouls[].class);
             break;
         case TAMING:
             TAMING = GSON.fromJson(in, PlayerStatsBonus.Taming[].class);
@@ -516,7 +512,6 @@ public class PlayerStatsBonus
         ZOMBIE_SLAYER("slayer"),
         SPIDER_SLAYER("slayer"),
         WOLF_SLAYER("slayer"),
-        FAIRY_SOULS("misc"),
         PETS_SCORE("misc");
 
         public static final Type[] VALUES = values();

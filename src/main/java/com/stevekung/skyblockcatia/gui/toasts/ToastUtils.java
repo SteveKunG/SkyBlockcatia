@@ -36,12 +36,14 @@ public class ToastUtils
         private String magicFind;
         private final ToastUtils.DropType type;
         private final ToastUtils.ToastType toastType;
+        private final long timestamp;
 
         public ItemDropCheck(String name, ToastUtils.DropType type, ToastUtils.ToastType toastType)
         {
             this.name = name;
             this.type = type;
             this.toastType = toastType;
+            this.timestamp = System.currentTimeMillis();
         }
 
         public ItemDropCheck(String name, String magicFind, ToastUtils.DropType type, ToastUtils.ToastType toastType)
@@ -52,7 +54,7 @@ public class ToastUtils
 
         public String getName()
         {
-            return this.name.replaceAll("\\s+$", "");
+            return this.name.replaceAll("\\s+$", "").replace("\u00a7r", "");
         }
 
         @Nullable
@@ -70,6 +72,11 @@ public class ToastUtils
         {
             return this.toastType;
         }
+
+        public long getTimestamp()
+        {
+            return this.timestamp;
+        }
     }
 
     public enum DropType
@@ -83,13 +90,16 @@ public class ToastUtils
         GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0"),
         GREAT_CATCH_COINS("GREAT CATCH!", "170,0,170"),
         SLAYER_RARE_DROP("RARE DROP!", "85,255,255"),
-        SLAYER_VERY_RARE_DROP("VERY RARE DROP!", "85,85,255"),
+        SLAYER_VERY_RARE_DROP_BLUE("VERY RARE DROP!", "85,85,255"),
+        SLAYER_VERY_RARE_DROP_PURPLE("VERY RARE DROP!", "170,0,170"),
         SLAYER_CRAZY_RARE_DROP("CRAZY RARE DROP!", "255,85,255"),
         COMMON_GIFT("COMMON GIFT!", "255,255,255"),
         SWEET_GIFT("SWEET GIFT!", "255,255,85"),
         RARE_GIFT("RARE GIFT!", "85,85,255"),
         SANTA_TIER("SANTA GIFT!", "255,85,85"),
-        PET_LEVEL_UP("PET LEVEL UP!", "85,85,255");
+        PET_LEVEL_UP("PET LEVEL UP!", "85,85,255"),
+        DUNGEON_QUALITY_DROP("DUNGEON DROP!", "255,69,0"),
+        ;
 
         private final String name;
         private final String color;
@@ -110,9 +120,14 @@ public class ToastUtils
             return ColorUtils.stringToRGB(this.color).toColoredFont();
         }
 
+        public boolean hasFormat()
+        {
+            return this == RARE_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP;
+        }
+
         public boolean isSpecialDrop()
         {
-            return this == BOSS_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER;
+            return this == BOSS_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER || this == DUNGEON_QUALITY_DROP;
         }
 
         public boolean isFishingCoins()

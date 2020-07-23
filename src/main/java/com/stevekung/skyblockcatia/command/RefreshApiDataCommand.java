@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
@@ -34,7 +34,7 @@ public class RefreshApiDataCommand implements IClientCommand
         {
             try
             {
-                BufferedReader reader = CurlExecutor.execute("SKYBLOCKCATIA_USERNAME");
+                BufferedReader reader = DataGetter.get("SKYBLOCKCATIA_USERNAME");
                 String inputLine;
 
                 while ((inputLine = reader.readLine()) != null)

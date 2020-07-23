@@ -1,6 +1,7 @@
 # folder
 .gradle
 .settings
+.sba
 bin
 build
 libs
