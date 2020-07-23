@@ -13,7 +13,6 @@
         "MixinBlockItem",
         "MixinBossOverlayGui",
         "MixinChatScreen",
-        "MixinClientModLoader",
         "MixinClientPlayerEntity",
         "MixinContainerScreen",
         "MixinDownloadingTexture",

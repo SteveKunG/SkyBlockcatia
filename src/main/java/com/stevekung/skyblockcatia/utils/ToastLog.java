@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.stevekung.stevekungslib.utils.GameProfileUtils;
+
 public class ToastLog
 {
     private static final Logger LOG = LogManager.getLogger("SkyBlockcatia");

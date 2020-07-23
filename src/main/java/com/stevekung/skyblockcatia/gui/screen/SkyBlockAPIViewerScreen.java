@@ -2340,23 +2340,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         double defenseBase = 0;
         double strengthBase = 0;
         double speedBase = 0;
-
-        for (PlayerStatsBonus.FairySouls progress : PlayerStatsBonus.FAIRY_SOULS)
-        {
-            int soulToCheck = progress.getCount();
-            double health = progress.getHealth();
-            double defense = progress.getDefense();
-            double strength = progress.getStrength();
-            double speed = progress.getSpeed();
-
-            if (soulToCheck <= fairySouls)
-            {
-                healthBase += health;
-                defenseBase += defense;
-                strengthBase += strength;
-                speedBase += speed;
-            }
-        }
         return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0, 0, 0, 0, 0);
     }
 

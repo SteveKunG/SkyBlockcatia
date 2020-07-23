@@ -507,7 +507,7 @@ public class SkyBlockEventHandler
                             String type = rareDropBracketPattern.group("type");
                             String name = rareDropBracketPattern.group("item");
                             String magicFind = rareDropBracketPattern.group(3);
-                            ToastUtils.DropType dropType = type.equals("VERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
+                            ToastUtils.DropType dropType = type.equals("VERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), magicFind, dropType, ToastType.DROP));
                             ToastLog.logToast(message);
                             cancelMessage = isToast;

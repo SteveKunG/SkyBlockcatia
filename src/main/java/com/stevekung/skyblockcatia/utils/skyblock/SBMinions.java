@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.utils.CurlExecutor;
+import com.stevekung.skyblockcatia.utils.DataGetter;
 
 import net.minecraft.item.ItemStack;
 
@@ -15,7 +15,7 @@ public class SBMinions
 
     public static void getMinionSlotFromRemote() throws Exception
     {
-        BufferedReader in = CurlExecutor.execute("api/minion_slots.json");
+        BufferedReader in = DataGetter.get("api/minion_slots.json");
         MINION_SLOTS = GSON.fromJson(in, SBMinions.Slot[].class);
     }
 
