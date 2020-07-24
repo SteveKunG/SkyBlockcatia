@@ -89,7 +89,7 @@ mixin {
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-	baseName = "SkyBlockcatia-" + mcVersion
+    baseName = "SkyBlockcatia-" + mcVersion
     exclude "test/**"
     classifier = "sources"
 }
@@ -119,8 +119,8 @@ curseforge {
     apiKey = project.skyblockcatia_api
     project {
         id = "397441"
-        changelog = "First public release!"
-        changelogType = "text"
+        changelog = file("CHANGE_LOG.md")
+        changelogType = "markdown"
         releaseType = "release"
         addGameVersion mcVersion
 
