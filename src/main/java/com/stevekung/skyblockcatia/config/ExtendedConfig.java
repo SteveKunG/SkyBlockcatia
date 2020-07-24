@@ -149,7 +149,7 @@ public class ExtendedConfig
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
     public boolean lobbyPlayerCount = true;
-    public boolean displayItemAbilityMaxUsed = true;
+    public boolean displayItemAbilityMaxUsed = false;
     public boolean preventScrollHotbarWhileFightDragon = false;
 
     private ExtendedConfig() {}
