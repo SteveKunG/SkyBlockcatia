@@ -62,6 +62,9 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     protected int guiTop;
 
     @Shadow
+    private Slot theSlot;
+
+    @Shadow
     protected abstract boolean checkHotbarKeys(int keyCode);
 
     @Shadow
@@ -205,16 +208,16 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     @Inject(method = "keyTyped(CI)V", cancellable = true, at = @At("HEAD"))
     private void keyTyped(char typedChar, int keyCode, CallbackInfo info) throws IOException
     {
-        if (this.that.getSlotUnderMouse() != null)
+        if (this.theSlot != null)
         {
             if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKeyCode())
             {
-                SkyBlockRecipeViewer.viewRecipe(this.that.mc.thePlayer, this.that.getSlotUnderMouse(), keyCode);
+                SkyBlockRecipeViewer.viewRecipe(this.that.mc.thePlayer, this.theSlot, keyCode);
                 info.cancel();
             }
             else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKeyCode())
             {
-                ItemStack itemStack = this.that.getSlotUnderMouse().getStack();
+                ItemStack itemStack = this.theSlot.getStack();
 
                 if (itemStack != null && itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("ExtraAttributes"))
                 {
