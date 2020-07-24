@@ -39,6 +39,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -65,7 +66,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SkyBlockEventHandler
 {
     private static final Pattern CUSTOM_FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-Z]");
-    private static final Pattern JOINED_PARTY_PATTERN = Pattern.compile("(?<name>\\w+) joined the party!");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
@@ -104,7 +104,6 @@ public class SkyBlockEventHandler
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
     public static SBLocation SKY_BLOCK_LOCATION = SBLocation.YOUR_ISLAND;
-    private static final List<String> PARTY_LIST = new ArrayList<>();
     public static String SKYBLOCK_AMPM = "";
     public static float dragonHealth;
     private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new ArrayList<>();
@@ -251,7 +250,6 @@ public class SkyBlockEventHandler
         {
             // Common matcher
             Matcher visitIslandMatcher = SkyBlockEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
-            Matcher joinedPartyMatcher = SkyBlockEventHandler.JOINED_PARTY_PATTERN.matcher(message);
             Matcher uuidMatcher = SkyBlockEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = SkyBlockEventHandler.CHAT_PATTERN.matcher(message);
             Matcher petCareMatcher1 = SkyBlockEventHandler.PET_CARE_PATTERN_1.matcher(message);
@@ -293,10 +291,6 @@ public class SkyBlockEventHandler
                         ToastLog.logToast(message);
                     }
                     cancelMessage = SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.DISABLED;
-                }
-                else if (joinedPartyMatcher.matches())
-                {
-                    SkyBlockEventHandler.PARTY_LIST.add(joinedPartyMatcher.group("name"));
                 }
                 else if (uuidMatcher.matches())
                 {
@@ -635,11 +629,6 @@ public class SkyBlockEventHandler
             this.previousInventory = null;
             SkyBlockEventHandler.dragonHealth = 0;
             ITEM_DROP_CHECK_LIST.clear();
-
-            if (GameProfileUtils.getUUID().toString().equals("a8fe118d-f808-4625-aafa-1ce7cacbf451"))///XXX KUY
-            {
-                this.mc.shutdown();
-            }
         }
     }
 
@@ -728,12 +717,12 @@ public class SkyBlockEventHandler
         catch (Exception e) {}
     }
 
-    @SubscribeEvent
+    @SubscribeEvent // TODO Remove later
     public void onRenderNameplate(RenderNameplateEvent event)
     {
-        if (event.getEntity().getDisplayName() != null)
+        if (event.getEntity() instanceof ArmorStandEntity && event.getEntity().hasCustomName())
         {
-            String name = event.getEntity().getDisplayName().getFormattedText();
+            String name = event.getEntity().getCustomName().getFormattedText();
 
             if (name.contains("Sven Pup"))
             {

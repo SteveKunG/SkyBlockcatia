@@ -11,6 +11,7 @@ import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.GameProfileUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 
@@ -20,24 +21,36 @@ public abstract class MixinFontRenderer
     @ModifyVariable(method = "renderString(Ljava/lang/String;FFILnet/minecraft/client/renderer/Matrix4f;Z)I", at = @At("HEAD"), argsOnly = true)
     private String renderString(String text)
     {
-        if (SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.supportersFancyColor)
+        if (SkyBlockEventHandler.isSkyBlock && text != null)
         {
-            for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
+            if (SBExtendedConfig.INSTANCE.supportersFancyColor)
             {
-                if (text != null && text.contains(name))
+                for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
                 {
-                    String namePatt = "(?:(?:\\u00a7[0-9a-fbr])\\B(?:" + name + ")\\b)|(?:\\u00a7[rb]" + name + "\\u00a7r)|\\b" + name + "\\b";
-                    Pattern prevColor = Pattern.compile("(?:.*\\B(?:(?<color>\\u00a7[0-9a-fbr])" + name + ")\\b.*)");
-                    Matcher prevColorMat = prevColor.matcher(text);
-
-                    if (prevColorMat.matches())
+                    if (text.contains(name))
                     {
-                        return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + prevColorMat.group("color"));
+                        return this.replaceSupportersName(text, name);
                     }
-                    return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
                 }
+            }
+            if (text.contains("SteveKunG") && !GameProfileUtils.isSteveKunG())
+            {
+                return this.replaceSupportersName(text, "SteveKunG");
             }
         }
         return text;
+    }
+
+    private String replaceSupportersName(String text, String name)
+    {
+        String namePatt = "(?:(?:\\u00a7[0-9a-fbr])\\B(?:" + name + ")\\b)|(?:\\u00a7[rb]" + name + "\\u00a7r)|\\b" + name + "\\b";
+        Pattern prevColor = Pattern.compile("(?:.*\\B(?:(?<color>\\u00a7[0-9a-fbr])" + name + ")\\b.*)");
+        Matcher prevColorMat = prevColor.matcher(text);
+
+        if (prevColorMat.matches())
+        {
+            return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + prevColorMat.group("color"));
+        }
+        return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
     }
 }

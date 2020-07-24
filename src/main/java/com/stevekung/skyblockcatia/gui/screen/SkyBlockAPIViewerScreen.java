@@ -35,6 +35,7 @@ import com.mojang.datafixers.util.Pair;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
@@ -110,7 +111,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     private String statusMessage;
     private Button doneButton;
     private Button backButton;
-    private final List<ProfileDataCallback> profiles;
+    private JsonObject skyblockProfiles;
+    private List<ProfileDataCallback> profiles;
     private final String sbProfileId;
     private final String sbProfileName;
     private final String username;
@@ -120,12 +122,14 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final GameProfile profile;
     private final StopWatch watch = new StopWatch();
     private ScrollingListScreen currentSlot;
-    private ViewButton viewButton = ViewButton.INFO;
+    private ViewButton viewButton = ViewButton.PLAYER;
     private OthersViewButton othersButton = OthersViewButton.KILLS;
-    private BasicInfoViewButton basicInfoButton = BasicInfoViewButton.INFO;
+    private BasicInfoViewButton basicInfoButton = BasicInfoViewButton.PLAYER_STATS;
     private boolean updated;
     private final ViewerData data = new ViewerData();
     private int skillCount;
+    private ScrollingListScreen errorInfo;
+    private List<String> errorList = new ArrayList<>();
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -196,6 +200,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.skyBlockContainer = new SkyBlockContainer();
         this.skyBlockArmorContainer = new ArmorContainer();
         this.profiles = profiles;
+        this.skyblockProfiles = callback.getSkyblockProfile();
         this.sbProfileId = callback.getProfileId();
         this.sbProfileName = callback.getProfileName();
         this.username = callback.getUsername();
@@ -222,12 +227,23 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.watch.start();
                     this.getPlayerData();
                     this.watch.stop();
-                    SkyBlockcatiaMod.LOGGER.info("API Download finished in: {}ms", this.watch.getTime());
+
+                    if (this.skyblockProfiles == null)
+                    {
+                        SkyBlockcatiaMod.LOGGER.info("API Download finished in: {}ms", this.watch.getTime());
+                    }
+
                     this.watch.reset();
                 }
                 catch (Throwable e)
                 {
-                    this.setErrorMessage(e.getStackTrace()[0].toString());
+                    this.errorList.add(TextFormatting.UNDERLINE.toString() + TextFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
+
+                    for (StackTraceElement stack : e.getStackTrace())
+                    {
+                        this.errorList.add("at " + stack.toString());
+                    }
+                    this.setErrorMessage("", true);
                     e.printStackTrace();
                 }
             });
@@ -235,7 +251,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null)));
         this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back"), button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.EMPTY, this.username, this.displayName, this.guild) : new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
-        Button infoButton = ViewButton.INFO.button = new Button(this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_info"), button -> this.performedInfo(ViewButton.INFO));
+        Button infoButton = ViewButton.PLAYER.button = new Button(this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_player"), button -> this.performedInfo(ViewButton.PLAYER));
         infoButton.active = false;
         this.addButton(infoButton);
         this.addButton(ViewButton.SKILLS.button = new Button(this.width / 2 - 88, 6, 80, 20, LangUtils.translate("gui.sb_view_skills"), button -> this.performedInfo(ViewButton.SKILLS)));
@@ -248,7 +264,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.addButton(OthersViewButton.DEATHS.button = new Button(this.width / 2 - 40, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.deaths"), button -> this.performedOthers(OthersViewButton.DEATHS)));
         this.addButton(OthersViewButton.OTHER_STATS.button = new Button(this.width / 2 + 44, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.others_stats"), button -> this.performedOthers(OthersViewButton.OTHER_STATS)));
 
-        Button basicInfoButton = BasicInfoViewButton.INFO.button = new Button(this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_basic_info"), button -> this.performedBasicInfo(BasicInfoViewButton.INFO));
+        Button basicInfoButton = BasicInfoViewButton.PLAYER_STATS.button = new Button(this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_player_stats"), button -> this.performedBasicInfo(BasicInfoViewButton.PLAYER_STATS));
         basicInfoButton.active = false;
         this.addButton(basicInfoButton);
         this.addButton(BasicInfoViewButton.INVENTORY.button = new Button(this.width / 2 - 84, this.height - 48, 80, 20, LangUtils.translate("gui.sb_inventory"), button -> this.performedBasicInfo(BasicInfoViewButton.INVENTORY)));
@@ -258,6 +274,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (!this.updated)
         {
             this.performedInfo(this.viewButton);
+
+            if (this.errorInfo != null)
+            {
+                this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.errorList);
+            }
             this.updated = true;
         }
 
@@ -322,6 +343,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else if (key == GLFW.GLFW_KEY_F5)
         {
+            this.skyblockProfiles = null;
             this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.guild, this.uuid, this.profile, -1)));
         }
         /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded) TODO
@@ -497,7 +519,15 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (this.error)
             {
                 this.drawCenteredString(this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
-                this.drawCenteredString(this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+
+                if (this.errorInfo != null)
+                {
+                    this.errorInfo.render(mouseX, mouseY, partialTicks);
+                }
+                else
+                {
+                    this.drawCenteredString(this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                }
                 super.render(mouseX, mouseY, partialTicks);
             }
             else
@@ -631,7 +661,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         switch (viewButton)
         {
-        case INFO:
+        case PLAYER:
         default:
             this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
             this.refreshBasicInfoViewButton(this.basicInfoButton, true);
@@ -660,7 +690,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         switch (basicInfoButton)
         {
-        case INFO:
+        case PLAYER_STATS:
         default:
             this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
             break;
@@ -842,12 +872,20 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void setErrorMessage(String message)
+    private void setErrorMessage(String message, boolean errorList)
     {
         this.error = true;
         this.loadingApi = false;
-        this.errorMessage = message;
         this.updateErrorButton();
+
+        if (errorList)
+        {
+            this.errorInfo = new APIErrorInfo(this, this.width - 39, this.height, 40, this.height / 4 + 128, 19, 12, this.errorList);
+        }
+        else
+        {
+            this.errorMessage = message;
+        }
     }
 
     private void updateErrorButton()
@@ -959,7 +997,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.font, NumberUtils.formatCompact((long)playerXp), xText, yText + 10, 16777215);
+                this.drawCenteredString(this.font, SBNumberUtils.formatWithM(playerXp), xText, yText + 10, 16777215);
             }
             else
             {
@@ -1204,19 +1242,28 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void getPlayerData() throws IOException
     {
         this.statusMessage = "Getting Player Data";
+        JsonObject profiles = null;
+        JsonElement banking = null;
 
-        URL url = new URL(SBAPIUtils.SKYBLOCK_PROFILE + this.sbProfileId);
-        JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-        JsonElement profile = obj.get("profile");
-
-        if (profile == null || profile.isJsonNull())
+        if (this.skyblockProfiles == null)
         {
-            this.setErrorMessage("No API data returned, please try again later!");
-            return;
-        }
+            URL url = new URL(SBAPIUtils.SKYBLOCK_PROFILE + this.sbProfileId);
+            JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            JsonElement profile = obj.get("profile");
 
-        JsonObject profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
-        JsonElement banking = profile.getAsJsonObject().get("banking");
+            if (profile == null || profile.isJsonNull())
+            {
+                this.setErrorMessage("No API data returned, please try again later!", false);
+                return;
+            }
+            profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
+            banking = profile.getAsJsonObject().get("banking");
+        }
+        else
+        {
+            profiles = this.skyblockProfiles.get("members").getAsJsonObject();
+            banking = this.skyblockProfiles.get("banking");
+        }
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
@@ -1258,7 +1305,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (!checkUUID.equals(this.uuid))
         {
-            this.setErrorMessage("Current Player UUID not matched Profile UUID, please try again later!");
+            this.setErrorMessage("Current Player UUID not matched Profile UUID, please try again later!", false);
             return;
         }
 
@@ -1826,10 +1873,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
 
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + NumberUtils.formatCompact(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
+                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + tier + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
-                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), active, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 
                     switch (tier)
                     {
@@ -1858,10 +1905,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                     itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.RED + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
                     list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "UNKNOWN PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
-                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, false, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
                     SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
                 }
-                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).build());
+                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getCurrentXp(), o1.getCurrentXp()).build());
             }
             for (SBPets.Data data : petData)
             {
@@ -1878,7 +1925,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         int xpRequired = 0;
         int currentLvl = 0;
         int levelToCheck = 0;
-        int xpTotal = 0;
+        double xpTotal = 0;
         double xpToNextLvl = 0;
         double currentXp = 0;
 
@@ -1891,25 +1938,27 @@ public class SkyBlockAPIViewerScreen extends Screen
                 xpTotal += progress[x].getXp();
                 currentLvl = x + 1;
                 levelToCheck = progress[x].getLevel() + 1;
-
-                if (levelToCheck <= progress.length)
-                {
-                    xpRequired = (int)progress[x].getXp();
-                }
+                xpRequired = (int)progress[x].getXp();
             }
         }
 
-        if (levelToCheck < progress.length)
+        if (currentLvl < progress.length)
         {
             xpToNextLvl = MathHelper.ceil(xpTotal - petExp);
             currentXp = xpRequired - xpToNextLvl;
         }
-        else
+        else if (currentLvl == progress.length)
+        {
+            xpToNextLvl = MathHelper.ceil(Math.abs(xpTotal - petExp));
+            currentXp = xpRequired - xpToNextLvl;
+        }
+
+        if (petExp >= xpTotal || currentXp >= xpRequired)
         {
             currentLvl = progress.length + 1;
             xpRequired = 0;
         }
-        return new SBPets.Info(currentLvl, levelToCheck, (int)currentXp, xpRequired, (int)petExp, totalPetTypeXp);
+        return new SBPets.Info(currentLvl, levelToCheck, currentXp, xpRequired, petExp, totalPetTypeXp);
     }
 
     private void applyBonuses()
@@ -1990,13 +2039,19 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void calculatePlayerStats(JsonObject currentProfile)
     {
         JsonElement fairySouls = currentProfile.get("fairy_souls_collected");
+        JsonElement fairyExchangesEle = currentProfile.get("fairy_exchanges");
+        int fairyExchanges = 0;
 
         if (fairySouls != null)
         {
             this.totalFairySouls = fairySouls.getAsInt();
         }
+        if (fairyExchangesEle != null)
+        {
+            fairyExchanges = fairyExchangesEle.getAsInt();
+        }
 
-        this.allStat.add(this.getFairySouls(this.totalFairySouls));
+        this.allStat.add(this.getFairySouls(fairyExchanges));
         this.allStat.add(this.getMagicFindFromPets(this.petScore));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FARMING, this.farmingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FORAGING, this.foragingLevel));
@@ -2087,10 +2142,16 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void getHealthFromCake(CompoundNBT extraAttrib)
     {
         List<ItemStack> itemStack1 = new ArrayList<>();
+        byte[] cakeData = extraAttrib.getByteArray("new_year_cake_bag_data");
+
+        if (cakeData.length == 0)
+        {
+            return;
+        }
 
         try
         {
-            CompoundNBT compound1 = CompressedStreamTools.readCompressed(new ByteArrayInputStream(extraAttrib.getByteArray("new_year_cake_bag_data")));
+            CompoundNBT compound1 = CompressedStreamTools.readCompressed(new ByteArrayInputStream(cakeData));
             ListNBT list = compound1.getList("i", Constants.NBT.TAG_COMPOUND);
             List<Integer> cakeYears = new ArrayList<>();
 
@@ -2173,7 +2234,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                         String lastLore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(list.size() - 1)).getString());
                         Matcher matcher = STATS_PATTERN.matcher(lore);
 
-                        if (!armor && (lastLore.endsWith(" BOOTS") || lastLore.endsWith(" LEGGINGS") || lastLore.endsWith(" CHESTPLATE") || lastLore.endsWith(" HELMET")))
+                        if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY")))
                         {
                             continue;
                         }
@@ -2297,11 +2358,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getTrueDefense())));
         this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getStrength())));
         this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSpeed())));
-        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritChance())));
-        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritDamage())));
-        this.infoList.add(new SkyBlockInfo(attackSpeed + "\u2694 Attack Speed", attackSpeed + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getAttackSpeed())));
+        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritChance()) + "%"));
+        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritDamage()) + "%"));
+        this.infoList.add(new SkyBlockInfo(attackSpeed + "\u2694 Attack Speed", attackSpeed + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getAttackSpeed()) + "%"));
         this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getIntelligence())));
-        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSeaCreatureChance())));
+        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSeaCreatureChance()) + "%"));
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getPetLuck())));
 
@@ -2315,7 +2376,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
         String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
-        this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? TimeUtils.getRelativeTime(firstJoinDate.getTime()) : TextFormatting.RED + "No first join data!"));
+        this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? TimeUtils.getRelativeTime(firstJoinDate.getTime()) + " (" + TimeUtils.getRelativeDay(firstJoinDate.getTime()) + ")" : TextFormatting.RED + "No first join data!"));
         this.infoList.add(new SkyBlockInfo("Joined (Date)", firstJoinMillis != -1 ? firstJoinDateFormat : TextFormatting.RED + "No first join data!"));
         this.infoList.add(new SkyBlockInfo("Last Updated", lastSaveMillis != -1 ? String.valueOf(lastSaveDate.getTime()) : TextFormatting.RED + "No last save data!"));
         this.infoList.add(new SkyBlockInfo("Last Updated (Date)", lastSaveMillis != -1 ? lastLogout : TextFormatting.RED + "No last save data!"));
@@ -2334,12 +2395,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.infoList.add(new SkyBlockInfo("Purse", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(coins)));
     }
 
-    private BonusStatTemplate getFairySouls(int fairySouls)
+    private BonusStatTemplate getFairySouls(int fairyExchanges)
     {
         double healthBase = 0;
         double defenseBase = 0;
         double strengthBase = 0;
-        double speedBase = 0;
+        double speedBase = Math.floor(fairyExchanges / 10);
+
+        for (int i = 0; i < fairyExchanges; i++)
+        {
+            healthBase += 3 + Math.floor(i / 2);
+            defenseBase += (i + 1) % 5 == 0 ? 2 : 1;
+            strengthBase += (i + 1) % 5 == 0 ? 2 : 1;
+        }
         return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0, 0, 0, 0, 0);
     }
 
@@ -2388,7 +2456,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         for (SBSkills.Info skill : skills)
         {
-            if (skill.getName().equals("Runecrafting") || skill.getName().equals("Carpentry"))
+            if (skill.getName().contains("Runecrafting") || skill.getName().contains("Carpentry"))
             {
                 continue;
             }
@@ -3254,7 +3322,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (stat.getText().equals("Zombie"))
                 {
                     ZombieEntity zombie = new ZombieEntity(this.world);
-                    ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
+                    ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE).setDisplayName(JsonUtils.create("Reaper Scythe"));
                     ItemStack helmet = SBRenderUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.DIAMOND_CHESTPLATE);
                     ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
@@ -3495,7 +3563,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private enum ViewButton
     {
-        INFO,
+        PLAYER,
         SKILLS,
         SLAYERS,
         OTHERS;
@@ -3516,7 +3584,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private enum BasicInfoViewButton
     {
-        INFO,
+        PLAYER_STATS,
         INVENTORY,
         COLLECTIONS,
         CRAFTED_MINIONS;

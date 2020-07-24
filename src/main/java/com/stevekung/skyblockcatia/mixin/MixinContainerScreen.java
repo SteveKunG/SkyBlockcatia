@@ -64,7 +64,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
     private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
     private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close");
-    private static final Pattern PET_MENU_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or])[\\w ]+");
+    private static final Pattern PET_MENU_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] \\u00a7r(?<color>\\u00a7[0-9a-fk-or])[\\w ]+\\u00a7r");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -497,7 +497,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             int j = 0;
             String levelString = "";
 
-            if (this.getTitle().getUnformattedComponentText().equals("Anvil"))
+            if (this.getTitle().getUnformattedComponentText().equals("Anvil") || this.getTitle().getUnformattedComponentText().equals("Reforge Item"))
             {
                 Slot anvilSlot = this.that.getContainer().inventorySlots.get(31);
                 ItemStack itemStack = this.that.getContainer().inventorySlots.get(22).getStack();
@@ -516,13 +516,13 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                         {
                             String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
 
-                            if (lore.endsWith("Exp Levels"))
+                            if (lore.endsWith("Exp Levels") || lore.endsWith("Exp Level"))
                             {
                                 int level = 0;
 
                                 try
                                 {
-                                    level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replace(" Exp Levels", "")).intValue();
+                                    level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
                                 }
                                 catch (ParseException e) {}
 
@@ -534,6 +534,19 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 {
                                     levelString = TextFormatting.GREEN + String.valueOf(level);
                                 }
+                            }
+                            else if (lore.endsWith("Coins") || lore.endsWith("Coin"))
+                            {
+                                int coin = 0;
+
+                                try
+                                {
+                                    coin = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
+                                }
+                                catch (ParseException e) {}
+
+                                levelString = TextFormatting.GOLD + String.valueOf(coin);
+                                break;
                             }
                         }
                     }

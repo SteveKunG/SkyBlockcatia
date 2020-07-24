@@ -13,7 +13,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
-import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -42,7 +41,7 @@ public abstract class MixinGameRenderer
     @Inject(method = "isDrawBlockOutline()Z", cancellable = true, at = @At("HEAD"))
     private void isDrawBlockOutline(CallbackInfoReturnable info)
     {
-        if (SBExtendedConfig.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND)
+        if (SBExtendedConfig.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore())
         {
             RayTraceResult raytraceresult = this.mc.objectMouseOver;
 

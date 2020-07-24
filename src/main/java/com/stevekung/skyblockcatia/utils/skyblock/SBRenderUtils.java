@@ -62,35 +62,35 @@ public class SBRenderUtils
                     RGB special = ColorUtils.stringToRGB("255,85,85");
                     RGB verySpecial = ColorUtils.stringToRGB("170,0,0");
 
-                    if (lore.startsWith(TextFormatting.WHITE + "" + TextFormatting.BOLD + "COMMON"))
+                    if (SBRenderUtils.checkRarityString(lore, TextFormatting.WHITE, "COMMON"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, common);
                     }
-                    else if (lore.startsWith(TextFormatting.GREEN + "" + TextFormatting.BOLD + "UNCOMMON"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.GREEN, "UNCOMMON"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, uncommon);
                     }
-                    else if (lore.startsWith(TextFormatting.BLUE + "" + TextFormatting.BOLD + "RARE"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.BLUE, "RARE"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, rare);
                     }
-                    else if (lore.startsWith(TextFormatting.DARK_PURPLE + "" + TextFormatting.BOLD + "EPIC"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.DARK_PURPLE, "EPIC"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, epic);
                     }
-                    else if (lore.startsWith(TextFormatting.GOLD + "" + TextFormatting.BOLD + "LEGENDARY"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.GOLD, "LEGENDARY"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, legendary);
                     }
-                    else if (lore.startsWith(TextFormatting.LIGHT_PURPLE + "" + TextFormatting.BOLD + "MYTHIC"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.LIGHT_PURPLE, "MYTHIC"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, mythic);
                     }
-                    else if (lore.startsWith(TextFormatting.RED + "" + TextFormatting.BOLD + "SPECIAL"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.RED, "SPECIAL"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, special);
                     }
-                    else if (lore.startsWith(TextFormatting.RED + "" + TextFormatting.BOLD + "VERY SPECIAL"))
+                    else if (SBRenderUtils.checkRarityString(lore, TextFormatting.RED, "VERY SPECIAL"))
                     {
                         SBRenderUtils.renderRarity(xPos, yPos, verySpecial);
                     }
@@ -115,5 +115,10 @@ public class SBRenderUtils
         RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
         RenderSystem.disableAlphaTest();
+    }
+
+    private static boolean checkRarityString(String lore, TextFormatting color, String text)
+    {
+        return lore.startsWith(color + "" + TextFormatting.BOLD + text) || lore.startsWith(color.toString() + TextFormatting.BOLD + TextFormatting.OBFUSCATED + "a" + TextFormatting.RESET + TextFormatting.GRAY + " " + TextFormatting.RESET + color + TextFormatting.BOLD + text);
     }
 }

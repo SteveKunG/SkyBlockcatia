@@ -63,6 +63,7 @@ public enum SBLocation
     JERRY_POND("Jerry Pond", ImmutableList.of(Blocks.ICE)),
 
     DUNGEON_HUB("Dungeon Hub"),
+    DUNGEON("Dungeon"),
     ;
 
     public static final SBLocation[] VALUES = SBLocation.values();
@@ -83,6 +84,11 @@ public enum SBLocation
     public boolean isTheEnd()
     {
         return this == SBLocation.THE_END || this == SBLocation.DRAGON_NEST;
+    }
+
+    public boolean ignore()
+    {
+        return this == SBLocation.YOUR_ISLAND || this == SBLocation.DUNGEON;
     }
 
     public String getLocation()

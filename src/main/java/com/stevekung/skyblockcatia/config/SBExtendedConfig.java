@@ -33,11 +33,9 @@ public class SBExtendedConfig
     public String grapplingHookCooldownColor = WHITE;
     public String zealotRespawnCooldownColor = WHITE;
     public String placedSummoningEyeColor = WHITE;
-    public String golemStageColor = WHITE;
 
     // Custom Color : Value
     public String placedSummoningEyeValueColor = WHITE;
-    public String golemStageValueColor = WHITE;
 
     // Hypixel
     public boolean axeCooldown = true;
@@ -51,19 +49,20 @@ public class SBExtendedConfig
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
     public boolean currentServerDay = true;
-    public boolean lobbyPlayerViewer = false;
+    public boolean lobbyPlayerViewer = true;
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
-    public boolean supportersFancyColor = false;
-    public boolean golemStageTracker = false;
-    public boolean bazaarOnItemTooltip = false;
+    public boolean supportersFancyColor = true;
+    public boolean bazaarOnItemTooltip = true;
     public boolean ignoreBushHitbox = false;
     public boolean onlyMineableHitbox = false;
-    public boolean ignoreInteractInvisibleArmorStand = false;
+    public boolean ignoreInteractInvisibleArmorStand = true;
     public boolean automaticOpenMaddox = false;
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
-    public boolean lobbyPlayerCount = false;
+    public boolean lobbyPlayerCount = true;
+    public boolean displayItemAbilityMaxUsed = false;
+    public boolean preventScrollHotbarWhileFightDragon = false;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -94,7 +93,6 @@ public class SBExtendedConfig
     public static final BooleanConfigOption AUCTION_BID_CONFIRM = new BooleanConfigOption("auction_bid_confirm", config -> config.auctionBidConfirm, (config, value) -> config.auctionBidConfirm = value);
     public static final BooleanConfigOption DISABLE_BLOCK_PARTICLES = new BooleanConfigOption("disable_block_particles", config -> config.disableBlockParticles, (config, value) -> config.disableBlockParticles = value);
     public static final BooleanConfigOption SUPPORTERS_FANCY_COLOR = new BooleanConfigOption("supporters_fancy_color", config -> config.supportersFancyColor, (config, value) -> config.supportersFancyColor = value);
-    public static final BooleanConfigOption GOLEM_STAGE_TRACKER = new BooleanConfigOption("golem_stage_tracker", config -> config.golemStageTracker, (config, value) -> config.golemStageTracker = value);
     public static final BooleanConfigOption BAZAAR_ON_ITEM_TOOLTIP = new BooleanConfigOption("bazaar_on_item_tooltip", config -> config.bazaarOnItemTooltip, (config, value) -> config.bazaarOnItemTooltip = value);
     public static final BooleanConfigOption IGNORE_BUSH_HITBOX = new BooleanConfigOption("ignore_bush_hitbox", config -> config.ignoreBushHitbox, (config, value) -> config.ignoreBushHitbox = value);
     public static final BooleanConfigOption ONLY_MINEABLE_HITBOX = new BooleanConfigOption("only_mineable_hitbox", config -> config.onlyMineableHitbox, (config, value) -> config.onlyMineableHitbox = value);
@@ -103,6 +101,8 @@ public class SBExtendedConfig
     public static final BooleanConfigOption SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND = new BooleanConfigOption("sneak_to_trade_other_player_island", config -> config.sneakToTradeOtherPlayerIsland, (config, value) -> config.sneakToTradeOtherPlayerIsland = value);
     public static final BooleanConfigOption MAKE_SPECIAL_ZEALOT_HELD_GOLD = new BooleanConfigOption("make_special_zealot_held_gold", config -> config.makeSpecialZealotHeldGold, (config, value) -> config.makeSpecialZealotHeldGold = value);
     public static final BooleanConfigOption LOBBY_PLAYER_COUNT  = new BooleanConfigOption("lobby_player_count", config -> config.lobbyPlayerCount, (config, value) -> config.lobbyPlayerCount = value);
+    public static final BooleanConfigOption DISPLAY_ITEM_ABILITY_MAX_USED  = new BooleanConfigOption("display_item_ability_max_used", config -> config.displayItemAbilityMaxUsed, (config, value) -> config.displayItemAbilityMaxUsed = value);
+    public static final BooleanConfigOption PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON  = new BooleanConfigOption("prevent_scroll_hotbar_while_fight_dragon", config -> config.preventScrollHotbarWhileFightDragon, (config, value) -> config.preventScrollHotbarWhileFightDragon = value);
 
 
     public static final StringConfigOption VISIT_ISLAND_DISPLAY_MODE = new StringConfigOption("visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey()));
@@ -116,11 +116,9 @@ public class SBExtendedConfig
     public static final TextFieldConfigOption GRAPPLING_HOOK_COOLDOWN_COLOR = new TextFieldConfigOption("grappling_hook_cooldown_color", config -> config.grapplingHookCooldownColor, (config, value) -> config.grapplingHookCooldownColor = value);
     public static final TextFieldConfigOption ZEALOT_RESPAWN_COOLDOWN_COLOR = new TextFieldConfigOption("zealot_respawn_cooldown_color", config -> config.zealotRespawnCooldownColor, (config, value) -> config.zealotRespawnCooldownColor = value);
     public static final TextFieldConfigOption PLACED_SUMMONING_EYE_COLOR = new TextFieldConfigOption("placed_summoning_eye_color", config -> config.placedSummoningEyeColor, (config, value) -> config.placedSummoningEyeColor = value);
-    public static final TextFieldConfigOption GOLEM_STAGE_COLOR = new TextFieldConfigOption("golem_stage_color", config -> config.golemStageColor, (config, value) -> config.golemStageColor = value);
 
 
     public static final TextFieldConfigOption PLACED_SUMMONING_EYE_VALUE_COLOR = new TextFieldConfigOption("placed_summoning_eye_value_color", config -> config.placedSummoningEyeValueColor, (config, value) -> config.placedSummoningEyeValueColor = value);
-    public static final TextFieldConfigOption GOLEM_STAGE_VALUE_COLOR = new TextFieldConfigOption("golem_stage_value_color", config -> config.golemStageValueColor, (config, value) -> config.golemStageValueColor = value);
 
     private SBExtendedConfig() {}
 
@@ -157,7 +155,6 @@ public class SBExtendedConfig
             this.auctionBidConfirm = this.getBoolean(nbt, "AuctionBidConfirm", this.auctionBidConfirm);
             this.disableBlockParticles = this.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = this.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
-            this.golemStageTracker = this.getBoolean(nbt, "GolemStageTracker", this.golemStageTracker);
             this.bazaarOnItemTooltip = this.getBoolean(nbt, "BazaarOnItemTooltip", this.bazaarOnItemTooltip);
             this.ignoreBushHitbox = this.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
             this.onlyMineableHitbox = this.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
@@ -166,6 +163,8 @@ public class SBExtendedConfig
             this.sneakToTradeOtherPlayerIsland = this.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             this.makeSpecialZealotHeldGold = this.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             this.lobbyPlayerCount = this.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
+            this.displayItemAbilityMaxUsed = this.getBoolean(nbt, "DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
+            this.preventScrollHotbarWhileFightDragon = this.getBoolean(nbt, "PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -181,11 +180,9 @@ public class SBExtendedConfig
             this.grapplingHookCooldownColor = this.getString(nbt, "GrapplingHookCooldownColor", this.grapplingHookCooldownColor);
             this.zealotRespawnCooldownColor = this.getString(nbt, "ZealotRespawnCooldownColor", this.zealotRespawnCooldownColor);
             this.placedSummoningEyeColor = this.getString(nbt, "PlacedSummoningEyeColor", this.placedSummoningEyeColor);
-            this.golemStageColor = this.getString(nbt, "GolemStageColor", this.golemStageColor);
 
             // Custom Color : Value
             this.placedSummoningEyeValueColor = this.getString(nbt, "PlacedSummoningEyeValueColor", this.placedSummoningEyeValueColor);
-            this.golemStageValueColor = this.getString(nbt, "GolemStageValueColor", this.golemStageValueColor);
 
             SkyBlockcatiaMod.LOGGER.info("Loading extended config {}", SBExtendedConfig.PROFILE_FILE.getPath());
         }
@@ -219,7 +216,6 @@ public class SBExtendedConfig
             nbt.putBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.putBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.putBoolean("SupportersFancyColor", this.supportersFancyColor);
-            nbt.putBoolean("GolemStageTracker", this.golemStageTracker);
             nbt.putBoolean("BazaarOnItemTooltip", this.bazaarOnItemTooltip);
             nbt.putBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
             nbt.putBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
@@ -228,6 +224,8 @@ public class SBExtendedConfig
             nbt.putBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             nbt.putBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             nbt.putBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
+            nbt.putBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
+            nbt.putBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());
@@ -243,11 +241,9 @@ public class SBExtendedConfig
             nbt.putString("GrapplingHookCooldownColor", this.grapplingHookCooldownColor);
             nbt.putString("ZealotRespawnCooldownColor", this.zealotRespawnCooldownColor);
             nbt.putString("PlacedSummoningEyeColor", this.placedSummoningEyeColor);
-            nbt.putString("GolemStageColor", this.golemStageColor);
 
             // Custom Color : Value
             nbt.putString("PlacedSummoningEyeValueColor", this.placedSummoningEyeValueColor);
-            nbt.putString("GolemStageValueColor", this.golemStageValueColor);
 
             CompressedStreamTools.write(nbt, !profileName.equalsIgnoreCase("default") ? new File(USER_DIR, profileName + ".dat") : SBExtendedConfig.PROFILE_FILE);
         }

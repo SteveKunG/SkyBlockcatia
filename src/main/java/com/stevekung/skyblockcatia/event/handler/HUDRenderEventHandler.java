@@ -116,7 +116,7 @@ public class HUDRenderEventHandler
         }
         if (SBExtendedConfig.INSTANCE.zealotRespawnCooldown)
         {
-            zealotRespawnDelay = this.getItemDelay(15000, this.lastZealotRespawn);
+            zealotRespawnDelay = this.getItemDelay(11000, this.lastZealotRespawn);
         }
 
         if (event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
@@ -125,6 +125,41 @@ public class HUDRenderEventHandler
             {
                 return;
             }
+
+            /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBExtendedConfig.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getHeldItemMainhand().isEmpty())TODO
+            {
+                ItemStack itemStack = this.mc.player.getHeldItemMainhand();
+
+                if (itemStack.hasTag())
+                {
+                    CompoundNBT compound = itemStack.getTag().getCompound("display");
+
+                    if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
+                    {
+                        ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
+
+                        for (int j1 = 0; j1 < list.size(); ++j1)
+                        {
+                            String lore = TextFormatting.getTextWithoutFormattingCodes(list.getString(j1));
+
+                            if (lore.startsWith("Mana Cost: "))
+                            {
+                                int count = SBAMana.INSTANCE.getMana() / Integer.parseInt(lore.replace("Mana Cost: ", ""));
+
+                                if (count > 0)
+                                {
+                                    String usedCount = TextFormatting.AQUA + String.valueOf(count);
+                                    float fontHeight = this.mc.fontRenderer.FONT_HEIGHT + 1;
+                                    float width = event.getWindow().getScaledWidth() / 2 + 1.0625F;
+                                    float height = event.getWindow().getScaledHeight() / 2 - 24 + fontHeight;
+                                    this.mc.fontRenderer.drawStringWithShadow(usedCount, width - this.mc.fontRenderer.getStringWidth(usedCount) / 2, height, 16777215);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }*/
 
             List<CrosshairOverlay> crosshairInfo = new ArrayList<>();
             int center = 0;
@@ -169,46 +204,6 @@ public class HUDRenderEventHandler
                     }
                     String color = ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.placedSummoningEyeValueColor).toColoredFont();
                     rightInfo.add(ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
-                }
-                if (SBExtendedConfig.INSTANCE.golemStageTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
-                {
-                    int golemStage = 0;
-
-                    for (int headPos = 0; headPos < 5; headPos++)
-                    {
-                        if (this.mc.world.getBlockState(new BlockPos(-689, 5 + headPos, -273)).getBlock() == Blocks.PLAYER_HEAD)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.world.getBlockState(new BlockPos(-644, 5 + headPos, -269)).getBlock() == Blocks.PLAYER_HEAD)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.world.getBlockState(new BlockPos(-678, 5 + headPos, -332)).getBlock() == Blocks.PLAYER_HEAD)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.world.getBlockState(new BlockPos(-639, 5 + headPos, -328)).getBlock() == Blocks.PLAYER_HEAD)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.world.getBlockState(new BlockPos(-649, 5 + headPos, -219)).getBlock() == Blocks.PLAYER_HEAD)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                        if (this.mc.world.getBlockState(new BlockPos(-727, 5 + headPos, -284)).getBlock() == Blocks.PLAYER_HEAD)
-                        {
-                            golemStage = headPos + 1;
-                            break;
-                        }
-                    }
-                    String color = ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.golemStageValueColor).toColoredFont();
-                    rightInfo.add(ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.golemStageColor).toColoredFont() + "Golem Stage: " + color + (golemStage == 5 ? "Golem Spawning soon!" : golemStage + "/5"));
                 }
                             if (SBExtendedConfig.INSTANCE.lobbyPlayerCount && !this.mc.isSingleplayer())
             {
@@ -284,7 +279,7 @@ public class HUDRenderEventHandler
                     {
                         long now = System.currentTimeMillis();
 
-                        if (now - this.lastZealotRespawn > 15000L)
+                        if (now - this.lastZealotRespawn > 11000L)
                         {
                             this.lastZealotRespawn = now;
                         }

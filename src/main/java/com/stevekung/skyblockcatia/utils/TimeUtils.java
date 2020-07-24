@@ -72,6 +72,15 @@ public class TimeUtils
         }
     }
 
+    public static String getRelativeDay(long timeDiff)
+    {
+        timeDiff = timeDiff / 1000;
+        long current = System.currentTimeMillis() / 1000;
+        long timeElapsed = current - timeDiff;
+        int days = Math.round(timeElapsed / 86400);
+        return days + " day" + (days == 1 ? "" : "s");
+    }
+
     public static TimerTask schedule(Runnable runnable, long delay)
     {
         TimerTask task = new TimerTask()

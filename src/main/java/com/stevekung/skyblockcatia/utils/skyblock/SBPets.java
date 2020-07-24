@@ -59,7 +59,7 @@ public class SBPets
         GUARDIAN(SBSkills.Type.COMBAT, "26508276-c01a-32a9-9201-7dae1724954e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIxMDI1NDM0MDQ1YmRhNzAyNWIzZTUxNGIzMTZhNGI3NzBjNmZhYTRiYTlhZGI0YmUzODA5NTI2ZGI3N2Y5ZCJ9fX0="),
         HORSE(SBSkills.Type.COMBAT, "6d310633-c175-4b47-92ab-778287bb7a5e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzZmY2QzZWMzYmM4NGJhZmI0MTIzZWE0Nzk0NzFmOWQyZjQyZDhmYjljNWYxMWNmNWY0ZTBkOTMyMjYifX19"),
         HOUND(SBSkills.Type.COMBAT, "802a167c-cbcd-3a1f-becd-5b1a25a4cf15", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjdjOGJlZjZiZWI3N2UyOWFmODYyN2VjZGMzOGQ4NmFhMmZlYTdjY2QxNjNkYzczYzAwZjlmMjU4ZjlhMTQ1NyJ9fX0="),
-        JELLYFISH(SBSkills.Type.FISHING, "a7be2bb4-70a1-32e4-a981-8f26c5864371", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTEzZjA4NmNjYjU2MzIzZjIzOGJhMzQ4OWZmMmExYTM0YzBmZGNlZWFmYzQ4M2FjZmYwZTU0ODhjZmQ2YzJmMSJ9fX0="),
+        JELLYFISH(SBSkills.Type.ALCHEMY, "a7be2bb4-70a1-32e4-a981-8f26c5864371", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTEzZjA4NmNjYjU2MzIzZjIzOGJhMzQ4OWZmMmExYTM0YzBmZGNlZWFmYzQ4M2FjZmYwZTU0ODhjZmQ2YzJmMSJ9fX0="),
         JERRY(SBSkills.Type.COMBAT, "0a9e8efb-9191-4c81-80f5-e27ca5433156", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODIyZDhlNzUxYzhmMmZkNGM4OTQyYzQ0YmRiMmY1Y2E0ZDhhZThlNTc1ZWQzZWIzNGMxOGE4NmU5M2IifX19"),
         LION(SBSkills.Type.FORAGING, "7e3ed445-3545-3c76-993b-8f292ea576c6", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzhmZjQ3M2JkNTJiNGRiMmMwNmYxYWM4N2ZlMTM2N2JjZTc1NzRmYWMzMzBmZmFjNzk1NjIyOWY4MmVmYmExIn19fQ=="),
         MAGMA_CUBE(SBSkills.Type.COMBAT, "35f02923-7bec-3869-9ef5-b42a4794cac8", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzg5NTdkNTAyM2M5MzdjNGM0MWFhMjQxMmQ0MzQxMGJkYTIzY2Y3OWE5ZjZhYjM2Yjc2ZmVmMmQ3YzQyOSJ9fX0="),
@@ -165,12 +165,12 @@ public class SBPets
     {
         private final int currentPetLevel;
         private final int nextPetLevel;
-        private final int currentPetXp;
+        private final double currentPetXp;
         private final int xpRequired;
-        private final int petXp;
+        private final double petXp;
         private final int totalPetTypeXp;
 
-        public Info(int currentPetLevel, int nextPetLevel, int currentPetXp, int xpRequired, int petXp, int totalPetTypeXp)
+        public Info(int currentPetLevel, int nextPetLevel, double currentPetXp, int xpRequired, double petXp, int totalPetTypeXp)
         {
             this.currentPetLevel = currentPetLevel;
             this.nextPetLevel = nextPetLevel;
@@ -190,7 +190,7 @@ public class SBPets
             return this.nextPetLevel;
         }
 
-        public int getCurrentPetXp()
+        public double getCurrentPetXp()
         {
             return this.currentPetXp;
         }
@@ -200,7 +200,7 @@ public class SBPets
             return this.xpRequired;
         }
 
-        public int getPetXp()
+        public double getPetXp()
         {
             return this.petXp;
         }
@@ -228,13 +228,15 @@ public class SBPets
     {
         private final SBPets.Tier tier;
         private final int currentLevel;
+        private final double currentXp;
         private final boolean isActive;
         private final List<ItemStack> itemStack;
 
-        public Data(SBPets.Tier tier, int currentLevel, boolean isActive, List<ItemStack> itemStack)
+        public Data(SBPets.Tier tier, int currentLevel, double currentXp, boolean isActive, List<ItemStack> itemStack)
         {
             this.tier = tier;
             this.currentLevel = currentLevel;
+            this.currentXp = currentXp;
             this.isActive = isActive;
             this.itemStack = itemStack;
         }
@@ -252,6 +254,11 @@ public class SBPets
         public int getCurrentLevel()
         {
             return this.currentLevel;
+        }
+
+        public double getCurrentXp()
+        {
+            return this.currentXp;
         }
 
         public boolean isActive()

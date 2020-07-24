@@ -33,7 +33,9 @@ public class SBAPIUtils
     public static SupportedPack PACKS;
     private static String API_KEY;
     public static String PLAYER_NAME;
+    public static String PLAYER_UUID;
     public static String SKYBLOCK_PROFILE;
+    public static String SKYBLOCK_PROFILES;
     public static String SKYBLOCK_AUCTION;
     public static String BAZAAR;
     public static String GUILD;
@@ -43,7 +45,9 @@ public class SBAPIUtils
         SkyBlockcatiaMod.LOGGER.info("Setting an API Key");
         SBAPIUtils.API_KEY = SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get();
         PLAYER_NAME = "https://api.hypixel.net/player?key=" + API_KEY + "&name=";
+        PLAYER_UUID = "https://api.hypixel.net/player?key=" + API_KEY + "&uuid=";
         SKYBLOCK_PROFILE = "https://api.hypixel.net/skyblock/profile?key=" + API_KEY + "&profile=";
+        SKYBLOCK_PROFILES = "https://api.hypixel.net/skyblock/profiles?key=" + API_KEY + "&uuid=";
         SKYBLOCK_AUCTION = "https://api.hypixel.net/skyblock/auction?key=" + API_KEY + "&profile=";
         BAZAAR = "https://api.hypixel.net/skyblock/bazaar?key=" + API_KEY;
         GUILD = "https://api.hypixel.net/guild?key=" + API_KEY + "&player=";
@@ -64,7 +68,7 @@ public class SBAPIUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            MAX_FAIRY_SOULS = 201;
+            MAX_FAIRY_SOULS = 209;
         }
     }
 
@@ -91,16 +95,22 @@ public class SBAPIUtils
             {
                 CompoundNBT compound = CompressedStreamTools.readCompressed(new ByteArrayInputStream(decode));
                 ListNBT list = compound.getList("i", Constants.NBT.TAG_COMPOUND);
+                int dummyIndex = -1;
+                boolean hasDummy = type == SBInventoryType.ACCESSORY_BAG || type == SBInventoryType.POTION_BAG || type == SBInventoryType.FISHING_BAG || type == SBInventoryType.QUIVER;
 
+                for (int i = 0; hasDummy && i < list.size(); ++i)
+                {
+                    if (list.getCompound(i).toString().contains("Go Back"))
+                    {
+                        dummyIndex = i;
+                        break;
+                    }
+                }
                 for (int i = type == SBInventoryType.INVENTORY ? 9 : 0; i < list.size(); ++i)
                 {
-                    // workaround for dummy slot
-                    if (type == SBInventoryType.ACCESSORY_BAG || type == SBInventoryType.POTION_BAG || type == SBInventoryType.FISHING_BAG || type == SBInventoryType.QUIVER)
+                    if (hasDummy && i >= dummyIndex - 3)
                     {
-                        if (i >= 45)
-                        {
-                            break;
-                        }
+                        break;
                     }
                     itemStack.add(SBAPIUtils.flatteningItemStack(list.getCompound(i)));
                 }

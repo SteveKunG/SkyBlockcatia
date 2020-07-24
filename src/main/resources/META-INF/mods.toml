@@ -7,9 +7,11 @@ issueTrackerURL="https://github.com/SteveKunG/SkyBlockcatia/issues"
 modId="skyblockcatia"
 version="2.0.0"
 displayName="SkyBlockcatia"
-description="SkyBlock utilities and helper!"
+description="Useful Hypixel Skyblock features, QOL and In-game API Viewer!"
+credits="Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible"
 displayURL="https://minecraft.curseforge.com/projects/skyblockcatia"
 authors="SteveKunG"
+logoFile="logo.png"
 
 [[dependencies.skyblockcatia]]
     modId="forge"
