@@ -43,7 +43,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, guiFactory = SkyBlockcatiaMod.GUI_FACTORY, certificateFingerprint = SkyBlockcatiaMod.CERTIFICATE)
+@Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, updateJSON = SkyBlockcatiaMod.JSON_URL, guiFactory = SkyBlockcatiaMod.GUI_FACTORY, certificateFingerprint = SkyBlockcatiaMod.CERTIFICATE)
 public class SkyBlockcatiaMod
 {
     protected static final String NAME = "SkyBlockcatia";
@@ -57,6 +57,7 @@ public class SkyBlockcatiaMod
     protected static final String CERTIFICATE = "@FINGERPRINT@";
     protected static final String DEPENDENCIES = "after:skyblockaddons@[1.5.0,); " + SkyBlockcatiaMod.FORGE_VERSION;
     private static final String URL = "https://minecraft.curseforge.com/projects/skyblockcatia";
+    protected static final String JSON_URL = "https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json";
 
     public static final File profile = new File(ExtendedConfig.userDir, "profile.txt");
     private static final Splitter COLON_SPLITTER = Splitter.on(':');
