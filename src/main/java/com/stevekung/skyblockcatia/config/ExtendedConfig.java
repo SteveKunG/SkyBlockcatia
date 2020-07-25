@@ -81,7 +81,6 @@ public class ExtendedConfig
     public String serverIPColor = defaultWhite;
     public String equipmentStatusColor = defaultWhite;
     public String arrowCountColor = defaultWhite;
-    public String baitCountColor = defaultWhite;
     public String realTimeColor = defaultWhite;
     public String gameTimeColor = defaultWhite;
     public String gameWeatherColor = defaultWhite;
@@ -227,7 +226,6 @@ public class ExtendedConfig
             this.serverIPColor = ExtendedConfig.getString(nbt, "ServerIPColor", this.serverIPColor);
             this.equipmentStatusColor = ExtendedConfig.getString(nbt, "EquipmentStatusColor", this.equipmentStatusColor);
             this.arrowCountColor = ExtendedConfig.getString(nbt, "ArrowCountColor", this.arrowCountColor);
-            this.baitCountColor = ExtendedConfig.getString(nbt, "BaitCountColor", this.baitCountColor);
             this.realTimeColor = ExtendedConfig.getString(nbt, "RealTimeColor", this.realTimeColor);
             this.gameTimeColor = ExtendedConfig.getString(nbt, "GameTimeColor", this.gameTimeColor);
             this.gameWeatherColor = ExtendedConfig.getString(nbt, "GameWeatherColor", this.gameWeatherColor);
@@ -364,7 +362,6 @@ public class ExtendedConfig
             nbt.setString("ServerIPColor", this.serverIPColor);
             nbt.setString("EquipmentStatusColor", this.equipmentStatusColor);
             nbt.setString("ArrowCountColor", this.arrowCountColor);
-            nbt.setString("BaitCountColor", this.baitCountColor);
             nbt.setString("RealTimeColor", this.realTimeColor);
             nbt.setString("GameTimeColor", this.gameTimeColor);
             nbt.setString("GameWeatherColor", this.gameWeatherColor);
@@ -862,10 +859,6 @@ public class ExtendedConfig
         {
             this.arrowCountColor = value;
         }
-        else if (options == ExtendedConfig.Options.BAIT_COUNT_COLOR)
-        {
-            this.baitCountColor = value;
-        }
         else if (options == ExtendedConfig.Options.REAL_TIME_COLOR)
         {
             this.realTimeColor = value;
@@ -1125,8 +1118,6 @@ public class ExtendedConfig
             return this.equipmentStatusColor;
         case ARROW_COUNT_COLOR:
             return this.arrowCountColor;
-        case BAIT_COUNT_COLOR:
-            return this.baitCountColor;
         case REAL_TIME_COLOR:
             return this.realTimeColor;
         case GAME_TIME_COLOR:
@@ -1241,7 +1232,6 @@ public class ExtendedConfig
         SERVER_IP_COLOR(false, false, true),
         EQUIPMENT_STATUS_COLOR(false, false, true),
         ARROW_COUNT_COLOR(false, false, true),
-        BAIT_COUNT_COLOR(false, false, true),
         REAL_TIME_COLOR(false, false, true),
         GAME_TIME_COLOR(false, false, true),
         GAME_WEATHER_COLOR(false, false, true),

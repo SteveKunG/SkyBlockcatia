@@ -326,14 +326,11 @@ public class HUDInfo
             int equipmentYOffset = baseYOffset + 16 * i;
             String info = equipment.renderInfo();
             String arrowInfo = equipment.renderArrowInfo();
-            String baitInfo = equipment.renderBaitInfo();
             float fontHeight = (mc.fontRendererObj.FONT_HEIGHT + 7) * i;
             float infoXOffset = right ? res.getScaledWidth() - mc.fontRendererObj.getStringWidth(info) - 20.0625F : baseXOffset + 18.0625F;
             float infoYOffset = baseYOffset + 4 + fontHeight;
             float arrowXOffset = right ? res.getScaledWidth() - ColorUtils.unicodeFontRenderer.getStringWidth(arrowInfo) - 2.0625F : baseXOffset + 8.0625F;
             float arrowYOffset = baseYOffset + 8 + fontHeight;
-            float baitXOffset = right ? res.getScaledWidth() - ColorUtils.unicodeFontRenderer.getStringWidth(baitInfo) - 2.0625F : baseXOffset + 8.0625F;
-            float baitYOffset = baseYOffset + 8 + fontHeight;
 
             EquipmentOverlay.renderItem(itemStack, baseXOffset, equipmentYOffset);
 
@@ -345,12 +342,6 @@ public class HUDInfo
             {
                 GlStateManager.disableDepth();
                 ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(ExtendedConfig.instance.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
-                GlStateManager.enableDepth();
-            }
-            else if (!StringUtils.isNullOrEmpty(baitInfo))
-            {
-                GlStateManager.disableDepth();
-                ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(ExtendedConfig.instance.baitCountColor).toColoredFont() + baitInfo, baitXOffset, baitYOffset, 16777215);
                 GlStateManager.enableDepth();
             }
             ++i;
@@ -406,7 +397,6 @@ public class HUDInfo
 
             String info = equipment.renderInfo();
             String arrowInfo = equipment.renderArrowInfo();
-            String baitInfo = equipment.renderBaitInfo();
 
             if (equipment.getSide() == HotbarEquipmentOverlay.Side.LEFT)
             {
@@ -427,12 +417,6 @@ public class HUDInfo
                 {
                     GlStateManager.disableDepth();
                     ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(ExtendedConfig.instance.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
-                    GlStateManager.enableDepth();
-                }
-                else if (!StringUtils.isNullOrEmpty(baitInfo))
-                {
-                    GlStateManager.disableDepth();
-                    ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(ExtendedConfig.instance.baitCountColor).toColoredFont() + baitInfo, arrowXOffset, arrowYOffset, 16777215);
                     GlStateManager.enableDepth();
                 }
                 ++iLeft;
@@ -457,15 +441,6 @@ public class HUDInfo
 
                     GlStateManager.disableDepth();
                     ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(ExtendedConfig.instance.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
-                    GlStateManager.enableDepth();
-                }
-                else if (!StringUtils.isNullOrEmpty(baitInfo))
-                {
-                    float baitXOffset = res.getScaledWidth() / 2 + 112 - ColorUtils.unicodeFontRenderer.getStringWidth(baitInfo);
-                    int baitYOffset = res.getScaledHeight() - 16 * iRight - 32;
-
-                    GlStateManager.disableDepth();
-                    ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(ExtendedConfig.instance.baitCountColor).toColoredFont() + baitInfo, baitXOffset, baitYOffset, 16777215);
                     GlStateManager.enableDepth();
                 }
                 ++iRight;

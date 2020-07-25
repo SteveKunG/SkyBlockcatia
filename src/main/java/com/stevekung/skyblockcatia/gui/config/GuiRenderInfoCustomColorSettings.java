@@ -31,7 +31,6 @@ public class GuiRenderInfoCustomColorSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.SERVER_IP_COLOR);
         OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_STATUS_COLOR);
         OPTIONS.add(ExtendedConfig.Options.ARROW_COUNT_COLOR);
-        OPTIONS.add(ExtendedConfig.Options.BAIT_COUNT_COLOR);
         OPTIONS.add(ExtendedConfig.Options.REAL_TIME_COLOR);
         OPTIONS.add(ExtendedConfig.Options.GAME_TIME_COLOR);
         OPTIONS.add(ExtendedConfig.Options.GAME_WEATHER_COLOR);

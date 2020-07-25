@@ -1,9 +1,5 @@
 package com.stevekung.skyblockcatia.renderer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.stevekung.skyblockcatia.config.EnumEquipment;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
@@ -14,13 +10,10 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
 
 public class EquipmentOverlay
 {
-    private static final List<String> BAIT_LIST = new ArrayList<>(Arrays.asList("WHALE_BAIT", "MINNOW_BAIT", "SPIKED_BAIT", "ICE_BAIT", "FISH_BAIT", "DARK_BAIT", "SPOOKY_BAIT", "BLESSED_BAIT", "LIGHT_BAIT", "CARROT_BAIT"));
-    protected static final List<String> FISHING_ROD_LIST = new ArrayList<>(Arrays.asList("YETI_ROD", "THE_SHREDDER", "LEGEND_ROD", "CHAMP_ROD", "AUGER_ROD", "CHALLENGE_ROD", "WINTER_ROD", "FISHING_ROD", "ICE_ROD", "PRISMARINE_ROD", "SPONGE_ROD", "SPEEDSTER_ROD", "FARMER_ROD"));
     private static final ModDecimalFormat STACK = new ModDecimalFormat("#.##");
     protected final ItemStack itemStack;
     protected final Minecraft mc;
@@ -64,17 +57,6 @@ public class EquipmentOverlay
         if (this.itemStack.getItem() instanceof ItemBow && arrowCount > 0)
         {
             return String.valueOf(arrowCount);
-        }
-        return "";
-    }
-
-    public String renderBaitInfo()
-    {
-        int baitCount = EquipmentOverlay.getInventoryFishBaitCount(this.mc.thePlayer.inventory);
-
-        if (this.itemStack.getItem() instanceof ItemFishingRod && this.itemStack.hasTagCompound() && FISHING_ROD_LIST.stream().anyMatch(id -> this.itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id").equals(id)) && baitCount > 0)
-        {
-            return String.valueOf(baitCount);
         }
         return "";
     }
@@ -159,25 +141,5 @@ public class EquipmentOverlay
             }
         }
         return arrowCount;
-    }
-
-    private static int getInventoryFishBaitCount(InventoryPlayer inventory)
-    {
-        int baitCount = 0;
-
-        for (int i = 0; i < inventory.getSizeInventory(); ++i)
-        {
-            ItemStack itemStack = inventory.getStackInSlot(i);
-
-            if (itemStack == null || !itemStack.hasTagCompound())
-            {
-                continue;
-            }
-            if (itemStack.getItem() == Items.skull && itemStack.getMetadata() == 3 && BAIT_LIST.stream().anyMatch(id -> itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id").equals(id)))
-            {
-                baitCount += itemStack.stackSize;
-            }
-        }
-        return baitCount;
     }
 }
