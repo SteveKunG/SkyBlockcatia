@@ -48,6 +48,18 @@ public class SBSkills
         {
             return this.itemStack;
         }
+
+        public static SBSkills.Type byName(String name)
+        {
+            for (SBSkills.Type type : SBSkills.Type.values())
+            {
+                if (type.name.equals(name))
+                {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Unknown skill type '" + name + "'");
+        }
     }
 
     public static class Info

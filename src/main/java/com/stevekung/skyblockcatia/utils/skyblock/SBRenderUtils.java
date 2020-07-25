@@ -9,6 +9,7 @@ import com.stevekung.stevekungslib.utils.ColorUtils.RGB;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -115,6 +116,52 @@ public class SBRenderUtils
         RenderSystem.enableLighting();
         RenderSystem.enableDepthTest();
         RenderSystem.disableAlphaTest();
+    }
+
+    // Credit to https://gist.github.com/killjoy1221/71b4cd975b92afe8dbd2e5f6222b1140
+    public static void drawLongItemName(ToastGui toastGui, long delta, long firstDrawTime, String itemName, long minDraw, long maxDraw, long timeUntilGone, long textSpeed, boolean shadow)
+    {
+        int x = 30;
+        int textWidth = toastGui.getMinecraft().fontRenderer.getStringWidth(itemName);
+        int maxSize = textWidth - 135;
+        long timeElapsed = delta - firstDrawTime - minDraw;
+        long timeElapsed2 = maxDraw - delta - timeUntilGone;
+        int maxTextLength = 125;
+
+        if (textWidth > maxSize && textWidth > maxTextLength)
+        {
+            if (timeElapsed > 0)
+            {
+                x = Math.max((int) (-textWidth * timeElapsed / textSpeed + x), -maxSize + 16);
+            }
+
+            int backward = Math.max(Math.min((int) -(textWidth * timeElapsed2 / textSpeed), 30), -maxSize + 16);
+
+            if (timeElapsed > timeElapsed2)
+            {
+                x = backward;
+            }
+        }
+
+        double height = toastGui.getMinecraft().getMainWindow().getScaledHeight();
+        double scale = toastGui.getMinecraft().getMainWindow().getGuiScaleFactor();
+        float[] trans = new float[16];
+        GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, trans);
+        float xpos = trans[12];
+
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor((int) ((xpos + 29) * scale), (int) ((height - 196) * scale), (int) (126 * scale), (int) (195 * scale));
+
+        if (shadow)
+        {
+            toastGui.getMinecraft().fontRenderer.drawStringWithShadow(itemName, x, 18, ColorUtils.rgbToDecimal(255, 255, 255));
+        }
+        else
+        {
+            toastGui.getMinecraft().fontRenderer.drawString(itemName, x, 18, ColorUtils.rgbToDecimal(255, 255, 255));
+        }
+
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
     private static boolean checkRarityString(String lore, TextFormatting color, String text)

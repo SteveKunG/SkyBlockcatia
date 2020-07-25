@@ -1,53 +1,53 @@
-//package com.stevekung.skyblockcatia.gui.toasts;
-//
-//import java.util.UUID;
-//
-//import com.mojang.authlib.GameProfile;
-//import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
-//import com.stevekung.skyblockcatia.utils.ColorUtils;
-//import com.stevekung.skyblockcatia.utils.JsonUtils;
-//
-//import net.minecraft.client.gui.Gui;
-//import net.minecraft.client.renderer.GlStateManager;
-//import net.minecraft.init.Items;
-//import net.minecraft.item.ItemStack;
-//import net.minecraft.nbt.NBTTagCompound;
-//import net.minecraft.nbt.NBTUtil;
-//import net.minecraft.tileentity.TileEntitySkull;
-//import net.minecraft.util.ResourceLocation;
-//
-//public class VisitIslandToast implements IToast TODO
-//{
-//    private static final ResourceLocation TEXTURE = new ResourceLocation("skyblockcatia:textures/gui/visit_island_toasts.png");
-//    private final ItemStack itemStack;
-//    private final String name;
-//
-//    public VisitIslandToast(String name, UUID uuid)
-//    {
-//        this.itemStack = VisitIslandToast.getPlayerHead(uuid, name);
-//        this.name = name;
-//    }
-//
-//    @Override
-//    public IToast.Visibility draw(GuiToast toastGui, long delta)
-//    {
-//        toastGui.mc.getTextureManager().bindTexture(TEXTURE);
-//        GlStateManager.color(1.0F, 1.0F, 1.0F);
-//        Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 160, 32, 160, 32);
-//        toastGui.mc.fontRendererObj.drawString(ColorUtils.stringToRGB("255,255,85").toColoredFont() + JsonUtils.create(this.name).setChatStyle(JsonUtils.style().setBold(true)).getFormattedText(), 30, 7, 16777215);
-//        toastGui.mc.fontRendererObj.drawString("is visiting Your Island!", 30, 18, ColorUtils.rgbToDecimal(255, 255, 255));
-//        EquipmentOverlay.renderItem(this.itemStack, 8, 8);
-//        return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
-//    }
-//
-//    private static ItemStack getPlayerHead(UUID uuid, String name)
-//    {
-//        ItemStack itemStack = new ItemStack(Items.skull, 1, 3);
-//        NBTTagCompound compound = new NBTTagCompound();
-//        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(uuid, name));
-//        compound.removeTag("SkullOwner");
-//        compound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), profile));
-//        itemStack.setTagCompound(compound);
-//        return itemStack;
-//    }
-//}
+package com.stevekung.skyblockcatia.gui.toasts;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.JsonUtils;
+
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.toasts.IToast;
+import net.minecraft.client.gui.toasts.ToastGui;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.SkullTileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+
+public class VisitIslandToast implements IToast
+{
+    private static final ResourceLocation TEXTURE = new ResourceLocation("skyblockcatia:textures/gui/visit_island_toasts.png");
+    private final ItemStack itemStack;
+    private final String name;
+
+    public VisitIslandToast(String name)
+    {
+        this.itemStack = VisitIslandToast.getPlayerHead(name);
+        this.name = name;
+    }
+
+    @Override
+    public IToast.Visibility draw(ToastGui toastGui, long delta)
+    {
+        toastGui.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
+        toastGui.getMinecraft().fontRenderer.drawString(ColorUtils.stringToRGB("255,255,85").toColoredFont() + JsonUtils.create(this.name).applyTextStyle(TextFormatting.BOLD).getFormattedText(), 30, 7, 16777215);
+        toastGui.getMinecraft().fontRenderer.drawString("is visiting Your Island!", 30, 18, ColorUtils.rgbToDecimal(255, 255, 255));
+        toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(this.itemStack, 8, 8);
+        return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
+    }
+
+    private static ItemStack getPlayerHead(String name)
+    {
+        ItemStack itemStack = new ItemStack(Items.PLAYER_HEAD);
+        CompoundNBT compound = new CompoundNBT();
+        GameProfile profile = SkullTileEntity.updateGameProfile(new GameProfile(null, name));
+        compound.remove("SkullOwner");
+        compound.put("SkullOwner", NBTUtil.writeGameProfile(new CompoundNBT(), profile));
+        itemStack.setTag(compound);
+        return itemStack;
+    }
+}

@@ -11,6 +11,7 @@ import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.RefreshApiDataCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
@@ -81,6 +82,7 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new MainEventHandler());
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
         CommonUtils.registerEventHandler(new SkyBlockEventHandler());
+        CommonUtils.registerEventHandler(new ClientEventHandler());
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
         ClientCommands.register(new BazaarViewerCommand());

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.stevekung.indicatia.hud.InfoUtils;
@@ -17,37 +18,35 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
-import com.stevekung.skyblockcatia.gui.toasts.ToastUtils;
+import com.stevekung.skyblockcatia.gui.toasts.*;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.ToastMode;
-import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
-import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
+import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
-import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.GameProfileUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
-import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
+import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
@@ -66,23 +65,26 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SkyBlockEventHandler
 {
     private static final Pattern CUSTOM_FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-Z]");
+    private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/']");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
-    private static final Pattern PET_CARE_PATTERN_1 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<day>[\\d]+) day(?:s){0,1} (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
-    private static final Pattern PET_CARE_PATTERN_2 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<hour>[\\d]+) hour(?:s){0,1} (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
-    private static final Pattern PET_CARE_PATTERN_3 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<minute>[\\d]+) minute(?:s){0,1} (?<second>[\\d]+) second(?:s){0,1}.");
-    private static final Pattern PET_CARE_PATTERN_4 = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?<second>[\\d]+) second(?:s){0,1}.");
+    private static final Pattern PET_CARE_PATTERN = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).");
+    private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("\\u00A7r +\\u00A7r\\u00A76\\u00A7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
+    private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
 
     // Item Drop Stuff
-    private static final String ITEM_PATTERN = "[\\w\\u0027\\u25C6\\[\\] -]+";
-    private static final String DROP_PATTERN = "(?<item>" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
-    private static final Pattern RARE_DROP_PATTERN = Pattern.compile("RARE DROP! " + DROP_PATTERN + " ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
-    private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("RARE DROP! \\u0028" + DROP_PATTERN + "\\u0029 ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
-    private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>VERY RARE|CRAZY RARE) DROP!  \\u0028" + DROP_PATTERN + "\\u0029 ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
+    private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
+    private static final String DROP_PATTERN = "(?<item>(?:\\u00a7r\\u00a7[0-9a-fk-or]){0,1}(?:\\u00a7[0-9a-fk-or]){0,1}" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
+    private static final Pattern RARE_DROP_PATTERN = Pattern.compile("\\u00a7r\\u00a76\\u00a7lRARE DROP! " + DROP_PATTERN + "(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
+    private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("\\u00a7r\\u00a7b\\u00a7lRARE DROP! \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\)(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
+    private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>\\u00a7r\\u00a79\\u00a7lVERY RARE|\\u00a7r\\u00a75\\u00a7lVERY RARE|\\u00a7r\\u00a7d\\u00a7lCRAZY RARE) DROP!  \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\)(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
     private static final Pattern BOSS_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
+
+    // Dungeons
+    private static final Pattern DUNGEON_QUALITY_DROP_PATTERN = Pattern.compile("You found a Top Quality Item! " + DROP_PATTERN);
 
     // Fish catch stuff
     private static final Pattern FISH_CATCH_PATTERN = Pattern.compile("(?<type>GOOD|GREAT) CATCH! You found a " + DROP_PATTERN + ".");
@@ -95,11 +97,11 @@ public class SkyBlockEventHandler
     private static final Pattern SANTA_TIER_PATTERN = Pattern.compile("SANTA TIER! " + DROP_PATTERN + " gift with " + RANKED_PATTERN + "!");
 
     // Pet
-    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("Your (?<name>[\\w ]+) levelled up to level (?<level>\\d+)!");
-    private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\u0028\\u002B(?<mf>[0-9]+)% Magic Find!\\u0029){0,1}");
+    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("\\u00a7r\\u00a7aYour (?<name>\\u00a7r\\u00a7[0-9a-fk-or][\\w ]+) \\u00a7r\\u00a7alevelled up to level \\u00a7r\\u00a79(?<level>\\d+)\\u00a7r\\u00a7a!\\u00a7r");
+    private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
 
     private static final List<String> LEFT_PARTY_MESSAGE = new ArrayList<>(Arrays.asList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left."));
-
+    private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("\u25C6 Ice Rune", "\u25C6 Ice Rune I").build();
     public static boolean isSkyBlock = false;
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
@@ -108,6 +110,7 @@ public class SkyBlockEventHandler
     public static float dragonHealth;
     private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new ArrayList<>();
     private List<ItemStack> previousInventory;
+    private DragonType dragonType;
     private final Minecraft mc;
 
     public SkyBlockEventHandler()
@@ -153,6 +156,11 @@ public class SkyBlockEventHandler
                             try
                             {
                                 SkyBlockEventHandler.dragonHealth = Float.valueOf(scoreText.replaceAll("[^\\d]", ""));
+
+                                if (this.dragonType != null)
+                                {
+                                    //SkyBlockBossBar.healthScale = HypixelEventHandler.dragonHealth / this.dragonType.getMaxHealth();
+                                }
                                 break;
                             }
                             catch (Exception e) {}
@@ -243,31 +251,34 @@ public class SkyBlockEventHandler
             return;
         }
 
+        String formattedMessage = event.getMessage().getFormattedText();
         String message = event.getMessage().getString();
         boolean cancelMessage = false;
 
-        if (this.isHypixel()) 
+        if (this.isHypixel())
         {
             // Common matcher
             Matcher visitIslandMatcher = SkyBlockEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
             Matcher uuidMatcher = SkyBlockEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = SkyBlockEventHandler.CHAT_PATTERN.matcher(message);
-            Matcher petCareMatcher1 = SkyBlockEventHandler.PET_CARE_PATTERN_1.matcher(message);
-            Matcher petCareMatcher2 = SkyBlockEventHandler.PET_CARE_PATTERN_2.matcher(message);
-            Matcher petCareMatcher3 = SkyBlockEventHandler.PET_CARE_PATTERN_3.matcher(message);
-            Matcher petCareMatcher4 = SkyBlockEventHandler.PET_CARE_PATTERN_4.matcher(message);
+            Matcher petCareMatcher = SkyBlockEventHandler.PET_CARE_PATTERN.matcher(message);
+            Matcher dragonDownMatcher = SkyBlockEventHandler.DRAGON_DOWN_PATTERN.matcher(formattedMessage);
+            Matcher dragonSpawnedMatcher = SkyBlockEventHandler.DRAGON_SPAWNED_PATTERN.matcher(formattedMessage);
 
             // Item Drop matcher
-            Matcher rareDropPattern = SkyBlockEventHandler.RARE_DROP_PATTERN.matcher(message);
+            Matcher rareDropPattern = SkyBlockEventHandler.RARE_DROP_PATTERN.matcher(formattedMessage);
             Matcher bossDropPattern = SkyBlockEventHandler.BOSS_DROP_PATTERN.matcher(message);
+
+            // Dungeons matcher
+            Matcher dungeonQualityDropPattern = SkyBlockEventHandler.DUNGEON_QUALITY_DROP_PATTERN.matcher(message);
 
             // Fish catch matcher
             Matcher fishCatchPattern = SkyBlockEventHandler.FISH_CATCH_PATTERN.matcher(message);
             Matcher coinsCatchPattern = SkyBlockEventHandler.COINS_CATCH_PATTERN.matcher(message);
 
             // Slayer Drop matcher
-            Matcher rareDropBracketPattern = SkyBlockEventHandler.RARE_DROP_WITH_BRACKET_PATTERN.matcher(message);
-            Matcher rareDrop2SpaceBracketPattern = SkyBlockEventHandler.RARE_DROP_2_SPACE_PATTERN.matcher(message);
+            Matcher rareDropBracketPattern = SkyBlockEventHandler.RARE_DROP_WITH_BRACKET_PATTERN.matcher(formattedMessage);
+            Matcher rareDrop2SpaceBracketPattern = SkyBlockEventHandler.RARE_DROP_2_SPACE_PATTERN.matcher(formattedMessage);
 
             // Gift matcher
             Matcher coinsGiftPattern = SkyBlockEventHandler.COINS_GIFT_PATTERN.matcher(message);
@@ -276,7 +287,7 @@ public class SkyBlockEventHandler
             Matcher santaTierPattern = SkyBlockEventHandler.SANTA_TIER_PATTERN.matcher(message);
 
             // Pet
-            Matcher petLevelUpPattern = SkyBlockEventHandler.PET_LEVEL_UP_PATTERN.matcher(message);
+            Matcher petLevelUpPattern = SkyBlockEventHandler.PET_LEVEL_UP_PATTERN.matcher(formattedMessage);
             Matcher petDropPattern = SkyBlockEventHandler.PET_DROP_PATTERN.matcher(message);
 
             if (event.getType() == ChatType.CHAT)
@@ -287,7 +298,7 @@ public class SkyBlockEventHandler
 
                     if (SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.CHAT_AND_TOAST)
                     {
-                        SkyBlockEventHandler.addVisitingToast(mc, name);
+                        SkyBlockEventHandler.addVisitingToast(this.mc, name);
                         ToastLog.logToast(message);
                     }
                     cancelMessage = SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.DISABLED;
@@ -297,53 +308,34 @@ public class SkyBlockEventHandler
                     SBAPIUtils.setApiKeyFromServer(uuidMatcher.group("uuid"));
                     ClientUtils.printClientMessage("Setting a new API Key!", TextFormatting.GREEN);
                 }
-                else if (petCareMatcher1.matches())
+                else if (petCareMatcher.matches())
                 {
-                    int day = Integer.parseInt(petCareMatcher1.group("day"));
-                    int hour = Integer.parseInt(petCareMatcher1.group("hour"));
-                    int minute = Integer.parseInt(petCareMatcher1.group("minute"));
-                    int second = Integer.parseInt(petCareMatcher1.group("second"));
+                    int day = 0;
+                    int hour = 0;
+                    int minute = 0;
+                    int second = 0;
+
+                    if (petCareMatcher.group("day") != null)
+                    {
+                        day = Integer.parseInt(petCareMatcher.group("day"));
+                    }
+                    if (petCareMatcher.group("hour") != null)
+                    {
+                        hour = Integer.parseInt(petCareMatcher.group("hour"));
+                    }
+                    if (petCareMatcher.group("minute") != null)
+                    {
+                        minute = Integer.parseInt(petCareMatcher.group("minute"));
+                    }
+                    if (petCareMatcher.group("second") != null)
+                    {
+                        second = Integer.parseInt(petCareMatcher.group("second"));
+                    }
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.DATE, day);
                     calendar.add(Calendar.HOUR, hour);
                     calendar.add(Calendar.MINUTE, minute);
-                    calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
-                }
-                else if (petCareMatcher2.matches())
-                {
-                    int hour = Integer.parseInt(petCareMatcher2.group("hour"));
-                    int minute = Integer.parseInt(petCareMatcher2.group("minute"));
-                    int second = Integer.parseInt(petCareMatcher2.group("second"));
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.HOUR, hour);
-                    calendar.add(Calendar.MINUTE, minute);
-                    calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
-                }
-                else if (petCareMatcher3.matches())
-                {
-                    int minute = Integer.parseInt(petCareMatcher3.group("minute"));
-                    int second = Integer.parseInt(petCareMatcher3.group("second"));
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.MINUTE, minute);
-                    calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
-                }
-                else if (petCareMatcher4.matches())
-                {
-                    int second = Integer.parseInt(petCareMatcher4.group("second"));
-
-                    Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.SECOND, second);
                     String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
                     String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
@@ -384,6 +376,16 @@ public class SkyBlockEventHandler
                             }
                         }, 2500);
                     }
+                    if (dragonDownMatcher.matches())
+                    {
+                        SkyBlockEventHandler.dragonHealth = 0;
+                    }
+                    if (dragonSpawnedMatcher.matches())
+                    {
+                        String dragon = dragonSpawnedMatcher.group("dragon");
+                        DragonType type = DragonType.valueOf(dragon.toUpperCase());
+                        this.dragonType = type;
+                    }
 
                     if (chatMatcher.matches())
                     {
@@ -414,8 +416,10 @@ public class SkyBlockEventHandler
                     {
                         if (fishCatchPattern.matches())
                         {
-                            SkyBlockEventHandler.addFishLoot(fishCatchPattern);
-                            ToastLog.logToast(message);
+                            String dropType = fishCatchPattern.group("type");
+                            String name = fishCatchPattern.group("item");
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
+                            ToastLog.logToast(formattedMessage);
                             cancelMessage = SBExtendedConfig.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST;
                         }
                         else if (coinsCatchPattern.matches())
@@ -424,8 +428,8 @@ public class SkyBlockEventHandler
                             String coin = coinsCatchPattern.group("coin");
                             CoinType coinType = type.equals("GOOD") ? CoinType.TYPE_1 : CoinType.TYPE_2;
                             ItemStack coinSkull = SBRenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
-                            //TODO NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), type.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH_COINS : ToastUtils.DropType.GREAT_CATCH_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
-                            ToastLog.logToast(message);
+                            NumericToast.addValueOrUpdate(this.mc.getToastGui(), type.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH_COINS : ToastUtils.DropType.GREAT_CATCH_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                            ToastLog.logToast(formattedMessage);
                             cancelMessage = SBExtendedConfig.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST;
                         }
                     }
@@ -438,7 +442,7 @@ public class SkyBlockEventHandler
                             String coin = coinsGiftPattern.group("coin");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
                             ItemStack coinSkull = SBRenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
-                            //TODO NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                            NumericToast.addValueOrUpdate(this.mc.getToastGui(), rarity, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             ToastLog.logToast(message);
                             cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
@@ -448,7 +452,7 @@ public class SkyBlockEventHandler
                             String exp = skillExpGiftPattern.group("exp");
                             String skill = skillExpGiftPattern.group("skill");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
-                            //TODO NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.valueOf(exp.replace(",", "")), null, skill);
+                            NumericToast.addValueOrUpdate(this.mc.getToastGui(), rarity, Integer.valueOf(exp.replace(",", "")), null, skill);
                             ToastLog.logToast(message);
                             cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
@@ -457,14 +461,14 @@ public class SkyBlockEventHandler
                             String type = itemDropGiftPattern.group("type");
                             String name = itemDropGiftPattern.group("item");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), rarity, ToastUtils.ToastType.GIFT));
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, rarity, ToastUtils.ToastType.GIFT));
                             ToastLog.logToast(message);
                             cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
                         else if (santaTierPattern.matches())
                         {
                             String name = santaTierPattern.group("item");
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), ToastUtils.DropType.SANTA_TIER, ToastUtils.ToastType.GIFT));
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.SANTA_TIER, ToastUtils.ToastType.GIFT));
                             ToastLog.logToast(message);
                             cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
@@ -485,15 +489,22 @@ public class SkyBlockEventHandler
                         {
                             String name = rareDropPattern.group("item");
                             String magicFind = rareDropPattern.group("mf");
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
                         else if (bossDropPattern.matches())
                         {
                             String name = bossDropPattern.group("item");
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), ToastUtils.DropType.BOSS_DROP, ToastType.DROP));
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.BOSS_DROP, ToastType.DROP));
                             ToastLog.logToast(message);
+                            cancelMessage = isToast;
+                        }
+                        else if (dungeonQualityDropPattern.matches())
+                        {
+                            String name = dungeonQualityDropPattern.group("item");
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.DUNGEON_QUALITY_DROP, ToastType.DROP));
+                            ToastLog.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
                         else if (rareDropBracketPattern.matches())
@@ -501,8 +512,8 @@ public class SkyBlockEventHandler
                             String type = rareDropBracketPattern.group("type");
                             String name = rareDropBracketPattern.group("item");
                             String magicFind = rareDropBracketPattern.group(3);
-                            ToastUtils.DropType dropType = type.equals("VERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), magicFind, dropType, ToastType.DROP));
+                            ToastUtils.DropType dropType = type.startsWith("\u00a7r\u00a79\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_BLUE : type.startsWith("\u00a7r\u00a75\u00a7lVERY RARE") ? ToastUtils.DropType.SLAYER_VERY_RARE_DROP_PURPLE : ToastUtils.DropType.SLAYER_CRAZY_RARE_DROP;
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, dropType, ToastType.DROP));
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
@@ -510,7 +521,7 @@ public class SkyBlockEventHandler
                         {
                             String name = rareDrop2SpaceBracketPattern.group("item");
                             String magicFind = rareDrop2SpaceBracketPattern.group(2);
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP));
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.SLAYER_RARE_DROP, ToastType.DROP));
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
@@ -524,9 +535,9 @@ public class SkyBlockEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            ItemStack itemStack = new ItemStack(Items.BONE);
+                            ItemStack itemStack = SBPets.Type.valueOf(TextFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase()).getPetItem();
                             itemStack.setDisplayName(JsonUtils.create(name));
-                            //TODO NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet");
+                            NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
@@ -534,7 +545,7 @@ public class SkyBlockEventHandler
                         {
                             String name = petDropPattern.group("item");
                             String magicFind = petDropPattern.group("mf");
-                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), magicFind, ToastUtils.DropType.PET_DROP, ToastType.DROP));
+                            SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.PET_DROP, ToastType.DROP));
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
                         }
@@ -613,11 +624,11 @@ public class SkyBlockEventHandler
 
         if (this.mc.world != null)
         {
-            //            if (name.equals("records.13") && HypixelEventHandler.SKY_BLOCK_LOCATION == SkyBlockLocation.BLAZING_FORTRESS)TODO
-            //            {
-            //                this.mc.ingameGUI.displayTitle(JsonUtils.create("Preparing spawn...").setChatStyle(JsonUtils.red()).getFormattedText(), JsonUtils.create("").setChatStyle(JsonUtils.red()).getFormattedText(), 0, 1200, 20);
-            //                this.mc.getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation("random.orb"), 0.75F, 1.0F, (float)this.mc.player.posX + 0.5F, (float)this.mc.player.posY + 0.5F, (float)this.mc.player.posZ + 0.5F));
-            //            }
+            if (name.equals("records.13") && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.BLAZING_FORTRESS)
+            {
+                this.mc.ingameGUI.displayTitle(JsonUtils.create("Preparing spawn...").applyTextStyle(TextFormatting.RED).getFormattedText(), JsonUtils.create("").getFormattedText(), 0, 1200, 20);
+                this.mc.getSoundHandler().play(new SimpleSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP.getName(), SoundCategory.PLAYERS, 0.75F, 1.0F, false, 0, ISound.AttenuationType.NONE, (float)this.mc.player.getPosX() + 0.5F, (float)this.mc.player.getPosY() + 0.5F, (float)this.mc.player.getPosZ() + 0.5F, false));
+            }
         }
     }
 
@@ -731,62 +742,113 @@ public class SkyBlockEventHandler
         }
     }
 
-    private static void addFishLoot(Matcher matcher)
-    {
-        String dropType = matcher.group("type");
-        String name = matcher.group("item");
-        SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(TextFormatting.getTextWithoutFormattingCodes(name), dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
-    }
-
     /**
      * Credit to codes.biscuit.skyblockaddons.utils.InventoryUtils
      */
     private void getInventoryDifference(NonNullList<ItemStack> currentInventory)
     {
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
+        Map<String, ItemDropDiff> previousInventoryMap = new HashMap<>();
+        Map<String, ItemDropDiff> newInventoryMap = new HashMap<>();
+        SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.removeIf(drop -> this.removeUndisplayedToast(drop));
 
         if (this.previousInventory != null)
         {
             for (int i = 0; i < newInventory.size(); i++)
             {
+                ItemStack previousItem = this.previousInventory.get(i);
                 ItemStack newItem = newInventory.get(i);
 
-                if (!newItem.isEmpty())
+                if (previousItem != null)
                 {
-                    String newItemName = newItem.getDisplayName().getUnformattedComponentText();
+                    int amount = previousInventoryMap.getOrDefault(previousItem.getDisplayName(), new ItemDropDiff(previousItem, 0)).count + previousItem.getCount();
+                    previousInventoryMap.put(previousItem.getDisplayName().getFormattedText(), new ItemDropDiff(previousItem, amount));
+                }
+                if (newItem != null)
+                {
+                    int amount = newInventoryMap.getOrDefault(newItem.getDisplayName(), new ItemDropDiff(newItem, 0)).count + newItem.getCount();
+                    newInventoryMap.put(newItem.getDisplayName().getFormattedText(), new ItemDropDiff(newItem, amount));
+                }
+            }
 
-                    for (Iterator<ToastUtils.ItemDropCheck> iterator = SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
+            Set<String> keySet = new HashSet<>(previousInventoryMap.keySet());
+            keySet.addAll(newInventoryMap.keySet());
+
+            keySet.forEach(key ->
+            {
+                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
+                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
+                int diff = newDiff.count - previousDiff.count;
+
+                if (diff != 0)
+                {
+                    ItemStack newItem = newDiff.itemStack;
+
+                    if (newItem != null)
                     {
-                        ToastUtils.ItemDropCheck drop = iterator.next();
-
-                        if (drop.getName().equals(newItemName))
+                        for (Iterator<ToastUtils.ItemDropCheck> iterator = SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
                         {
-                            if (drop.getToastType() == ToastType.DROP)
+                            ToastUtils.ItemDropCheck drop = iterator.next();
+                            String dropName = drop.getName();
+
+                            if (drop.getType() == ToastUtils.DropType.PET_DROP)
                             {
-                                /*if (this.mc.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                if (("[Lvl 1] " + dropName).equals(key))
                                 {
-                                    iterator.remove();TODO
-                                }*/
+                                    newItem.setCount(diff);
+
+                                    if (this.mc.getToastGui().toastsQueue.add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    {
+                                        iterator.remove();
+                                    }
+                                }
                             }
                             else
                             {
-                                /*if (this.mc.getToastGui().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                dropName = RENAMED_DROP.getOrDefault(dropName, dropName);
+
+                                if (dropName.equals(key) || !drop.getType().hasFormat() && dropName.equals(TextFormatting.getTextWithoutFormattingCodes(key)))
                                 {
-                                    iterator.remove();
-                                }*/
+                                    newItem.setCount(diff);
+
+                                    if (drop.getToastType() == ToastType.DROP)
+                                    {
+                                        if (this.mc.getToastGui().toastsQueue.add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                        {
+                                            iterator.remove();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (this.mc.getToastGui().toastsQueue.add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                        {
+                                            iterator.remove();
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
         }
         this.previousInventory = newInventory;
+    }
+
+    private boolean removeUndisplayedToast(ToastUtils.ItemDropCheck drop)
+    {
+        if (System.currentTimeMillis() > drop.getTimestamp() + 10000L)
+        {
+            ToastLog.logToast("You got " + drop.getName() + " but it doesn't show on toast!");
+            return true;
+        }
+        return false;
     }
 
     public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
     {
         ItemStack itemStack = skill.getItemStack();
-        itemStack.setDisplayName(JsonUtils.create(ColorUtils.stringToRGB("255,255,85").toColoredFont() + exp + " " + skill + " XP"));
+        itemStack.setDisplayName(JsonUtils.create(ColorUtils.stringToRGB("255,255,85").toColoredFont() + exp + " " + skill.getName() + " XP"));
         return itemStack;
     }
 
@@ -809,7 +871,7 @@ public class SkyBlockEventHandler
 
     private static void addVisitingToast(Minecraft mc, String name)
     {
-        //CommonUtils.runAsync(() -> mc.getToastGui().add(new VisitIslandToast(name)));
+        CommonUtils.runAsync(() -> mc.getToastGui().add(new VisitIslandToast(name)));
     }
 
     private static void replaceEventEstimateTime(String lore, Calendar calendar, List<ITextComponent> tooltip, List<ITextComponent> dates, String replacedText)
@@ -1027,6 +1089,18 @@ public class SkyBlockEventHandler
         public String getValue()
         {
             return this.value;
+        }
+    }
+
+    class ItemDropDiff
+    {
+        final ItemStack itemStack;
+        final int count;
+
+        public ItemDropDiff(ItemStack itemStack, int count)
+        {
+            this.itemStack = itemStack;
+            this.count = count;
         }
     }
 }
