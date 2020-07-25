@@ -759,12 +759,12 @@ public class SkyBlockEventHandler
                 ItemStack previousItem = this.previousInventory.get(i);
                 ItemStack newItem = newInventory.get(i);
 
-                if (previousItem != null)
+                if (!previousItem.isEmpty())
                 {
                     int amount = previousInventoryMap.getOrDefault(previousItem.getDisplayName(), new ItemDropDiff(previousItem, 0)).count + previousItem.getCount();
                     previousInventoryMap.put(previousItem.getDisplayName().getFormattedText(), new ItemDropDiff(previousItem, amount));
                 }
-                if (newItem != null)
+                if (!newItem.isEmpty())
                 {
                     int amount = newInventoryMap.getOrDefault(newItem.getDisplayName(), new ItemDropDiff(newItem, 0)).count + newItem.getCount();
                     newInventoryMap.put(newItem.getDisplayName().getFormattedText(), new ItemDropDiff(newItem, amount));
@@ -776,15 +776,15 @@ public class SkyBlockEventHandler
 
             keySet.forEach(key ->
             {
-                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
-                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
+                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(ItemStack.EMPTY, 0));
+                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(ItemStack.EMPTY, 0));
                 int diff = newDiff.count - previousDiff.count;
 
                 if (diff != 0)
                 {
                     ItemStack newItem = newDiff.itemStack;
 
-                    if (newItem != null)
+                    if (!newItem.isEmpty())
                     {
                         for (Iterator<ToastUtils.ItemDropCheck> iterator = SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
                         {
