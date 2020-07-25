@@ -806,8 +806,8 @@ public class HypixelEventHandler
 
             keySet.forEach(key ->
             {
-                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(new ItemStack(Blocks.air), 0));
-                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(new ItemStack(Blocks.air), 0));
+                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
+                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
                 int diff = newDiff.count - previousDiff.count;
 
                 if (diff != 0)
