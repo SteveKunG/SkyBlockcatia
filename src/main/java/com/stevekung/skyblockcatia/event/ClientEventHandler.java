@@ -50,10 +50,6 @@ public class ClientEventHandler
                 ClientEventHandler.ticksPaused++;
             }
         }
-        /*if (!SkyBlockcatiaMod.isDevelopment && SkyBlockcatiaMod.CURRENT_UUID != null && !SkyBlockcatiaMod.SUPPORTERS_UUID.stream().anyMatch(uuid -> SkyBlockcatiaMod.CURRENT_UUID.toString().equals(uuid)))
-        {
-            this.mc.shutdown();
-        }*/
     }
 
     @SubscribeEvent
