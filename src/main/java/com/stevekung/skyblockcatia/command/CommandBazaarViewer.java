@@ -1,13 +1,9 @@
 package com.stevekung.skyblockcatia.command;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.event.MainEventHandler;
-import com.stevekung.skyblockcatia.utils.BazaarData;
-import com.stevekung.skyblockcatia.utils.ClientUtils;
-import com.stevekung.skyblockcatia.utils.CommonUtils;
-import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -35,7 +31,7 @@ public class CommandBazaarViewer extends ClientCommandBase
         {
             if (MainEventHandler.BAZAAR_DATA.keySet().stream().anyMatch(product -> product.equals(args[0])))
             {
-                DecimalFormat format = new DecimalFormat("#,###.#");
+                ModDecimalFormat format = new ModDecimalFormat("#,###.#");
                 BazaarData data = MainEventHandler.BAZAAR_DATA.get(args[0]);
                 ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(data.getLastUpdated()));
                 ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Product: " + EnumChatFormatting.GOLD + args[0]);

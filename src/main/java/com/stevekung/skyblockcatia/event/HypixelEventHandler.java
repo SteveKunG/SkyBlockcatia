@@ -1,7 +1,6 @@
 package com.stevekung.skyblockcatia.event;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -408,7 +407,7 @@ public class HypixelEventHandler
                     if (dragonSpawnedMatcher.matches())
                     {
                         String dragon = dragonSpawnedMatcher.group("dragon");
-                        SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase());
+                        SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase(Locale.ENGLISH));
                         SkyBlockBossBar.renderBossBar = true;
                         SkyBlockBossBar.bossName = EnumChatFormatting.RED + type.getName();
                         this.dragonType = type;
@@ -562,7 +561,7 @@ public class HypixelEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            ItemStack itemStack = SkyBlockPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase()).getPetItem();
+                            ItemStack itemStack = SkyBlockPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ENGLISH)).getPetItem();
                             itemStack.setStackDisplayName(name);
                             NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             LoggerIN.logToast(formattedMessage);
@@ -694,7 +693,7 @@ public class HypixelEventHandler
             {
                 NBTTagCompound extraAttrib = event.itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
                 int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
-                DecimalFormat format = new DecimalFormat("#,###.#");
+                ModDecimalFormat format = new ModDecimalFormat("#,###.#");
 
                 if (extraAttrib.hasKey("timestamp"))
                 {

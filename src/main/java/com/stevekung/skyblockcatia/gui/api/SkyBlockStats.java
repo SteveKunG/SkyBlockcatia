@@ -1,6 +1,6 @@
 package com.stevekung.skyblockcatia.gui.api;
 
-import java.text.DecimalFormat;
+import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
 
 import net.minecraft.util.EnumChatFormatting;
 
@@ -8,7 +8,7 @@ public class SkyBlockStats
 {
     private String name;
     private final double value;
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###.#");
+    private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###.#");
 
     public SkyBlockStats(String name, double value)
     {

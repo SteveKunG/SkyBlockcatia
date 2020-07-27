@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -77,11 +76,11 @@ public class NumberUtils
 
         if (value >= 3 && base < suffix.length)
         {
-            return new DecimalFormat("#0.0").format(number / Math.pow(10, base * 3)) + suffix[base];
+            return new ModDecimalFormat("#0.0").format(number / Math.pow(10, base * 3)) + suffix[base];
         }
         else
         {
-            return new DecimalFormat("#,##0").format(number);
+            return new ModDecimalFormat("#,##0").format(number);
         }
     }
 

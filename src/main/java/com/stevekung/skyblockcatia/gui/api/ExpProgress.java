@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.gui.api;
 
 import java.io.BufferedReader;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.stevekung.skyblockcatia.utils.DataGetter;
@@ -59,7 +60,7 @@ public class ExpProgress
         @Override
         public String toString()
         {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ENGLISH);
         }
     }
 }

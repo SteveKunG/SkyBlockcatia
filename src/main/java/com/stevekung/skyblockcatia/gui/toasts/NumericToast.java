@@ -1,13 +1,13 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.nio.FloatBuffer;
-import java.text.DecimalFormat;
 import java.util.Random;
 
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GLAllocation;
@@ -30,7 +30,7 @@ public class NumericToast implements IToast<NumericToast>
     private boolean hasNewValue;
     private final long maxDrawTime;
     private final FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);
-    private static final DecimalFormat FORMAT = new DecimalFormat("###,###");
+    private static final ModDecimalFormat FORMAT = new ModDecimalFormat("###,###");
 
     public NumericToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
     {

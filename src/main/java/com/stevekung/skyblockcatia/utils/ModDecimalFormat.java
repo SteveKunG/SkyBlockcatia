@@ -11,7 +11,7 @@ public class ModDecimalFormat extends DecimalFormat
         super(pattern);
         DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
         symbols.setDecimalSeparator('.');
-        symbols.setGroupingSeparator('.');
+        symbols.setGroupingSeparator(',');
         this.setDecimalFormatSymbols(symbols);
     }
 }

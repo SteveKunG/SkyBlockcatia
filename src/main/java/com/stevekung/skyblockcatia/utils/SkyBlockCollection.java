@@ -1,12 +1,10 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.text.DecimalFormat;
-
 import net.minecraft.item.ItemStack;
 
 public class SkyBlockCollection
 {
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###");
+    private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
     private final ItemStack itemStack;
     private final Type type;
     private final int value;

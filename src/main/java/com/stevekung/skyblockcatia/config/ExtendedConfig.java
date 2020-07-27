@@ -2,12 +2,8 @@ package com.stevekung.skyblockcatia.config;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 
-import com.stevekung.skyblockcatia.utils.ClientUtils;
-import com.stevekung.skyblockcatia.utils.GameProfileUtils;
-import com.stevekung.skyblockcatia.utils.LangUtils;
-import com.stevekung.skyblockcatia.utils.LoggerIN;
+import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -492,7 +488,7 @@ public class ExtendedConfig
     public String getKeyBinding(ExtendedConfig.Options options)
     {
         String name = LangUtils.translate(options.getTranslation()) + ": ";
-        DecimalFormat format = new DecimalFormat("#,###");
+        ModDecimalFormat format = new ModDecimalFormat("#,###");
 
         if (options.isFloat())
         {

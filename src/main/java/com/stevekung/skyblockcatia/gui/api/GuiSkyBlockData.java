@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -115,11 +114,11 @@ public class GuiSkyBlockData extends GuiScreen
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}");
-    private static final DecimalFormat FORMAT = new DecimalFormat("#,###");
-    private static final DecimalFormat FORMAT_2 = new DecimalFormat("#,###.#");
-    private static final DecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new DecimalFormat("+#;-#");
-    private static final DecimalFormat SKILL_AVG = new DecimalFormat("##.#");
-    private static final DecimalFormat SKILL_AVG1 = new DecimalFormat("##.##");
+    private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
+    private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
+    private static final ModDecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new ModDecimalFormat("+#;-#");
+    private static final ModDecimalFormat SKILL_AVG = new ModDecimalFormat("##.#");
+    private static final ModDecimalFormat SKILL_AVG1 = new ModDecimalFormat("##.##");
     private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
     private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold").put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder").build();
@@ -2076,7 +2075,7 @@ public class GuiSkyBlockData extends GuiScreen
                         }
                         else
                         {
-                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase());
+                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ENGLISH));
                             ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
                             itemStack.setStackDisplayName(slayerDrops.getDisplayName());
                             itemStack.getTagCompound().setTag("ench", new NBTTagList());
@@ -3125,7 +3124,7 @@ public class GuiSkyBlockData extends GuiScreen
         {
             try
             {
-                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase());
+                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ENGLISH));
                 this.activeSlayerTier = 1 + slayerQuest.getAsJsonObject().get("tier").getAsInt();
             }
             catch (Exception e)
@@ -3598,7 +3597,7 @@ public class GuiSkyBlockData extends GuiScreen
             if (this.xpRequired > 0)
             {
                 double percent = this.currentPetXp * 100.0D / this.xpRequired;
-                return new DecimalFormat("##.#").format(percent) + "%";
+                return new ModDecimalFormat("##.#").format(percent) + "%";
             }
             else
             {
