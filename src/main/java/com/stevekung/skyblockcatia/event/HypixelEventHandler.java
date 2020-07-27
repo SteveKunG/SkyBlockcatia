@@ -73,6 +73,7 @@ public class HypixelEventHandler
 
     // Dungeons
     private static final Pattern DUNGEON_QUALITY_DROP_PATTERN = Pattern.compile("You found a Top Quality Item! " + DROP_PATTERN);
+    private static final Pattern DUNGEON_REWARD_PATTERN = Pattern.compile(" +RARE REWARD! " + DROP_PATTERN);
 
     // Fish catch stuff
     private static final Pattern FISH_CATCH_PATTERN = Pattern.compile("(?<type>GOOD|GREAT) CATCH! You found a " + DROP_PATTERN + ".");
@@ -285,6 +286,7 @@ public class HypixelEventHandler
 
             // Dungeons matcher
             Matcher dungeonQualityDropPattern = HypixelEventHandler.DUNGEON_QUALITY_DROP_PATTERN.matcher(message);
+            Matcher dungeonRewardPattern = HypixelEventHandler.DUNGEON_REWARD_PATTERN.matcher(message);
 
             // Fish catch matcher
             Matcher fishCatchPattern = HypixelEventHandler.FISH_CATCH_PATTERN.matcher(message);
@@ -532,6 +534,11 @@ public class HypixelEventHandler
                             HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.DUNGEON_QUALITY_DROP, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
+                        }
+                        else if (dungeonRewardPattern.matches())
+                        {
+                            String name = dungeonRewardPattern.group("item");
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.DUNGEON_REWARD_DROP, ToastType.DROP));
                         }
                         else if (rareDropBracketPattern.matches())
                         {
@@ -836,7 +843,7 @@ public class HypixelEventHandler
                             {
                                 dropName = RENAMED_DROP.getOrDefault(dropName, dropName);
 
-                                if (dropName.equals(key) || !drop.getType().hasFormat() && dropName.equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
+                                if (dropName.equals(key) || !drop.getType().matches(ToastUtils.DropCondition.FORMAT) && dropName.equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.stackSize = diff;
 
@@ -853,6 +860,13 @@ public class HypixelEventHandler
                                         {
                                             iterator.remove();
                                         }
+                                    }
+                                }
+                                else if (drop.getType().matches(ToastUtils.DropCondition.CONTAINS) && key.contains(dropName))
+                                {
+                                    if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    {
+                                        iterator.remove();
                                     }
                                 }
                             }

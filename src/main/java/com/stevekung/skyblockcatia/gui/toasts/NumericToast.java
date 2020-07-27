@@ -39,7 +39,7 @@ public class NumericToast implements IToast<NumericToast>
         this.object = object;
         this.isCoins = this.object.equals("Coins");
         this.isPet = this.object.equals("Pet");
-        this.isFishingCoins = rarity.isFishingCoins();
+        this.isFishingCoins = rarity.matches(ToastUtils.DropCondition.FISHING_COINS);
         this.maxDrawTime = this.isFishingCoins || this.isPet ? 15000L : 10000L;
         this.texture = new ResourceLocation(this.isFishingCoins || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
     }
@@ -140,7 +140,7 @@ public class NumericToast implements IToast<NumericToast>
                 builder.append(PetLevelUpToast.class.getName());
                 break;
             }
-            if (!rarity.isFishingCoins() && rarity != ToastUtils.DropType.PET_LEVEL_UP)
+            if (!rarity.matches(ToastUtils.DropCondition.FISHING_COINS) && rarity != ToastUtils.DropType.PET_LEVEL_UP)
             {
                 builder.append("$" + object);
             }

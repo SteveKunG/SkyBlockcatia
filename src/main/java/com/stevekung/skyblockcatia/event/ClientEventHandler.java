@@ -184,6 +184,8 @@ public class ClientEventHandler
 
         // Dungeon Drop
         //String test = "You found a Top Quality Item! " + itemStack.getDisplayName();
+        //String test = "You found a Top Quality Item! Skeleton Soldier Boots";
+        //String test = "     RARE REWARD! Adaptive Boots";
         //player.addChatComponentMessage(JsonUtils.create(test));
     }
 }

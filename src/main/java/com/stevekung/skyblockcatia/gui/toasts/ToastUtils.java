@@ -1,7 +1,11 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.item.ItemStack;
@@ -81,33 +85,41 @@ public class ToastUtils
 
     public enum DropType
     {
-        RARE_DROP("RARE DROP!", "255,170,0"),
+        RARE_DROP("RARE DROP!", "255,170,0", ImmutableList.of(DropCondition.FORMAT)),
         PET_DROP("PET DROP!", "255,170,0"),
         DRAGON_CRYSTAL_FRAGMENT("RARE DROP!", "170,0,170"),
-        BOSS_DROP("BOSS DROP!", "127,255,212"),
+        BOSS_DROP("BOSS DROP!", "127,255,212", ImmutableList.of(DropCondition.SPECIAL_DROP)),
         GOOD_CATCH("GOOD CATCH!", "255,170,0"),
         GREAT_CATCH("GREAT CATCH!", "170,0,170"),
-        GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0"),
-        GREAT_CATCH_COINS("GREAT CATCH!", "170,0,170"),
-        SLAYER_RARE_DROP("RARE DROP!", "85,255,255"),
-        SLAYER_VERY_RARE_DROP_BLUE("VERY RARE DROP!", "85,85,255"),
-        SLAYER_VERY_RARE_DROP_PURPLE("VERY RARE DROP!", "170,0,170"),
-        SLAYER_CRAZY_RARE_DROP("CRAZY RARE DROP!", "255,85,255"),
+        GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0", ImmutableList.of(DropCondition.FISHING_COINS)),
+        GREAT_CATCH_COINS("GREAT CATCH!", "170,0,170", ImmutableList.of(DropCondition.FISHING_COINS)),
+        SLAYER_RARE_DROP("RARE DROP!", "85,255,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
+        SLAYER_VERY_RARE_DROP_BLUE("VERY RARE DROP!", "85,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
+        SLAYER_VERY_RARE_DROP_PURPLE("VERY RARE DROP!", "170,0,170", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
+        SLAYER_CRAZY_RARE_DROP("CRAZY RARE DROP!", "255,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         COMMON_GIFT("COMMON GIFT!", "255,255,255"),
         SWEET_GIFT("SWEET GIFT!", "255,255,85"),
         RARE_GIFT("RARE GIFT!", "85,85,255"),
-        SANTA_TIER("SANTA GIFT!", "255,85,85"),
+        SANTA_TIER("SANTA GIFT!", "255,85,85", ImmutableList.of(DropCondition.SPECIAL_DROP)),
         PET_LEVEL_UP("PET LEVEL UP!", "85,85,255"),
-        DUNGEON_QUALITY_DROP("DUNGEON DROP!", "255,69,0"),
+        DUNGEON_QUALITY_DROP("DUNGEON DROP!", "255,69,0", ImmutableList.of(DropCondition.SPECIAL_DROP, DropCondition.CONTAINS)),
+        DUNGEON_REWARD_DROP("DUNGEON REWARD!", "255,69,0", ImmutableList.of(DropCondition.SPECIAL_DROP, DropCondition.CONTAINS)),
         ;
 
         private final String name;
         private final String color;
+        private final List<DropCondition> properties;
 
         private DropType(String name, String color)
         {
+            this(color, color, ImmutableList.of());
+        }
+
+        private DropType(String name, String color, List<DropCondition> properties)
+        {
             this.name = name;
             this.color = color;
+            this.properties = properties;
         }
 
         public String getName()
@@ -120,24 +132,22 @@ public class ToastUtils
             return ColorUtils.stringToRGB(this.color).toColoredFont();
         }
 
-        public boolean hasFormat()
+        public boolean matches(DropCondition... condition)
         {
-            return this == RARE_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP;
-        }
-
-        public boolean isSpecialDrop()
-        {
-            return this == BOSS_DROP || this == SLAYER_RARE_DROP || this == SLAYER_VERY_RARE_DROP_BLUE || this == SLAYER_VERY_RARE_DROP_PURPLE || this == SLAYER_CRAZY_RARE_DROP || this == SANTA_TIER || this == DUNGEON_QUALITY_DROP;
-        }
-
-        public boolean isFishingCoins()
-        {
-            return this == GOOD_CATCH_COINS || this == GREAT_CATCH_COINS;
+            return this.properties.containsAll(Arrays.asList(condition));
         }
     }
 
     public enum ToastType
     {
         DROP, GIFT;
+    }
+
+    public enum DropCondition
+    {
+        FISHING_COINS,
+        SPECIAL_DROP,
+        CONTAINS,
+        FORMAT;
     }
 }
