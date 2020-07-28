@@ -527,6 +527,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             {
                 this.drawBids(slot);
             }
+            this.drawCurrentSelectedPet(slot);
         }
     }
 
@@ -725,6 +726,38 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                                 }
                             }
                             catch (Exception e) {}
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawCurrentSelectedPet(Slot slot)
+    {
+        if (slot.getStack() != null && slot.getStack().hasTagCompound())
+        {
+            NBTTagCompound compound = slot.getStack().getTagCompound().getCompoundTag("display");
+
+            if (compound.getTagId("Lore") == 9)
+            {
+                NBTTagList list = compound.getTagList("Lore", 8);
+
+                if (list.tagCount() > 0)
+                {
+                    for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                    {
+                        int slotLeft = slot.xDisplayPosition;
+                        int slotTop = slot.yDisplayPosition;
+                        int slotRight = slotLeft + 16;
+                        int slotBottom = slotTop + 16;
+                        String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+                        int green = ColorUtils.to32BitColor(150, 85, 255, 85);
+
+                        if (lore.startsWith("Click to despawn"))
+                        {
+                            this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, green, green);
+                            break;
                         }
                     }
                 }
