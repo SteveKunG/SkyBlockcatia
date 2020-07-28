@@ -112,7 +112,7 @@ public class ToastUtils
 
         private DropType(String name, String color)
         {
-            this(color, color, ImmutableList.of());
+            this(name, color, ImmutableList.of());
         }
 
         private DropType(String name, String color, List<DropCondition> properties)
