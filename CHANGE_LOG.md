@@ -1,5 +1,9 @@
 # Change Log
 
-* * Change default key of API Viewer to F8
-* * Attempt to fix crash with Item Drop Toast
-* - Removed Bait count from Equipment HUD
+* * + Added Dungeon Reward toast
+* * + Added Enable Enchanted Glint for Skulls in main config
+* * + Added Prevent Clicking on Dummy Item config
+* * + Highlight Overlay for current selected pet
+* * Fixed Dungeon Quality Drop not displayed
+* * Fixed regional format issues with number format
+* * Fixed Skyblock Enchantment Glint not rendered
