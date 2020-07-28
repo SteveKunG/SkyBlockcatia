@@ -40,6 +40,7 @@ public class ConfigManagerIN
     public static boolean enableOldFishingRodRenderModel;
     public static boolean enable1_15ArmorEnchantedGlint;
     public static boolean enableMovementHandler;
+    public static boolean enableEnchantedGlintForSkull;
 
     // Key Binding Settings
     public static String keyToggleSprint;
@@ -163,6 +164,10 @@ public class ConfigManagerIN
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Movement Handler", false);
         prop.comment = LangUtils.translate("gui.config.skyblockcatia.movement_handler");
         ConfigManagerIN.enableMovementHandler = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Enchanted Glint for Skulls", true);
+        ConfigManagerIN.enableEnchantedGlintForSkull = prop.getBoolean();
         propOrder.add(prop.getName());
 
         return propOrder;

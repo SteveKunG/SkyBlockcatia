@@ -117,7 +117,7 @@ public class TileEntityEnchantedSkullRenderer
 
         model.render(null, 0.0F, 0.0F, 0.0F, rotation, 0.0F, 0.0625F);
 
-        if (enchanted)
+        if (ConfigManagerIN.enableEnchantedGlintForSkull && enchanted)
         {
             GlStateManager.pushMatrix();
             this.renderGlint(entity, mc, model, rotation, partialTicks);
