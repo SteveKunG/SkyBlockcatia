@@ -315,7 +315,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
 
             if (itemStack != null)
             {
-                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                if (ExtendedConfig.instance.preventClickingOnDummyItem && this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
                     info.cancel();
                 }

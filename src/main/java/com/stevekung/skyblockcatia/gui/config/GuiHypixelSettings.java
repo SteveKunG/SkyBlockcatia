@@ -51,6 +51,7 @@ public class GuiHypixelSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.LOBBY_PLAYER_COUNT);
         OPTIONS.add(ExtendedConfig.Options.DISPLAY_ITEM_ABILITY_MAX_USED);
         OPTIONS.add(ExtendedConfig.Options.PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON);
+        OPTIONS.add(ExtendedConfig.Options.PREVENT_CLICKING_ON_DUMMY_ITEM);
     }
 
     public GuiHypixelSettings(GuiScreen parent)
