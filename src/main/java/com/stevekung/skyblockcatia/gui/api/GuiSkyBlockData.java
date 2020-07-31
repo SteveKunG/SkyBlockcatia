@@ -1287,7 +1287,7 @@ public class GuiSkyBlockData extends GuiScreen
                 Gui.drawModalRectWithCustomSizedTexture(xBar, yBar, 0, 5, filled, 5, 91, 10);
             }
 
-            this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.GRAY + name + EnumChatFormatting.YELLOW + " " + currentLvl, xText, yText, 16777215);
+            this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.GRAY + name + (reachLimit ? EnumChatFormatting.GOLD : EnumChatFormatting.YELLOW) + " " + currentLvl, xText, yText, 16777215);
 
             if (reachLimit)
             {
@@ -3202,6 +3202,7 @@ public class GuiSkyBlockData extends GuiScreen
                 int slayerLvl = 0;
                 int levelToCheck = 0;
                 int xpToNextLvl = 0;
+                boolean reachLimit = false;
 
                 for (ExpProgress skill : progress)
                 {
@@ -3227,11 +3228,12 @@ public class GuiSkyBlockData extends GuiScreen
                 else
                 {
                     levelToCheck = progress.length;
+                    reachLimit = true;
                 }
 
                 this.setSlayerSkillLevel(type, slayerLvl);
 
-                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + type.getName() + " Slayer: " + EnumChatFormatting.YELLOW + "LVL " + slayerLvl));
+                list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + type.getName() + " Slayer: " + (reachLimit ? EnumChatFormatting.GOLD : EnumChatFormatting.YELLOW) + "LVL " + slayerLvl));
                 list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "EXP: " + EnumChatFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? FORMAT.format(playerSlayerXp) : FORMAT.format(playerSlayerXp) + EnumChatFormatting.DARK_PURPLE + "/" + EnumChatFormatting.LIGHT_PURPLE + FORMAT.format(xpRequired))));
 
                 if (xpToNextLvl != 0)
