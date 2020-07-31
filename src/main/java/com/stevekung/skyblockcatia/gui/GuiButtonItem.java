@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.gui;
 
+import java.lang.reflect.Field;
+
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 
 import net.minecraft.client.Minecraft;
@@ -25,6 +27,14 @@ public class GuiButtonItem extends GuiButton
     private final Item item;
     private final Minecraft mc;
     private String customName;
+
+    // Patcher Compatibility
+    private static Class<?> patcherConfig;
+    private boolean patcherInventoryPosition;
+
+    // Vanilla Enhancements Compatibility
+    private static Class<?> vanillaEnConfig;
+    private boolean vanillaEnFixInventory;
 
     public GuiButtonItem(int buttonID, int xPos, int yPos, Item item)
     {
@@ -56,7 +66,39 @@ public class GuiButtonItem extends GuiButton
         this.visible = condition;
         this.customName = customName;
 
-        if (!(SkyBlockcatiaMod.isVanillaEnhancementsLoaded || SkyBlockcatiaMod.isPatcherLoaded))
+        if (SkyBlockcatiaMod.isPatcherLoaded)
+        {
+            try
+            {
+                patcherConfig = Class.forName("club.sk1er.patcher.config.PatcherConfig");
+                Field inventoryPosition = patcherConfig.getDeclaredField("inventoryPosition");
+                this.patcherInventoryPosition = inventoryPosition.getBoolean(patcherConfig);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        if (SkyBlockcatiaMod.isVanillaEnhancementsLoaded)
+        {
+            try
+            {
+                vanillaEnConfig = Class.forName("com.orangemarshall.enhancements.config.Config");
+                Object instance = vanillaEnConfig.getDeclaredMethod("instance").invoke(vanillaEnConfig);
+                Field fixInventory = instance.getClass().getDeclaredField("fixInventory");
+                this.vanillaEnFixInventory = fixInventory.getBoolean(instance);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void drawButton(Minecraft mc, int mouseX, int mouseY)
+    {
+        if (!(this.vanillaEnFixInventory || this.patcherInventoryPosition))
         {
             boolean hasVisibleEffect = false;
 
@@ -80,11 +122,7 @@ public class GuiButtonItem extends GuiButton
                 this.xPosition = this.originalX;
             }
         }
-    }
 
-    @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY)
-    {
         boolean flag = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
 
         if (this.visible)
