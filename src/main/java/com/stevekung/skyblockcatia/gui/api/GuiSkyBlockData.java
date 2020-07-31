@@ -1274,13 +1274,20 @@ public class GuiSkyBlockData extends GuiScreen
     // Render
     private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
     {
+        ColorUtils.RGB color = ColorUtils.stringToRGB("128,255,0");
+
+        if (reachLimit)
+        {
+            color = ColorUtils.stringToRGB("255,185,0");
+        }
+
         this.mc.getTextureManager().bindTexture(XP_BARS);
-        GlStateManager.color(0.5F, 1.0F, 0.0F, 1.0F);
+        GlStateManager.color(color.floatRed(), color.floatGreen(), color.floatBlue(), 1.0F);
         Gui.drawModalRectWithCustomSizedTexture(xBar, yBar, 0, 0, 91, 5, 91, 10);
 
         if (xpRequired > 0)
         {
-            int filled = Math.min((int)Math.floor(playerXp * 92 / xpRequired), 91);
+            int filled = reachLimit ? 91 : Math.min((int)Math.floor(playerXp * 92 / xpRequired), 91);
 
             if (filled > 0)
             {
@@ -3241,7 +3248,7 @@ public class GuiSkyBlockData extends GuiScreen
                     list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "XP to " + EnumChatFormatting.YELLOW + "LVL " + levelToCheck + ": " + EnumChatFormatting.LIGHT_PURPLE + FORMAT.format(xpToNextLvl)));
                 }
 
-                list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl));
+                list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl, reachLimit));
                 int amount = 0;
 
                 for (int i = 1; i <= 4; i++)
@@ -3810,6 +3817,7 @@ public class GuiSkyBlockData extends GuiScreen
     {
         private final String text;
         private String xp;
+        private boolean reachLimit;
         private Type type = Type.TEXT;
 
         public SkyBlockSlayerInfo(String text)
@@ -3817,11 +3825,12 @@ public class GuiSkyBlockData extends GuiScreen
             this.text = text;
         }
 
-        public SkyBlockSlayerInfo(String text, String xp, Type type)
+        public SkyBlockSlayerInfo(String text, String xp, Type type, boolean reachLimit)
         {
             this(text);
             this.xp = xp;
             this.type = type;
+            this.reachLimit = reachLimit;
         }
 
         public String getText()
@@ -3839,9 +3848,14 @@ public class GuiSkyBlockData extends GuiScreen
             return this.type;
         }
 
-        public static SkyBlockSlayerInfo createMobAndXp(String slayerType, String xp)
+        public boolean isReachLimit()
         {
-            return new SkyBlockSlayerInfo(slayerType, xp, Type.XP_AND_MOB);
+            return this.reachLimit;
+        }
+
+        public static SkyBlockSlayerInfo createMobAndXp(String slayerType, String xp, boolean reachLimit)
+        {
+            return new SkyBlockSlayerInfo(slayerType, xp, Type.XP_AND_MOB, reachLimit);
         }
 
         public static SkyBlockSlayerInfo empty()
@@ -3993,15 +4007,23 @@ public class GuiSkyBlockData extends GuiScreen
                     GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
                 }
 
+                ColorUtils.RGB color = ColorUtils.stringToRGB("0,255,255");
+                boolean reachLimit = stat.isReachLimit();
+
+                if (reachLimit)
+                {
+                    color = ColorUtils.stringToRGB("255,185,0");
+                }
+
                 this.parent.mc.getTextureManager().bindTexture(XP_BARS);
-                GlStateManager.color(0.0F, 1.0F, 1.0F, 1.0F);
+                GlStateManager.color(color.floatRed(), color.floatGreen(), color.floatBlue(), 1.0F);
                 GlStateManager.disableBlend();
 
                 String[] xpSplit = stat.getXp().split(",");
                 int playerSlayerXp = Integer.valueOf(xpSplit[0]);
                 int xpRequired = Integer.valueOf(xpSplit[1]);
 
-                int filled = Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
+                int filled = stat.isReachLimit() ? 91 : Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
                 Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
                 if (filled > 0)
