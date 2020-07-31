@@ -405,6 +405,11 @@ public class HypixelEventHandler
                     if (dragonDownMatcher.matches())
                     {
                         this.clearBossData();
+
+                        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.showHitboxWhenDragonSpawned)
+                        {
+                            this.mc.getRenderManager().setDebugBoundingBox(false);
+                        }
                     }
                     if (dragonSpawnedMatcher.matches())
                     {
@@ -412,7 +417,13 @@ public class HypixelEventHandler
                         SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase(Locale.ENGLISH));
                         SkyBlockBossBar.renderBossBar = true;
                         SkyBlockBossBar.bossName = EnumChatFormatting.RED + type.getName();
+                        HUDRenderEventHandler.foundDragon = true;
                         this.dragonType = type;
+
+                        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.showHitboxWhenDragonSpawned)
+                        {
+                            this.mc.getRenderManager().setDebugBoundingBox(true);
+                        }
                     }
 
                     if (chatMatcher.matches())
@@ -895,6 +906,7 @@ public class HypixelEventHandler
         SkyBlockBossBar.healthScale = 0;
         HypixelEventHandler.dragonHealth = 0;
         this.dragonType = null;
+        HUDRenderEventHandler.foundDragon = false;
     }
 
     public static ItemStack getSkillItemStack(String exp, String skill)
