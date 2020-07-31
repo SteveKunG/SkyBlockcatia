@@ -69,11 +69,6 @@ public abstract class LayerCustomHeadMixin
         {
             String texture = "";
 
-            /*if (entity instanceof net.minecraft.client.entity.EntityPlayerSP)
-            {
-                System.out.println(itemstack.getTagCompound());
-            }*/
-
             if (!itemstack.hasTagCompound())
             {
                 return;
