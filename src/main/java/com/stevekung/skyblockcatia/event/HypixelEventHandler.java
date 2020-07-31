@@ -362,8 +362,8 @@ public class HypixelEventHandler
                     calendar.add(Calendar.HOUR, hour);
                     calendar.add(Calendar.MINUTE, minute);
                     calendar.add(Calendar.SECOND, second);
-                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
+                    String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.US).format(calendar.getTime());
+                    String date2 = new SimpleDateFormat("h:mm:ss a", Locale.US).format(calendar.getTime());
                     ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).setChatStyle(JsonUtils.green()));
                 }
 
@@ -414,7 +414,7 @@ public class HypixelEventHandler
                     if (dragonSpawnedMatcher.matches())
                     {
                         String dragon = dragonSpawnedMatcher.group("dragon");
-                        SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase(Locale.ENGLISH));
+                        SkyBlockBossBar.DragonType type = SkyBlockBossBar.DragonType.valueOf(dragon.toUpperCase(Locale.US));
                         SkyBlockBossBar.renderBossBar = true;
                         SkyBlockBossBar.bossName = EnumChatFormatting.RED + type.getName();
                         HUDRenderEventHandler.foundDragon = true;
@@ -579,7 +579,7 @@ public class HypixelEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            ItemStack itemStack = SkyBlockPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ENGLISH)).getPetItem();
+                            ItemStack itemStack = SkyBlockPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.US)).getPetItem();
                             itemStack.setStackDisplayName(name);
                             NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             LoggerIN.logToast(formattedMessage);
@@ -972,8 +972,8 @@ public class HypixelEventHandler
             calendar.add(Calendar.HOUR, hourF);
             calendar.add(Calendar.MINUTE, minuteF);
             calendar.add(Calendar.SECOND, secondF);
-            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
+            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.US).format(calendar.getTime());
+            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.US).format(calendar.getTime());
             dates.add("Event starts at: ");
             dates.add(EnumChatFormatting.YELLOW + date1);
             dates.add(EnumChatFormatting.YELLOW + date2);
@@ -1028,14 +1028,14 @@ public class HypixelEventHandler
             calendar.add(Calendar.HOUR, hourF);
             calendar.add(Calendar.MINUTE, minuteF);
             calendar.add(Calendar.SECOND, secondF);
-            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
+            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.US).format(calendar.getTime());
 
             if (timeEstimate.length == 1)
             {
-                date1 = new SimpleDateFormat("EEEE h:00 a", Locale.ENGLISH).format(calendar.getTime());
+                date1 = new SimpleDateFormat("EEEE h:00 a", Locale.US).format(calendar.getTime());
             }
 
-            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
+            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.US).format(calendar.getTime());
             dates.add("Interest receive at: ");
             dates.add(EnumChatFormatting.YELLOW + date1);
             dates.add(EnumChatFormatting.YELLOW + date2);
@@ -1103,14 +1103,14 @@ public class HypixelEventHandler
             calendar.add(Calendar.HOUR, hourF);
             calendar.add(Calendar.MINUTE, minuteF);
             calendar.add(Calendar.SECOND, secondF);
-            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
+            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.US).format(calendar.getTime());
 
             if (timeEstimate.length == 1)
             {
-                date1 = new SimpleDateFormat("EEEE h:00 a", Locale.ENGLISH).format(calendar.getTime());
+                date1 = new SimpleDateFormat("EEEE h:00 a", Locale.US).format(calendar.getTime());
             }
 
-            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
+            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.US).format(calendar.getTime());
 
             if (mc.currentScreen != null && mc.currentScreen instanceof GuiChest)
             {

@@ -40,7 +40,7 @@ public class ExpProgress
 
     public static ExpProgress[] getXpProgressFromRemote(Type type) throws Exception
     {
-        BufferedReader in = DataGetter.get("api/exp_progress/" + type + ".json");
+        BufferedReader in = DataGetter.get("api/exp_progress/" + type.toString().toLowerCase(Locale.US) + ".json");
         return GSON.fromJson(in, ExpProgress[].class);
     }
 
@@ -56,11 +56,5 @@ public class ExpProgress
         PET_2,
         PET_3,
         PET_4;
-
-        @Override
-        public String toString()
-        {
-            return this.name().toLowerCase(Locale.ENGLISH);
-        }
     }
 }

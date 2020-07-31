@@ -219,7 +219,7 @@ public class HUDInfo
                     builder.append(":");
                     int minute = (int)minuteField.get(getCurrentDate);
                     builder.append(minute == 0 ? "0" + minute : minute);
-                    builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.ENGLISH));
+                    builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.US));
                 }
                 catch (Exception e) {}
                 String currentTime = ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
