@@ -1,9 +1,11 @@
 # Change Log
 
-* * + Added Dungeon Reward toast
-* * + Added Enable Enchanted Glint for Skulls in main config
-* * + Added Prevent Clicking on Dummy Item config
-* * + Highlight Overlay for current selected pet
-* * Fixed Dungeon Quality Drop not displayed
-* * Fixed regional format issues with number format
-* * Fixed Skyblock Enchantment Glint not rendered
+* + Added Spirit Pet
+* + Added rarity detection for upgraded accessory
+* * Disable Indicatia render info by default
+* * Highlight max level of skills to gold color
+* * Minor fixes to Dragon Hitbox when dragon respawned/death
+* * More attempt to fix regional language issue
+* * Fixed Toast displayed wrong title, blame eclipse...
+* * Fixed Zealot Respawn Cooldown not display in some circumstance
+* * Fixed button position compatibility with Patcher and VanillaEnhancements
