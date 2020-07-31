@@ -30,11 +30,11 @@ public class ExtendedConfig
     private static File file;
 
     // Render Info
-    public boolean fps = true;
-    public boolean xyz = true;
-    public boolean direction = true;
-    public boolean biome = true;
-    public boolean ping = true;
+    public boolean fps = false;
+    public boolean xyz = false;
+    public boolean direction = false;
+    public boolean biome = false;
+    public boolean ping = false;
     public boolean pingToSecond = false;
     public boolean serverIP = false;
     public boolean serverIPMCVersion = false;
@@ -42,10 +42,10 @@ public class ExtendedConfig
     public boolean equipmentArmorItems = true;
     public boolean equipmentHandItems = true;
     public boolean potionHUD = false;
-    public boolean realTime = true;
-    public boolean gameTime = true;
-    public boolean gameWeather = true;
-    public boolean moonPhase = true;
+    public boolean realTime = false;
+    public boolean gameTime = false;
+    public boolean gameWeather = false;
+    public boolean moonPhase = false;
     public boolean potionHUDIcon = false;
     public boolean alternatePotionHUDTextColor = false;
     public boolean toggleSprint = false;
