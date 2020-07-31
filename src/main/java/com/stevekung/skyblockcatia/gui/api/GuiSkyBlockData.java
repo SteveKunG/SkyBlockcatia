@@ -2569,7 +2569,7 @@ public class GuiSkyBlockData extends GuiScreen
                             String lastLore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(list.tagCount() - 1));
                             Matcher matcher = STATS_PATTERN.matcher(lore);
 
-                            if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY")))
+                            if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY") || lastLore.endsWith(" ACCESSORY a") || lastLore.endsWith(" HATCCESSORY a")))
                             {
                                 continue;
                             }
