@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.utils;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.utils.ColorUtils.RGB;
 
@@ -12,6 +13,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
@@ -59,6 +62,17 @@ public class RenderUtils
         texture.setTag("textures", list);
         properties.setTag("Properties", texture);
         compound.setTag("SkullOwner", properties);
+        itemStack.setTagCompound(compound);
+        return itemStack;
+    }
+
+    public static ItemStack getPlayerHead(String name)
+    {
+        ItemStack itemStack = new ItemStack(Items.skull, 1, 3);
+        NBTTagCompound compound = new NBTTagCompound();
+        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(null, name));
+        compound.removeTag("SkullOwner");
+        compound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), profile));
         itemStack.setTagCompound(compound);
         return itemStack;
     }

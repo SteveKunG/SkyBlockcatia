@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -24,7 +23,7 @@ public class GuiButtonItem extends GuiButton
     private static final ResourceLocation TEXTURE = new ResourceLocation("skyblockcatia:textures/gui/blank.png");
     private final int originalX;
     private final int potionX;
-    private final Item item;
+    private ItemStack itemStack;
     private final Minecraft mc;
     private String customName;
 
@@ -36,34 +35,28 @@ public class GuiButtonItem extends GuiButton
     private static Class<?> vanillaEnConfig;
     private boolean vanillaEnFixInventory;
 
-    public GuiButtonItem(int buttonID, int xPos, int yPos, Item item)
+    public GuiButtonItem(int buttonID, int xPos, int yPos, ItemStack itemStack)
     {
-        this(buttonID, xPos, yPos, xPos, item, true, item.getItemStackDisplayName(new ItemStack(item)));
+        this(buttonID, xPos, yPos, xPos, itemStack, itemStack.getDisplayName());
     }
 
-    public GuiButtonItem(int buttonID, int xPos, int yPos, int potionX, Item item)
+    public GuiButtonItem(int buttonID, int xPos, int yPos, int potionX, ItemStack itemStack)
     {
-        this(buttonID, xPos, yPos, potionX, item, true, item.getItemStackDisplayName(new ItemStack(item)));
+        this(buttonID, xPos, yPos, potionX, itemStack, itemStack.getDisplayName());
     }
 
-    public GuiButtonItem(int buttonID, int xPos, int yPos, Item item, boolean condition)
+    public GuiButtonItem(int buttonID, int xPos, int yPos, ItemStack itemStack, String customName)
     {
-        this(buttonID, xPos, yPos, xPos, item, condition, item.getItemStackDisplayName(new ItemStack(item)));
+        this(buttonID, xPos, yPos, xPos, itemStack, customName);
     }
 
-    public GuiButtonItem(int buttonID, int xPos, int yPos, Item item, String customName)
-    {
-        this(buttonID, xPos, yPos, xPos, item, true, customName);
-    }
-
-    public GuiButtonItem(int buttonID, int xPos, int yPos, int potionX, Item item, boolean condition, String customName)
+    public GuiButtonItem(int buttonID, int xPos, int yPos, int potionX, ItemStack itemStack, String customName)
     {
         super(buttonID, xPos, yPos, 18, 18, "");
         this.originalX = xPos;
         this.potionX = potionX;
-        this.item = item;
+        this.itemStack = itemStack;
         this.mc = Minecraft.getMinecraft();
-        this.visible = condition;
         this.customName = customName;
 
         if (SkyBlockcatiaMod.isPatcherLoaded)
@@ -127,16 +120,14 @@ public class GuiButtonItem extends GuiButton
 
         if (this.visible)
         {
-            ItemStack itemStack = new ItemStack(this.item);
-
-            if (this.item == Items.nether_star)
+            if (this.itemStack.getItem() == Items.nether_star)
             {
-                ItemStack skyBlockMenu = itemStack.copy();
+                ItemStack skyBlockMenu = this.itemStack.copy();
                 NBTTagList list = new NBTTagList();
                 skyBlockMenu.setStackDisplayName("SkyBlock Menu");
                 list.appendTag(new NBTTagString(EnumChatFormatting.GRAY + "View all of your SkyBlock"));
                 skyBlockMenu.getTagCompound().getCompoundTag("display").setTag("Lore", list);
-                itemStack = skyBlockMenu;
+                this.itemStack = skyBlockMenu;
             }
 
             mc.getTextureManager().bindTexture(TEXTURE);
@@ -149,7 +140,7 @@ public class GuiButtonItem extends GuiButton
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableLighting();
-            mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, this.xPosition + 1, this.yPosition + 1);
+            mc.getRenderItem().renderItemAndEffectIntoGUI(this.itemStack, this.xPosition + 1, this.yPosition + 1);
             RenderHelper.enableGUIStandardItemLighting();
         }
     }

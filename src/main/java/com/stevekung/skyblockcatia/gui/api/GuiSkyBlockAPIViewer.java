@@ -16,10 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import com.stevekung.skyblockcatia.gui.APIErrorInfo;
-import com.stevekung.skyblockcatia.gui.GuiButtonSearch;
-import com.stevekung.skyblockcatia.gui.GuiRightClickTextField;
-import com.stevekung.skyblockcatia.gui.GuiSBProfileButton;
+import com.stevekung.skyblockcatia.gui.*;
 import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.Minecraft;
@@ -39,6 +36,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     private GuiRightClickTextField usernameTextField;
     private GuiButtonSearch checkButton;
     private GuiButton closeButton;
+    private GuiButton selfButton;
     private String input = "";
     private String displayName = "";
     private boolean openFromPlayer;
@@ -89,6 +87,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         this.buttonList.clear();
         this.buttonList.add(this.checkButton = new GuiButtonSearch(0, this.width / 2 + 78, 46));
         this.buttonList.add(this.closeButton = new GuiButton(1, this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close")));
+        this.buttonList.add(this.selfButton = new GuiButtonItem(2, this.width / 2 - 96, 46, RenderUtils.getPlayerHead(GameProfileUtils.getUsername()), "Check Self"));
         this.usernameTextField = new GuiRightClickTextField(2, this.fontRendererObj, this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused(true);
@@ -227,6 +226,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             {
                 this.mc.displayGuiScreen(this.error ? new GuiSkyBlockAPIViewer(GuiState.ERROR, this.input, this.displayName, this.guild) : null);
             }
+            else if (button.id == 2)
+            {
+                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, this.guild));
+            }
         }
     }
 
@@ -292,6 +295,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
+        this.selfButton.visible = !this.loadingApi && !this.error;
 
         if (this.loadingApi)
         {
@@ -643,6 +647,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         this.error = true;
         this.loadingApi = false;
         this.checkButton.visible = !this.error;
+        this.selfButton.visible = !this.error;
         this.closeButton.displayString = LangUtils.translate("gui.back");
 
         if (errorList)

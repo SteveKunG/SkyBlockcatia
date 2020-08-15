@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -11,7 +12,6 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.BlockPos;
 
 public class CommandApiViewer extends ClientCommandBase
@@ -27,7 +27,7 @@ public class CommandApiViewer extends ClientCommandBase
     {
         if (args.length == 0)
         {
-            throw new WrongUsageException("/sbapi <player_name>");
+            MainEventHandler.playerToView = GameProfileUtils.getUsername();
         }
         else
         {

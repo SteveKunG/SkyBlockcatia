@@ -44,10 +44,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.handshake.client.C00Handshake;
@@ -223,15 +223,20 @@ public class MainEventHandler
         {
             if (event.gui instanceof GuiInventory)
             {
-                event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, Item.getItemFromBlock(Blocks.ender_chest)));
-                event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, Item.getItemFromBlock(Blocks.crafting_table)));
-                event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, Items.bone, true, "Pets"));
-                event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, Items.leather_chestplate, true, "Wardrobe"));
+                event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest)));
+                event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table)));
+                event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, new ItemStack(Items.bone), "Pets"));
+                event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, new ItemStack(Items.leather_chestplate), "Wardrobe"));
             }
             else if (event.gui instanceof GuiChest)
             {
                 GuiChest chest = (GuiChest)event.gui;
                 IInventory lowerChestInventory = chest.lowerChestInventory;
+                ItemStack skyBlockMenu = new ItemStack(Items.nether_star);
+                NBTTagList list = new NBTTagList();
+                skyBlockMenu.setStackDisplayName("SkyBlock Menu");
+                list.appendTag(new NBTTagString(EnumChatFormatting.GRAY + "View all of your SkyBlock"));
+                skyBlockMenu.getTagCompound().getCompoundTag("display").setTag("Lore", list);
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, lowerChestInventory))
                 {
@@ -240,32 +245,32 @@ public class MainEventHandler
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
                 {
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table)));
-                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, Item.getItemFromBlock(Blocks.ender_chest)));
-                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 85, width + 88, Items.nether_star, true, "SkyBlock Menu"));
+                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
+                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, new ItemStack(Blocks.ender_chest)));
+                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 85, width + 88, skyBlockMenu));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Craft Item"))
                 {
-                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, Item.getItemFromBlock(Blocks.ender_chest)));
-                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, Items.nether_star, "SkyBlock Menu"));
+                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, new ItemStack(Blocks.ender_chest)));
+                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
                 {
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, Item.getItemFromBlock(Blocks.crafting_table)));
-                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, Items.nether_star, "SkyBlock Menu"));
+                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
+                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser"))
                 {
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
-                    event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, Item.getItemFromBlock(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
+                    event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Wardrobe"))
                 {
-                    event.buttonList.add(new GuiButtonItem(1002, width + 88, height + 47, width + 89, Items.bone, true, "Pets"));
+                    event.buttonList.add(new GuiButtonItem(1002, width + 88, height + 47, width + 89, new ItemStack(Items.bone), "Pets"));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Pets"))
                 {
-                    event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, Items.leather_chestplate, true, "Wardrobe"));
+                    event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, new ItemStack(Items.leather_chestplate), "Wardrobe"));
                 }
             }
         }

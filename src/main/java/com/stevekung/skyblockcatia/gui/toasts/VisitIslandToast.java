@@ -1,17 +1,13 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
-import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.RenderUtils;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 
 public class VisitIslandToast implements IToast
@@ -22,7 +18,7 @@ public class VisitIslandToast implements IToast
 
     public VisitIslandToast(String name)
     {
-        this.itemStack = VisitIslandToast.getPlayerHead(name);
+        this.itemStack = RenderUtils.getPlayerHead(name);
         this.name = name;
     }
 
@@ -36,16 +32,5 @@ public class VisitIslandToast implements IToast
         toastGui.mc.fontRendererObj.drawString("is visiting Your Island!", 30, 18, ColorUtils.rgbToDecimal(255, 255, 255));
         EquipmentOverlay.renderItem(this.itemStack, 8, 8);
         return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
-    }
-
-    private static ItemStack getPlayerHead(String name)
-    {
-        ItemStack itemStack = new ItemStack(Items.skull, 1, 3);
-        NBTTagCompound compound = new NBTTagCompound();
-        GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(null, name));
-        compound.removeTag("SkullOwner");
-        compound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), profile));
-        itemStack.setTagCompound(compound);
-        return itemStack;
     }
 }
