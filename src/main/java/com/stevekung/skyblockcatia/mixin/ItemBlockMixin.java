@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.utils.SkyBlockItemUtils;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 @Mixin(ItemBlock.class)
 public abstract class ItemBlockMixin extends Item
 {
+    private static final ImmutableList<String> IGNORE_ITEM_USE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND");
+
     @Inject(method = "onItemUse(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;FFF)Z", cancellable = true, at = @At("HEAD"))
     private void onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, CallbackInfoReturnable<Boolean> info)
     {
@@ -27,9 +29,8 @@ public abstract class ItemBlockMixin extends Item
         {
             NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
 
-            if (SkyBlockItemUtils.CLICKABLE.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
+            if (IGNORE_ITEM_USE.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
             {
-                player.swingItem();
                 info.setReturnValue(false);
             }
         }
