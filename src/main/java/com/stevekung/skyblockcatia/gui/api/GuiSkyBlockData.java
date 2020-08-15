@@ -30,7 +30,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
@@ -1382,12 +1381,6 @@ public class GuiSkyBlockData extends GuiScreen
         }
 
         GlStateManager.enableDepth();
-
-        if (ExtendedConfig.instance.showItemRarity)
-        {
-            RenderUtils.drawRarity(slot.getStack(), slot.xDisplayPosition, slot.yDisplayPosition);
-        }
-
         this.itemRender.renderItemAndEffectIntoGUI(itemStack, i, j);
         this.renderItemOverlayIntoGUI(itemStack, i, j);
         this.itemRender.zLevel = 0.0F;

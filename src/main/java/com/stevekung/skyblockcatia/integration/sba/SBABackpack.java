@@ -2,9 +2,7 @@ package com.stevekung.skyblockcatia.integration.sba;
 
 import java.lang.reflect.Method;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData;
-import com.stevekung.skyblockcatia.utils.RenderUtils;
 
 import codes.biscuit.skyblockaddons.SkyblockAddons;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook;
@@ -132,12 +130,6 @@ public class SBABackpack
                             RenderItem renderItem = mc.getRenderItem();
                             gui.zLevel = 200;
                             renderItem.zLevel = 200;
-
-                            if (ExtendedConfig.instance.showItemRarity)
-                            {
-                                RenderUtils.drawRarity(item, itemX, itemY);
-                            }
-
                             renderItem.renderItemAndEffectIntoGUI(item, itemX, itemY);
                             renderItem.renderItemOverlayIntoGUI(mc.fontRendererObj, item, itemX, itemY, null);
 

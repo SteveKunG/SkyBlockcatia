@@ -380,8 +380,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     {
         if (ExtendedConfig.instance.showItemRarity)
         {
-            RenderUtils.drawRarity(slot.getStack(), slot.xDisplayPosition, slot.yDisplayPosition);
-
             if (this.that instanceof GuiChest)
             {
                 GuiChest chest = (GuiChest)this.that;
