@@ -328,7 +328,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
                 if (StringUtils.isNullOrEmpty(this.usernameTextField.getText()) && !this.usernameTextField.isFocused())
                 {
-                    this.drawString(this.fontRendererObj, "Enter username", this.width / 2 - 71, 51, 10526880);
+                    this.drawString(this.fontRendererObj, "Enter Username or UUID", this.width / 2 - 71, 51, 10526880);
                 }
 
                 for (GuiSBProfileButton button : this.profileButtonList)
