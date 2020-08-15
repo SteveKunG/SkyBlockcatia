@@ -23,6 +23,7 @@ public enum SkyBlockLocation
     FISHERMAN_HUT("Fisherman's Hut"),
     COLOSSEUM("Colosseum"),
     BAZAAR_ALLEY("Bazaar Alley"),
+    COMMUNITY_CENTER("Community Center"),
     CATACOMBS_ENTRANCE("Catacombs Entrance"),
 
     // Public Island building
@@ -64,6 +65,11 @@ public enum SkyBlockLocation
 
     DUNGEON_HUB("Dungeon Hub"),
     DUNGEON("Dungeon"),
+    THE_CATACOMBS_E("The Catacombs (E)"),
+    THE_CATACOMBS_F1("The Catacombs (F1)"),
+    THE_CATACOMBS_F2("The Catacombs (F2)"),
+    THE_CATACOMBS_F3("The Catacombs (F3)"),
+    THE_CATACOMBS_F4("The Catacombs (F4)"),
     ;
 
     private final String location;
@@ -97,7 +103,7 @@ public enum SkyBlockLocation
 
     public boolean ignore()
     {
-        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.DUNGEON;
+        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.THE_CATACOMBS_E || this == SkyBlockLocation.THE_CATACOMBS_F1 || this == SkyBlockLocation.THE_CATACOMBS_F2 || this == SkyBlockLocation.THE_CATACOMBS_F3 || this == SkyBlockLocation.THE_CATACOMBS_F4;
     }
 
     public static class BlockMetadata
