@@ -147,6 +147,7 @@ public class ExtendedConfig
     public boolean displayItemAbilityMaxUsed = false;
     public boolean preventScrollHotbarWhileFightDragon = false;
     public boolean preventClickingOnDummyItem = true;
+    public boolean shortcutButtonInInventory = true;
 
     private ExtendedConfig() {}
 
@@ -287,6 +288,7 @@ public class ExtendedConfig
             this.displayItemAbilityMaxUsed = ExtendedConfig.getBoolean(nbt, "DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
             this.preventScrollHotbarWhileFightDragon = ExtendedConfig.getBoolean(nbt, "PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             this.preventClickingOnDummyItem = ExtendedConfig.getBoolean(nbt, "PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
+            this.shortcutButtonInInventory = ExtendedConfig.getBoolean(nbt, "ShortcutButtonInInventory", this.shortcutButtonInInventory);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -420,6 +422,7 @@ public class ExtendedConfig
             nbt.setBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
             nbt.setBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             nbt.setBoolean("PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
+            nbt.setBoolean("ShortcutButtonInInventory", this.shortcutButtonInInventory);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             nbt.setInteger("ItemRarityOpacity", this.itemRarityOpacity);
@@ -789,6 +792,10 @@ public class ExtendedConfig
         {
             this.preventClickingOnDummyItem = !this.preventClickingOnDummyItem;
         }
+        else if (options == ExtendedConfig.Options.SHORTCUT_BUTTON_IN_INVENTORY)
+        {
+            this.shortcutButtonInInventory = !this.shortcutButtonInInventory;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1096,6 +1103,8 @@ public class ExtendedConfig
             return this.preventScrollHotbarWhileFightDragon;
         case PREVENT_CLICKING_ON_DUMMY_ITEM:
             return this.preventClickingOnDummyItem;
+        case SHORTCUT_BUTTON_IN_INVENTORY:
+            return this.shortcutButtonInInventory;
         default:
             return false;
         }
@@ -1291,6 +1300,7 @@ public class ExtendedConfig
         DISPLAY_ITEM_ABILITY_MAX_USED(false, true),
         PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON(false, true),
         PREVENT_CLICKING_ON_DUMMY_ITEM(false, true),
+        SHORTCUT_BUTTON_IN_INVENTORY(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;

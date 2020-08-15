@@ -221,14 +221,14 @@ public class MainEventHandler
         }
         if (HypixelEventHandler.isSkyBlock)
         {
-            if (event.gui instanceof GuiInventory)
+            if (ExtendedConfig.instance.shortcutButtonInInventory && event.gui instanceof GuiInventory)
             {
                 event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest)));
                 event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table)));
                 event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, new ItemStack(Items.bone), "Pets"));
                 event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, new ItemStack(Items.leather_chestplate), "Wardrobe"));
             }
-            else if (event.gui instanceof GuiChest)
+            if (event.gui instanceof GuiChest)
             {
                 GuiChest chest = (GuiChest)event.gui;
                 IInventory lowerChestInventory = chest.lowerChestInventory;
@@ -243,34 +243,38 @@ public class MainEventHandler
                     event.buttonList.add(new GuiButton(500, width - 108, height + 190, 20, 20, "C"));
                 }
 
-                if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
+                if (ExtendedConfig.instance.shortcutButtonInInventory)
                 {
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
-                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, new ItemStack(Blocks.ender_chest)));
-                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 85, width + 88, skyBlockMenu));
+                    if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
+                    {
+                        event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
+                        event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, new ItemStack(Blocks.ender_chest)));
+                        event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 85, width + 88, skyBlockMenu));
+                    }
+                    else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Craft Item"))
+                    {
+                        event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, new ItemStack(Blocks.ender_chest)));
+                        event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
+                    }
+                    else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
+                    {
+                        event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
+                        event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
+                    }
+                    else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Wardrobe"))
+                    {
+                        event.buttonList.add(new GuiButtonItem(1002, width + 88, height + 47, width + 89, new ItemStack(Items.bone), "Pets"));
+                    }
+                    else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Pets"))
+                    {
+                        event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, new ItemStack(Items.leather_chestplate), "Wardrobe"));
+                    }
                 }
-                else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Craft Item"))
-                {
-                    event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, new ItemStack(Blocks.ender_chest)));
-                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
-                }
-                else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
-                {
-                    event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
-                    event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
-                }
-                else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser"))
+
+                if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser"))
                 {
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                     event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
-                }
-                else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Wardrobe"))
-                {
-                    event.buttonList.add(new GuiButtonItem(1002, width + 88, height + 47, width + 89, new ItemStack(Items.bone), "Pets"));
-                }
-                else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Pets"))
-                {
-                    event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, new ItemStack(Items.leather_chestplate), "Wardrobe"));
                 }
             }
         }
