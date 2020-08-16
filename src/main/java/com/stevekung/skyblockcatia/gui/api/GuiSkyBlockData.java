@@ -2181,7 +2181,7 @@ public class GuiSkyBlockData extends GuiScreen
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + type.getSkillType().getName() + " Pet"));
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkillType().getName() + " Pet"));
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (active ? EnumChatFormatting.GREEN + "Active Pet" : EnumChatFormatting.RED + "Inactive Pet")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
