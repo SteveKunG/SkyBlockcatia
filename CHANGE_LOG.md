@@ -1,11 +1,12 @@
 # Change Log
 
-* + Added Spirit Pet
-* + Added rarity detection for upgraded accessory
-* * Disable Indicatia render info by default
-* * Highlight max level of skills to gold color
-* * Minor fixes to Dragon Hitbox when dragon respawned/death
-* * More attempt to fix regional language issue
-* * Fixed Toast displayed wrong title, blame eclipse...
-* * Fixed Zealot Respawn Cooldown not display in some circumstance
-* * Fixed button position compatibility with Patcher and VanillaEnhancements
+* + Added potatoes, wheat and nether wart to Village (Mineable Hitbox)
+* + Added shortcut button for checking own API
+* + Added Shortcut Button in Inventory config
+* + Added Show Armor Button in API Viewer
+* * Update API Viewer textbox description
+* * /sbapi command default argument is now current player username
+* * Item Rarity rendering is now working for all item renderer (including inside SBA Backpack)
+* * Ignore Catacombs location for mineable hitbox
+* * Minor change to pet type lore color in API Viewer
+* - Removed player swing animation when item used (mostly player head)
