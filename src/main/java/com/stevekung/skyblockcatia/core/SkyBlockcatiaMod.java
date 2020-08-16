@@ -56,7 +56,7 @@ public class SkyBlockcatiaMod
     protected static final String FORGE_VERSION = "required-after:Forge@[11.15.1.2318,);";
     protected static final String CERTIFICATE = "@FINGERPRINT@";
     protected static final String DEPENDENCIES = "after:skyblockaddons@[1.5.0,); " + SkyBlockcatiaMod.FORGE_VERSION;
-    private static final String URL = "https://minecraft.curseforge.com/projects/skyblockcatia";
+    private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
     protected static final String JSON_URL = "https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json";
 
     public static final File profile = new File(ExtendedConfig.userDir, "profile.txt");
