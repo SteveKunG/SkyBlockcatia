@@ -3,6 +3,7 @@ package com.stevekung.skyblockcatia.gui;
 import java.lang.reflect.Field;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -91,7 +92,7 @@ public class GuiButtonItem extends GuiButton
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
-        if (!(this.vanillaEnFixInventory || this.patcherInventoryPosition))
+        if (!(this.vanillaEnFixInventory || this.patcherInventoryPosition || this.mc.currentScreen instanceof GuiSkyBlockData))
         {
             boolean hasVisibleEffect = false;
 
@@ -141,7 +142,6 @@ public class GuiButtonItem extends GuiButton
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableLighting();
             mc.getRenderItem().renderItemAndEffectIntoGUI(this.itemStack, this.xPosition + 1, this.yPosition + 1);
-            RenderHelper.enableGUIStandardItemLighting();
         }
     }
 

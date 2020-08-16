@@ -33,6 +33,7 @@ import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
+import com.stevekung.skyblockcatia.gui.GuiButtonItem;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.integration.sba.SBABackpack;
 import com.stevekung.skyblockcatia.utils.*;
@@ -87,6 +88,7 @@ public class GuiSkyBlockData extends GuiScreen
     private String statusMessage;
     private GuiButton doneButton;
     private GuiButton backButton;
+    private GuiButtonItem showArmorButton;
     private JsonObject skyblockProfiles;
     private List<ProfileDataCallback> profiles;
     private final String sbProfileId;
@@ -109,6 +111,9 @@ public class GuiSkyBlockData extends GuiScreen
     private int skillCount;
     private GuiScrollingList errorInfo;
     private List<String> errorList = new ArrayList<>();
+    private boolean showArmor = true;
+    private float oldMouseX;
+    private float oldMouseY;
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -257,6 +262,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.buttonList.add(this.doneButton = new GuiButton(0, this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close")));
         this.buttonList.add(this.backButton = new GuiButton(1, this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back")));
+        this.buttonList.add(this.showArmorButton = new GuiButtonItem(2, this.width / 2 - 115, this.height / 2 - 65, new ItemStack(Items.diamond_chestplate), "Show Armor: " + EnumChatFormatting.GREEN + "ON"));
         GuiButton infoButton = new GuiButton(ViewButton.PLAYER.id, this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_player"));
         infoButton.enabled = false;
         this.buttonList.add(infoButton);
@@ -397,19 +403,25 @@ public class GuiSkyBlockData extends GuiScreen
             if (this.currentBasicSlotId == -1 || this.currentBasicSlotId == BasicInfoViewButton.PLAYER_STATS.id)
             {
                 this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.infoList);
+                this.showArmorButton.visible = true;
+                this.showArmorButton.xPosition = this.width / 2 - 114;
             }
             else if (this.currentBasicSlotId == BasicInfoViewButton.INVENTORY.id)
             {
                 this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, EmptyStats.Type.INVENTORY);
                 this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
+                this.showArmorButton.visible = true;
+                this.showArmorButton.xPosition = this.width / 2 - 104;
             }
             else if (this.currentBasicSlotId == BasicInfoViewButton.COLLECTIONS.id)
             {
                 this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.collections);
+                this.showArmorButton.visible = false;
             }
             else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
                 this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                this.showArmorButton.visible = false;
             }
         }
         else if (this.currentSlotId == ViewButton.SKILLS.id)
@@ -417,12 +429,14 @@ public class GuiSkyBlockData extends GuiScreen
             this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 28, 59, 12, this.width, this.height, EmptyStats.Type.SKILL);
             this.hideOthersButton();
             this.hideBasicInfoButton();
+            this.showArmorButton.visible = false;
         }
         else if (this.currentSlotId == ViewButton.SLAYERS.id)
         {
             this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 49, 59, 16, this.width, this.height, this.slayerInfo);
             this.hideOthersButton();
             this.hideBasicInfoButton();
+            this.showArmorButton.visible = false;
         }
         else if (this.currentSlotId == ViewButton.OTHERS.id)
         {
@@ -450,6 +464,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
             }
             this.hideBasicInfoButton();
+            this.showArmorButton.visible = false;
 
             for (GuiButton viewButton : this.buttonList)
             {
@@ -551,6 +566,38 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 this.mc.displayGuiScreen(this.profiles.size() == 0 ? new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.EMPTY, this.username, this.displayName, this.guild) : new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
             }
+            else if (button.id == 2)
+            {
+                if (this.showArmor)
+                {
+                    for (int i = 0; i <= 4; i++)
+                    {
+                        this.player.setCurrentItemOrArmor(i, null);
+                    }
+                    this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.RED + "OFF");
+                    this.showArmor = false;
+                }
+                else
+                {
+                    for (ItemStack armor : this.armorItems)
+                    {
+                        if (armor == null)
+                        {
+                            continue;
+                        }
+
+                        int index = EntityLiving.getArmorPosition(armor);
+
+                        if (armor.getItem() instanceof ItemBlock)
+                        {
+                            index = 4;
+                        }
+                        this.player.setCurrentItemOrArmor(index, armor);
+                    }
+                    this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.GREEN + "ON");
+                    this.showArmor = true;
+                }
+            }
         }
     }
 
@@ -634,6 +681,8 @@ public class GuiSkyBlockData extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
+        this.oldMouseX = mouseX;
+        this.oldMouseY = mouseY;
 
         if (this.loadingApi)
         {
@@ -715,7 +764,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     GlStateManager.enableDepth();
-                    GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.player);
+                    GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
                 }
                 else if (this.currentSlot instanceof EmptyStats)
                 {
@@ -745,9 +794,9 @@ public class GuiSkyBlockData extends GuiScreen
                         GlStateManager.disableLighting();
 
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                        GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.player);
+                        GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
 
-                        if (this.theSlot != null && this.theSlot.getHasStack())
+                        if (this.showArmor && this.theSlot != null && this.theSlot.getHasStack())
                         {
                             this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
                         }
@@ -894,19 +943,25 @@ public class GuiSkyBlockData extends GuiScreen
                 if (this.currentBasicSlotId == -1 || this.currentBasicSlotId == BasicInfoViewButton.PLAYER_STATS.id)
                 {
                     this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.infoList);
+                    this.showArmorButton.visible = true;
+                    this.showArmorButton.xPosition = this.width / 2 - 115;
                 }
                 else if (this.currentBasicSlotId == BasicInfoViewButton.INVENTORY.id)
                 {
                     this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, EmptyStats.Type.INVENTORY);
                     this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
+                    this.showArmorButton.visible = true;
+                    this.showArmorButton.xPosition = this.width / 2 - 105;
                 }
                 else if (this.currentBasicSlotId == BasicInfoViewButton.COLLECTIONS.id)
                 {
                     this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.collections);
+                    this.showArmorButton.visible = false;
                 }
                 else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
                 {
                     this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                    this.showArmorButton.visible = false;
                 }
 
                 this.currentSlotId = ViewButton.PLAYER.id;
@@ -946,6 +1001,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentSlotId = ViewButton.SKILLS.id;
                 this.hideOthersButton();
                 this.hideBasicInfoButton();
+                this.showArmorButton.visible = false;
             }
             else if (type.id == ViewButton.SLAYERS.id)
             {
@@ -953,6 +1009,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentSlotId = ViewButton.SLAYERS.id;
                 this.hideOthersButton();
                 this.hideBasicInfoButton();
+                this.showArmorButton.visible = false;
             }
             else if (type.id == ViewButton.OTHERS.id)
             {
@@ -977,6 +1034,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                 this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
                 this.currentSlotId = ViewButton.OTHERS.id;
+                this.showArmorButton.visible = false;
                 this.hideBasicInfoButton();
 
                 for (GuiButton viewButton : this.buttonList)
@@ -1133,22 +1191,28 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, this.infoList);
                 this.currentBasicSlotId = BasicInfoViewButton.PLAYER_STATS.id;
+                this.showArmorButton.visible = true;
+                this.showArmorButton.xPosition = this.width / 2 - 115;
             }
             else if (type.id == BasicInfoViewButton.INVENTORY.id)
             {
                 this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, EmptyStats.Type.INVENTORY);
                 this.currentBasicSlotId = BasicInfoViewButton.INVENTORY.id;
                 this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
+                this.showArmorButton.visible = true;
+                this.showArmorButton.xPosition = this.width / 2 - 105;
             }
             else if (type.id == BasicInfoViewButton.COLLECTIONS.id)
             {
                 this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.width, this.height, this.collections);
                 this.currentBasicSlotId = BasicInfoViewButton.COLLECTIONS.id;
+                this.showArmorButton.visible = false;
             }
             else if (type.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
                 this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
                 this.currentBasicSlotId = BasicInfoViewButton.CRAFTED_MINIONS.id;
+                this.showArmorButton.visible = false;
             }
         }
     }
@@ -1172,6 +1236,7 @@ public class GuiSkyBlockData extends GuiScreen
     private void updateErrorButton()
     {
         this.backButton.visible = false;
+        this.showArmorButton.visible = false;
         this.doneButton.xPosition = this.width / 2 - 75;
         this.doneButton.yPosition = this.height / 4 + 132;
         this.doneButton.displayString = LangUtils.translate("gui.back");
@@ -3315,6 +3380,46 @@ public class GuiSkyBlockData extends GuiScreen
     private String formatSlayerKill(int kills)
     {
         return FORMAT.format(kills) + " kill" + (kills <= 1 ? "" : "s");
+    }
+
+    private static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity)
+    {
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, posY, 50.0F);
+        GlStateManager.scale(-scale, scale, scale);
+        GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        float f = entity.renderYawOffset;
+        float f1 = entity.rotationYaw;
+        float f2 = entity.rotationPitch;
+        float f3 = entity.prevRotationYawHead;
+        float f4 = entity.rotationYawHead;
+        GlStateManager.rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderHelper.enableStandardItemLighting();
+        GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-((float)Math.atan(mouseY / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
+        entity.renderYawOffset = (float)Math.atan(mouseX / 40.0F) * 20.0F;
+        entity.rotationYaw = (float)Math.atan(mouseX / 40.0F) * 40.0F;
+        entity.rotationPitch = -((float)Math.atan(mouseY / 40.0F)) * 20.0F;
+        entity.rotationYawHead = entity.rotationYaw;
+        entity.prevRotationYawHead = entity.rotationYaw;
+        GlStateManager.translate(0.0F, 0.0F, 0.0F);
+        RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+        rendermanager.setPlayerViewY(180.0F);
+        rendermanager.setRenderShadow(false);
+        rendermanager.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+        rendermanager.setRenderShadow(true);
+        entity.renderYawOffset = f;
+        entity.rotationYaw = f1;
+        entity.rotationPitch = f2;
+        entity.prevRotationYawHead = f3;
+        entity.rotationYawHead = f4;
+        GlStateManager.popMatrix();
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     private static void drawEntityOnScreen(int posX, int posY, int scale, EntityLivingBase entity)
