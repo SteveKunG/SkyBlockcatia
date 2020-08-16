@@ -11,7 +11,7 @@ public enum SkyBlockLocation
     YOUR_ISLAND("Your Island"),
 
     // Public Island
-    VILLAGE("Village", ImmutableList.of(BlockMetadata.create(Blocks.red_flower), BlockMetadata.create(Blocks.yellow_flower), BlockMetadata.create(Blocks.carrots))),
+    VILLAGE("Village", ImmutableList.of(BlockMetadata.create(Blocks.red_flower), BlockMetadata.create(Blocks.yellow_flower), BlockMetadata.create(Blocks.carrots), BlockMetadata.create(Blocks.potatoes), BlockMetadata.create(Blocks.wheat), BlockMetadata.create(Blocks.nether_wart))),
     FARM("Farm", ImmutableList.of(BlockMetadata.create(Blocks.wheat))),
     COAL_MINE("Coal Mine", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.coal_ore))),
     FOREST("Forest", ImmutableList.of(BlockMetadata.create(Blocks.log), BlockMetadata.create(Blocks.leaves))),
