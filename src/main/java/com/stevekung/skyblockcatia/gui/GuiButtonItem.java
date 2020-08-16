@@ -150,8 +150,18 @@ public class GuiButtonItem extends GuiButton
         return this.customName;
     }
 
+    public ItemStack getItemStack()
+    {
+        return this.itemStack;
+    }
+
     public void setName(String name)
     {
         this.customName = name;
+    }
+
+    public void setItemStack(ItemStack itemStack)
+    {
+        this.itemStack = itemStack;
     }
 }
