@@ -796,7 +796,7 @@ public class GuiSkyBlockData extends GuiScreen
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
 
-                        if (this.showArmor && this.theSlot != null && this.theSlot.getHasStack())
+                        if (this.theSlot != null && this.theSlot.getHasStack())
                         {
                             this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
                         }
@@ -1414,11 +1414,14 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
 
-        for (Slot slot : this.skyBlockArmorContainer.inventorySlots)
+        if (this.showArmor)
         {
-            if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())
+            for (Slot slot : this.skyBlockArmorContainer.inventorySlots)
             {
-                this.theSlot = slot;
+                if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())
+                {
+                    this.theSlot = slot;
+                }
             }
         }
         GlStateManager.popMatrix();
