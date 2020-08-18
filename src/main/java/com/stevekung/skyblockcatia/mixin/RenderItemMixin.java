@@ -21,7 +21,7 @@ public abstract class RenderItemMixin
         return ConfigManagerIN.enableOldFishingRodRenderModel ? new ModelResourceLocation("skyblockcatia:fishing_rod_cast", "inventory") : new ModelResourceLocation(p_i46081_1_, p_i46081_2_);
     }
 
-    @Inject(method = "renderItemAndEffectIntoGUI(Lnet/minecraft/item/ItemStack;II)V", at = @At("HEAD"))
+    @Inject(method = "renderItemIntoGUI(Lnet/minecraft/item/ItemStack;II)V", at = @At("HEAD"))
     private void renderRarity(ItemStack itemStack, int xPosition, int yPosition, CallbackInfo info)
     {
         if (ExtendedConfig.instance.showItemRarity)
