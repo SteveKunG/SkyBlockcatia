@@ -36,37 +36,40 @@ public abstract class MinecraftMixin
     @Inject(method = "refreshResources()V", at = @At("HEAD"))
     private void refreshResources(CallbackInfo info)
     {
-        boolean found = false;
-
-        for (ResourcePackRepository.Entry entry : this.that.getResourcePackRepository().getRepositoryEntries())
+        if (SkyBlockAPIUtils.PACKS != null)
         {
-            String packName = entry.getResourcePack().getPackName();
-            String packDesc = entry.getTexturePackDescription();
+            boolean found = false;
 
-            if (SkyBlockAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+            for (ResourcePackRepository.Entry entry : this.that.getResourcePackRepository().getRepositoryEntries())
             {
-                HypixelEventHandler.skyBlockPackResolution = "16";
-            }
-            if (SkyBlockAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
-            {
-                HypixelEventHandler.skyBlockPackResolution = "32";
-            }
+                String packName = entry.getResourcePack().getPackName();
+                String packDesc = entry.getTexturePackDescription();
 
-            if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
-            {
-                HypixelEventHandler.foundSkyBlockPack = true;
-                found = true;
-                break;
+                if (SkyBlockAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                {
+                    HypixelEventHandler.skyBlockPackResolution = "16";
+                }
+                if (SkyBlockAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
+                {
+                    HypixelEventHandler.skyBlockPackResolution = "32";
+                }
+
+                if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
+                {
+                    HypixelEventHandler.foundSkyBlockPack = true;
+                    found = true;
+                    break;
+                }
             }
-        }
-        if (found)
-        {
-            LoggerIN.info("Found SkyBlock Pack with x" + HypixelEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
-        }
-        else
-        {
-            HypixelEventHandler.foundSkyBlockPack = false;
-            LoggerIN.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
+            if (found)
+            {
+                LoggerIN.info("Found SkyBlock Pack with x" + HypixelEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
+            }
+            else
+            {
+                HypixelEventHandler.foundSkyBlockPack = false;
+                LoggerIN.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
+            }
         }
     }
 
