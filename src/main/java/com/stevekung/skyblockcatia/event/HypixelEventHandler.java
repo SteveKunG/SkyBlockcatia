@@ -840,7 +840,7 @@ public class HypixelEventHandler
 
                             if (drop.getType() == ToastUtils.DropType.PET_DROP)
                             {
-                                if (("[Lvl 1] " + dropName).equals(key))
+                                if (("[Lvl 1] " + dropName).equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.stackSize = diff;
 
