@@ -663,6 +663,11 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                         int green = ColorUtils.to32BitColor(128, 85, 255, 85);
                         int yellow = ColorUtils.to32BitColor(128, 255, 255, 85);
 
+                        if (lore.startsWith("Status: Sold!"))
+                        {
+                            this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
+                        }
+
                         if (((ITradeGUI)(GuiChest)this.that).getNumberField() == null || ((ITradeGUI)(GuiChest)this.that).getNumberField().getText().isEmpty())
                         {
                             if (lore.startsWith("Starting bid:"))
