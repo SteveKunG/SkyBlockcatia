@@ -27,6 +27,12 @@ public abstract class MinecraftMixin
 {
     private final Minecraft that = (Minecraft) (Object) this;
 
+    @Inject(method = "startGame()V", at = @At("HEAD"))
+    private void startGame(CallbackInfo info)
+    {
+        SkyBlockAPIUtils.getSupportedPackNames();
+    }
+
     @Inject(method = "runGameLoop()V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/EntityRenderer.updateCameraAndRender(FJ)V", shift = At.Shift.AFTER))
     private void runGameLoop(CallbackInfo info)
     {
@@ -70,6 +76,10 @@ public abstract class MinecraftMixin
                 HypixelEventHandler.foundSkyBlockPack = false;
                 LoggerIN.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
             }
+        }
+        else
+        {
+            LoggerIN.warning("SupportedPack is null, Glowing Armor Overlay will not loaded!");
         }
     }
 
