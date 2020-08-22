@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,12 +34,10 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
 {
     @Shadow
     @Final
-    @Mutable
     private Minecraft mc;
 
     @Shadow
     @Final
-    @Mutable
     private static Ordering<NetworkPlayerInfo> field_175252_a;
 
     private int playerCount;

@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -122,7 +121,6 @@ public class GuiSkyBlockData extends GuiScreen
     private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
     private static final ModDecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new ModDecimalFormat("+#;-#");
     private static final ModDecimalFormat SKILL_AVG = new ModDecimalFormat("##.#");
-    private static final ModDecimalFormat SKILL_AVG1 = new ModDecimalFormat("##.##");
     private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
     private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold").put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder").build();
@@ -2422,7 +2420,8 @@ public class GuiSkyBlockData extends GuiScreen
         {
             this.allStat.setHealth(250);
         }
-        for (ItemStack itemStack : this.armorItems.stream().filter(armor -> armor != null && armor.hasTagCompound() && armor.getTagCompound().getCompoundTag("ExtraAttributes").getString("modifier").equals("renowned")).collect(Collectors.toList()))
+
+        this.armorItems.stream().filter(armor -> armor != null && armor.hasTagCompound() && armor.getTagCompound().getCompoundTag("ExtraAttributes").getString("modifier").equals("renowned")).forEach(itemStack ->
         {
             this.allStat.setHealth(Math.round(this.allStat.getHealth() * 1.01D));
             this.allStat.setDefense(Math.round(this.allStat.getDefense() * 1.01D));
@@ -2434,7 +2433,7 @@ public class GuiSkyBlockData extends GuiScreen
             this.allStat.setSeaCreatureChance(Math.round(this.allStat.getSeaCreatureChance() * 1.01D));
             this.allStat.setMagicFind(Math.round(this.allStat.getMagicFind() * 1.01D));
             this.allStat.setPetLuck(Math.round(this.allStat.getPetLuck() * 1.01D));
-        }
+        });
     }
 
     private void calculatePlayerStats(JsonObject currentProfile)

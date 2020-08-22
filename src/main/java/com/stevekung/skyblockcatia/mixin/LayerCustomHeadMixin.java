@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +14,6 @@ import com.stevekung.skyblockcatia.renderer.TileEntityEnchantedSkullRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelHumanoidHead;
-import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,11 +30,9 @@ import net.minecraft.util.ResourceLocation;
 public abstract class LayerCustomHeadMixin
 {
     private final ModelSkeletonHead humanoidHead = new ModelHumanoidHead();
-    private final ModelPlayer playerModel = new ModelPlayer(0.0F, false);
 
     @Shadow
     @Final
-    @Mutable
     private ModelRenderer field_177209_a;
 
     @Redirect(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/TileEntitySkullRenderer.renderSkull(FFFLnet/minecraft/util/EnumFacing;FILcom/mojang/authlib/GameProfile;I)V"))

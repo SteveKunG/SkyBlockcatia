@@ -7,7 +7,10 @@ import java.util.Locale;
 import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 
 import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.utils.CachedEnum;
@@ -36,12 +39,10 @@ public abstract class TileEntitySignRendererMixin extends TileEntitySpecialRende
 {
     @Shadow
     @Final
-    @Mutable
     private static ResourceLocation SIGN_TEXTURE;
 
     @Shadow
     @Final
-    @Mutable
     private ModelSign model;
 
     @Override

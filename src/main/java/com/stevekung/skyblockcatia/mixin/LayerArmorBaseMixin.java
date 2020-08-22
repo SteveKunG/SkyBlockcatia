@@ -1,6 +1,9 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,12 +31,10 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
 
     @Shadow
     @Final
-    @Mutable
     protected static ResourceLocation ENCHANTED_ITEM_GLINT_RES;
 
     @Shadow
     @Final
-    @Mutable
     private RendererLivingEntity<?> renderer;
 
     @Shadow

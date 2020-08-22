@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,27 +33,22 @@ public abstract class ServerListEntryNormalMixin implements GuiListExtended.IGui
 
     @Shadow
     @Final
-    @Mutable
     private ServerData field_148301_e;
 
     @Shadow
     @Final
-    @Mutable
     private Minecraft mc;
 
     @Shadow
     @Final
-    @Mutable
     private GuiMultiplayer field_148303_c;
 
     @Shadow
     @Final
-    @Mutable
     private static ResourceLocation UNKNOWN_SERVER;
 
     @Shadow
     @Final
-    @Mutable
     private static ResourceLocation SERVER_SELECTION_BUTTONS;
 
     @Shadow
