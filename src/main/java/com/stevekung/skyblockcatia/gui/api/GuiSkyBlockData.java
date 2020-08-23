@@ -124,6 +124,7 @@ public class GuiSkyBlockData extends GuiScreen
     private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
     private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold").put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder").build();
+    private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").build();
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
@@ -1954,17 +1955,7 @@ public class GuiSkyBlockData extends GuiScreen
                 String[] split = unlockedTier.getAsString().toLowerCase().split("_");
                 String unlockedId = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
-
-                for (SkyBlockCollection.ItemId sbItem : SkyBlockCollection.ItemId.VALUES)
-                {
-                    String sbItemId = sbItem.name().toLowerCase();
-
-                    if (unlockedId.contains(sbItemId))
-                    {
-                        unlockedId = unlockedId.replace(sbItemId, sbItem.getMinecraftId());
-                    }
-                }
-                skyblockCollectionMap.put(unlockedId, unlockedLvl);
+                skyblockCollectionMap.put(this.replaceId(unlockedId), unlockedLvl);
             }
         }
 
@@ -1977,22 +1968,12 @@ public class GuiSkyBlockData extends GuiScreen
             List<SkyBlockCollection> combat = new ArrayList<>();
             List<SkyBlockCollection> foraging = new ArrayList<>();
             List<SkyBlockCollection> fishing = new ArrayList<>();
+            List<SkyBlockCollection> unknown = new ArrayList<>();
 
             for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
             {
-                String collectionId = collection.getKey().toLowerCase();
+                String collectionId = this.replaceId(collection.getKey().toLowerCase());
                 int collectionCount = collection.getValue().getAsInt();
-
-                for (SkyBlockCollection.ItemId sbItem : SkyBlockCollection.ItemId.VALUES)
-                {
-                    String sbItemId = sbItem.name().toLowerCase();
-
-                    if (collectionId.contains(sbItemId))
-                    {
-                        collectionId = collectionId.replace(sbItemId, sbItem.getMinecraftId());
-                    }
-                }
-
                 String[] split = collectionId.split(":");
                 String itemId = split[0];
                 int meta = 0;
@@ -2019,8 +2000,22 @@ public class GuiSkyBlockData extends GuiScreen
                 }
 
                 Item item = Item.getByNameOrId(itemId);
+                ItemStack itemStack = null;
+
+                if (item == null)
+                {
+                    item = Item.getItemFromBlock(Blocks.barrier);
+                    ItemStack unknownCollection = new ItemStack(Blocks.barrier, 0, meta);
+                    unknownCollection.setStackDisplayName(itemId);
+                    itemStack = unknownCollection;
+                }
+                else
+                {
+                    itemStack = new ItemStack(item, 0, meta);
+                }
+
                 SkyBlockCollection.Type type = SkyBlockCollection.Type.FARMING;
-                SkyBlockCollection itemCollection = new SkyBlockCollection(new ItemStack(item, 0, meta), type, collectionCount, level);
+                SkyBlockCollection itemCollection = new SkyBlockCollection(itemStack, type, collectionCount, level);
 
                 if (item == Item.getItemFromBlock(Blocks.cobblestone) || item == Items.coal || item == Items.iron_ingot || item == Items.gold_ingot || item == Items.diamond || item == Items.emerald || item == Items.redstone
                         || item == Items.quartz || item == Item.getItemFromBlock(Blocks.obsidian) || item == Items.glowstone_dust || item == Item.getItemFromBlock(Blocks.gravel) || item == Item.getItemFromBlock(Blocks.ice) || item == Item.getItemFromBlock(Blocks.netherrack)
@@ -2044,9 +2039,14 @@ public class GuiSkyBlockData extends GuiScreen
                     fishing.add(itemCollection);
                     type = SkyBlockCollection.Type.FISHING;
                 }
-                else
+                else if (item == Items.reeds || item == Item.getItemFromBlock(Blocks.pumpkin) || item == Items.carrot || item == Items.wheat || item == Items.potato || item == Items.melon || item == Items.dye && meta == 3 || item == Items.feather || item == Items.chicken
+                        || item == Items.porkchop || item == Items.mutton || item == Items.leather || item == Item.getItemFromBlock(Blocks.red_mushroom) || item == Items.nether_wart || item == Items.rabbit || item == Items.wheat_seeds || item == Item.getItemFromBlock(Blocks.cactus))
                 {
                     farming.add(itemCollection);
+                }
+                else
+                {
+                    unknown.add(itemCollection);
                 }
             }
 
@@ -2056,6 +2056,7 @@ public class GuiSkyBlockData extends GuiScreen
             combat.sort(com);
             foraging.sort(com);
             fishing.sort(com);
+            unknown.sort(com);
 
             if (!farming.isEmpty())
             {
@@ -2086,6 +2087,12 @@ public class GuiSkyBlockData extends GuiScreen
                 this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.FISHING, -1, -1));
                 this.collections.addAll(fishing);
             }
+            if (!unknown.isEmpty())
+            {
+                this.collections.add(dummyCollection);
+                this.collections.add(new SkyBlockCollection(null, SkyBlockCollection.Type.UNKNOWN, -1, -1));
+                this.collections.addAll(unknown);
+            }
             this.collections.add(dummyCollection);
         }
         else
@@ -2107,18 +2114,7 @@ public class GuiSkyBlockData extends GuiScreen
                 for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
                 {
                     int count = sackEntry.getValue().getAsInt();
-                    String sackId = sackEntry.getKey().toLowerCase();
-
-                    for (SkyBlockCollection.ItemId sbItem : SkyBlockCollection.ItemId.VALUES)
-                    {
-                        String sbItemId = sbItem.name().toLowerCase();
-
-                        if (sackId.contains(sbItemId))
-                        {
-                            sackId = sackId.replace(sbItemId, sbItem.getMinecraftId());
-                        }
-                    }
-
+                    String sackId = this.replaceId(sackEntry.getKey().toLowerCase());
                     String[] split = sackId.split(":");
                     String itemId = split[0];
                     int meta = 0;
@@ -3384,6 +3380,20 @@ public class GuiSkyBlockData extends GuiScreen
         return FORMAT.format(kills) + " kill" + (kills <= 1 ? "" : "s");
     }
 
+    private String replaceId(String id)
+    {
+        for (Map.Entry<String, String> sbItem : SKYBLOCK_ITEM_ID_REMAP.entrySet())
+        {
+            String sbItemId = sbItem.getKey();
+
+            if (id.contains(sbItemId))
+            {
+                id = id.replace(sbItemId, sbItem.getValue());
+            }
+        }
+        return id;
+    }
+
     private static void drawEntityOnScreen(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity)
     {
         GlStateManager.enableColorMaterial();
@@ -3453,7 +3463,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.drawSprite(x + 1, y + 1);
         GlStateManager.enableRescaleNormal();
         RenderHelper.enableGUIStandardItemLighting();
-        this.mc.getRenderItem().renderItemIntoGUI(itemStack, x + 2, y + 2);
+        this.mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x + 2, y + 2);
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableRescaleNormal();
     }
@@ -4235,15 +4245,15 @@ public class GuiSkyBlockData extends GuiScreen
         {
             SkyBlockCollection collection = this.collection.get(index);
 
-            if (collection.getItemStack() != null && collection.getCollectionType() != null)
+            if (collection.getCollectionType() != null)
             {
-                this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
-                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
-                this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
-            }
-            else
-            {
-                if (collection.getCollectionType() != null)
+                if (collection.getItemStack() != null)
+                {
+                    this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
+                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                }
+                else
                 {
                     this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }

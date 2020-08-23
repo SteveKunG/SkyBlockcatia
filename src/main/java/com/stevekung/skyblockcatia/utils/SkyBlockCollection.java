@@ -43,44 +43,14 @@ public class SkyBlockCollection
         return FORMAT.format(this.value);
     }
 
-    public enum ItemId
-    {
-        SEEDS("wheat_seeds"),
-        RAW_CHICKEN("chicken"),
-        CARROT_ITEM("carrot"),
-        POTATO_ITEM("potato"),
-        SULPHUR("gunpowder"),
-        MUSHROOM_COLLECTION("red_mushroom"),
-        SUGAR_CANE("reeds"),
-        PORK("porkchop"),
-        NETHER_STALK("nether_wart"),
-        RAW_FISH("fish"),
-        INK_SACK("dye"),
-        WATER_LILY("waterlily"),
-        ENDER_STONE("end_stone"),
-        LOG_2("log2");
-
-        public static final ItemId[] VALUES = ItemId.values();
-        private final String minecraftId;
-
-        private ItemId(String minecraftId)
-        {
-            this.minecraftId = minecraftId;
-        }
-
-        public String getMinecraftId()
-        {
-            return this.minecraftId;
-        }
-    }
-
     public enum Type
     {
         FARMING("Farming"),
         MINING("Mining"),
         COMBAT("Combat"),
         FORAGING("Foraging"),
-        FISHING("Fishing");
+        FISHING("Fishing"),
+        UNKNOWN("Unknown");
 
         private final String name;
 
