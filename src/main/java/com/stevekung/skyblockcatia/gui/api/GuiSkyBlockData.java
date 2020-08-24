@@ -2004,9 +2004,25 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (item == null)
                 {
-                    item = Item.getItemFromBlock(Blocks.barrier);
                     ItemStack unknownCollection = new ItemStack(Blocks.barrier, 0, meta);
-                    unknownCollection.setStackDisplayName(itemId);
+
+                    if (itemId.startsWith("enchanted_"))
+                    {
+                        item = Item.getByNameOrId(itemId.replace("enchanted_", ""));
+
+                        if (item == null)
+                        {
+                            item = Item.getItemFromBlock(Blocks.barrier);
+                        }
+
+                        unknownCollection = new ItemStack(item, 0, meta);
+                        NBTTagCompound compound = new NBTTagCompound();
+                        compound.setTag("ench", new NBTTagList());
+                        unknownCollection.setTagCompound(compound);
+                        unknownCollection.setStackDisplayName(WordUtils.capitalize(itemId.replace("_", " ")));
+                    }
+
+                    item = Item.getItemFromBlock(Blocks.barrier);
                     itemStack = unknownCollection;
                 }
                 else
@@ -4244,7 +4260,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     String collectionLvl = collection.getCollectionType() == SkyBlockCollection.Type.UNKNOWN ? "" : " " + EnumChatFormatting.GOLD + collection.getLevel();
                     this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
-                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + collectionLvl, this.parent.guiLeft - 41, top + 6, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, (collection.getCollectionType() == SkyBlockCollection.Type.UNKNOWN ? EnumChatFormatting.RED : "") + collection.getItemStack().getDisplayName() + collectionLvl, this.parent.guiLeft - 41, top + 6, 16777215);
                     this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
                 }
                 else
