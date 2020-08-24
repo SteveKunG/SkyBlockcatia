@@ -2014,39 +2014,32 @@ public class GuiSkyBlockData extends GuiScreen
                     itemStack = new ItemStack(item, 0, meta);
                 }
 
-                SkyBlockCollection.Type type = SkyBlockCollection.Type.FARMING;
-                SkyBlockCollection itemCollection = new SkyBlockCollection(itemStack, type, collectionCount, level);
-
                 if (item == Item.getItemFromBlock(Blocks.cobblestone) || item == Items.coal || item == Items.iron_ingot || item == Items.gold_ingot || item == Items.diamond || item == Items.emerald || item == Items.redstone
                         || item == Items.quartz || item == Item.getItemFromBlock(Blocks.obsidian) || item == Items.glowstone_dust || item == Item.getItemFromBlock(Blocks.gravel) || item == Item.getItemFromBlock(Blocks.ice) || item == Item.getItemFromBlock(Blocks.netherrack)
                         || item == Item.getItemFromBlock(Blocks.sand) || item == Item.getItemFromBlock(Blocks.end_stone) || item == Items.dye && meta == 4)
                 {
-                    mining.add(itemCollection);
-                    type = SkyBlockCollection.Type.MINING;
+                    mining.add(new SkyBlockCollection(itemStack, SkyBlockCollection.Type.MINING, collectionCount, level));
                 }
                 else if (item == Items.rotten_flesh || item == Items.bone || item == Items.string || item == Items.spider_eye || item == Items.gunpowder || item == Items.ender_pearl || item == Items.ghast_tear || item == Items.slime_ball || item == Items.blaze_rod || item == Items.magma_cream)
                 {
-                    combat.add(itemCollection);
-                    type = SkyBlockCollection.Type.COMBAT;
+                    combat.add(new SkyBlockCollection(itemStack, SkyBlockCollection.Type.COMBAT, collectionCount, level));
                 }
                 else if (item == Item.getItemFromBlock(Blocks.log) || item == Item.getItemFromBlock(Blocks.log2))
                 {
-                    foraging.add(itemCollection);
-                    type = SkyBlockCollection.Type.FORAGING;
+                    foraging.add(new SkyBlockCollection(itemStack, SkyBlockCollection.Type.FORAGING, collectionCount, level));
                 }
                 else if (item == Items.fish || item == Items.prismarine_shard || item == Items.prismarine_crystals || item == Items.clay_ball || item == Item.getItemFromBlock(Blocks.waterlily) || item == Item.getItemFromBlock(Blocks.sponge) || item == Items.dye && meta == 0)
                 {
-                    fishing.add(itemCollection);
-                    type = SkyBlockCollection.Type.FISHING;
+                    fishing.add(new SkyBlockCollection(itemStack, SkyBlockCollection.Type.FISHING, collectionCount, level));
                 }
                 else if (item == Items.reeds || item == Item.getItemFromBlock(Blocks.pumpkin) || item == Items.carrot || item == Items.wheat || item == Items.potato || item == Items.melon || item == Items.dye && meta == 3 || item == Items.feather || item == Items.chicken
                         || item == Items.porkchop || item == Items.mutton || item == Items.leather || item == Item.getItemFromBlock(Blocks.red_mushroom) || item == Items.nether_wart || item == Items.rabbit || item == Items.wheat_seeds || item == Item.getItemFromBlock(Blocks.cactus))
                 {
-                    farming.add(itemCollection);
+                    farming.add(new SkyBlockCollection(itemStack, SkyBlockCollection.Type.FARMING, collectionCount, level));
                 }
                 else
                 {
-                    unknown.add(itemCollection);
+                    unknown.add(new SkyBlockCollection(itemStack, SkyBlockCollection.Type.UNKNOWN, collectionCount, level));
                 }
             }
 
@@ -4249,8 +4242,9 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 if (collection.getItemStack() != null)
                 {
+                    String collectionLvl = collection.getCollectionType() == SkyBlockCollection.Type.UNKNOWN ? "" : " " + EnumChatFormatting.GOLD + collection.getLevel();
                     this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
-                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + " " + EnumChatFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, collection.getItemStack().getDisplayName() + collectionLvl, this.parent.guiLeft - 41, top + 6, 16777215);
                     this.parent.drawString(this.parent.mc.fontRendererObj, collection.getCollectionAmount(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
                 }
                 else
