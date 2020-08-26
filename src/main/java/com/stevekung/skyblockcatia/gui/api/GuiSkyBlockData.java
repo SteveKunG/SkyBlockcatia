@@ -690,11 +690,13 @@ public class GuiSkyBlockData extends GuiScreen
             this.drawCenteredString(this.fontRendererObj, text, this.width / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 35, 16777215);
             this.drawString(this.fontRendererObj, GuiSkyBlockAPIViewer.downloadingStates[(int)(Minecraft.getSystemTime() / 500L % GuiSkyBlockAPIViewer.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 35, 16777215);
             this.drawCenteredString(this.fontRendererObj, "Status: " + EnumChatFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 15, 16777215);
+            this.showArmorButton.visible = false;
         }
         else
         {
             if (this.error)
             {
+                this.showArmorButton.visible = false;
                 this.drawCenteredString(this.fontRendererObj, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
 
                 if (this.errorInfo != null)
@@ -1732,6 +1734,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
         this.loadingApi = false;
+        this.showArmorButton.visible = true;
     }
 
     private String getLocation(JsonObject objStatus, String uuid)
