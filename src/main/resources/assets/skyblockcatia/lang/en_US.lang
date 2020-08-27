@@ -182,6 +182,7 @@ display_item_ability_max_used.extended_config=Display Max Used of Item Ability
 prevent_scroll_hotbar_while_fight_dragon.extended_config=Prevent Scroll Hotbar while Fighting Dragon
 prevent_clicking_on_dummy_item.extended_config=Prevent Clicking on Dummy Item
 shortcut_button_in_inventory.extended_config=Shortcut Button in Inventory
+show_obtained_date.extended_config=Show Obtained Date
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

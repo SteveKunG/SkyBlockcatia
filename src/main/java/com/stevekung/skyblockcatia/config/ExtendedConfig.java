@@ -148,6 +148,7 @@ public class ExtendedConfig
     public boolean preventScrollHotbarWhileFightDragon = false;
     public boolean preventClickingOnDummyItem = true;
     public boolean shortcutButtonInInventory = true;
+    public boolean showObtainedDate = true;
 
     private ExtendedConfig() {}
 
@@ -289,6 +290,7 @@ public class ExtendedConfig
             this.preventScrollHotbarWhileFightDragon = ExtendedConfig.getBoolean(nbt, "PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             this.preventClickingOnDummyItem = ExtendedConfig.getBoolean(nbt, "PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
             this.shortcutButtonInInventory = ExtendedConfig.getBoolean(nbt, "ShortcutButtonInInventory", this.shortcutButtonInInventory);
+            this.showObtainedDate = ExtendedConfig.getBoolean(nbt, "ShowObtainedDate", this.showObtainedDate);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -423,6 +425,7 @@ public class ExtendedConfig
             nbt.setBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             nbt.setBoolean("PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
             nbt.setBoolean("ShortcutButtonInInventory", this.shortcutButtonInInventory);
+            nbt.setBoolean("ShowObtainedDate", this.showObtainedDate);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             nbt.setInteger("ItemRarityOpacity", this.itemRarityOpacity);
@@ -796,6 +799,10 @@ public class ExtendedConfig
         {
             this.shortcutButtonInInventory = !this.shortcutButtonInInventory;
         }
+        else if (options == ExtendedConfig.Options.SHOW_OBTAINED_DATE)
+        {
+            this.showObtainedDate = !this.showObtainedDate;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1105,6 +1112,8 @@ public class ExtendedConfig
             return this.preventClickingOnDummyItem;
         case SHORTCUT_BUTTON_IN_INVENTORY:
             return this.shortcutButtonInInventory;
+        case SHOW_OBTAINED_DATE:
+            return this.showObtainedDate;
         default:
             return false;
         }
@@ -1301,6 +1310,7 @@ public class ExtendedConfig
         PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON(false, true),
         PREVENT_CLICKING_ON_DUMMY_ITEM(false, true),
         SHORTCUT_BUTTON_IN_INVENTORY(false, true),
+        SHOW_OBTAINED_DATE(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         ;
