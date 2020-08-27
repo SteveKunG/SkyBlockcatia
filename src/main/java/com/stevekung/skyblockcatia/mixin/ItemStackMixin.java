@@ -19,7 +19,7 @@ public abstract class ItemStackMixin
     @Inject(method = "isItemEnchanted()Z", cancellable = true, at = @At("HEAD"))
     private void addSkyblockEnchantTag(CallbackInfoReturnable info)
     {
-        if (this.stackTagCompound != null && this.stackTagCompound.hasKey("ExtraAttributes", Constants.NBT.TAG_COMPOUND) && this.stackTagCompound.getCompoundTag("ExtraAttributes").hasKey("enchantments"))
+        if (this.stackTagCompound != null && this.stackTagCompound.hasKey("ExtraAttributes", Constants.NBT.TAG_COMPOUND) && this.stackTagCompound.getCompoundTag("ExtraAttributes").hasKey("enchantments", Constants.NBT.TAG_COMPOUND) && !this.stackTagCompound.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").hasNoTags())
         {
             info.setReturnValue(true);
         }
