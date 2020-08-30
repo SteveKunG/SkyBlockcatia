@@ -28,7 +28,6 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.init.Blocks;
@@ -362,10 +361,9 @@ public class HUDRenderEventHandler
         }
         if (event.type == RenderGameOverlayEvent.ElementType.BOSSHEALTH)
         {
-            event.setCanceled(true);
-
             if (HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
             {
+                event.setCanceled(true);
                 this.mc.getTextureManager().bindTexture(Gui.icons);
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.enableBlend();
@@ -379,56 +377,19 @@ public class HUDRenderEventHandler
                     int l = (int)(SkyBlockBossBar.healthScale * (j + 1));
                     int i1 = 12;
 
-                    if (ConfigManagerIN.enableRenderBossHealthBar)
-                    {
-                        this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 74, j, 5);
+                    this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 74, j, 5);
 
-                        if (l > 0)
-                        {
-                            this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 79, l, 5);
-                        }
+                    if (l > 0)
+                    {
+                        this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 79, l, 5);
                     }
+
                     String name = SkyBlockBossBar.bossName;
                     this.mc.ingameGUI.getFontRenderer().drawStringWithShadow(name, i / 2 - this.mc.ingameGUI.getFontRenderer().getStringWidth(name) / 2, i1 - 10, 16777215);
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     this.mc.getTextureManager().bindTexture(Gui.icons);
                 }
                 GlStateManager.disableBlend();
-            }
-            else
-            {
-                if (ConfigManagerIN.enableRenderBossHealthStatus)
-                {
-                    this.mc.getTextureManager().bindTexture(Gui.icons);
-                    GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-                    GlStateManager.enableBlend();
-
-                    if (BossStatus.bossName != null && BossStatus.statusBarTime > 0)
-                    {
-                        --BossStatus.statusBarTime;
-                        ScaledResolution res = new ScaledResolution(this.mc);
-                        int i = res.getScaledWidth();
-                        int j = 182;
-                        int k = i / 2 - j / 2;
-                        int l = (int)(BossStatus.healthScale * (j + 1));
-                        int i1 = 12;
-
-                        if (ConfigManagerIN.enableRenderBossHealthBar)
-                        {
-                            this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 74, j, 5);
-
-                            if (l > 0)
-                            {
-                                this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 79, l, 5);
-                            }
-                        }
-                        String name = BossStatus.bossName;
-                        this.mc.ingameGUI.getFontRenderer().drawStringWithShadow(name, i / 2 - this.mc.ingameGUI.getFontRenderer().getStringWidth(name) / 2, i1 - 10, 16777215);
-                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                        this.mc.getTextureManager().bindTexture(Gui.icons);
-                    }
-                    GlStateManager.disableBlend();
-                }
             }
         }
     }

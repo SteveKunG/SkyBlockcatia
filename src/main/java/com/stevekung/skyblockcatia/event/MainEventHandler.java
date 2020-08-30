@@ -58,7 +58,6 @@ import net.minecraft.network.status.server.S00PacketServerInfo;
 import net.minecraft.network.status.server.S01PacketPong;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -119,7 +118,6 @@ public class MainEventHandler
                 }
             }
         }
-        GuiIngameForge.renderObjective = ConfigManagerIN.enableRenderScoreboard;
     }
 
     @SubscribeEvent

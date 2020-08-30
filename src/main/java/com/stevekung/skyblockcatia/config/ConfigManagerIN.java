@@ -28,9 +28,6 @@ public class ConfigManagerIN
     public static boolean enableCustomPlayerList;
     public static boolean enableCustomServerSelectionGui;
     public static boolean enableConfirmToDisconnect;
-    public static boolean enableRenderBossHealthBar;
-    public static boolean enableRenderBossHealthStatus;
-    public static boolean enableRenderScoreboard;
     public static boolean enableSmoothSneakingView;
     public static boolean enableTransparentSkinRender;
     public static boolean enableChatMode;
@@ -112,18 +109,6 @@ public class ConfigManagerIN
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Confirm to Disconnect", false);
         ConfigManagerIN.enableConfirmToDisconnect = prop.getBoolean();
         prop.comment = LangUtils.translate("gui.config.skyblockcatia.confirm_to_disconnect");
-        propOrder.add(prop.getName());
-
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Boss Health Bar", true);
-        ConfigManagerIN.enableRenderBossHealthBar = prop.getBoolean();
-        propOrder.add(prop.getName());
-
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Boss Health Status", true);
-        ConfigManagerIN.enableRenderBossHealthStatus = prop.getBoolean();
-        propOrder.add(prop.getName());
-
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Scoreboard Sidebar Render", true);
-        ConfigManagerIN.enableRenderScoreboard = prop.getBoolean();
         propOrder.add(prop.getName());
 
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Smooth Sneaking View", false);
