@@ -477,13 +477,16 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                                     }
                                     catch (ParseException e) {}
 
-                                    if (this.mc.thePlayer.experienceLevel < level)
+                                    if (level > 0)
                                     {
-                                        levelString = EnumChatFormatting.RED + String.valueOf(level);
-                                    }
-                                    else
-                                    {
-                                        levelString = EnumChatFormatting.GREEN + String.valueOf(level);
+                                        if (this.mc.thePlayer.experienceLevel < level)
+                                        {
+                                            levelString = EnumChatFormatting.RED + String.valueOf(level);
+                                        }
+                                        else
+                                        {
+                                            levelString = EnumChatFormatting.GREEN + String.valueOf(level);
+                                        }
                                     }
                                     break;
                                 }
@@ -497,7 +500,10 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                                     }
                                     catch (ParseException e) {}
 
-                                    levelString = EnumChatFormatting.GOLD + String.valueOf(coin);
+                                    if (coin > 0)
+                                    {
+                                        levelString = EnumChatFormatting.GOLD + String.valueOf(coin);
+                                    }
                                     break;
                                 }
                             }
