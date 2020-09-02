@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.gui.api;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -182,10 +181,6 @@ public class GuiSkyBlockData extends GuiScreen
     private int guiTop;
     private Slot theSlot;
 
-    // Patcher Compatibility
-    private static Class<?> patcherConfig;
-    private boolean patcherEntityCulling;
-
     public GuiSkyBlockData(List<ProfileDataCallback> profiles, ProfileDataCallback callback)
     {
         this.firstLoad = true;
@@ -204,21 +199,6 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.xSize = 202;
         this.ySize = 125;
-
-        if (SkyBlockcatiaMod.isPatcherLoaded)
-        {
-            try
-            {
-                patcherConfig = Class.forName("club.sk1er.patcher.config.PatcherConfig");
-                Field entityCulling = patcherConfig.getDeclaredField("entityCulling");
-                this.patcherEntityCulling = entityCulling.getBoolean(patcherConfig);
-                entityCulling.set(patcherConfig, false);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -533,19 +513,6 @@ public class GuiSkyBlockData extends GuiScreen
         SKYBLOCK_INV.clear();
         this.mc.getNetHandler().getPlayerInfoMap().removeIf(network -> ((IViewerLoader)network).isLoadedFromViewer());
         GuiSkyBlockData.renderSecondLayer = false;
-
-        if (SkyBlockcatiaMod.isPatcherLoaded)
-        {
-            try
-            {
-                Field entityCulling = patcherConfig.getDeclaredField("entityCulling");
-                entityCulling.set(patcherConfig, this.patcherEntityCulling);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
