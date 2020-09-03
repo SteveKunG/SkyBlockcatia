@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.ImmutableList;
@@ -34,6 +35,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -531,7 +533,55 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             {
                 this.drawBids(slot);
             }
+
             this.drawCurrentSelectedPet(slot);
+
+            if (ExtendedConfig.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
+            {
+                this.renderHubOverlay(slot);
+            }
+        }
+    }
+
+    @Redirect(method = "drawSlot", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/RenderItem.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
+    private void renderPlayerCount(RenderItem renderItem, FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text)
+    {
+        boolean found = false;
+
+        if (ExtendedConfig.instance.lobbyPlayerViewer && this.that instanceof GuiChest)
+        {
+            GuiChest chest = (GuiChest)this.that;
+
+            if (chest.lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector") && stack != null && stack.hasTagCompound())
+            {
+                NBTTagCompound compound = stack.getTagCompound().getCompoundTag("display");
+
+                if (compound.getTagId("Lore") == 9)
+                {
+                    NBTTagList list = compound.getTagList("Lore", 8);
+
+                    if (list.tagCount() > 0)
+                    {
+                        for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                        {
+                            String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+
+                            if (lore.startsWith("Players: "))
+                            {
+                                lore = lore.substring(lore.indexOf(" ") + 1);
+                                String[] loreCount = lore.split("/");
+                                renderItem.renderItemOverlayIntoGUI(this.fontRendererObj, stack, xPosition, yPosition, loreCount[0]);
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!found)
+        {
+            renderItem.renderItemOverlayIntoGUI(this.fontRendererObj, stack, xPosition, yPosition, text);
         }
     }
 
@@ -772,6 +822,55 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                 }
             }
         }
+    }
+
+    private void renderHubOverlay(Slot slot)
+    {
+        if (slot.getStack() != null && slot.getStack().hasTagCompound())
+        {
+            NBTTagCompound compound = slot.getStack().getTagCompound().getCompoundTag("display");
+
+            if (compound.getTagId("Lore") == 9)
+            {
+                NBTTagList list = compound.getTagList("Lore", 8);
+
+                if (list.tagCount() > 0)
+                {
+                    for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                    {
+                        int slotLeft = slot.xDisplayPosition;
+                        int slotTop = slot.yDisplayPosition;
+                        int slotRight = slotLeft + 16;
+                        int slotBottom = slotTop + 16;
+                        String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+
+                        if (lore.startsWith("Players: "))
+                        {
+                            lore = lore.substring(lore.indexOf(" ") + 1);
+                            String[] loreCount = lore.split("/");
+                            int min = Integer.valueOf(loreCount[0]);
+                            int max = Integer.valueOf(loreCount[1]);
+                            int playerCountColor = this.getRGBPlayerCount(min, max);
+                            int color = ColorUtils.to32BitColor(128, playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255);
+                            this.zLevel = 300.0F;
+                            this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color, color);
+                            this.zLevel = 0.0F;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private int getRGBPlayerCount(int playerCount, int maxedPlayerCount)
+    {
+        return MathHelper.hsvToRGB(Math.max(0.0F, (float) (1.0F - this.getPlayerCount(playerCount, maxedPlayerCount))) / 3.0F, 1.0F, 1.0F);
+    }
+
+    private double getPlayerCount(int playerCount, int maxedPlayerCount)
+    {
+        return (double) playerCount / maxedPlayerCount;
     }
 
     private void checkCondition(int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)

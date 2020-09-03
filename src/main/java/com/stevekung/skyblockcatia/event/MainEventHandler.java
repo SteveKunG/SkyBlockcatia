@@ -37,7 +37,6 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.ServerAddress;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
@@ -45,7 +44,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.EnumConnectionState;
@@ -274,6 +272,11 @@ public class MainEventHandler
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                     event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
                 }
+                else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
+                {
+                    String overlay = ExtendedConfig.instance.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    event.buttonList.add(new GuiButtonItem(1006, width + 89, height + 29, new ItemStack(Items.compass), "Lobby Player Overlay: " + overlay));
+                }
             }
         }
         if (event.gui instanceof GuiControls)
@@ -356,6 +359,13 @@ public class MainEventHandler
                 String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                 ((GuiButtonItem)event.button).setName("Toggle Bid Highlight: " + bid);
             }
+            else if (event.button.id == 1006)
+            {
+                ExtendedConfig.instance.lobbyPlayerViewer = !ExtendedConfig.instance.lobbyPlayerViewer;
+                String overlay = ExtendedConfig.instance.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                ((GuiButtonItem)event.button).setName("Lobby Player Overlay: " + overlay);
+                ExtendedConfig.instance.save();
+            }
         }
     }
 
@@ -370,113 +380,6 @@ public class MainEventHandler
             {
                 GuiUtils.drawHoveringText(Collections.singletonList(((GuiButtonItem)button).getName()), event.mouseX, event.mouseY, event.gui.width, event.gui.height, -1, this.mc.fontRendererObj);
                 GlStateManager.disableLighting();
-            }
-        }
-
-        if (event.gui instanceof GuiChest)
-        {
-            GuiChest chest = (GuiChest)event.gui;
-
-            if (ExtendedConfig.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("SkyBlock Hub Selector"))
-            {
-                List<String> lobby1 = new ArrayList<>();
-                List<String> lobby2 = new ArrayList<>();
-
-                for (int i = 0; i < chest.lowerChestInventory.getSizeInventory(); i++)
-                {
-                    ItemStack itemStack = chest.lowerChestInventory.getStackInSlot(i);
-
-                    if (itemStack == null)
-                    {
-                        continue;
-                    }
-
-                    if (itemStack.getDisplayName().contains("SkyBlock Hub"))
-                    {
-                        String name = itemStack.getDisplayName().substring(itemStack.getDisplayName().indexOf("#"));
-                        int lobbyNum = Integer.valueOf(name.substring(name.indexOf("#") + 1));
-                        String lobbyCount = "";
-                        int min = 0;
-                        int max = 0;
-
-                        if (itemStack.hasTagCompound())
-                        {
-                            NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
-
-                            if (compound.getTagId("Lore") == 9)
-                            {
-                                NBTTagList list = compound.getTagList("Lore", 8);
-
-                                if (list.tagCount() > 0)
-                                {
-                                    int countIndex = -1;
-
-                                    for (int j1 = 0; j1 < list.tagCount(); ++j1)
-                                    {
-                                        if (list.getStringTagAt(j1).contains("Players: "))
-                                        {
-                                            countIndex = j1;
-                                            break;
-                                        }
-                                    }
-
-                                    String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(countIndex));
-                                    lore = lore.substring(lore.indexOf(" ") + 1);
-                                    String[] loreCount = lore.split("/");
-                                    min = Integer.valueOf(loreCount[0]);
-                                    max = Integer.valueOf(loreCount[1]);
-
-                                    if (min >= max)
-                                    {
-                                        lobbyCount = EnumChatFormatting.RED + "Full!";
-                                    }
-                                    else if (min >= max - 15) // 70
-                                    {
-                                        lobbyCount = EnumChatFormatting.YELLOW + "" + min + EnumChatFormatting.GRAY + "/" + EnumChatFormatting.RED + max;
-                                    }
-                                    else if (min > max - 40 && min < max - 15) // 40 > 70
-                                    {
-                                        lobbyCount = EnumChatFormatting.GOLD + "" + min + EnumChatFormatting.GRAY + "/" + EnumChatFormatting.RED + max;
-                                    }
-                                    else if (min <= max - 40) // < 40
-                                    {
-                                        lobbyCount = EnumChatFormatting.GREEN + "" + min + EnumChatFormatting.GRAY + "/" + EnumChatFormatting.RED + max;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (lobbyNum > 14)
-                        {
-                            lobby2.add(ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + " " + lobbyCount);
-                        }
-                        else
-                        {
-                            lobby1.add(ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + " " + lobbyCount);
-                        }
-                    }
-                }
-
-                int i = 0;
-                RenderHelper.disableStandardItemLighting();
-
-                for (String lobbyCount : lobby1)
-                {
-                    int fontHeight = this.mc.fontRendererObj.FONT_HEIGHT + 1;
-                    int yOffset = chest.height / 2 - 75 + fontHeight * i;
-                    chest.drawString(this.mc.fontRendererObj, lobbyCount, chest.width / 2 - 200, yOffset, 0);
-                    i++;
-                }
-
-                int i2 = 0;
-
-                for (String lobbyCount : lobby2)
-                {
-                    int fontHeight = this.mc.fontRendererObj.FONT_HEIGHT + 1;
-                    int yOffset = chest.height / 2 - 75 + fontHeight * i2;
-                    chest.drawString(this.mc.fontRendererObj, lobbyCount, chest.width / 2 - 143, yOffset, 0);
-                    i2++;
-                }
             }
         }
     }
