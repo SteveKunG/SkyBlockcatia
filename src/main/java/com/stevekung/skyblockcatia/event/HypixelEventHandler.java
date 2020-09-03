@@ -854,6 +854,11 @@ public class HypixelEventHandler
                             {
                                 dropName = RENAMED_DROP.getOrDefault(dropName, dropName);
 
+                                if (dropName.equals("\u00a7fEnchanted Book"))
+                                {
+                                    dropName = "\u00a79Enchanted Book";
+                                }
+
                                 if (dropName.equals(key) || !drop.getType().matches(ToastUtils.DropCondition.FORMAT) && dropName.equals(EnumChatFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.stackSize = diff;

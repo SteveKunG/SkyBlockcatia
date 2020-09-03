@@ -85,6 +85,7 @@ public class ClientEventHandler
         // Rare Drop
         //String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
         //String test = "§r§6§lRARE DROP! " + "§r" + itemStack.getDisplayName() + magic;
+        //String test = "§r§6§lRARE DROP! " + "§r§f" + EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName()) + magic;
         //player.addChatComponentMessage(JsonUtils.create(test));
 
         // Slayer Drop
