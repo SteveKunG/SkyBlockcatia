@@ -236,7 +236,8 @@ public class MainEventHandler
 
                 if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, lowerChestInventory))
                 {
-                    event.buttonList.add(new GuiButton(500, width - 108, height + 190, 20, 20, "C"));
+                    String chat = MainEventHandler.showChat ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    event.buttonList.add(new GuiButtonItem(500, 2, event.gui.height - 35, new ItemStack(Items.ender_eye), "Toggle Inventory Chat: " + chat));
                 }
 
                 if (ExtendedConfig.instance.shortcutButtonInInventory)
@@ -352,6 +353,8 @@ public class MainEventHandler
             if (event.button.id == 500)
             {
                 MainEventHandler.showChat = !MainEventHandler.showChat;
+                String chat = MainEventHandler.showChat ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                ((GuiButtonItem)event.button).setName("Toggle Inventory Chat: " + chat);
             }
             else if (event.button.id == 1005)
             {
