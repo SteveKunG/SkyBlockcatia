@@ -5,6 +5,7 @@ public class ViewerData
     private boolean hasKills = true;
     private boolean hasDeaths = true;
     private boolean hasOthers = true;
+    private boolean hasBankHistory = true;
     private boolean hasSkills = true;
     private boolean hasSlayers = true;
     private boolean hasCollections = true;
@@ -24,6 +25,11 @@ public class ViewerData
     public void setHasOthers(boolean hasOthers)
     {
         this.hasOthers = hasOthers;
+    }
+
+    public void setHasBankHistory(boolean hasBankHistory)
+    {
+        this.hasBankHistory = hasBankHistory;
     }
 
     public void setHasSkills(boolean hasSkills)
@@ -64,6 +70,11 @@ public class ViewerData
     public boolean hasOthers()
     {
         return this.hasOthers;
+    }
+
+    public boolean hasBankHistory()
+    {
+        return this.hasBankHistory;
     }
 
     public boolean hasSkills()

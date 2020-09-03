@@ -38,9 +38,4 @@ public class SkyBlockStats
         }
         return FORMAT.format(this.value);
     }
-
-    public enum Type
-    {
-        KILLS, DEATHS, OTHERS;
-    }
 }

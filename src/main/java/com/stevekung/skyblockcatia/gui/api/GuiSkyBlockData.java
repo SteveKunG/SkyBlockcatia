@@ -22,10 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -132,6 +129,7 @@ public class GuiSkyBlockData extends GuiScreen
     private final List<SkyBlockStats> sbKills = new ArrayList<>();
     private final List<SkyBlockStats> sbDeaths = new ArrayList<>();
     private final List<SkyBlockStats> sbOthers = new ArrayList<>();
+    private final List<BankHistory.Stats> sbBankHistories = new ArrayList<>();
     private final List<CraftedMinion> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
@@ -249,11 +247,12 @@ public class GuiSkyBlockData extends GuiScreen
         this.buttonList.add(new GuiButton(ViewButton.SLAYERS.id, this.width / 2 + 8, 6, 80, 20, LangUtils.translate("gui.sb_view_slayers")));
         this.buttonList.add(new GuiButton(ViewButton.OTHERS.id, this.width / 2 + 104, 6, 80, 20, LangUtils.translate("gui.sb_view_others")));
 
-        GuiButton statKillsButton = new GuiButton(OthersViewButton.KILLS.id, this.width / 2 - 124, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.kills"));
+        GuiButton statKillsButton = new GuiButton(OthersViewButton.KILLS.id, this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.kills"));
         statKillsButton.enabled = false;
         this.buttonList.add(statKillsButton);
-        this.buttonList.add(new GuiButton(OthersViewButton.DEATHS.id, this.width / 2 - 40, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.deaths")));
-        this.buttonList.add(new GuiButton(OthersViewButton.OTHER_STATS.id, this.width / 2 + 44, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.others_stats")));
+        this.buttonList.add(new GuiButton(OthersViewButton.DEATHS.id, this.width / 2 - 84, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.deaths")));
+        this.buttonList.add(new GuiButton(OthersViewButton.OTHER_STATS.id, this.width / 2 + 4, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.others_stats")));
+        this.buttonList.add(new GuiButton(OthersViewButton.BANK_HISTORY.id, this.width / 2 + 90, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.bank_history")));
 
         for (GuiButton viewButton : this.buttonList)
         {
@@ -360,6 +359,14 @@ public class GuiSkyBlockData extends GuiScreen
                             continue;
                         }
                     }
+                    if (button.id == OthersViewButton.BANK_HISTORY.id)
+                    {
+                        if (!this.data.hasBankHistory())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
                     button.enabled = this.othersButton != othersType;
                 }
             }
@@ -412,35 +419,35 @@ public class GuiSkyBlockData extends GuiScreen
         }
         else if (this.currentSlotId == ViewButton.SLAYERS.id)
         {
-            this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 49, 59, 16, this.width, this.height, this.slayerInfo);
+            this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.width, this.height, this.slayerInfo);
             this.hideOthersButton();
             this.hideBasicInfoButton();
             this.showArmorButton.visible = false;
         }
         else if (this.currentSlotId == ViewButton.OTHERS.id)
         {
-            SkyBlockStats.Type statType = SkyBlockStats.Type.KILLS;
-            List<SkyBlockStats> list = null;
+            List<?> list = null;
 
             if (this.currentOthersSlotId == -1 || this.currentOthersSlotId == OthersViewButton.KILLS.id)
             {
-                statType = SkyBlockStats.Type.KILLS;
                 list = this.sbKills;
             }
             else if (this.currentOthersSlotId == OthersViewButton.DEATHS.id)
             {
-                statType = SkyBlockStats.Type.DEATHS;
                 list = this.sbDeaths;
             }
             else if (this.currentOthersSlotId == OthersViewButton.OTHER_STATS.id)
             {
-                statType = SkyBlockStats.Type.OTHERS;
                 list = this.sbOthers;
+            }
+            else if (this.currentOthersSlotId == OthersViewButton.BANK_HISTORY.id)
+            {
+                list = this.sbBankHistories;
             }
 
             if (list != null)
             {
-                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list);
             }
             this.hideBasicInfoButton();
             this.showArmorButton.visible = false;
@@ -472,6 +479,14 @@ public class GuiSkyBlockData extends GuiScreen
                     if (viewButton.id == OthersViewButton.OTHER_STATS.id)
                     {
                         if (!this.data.hasOthers())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (viewButton.id == OthersViewButton.BANK_HISTORY.id)
+                    {
+                        if (!this.data.hasBankHistory())
                         {
                             viewButton.enabled = false;
                             continue;
@@ -973,7 +988,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else if (type.id == ViewButton.SLAYERS.id)
             {
-                this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 49, 59, 16, this.width, this.height, this.slayerInfo);
+                this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.width, this.height, this.slayerInfo);
                 this.currentSlotId = ViewButton.SLAYERS.id;
                 this.hideOthersButton();
                 this.hideBasicInfoButton();
@@ -981,26 +996,26 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else if (type.id == ViewButton.OTHERS.id)
             {
-                SkyBlockStats.Type statType = SkyBlockStats.Type.KILLS;
-                List<SkyBlockStats> list = this.sbKills;
+                List<?> list = this.sbKills;
 
                 if (this.currentOthersSlotId == -1 || this.currentOthersSlotId == OthersViewButton.KILLS.id)
                 {
-                    statType = SkyBlockStats.Type.KILLS;
                     list = this.sbKills;
                 }
                 else if (this.currentOthersSlotId == OthersViewButton.DEATHS.id)
                 {
-                    statType = SkyBlockStats.Type.DEATHS;
                     list = this.sbDeaths;
+                }
+                else if (this.currentOthersSlotId == OthersViewButton.OTHER_STATS.id)
+                {
+                    list = this.sbOthers;
                 }
                 else
                 {
-                    statType = SkyBlockStats.Type.OTHERS;
-                    list = this.sbOthers;
+                    list = this.sbBankHistories;
                 }
 
-                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list);
                 this.currentSlotId = ViewButton.OTHERS.id;
                 this.showArmorButton.visible = false;
                 this.hideBasicInfoButton();
@@ -1032,6 +1047,14 @@ public class GuiSkyBlockData extends GuiScreen
                         if (type2.id == OthersViewButton.OTHER_STATS.id)
                         {
                             if (!this.data.hasOthers())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
+                        if (type2.id == OthersViewButton.BANK_HISTORY.id)
+                        {
+                            if (!this.data.hasBankHistory())
                             {
                                 viewButton.enabled = false;
                                 continue;
@@ -1088,35 +1111,44 @@ public class GuiSkyBlockData extends GuiScreen
                             continue;
                         }
                     }
+                    if (type2.id == OthersViewButton.BANK_HISTORY.id)
+                    {
+                        if (!this.data.hasBankHistory())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
                     viewButton.enabled = this.othersButton != type2;
                 }
             }
 
-            SkyBlockStats.Type statType = SkyBlockStats.Type.KILLS;
-            List<SkyBlockStats> list = null;
+            List<?> list = null;
 
             if (type.id == OthersViewButton.KILLS.id)
             {
-                statType = SkyBlockStats.Type.KILLS;
                 this.currentOthersSlotId = OthersViewButton.KILLS.id;
                 list = this.sbKills;
             }
             else if (type.id == OthersViewButton.DEATHS.id)
             {
-                statType = SkyBlockStats.Type.DEATHS;
                 this.currentOthersSlotId = OthersViewButton.DEATHS.id;
                 list = this.sbDeaths;
             }
             else if (type.id == OthersViewButton.OTHER_STATS.id)
             {
-                statType = SkyBlockStats.Type.OTHERS;
                 this.currentOthersSlotId = OthersViewButton.OTHER_STATS.id;
                 list = this.sbOthers;
+            }
+            else if (type.id == OthersViewButton.BANK_HISTORY.id)
+            {
+                this.currentOthersSlotId = OthersViewButton.BANK_HISTORY.id;
+                list = this.sbBankHistories;
             }
 
             if (list != null)
             {
-                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list, statType);
+                this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.width, this.height, list);
             }
         }
     }
@@ -1602,7 +1634,14 @@ public class GuiSkyBlockData extends GuiScreen
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
-            this.getCraftedMinions(profiles.get(userUUID).getAsJsonObject());
+            JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
+            this.getCraftedMinions(currentUserProfile);
+
+            if (banking != null)
+            {
+                this.getBankHistories(banking.getAsJsonObject());
+            }
+            this.data.setHasBankHistory(banking != null && this.sbBankHistories.size() > 0);
         }
 
         this.processCraftedMinions();
@@ -1702,6 +1741,20 @@ public class GuiSkyBlockData extends GuiScreen
         }
         this.loadingApi = false;
         this.showArmorButton.visible = true;
+    }
+
+    private void getBankHistories(JsonObject banking)
+    {
+        BankHistory[] bankHistory = new Gson().fromJson(banking.get("transactions"), BankHistory[].class);
+        Collections.reverse(Arrays.asList(bankHistory));
+
+        for (BankHistory bank : bankHistory)
+        {
+            this.sbBankHistories.add(new BankHistory.Stats(EnumChatFormatting.DARK_GRAY + "------------------------------"));
+            this.sbBankHistories.add(new BankHistory.Stats("Initiator: " + (bank.getName().equals("Bank Interest") ? ColorUtils.stringToRGB("255,215,0").toColoredFont() + bank.getName() : bank.getName())));
+            this.sbBankHistories.add(new BankHistory.Stats(bank.getAction().name + " " + EnumChatFormatting.GOLD + NumberUtils.formatWithM(bank.getAmount()) + EnumChatFormatting.RESET + " about " + CommonUtils.getRelativeTime(bank.getTimestamp())));
+        }
+        this.sbBankHistories.add(new BankHistory.Stats(EnumChatFormatting.DARK_GRAY + "------------------------------"));
     }
 
     private String getLocation(JsonObject objStatus, String uuid)
@@ -4154,10 +4207,10 @@ public class GuiSkyBlockData extends GuiScreen
 
     class Others extends GuiScrollingList
     {
-        private final List<SkyBlockStats> stats;
+        private final List<?> stats;
         private final GuiSkyBlockData parent;
 
-        public Others(GuiSkyBlockData parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockStats> stats, SkyBlockStats.Type type)
+        public Others(GuiSkyBlockData parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<?> stats)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.stats = stats;
@@ -4176,15 +4229,25 @@ public class GuiSkyBlockData extends GuiScreen
             if (!this.stats.isEmpty())
             {
                 FontRenderer font = this.parent.mc.fontRendererObj;
-                SkyBlockStats stat = this.stats.get(index);
+                Object obj = this.stats.get(index);
 
-                if (!StringUtils.isNullOrEmpty(stat.getName()) && this.parent.mc.fontRendererObj.getStringWidth(stat.getName()) > 200)
+                if (obj instanceof SkyBlockStats)
                 {
-                    font = ColorUtils.unicodeFontRenderer;
-                }
+                    SkyBlockStats stat = (SkyBlockStats)obj;
 
-                this.parent.drawString(font, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.parent.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
-                this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValueByString(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
+                    if (!StringUtils.isNullOrEmpty(stat.getName()) && this.parent.mc.fontRendererObj.getStringWidth(stat.getName()) > 200)
+                    {
+                        font = ColorUtils.unicodeFontRenderer;
+                    }
+
+                    this.parent.drawString(font, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), this.parent.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValueByString(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
+                }
+                else if (obj instanceof BankHistory.Stats)
+                {
+                    BankHistory.Stats stat = (BankHistory.Stats)obj;
+                    this.parent.drawString(font, stat.getStats(), this.parent.guiLeft - 55, top, 16777215);
+                }
             }
         }
 
@@ -4697,7 +4760,8 @@ public class GuiSkyBlockData extends GuiScreen
     {
         KILLS(20),
         DEATHS(21),
-        OTHER_STATS(22);
+        OTHER_STATS(22),
+        BANK_HISTORY(23);
 
         private final int id;
         protected static final OthersViewButton[] VALUES = OthersViewButton.values();
