@@ -66,7 +66,7 @@ public class GuiExtendedConfig extends GuiScreen
         this.buttonList.add(new GuiButton(100, this.width / 2 - 155, this.height / 6 + 127, 150, 20, LangUtils.translate("extended_config.render_info.title")));
         this.buttonList.add(new GuiButton(101, this.width / 2 + 10, this.height / 6 + 127, 150, 20, LangUtils.translate("extended_config.custom_color.title")));
         this.buttonList.add(new GuiButton(102, this.width / 2 - 155, this.height / 6 + 151, 150, 20, LangUtils.translate("extended_config.offset.title")));
-        this.buttonList.add(new GuiButton(103, this.width / 2 + 10, this.height / 6 + 151, 150, 20, LangUtils.translate("extended_config.hypixel.title")));
+        this.buttonList.add(new GuiButton(103, this.width / 2 + 10, this.height / 6 + 151, 150, 20, LangUtils.translate("extended_config.skyblock.title")));
 
         this.buttonList.add(this.doneButton = new GuiButton(200, this.width / 2 + 5, this.height / 6 + 175, 160, 20, LangUtils.translate("gui.done")));
         this.buttonList.add(this.resetButton = new GuiButton(201, this.width / 2 - 160, this.height / 6 + 175, 160, 20, LangUtils.translate("extended_config.reset_config")));
@@ -125,7 +125,7 @@ public class GuiExtendedConfig extends GuiScreen
             }
             if (button.id == 103)
             {
-                this.mc.displayGuiScreen(new GuiHypixelSettings(this));
+                this.mc.displayGuiScreen(new GuiSkyblockSettings(this));
             }
             if (button.id == this.doneButton.id)
             {
