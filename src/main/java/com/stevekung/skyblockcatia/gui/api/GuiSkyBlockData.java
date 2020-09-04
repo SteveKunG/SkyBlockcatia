@@ -2210,7 +2210,10 @@ public class GuiSkyBlockData extends GuiScreen
     {
         if (count >= 1000)
         {
-            itemStack.setTagCompound(new NBTTagCompound());
+            if (!itemStack.hasTagCompound())
+            {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
 
             if (!itemStack.getTagCompound().hasKey("display", 10))
             {
