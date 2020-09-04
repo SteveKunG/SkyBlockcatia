@@ -2289,12 +2289,15 @@ public class GuiSkyBlockData extends GuiScreen
                     itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkillType().getName() + " Pet"));
                     list.appendTag(new NBTTagString(""));
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (active ? EnumChatFormatting.GREEN + "Active Pet" : EnumChatFormatting.RED + "Inactive Pet")));
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
 
                     if (level.getCurrentPetLevel() < 100)
                     {
-                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Current EXP: " + EnumChatFormatting.YELLOW + FORMAT.format(level.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getXpRequired())));
+                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(level.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getXpRequired())));
+                    }
+                    if (candyUsed > 0 || heldItem != null)
+                    {
+                        list.appendTag(new NBTTagString(""));
                     }
                     if (candyUsed > 0)
                     {
@@ -3525,6 +3528,27 @@ public class GuiSkyBlockData extends GuiScreen
         worldrenderer.pos(left + 18, top, this.zLevel).tex(18 * 0.0078125F, 0).endVertex();
         worldrenderer.pos(left, top, this.zLevel).tex(0, 0).endVertex();
         tessellator.draw();
+    }
+
+    private String getTextPercentage(int current, int total)
+    {
+        int size = 16;
+
+        if (current > total)
+        {
+            throw new IllegalArgumentException();
+        }
+
+        int donePercents = 100 * current / total;
+        int doneLength = size * donePercents / 100;
+
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < size; i++)
+        {
+            builder.append(i < doneLength ? EnumChatFormatting.DARK_GREEN + "-" + EnumChatFormatting.WHITE : "-");
+        }
+        return builder.toString();
     }
 
     class MinionLevel
