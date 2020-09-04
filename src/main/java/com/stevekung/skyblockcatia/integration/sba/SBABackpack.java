@@ -56,6 +56,7 @@ public class SBABackpack
                 int y = (int)backpackClass.getDeclaredMethod("getY").invoke(getBackpackToPreview);
                 ItemStack[] items = (ItemStack[])backpackClass.getDeclaredMethod("getItems").invoke(getBackpackToPreview);
                 int length = items.length;
+                int screenHeight = gui.height;
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
                 if (!this.isFreezeBackpack())
@@ -63,6 +64,9 @@ public class SBABackpack
                     SBABackpack.mouseXFreeze = mouseX;
                     SBABackpack.mouseYFreeze = mouseY;
                 }
+
+                int tooltipX = SBABackpack.mouseXFreeze;
+                int tooltipY = SBABackpack.mouseYFreeze;
 
                 if (getConfigValues.getClass().getDeclaredMethod("getBackpackStyle").invoke(getConfigValues).toString().equals("GUI"))
                 {
@@ -81,8 +85,6 @@ public class SBABackpack
                         textColor = (int)backpackColorClass.getDeclaredMethod("getInventoryTextColor").invoke(backpackColor);
                     }
 
-                    int screenHeight = gui.height;
-                    int tooltipX = SBABackpack.mouseXFreeze;
                     int tooltipTextWidth = 176;
 
                     if (tooltipX + tooltipTextWidth > gui.width)
@@ -91,7 +93,6 @@ public class SBABackpack
                     }
 
                     int tooltipHeight = length / 9 * 18;
-                    int tooltipY = SBABackpack.mouseYFreeze;
 
                     if (tooltipY + tooltipHeight + 24 > screenHeight)
                     {
@@ -142,6 +143,21 @@ public class SBABackpack
                 }
                 else
                 {
+                    int tooltipTextWidth = 16 * 9 + 3;
+
+                    if (tooltipX + tooltipTextWidth > gui.width) {
+                        tooltipX = mouseXFreeze - 16 - tooltipTextWidth;
+                    }
+
+                    int tooltipHeight = 16 * (length / 9) + 3;
+
+                    if (tooltipY + tooltipHeight > screenHeight) {
+                        tooltipY = screenHeight - tooltipHeight;
+                    }
+
+                    x = tooltipX;
+                    y = tooltipY;
+
                     GlStateManager.disableLighting();
                     GlStateManager.pushMatrix();
                     GlStateManager.translate(0,0, 300);
