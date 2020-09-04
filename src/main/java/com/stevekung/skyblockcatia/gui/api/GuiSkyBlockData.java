@@ -1450,6 +1450,18 @@ public class GuiSkyBlockData extends GuiScreen
 
         GlStateManager.enableDepth();
         this.itemRender.renderItemAndEffectIntoGUI(itemStack, i, j);
+
+        int slotLeft = slot.xDisplayPosition;
+        int slotTop = slot.yDisplayPosition;
+        int slotRight = slotLeft + 16;
+        int slotBottom = slotTop + 16;
+        int green = ColorUtils.to32BitColor(150, 85, 255, 85);
+
+        if (itemStack != null && itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("active"))
+        {
+            this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, green, green);
+        }
+
         this.renderItemOverlayIntoGUI(itemStack, i, j);
         this.itemRender.zLevel = 0.0F;
         this.zLevel = 0.0F;
@@ -1457,25 +1469,22 @@ public class GuiSkyBlockData extends GuiScreen
 
     private void renderItemOverlayIntoGUI(ItemStack itemStack, int xPosition, int yPosition)
     {
-        if (itemStack != null)
+        if (itemStack != null && itemStack.stackSize != 1)
         {
-            if (itemStack.stackSize != 1)
+            FontRenderer fontRenderer = this.fontRendererObj;
+            String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.stackSize));
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+            GlStateManager.disableBlend();
+
+            if (itemStack.stackSize >= 100)
             {
-                FontRenderer fontRenderer = this.fontRendererObj;
-                String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.stackSize));
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                GlStateManager.disableBlend();
-
-                if (itemStack.stackSize >= 100)
-                {
-                    fontRenderer = ColorUtils.unicodeFontRenderer;
-                }
-
-                fontRenderer.drawStringWithShadow(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                fontRenderer = ColorUtils.unicodeFontRenderer;
             }
+
+            fontRenderer.drawStringWithShadow(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215);
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
         }
     }
 
@@ -2303,6 +2312,7 @@ public class GuiSkyBlockData extends GuiScreen
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
                     list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
+                    itemStack.getTagCompound().setBoolean("active", active);
                     petData.add(new PetData(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 
                     switch (tier)
@@ -3495,7 +3505,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.drawSprite(x + 1, y + 1);
         GlStateManager.enableRescaleNormal();
         RenderHelper.enableGUIStandardItemLighting();
-        this.mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, x + 2, y + 2);
+        this.itemRender.renderItemAndEffectIntoGUI(itemStack, x + 2, y + 2);
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableRescaleNormal();
     }
