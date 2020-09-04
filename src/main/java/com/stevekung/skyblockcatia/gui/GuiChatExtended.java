@@ -222,7 +222,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                 buttonList.add(new GuiButton(202, width - 23, height - 77, 20, 20, "G"));
                 buttonList.add(new GuiButton(203, width - 31, height - 98, 28, 20, "COOP"));
             }
-            if (!ConfigManagerIN.enableShortcutGameButton)
+            if (!ConfigManagerIN.enableShortcutGameButton || this.mc.gameSettings.showDebugInfo)
             {
                 return;
             }
