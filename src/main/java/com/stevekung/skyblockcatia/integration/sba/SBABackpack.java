@@ -19,8 +19,8 @@ public class SBABackpack
 {
     public static final SBABackpack INSTANCE = new SBABackpack();
     private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
-    public static int mouseXFreeze;
-    public static int mouseYFreeze;
+    private static int mouseXFreeze;
+    private static int mouseYFreeze;
 
     public void drawBackpacks(GuiSkyBlockData gui, int mouseX, int mouseY, float partialTicks)
     {
@@ -58,7 +58,7 @@ public class SBABackpack
                 int length = items.length;
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-                if (!GuiContainerHook.isFreezeBackpack())
+                if (!this.isFreezeBackpack())
                 {
                     SBABackpack.mouseXFreeze = mouseX;
                     SBABackpack.mouseYFreeze = mouseY;
@@ -81,28 +81,21 @@ public class SBABackpack
                         textColor = (int)backpackColorClass.getDeclaredMethod("getInventoryTextColor").invoke(backpackColor);
                     }
 
+                    int screenHeight = gui.height;
                     int tooltipX = SBABackpack.mouseXFreeze;
                     int tooltipTextWidth = 176;
 
                     if (tooltipX + tooltipTextWidth > gui.width)
                     {
-                        tooltipX = SBABackpack.mouseXFreeze + 150 - x;
-
-                        if (tooltipX > 340) // if the backpack doesn't fit on the screen
-                        {
-                            if (SBABackpack.mouseXFreeze > gui.width / 2)
-                            {
-                                tooltipX = SBABackpack.mouseXFreeze - tooltipTextWidth;
-                            }
-                        }
+                        tooltipX = SBABackpack.mouseXFreeze - 16 - tooltipTextWidth;
                     }
 
                     int tooltipHeight = length / 9 * 18;
                     int tooltipY = SBABackpack.mouseYFreeze;
 
-                    if (tooltipY + tooltipHeight + 24 > gui.height)
+                    if (tooltipY + tooltipHeight + 24 > screenHeight)
                     {
-                        tooltipY = gui.height - tooltipHeight - 24;
+                        tooltipY = screenHeight - tooltipHeight - 24;
                     }
 
                     x = tooltipX;
@@ -133,7 +126,7 @@ public class SBABackpack
                             renderItem.renderItemAndEffectIntoGUI(item, itemX, itemY);
                             renderItem.renderItemOverlayIntoGUI(mc.fontRendererObj, item, itemX, itemY, null);
 
-                            if (GuiContainerHook.isFreezeBackpack() && mouseX > itemX && mouseX < itemX + 16 && mouseY > itemY && mouseY < itemY + 16)
+                            if (this.isFreezeBackpack() && mouseX > itemX && mouseX < itemX + 16 && mouseY > itemY && mouseY < itemY + 16)
                             {
                                 toRenderOverlay = item;
                             }
@@ -177,7 +170,7 @@ public class SBABackpack
                         }
                     }
                 }
-                if (!GuiContainerHook.isFreezeBackpack())
+                if (!this.isFreezeBackpack())
                 {
                     Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", backpackClass);
                     setBackpack.invoke(getUtils, new Object[] { null });
@@ -215,15 +208,13 @@ public class SBABackpack
                     Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
                     setBackpack.invoke(getUtils, new Object[] { null });
                 }
-                SBABackpack.mouseXFreeze = 0;
-                SBABackpack.mouseYFreeze = 0;
+                this.clear();
             }
-            if (keyCode == main.getFreezeBackpackKey().getKeyCode() && GuiContainerHook.isFreezeBackpack() && System.currentTimeMillis() - lastBackpackFreezeKey > 500)
+            if (keyCode == main.getFreezeBackpackKey().getKeyCode() && this.isFreezeBackpack() && System.currentTimeMillis() - lastBackpackFreezeKey > 500)
             {
                 setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
                 GuiContainerHook.setFreezeBackpack(false);
-                SBABackpack.mouseXFreeze = 0;
-                SBABackpack.mouseYFreeze = 0;
+                this.clear();
             }
         }
         catch (Exception e)
@@ -250,8 +241,7 @@ public class SBABackpack
                 Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
                 setBackpack.invoke(getUtils, new Object[] { null });
             }
-            SBABackpack.mouseXFreeze = 0;
-            SBABackpack.mouseYFreeze = 0;
+            this.clear();
         }
         catch (Exception e)
         {
@@ -262,5 +252,11 @@ public class SBABackpack
     public boolean isFreezeBackpack()
     {
         return GuiContainerHook.isFreezeBackpack();
+    }
+
+    private void clear()
+    {
+        SBABackpack.mouseXFreeze = 0;
+        SBABackpack.mouseYFreeze = 0;
     }
 }
