@@ -24,7 +24,6 @@ public class NumericToast implements IToast<NumericToast>
     private int value;
     private final String object;
     private final boolean isCoins;
-    private final boolean isFishingCoins;
     private final boolean isPet;
     private long firstDrawTime;
     private boolean hasNewValue;
@@ -39,9 +38,8 @@ public class NumericToast implements IToast<NumericToast>
         this.object = object;
         this.isCoins = this.object.equals("Coins");
         this.isPet = this.object.equals("Pet");
-        this.isFishingCoins = rarity.matches(ToastUtils.DropCondition.FISHING_COINS);
-        this.maxDrawTime = this.isFishingCoins || this.isPet ? 15000L : 10000L;
-        this.texture = new ResourceLocation(this.isFishingCoins || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
+        this.maxDrawTime = rarity.getTime();
+        this.texture = new ResourceLocation(rarity.matches(ToastUtils.DropCondition.FISHING_COINS) || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
     }
 
     @Override
@@ -61,7 +59,7 @@ public class NumericToast implements IToast<NumericToast>
         GlStateManager.color(1.0F, 1.0F, 1.0F);
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.mc.fontRendererObj.drawString(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).setChatStyle(JsonUtils.style().setBold(true)).getFormattedText(), 30, 7, 16777215);
-        GuiToast.drawLongItemName(toastGui, delta, this.firstDrawTime, this.buffer, itemName, this.isFishingCoins || this.isPet ? 1000L : 500L, this.maxDrawTime, 5000L, 8000L, false);
+        GuiToast.drawLongItemName(toastGui, delta, this.firstDrawTime, this.maxDrawTime, this.buffer, itemName, false);
         EquipmentOverlay.renderItem(itemStack, 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }

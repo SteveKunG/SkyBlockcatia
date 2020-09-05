@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.item.ItemStack;
@@ -130,6 +131,39 @@ public class ToastUtils
         public String getColor()
         {
             return ColorUtils.stringToRGB(this.color).toColoredFont();
+        }
+
+        public long getTime()
+        {
+            switch (this)
+            {
+            case RARE_DROP:
+            case PET_DROP:
+            case DRAGON_CRYSTAL_FRAGMENT:
+                return ExtendedConfig.instance.rareDropToastTime * 1000L;
+            case BOSS_DROP:
+            case SLAYER_RARE_DROP:
+            case SLAYER_VERY_RARE_DROP_BLUE:
+            case SLAYER_VERY_RARE_DROP_PURPLE:
+            case SLAYER_CRAZY_RARE_DROP:
+            case SANTA_TIER:
+            case DUNGEON_QUALITY_DROP:
+            case DUNGEON_REWARD_DROP:
+                return ExtendedConfig.instance.specialDropToastTime * 1000L;
+            case GOOD_CATCH:
+            case GREAT_CATCH:
+            case GOOD_CATCH_COINS:
+            case GREAT_CATCH_COINS:
+                return ExtendedConfig.instance.specialDropToastTime * 1000L;
+            case COMMON_GIFT:
+            case SWEET_GIFT:
+            case RARE_GIFT:
+                return ExtendedConfig.instance.giftToastTime * 1000L;
+            case PET_LEVEL_UP:
+                return ExtendedConfig.instance.petToastTime * 1000L;
+            default:
+                return 0;
+            }
         }
 
         public boolean matches(DropCondition... condition)

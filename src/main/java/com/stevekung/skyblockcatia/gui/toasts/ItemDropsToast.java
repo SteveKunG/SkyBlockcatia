@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.nio.FloatBuffer;
 
+import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.ClientEventHandler;
 import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
@@ -25,7 +26,6 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
     private final FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);
     private String magicFind;
     private final boolean hasMagicFind;
-    private final boolean isSpecialDrop;
     private final long maxDrawTime;
 
     public ItemDropsToast(ItemStack itemStack, ToastUtils.DropType type)
@@ -37,9 +37,8 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
     {
         this.rareDropOutput = new ToastUtils.ItemDrop(itemStack, type);
         this.hasMagicFind = magicFind != null;
-        this.isSpecialDrop = this.hasMagicFind || type.matches(ToastUtils.DropCondition.SPECIAL_DROP);
         this.magicFind = this.hasMagicFind ? EnumChatFormatting.AQUA + " (" + magicFind + "% Magic Find!)" : "";
-        this.maxDrawTime = this.isSpecialDrop ? 30000L : 15000L;
+        this.maxDrawTime = this.hasMagicFind ? ExtendedConfig.instance.specialDropToastTime * 1000L : type.getTime();
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
             toastGui.mc.fontRendererObj.drawString(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).setChatStyle(JsonUtils.style().setBold(true)).getFormattedText(), 30, 7, 16777215);
         }
 
-        GuiToast.drawLongItemName(toastGui, delta, 0L, this.buffer, itemName, this.isSpecialDrop ? 5000L : 1000L, this.maxDrawTime, this.isSpecialDrop ? 10000L : 5000L, this.isSpecialDrop ? 10000L : 8000L, this.hasMagicFind);
+        GuiToast.drawLongItemName(toastGui, delta, 0L, this.maxDrawTime, this.buffer, itemName, this.hasMagicFind);
         RenderHelper.enableGUIStandardItemLighting();
 
         EquipmentOverlay.renderItem(itemStack, 8, 8);

@@ -513,9 +513,9 @@ public class HypixelEventHandler
                         }
                     }
 
-                    if (ToastMode.getById(ExtendedConfig.instance.itemDropToastMode).equalsIgnoreCase("toast") || ToastMode.getById(ExtendedConfig.instance.itemDropToastMode).equalsIgnoreCase("chat_and_toast"))
+                    if (ToastMode.getById(ExtendedConfig.instance.rareDropToastMode).equalsIgnoreCase("toast") || ToastMode.getById(ExtendedConfig.instance.rareDropToastMode).equalsIgnoreCase("chat_and_toast"))
                     {
-                        boolean isToast = ToastMode.getById(ExtendedConfig.instance.itemDropToastMode).equalsIgnoreCase("toast");
+                        boolean isToast = ToastMode.getById(ExtendedConfig.instance.rareDropToastMode).equalsIgnoreCase("toast");
 
                         if (message.contains("You destroyed an Ender Crystal!"))
                         {

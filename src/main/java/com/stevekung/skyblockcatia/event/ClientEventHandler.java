@@ -4,15 +4,11 @@ import java.util.Random;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.GuiChatRegistry;
-import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -71,12 +67,11 @@ public class ClientEventHandler
         Random rand = event.player.worldObj.rand;
         EntityPlayer player = event.player;
         ItemStack itemStack = event.pickedUp.getEntityItem();
-        ChatStyle hoverStyle = JsonUtils.style().setChatHoverEvent(JsonUtils.hover(HoverEvent.Action.SHOW_ITEM, JsonUtils.create(itemStack.writeToNBT(new NBTTagCompound()).toString())));
         String magic = rand.nextBoolean() ? " §r§b(+" + rand.nextInt(100) + "% Magic Find!)§r" : "";
         char formatter = EnumChatFormatting.values()[new Random().nextInt(EnumChatFormatting.values().length)].formattingCode;
 
         // Pet Level Up
-        //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse"};
+        //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse","Flying Fish","Magma Cube"};
         //player.addChatComponentMessage(JsonUtils.create("§r§aYour §r§" + formatter + pet[rand.nextInt(pet.length)] + " §r§alevelled up to level §r§9" + rand.nextInt(100) + "§r§a!§r"));
 
         // Pet Drop
@@ -93,16 +88,16 @@ public class ClientEventHandler
         {
         case 0:
         default:
-            player.addChatComponentMessage(JsonUtils.create("§r§b§lRARE DROP! §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§b§lRARE DROP! §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         case 1:
-            player.addChatComponentMessage(JsonUtils.create("§r§9§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§9§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         case 2:
-            player.addChatComponentMessage(JsonUtils.create("§r§5§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§5§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         case 3:
-            player.addChatComponentMessage(JsonUtils.create("§r§d§lCRAZY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.addChatComponentMessage(JsonUtils.create("§r§d§lCRAZY RARE DROP!  §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
             break;
         }*/
 
@@ -113,16 +108,16 @@ public class ClientEventHandler
         /*switch (rand.nextInt(4))
         {
         case 0:
-            player.addChatComponentMessage(JsonUtils.create("COMMON! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.addChatComponentMessage(JsonUtils.create("COMMON! ").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create(" gift with TEST!")));
             break;
         case 1:
-            player.addChatComponentMessage(JsonUtils.create("SWEET! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.addChatComponentMessage(JsonUtils.create("SWEET! ").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create(" gift with TEST!")));
             break;
         case 2:
-            player.addChatComponentMessage(JsonUtils.create("RARE! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.addChatComponentMessage(JsonUtils.create("RARE! ").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create(" gift with TEST!")));
             break;
         case 3:
-            player.addChatComponentMessage(JsonUtils.create("SANTA TIER! ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.addChatComponentMessage(JsonUtils.create("SANTA TIER! ").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create(" gift with TEST!")));
             break;
         }*/
 
@@ -176,10 +171,10 @@ public class ClientEventHandler
         {
         case 0:
         default:
-            player.addChatComponentMessage(JsonUtils.create("GOOD CATCH! You found a ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("!")));
+            player.addChatComponentMessage(JsonUtils.create("GOOD CATCH! You found a ").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create("!")));
             break;
         case 1:
-            player.addChatComponentMessage(JsonUtils.create("GREAT CATCH! You found a ").appendSibling(JsonUtils.create(itemStack.getDisplayName()).setChatStyle(hoverStyle)).appendSibling(JsonUtils.create("!")));
+            player.addChatComponentMessage(JsonUtils.create("GREAT CATCH! You found a ").appendSibling(JsonUtils.create(itemStack.getDisplayName())).appendSibling(JsonUtils.create("!")));
             break;
         }*/
 
@@ -187,6 +182,7 @@ public class ClientEventHandler
         //String test = "You found a Top Quality Item! " + itemStack.getDisplayName();
         //String test = "You found a Top Quality Item! Skeleton Soldier Boots";
         //String test = "     RARE REWARD! Adaptive Boots";
+        //String test = "     RARE REWARD! " + itemStack.getDisplayName();
         //player.addChatComponentMessage(JsonUtils.create(test));
     }
 }
