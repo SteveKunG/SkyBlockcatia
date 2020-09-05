@@ -15,6 +15,6 @@ public abstract class RenderSnowballMixin
     @Redirect(method = "doRender(Lnet/minecraft/entity/Entity;DDDFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.rotate(FFFF)V", ordinal = 1))
     private void rotate(float angle, float x, float y, float z)
     {
-        GlStateManager.rotate((that.getRenderManager().options.thirdPersonView == 2 ? -1 : 1) * that.getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate((this.that.getRenderManager().options.thirdPersonView == 2 ? -1 : 1) * this.that.getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
     }
 }
