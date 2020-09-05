@@ -31,6 +31,7 @@ import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.GuiButtonItem;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.integration.sba.SBABackpack;
+import com.stevekung.skyblockcatia.integration.textoverflow.TooltipOverflow;
 import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.Minecraft;
@@ -853,8 +854,14 @@ public class GuiSkyBlockData extends GuiScreen
     {
         super.handleMouseInput();
         int i = Mouse.getEventDWheel();
+        boolean scroll = true;
 
-        if (i != 0 && this.needsScrollBars())
+        if (SkyBlockcatiaMod.isTextOverflowScrollLoaded)
+        {
+            scroll = !TooltipOverflow.INSTANCE.checkCanScroll();
+        }
+
+        if (i != 0 && this.needsScrollBars() && scroll)
         {
             int j = this.skyBlockContainer.itemList.size() / 9 - 4;
 

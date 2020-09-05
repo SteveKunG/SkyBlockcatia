@@ -65,6 +65,7 @@ public class SkyBlockcatiaMod
     public static boolean isIngameAccountSwitcherLoaded = Loader.isModLoaded("IngameAccountSwitcher");
     public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
     public static boolean isPatcherLoaded = Loader.isModLoaded("patcher");
+    public static boolean isTextOverflowScrollLoaded = Loader.isModLoaded("text_overflow_scroll");
 
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     public static boolean isDevelopment;
