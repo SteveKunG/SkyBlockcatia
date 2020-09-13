@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderFish;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityFishHook;
@@ -20,9 +19,9 @@ import net.minecraft.util.Vec3;
 @Mixin(RenderFish.class)
 public abstract class RenderFishMixin extends Render<Entity>
 {
-    public RenderFishMixin(RenderManager manager)
+    private RenderFishMixin()
     {
-        super(manager);
+        super(null);
     }
 
     @Override

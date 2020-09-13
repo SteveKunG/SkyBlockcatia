@@ -10,16 +10,15 @@ import com.stevekung.skyblockcatia.utils.EntityOtherFakePlayer;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
 
 @Mixin(RendererLivingEntity.class)
 public abstract class RendererLivingEntityMixin extends Render<EntityLivingBase>
 {
-    protected RendererLivingEntityMixin(RenderManager renderManager)
+    private RendererLivingEntityMixin()
     {
-        super(renderManager);
+        super(null);
     }
 
     @Inject(method = "canRenderName(Lnet/minecraft/entity/EntityLivingBase;)Z", cancellable = true, at = @At("HEAD"))

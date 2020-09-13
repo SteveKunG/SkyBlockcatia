@@ -5,7 +5,6 @@ import org.spongepowered.asm.mixin.Overwrite;
 
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderXPOrb;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -14,9 +13,9 @@ import net.minecraft.util.MathHelper;
 @Mixin(RenderXPOrb.class)
 public abstract class RenderXPOrbMixin extends Render<EntityXPOrb>
 {
-    protected RenderXPOrbMixin(RenderManager manager)
+    private RenderXPOrbMixin()
     {
-        super(manager);
+        super(null);
     }
 
     @Override

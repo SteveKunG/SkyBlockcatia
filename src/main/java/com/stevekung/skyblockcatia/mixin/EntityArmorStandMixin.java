@@ -15,7 +15,6 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 @Mixin(EntityArmorStand.class)
 public abstract class EntityArmorStandMixin extends EntityLivingBase
@@ -24,9 +23,9 @@ public abstract class EntityArmorStandMixin extends EntityLivingBase
     @Final
     private ItemStack[] contents;
 
-    public EntityArmorStandMixin(World world)
+    private EntityArmorStandMixin()
     {
-        super(world);
+        super(null);
     }
 
     @Inject(method = "interactAt(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/Vec3;)Z", cancellable = true, at = @At("HEAD"))

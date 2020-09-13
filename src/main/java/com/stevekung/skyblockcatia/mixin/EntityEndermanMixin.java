@@ -7,14 +7,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.world.World;
 
 @Mixin(EntityEnderman.class)
 public abstract class EntityEndermanMixin extends EntityMob
 {
-    public EntityEndermanMixin(World world)
+    private EntityEndermanMixin()
     {
-        super(world);
+        super(null);
     }
 
     @Inject(method = "teleportRandomly()Z", cancellable = true, at = @At("HEAD"))

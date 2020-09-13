@@ -10,16 +10,15 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLightningBolt;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.effect.EntityLightningBolt;
 
 @Mixin(RenderLightningBolt.class)
 public abstract class RenderLightningBoltMixin extends Render<EntityLightningBolt>
 {
-    protected RenderLightningBoltMixin(RenderManager renderManager)
+    private RenderLightningBoltMixin()
     {
-        super(renderManager);
+        super(null);
     }
 
     @Override
