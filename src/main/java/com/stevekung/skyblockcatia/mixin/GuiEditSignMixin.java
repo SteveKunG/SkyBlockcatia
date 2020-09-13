@@ -133,7 +133,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
             {
                 String text = this.that.tileSign.signText[0].getUnformattedText();
 
-                if (ExtendedConfig.instance.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
+                if (ExtendedConfig.instance.auctionBidConfirm && !StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
                 {
                     int price = Integer.parseInt(text);
 
