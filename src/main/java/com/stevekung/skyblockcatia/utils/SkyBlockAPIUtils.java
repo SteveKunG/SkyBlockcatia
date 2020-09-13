@@ -88,23 +88,9 @@ public class SkyBlockAPIUtils
             {
                 NBTTagCompound compound = CompressedStreamTools.readCompressed(new ByteArrayInputStream(decode));
                 NBTTagList list = compound.getTagList("i", 10);
-                int dummyIndex = -1;
-                boolean hasDummy = type == SkyBlockInventoryType.ACCESSORY_BAG || type == SkyBlockInventoryType.POTION_BAG || type == SkyBlockInventoryType.FISHING_BAG || type == SkyBlockInventoryType.QUIVER;
 
-                for (int i = 0; hasDummy && i < list.tagCount(); ++i)
-                {
-                    if (list.getCompoundTagAt(i).toString().contains("Go Back"))
-                    {
-                        dummyIndex = i;
-                        break;
-                    }
-                }
                 for (int i = type == SkyBlockInventoryType.INVENTORY ? 9 : 0; i < list.tagCount(); ++i)
                 {
-                    if (hasDummy && i >= dummyIndex - 3)
-                    {
-                        break;
-                    }
                     itemStack.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
                 }
                 if (type == SkyBlockInventoryType.INVENTORY)
