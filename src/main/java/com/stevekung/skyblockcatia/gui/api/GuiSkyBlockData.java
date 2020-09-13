@@ -203,41 +203,6 @@ public class GuiSkyBlockData extends GuiScreen
     @Override
     public void initGui()
     {
-        this.buttonList.clear();
-
-        if (this.firstLoad)
-        {
-            this.firstLoad = false;
-
-            CommonUtils.runAsync(() ->
-            {
-                try
-                {
-                    this.watch.start();
-                    this.getPlayerData();
-                    this.watch.stop();
-
-                    if (this.skyblockProfiles == null)
-                    {
-                        LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
-                    }
-
-                    this.watch.reset();
-                }
-                catch (Throwable e)
-                {
-                    this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
-
-                    for (StackTraceElement stack : e.getStackTrace())
-                    {
-                        this.errorList.add("at " + stack.toString());
-                    }
-                    this.setErrorMessage("", true);
-                    e.printStackTrace();
-                }
-            });
-        }
-
         this.buttonList.add(this.doneButton = new GuiButton(0, this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close")));
         this.buttonList.add(this.backButton = new GuiButton(1, this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back")));
         this.buttonList.add(this.showArmorButton = new GuiButtonItem(2, this.width / 2 - 115, this.height / 2 - 65, new ItemStack(Items.diamond_chestplate), "Show Armor: " + EnumChatFormatting.GREEN + "ON"));
@@ -276,6 +241,39 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 viewButton.visible = true;
             }
+        }
+
+        if (this.firstLoad)
+        {
+            this.firstLoad = false;
+
+            CommonUtils.runAsync(() ->
+            {
+                try
+                {
+                    this.watch.start();
+                    this.getPlayerData();
+                    this.watch.stop();
+
+                    if (this.skyblockProfiles == null)
+                    {
+                        LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
+                    }
+
+                    this.watch.reset();
+                }
+                catch (Throwable e)
+                {
+                    this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
+
+                    for (StackTraceElement stack : e.getStackTrace())
+                    {
+                        this.errorList.add("at " + stack.toString());
+                    }
+                    this.setErrorMessage("", true);
+                    e.printStackTrace();
+                }
+            });
         }
 
         if (!this.updated)
