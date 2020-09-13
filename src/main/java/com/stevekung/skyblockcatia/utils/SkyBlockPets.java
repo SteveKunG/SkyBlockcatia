@@ -114,12 +114,12 @@ public class SkyBlockPets
         PET_ITEM_IRON_CLAWS_COMMON("PET_ITEM_IRON_CLAWS", EnumChatFormatting.WHITE),
         PET_ITEM_SHARPENED_CLAWS_UNCOMMON("PET_ITEM_SHARPENED_CLAWS", EnumChatFormatting.GREEN),
         PET_ITEM_HARDENED_SCALES_UNCOMMON("PET_ITEM_HARDENED_SCALES", EnumChatFormatting.GREEN),
-        PET_ITEM_BUBBLEGUM(null, EnumChatFormatting.BLUE),
-        PET_ITEM_LUCKY_CLOVER(null, EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_TEXTBOOK(null, EnumChatFormatting.GOLD),
-        PET_ITEM_SADDLE(null, EnumChatFormatting.GREEN),
-        PET_ITEM_EXP_SHARE(null, EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_TIER_BOOST(null, EnumChatFormatting.GOLD),
+        PET_ITEM_BUBBLEGUM(EnumChatFormatting.BLUE),
+        PET_ITEM_LUCKY_CLOVER(EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_TEXTBOOK(EnumChatFormatting.GOLD),
+        PET_ITEM_SADDLE(EnumChatFormatting.GREEN),
+        PET_ITEM_EXP_SHARE(EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_TIER_BOOST(EnumChatFormatting.GOLD),
         PET_ITEM_COMBAT_SKILL_BOOST_COMMON("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.WHITE),
         PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.GREEN),
         PET_ITEM_COMBAT_SKILL_BOOST_RARE("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.BLUE),
@@ -139,10 +139,24 @@ public class SkyBlockPets
         PET_ITEM_FARMING_SKILL_BOOST_COMMON("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.WHITE),
         PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.GREEN),
         PET_ITEM_FARMING_SKILL_BOOST_RARE("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.BLUE),
-        PET_ITEM_FARMING_SKILL_BOOST_EPIC("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE);
+        PET_ITEM_FARMING_SKILL_BOOST_EPIC("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
+        REINFORCED_SCALES(EnumChatFormatting.BLUE),
+        GOLD_CLAWS(EnumChatFormatting.GREEN),
+        ALL_SKILLS_SUPER_BOOST(EnumChatFormatting.WHITE),
+        BIGGER_TEETH(EnumChatFormatting.GREEN),
+        SERRATED_CLAWS(EnumChatFormatting.BLUE),
+        WASHED_UP_SOUVENIR(EnumChatFormatting.GOLD),
+        ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE),
+        CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
+        DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE);
 
         private final String altName;
         private final EnumChatFormatting color;
+
+        private HeldItem(EnumChatFormatting color)
+        {
+            this(null, color);
+        }
 
         private HeldItem(String altName, EnumChatFormatting color)
         {

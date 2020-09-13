@@ -2254,7 +2254,9 @@ public class GuiSkyBlockData extends GuiScreen
                 double exp = 0.0D;
                 String petRarity = SkyBlockPets.Tier.COMMON.name();
                 int candyUsed = 0;
+                JsonElement heldItemObj = element.getAsJsonObject().get("heldItem");
                 SkyBlockPets.HeldItem heldItem = null;
+                String heldItemType = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
@@ -2268,9 +2270,16 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
                 }
-                if (element.getAsJsonObject().get("heldItem") != null && !element.getAsJsonObject().get("heldItem").isJsonNull())
+                if (heldItemObj != null && !heldItemObj.isJsonNull())
                 {
-                    heldItem = SkyBlockPets.HeldItem.valueOf(element.getAsJsonObject().get("heldItem").getAsString());
+                    try
+                    {
+                        heldItem = SkyBlockPets.HeldItem.valueOf(heldItemObj.getAsString());
+                    }
+                    catch (Exception e)
+                    {
+                        heldItemType = heldItemObj.getAsString();
+                    }
                 }
 
                 SkyBlockPets.Tier tier = SkyBlockPets.Tier.valueOf(petRarity);
@@ -2300,7 +2309,7 @@ public class GuiSkyBlockData extends GuiScreen
                     {
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(level.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getXpRequired())));
                     }
-                    if (candyUsed > 0 || heldItem != null)
+                    if (candyUsed > 0 || heldItem != null || heldItemType != null)
                     {
                         list.appendTag(new NBTTagString(""));
                     }
@@ -2317,6 +2326,13 @@ public class GuiSkyBlockData extends GuiScreen
                             heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase().replace("pet_item_", "").replace("_", " "));
                         }
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + heldItemName));
+                    }
+                    else
+                    {
+                        if (heldItemType != null)
+                        {
+                            list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + EnumChatFormatting.RED + heldItemType));
+                        }
                     }
 
                     list.appendTag(new NBTTagString(""));

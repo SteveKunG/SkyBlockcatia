@@ -145,13 +145,15 @@ public class SBABackpack
                 {
                     int tooltipTextWidth = 16 * 9 + 3;
 
-                    if (tooltipX + tooltipTextWidth > gui.width) {
+                    if (tooltipX + tooltipTextWidth > gui.width)
+                    {
                         tooltipX = mouseXFreeze - 16 - tooltipTextWidth;
                     }
 
                     int tooltipHeight = 16 * (length / 9) + 3;
 
-                    if (tooltipY + tooltipHeight > screenHeight) {
+                    if (tooltipY + tooltipHeight > screenHeight)
+                    {
                         tooltipY = screenHeight - tooltipHeight;
                     }
 
