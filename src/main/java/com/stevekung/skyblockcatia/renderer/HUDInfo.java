@@ -187,8 +187,8 @@ public class HUDInfo
     {
         Date date = new Date();
         boolean isThai = Calendar.getInstance().getTimeZone().getID().equals("Asia/Bangkok");
-        String dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.getDefault()).format(date);
-        String timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.getDefault()).format(date);
+        String dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
+        String timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
         String currentTime = ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeDDMMYYValueColor).toColoredFont() + dateFormat + " " + ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeHHMMSSValueColor).toColoredFont() + timeFormat;
         return ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeColor).toColoredFont() + "Time: " + currentTime;
     }
@@ -219,7 +219,7 @@ public class HUDInfo
                     builder.append(":");
                     int minute = (int)minuteField.get(getCurrentDate);
                     builder.append(minute == 0 ? "0" + minute : minute);
-                    builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.US));
+                    builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.ROOT));
                 }
                 catch (Exception e) {}
                 String currentTime = ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();

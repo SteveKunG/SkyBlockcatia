@@ -40,7 +40,7 @@ public class ExpProgress
 
     public static ExpProgress[] getXpProgressFromRemote(Type type) throws Exception
     {
-        BufferedReader in = DataGetter.get("api/exp_progress/" + type.toString().toLowerCase(Locale.US) + ".json");
+        BufferedReader in = DataGetter.get("api/exp_progress/" + type.toString().toLowerCase(Locale.ROOT) + ".json");
         return GSON.fromJson(in, ExpProgress[].class);
     }
 

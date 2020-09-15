@@ -2185,7 +2185,7 @@ public class GuiSkyBlockData extends GuiScreen
                         }
                         else
                         {
-                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.US));
+                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
                             ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
                             this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName());
                             sacks.add(itemStack);
@@ -2842,9 +2842,9 @@ public class GuiSkyBlockData extends GuiScreen
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
-        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ROOT);
         String lastLogout = logoutDate.format(lastSaveDate);
-        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
+        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ROOT);
         joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
         String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
@@ -3248,7 +3248,7 @@ public class GuiSkyBlockData extends GuiScreen
         {
             try
             {
-                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.US));
+                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ROOT));
                 this.activeSlayerTier = 1 + slayerQuest.getAsJsonObject().get("tier").getAsInt();
             }
             catch (Exception e)

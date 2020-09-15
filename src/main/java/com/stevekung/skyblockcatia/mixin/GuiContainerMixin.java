@@ -475,7 +475,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
 
                                     try
                                     {
-                                        level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
+                                        level = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
                                     }
                                     catch (ParseException e) {}
 
@@ -498,7 +498,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
 
                                     try
                                     {
-                                        coin = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
+                                        coin = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
                                     }
                                     catch (ParseException e) {}
 
