@@ -2188,7 +2188,6 @@ public class GuiSkyBlockData extends GuiScreen
                             SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.US));
                             ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
                             this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName());
-                            System.out.println(itemStack);
                             sacks.add(itemStack);
                         }
                     }
@@ -3056,6 +3055,7 @@ public class GuiSkyBlockData extends GuiScreen
         List<SkyBlockStats> seaCreatures = new ArrayList<>();
         List<SkyBlockStats> dragons = new ArrayList<>();
         List<SkyBlockStats> race = new ArrayList<>();
+        List<SkyBlockStats> mythosBurrowsDug = new ArrayList<>();
 
         // special case
         int emperorKills = 0;
@@ -3071,7 +3071,7 @@ public class GuiSkyBlockData extends GuiScreen
                 continue;
             }
 
-            if (statName.startsWith("kills"))
+            if (statName.startsWith("kills") || statName.endsWith("kills"))
             {
                 for (String sc : SEA_CREATURES)
                 {
@@ -3129,6 +3129,10 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     race.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("dungeon_hub_", "").replace("_", " ")), value));
                 }
+                else if (statName.startsWith("mythos_burrows_"))
+                {
+                    mythosBurrowsDug.add(new SkyBlockStats(WordUtils.capitalize(statName.toLowerCase(Locale.ROOT).replace("mythos_burrows_", "").replace("_", " ")), value));
+                }
                 else
                 {
                     others.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("_", " ")), value));
@@ -3154,49 +3158,24 @@ public class GuiSkyBlockData extends GuiScreen
         this.sortStats(winter, "Winter Event");
         this.sortStats(petMilestone, "Pet Milestones");
         this.sortStats(race, "Races");
+        this.sortStats(mythosBurrowsDug, "Mythos Burrows Dug");
         this.sortStats(others, "Others");
 
         this.sortStatsByValue(mobKills, "Mob Kills");
         this.sortStatsByValue(dragons, "Dragon Kills");
         this.sortStatsByValue(seaCreatures, "Sea Creature Kills");
 
-        if (mobKills.size() > 2)
-        {
-            this.sbKills.addAll(mobKills);
-        }
-        if (dragons.size() > 2)
-        {
-            this.sbKills.addAll(dragons);
-        }
-        if (seaCreatures.size() > 2)
-        {
-            this.sbKills.addAll(seaCreatures);
-        }
+        this.checkEmptyList(this.sbKills, mobKills);
+        this.checkEmptyList(this.sbKills, dragons);
+        this.checkEmptyList(this.sbKills, seaCreatures);
 
-        if (auctions.size() > 2)
-        {
-            this.sbOthers.addAll(auctions);
-        }
-        if (fished.size() > 2)
-        {
-            this.sbOthers.addAll(fished);
-        }
-        if (winter.size() > 2)
-        {
-            this.sbOthers.addAll(winter);
-        }
-        if (petMilestone.size() > 2)
-        {
-            this.sbOthers.addAll(petMilestone);
-        }
-        if (race.size() > 2)
-        {
-            this.sbOthers.addAll(race);
-        }
-        if (others.size() > 2)
-        {
-            this.sbOthers.addAll(others);
-        }
+        this.checkEmptyList(this.sbOthers, auctions);
+        this.checkEmptyList(this.sbOthers, fished);
+        this.checkEmptyList(this.sbOthers, winter);
+        this.checkEmptyList(this.sbOthers, petMilestone);
+        this.checkEmptyList(this.sbOthers, race);
+        this.checkEmptyList(this.sbOthers, mythosBurrowsDug);
+        this.checkEmptyList(this.sbOthers, others);
 
         this.data.setHasKills(this.sbKills.size() > 1);
         this.data.setHasDeaths(this.sbDeaths.size() > 1);
@@ -3205,6 +3184,14 @@ public class GuiSkyBlockData extends GuiScreen
         if (!this.data.hasKills() && !this.data.hasDeaths() && !this.data.hasOthers())
         {
             this.data.setHasOthersTab(false);
+        }
+    }
+
+    private <T> void checkEmptyList(List<T> parent, List<T> toAdd)
+    {
+        if (toAdd.size() > 2)
+        {
+            parent.addAll(toAdd);
         }
     }
 
