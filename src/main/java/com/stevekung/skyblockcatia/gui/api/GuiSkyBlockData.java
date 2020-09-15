@@ -2218,6 +2218,7 @@ public class GuiSkyBlockData extends GuiScreen
             if (!StringUtils.isNullOrEmpty(altName))
             {
                 itemStack.setStackDisplayName(altName + EnumChatFormatting.GRAY + " x" + FORMAT.format(count));
+                itemStack.getTagCompound().setTag("ench", new NBTTagList());
             }
             else
             {
