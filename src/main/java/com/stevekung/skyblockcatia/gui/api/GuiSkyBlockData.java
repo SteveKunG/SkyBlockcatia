@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.text.WordUtils;
@@ -2178,16 +2180,15 @@ public class GuiSkyBlockData extends GuiScreen
                         if (item != null)
                         {
                             ItemStack itemStack = new ItemStack(item, count, meta);
-                            this.addSackItemStackCount(itemStack, count);
+                            this.addSackItemStackCount(itemStack, count, null);
                             sacks.add(itemStack);
                         }
                         else
                         {
                             SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.US));
                             ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
-                            itemStack.setStackDisplayName(slayerDrops.getDisplayName());
-                            itemStack.getTagCompound().setTag("ench", new NBTTagList());
-                            this.addSackItemStackCount(itemStack, count);
+                            this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName());
+                            System.out.println(itemStack);
                             sacks.add(itemStack);
                         }
                     }
@@ -2196,7 +2197,7 @@ public class GuiSkyBlockData extends GuiScreen
             else
             {
                 ItemStack barrier = new ItemStack(Blocks.barrier);
-                barrier.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + "Sacks is not available!");
+                barrier.setStackDisplayName(EnumChatFormatting.RESET.toString() + EnumChatFormatting.RED + "Sacks is not available!");
 
                 for (int i = 0; i < 36; ++i)
                 {
@@ -2211,22 +2212,26 @@ public class GuiSkyBlockData extends GuiScreen
         SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SkyBlockInventoryTabs.SACKS));
     }
 
-    private void addSackItemStackCount(ItemStack itemStack, int count)
+    private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable String altName)
     {
         if (count >= 1000)
         {
-            if (!itemStack.hasTagCompound())
+            if (!StringUtils.isNullOrEmpty(altName))
             {
-                itemStack.setTagCompound(new NBTTagCompound());
+                itemStack.setStackDisplayName(altName + EnumChatFormatting.GRAY + " x" + FORMAT.format(count));
             }
-
-            if (!itemStack.getTagCompound().hasKey("display", 10))
+            else
             {
-                itemStack.getTagCompound().setTag("display", new NBTTagCompound());
+                itemStack.setStackDisplayName(EnumChatFormatting.RESET + itemStack.getDisplayName() + EnumChatFormatting.GRAY + " x" + FORMAT.format(count));
             }
-            NBTTagList itemCount = new NBTTagList();
-            itemCount.appendTag(new NBTTagString(EnumChatFormatting.RESET + "Item Count: " + EnumChatFormatting.GRAY + FORMAT.format(count)));
-            itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", itemCount);
+        }
+        else
+        {
+            if (!StringUtils.isNullOrEmpty(altName))
+            {
+                itemStack.setStackDisplayName(altName);
+                itemStack.getTagCompound().setTag("ench", new NBTTagList());
+            }
         }
     }
 
