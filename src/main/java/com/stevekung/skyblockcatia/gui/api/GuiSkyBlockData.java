@@ -3810,7 +3810,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             else
             {
-                return EnumChatFormatting.AQUA + "MAX LEVEL";
+                return EnumChatFormatting.AQUA.toString() + EnumChatFormatting.BOLD + "MAX LEVEL";
             }
         }
     }
