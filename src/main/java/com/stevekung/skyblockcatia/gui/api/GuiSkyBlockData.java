@@ -2815,15 +2815,11 @@ public class GuiSkyBlockData extends GuiScreen
         String magicFind = ColorUtils.stringToRGB("85,255,255").toColoredFont();
         String petLuck = ColorUtils.stringToRGB("255,85,255").toColoredFont();
         String fairySoulsColor = ColorUtils.stringToRGB("203,54,202").toColoredFont();
+        String bank = ColorUtils.stringToRGB("255,215,0").toColoredFont();
+        String purseColor = ColorUtils.stringToRGB("255,165,0").toColoredFont();
         String location = this.getLocation(objStatus, uuid);
 
-        if (!StringUtils.isNullOrEmpty(location))
-        {
-            this.infoList.add(new SkyBlockInfo("\u23E3 Current Location", location));
-        }
-
-        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SkyBlockAPIUtils.MAX_FAIRY_SOULS));
-        this.infoList.add(new SkyBlockInfo("", ""));
+        this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Base Stats", ""));
         this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + SKILL_AVG.format(this.allStat.getHealth())));
         this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + SKILL_AVG.format(this.allStat.getEffectiveHealth())));
         this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + SKILL_AVG.format(this.allStat.getDefense())));
@@ -2837,8 +2833,34 @@ public class GuiSkyBlockData extends GuiScreen
         this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + SKILL_AVG.format(this.allStat.getSeaCreatureChance()) + "%"));
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
+        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "\u2618 Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SkyBlockAPIUtils.MAX_FAIRY_SOULS));
 
         this.infoList.add(new SkyBlockInfo("", ""));
+        this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Account", ""));
+
+        if (!StringUtils.isNullOrEmpty(location))
+        {
+            this.infoList.add(new SkyBlockInfo(EnumChatFormatting.GREEN + "Current Location", EnumChatFormatting.GREEN + location));
+        }
+        else
+        {
+            this.infoList.add(new SkyBlockInfo(EnumChatFormatting.RED + "Status", EnumChatFormatting.RED + "Offline"));
+        }
+
+        if (banking != null)
+        {
+            double balance = banking.getAsJsonObject().get("balance").getAsDouble();
+            this.infoList.add(new SkyBlockInfo(bank + "Banking Account", bank + FORMAT_2.format(balance)));
+        }
+        else
+        {
+            this.infoList.add(new SkyBlockInfo(bank + "Banking Account", EnumChatFormatting.RED + "API is not enabled!"));
+        }
+
+        this.infoList.add(new SkyBlockInfo(purseColor + "Purse", purseColor + FORMAT_2.format(coins)));
+
+        this.infoList.add(new SkyBlockInfo("", ""));
+        this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Others", ""));
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
@@ -2853,18 +2875,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.infoList.add(new SkyBlockInfo("Last Updated", lastSaveMillis != -1 ? String.valueOf(lastSaveDate.getTime()) : EnumChatFormatting.RED + "No last save data!"));
         this.infoList.add(new SkyBlockInfo("Last Updated (Date)", lastSaveMillis != -1 ? lastLogout : EnumChatFormatting.RED + "No last save data!"));
 
-        this.infoList.add(new SkyBlockInfo("Death Count", String.valueOf(deathCounts)));
-
-        if (banking != null)
-        {
-            double balance = banking.getAsJsonObject().get("balance").getAsDouble();
-            this.infoList.add(new SkyBlockInfo("Banking Account", FORMAT_2.format(balance)));
-        }
-        else
-        {
-            this.infoList.add(new SkyBlockInfo("Banking Account", EnumChatFormatting.RED + "API is not enabled!"));
-        }
-        this.infoList.add(new SkyBlockInfo("Purse", FORMAT_2.format(coins)));
+        this.infoList.add(new SkyBlockInfo("Death Count", FORMAT.format(deathCounts)));
     }
 
     private BonusStatTemplate getFairySouls(int fairyExchanges)
