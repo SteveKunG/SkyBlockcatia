@@ -3127,7 +3127,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 else if (statName.contains("race") || statName.contains("dungeon_hub"))
                 {
-                    race.add(new SkyBlockStats(WordUtils.capitalize(statName.replace("dungeon_hub_", "").replace("_", " ")), value));
+                    race.add(new SkyBlockStats(WordUtils.capitalize(statName.replaceAll("dungeon_hub_|_best_time", "").replace("_", " ")), value));
                 }
                 else if (statName.startsWith("mythos_burrows_"))
                 {
@@ -3152,7 +3152,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        auctions.add(0, new SkyBlockStats(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + "Auctions", 0.0F));
+        auctions.add(0, new SkyBlockStats(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + "Auctions", 0.0F));
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");

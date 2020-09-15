@@ -32,7 +32,7 @@ public class SkyBlockStats
         {
             return "";
         }
-        else if (this.name.contains("Race") || this.name.contains("Best Time"))
+        else if (this.name.contains("Race") || this.name.contains("No Return") || this.name.contains("With Return"))
         {
             return String.format("%1$TM:%1$TS.%1$TL", (long)this.value);
         }
