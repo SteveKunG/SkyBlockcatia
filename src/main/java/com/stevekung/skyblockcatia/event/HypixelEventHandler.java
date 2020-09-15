@@ -59,7 +59,7 @@ public class HypixelEventHandler
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + HypixelEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
     private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
-    private static final Pattern PET_CARE_PATTERN = Pattern.compile("I'm currently taking care of your [\\w ]+! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).");
+    private static final Pattern PET_CARE_PATTERN = Pattern.compile("\\u00a7r\\u00a7aI'm currently taking care of your \\u00a7r(?<pet>\\u00a7[0-9a-fk-or][\\w ]+)\\u00a7r\\u00a7a! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).\\u00a7r");
     private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("\\u00A7r +\\u00A7r\\u00A76\\u00A7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
     private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
 
@@ -276,7 +276,7 @@ public class HypixelEventHandler
             Matcher visitIslandMatcher = HypixelEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
             Matcher uuidMatcher = HypixelEventHandler.UUID_PATTERN.matcher(message);
             Matcher chatMatcher = HypixelEventHandler.CHAT_PATTERN.matcher(message);
-            Matcher petCareMatcher = HypixelEventHandler.PET_CARE_PATTERN.matcher(message);
+            Matcher petCareMatcher = HypixelEventHandler.PET_CARE_PATTERN.matcher(formattedMessage);
             Matcher dragonDownMatcher = HypixelEventHandler.DRAGON_DOWN_PATTERN.matcher(formattedMessage);
             Matcher dragonSpawnedMatcher = HypixelEventHandler.DRAGON_SPAWNED_PATTERN.matcher(formattedMessage);
 
@@ -364,7 +364,8 @@ public class HypixelEventHandler
                     calendar.add(Calendar.SECOND, second);
                     String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.US).format(calendar.getTime());
                     String date2 = new SimpleDateFormat("h:mm:ss a", Locale.US).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).setChatStyle(JsonUtils.green()));
+                    ClientUtils.printClientMessage(JsonUtils.create(petCareMatcher.group("pet") + EnumChatFormatting.GREEN + " will be finished on " + date1 + " " + date2).setChatStyle(JsonUtils.green()));
+                    cancelMessage = true;
                 }
 
                 if (HypixelEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
@@ -756,13 +757,29 @@ public class HypixelEventHandler
             {
                 String lore = EnumChatFormatting.getTextWithoutFormattingCodes(tooltip);
 
-                HypixelEventHandler.replaceEventEstimateTime(lore, calendar, event.toolTip, dates, "Starts in: ");
-                HypixelEventHandler.replaceEventEstimateTime(lore, calendar, event.toolTip, dates, "Starting in: ");
+                if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiChest)
+                {
+                    GuiChest chest = (GuiChest)this.mc.currentScreen;
+                    String name = chest.lowerChestInventory.getDisplayName().getUnformattedText();
+
+                    if (name.equals("Community Shop"))
+                    {
+                        HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Starts in: ", "Starts at: ");
+                    }
+                    else
+                    {
+                        HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Starts in: ", "Event starts at: ");
+                    }
+                }
+
+                HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Starting in: ", "Event starts at: ");
 
                 HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, dates, "Interest in: ");
                 HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, dates, "Until interest: ");
 
                 HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, dates, "Ends in: ");
+
+                HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Time left: ", "Ends at: ");
             }
         }
         catch (Exception e) {}
@@ -963,11 +980,11 @@ public class HypixelEventHandler
         CommonUtils.runAsync(() -> HUDRenderEventHandler.INSTANCE.getToastGui().add(new VisitIslandToast(name)));
     }
 
-    private static void replaceEventEstimateTime(String lore, Calendar calendar, List<String> tooltip, List<String> dates, String replacedText)
+    private static void replaceEstimateTime(String lore, Calendar calendar, List<String> tooltip, List<String> dates, String replacedText, String newText)
     {
         if (lore.startsWith(replacedText))
         {
-            lore = lore.replace(replacedText, "");
+            lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^a-zA-Z0-9 ]|^[a-zA-Z ]+", "");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
             int dayF = Integer.valueOf(timeEstimate[0]);
             int hourF = Integer.valueOf(timeEstimate[1]);
@@ -979,7 +996,7 @@ public class HypixelEventHandler
             calendar.add(Calendar.SECOND, secondF);
             String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.US).format(calendar.getTime());
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.US).format(calendar.getTime());
-            dates.add("Event starts at: ");
+            dates.add(newText);
             dates.add(EnumChatFormatting.YELLOW + date1);
             dates.add(EnumChatFormatting.YELLOW + date2);
 
@@ -1008,7 +1025,7 @@ public class HypixelEventHandler
     {
         if (lore.startsWith(replacedText))
         {
-            lore = lore.replace(replacedText, "").replaceAll("[^0-9]+", " ");
+            lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^0-9]+", " ");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
             int hourF = 0;
             int minuteF = 0;
@@ -1074,7 +1091,7 @@ public class HypixelEventHandler
         if (lore.startsWith(replacedText))
         {
             boolean isDay = lore.endsWith("d");
-            lore = lore.replace(replacedText, "").replaceAll("[^0-9]+", " ");
+            lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^0-9]+", " ");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
             int dayF = 0;
             int hourF = 0;
