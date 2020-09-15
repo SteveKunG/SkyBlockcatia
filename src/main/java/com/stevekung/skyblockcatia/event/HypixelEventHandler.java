@@ -731,19 +731,30 @@ public class HypixelEventHandler
                         {
                             if (ClientUtils.isShiftKeyDown())
                             {
-                                double buyStack = 64 * product.getBuyPrice();
-                                double sellStack = 64 * product.getSellPrice();
-                                double buyCurrent = event.itemStack.stackSize * product.getBuyPrice();
-                                double sellCurrent = event.itemStack.stackSize * product.getSellPrice();
-                                event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(buyStack) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellStack) + " coins");
-
-                                if (event.itemStack.stackSize > 1 && event.itemStack.stackSize < 64)
+                                if (StringUtils.isNullOrEmpty(ConfigManagerIN.hypixelApiKey))
                                 {
-                                    event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(buyCurrent) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellCurrent) + " coins");
+                                    event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.RED + "Couldn't get bazaar data, Empty text in the Config!");
                                 }
+                                else if (!ConfigManagerIN.hypixelApiKey.matches(HypixelEventHandler.UUID_PATTERN_STRING))
+                                {
+                                    event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.RED + "Invalid UUID for Hypixel API Key!");
+                                }
+                                else
+                                {
+                                    double buyStack = 64 * product.getBuyPrice();
+                                    double sellStack = 64 * product.getSellPrice();
+                                    double buyCurrent = event.itemStack.stackSize * product.getBuyPrice();
+                                    double sellCurrent = event.itemStack.stackSize * product.getSellPrice();
+                                    event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(buyStack) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellStack) + " coins");
 
-                                event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
-                                event.toolTip.add(event.toolTip.size() - toAdd, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
+                                    if (event.itemStack.stackSize > 1 && event.itemStack.stackSize < 64)
+                                    {
+                                        event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(buyCurrent) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellCurrent) + " coins");
+                                    }
+
+                                    event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
+                                    event.toolTip.add(event.toolTip.size() - toAdd, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
+                                }
                             }
                             else
                             {
