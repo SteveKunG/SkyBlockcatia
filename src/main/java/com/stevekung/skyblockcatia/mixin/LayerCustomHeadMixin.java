@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -70,11 +71,22 @@ public abstract class LayerCustomHeadMixin
                 return;
             }
 
-            String id = itemstack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id");
+            NBTTagCompound compound = itemstack.getTagCompound().getCompoundTag("ExtraAttributes");
+            String id = compound.getString("id");
 
             if (id.equals("SUPERIOR_DRAGON_HELMET"))
             {
-                texture = "superior";
+                if (compound.hasKey("skin"))
+                {
+                    if (compound.getString("skin").equals("SUPERIOR_BABY"))
+                    {
+                        texture = "superior_baby";
+                    }
+                }
+                else
+                {
+                    texture = "superior";
+                }
             }
             else if (id.equals("WISE_DRAGON_HELMET"))
             {
