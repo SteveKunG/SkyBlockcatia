@@ -714,7 +714,7 @@ public class HypixelEventHandler
                 int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
                 ModDecimalFormat format = new ModDecimalFormat("#,###.#");
 
-                if (extraAttrib.hasKey("timestamp"))
+                if (ExtendedConfig.instance.showObtainedDate && extraAttrib.hasKey("timestamp"))
                 {
                     DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
                     Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
