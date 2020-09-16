@@ -138,6 +138,7 @@ public class GuiSkyBlockData extends GuiScreen
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
     private final List<SkyBlockCollection> collections = new ArrayList<>();
     private final Multimap<String, Integer> craftedMinions = HashMultimap.create();
+    private int additionalMinionSlot;
     private int craftedMinionCount;
     private int currentMinionSlot;
     private int slayerTotalAmountSpent;
@@ -839,7 +840,7 @@ public class GuiSkyBlockData extends GuiScreen
                 else if (this.currentSlot instanceof SkyBlockCraftedMinions)
                 {
                     String total1 = EnumChatFormatting.GRAY + "Unique Minions: " + EnumChatFormatting.YELLOW + this.craftedMinionCount + "/" + GuiSkyBlockData.MAXED_UNIQUE_MINIONS + EnumChatFormatting.GRAY + " (" + this.craftedMinionCount * 100 / GuiSkyBlockData.MAXED_UNIQUE_MINIONS + "%)";
-                    String total2 = EnumChatFormatting.GRAY + "Current Minion Slot: " + EnumChatFormatting.YELLOW + this.currentMinionSlot;
+                    String total2 = EnumChatFormatting.GRAY + "Current Minion Slot: " + EnumChatFormatting.YELLOW + this.currentMinionSlot + (this.additionalMinionSlot > 0 ? EnumChatFormatting.GOLD + " (Bonus +" + this.additionalMinionSlot + ")" : "");
                     this.drawString(this.fontRendererObj, total1, this.width - this.fontRendererObj.getStringWidth(total1) - 60, this.height - 68, 16777215);
                     this.drawString(this.fontRendererObj, total2, this.width - this.fontRendererObj.getStringWidth(total2) - 60, this.height - 58, 16777215);
                 }
@@ -1624,8 +1625,10 @@ public class GuiSkyBlockData extends GuiScreen
     private void getPlayerData() throws IOException
     {
         this.statusMessage = "Getting Player Data";
+        Gson gson = new Gson();
         JsonObject profiles = null;
         JsonElement banking = null;
+        CommunityUpgrades communityUpgrade = null;
 
         if (this.skyblockProfiles == null)
         {
@@ -1640,11 +1643,13 @@ public class GuiSkyBlockData extends GuiScreen
             }
             profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
             banking = profile.getAsJsonObject().get("banking");
+            communityUpgrade = gson.fromJson(profile.getAsJsonObject().get("community_upgrades"), CommunityUpgrades.class);
         }
         else
         {
             profiles = this.skyblockProfiles.get("members").getAsJsonObject();
             banking = this.skyblockProfiles.get("banking");
+            communityUpgrade = gson.fromJson(this.skyblockProfiles.getAsJsonObject().get("community_upgrades"), CommunityUpgrades.class);
         }
 
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
@@ -1688,7 +1693,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.applyBonuses();
 
                 this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0));
-                this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID);
+                this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID, communityUpgrade);
                 break;
             }
         }
@@ -1757,6 +1762,40 @@ public class GuiSkyBlockData extends GuiScreen
         }
         this.loadingApi = false;
         this.showArmorButton.visible = true;
+    }
+
+    private List<SkyBlockInfo> getCommunityUpgrades(CommunityUpgrades communityUpgrades)
+    {
+        List<SkyBlockInfo> info = new ArrayList<>();
+        CommunityUpgrades.Upgrading upgrading = communityUpgrades.getCurrentUpgrade();
+        List<CommunityUpgrades.States> states = communityUpgrades.getUpgradeStates();
+
+        if (upgrading != null)
+        {
+            info.add(new SkyBlockInfo("Current Upgrade", upgrading.toString()));
+        }
+        if (states != null)
+        {
+            Multimap<String, Integer> upgradeStateMap = HashMultimap.create();
+
+            for (CommunityUpgrades.States state : states)
+            {
+                upgradeStateMap.put(state.getUpgrade(), state.getTier());
+            }
+            for (String type : upgradeStateMap.keySet())
+            {
+                CommunityUpgrades.Data data = CommunityUpgrades.Data.getData(type, Collections.max(upgradeStateMap.get(type)));
+                int tier = data.getTier();
+
+                if (data.getType() == CommunityUpgrades.Type.MINION_SLOTS)
+                {
+                    this.additionalMinionSlot = tier;
+                }
+
+                info.add(new SkyBlockInfo(data.getDisplayName(), "Tier " + NumberUtils.intToRoman(tier)));
+            }
+        }
+        return info;
     }
 
     private void getBankHistories(JsonObject banking)
@@ -2771,7 +2810,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp));
     }
 
-    private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid)
+    private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid, CommunityUpgrades communityUpgrade)
     {
         JsonElement deathCount = currentProfile.get("death_count");
         JsonElement purse = currentProfile.get("coin_purse");
@@ -2859,6 +2898,18 @@ public class GuiSkyBlockData extends GuiScreen
         }
 
         this.infoList.add(new SkyBlockInfo(purseColor + "Purse", purseColor + FORMAT_2.format(coins)));
+
+        if (communityUpgrade != null)
+        {
+            List<SkyBlockInfo> comm = this.getCommunityUpgrades(communityUpgrade);
+
+            if (comm.size() > 0)
+            {
+                this.infoList.add(new SkyBlockInfo("", ""));
+                this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Community Upgrades", ""));
+                this.infoList.addAll(comm);
+            }
+        }
 
         this.infoList.add(new SkyBlockInfo("", ""));
         this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Others", ""));
