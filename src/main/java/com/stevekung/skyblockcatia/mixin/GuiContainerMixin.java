@@ -386,7 +386,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             {
                 GuiChest chest = (GuiChest)this.that;
 
-                if (chest.lowerChestInventory.getDisplayName().getUnformattedText().matches("\\(\\d+\\/\\d+\\) Pets") || chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Pets"))
+                if (this.isPeopleProfile(chest.lowerChestInventory) || chest.lowerChestInventory.getDisplayName().getUnformattedText().matches("\\(\\d+\\/\\d+\\) Pets") || chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Pets"))
                 {
                     if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
                     {
