@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -46,6 +47,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -122,8 +124,11 @@ public class GuiSkyBlockData extends GuiScreen
     private static final ModDecimalFormat SKILL_AVG = new ModDecimalFormat("##.#");
     private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king", "nurse_shark", "blue_shark", "tiger_shark", "great_white_shark");
     private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
-    private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold").put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder").build();
+    private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold")
+            .put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder")
+            .put("mythos_burrows_chains_complete_common", "mythos_burrows_common_chains_complete").put("mythos_burrows_chains_complete_epic", "mythos_burrows_epic_chains_complete").put("mythos_burrows_chains_complete_legendary", "mythos_burrows_legendary_chains_complete").put("mythos_burrows_chains_complete_rare", "mythos_burrows_rare_chains_complete").put("mythos_burrows_dug_combat_common", "mythos_burrows_dug_common_monsters").put("mythos_burrows_dug_combat_epic", "mythos_burrows_dug_epic_monsters").put("mythos_burrows_dug_combat_legendary", "mythos_burrows_dug_legendary_monsters").put("mythos_burrows_dug_combat_rare", "mythos_burrows_dug_rare_monsters").put("mythos_burrows_dug_next_common", "mythos_burrows_dug_common_arrows").put("mythos_burrows_dug_next_epic", "mythos_burrows_dug_epic_arrows").put("mythos_burrows_dug_next_legendary", "mythos_burrows_dug_legendary_arrows").put("mythos_burrows_dug_next_rare", "mythos_burrows_dug_rare_arrows").put("mythos_burrows_dug_treasure_common", "mythos_burrows_dug_common_treasure").put("mythos_burrows_dug_treasure_epic", "mythos_burrows_dug_epic_treasure").put("mythos_burrows_dug_treasure_legendary", "mythos_burrows_dug_legendary_treasure").put("mythos_burrows_dug_treasure_rare", "mythos_burrows_dug_rare_treasure").build();
     private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").build();
+    private static final ImmutableList<String> BLACKLIST_STATS = ImmutableList.of("highest_crit_damage", "mythos_burrows_dug_combat", "mythos_burrows_dug_combat_null", "mythos_burrows_dug_treasure", "mythos_burrows_dug_next", "mythos_burrows_dug_treasure_null", "mythos_burrows_chains_complete", "mythos_burrows_chains_complete_null", "mythos_burrows_dug_next_null");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
@@ -2219,18 +2224,30 @@ public class GuiSkyBlockData extends GuiScreen
                         if (item != null)
                         {
                             ItemStack itemStack = new ItemStack(item, count, meta);
-                            this.addSackItemStackCount(itemStack, count, null);
+                            this.addSackItemStackCount(itemStack, count, null, false);
                             sacks.add(itemStack);
                         }
                         else
                         {
-                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
-                            ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
-                            this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName());
-                            sacks.add(itemStack);
+                            try
+                            {
+                                SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
+                                ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
+                                this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName(), true);
+                                sacks.add(itemStack);
+                            }
+                            catch (Exception e)
+                            {
+                                DungeonDrops dungeonDrops = DungeonDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
+                                ItemStack itemStack = dungeonDrops.getBaseItem();
+                                itemStack.stackSize = count;
+                                this.addSackItemStackCount(itemStack, count, dungeonDrops.getDisplayName(), false);
+                                sacks.add(itemStack);
+                            }
                         }
                     }
                 }
+                sacks.sort((itemStack1, itemStack2) -> new CompareToBuilder().append(itemStack2.stackSize, itemStack1.stackSize).build());
             }
             else
             {
@@ -2250,14 +2267,13 @@ public class GuiSkyBlockData extends GuiScreen
         SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SkyBlockInventoryTabs.SACKS));
     }
 
-    private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable String altName)
+    private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable String altName, boolean ench)
     {
         if (count >= 1000)
         {
             if (!StringUtils.isNullOrEmpty(altName))
             {
                 itemStack.setStackDisplayName(altName + EnumChatFormatting.GRAY + " x" + FORMAT.format(count));
-                itemStack.getTagCompound().setTag("ench", new NBTTagList());
             }
             else
             {
@@ -2269,8 +2285,12 @@ public class GuiSkyBlockData extends GuiScreen
             if (!StringUtils.isNullOrEmpty(altName))
             {
                 itemStack.setStackDisplayName(altName);
-                itemStack.getTagCompound().setTag("ench", new NBTTagList());
             }
+        }
+
+        if (ench)
+        {
+            itemStack.getTagCompound().setTag("ench", new NBTTagList());
         }
     }
 
@@ -3124,15 +3144,10 @@ public class GuiSkyBlockData extends GuiScreen
         int emperorKills = 0;
         int deepMonsterKills = 0;
 
-        for (Map.Entry<String, JsonElement> stat : stats.entrySet())
+        for (Map.Entry<String, JsonElement> stat : stats.entrySet().stream().filter(entry -> !BLACKLIST_STATS.stream().anyMatch(stat -> entry.getKey().equals(stat))).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())).entrySet())
         {
-            String statName = stat.getKey();
+            String statName = stat.getKey().toLowerCase();
             double value = stat.getValue().getAsDouble();
-
-            if (statName.equals("highest_crit_damage"))
-            {
-                continue;
-            }
 
             if (statName.startsWith("kills") || statName.endsWith("kills"))
             {
@@ -4817,9 +4832,9 @@ public class GuiSkyBlockData extends GuiScreen
 
     private enum SlayerDrops
     {
-        TARANTULA_WEB(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Tarantula Web", Items.string),
-        REVENANT_FLESH(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Revenant Flesh", Items.rotten_flesh),
-        WOLF_TOOTH(EnumChatFormatting.RESET + "" + EnumChatFormatting.GREEN + "Wolf Tooth", Items.ghast_tear);
+        TARANTULA_WEB(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Tarantula Web", Items.string),
+        REVENANT_FLESH(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Revenant Flesh", Items.rotten_flesh),
+        WOLF_TOOTH(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Wolf Tooth", Items.ghast_tear);
 
         private final String displayName;
         private final Item baseItem;
@@ -4836,6 +4851,33 @@ public class GuiSkyBlockData extends GuiScreen
         }
 
         public Item getBaseItem()
+        {
+            return this.baseItem;
+        }
+    }
+
+    private enum DungeonDrops
+    {
+        SPIRIT_LEAP(EnumChatFormatting.RESET.toString() + EnumChatFormatting.BLUE + "Spirit Leap", new ItemStack(Items.ender_pearl)),
+        DUNGEON_DECOY(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Decoy", new ItemStack(Items.spawn_egg)),
+        INFLATABLE_JERRY(EnumChatFormatting.RESET.toString() + EnumChatFormatting.WHITE + "Inflatable Jerry", new ItemStack(Items.spawn_egg, 0, EntityList.getIDFromString("Villager"))),
+        DUNGEON_TRAP(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Dungeon Trap", new ItemStack(Blocks.heavy_weighted_pressure_plate));
+
+        private final String displayName;
+        private final ItemStack baseItem;
+
+        private DungeonDrops(String displayName, ItemStack baseItem)
+        {
+            this.displayName = displayName;
+            this.baseItem = baseItem;
+        }
+
+        public String getDisplayName()
+        {
+            return this.displayName;
+        }
+
+        public ItemStack getBaseItem()
         {
             return this.baseItem;
         }

@@ -120,7 +120,7 @@ public class CommunityUpgrades
     {
         ISLAND_SIZE("Island Size"),
         MINION_SLOTS("Minion Slots"),
-        GUESTS_LIMIT("Guests Limit"),
+        GUESTS_COUNT("Guests Limit"),
         COOP_SLOTS("Co-op Slots"),
         COINS_ALLOWANCE("Coins Allowance");
 
