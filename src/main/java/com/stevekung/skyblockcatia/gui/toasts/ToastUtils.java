@@ -90,10 +90,11 @@ public class ToastUtils
         PET_DROP("PET DROP!", "255,170,0"),
         DRAGON_CRYSTAL_FRAGMENT("RARE DROP!", "170,0,170"),
         BOSS_DROP("BOSS DROP!", "127,255,212", ImmutableList.of(DropCondition.SPECIAL_DROP)),
+        MYTHOS_COINS("COINS!", "255,170,0", ImmutableList.of(DropCondition.COINS)),
         GOOD_CATCH("GOOD CATCH!", "255,170,0"),
         GREAT_CATCH("GREAT CATCH!", "170,0,170"),
-        GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0", ImmutableList.of(DropCondition.FISHING_COINS)),
-        GREAT_CATCH_COINS("GREAT CATCH!", "170,0,170", ImmutableList.of(DropCondition.FISHING_COINS)),
+        GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0", ImmutableList.of(DropCondition.COINS)),
+        GREAT_CATCH_COINS("GREAT CATCH!", "170,0,170", ImmutableList.of(DropCondition.COINS)),
         SLAYER_RARE_DROP("RARE DROP!", "85,255,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         SLAYER_VERY_RARE_DROP_BLUE("VERY RARE DROP!", "85,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         SLAYER_VERY_RARE_DROP_PURPLE("VERY RARE DROP!", "170,0,170", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
@@ -138,6 +139,7 @@ public class ToastUtils
             switch (this)
             {
             case RARE_DROP:
+            case MYTHOS_COINS:
             case PET_DROP:
             case DRAGON_CRYSTAL_FRAGMENT:
                 return ExtendedConfig.instance.rareDropToastTime * 1000L;
@@ -179,7 +181,7 @@ public class ToastUtils
 
     public enum DropCondition
     {
-        FISHING_COINS,
+        COINS,
         SPECIAL_DROP,
         CONTAINS,
         FORMAT;

@@ -70,6 +70,10 @@ public class HypixelEventHandler
     private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>\\u00a7r\\u00a79\\u00a7lVERY RARE|\\u00a7r\\u00a75\\u00a7lVERY RARE|\\u00a7r\\u00a7d\\u00a7lCRAZY RARE) DROP!  \\u00a7r\\u00a77\\(" + DROP_PATTERN + "\\u00a7r\\u00a77\\)(?:\\b\\u00a7r\\b){0,1} ?(?:\\u00a7r\\u00a7b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)\\u00a7r){0,1}");
     private static final Pattern BOSS_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
 
+    // Mythos Events
+    private static final Pattern RARE_DROP_MYTHOS_PATTERN = Pattern.compile("RARE DROP! You dug out a " + DROP_PATTERN + "!");
+    private static final Pattern COINS_MYTHOS_PATTERN = Pattern.compile("Wow! You dug out (?<coin>[0-9,]+) coins!");
+
     // Dungeons
     private static final Pattern DUNGEON_QUALITY_DROP_PATTERN = Pattern.compile("You found a Top Quality Item! " + DROP_PATTERN);
     private static final Pattern DUNGEON_REWARD_PATTERN = Pattern.compile(" +RARE REWARD! " + DROP_PATTERN);
@@ -281,6 +285,10 @@ public class HypixelEventHandler
             // Item Drop matcher
             Matcher rareDropPattern = HypixelEventHandler.RARE_DROP_PATTERN.matcher(formattedMessage);
             Matcher bossDropPattern = HypixelEventHandler.BOSS_DROP_PATTERN.matcher(message);
+
+            // Mythos Events matcher
+            Matcher rareDropMythosPattern = HypixelEventHandler.RARE_DROP_MYTHOS_PATTERN.matcher(message);
+            Matcher coinsMythosPattern = HypixelEventHandler.COINS_MYTHOS_PATTERN.matcher(message);
 
             // Dungeons matcher
             Matcher dungeonQualityDropPattern = HypixelEventHandler.DUNGEON_QUALITY_DROP_PATTERN.matcher(message);
@@ -503,6 +511,22 @@ public class HypixelEventHandler
                             String name = rareDropPattern.group("item");
                             String magicFind = rareDropPattern.group("mf");
                             HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, magicFind, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
+                            LoggerIN.logToast(formattedMessage);
+                            cancelMessage = isToast;
+                        }
+                        else if (rareDropMythosPattern.matches())
+                        {
+                            String name = rareDropMythosPattern.group("item");
+                            HypixelEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.RARE_DROP, ToastType.DROP));
+                            LoggerIN.logToast(formattedMessage);
+                            cancelMessage = isToast;
+                        }
+                        else if (coinsMythosPattern.matches())
+                        {
+                            String coin = coinsMythosPattern.group("coin");
+                            CoinType coinType = CoinType.TYPE_1;
+                            ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.MYTHOS_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.GuiChatRegistry;
+import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -184,5 +185,11 @@ public class ClientEventHandler
         //String test = "     RARE REWARD! Adaptive Boots";
         //String test = "     RARE REWARD! " + itemStack.getDisplayName();
         //player.addChatComponentMessage(JsonUtils.create(test));
+
+        // Mythos Drop
+        //String test = "RARE DROP! You dug out a " + itemStack.getDisplayName() + "!";
+        //player.addChatComponentMessage(JsonUtils.create(test));
+        //String coins = "Wow! You dug out " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
+        //player.addChatComponentMessage(JsonUtils.create(coins));
     }
 }

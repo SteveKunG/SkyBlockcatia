@@ -39,7 +39,7 @@ public class NumericToast implements IToast<NumericToast>
         this.isCoins = this.object.equals("Coins");
         this.isPet = this.object.equals("Pet");
         this.maxDrawTime = rarity.getTime();
-        this.texture = new ResourceLocation(rarity.matches(ToastUtils.DropCondition.FISHING_COINS) || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
+        this.texture = new ResourceLocation(rarity.matches(ToastUtils.DropCondition.COINS) || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
     }
 
     @Override
@@ -128,6 +128,9 @@ public class NumericToast implements IToast<NumericToast>
             case RARE_GIFT:
                 builder.append(GiftRareToast.class.getName());
                 break;
+            case MYTHOS_COINS:
+                builder.append(MythosCoinsToast.class.getName());
+                break;
             case GOOD_CATCH_COINS:
                 builder.append(GoodToast.class.getName());
                 break;
@@ -138,7 +141,7 @@ public class NumericToast implements IToast<NumericToast>
                 builder.append(PetLevelUpToast.class.getName());
                 break;
             }
-            if (!rarity.matches(ToastUtils.DropCondition.FISHING_COINS) && rarity != ToastUtils.DropType.PET_LEVEL_UP)
+            if (!rarity.matches(ToastUtils.DropCondition.COINS) && rarity != ToastUtils.DropType.PET_LEVEL_UP)
             {
                 builder.append("$" + object);
             }
@@ -153,6 +156,14 @@ public class NumericToast implements IToast<NumericToast>
     static class PetLevelUpToast extends NumericToast
     {
         public PetLevelUpToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
+        {
+            super(value, itemStack, object, rarity);
+        }
+    }
+
+    static class MythosCoinsToast extends NumericToast
+    {
+        public MythosCoinsToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
         {
             super(value, itemStack, object, rarity);
         }
