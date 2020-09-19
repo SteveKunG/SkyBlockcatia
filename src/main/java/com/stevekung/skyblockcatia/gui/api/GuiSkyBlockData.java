@@ -1808,13 +1808,16 @@ public class GuiSkyBlockData extends GuiScreen
         BankHistory[] bankHistory = new Gson().fromJson(banking.get("transactions"), BankHistory[].class);
         Collections.reverse(Arrays.asList(bankHistory));
 
-        for (BankHistory bank : bankHistory)
+        if (bankHistory.length > 0)
         {
+            for (BankHistory bank : bankHistory)
+            {
+                this.sbBankHistories.add(new BankHistory.Stats(EnumChatFormatting.DARK_GRAY + "------------------------------"));
+                this.sbBankHistories.add(new BankHistory.Stats("Initiator: " + (bank.getName().equals("Bank Interest") ? ColorUtils.stringToRGB("255,215,0").toColoredFont() + bank.getName() : bank.getName())));
+                this.sbBankHistories.add(new BankHistory.Stats(bank.getAction().name + " " + EnumChatFormatting.GOLD + NumberUtils.formatWithM(bank.getAmount()) + EnumChatFormatting.RESET + " about " + CommonUtils.getRelativeTime(bank.getTimestamp())));
+            }
             this.sbBankHistories.add(new BankHistory.Stats(EnumChatFormatting.DARK_GRAY + "------------------------------"));
-            this.sbBankHistories.add(new BankHistory.Stats("Initiator: " + (bank.getName().equals("Bank Interest") ? ColorUtils.stringToRGB("255,215,0").toColoredFont() + bank.getName() : bank.getName())));
-            this.sbBankHistories.add(new BankHistory.Stats(bank.getAction().name + " " + EnumChatFormatting.GOLD + NumberUtils.formatWithM(bank.getAmount()) + EnumChatFormatting.RESET + " about " + CommonUtils.getRelativeTime(bank.getTimestamp())));
         }
-        this.sbBankHistories.add(new BankHistory.Stats(EnumChatFormatting.DARK_GRAY + "------------------------------"));
     }
 
     private String getLocation(JsonObject objStatus, String uuid)
