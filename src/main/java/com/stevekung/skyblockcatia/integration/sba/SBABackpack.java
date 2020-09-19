@@ -19,8 +19,6 @@ public class SBABackpack
 {
     public static final SBABackpack INSTANCE = new SBABackpack();
     private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
-    private static int mouseXFreeze;
-    private static int mouseYFreeze;
 
     public void drawBackpacks(GuiSkyBlockData gui, int mouseX, int mouseY, float partialTicks)
     {
@@ -32,7 +30,17 @@ public class SBABackpack
             Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
             Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
             Object getConfigValues = getInstance.getClass().getDeclaredMethod("getConfigValues").invoke(getInstance);
-            Object getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
+            Object getBackpackToPreview = null;
+
+            try
+            {
+                getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
+            }
+            catch (Exception e)
+            {
+                getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getContainerPreviewToRender").invoke(getUtils);
+            }
+
             Method featureValues = feature.getDeclaredMethod("values");
             Object colorBackpack = null;
 
@@ -57,16 +65,8 @@ public class SBABackpack
                 ItemStack[] items = (ItemStack[])backpackClass.getDeclaredMethod("getItems").invoke(getBackpackToPreview);
                 int length = items.length;
                 int screenHeight = gui.height;
+                ItemStack tooltipItem = null;
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-                if (!this.isFreezeBackpack())
-                {
-                    SBABackpack.mouseXFreeze = mouseX;
-                    SBABackpack.mouseYFreeze = mouseY;
-                }
-
-                int tooltipX = SBABackpack.mouseXFreeze;
-                int tooltipY = SBABackpack.mouseYFreeze;
 
                 if (getConfigValues.getClass().getDeclaredMethod("getBackpackStyle").invoke(getConfigValues).toString().equals("GUI"))
                 {
@@ -80,38 +80,49 @@ public class SBABackpack
                     if (colorBackpack != null && (boolean)getConfigValues.getClass().getDeclaredMethod("isEnabled", feature).invoke(getConfigValues, colorBackpack))
                     {
                         Object backpackColor = backpackClass.getDeclaredMethod("getBackpackColor").invoke(getBackpackToPreview);
-                        Class<?> backpackColorClass = backpackColor.getClass();
-                        GlStateManager.color((float)backpackColorClass.getDeclaredMethod("getR").invoke(backpackColor), (float)backpackColorClass.getDeclaredMethod("getG").invoke(backpackColor), (float)backpackColorClass.getDeclaredMethod("getB").invoke(backpackColor), 1);
-                        textColor = (int)backpackColorClass.getDeclaredMethod("getInventoryTextColor").invoke(backpackColor);
+
+                        if (backpackColor != null)
+                        {
+                            Class<?> backpackColorClass = backpackColor.getClass();
+                            GlStateManager.color((float)backpackColorClass.getDeclaredMethod("getR").invoke(backpackColor), (float)backpackColorClass.getDeclaredMethod("getG").invoke(backpackColor), (float)backpackColorClass.getDeclaredMethod("getB").invoke(backpackColor), 1);
+                            textColor = (int)backpackColorClass.getDeclaredMethod("getInventoryTextColor").invoke(backpackColor);
+                        }
                     }
 
-                    int tooltipTextWidth = 176;
+                    int totalWidth  = 176;
 
-                    if (tooltipX + tooltipTextWidth > gui.width)
+                    if (x + totalWidth > gui.width)
                     {
-                        tooltipX = SBABackpack.mouseXFreeze - 16 - tooltipTextWidth;
+                        x -= totalWidth;
                     }
 
-                    int tooltipHeight = length / 9 * 18;
+                    int totalHeight = rows * 18 + 24;
 
-                    if (tooltipY + tooltipHeight + 24 > screenHeight)
+                    if (y + totalHeight > screenHeight)
                     {
-                        tooltipY = screenHeight - tooltipHeight - 24;
+                        y = screenHeight - totalHeight;
                     }
-
-                    x = tooltipX;
-                    y = tooltipY;
 
                     gui.drawTexturedModalRect(x, y, 0, 0, 176, rows * 18 + 17);
                     gui.drawTexturedModalRect(x, y + rows * 18 + 17, 0, 215, 176, 7);
-                    mc.fontRendererObj.drawString((String)backpackClass.getDeclaredMethod("getBackpackName").invoke(getBackpackToPreview), x+8, y+6, textColor);
+
+                    Method containerName = null;
+
+                    try
+                    {
+                        containerName = backpackClass.getDeclaredMethod("getBackpackName");
+                    }
+                    catch (Exception e)
+                    {
+                        containerName = backpackClass.getDeclaredMethod("getName");
+                    }
+
+                    mc.fontRendererObj.drawString((String)containerName.invoke(getBackpackToPreview), x+8, y+6, textColor);
                     GlStateManager.popMatrix();
                     GlStateManager.enableLighting();
                     RenderHelper.enableGUIStandardItemLighting();
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     GlStateManager.enableRescaleNormal();
-
-                    ItemStack toRenderOverlay = null;
 
                     for (int i = 0; i < length; i++)
                     {
@@ -126,39 +137,31 @@ public class SBABackpack
                             renderItem.zLevel = 200;
                             renderItem.renderItemAndEffectIntoGUI(item, itemX, itemY);
                             renderItem.renderItemOverlayIntoGUI(mc.fontRendererObj, item, itemX, itemY, null);
+                            gui.zLevel = 0;
+                            renderItem.zLevel = 0;
 
                             if (this.isFreezeBackpack() && mouseX > itemX && mouseX < itemX + 16 && mouseY > itemY && mouseY < itemY + 16)
                             {
-                                toRenderOverlay = item;
+                                tooltipItem = item;
                             }
-
-                            gui.zLevel = 0;
-                            renderItem.zLevel = 0;
                         }
-                    }
-                    if (toRenderOverlay != null)
-                    {
-                        gui.drawHoveringText(toRenderOverlay.getTooltip(null, mc.gameSettings.advancedItemTooltips), mouseX, mouseY);
                     }
                 }
                 else
                 {
-                    int tooltipTextWidth = 16 * 9 + 3;
+                    int totalWidth = 16 * 9 + 3;
 
-                    if (tooltipX + tooltipTextWidth > gui.width)
+                    if (x + totalWidth > gui.width)
                     {
-                        tooltipX = mouseXFreeze - 16 - tooltipTextWidth;
+                        x -= totalWidth;
                     }
 
-                    int tooltipHeight = 16 * (length / 9) + 3;
+                    int totalHeight = 16 * (length / 9) + 3;
 
-                    if (tooltipY + tooltipHeight > screenHeight)
+                    if (y + totalHeight > screenHeight)
                     {
-                        tooltipY = screenHeight - tooltipHeight;
+                        y = screenHeight - totalHeight;
                     }
-
-                    x = tooltipX;
-                    y = tooltipY;
 
                     GlStateManager.disableLighting();
                     GlStateManager.pushMatrix();
@@ -185,12 +188,31 @@ public class SBABackpack
                             renderItem.renderItemOverlayIntoGUI(mc.fontRendererObj, item, itemX, itemY, null);
                             gui.zLevel = 0;
                             renderItem.zLevel = 0;
+
+                            if (this.isFreezeBackpack() && mouseX > itemX && mouseX < itemX + 16 && mouseY > itemY && mouseY < itemY + 16)
+                            {
+                                tooltipItem = item;
+                            }
                         }
                     }
                 }
+
+                if (tooltipItem != null)
+                {
+                    gui.drawHoveringText(tooltipItem.getTooltip(null, mc.gameSettings.advancedItemTooltips), mouseX, mouseY);
+                }
                 if (!this.isFreezeBackpack())
                 {
-                    Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", backpackClass);
+                    Method setBackpack = null;
+
+                    try
+                    {
+                        setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", backpackClass);
+                    }
+                    catch (Exception e)
+                    {
+                        setBackpack = getUtils.getClass().getDeclaredMethod("setContainerPreviewToRender", backpackClass);
+                    }
                     setBackpack.invoke(getUtils, new Object[] { null });
                 }
                 GlStateManager.enableLighting();
@@ -219,20 +241,12 @@ public class SBABackpack
                 Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
                 Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
                 Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
-                Object getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
-
-                if (getBackpackToPreview != null)
-                {
-                    Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
-                    setBackpack.invoke(getUtils, new Object[] { null });
-                }
-                this.clear();
+                this.clear(getUtils);
             }
             if (keyCode == main.getFreezeBackpackKey().getKeyCode() && this.isFreezeBackpack() && System.currentTimeMillis() - lastBackpackFreezeKey > 500)
             {
                 setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
                 GuiContainerHook.setFreezeBackpack(false);
-                this.clear();
             }
         }
         catch (Exception e)
@@ -252,14 +266,7 @@ public class SBABackpack
             Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
             Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
             Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
-            Object getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
-
-            if (getBackpackToPreview != null)
-            {
-                Method setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
-                setBackpack.invoke(getUtils, new Object[] { null });
-            }
-            this.clear();
+            this.clear(getUtils);
         }
         catch (Exception e)
         {
@@ -272,9 +279,32 @@ public class SBABackpack
         return GuiContainerHook.isFreezeBackpack();
     }
 
-    private void clear()
+    private void clear(Object getUtils) throws Exception
     {
-        SBABackpack.mouseXFreeze = 0;
-        SBABackpack.mouseYFreeze = 0;
+        Object getBackpackToPreview = null;
+
+        try
+        {
+            getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getBackpackToPreview").invoke(getUtils);
+        }
+        catch (Exception e)
+        {
+            getBackpackToPreview = getUtils.getClass().getDeclaredMethod("getContainerPreviewToRender").invoke(getUtils);
+        }
+
+        if (getBackpackToPreview != null)
+        {
+            Method setBackpack = null;
+
+            try
+            {
+                setBackpack = getUtils.getClass().getDeclaredMethod("setBackpackToPreview", getBackpackToPreview.getClass());
+            }
+            catch (Exception e)
+            {
+                setBackpack = getUtils.getClass().getDeclaredMethod("setContainerPreviewToRender", getBackpackToPreview.getClass());
+            }
+            setBackpack.invoke(getUtils, new Object[] { null });
+        }
     }
 }
