@@ -58,7 +58,6 @@ public class HypixelEventHandler
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + HypixelEventHandler.UUID_PATTERN_STRING + ")");
     private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
-    private static final Pattern CHAT_PATTERN = Pattern.compile("(?:(\\w+)|(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]) (\\w+))+: (?:.)+");
     private static final Pattern PET_CARE_PATTERN = Pattern.compile("\\u00a7r\\u00a7aI'm currently taking care of your \\u00a7r(?<pet>\\u00a7[0-9a-fk-or][\\w ]+)\\u00a7r\\u00a7a! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).\\u00a7r");
     private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("\\u00A7r +\\u00A7r\\u00A76\\u00A7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
     private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
@@ -275,7 +274,6 @@ public class HypixelEventHandler
             // Common matcher
             Matcher visitIslandMatcher = HypixelEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
             Matcher uuidMatcher = HypixelEventHandler.UUID_PATTERN.matcher(message);
-            Matcher chatMatcher = HypixelEventHandler.CHAT_PATTERN.matcher(message);
             Matcher petCareMatcher = HypixelEventHandler.PET_CARE_PATTERN.matcher(formattedMessage);
             Matcher dragonDownMatcher = HypixelEventHandler.DRAGON_DOWN_PATTERN.matcher(formattedMessage);
             Matcher dragonSpawnedMatcher = HypixelEventHandler.DRAGON_SPAWNED_PATTERN.matcher(formattedMessage);
@@ -425,31 +423,6 @@ public class HypixelEventHandler
                         {
                             this.mc.getRenderManager().setDebugBoundingBox(true);
                         }
-                    }
-
-                    if (chatMatcher.matches())
-                    {
-                        try
-                        {
-                            String name = "";
-
-                            if (chatMatcher.group(1) != null)
-                            {
-                                name = chatMatcher.group(1);
-                            }
-                            if (chatMatcher.group(2) != null)
-                            {
-                                name = chatMatcher.group(2);
-                            }
-
-                            if (!name.isEmpty())
-                            {
-                                IChatComponent chat = event.message.createCopy();
-                                chat.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/p " + name));
-                                event.message = chat;
-                            }
-                        }
-                        catch (Exception e) {}
                     }
 
                     if (ToastMode.getById(ExtendedConfig.instance.fishCatchToastMode).equalsIgnoreCase("toast") || ToastMode.getById(ExtendedConfig.instance.fishCatchToastMode).equalsIgnoreCase("chat_and_toast"))
