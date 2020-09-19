@@ -237,7 +237,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             }
             else if (button.id == 2)
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, this.guild));
+                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""));
             }
         }
     }
