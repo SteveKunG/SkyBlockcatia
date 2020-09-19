@@ -4206,7 +4206,8 @@ public class GuiSkyBlockData extends GuiScreen
         protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
         {
             SkyBlockInfo stat = this.stats.get(index);
-            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getTitle(), this.parent.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
+            boolean isCurrentUpgrade = stat.getTitle().equals("Current Upgrade");
+            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getTitle() + (isCurrentUpgrade ? GuiSkyBlockAPIViewer.downloadingStates[(int)(Minecraft.getSystemTime() / 250L % GuiSkyBlockAPIViewer.downloadingStates.length)] : ""), this.parent.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
             this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValue(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValue()) + 195, top, index % 2 == 0 ? 16777215 : 9474192);
         }
 
