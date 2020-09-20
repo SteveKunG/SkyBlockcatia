@@ -1,0 +1,26 @@
+[
+    {
+        "level": 1,
+        "count": 25
+    },
+    {
+        "level": 2,
+        "count": 50
+    },
+    {
+        "level": 3,
+        "count": 100
+    },
+    {
+        "level": 4,
+        "count": 150
+    },
+    {
+        "level": 5,
+        "count": 250
+    },
+    {
+        "level": 6,
+        "count": 1000
+    }
+]
