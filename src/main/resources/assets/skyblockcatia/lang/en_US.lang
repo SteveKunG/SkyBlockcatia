@@ -227,6 +227,7 @@ message.bid_confirm=Are you sure really want to do this?
 gui.sb_view_player=Player
 gui.sb_view_skills=Skills
 gui.sb_view_slayers=Slayers
+gui.sb_view_dungeons=Dungeons
 gui.sb_view_others=Others
 gui.sb_others.kills=Kills
 gui.sb_others.deaths=Deaths

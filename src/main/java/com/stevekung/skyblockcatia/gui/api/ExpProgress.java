@@ -20,6 +20,7 @@ public class ExpProgress
     public static ExpProgress[] PET_RARE;
     public static ExpProgress[] PET_EPIC;
     public static ExpProgress[] PET_LEGENDARY;
+    public static ExpProgress[] DUNGEON;
     private static final Gson GSON = new Gson();
 
     public ExpProgress(int level, double xp)
@@ -55,6 +56,7 @@ public class ExpProgress
         PET_1,
         PET_2,
         PET_3,
-        PET_4;
+        PET_4,
+        DUNGEON;
     }
 }

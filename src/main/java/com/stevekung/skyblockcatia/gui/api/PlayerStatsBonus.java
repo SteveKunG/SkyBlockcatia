@@ -16,6 +16,7 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.Enchanting[] ENCHANTING;
     public static PlayerStatsBonus.Alchemy[] ALCHEMY;
     public static PlayerStatsBonus.Taming[] TAMING;
+    public static PlayerStatsBonus.CatacombsDungeon[] CATACOMBS_DUNGEON;
     public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
     public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
     public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
@@ -63,6 +64,9 @@ public class PlayerStatsBonus
             break;
         case PETS_SCORE:
             PETS_SCORE = GSON.fromJson(in, PlayerStatsBonus.PetsScore[].class);
+            break;
+        case CATACOMBS_DUNGEON:
+            CATACOMBS_DUNGEON = GSON.fromJson(in, PlayerStatsBonus.CatacombsDungeon[].class);
             break;
         default:
             break;
@@ -260,6 +264,30 @@ public class PlayerStatsBonus
         public double getPetLuck()
         {
             return this.petLuck;
+        }
+    }
+
+    public class CatacombsDungeon implements IBonusTemplate
+    {
+        private final int level;
+        private final double health;
+
+        public CatacombsDungeon(int level, double health)
+        {
+            this.level = level;
+            this.health = health;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getHealth()
+        {
+            return this.health;
         }
     }
 
@@ -511,6 +539,7 @@ public class PlayerStatsBonus
         ENCHANTING("skill"),
         ALCHEMY("skill"),
         TAMING("skill"),
+        CATACOMBS_DUNGEON("skill"),
         ZOMBIE_SLAYER("slayer"),
         SPIDER_SLAYER("slayer"),
         WOLF_SLAYER("slayer"),

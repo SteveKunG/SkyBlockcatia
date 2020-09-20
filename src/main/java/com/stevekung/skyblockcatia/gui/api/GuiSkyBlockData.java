@@ -176,6 +176,7 @@ public class GuiSkyBlockData extends GuiScreen
     private int enchantingLevel;
     private int alchemyLevel;
     private int tamingLevel;
+    private int catacombsLevel;
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
@@ -214,12 +215,13 @@ public class GuiSkyBlockData extends GuiScreen
         this.buttonList.add(this.doneButton = new GuiButton(0, this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close")));
         this.buttonList.add(this.backButton = new GuiButton(1, this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back")));
         this.buttonList.add(this.showArmorButton = new GuiButtonItem(2, this.width / 2 - 115, this.height / 2 - 65, new ItemStack(Items.diamond_chestplate), "Show Armor: " + EnumChatFormatting.GREEN + "ON"));
-        GuiButton infoButton = new GuiButton(ViewButton.PLAYER.id, this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_player"));
+        GuiButton infoButton = new GuiButton(ViewButton.PLAYER.id, this.width / 2 - 197, 6, 70, 20, LangUtils.translate("gui.sb_view_player"));
         infoButton.enabled = false;
         this.buttonList.add(infoButton);
-        this.buttonList.add(new GuiButton(ViewButton.SKILLS.id, this.width / 2 - 88, 6, 80, 20, LangUtils.translate("gui.sb_view_skills")));
-        this.buttonList.add(new GuiButton(ViewButton.SLAYERS.id, this.width / 2 + 8, 6, 80, 20, LangUtils.translate("gui.sb_view_slayers")));
-        this.buttonList.add(new GuiButton(ViewButton.OTHERS.id, this.width / 2 + 104, 6, 80, 20, LangUtils.translate("gui.sb_view_others")));
+        this.buttonList.add(new GuiButton(ViewButton.SKILLS.id, this.width / 2 - 116, 6, 70, 20, LangUtils.translate("gui.sb_view_skills")));
+        this.buttonList.add(new GuiButton(ViewButton.SLAYERS.id, this.width / 2 - 35, 6, 70, 20, LangUtils.translate("gui.sb_view_slayers")));
+        this.buttonList.add(new GuiButton(ViewButton.DUNGEONS.id, this.width / 2 + 45, 6, 70, 20, LangUtils.translate("gui.sb_view_dungeons")));
+        this.buttonList.add(new GuiButton(ViewButton.OTHERS.id, this.width / 2 + 126, 6, 70, 20, LangUtils.translate("gui.sb_view_others")));
 
         GuiButton statKillsButton = new GuiButton(OthersViewButton.KILLS.id, this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.kills"));
         statKillsButton.enabled = false;
@@ -305,6 +307,14 @@ public class GuiSkyBlockData extends GuiScreen
                     if (button.id == ViewButton.SLAYERS.id)
                     {
                         if (!this.data.hasSlayers())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
+                    if (button.id == ViewButton.DUNGEONS.id)
+                    {
+                        if (!this.data.hasDungeons())
                         {
                             button.enabled = false;
                             continue;
@@ -427,6 +437,13 @@ public class GuiSkyBlockData extends GuiScreen
         else if (this.currentSlotId == ViewButton.SLAYERS.id)
         {
             this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.width, this.height, this.slayerInfo);
+            this.hideOthersButton();
+            this.hideBasicInfoButton();
+            this.showArmorButton.visible = false;
+        }
+        else if (this.currentSlotId == ViewButton.DUNGEONS.id)
+        {
+            this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 28, 59, 12, this.width, this.height, EmptyStats.Type.DUNGEON);
             this.hideOthersButton();
             this.hideBasicInfoButton();
             this.showArmorButton.visible = false;
@@ -795,6 +812,19 @@ public class GuiSkyBlockData extends GuiScreen
                             SBABackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
                         }
                     }
+                    else if (stat.getType() == EmptyStats.Type.DUNGEON)//TODO
+                    {
+                        int i = 0;
+
+                        for (String dungeon : this.dungeonData)
+                        {
+                            int x = this.width / 2 - 150;
+                            int y = 50;
+                            int textY = y + 12 * i;
+                            this.drawString(this.fontRendererObj, dungeon, x, textY, -1);
+                            ++i;
+                        }
+                    }
                     else
                     {
                         int i = 0;
@@ -922,6 +952,14 @@ public class GuiSkyBlockData extends GuiScreen
                             continue;
                         }
                     }
+                    if (type2.id == ViewButton.DUNGEONS.id)
+                    {
+                        if (!this.data.hasDungeons())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
                     if (type2.id == ViewButton.OTHERS.id)
                     {
                         if (!this.data.hasOthersTab())
@@ -1003,6 +1041,14 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.width, this.height, this.slayerInfo);
                 this.currentSlotId = ViewButton.SLAYERS.id;
+                this.hideOthersButton();
+                this.hideBasicInfoButton();
+                this.showArmorButton.visible = false;
+            }
+            else if (type.id == ViewButton.DUNGEONS.id)
+            {
+                this.currentSlot = new EmptyStats(this.mc, this.width - 119, this.height, 40, this.height - 28, 59, 12, this.width, this.height, EmptyStats.Type.DUNGEON);
+                this.currentSlotId = ViewButton.DUNGEONS.id;
                 this.hideOthersButton();
                 this.hideBasicInfoButton();
                 this.showArmorButton.visible = false;
@@ -1691,6 +1737,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getPets(currentUserProfile);
                 this.getCollections(currentUserProfile);
                 this.getSacks(currentUserProfile);
+                this.getDungeons(currentUserProfile);
                 this.createFakePlayer();
                 this.calculatePlayerStats(currentUserProfile);
                 this.getItemStats(this.inventoryToStats, false);
@@ -1726,6 +1773,14 @@ public class GuiSkyBlockData extends GuiScreen
                 if (type2.id == ViewButton.SLAYERS.id)
                 {
                     if (!this.data.hasSlayers())
+                    {
+                        viewButton.enabled = false;
+                        continue;
+                    }
+                }
+                if (type2.id == ViewButton.DUNGEONS.id)
+                {
+                    if (!this.data.hasDungeons())
                     {
                         viewButton.enabled = false;
                         continue;
@@ -1801,6 +1856,122 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
         return info;
+    }
+
+    @Deprecated
+    private final List<String> dungeonData = new ArrayList<>();
+    private void getDungeons(JsonObject currentUserProfile)//TODO
+    {
+        JsonElement dungeon = currentUserProfile.get("dungeons");
+        int i = 0;
+
+        if (dungeon != null)
+        {
+            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            //System.out.println(gson.toJson(dungeon));
+            this.dungeonData.add(EnumChatFormatting.RED.toString() + EnumChatFormatting.BOLD + "WORK IN PROGRESS! NOT A FINAL GUI!");
+            this.dungeonData.add("");
+
+            JsonElement dungeonType = dungeon.getAsJsonObject().get("dungeon_types");
+            JsonElement selectedClass = dungeon.getAsJsonObject().get("selected_dungeon_class");
+            JsonElement playerClassExp = dungeon.getAsJsonObject().get("player_classes");
+            JsonObject catacombsDungeon = dungeonType.getAsJsonObject().get("catacombs").getAsJsonObject();
+            JsonElement catacombsExp = catacombsDungeon.get("experience");
+            JsonElement highestFloor = catacombsDungeon.get("highest_tier_completed");
+            JsonElement tierCompletion = catacombsDungeon.get("tier_completions");
+
+            if (catacombsExp != null)
+            {
+                SkyBlockSkillInfo info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), DungeonSkillType.THE_CATACOMBS);
+                this.catacombsLevel = info.getCurrentLvl();
+                this.dungeonData.add(EnumChatFormatting.RED + info.getName() + EnumChatFormatting.RESET + ", Level: " + info.getCurrentLvl() + " " + (int)Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
+                i++;
+            }
+
+            if (selectedClass != null)
+            {
+                this.dungeonData.add("Selected Class: " + WordUtils.capitalize(selectedClass.getAsString()));
+                i++;
+            }
+            if (highestFloor != null)
+            {
+                this.dungeonData.add("Highest Floor: " + highestFloor.getAsInt());
+                i++;
+            }
+            this.dungeonData.add("");
+
+            for (Map.Entry<String, JsonElement> entry : playerClassExp.getAsJsonObject().entrySet())
+            {
+                JsonElement classExp = entry.getValue().getAsJsonObject().get("experience");
+
+                if (classExp != null)
+                {
+                    SkyBlockSkillInfo info2 = this.calculateDungeonSkill(classExp.getAsDouble(), DungeonSkillType.valueOf(entry.getKey().toUpperCase()));
+                    this.dungeonData.add(EnumChatFormatting.RED + info2.getName() + EnumChatFormatting.RESET + ", Level: " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
+                    i++;
+                }
+            }
+
+            this.dungeonData.add("");
+            StringBuilder builder = new StringBuilder();
+
+            if (tierCompletion != null)
+            {
+                for (Map.Entry<String, JsonElement> entry : tierCompletion.getAsJsonObject().entrySet().stream().filter(entry -> !entry.getKey().equals("0")).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())).entrySet())
+                {
+                    builder.append("Floor: " + entry.getKey() + "/" + FORMAT.format(entry.getValue().getAsInt()) + ", ");
+                }
+                i++;
+            }
+
+            this.dungeonData.add(builder.toString());
+        }
+        this.data.setHasDungeons(dungeon != null && i > 0);
+    }
+
+    private SkyBlockSkillInfo calculateDungeonSkill(double playerXp, DungeonSkillType type)
+    {
+        ExpProgress[] progress = ExpProgress.DUNGEON;
+        int xpRequired = 0;
+        int currentLvl = 0;
+        int levelToCheck = 0;
+        double xpTotal = 0;
+        double xpToNextLvl = 0;
+        double currentXp = 0;
+
+        for (int x = 0; x < progress.length; ++x)
+        {
+            if (playerXp >= xpTotal)
+            {
+                xpTotal += progress[x].getXp();
+                currentLvl = x;
+                levelToCheck = progress[x].getLevel();
+
+                if (levelToCheck <= progress.length)
+                {
+                    xpRequired = (int)progress[x].getXp();
+                }
+            }
+        }
+
+        if (levelToCheck < progress.length)
+        {
+            xpToNextLvl = xpTotal - playerXp;
+            currentXp = xpRequired - xpToNextLvl;
+        }
+        else
+        {
+            currentLvl = progress.length;
+            currentXp = playerXp - xpTotal;
+        }
+
+        if (currentXp < 0 && levelToCheck <= progress.length) // fix for skill level almost reach to limit
+        {
+            xpToNextLvl = xpTotal - playerXp;
+            currentXp = xpRequired - xpToNextLvl;
+            currentLvl = progress.length - 1;
+        }
+        return new SkyBlockSkillInfo(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
     }
 
     private void getBankHistories(JsonObject banking)
@@ -2593,6 +2764,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ENCHANTING, this.enchantingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ALCHEMY, this.alchemyLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.TAMING, this.tamingLevel));
+        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.CATACOMBS_DUNGEON, this.catacombsLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ZOMBIE_SLAYER, this.zombieSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.SPIDER_SLAYER, this.spiderSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.WOLF_SLAYER, this.wolfSlayerLevel));
@@ -4183,7 +4355,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         enum Type
         {
-            INVENTORY, SKILL;
+            INVENTORY, SKILL, DUNGEON;
         }
     }
 
@@ -4797,6 +4969,28 @@ public class GuiSkyBlockData extends GuiScreen
         }
     }
 
+    public enum DungeonSkillType
+    {
+        HEALER("Healer"),
+        MAGE("Mage"),
+        BERSERK("Berserk"),
+        ARCHER("Archer"),
+        TANK("Tank"),
+        THE_CATACOMBS("The Catacombs");
+
+        private final String name;
+
+        private DungeonSkillType(String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+    }
+
     private enum SlayerType
     {
         ZOMBIE("Zombie", ExpProgress.ZOMBIE_SLAYER),
@@ -4895,7 +5089,8 @@ public class GuiSkyBlockData extends GuiScreen
         PLAYER(10),
         SKILLS(11),
         SLAYERS(12),
-        OTHERS(13);
+        DUNGEONS(13),
+        OTHERS(14);
 
         private final int id;
         protected static final ViewButton[] VALUES = ViewButton.values();
