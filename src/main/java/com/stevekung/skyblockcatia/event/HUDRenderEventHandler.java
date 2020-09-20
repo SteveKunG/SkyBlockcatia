@@ -37,7 +37,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -116,7 +115,6 @@ public class HUDRenderEventHandler
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPreInfoRender(RenderGameOverlayEvent.Pre event)
     {
-        GuiIngameForge.renderObjective = !this.mc.gameSettings.showDebugInfo;
         double jungleAxeDelay = 0;
         double grapplingHookDelay = 0;
         double zealotRespawnDelay = 0;
