@@ -3326,26 +3326,22 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (statName.startsWith("kills") || statName.endsWith("kills"))
             {
-                for (String sc : SEA_CREATURES)
+                if (SEA_CREATURES.stream().anyMatch(statName::contains))
                 {
-                    if (statName.contains(sc))
+                    if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
                     {
-                        if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
-                        {
-                            emperorKills += value;
-                        }
-                        else if (statName.contains("chicken_deep") || statName.contains("zombie_deep"))
-                        {
-                            deepMonsterKills += value;
-                        }
-                        else
-                        {
-                            seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
-                        }
+                        emperorKills += value;
+                    }
+                    else if (statName.contains("chicken_deep") || statName.contains("zombie_deep"))
+                    {
+                        deepMonsterKills += value;
+                    }
+                    else
+                    {
+                        seaCreatures.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
                     }
                 }
-
-                if (statName.contains("dragon"))
+                else if (statName.contains("dragon"))
                 {
                     dragons.add(new SkyBlockStats(this.replaceStatsString(statName, "kills"), value));
                 }
