@@ -146,7 +146,7 @@ public class SkyBlockPets
         ALL_SKILLS_SUPER_BOOST(EnumChatFormatting.WHITE),
         BIGGER_TEETH(EnumChatFormatting.GREEN),
         SERRATED_CLAWS(EnumChatFormatting.BLUE),
-        WASHED_UP_SOUVENIR(EnumChatFormatting.GOLD),
+        WASHED_UP_SOUVENIR("WASHED-UP_SOUVENIR", EnumChatFormatting.GOLD),
         ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
         DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE);
