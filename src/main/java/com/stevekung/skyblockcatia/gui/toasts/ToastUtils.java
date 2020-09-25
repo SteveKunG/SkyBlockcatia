@@ -91,6 +91,8 @@ public class ToastUtils
         DRAGON_CRYSTAL_FRAGMENT("RARE DROP!", "170,0,170"),
         BOSS_DROP("BOSS DROP!", "127,255,212", ImmutableList.of(DropCondition.SPECIAL_DROP)),
         MYTHOS_COINS("COINS!", "255,170,0", ImmutableList.of(DropCondition.COINS)),
+        BANK_INTEREST("BANK INTEREST!", "255,170,0", ImmutableList.of(DropCondition.COINS)),
+        ALLOWANCE("ALLOWANCE!", "255,170,0", ImmutableList.of(DropCondition.COINS)),
         GOOD_CATCH("GOOD CATCH!", "255,170,0"),
         GREAT_CATCH("GREAT CATCH!", "170,0,170"),
         GOOD_CATCH_COINS("GOOD CATCH!", "255,170,0", ImmutableList.of(DropCondition.COINS)),
@@ -164,7 +166,7 @@ public class ToastUtils
             case PET_LEVEL_UP:
                 return ExtendedConfig.instance.petToastTime * 1000L;
             default:
-                return 0;
+                return 5000L;
             }
         }
 

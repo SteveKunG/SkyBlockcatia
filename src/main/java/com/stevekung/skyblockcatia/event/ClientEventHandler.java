@@ -191,5 +191,10 @@ public class ClientEventHandler
         //player.addChatComponentMessage(JsonUtils.create(test));
         //String coins = "Wow! You dug out " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
         //player.addChatComponentMessage(JsonUtils.create(coins));
+
+        // Bank Interest/Allowance
+        //String coins = "Since you've been away you earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins as interest in your personal bank account!";
+        //String coins = "ALLOWANCE! You earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
+        //player.addChatComponentMessage(JsonUtils.create(coins));
     }
 }

@@ -74,6 +74,10 @@ public class HypixelEventHandler
     private static final Pattern RARE_DROP_MYTHOS_PATTERN = Pattern.compile("RARE DROP! You dug out a " + DROP_PATTERN + "!");
     private static final Pattern COINS_MYTHOS_PATTERN = Pattern.compile("Wow! You dug out (?<coin>[0-9,]+) coins!");
 
+    // Bank Interest/Allowance
+    private static final Pattern BANK_INTEREST_PATTERN = Pattern.compile("Since you've been away you earned (?<coin>[0-9,]+) coins as interest in your personal bank account!");
+    private static final Pattern ALLOWANCE_PATTERN = Pattern.compile("ALLOWANCE! You earned (?<coin>[0-9,]+) coins!");
+
     // Dungeons
     private static final Pattern DUNGEON_QUALITY_DROP_PATTERN = Pattern.compile("You found a Top Quality Item! " + DROP_PATTERN);
     private static final Pattern DUNGEON_REWARD_PATTERN = Pattern.compile(" +RARE REWARD! " + DROP_PATTERN);
@@ -290,6 +294,10 @@ public class HypixelEventHandler
             Matcher rareDropMythosPattern = HypixelEventHandler.RARE_DROP_MYTHOS_PATTERN.matcher(message);
             Matcher coinsMythosPattern = HypixelEventHandler.COINS_MYTHOS_PATTERN.matcher(message);
 
+            // Bank Interest/Allowance
+            Matcher bankInterestPattern = HypixelEventHandler.BANK_INTEREST_PATTERN.matcher(message);
+            Matcher allowancePattern = HypixelEventHandler.ALLOWANCE_PATTERN.matcher(message);
+
             // Dungeons matcher
             Matcher dungeonQualityDropPattern = HypixelEventHandler.DUNGEON_QUALITY_DROP_PATTERN.matcher(message);
             Matcher dungeonRewardPattern = HypixelEventHandler.DUNGEON_REWARD_PATTERN.matcher(message);
@@ -431,6 +439,25 @@ public class HypixelEventHandler
                         {
                             this.mc.getRenderManager().setDebugBoundingBox(true);
                         }
+                    }
+
+                    if (bankInterestPattern.matches())
+                    {
+                        String coin = bankInterestPattern.group("coin");
+                        CoinType coinType = CoinType.TYPE_3;
+                        ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.BANK_INTEREST, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                        LoggerIN.logToast(formattedMessage);
+                        cancelMessage = true;
+                    }
+                    else if (allowancePattern.matches())
+                    {
+                        String coin = allowancePattern.group("coin");
+                        CoinType coinType = CoinType.TYPE_3;
+                        ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.ALLOWANCE, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                        LoggerIN.logToast(formattedMessage);
+                        cancelMessage = true;
                     }
 
                     if (ToastMode.getById(ExtendedConfig.instance.fishCatchToastMode).equalsIgnoreCase("toast") || ToastMode.getById(ExtendedConfig.instance.fishCatchToastMode).equalsIgnoreCase("chat_and_toast"))
@@ -1184,7 +1211,8 @@ public class HypixelEventHandler
     private enum CoinType
     {
         TYPE_1("2070f6cb-f5db-367a-acd0-64d39a7e5d1b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTM4MDcxNzIxY2M1YjRjZDQwNmNlNDMxYTEzZjg2MDgzYTg5NzNlMTA2NGQyZjg4OTc4Njk5MzBlZTZlNTIzNyJ9fX0="),
-        TYPE_2("8ce61ae1-7cb4-3bdd-b1be-448c6fabb355", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGZhMDg3ZWI3NmU3Njg3YTgxZTRlZjgxYTdlNjc3MjY0OTk5MGY2MTY3Y2ViMGY3NTBhNGM1ZGViNmM0ZmJhZCJ9fX0=");
+        TYPE_2("8ce61ae1-7cb4-3bdd-b1be-448c6fabb355", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGZhMDg3ZWI3NmU3Njg3YTgxZTRlZjgxYTdlNjc3MjY0OTk5MGY2MTY3Y2ViMGY3NTBhNGM1ZGViNmM0ZmJhZCJ9fX0="),
+        TYPE_3("9dd5008a-08a1-3f4a-b8af-2499bdb8ff3b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTM2ZTk0ZjZjMzRhMzU0NjVmY2U0YTkwZjJlMjU5NzYzODllYjk3MDlhMTIyNzM1NzRmZjcwZmQ0ZGFhNjg1MiJ9fX0=");
 
         private final String id;
         private final String value;
