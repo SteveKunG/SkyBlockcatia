@@ -3477,6 +3477,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         SKYBLOCK_INV.add(new SkyBlockInventory(mainInventory, SkyBlockInventoryTabs.INVENTORY));
         SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.ENDER_CHEST), SkyBlockInventoryTabs.ENDER_CHEST));
+        SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.PERSONAL_VAULT), SkyBlockInventoryTabs.PERSONAL_VAULT));
         SKYBLOCK_INV.add(new SkyBlockInventory(accessoryInventory, SkyBlockInventoryTabs.ACCESSORY));
         SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.POTION_BAG), SkyBlockInventoryTabs.POTION));
         SKYBLOCK_INV.add(new SkyBlockInventory(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.FISHING_BAG), SkyBlockInventoryTabs.FISHING));
