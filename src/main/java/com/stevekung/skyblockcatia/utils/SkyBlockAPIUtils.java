@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -89,21 +90,19 @@ public class SkyBlockAPIUtils
                 NBTTagCompound compound = CompressedStreamTools.readCompressed(new ByteArrayInputStream(decode));
                 NBTTagList list = compound.getTagList("i", 10);
 
-                for (int i = type == SkyBlockInventoryType.INVENTORY ? 9 : 0; i < list.tagCount(); ++i)
+                for (int i = 0; i < list.tagCount(); ++i)
                 {
                     itemStack.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
-                }
-                if (type == SkyBlockInventoryType.INVENTORY)
-                {
-                    for (int i = 0; i < 9; ++i)
-                    {
-                        itemStack.add(ItemStack.loadItemStackFromNBT(list.getCompoundTagAt(i)));
-                    }
                 }
             }
             catch (IOException e)
             {
                 e.printStackTrace();
+            }
+
+            if (type == SkyBlockInventoryType.INVENTORY)
+            {
+                Collections.rotate(itemStack, -9);
             }
             return itemStack;
         }
