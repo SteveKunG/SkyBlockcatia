@@ -9,9 +9,9 @@ public enum SkyBlockInventoryType
     ACCESSORY_BAG("talisman_bag", "Accessory Bag"),
     POTION_BAG("potion_bag", "Potion Bag"),
     FISHING_BAG("fishing_bag", "Fishing Bag"),
+    WARDROBE("wardrobe_contents", "Wardrobe"),
     QUIVER("quiver", "Quiver"),
-    CANDY("candy_inventory_contents", "Candy Bag"),
-    WARDROBE("wardrobe_contents", "Wardrobe");
+    CANDY("candy_inventory_contents", "Candy Bag");
 
     private final String apiName;
     private final String name;
