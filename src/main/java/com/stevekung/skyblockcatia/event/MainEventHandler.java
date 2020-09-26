@@ -41,6 +41,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -218,12 +219,15 @@ public class MainEventHandler
         }
         if (HypixelEventHandler.isSkyBlock)
         {
+            ItemStack wardRobeItem = new ItemStack(Items.leather_chestplate);
+            ((ItemArmor)wardRobeItem.getItem()).setColor(wardRobeItem, 8339378);
+
             if (ExtendedConfig.instance.shortcutButtonInInventory && event.gui instanceof GuiInventory)
             {
                 event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest)));
                 event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table)));
                 event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, new ItemStack(Items.bone), "Pets"));
-                event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, new ItemStack(Items.leather_chestplate), "Wardrobe"));
+                event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, wardRobeItem, "Wardrobe"));
             }
             if (event.gui instanceof GuiChest)
             {
@@ -265,7 +269,7 @@ public class MainEventHandler
                     }
                     else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Pets"))
                     {
-                        event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, new ItemStack(Items.leather_chestplate), "Wardrobe"));
+                        event.buttonList.add(new GuiButtonItem(1003, width + 88, height + 47, width + 89, wardRobeItem, "Wardrobe"));
                     }
                 }
 
