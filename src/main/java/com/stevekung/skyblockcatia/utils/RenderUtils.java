@@ -125,6 +125,10 @@ public class RenderUtils
                         {
                             RenderUtils.renderRarity(xPos, yPos, mythic);
                         }
+                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.DARK_RED, "SUPREME"))
+                        {
+                            RenderUtils.renderRarity(xPos, yPos, verySpecial);
+                        }
                         else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.RED, "SPECIAL"))
                         {
                             RenderUtils.renderRarity(xPos, yPos, special);
