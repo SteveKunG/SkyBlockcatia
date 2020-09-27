@@ -36,6 +36,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 {
     public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
     private static boolean firstLoad;
+    private static ItemStack selfItemCache;
     private GuiRightClickTextField usernameTextField;
     private GuiButtonSearch checkButton;
     private GuiButton closeButton;
@@ -86,11 +87,16 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     @Override
     public void initGui()
     {
+        if (selfItemCache == null)
+        {
+            selfItemCache = new ItemStack(Items.skull);
+        }
+
         Keyboard.enableRepeatEvents(true);
         this.buttonList.clear();
         this.buttonList.add(this.checkButton = new GuiButtonSearch(0, this.width / 2 + 78, 46));
         this.buttonList.add(this.closeButton = new GuiButton(1, this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close")));
-        this.buttonList.add(this.selfButton = new GuiButtonItem(2, this.width / 2 - 96, 46, !firstLoad ? new ItemStack(Items.skull) : RenderUtils.getPlayerHead(GameProfileUtils.getUsername()), "Check Self"));
+        this.buttonList.add(this.selfButton = new GuiButtonItem(2, this.width / 2 - 96, 46, selfItemCache, "Check Self"));
         this.usernameTextField = new GuiRightClickTextField(2, this.fontRendererObj, this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused(true);
@@ -178,9 +184,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         this.usernameTextField.updateCursorCounter();
         this.checkButton.enabled = this.usernameTextField.getText().trim().length() > 0;
 
-        if (!firstLoad && this.selfButton.getItemStack().getItem() == Items.skull && this.selfButton.getItemStack().getItemDamage() == 0)
+        if (!firstLoad && selfItemCache != null && selfItemCache.getItem() == Items.skull && selfItemCache.getItemDamage() == 0)
         {
-            CommonUtils.runAsync(() -> this.selfButton.setItemStack(RenderUtils.getPlayerHead(GameProfileUtils.getUsername())));
+            CommonUtils.runAsync(this::setItemCache);
             firstLoad = true;
         }
     }
@@ -410,6 +416,12 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 this.autocompletePlayerNames();
             }
         }
+    }
+
+    private void setItemCache()
+    {
+        selfItemCache = RenderUtils.getPlayerHead(GameProfileUtils.getUsername());
+        this.selfButton.setItemStack(selfItemCache);
     }
 
     private void checkAPI() throws IOException
