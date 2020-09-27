@@ -165,7 +165,7 @@ public class GuiSkyBlockData extends GuiScreen
     private boolean isScrolling;
     private boolean wasClicking;
     private final ContainerSkyBlock skyBlockContainer;
-    private final ContainerArmor skyBlockArmorContainer;
+    private ContainerArmor skyBlockArmorContainer;
 
     // Player Bonus Stats
     private int totalFairySouls;
@@ -195,7 +195,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.firstLoad = true;
         this.allowUserInput = true;
         this.skyBlockContainer = new ContainerSkyBlock();
-        this.skyBlockArmorContainer = new ContainerArmor();
+        this.skyBlockArmorContainer = new ContainerArmor(true);
         this.profiles = profiles;
         this.skyblockProfiles = callback.getSkyblockProfile();
         this.sbProfileId = callback.getProfileId();
@@ -593,21 +593,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 else
                 {
-                    for (ItemStack armor : this.armorItems)
-                    {
-                        if (armor == null)
-                        {
-                            continue;
-                        }
-
-                        int index = EntityLiving.getArmorPosition(armor);
-
-                        if (armor.getItem() instanceof ItemBlock)
-                        {
-                            index = 4;
-                        }
-                        this.player.setCurrentItemOrArmor(index, armor);
-                    }
+                    this.setPlayerArmors();
                     this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.GREEN + "ON");
                     this.showArmor = true;
                 }
@@ -781,6 +767,13 @@ public class GuiSkyBlockData extends GuiScreen
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     GlStateManager.enableDepth();
                     GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
+
+                    this.drawContainerSlot(mouseX, mouseY, true);
+
+                    if (this.theSlot != null && this.theSlot.getHasStack())
+                    {
+                        this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
+                    }
                 }
                 else if (this.currentSlot instanceof EmptyStats)
                 {
@@ -788,7 +781,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                     if (stat.getType() == EmptyStats.Type.INVENTORY)
                     {
-                        this.drawContainerSlot(mouseX, mouseY);
+                        this.drawContainerSlot(mouseX, mouseY, false);
 
                         RenderHelper.disableStandardItemLighting();
                         this.drawTabsForegroundLayer();
@@ -1276,6 +1269,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.currentBasicSlotId = BasicInfoViewButton.PLAYER_STATS.id;
                 this.showArmorButton.visible = true;
                 this.showArmorButton.xPosition = this.width / 2 - 115;
+                this.skyBlockArmorContainer = new ContainerArmor(true);
             }
             else if (type.id == BasicInfoViewButton.INVENTORY.id)
             {
@@ -1284,6 +1278,7 @@ public class GuiSkyBlockData extends GuiScreen
                 this.setCurrentTab(SkyBlockInventoryTabs.tabArray[this.selectedTabIndex]);
                 this.showArmorButton.visible = true;
                 this.showArmorButton.xPosition = this.width / 2 - 105;
+                this.skyBlockArmorContainer = new ContainerArmor(false);
             }
             else if (type.id == BasicInfoViewButton.COLLECTIONS.id)
             {
@@ -1458,7 +1453,7 @@ public class GuiSkyBlockData extends GuiScreen
         }
     }
 
-    private void drawContainerSlot(int mouseX, int mouseY)
+    private void drawContainerSlot(int mouseX, int mouseY, boolean info)
     {
         int i = this.guiLeft;
         int j = this.guiTop;
@@ -1473,27 +1468,30 @@ public class GuiSkyBlockData extends GuiScreen
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, k / 1.0F, l / 1.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        for (Slot slot : this.skyBlockContainer.inventorySlots)
+        if (!info)
         {
-            this.drawSlot(slot);
-
-            if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())
+            for (Slot slot : this.skyBlockContainer.inventorySlots)
             {
-                this.theSlot = slot;
+                this.drawSlot(slot);
 
-                if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
+                if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())
                 {
-                    continue;
+                    this.theSlot = slot;
+
+                    if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
+                    {
+                        continue;
+                    }
+                    GlStateManager.disableLighting();
+                    GlStateManager.disableDepth();
+                    int j1 = slot.xDisplayPosition;
+                    int k1 = slot.yDisplayPosition;
+                    GlStateManager.colorMask(true, true, true, false);
+                    this.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+                    GlStateManager.colorMask(true, true, true, true);
+                    GlStateManager.enableLighting();
+                    GlStateManager.enableDepth();
                 }
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                int j1 = slot.xDisplayPosition;
-                int k1 = slot.yDisplayPosition;
-                GlStateManager.colorMask(true, true, true, false);
-                this.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-                GlStateManager.colorMask(true, true, true, true);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
             }
         }
 
@@ -3584,7 +3582,11 @@ public class GuiSkyBlockData extends GuiScreen
 
         this.player = new EntityOtherFakePlayer(this.mc.theWorld, this.profile);
         GuiSkyBlockData.renderSecondLayer = true;
+        this.setPlayerArmors();
+    }
 
+    private void setPlayerArmors()
+    {
         for (ItemStack armor : this.armorItems)
         {
             if (armor == null)
@@ -4102,12 +4104,13 @@ public class GuiSkyBlockData extends GuiScreen
 
     static class ContainerArmor extends Container
     {
-        public ContainerArmor()
+        public ContainerArmor(boolean info)
         {
-            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 0, -52, 75)); // boots
-            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 1, -52, 56));
-            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 2, -52, 36));
-            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 3, -52, 12)); // helmet
+            int x = info ? -62 : -52;
+            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 0, x, 75)); // boots
+            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 1, x, 56));
+            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 2, x, 36));
+            this.addSlotToContainer(new Slot(GuiSkyBlockData.TEMP_ARMOR_INVENTORY, 3, x, 12)); // helmet
         }
 
         @Override
