@@ -1021,10 +1021,30 @@ public class HypixelEventHandler
         {
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^a-zA-Z0-9 ]|^[a-zA-Z ]+", "");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
-            int dayF = Integer.valueOf(timeEstimate[0]);
-            int hourF = Integer.valueOf(timeEstimate[1]);
-            int minuteF = Integer.valueOf(timeEstimate[2]);
-            int secondF = Integer.valueOf(timeEstimate[3]);
+            int dayF = 0;
+            int hourF = 0;
+            int minuteF = 0;
+            int secondF = 0;
+
+            if (timeEstimate.length == 2)
+            {
+                minuteF = Integer.valueOf(timeEstimate[0]);
+                secondF = Integer.valueOf(timeEstimate[1]);
+            }
+            else if (timeEstimate.length == 3)
+            {
+                hourF = Integer.valueOf(timeEstimate[0]);
+                minuteF = Integer.valueOf(timeEstimate[1]);
+                secondF = Integer.valueOf(timeEstimate[2]);
+            }
+            else
+            {
+                dayF = Integer.valueOf(timeEstimate[0]);
+                hourF = Integer.valueOf(timeEstimate[1]);
+                minuteF = Integer.valueOf(timeEstimate[2]);
+                secondF = Integer.valueOf(timeEstimate[3]);
+            }
+
             calendar.add(Calendar.DATE, dayF);
             calendar.add(Calendar.HOUR, hourF);
             calendar.add(Calendar.MINUTE, minuteF);
