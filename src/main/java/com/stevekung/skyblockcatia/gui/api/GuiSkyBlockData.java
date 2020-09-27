@@ -3594,14 +3594,11 @@ public class GuiSkyBlockData extends GuiScreen
 
             int index = EntityLiving.getArmorPosition(armor);
 
-            if (index > 0)
+            if (index == 0 && armor.getItem() instanceof ItemBlock)
             {
-                if (armor.getItem() instanceof ItemBlock)
-                {
-                    index = 4;
-                }
-                this.player.setCurrentItemOrArmor(index, armor);
+                index = 4;
             }
+            this.player.setCurrentItemOrArmor(index, armor);
         }
     }
 
