@@ -12,13 +12,14 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 
 public class SkyBlockInventoryTabs
 {
     public static SkyBlockInventoryTabs[] tabArray = new SkyBlockInventoryTabs[10];
     public static final SkyBlockInventoryTabs INVENTORY = new SkyBlockInventoryTabs(0, "inventory", Blocks.chest).setBackgroundImageName("player_inventory");
     public static final SkyBlockInventoryTabs ENDER_CHEST = new SkyBlockInventoryTabs(1, "ender_chest", Blocks.ender_chest);
-    public static final SkyBlockInventoryTabs PERSONAL_VAULT = new SkyBlockInventoryTabs(2, "personal_vault", Blocks.end_portal_frame);
+    public static final SkyBlockInventoryTabs PERSONAL_VAULT = new SkyBlockInventoryTabs(2, "personal_vault", RenderUtils.getSkullItemStack("5dc858cb-5ca4-4aef-90eb-091790d2ec0e", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmJkZDYyZjI1ZjRhNDljYzQyZTA1NGEzZjIxMmMzZTAwOTIxMzgyOTkxNzJkN2Q4ZjNkNDM4MjE0Y2E5NzJhYyJ9fX0="));
     public static final SkyBlockInventoryTabs ACCESSORY = new SkyBlockInventoryTabs(3, "accessory", RenderUtils.getSkullItemStack("a97ab432-e9d4-4c42-aff7-2775265b2b4c", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTYxYTkxOGMwYzQ5YmE4ZDA1M2U1MjJjYjkxYWJjNzQ2ODkzNjdiNGQ4YWEwNmJmYzFiYTkxNTQ3MzA5ODVmZiJ9fX0="));
     public static final SkyBlockInventoryTabs POTION = new SkyBlockInventoryTabs(4, "potion", RenderUtils.getSkullItemStack("d01f7f54-635d-40a5-be43-7f322fd05cc6", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWY4YjgyNDI3YjI2MGQwYTYxZTY0ODNmYzNiMmMzNWE1ODU4NTFlMDhhOWE5ZGYzNzI1NDhiNDE2OGNjODE3YyJ9fX0="));
     public static final SkyBlockInventoryTabs FISHING = new SkyBlockInventoryTabs(5, "fishing", RenderUtils.getSkullItemStack("49a4ee3b-7918-462b-9040-de9a9b2e9946", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWI4ZTI5N2RmNmI4ZGZmY2YxMzVkYmE4NGVjNzkyZDQyMGFkOGVjYjQ1OGQxNDQyODg1NzJhODQ2MDNiMTYzMSJ9fX0="));
@@ -83,7 +84,8 @@ public class SkyBlockInventoryTabs
 
     public String getTranslatedTabLabel()
     {
-        return LangUtils.translate("skyblock_tab." + this.label);
+        String translated = LangUtils.translate("skyblock_tab." + this.label);
+        return this.isDisabled() ? EnumChatFormatting.RED + translated + " not available or empty" : translated;
     }
 
     public ItemStack getIcon()
@@ -126,5 +128,18 @@ public class SkyBlockInventoryTabs
                 items.addAll(inventory.getItems());
             }
         }
+    }
+
+    public boolean isDisabled()
+    {
+        for (SkyBlockInventory inventory : GuiSkyBlockData.SKYBLOCK_INV)
+        {
+            if (inventory.getTab() == this)
+            {
+                List<ItemStack> itemList = inventory.getItems();
+                return itemList.isEmpty() || itemList.stream().allMatch(itemStack -> itemStack != null && itemStack.getItem() == Item.getItemFromBlock(Blocks.barrier) || itemStack == null);
+            }
+        }
+        return false;
     }
 }

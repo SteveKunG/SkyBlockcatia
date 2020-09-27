@@ -148,6 +148,7 @@ public class GuiSkyBlockData extends GuiScreen
     private int currentMinionSlot;
     private int slayerTotalAmountSpent;
     private int totalSlayerXp;
+    private int totalDisabledInv;
     private EntityOtherFakePlayer player;
     private String skillAvg;
     private int petScore;
@@ -332,6 +333,14 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 if (basicInfoType != null)
                 {
+                    if (button.id == BasicInfoViewButton.INVENTORY.id)
+                    {
+                        if (!this.data.hasInventories())
+                        {
+                            button.enabled = false;
+                            continue;
+                        }
+                    }
                     if (button.id == BasicInfoViewButton.COLLECTIONS.id)
                     {
                         if (!this.data.hasCollections())
@@ -658,7 +667,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                 for (SkyBlockInventoryTabs tab : SkyBlockInventoryTabs.tabArray)
                 {
-                    if (this.isMouseOverTab(tab, i, j))
+                    if (this.isMouseOverTab(tab, i, j) && !tab.isDisabled())
                     {
                         this.setCurrentTab(tab);
                         return;
@@ -785,6 +794,12 @@ public class GuiSkyBlockData extends GuiScreen
                         this.drawTabsForegroundLayer();
                         RenderHelper.enableGUIStandardItemLighting();
 
+                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                        GlStateManager.disableLighting();
+
+                        GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
+                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
                         for (SkyBlockInventoryTabs tab : SkyBlockInventoryTabs.tabArray)
                         {
                             if (tab == null)
@@ -796,13 +811,6 @@ public class GuiSkyBlockData extends GuiScreen
                                 break;
                             }
                         }
-
-                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                        GlStateManager.disableLighting();
-
-                        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                        GuiSkyBlockData.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
-
                         if (this.theSlot != null && this.theSlot.getHasStack())
                         {
                             this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
@@ -1009,6 +1017,14 @@ public class GuiSkyBlockData extends GuiScreen
                     {
                         viewButton.visible = true;
 
+                        if (type2.id == BasicInfoViewButton.INVENTORY.id)
+                        {
+                            if (!this.data.hasInventories())
+                            {
+                                viewButton.enabled = false;
+                                continue;
+                            }
+                        }
                         if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
                         {
                             if (!this.data.hasCollections())
@@ -1226,6 +1242,14 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (type2 != null)
                 {
+                    if (type2.id == BasicInfoViewButton.INVENTORY.id)
+                    {
+                        if (!this.data.hasInventories())
+                        {
+                            viewButton.enabled = false;
+                            continue;
+                        }
+                    }
                     if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
                     {
                         if (!this.data.hasCollections())
@@ -1744,6 +1768,15 @@ public class GuiSkyBlockData extends GuiScreen
                 this.getItemStats(this.armorItems, true);
                 this.applyBonuses();
 
+                for (SkyBlockInventoryTabs tab : SkyBlockInventoryTabs.tabArray)
+                {
+                    if (tab.isDisabled())
+                    {
+                        this.totalDisabledInv++;
+                    }
+                }
+
+                this.data.setHasInventories(this.totalDisabledInv != 11);
                 this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0));
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID, communityUpgrade);
                 break;
@@ -1802,6 +1835,14 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (type2 != null)
             {
+                if (type2.id == BasicInfoViewButton.INVENTORY.id)
+                {
+                    if (!this.data.hasInventories())
+                    {
+                        viewButton.enabled = false;
+                        continue;
+                    }
+                }
                 if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
                 {
                     if (!this.data.hasCollections())
@@ -2471,6 +2512,7 @@ public class GuiSkyBlockData extends GuiScreen
     private void getPets(JsonObject currentUserProfile)
     {
         List<PetData> petData = new ArrayList<>();
+        List<ItemStack> petItem = new ArrayList<>();
         JsonElement petsObj = currentUserProfile.get("pets");
 
         if (petsObj == null)
@@ -2614,9 +2656,10 @@ public class GuiSkyBlockData extends GuiScreen
             }
             for (PetData data : petData)
             {
-                SKYBLOCK_INV.add(new SkyBlockInventory(data.getItemStack(), SkyBlockInventoryTabs.PET));
+                petItem.addAll(data.getItemStack());
             }
         }
+        SKYBLOCK_INV.add(new SkyBlockInventory(petItem, SkyBlockInventoryTabs.PET));
         this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
