@@ -1689,6 +1689,16 @@ public class GuiSkyBlockData extends GuiScreen
         ItemStack itemStack = tab.getIcon();
         this.itemRender.renderItemAndEffectIntoGUI(itemStack, l, i1);
         this.itemRender.renderItemOverlays(this.fontRendererObj, itemStack, l, i1);
+
+        if (tab.isDisabled())
+        {
+            GlStateManager.disableDepth();
+            itemStack = new ItemStack(Blocks.barrier);
+            this.itemRender.renderItemAndEffectIntoGUI(itemStack, l, i1);
+            this.itemRender.renderItemOverlays(this.fontRendererObj, itemStack, l, i1);
+            GlStateManager.enableDepth();
+        }
+
         GlStateManager.disableLighting();
         this.itemRender.zLevel = 0.0F;
         this.zLevel = 0.0F;
