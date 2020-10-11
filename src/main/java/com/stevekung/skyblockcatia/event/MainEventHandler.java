@@ -19,10 +19,7 @@ import com.google.gson.JsonParser;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.gui.GuiButtonItem;
-import com.stevekung.skyblockcatia.gui.GuiButtonMojangStatus;
-import com.stevekung.skyblockcatia.gui.GuiConfirmDisconnect;
-import com.stevekung.skyblockcatia.gui.GuiMojangStatusChecker;
+import com.stevekung.skyblockcatia.gui.*;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockAPIViewer;
 import com.stevekung.skyblockcatia.gui.config.GuiExtendedConfig;
 import com.stevekung.skyblockcatia.gui.config.GuiRenderPreview;
@@ -82,6 +79,7 @@ public class MainEventHandler
     public static String playerToView;
     public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
     public static boolean bidHighlight = true;
+    private static int inventoryPage = 0;
 
     public MainEventHandler()
     {
@@ -224,10 +222,32 @@ public class MainEventHandler
 
             if (ExtendedConfig.instance.shortcutButtonInInventory && event.gui instanceof GuiInventory)
             {
-                event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest)));
-                event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table)));
-                event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, new ItemStack(Items.bone), "Pets"));
-                event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, wardRobeItem, "Wardrobe"));
+                GuiButtonItem item = new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest));
+                item.visible = inventoryPage == 0;
+                event.buttonList.add(item);
+                item = new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table));
+                item.visible = inventoryPage == 0;
+                event.buttonList.add(item);
+                item = new GuiButtonItem(1002, width + 29, height + 86, width + 89, new ItemStack(Items.bone), "Pets");
+                item.visible = inventoryPage == 0;
+                event.buttonList.add(item);
+                item = new GuiButtonItem(1003, width + 48, height + 86, width + 108, wardRobeItem, "Wardrobe");
+                item.visible = inventoryPage == 0;
+                event.buttonList.add(item);
+
+                item = new GuiButtonItem(1010, width - 9, height + 86, width + 51, new ItemStack(Items.golden_horse_armor), "Auction House");
+                item.visible = inventoryPage == 1;
+                event.buttonList.add(item);
+                item = new GuiButtonItem(1011, width + 10, height + 86, width + 70, new ItemStack(Blocks.gold_ore), "Bazaar");
+                item.visible = inventoryPage == 1;
+                event.buttonList.add(item);
+
+                GuiSmallArrow arrow = new GuiSmallArrow(1100, width + 48, height + 90, width + 132, 0);
+                arrow.visible = inventoryPage == 0;
+                event.buttonList.add(arrow);
+                arrow = new GuiSmallArrow(1101, width + 48, height + 90, width + 132, 1);
+                arrow.visible = inventoryPage == 1;
+                event.buttonList.add(arrow);
             }
             if (event.gui instanceof GuiChest)
             {
@@ -352,6 +372,31 @@ public class MainEventHandler
                 else if (event.button.id == 1004)
                 {
                     this.mc.thePlayer.sendChatMessage("/viewsbmenu");
+                }
+                else if (event.button.id == 1010)
+                {
+                    this.mc.thePlayer.sendChatMessage("/ah");
+                }
+                else if (event.button.id == 1011)
+                {
+                    this.mc.thePlayer.sendChatMessage("/bz");
+                }
+                else if (event.button.id == 1100 || event.button.id == 1101)
+                {
+                    inventoryPage++;
+                    inventoryPage %= 2;
+
+                    for (GuiButton button : event.buttonList)
+                    {
+                        if (button.id >= 1000 && button.id <= 1003 || button.id == 1100)
+                        {
+                            button.visible = inventoryPage == 0;
+                        }
+                        else if (button.id == 1010 || button.id == 1011 || button.id == 1101)
+                        {
+                            button.visible = inventoryPage == 1;
+                        }
+                    }
                 }
                 this.lastButtonClick = now;
             }
