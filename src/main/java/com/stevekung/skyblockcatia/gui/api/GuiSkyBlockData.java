@@ -2525,6 +2525,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         if (petsObj == null)
         {
+            this.totalDisabledInv++;
             return;
         }
 
