@@ -108,6 +108,7 @@ public class HypixelEventHandler
     private List<ItemStack> previousInventory;
     private SkyBlockBossBar.DragonType dragonType;
     private final Minecraft mc;
+    private boolean initVersionCheck;
 
     public HypixelEventHandler()
     {
@@ -709,6 +710,13 @@ public class HypixelEventHandler
             this.previousInventory = null;
             this.clearBossData();
             ITEM_DROP_CHECK_LIST.clear();
+
+            if (!this.initVersionCheck)
+            {
+                SkyBlockcatiaMod.CHECKER.startCheckIfFailed();
+                SkyBlockcatiaMod.CHECKER.printInfo(this.mc.thePlayer);
+                this.initVersionCheck = true;
+            }
         }
     }
 

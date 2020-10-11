@@ -36,6 +36,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -58,6 +59,10 @@ public class SkyBlockcatiaMod
     protected static final String DEPENDENCIES = "after:skyblockaddons@[1.5.0,); " + SkyBlockcatiaMod.FORGE_VERSION;
     private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
     protected static final String JSON_URL = "https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json";
+    
+    @Instance(MOD_ID)
+    private static SkyBlockcatiaMod INSTANCE;
+    public static VersionChecker CHECKER;
 
     public static final File profile = new File(ExtendedConfig.userDir, "profile.txt");
     private static final Splitter COLON_SPLITTER = Splitter.on(':');
@@ -106,6 +111,7 @@ public class SkyBlockcatiaMod
         SkyBlockcatiaMod.init(event.getModMetadata());
         ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingHandler.init();
+        CHECKER = new VersionChecker(INSTANCE, "SkyBlockcatia", URL);
 
         if (ConfigManagerIN.enableOldFishingRodRenderModel)
         {
@@ -175,6 +181,7 @@ public class SkyBlockcatiaMod
         {
             ColorUtils.init();
         }
+        CHECKER.startCheck();
     }
 
     @SubscribeEvent
