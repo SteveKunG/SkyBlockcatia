@@ -43,6 +43,7 @@ public class ExtendedConfig
     public boolean equipmentHandItems = true;
     public boolean potionHUD = false;
     public boolean realTime = false;
+    public boolean twentyFourTime = false;
     public boolean gameTime = false;
     public boolean gameWeather = false;
     public boolean moonPhase = false;
@@ -189,6 +190,7 @@ public class ExtendedConfig
             this.equipmentHandItems = ExtendedConfig.getBoolean(nbt, "EquipmentHandItems", this.equipmentHandItems);
             this.potionHUD = ExtendedConfig.getBoolean(nbt, "PotionHUD", this.potionHUD);
             this.realTime = ExtendedConfig.getBoolean(nbt, "RealTime", this.realTime);
+            this.twentyFourTime = ExtendedConfig.getBoolean(nbt, "TwentyFourTime", this.twentyFourTime);
             this.gameTime = ExtendedConfig.getBoolean(nbt, "GameTime", this.gameTime);
             this.gameWeather = ExtendedConfig.getBoolean(nbt, "GameWeather", this.gameWeather);
             this.moonPhase = ExtendedConfig.getBoolean(nbt, "MoonPhase", this.moonPhase);
@@ -334,6 +336,7 @@ public class ExtendedConfig
             nbt.setBoolean("EquipmentHandItems", this.equipmentHandItems);
             nbt.setBoolean("PotionHUD", this.potionHUD);
             nbt.setBoolean("RealTime", this.realTime);
+            nbt.setBoolean("TwentyFourTime", this.twentyFourTime);
             nbt.setBoolean("GameTime", this.gameTime);
             nbt.setBoolean("GameWeather", this.gameWeather);
             nbt.setBoolean("MoonPhase", this.moonPhase);
@@ -691,6 +694,10 @@ public class ExtendedConfig
         else if (options == ExtendedConfig.Options.REAL_TIME)
         {
             this.realTime = !this.realTime;
+        }
+        else if (options == ExtendedConfig.Options.TWENTY_FOUR_TIME)
+        {
+            this.twentyFourTime = !this.twentyFourTime;
         }
         else if (options == ExtendedConfig.Options.GAME_TIME)
         {
@@ -1119,6 +1126,8 @@ public class ExtendedConfig
             return this.potionHUD;
         case REAL_TIME:
             return this.realTime;
+        case TWENTY_FOUR_TIME:
+            return this.twentyFourTime;
         case GAME_TIME:
             return this.gameTime;
         case GAME_WEATHER:
@@ -1308,6 +1317,7 @@ public class ExtendedConfig
         EQUIPMENT_HAND_ITEMS(false, true),
         POTION_HUD(false, true),
         REAL_TIME(false, true),
+        TWENTY_FOUR_TIME(false, true),
         GAME_TIME(false, true),
         GAME_WEATHER(false, true),
         MOON_PHASE(false, true),

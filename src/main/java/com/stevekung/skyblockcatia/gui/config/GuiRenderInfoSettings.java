@@ -31,6 +31,7 @@ public class GuiRenderInfoSettings extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_HAND_ITEMS);
         OPTIONS.add(ExtendedConfig.Options.POTION_HUD);
         OPTIONS.add(ExtendedConfig.Options.REAL_TIME);
+        OPTIONS.add(ExtendedConfig.Options.TWENTY_FOUR_TIME);
         OPTIONS.add(ExtendedConfig.Options.GAME_TIME);
         OPTIONS.add(ExtendedConfig.Options.GAME_WEATHER);
         OPTIONS.add(ExtendedConfig.Options.MOON_PHASE);

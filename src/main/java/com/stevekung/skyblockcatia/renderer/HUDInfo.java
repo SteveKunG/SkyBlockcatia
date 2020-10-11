@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.renderer;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.stevekung.skyblockcatia.config.EnumEquipment;
@@ -188,7 +189,7 @@ public class HUDInfo
         Date date = new Date();
         boolean isThai = Calendar.getInstance().getTimeZone().getID().equals("Asia/Bangkok");
         String dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
-        String timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
+        String timeFormat = ExtendedConfig.instance.twentyFourTime ? new SimpleDateFormat("HH:mm:ss").format(date) : DateFormat.getTimeInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
         String currentTime = ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeDDMMYYValueColor).toColoredFont() + dateFormat + " " + ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeHHMMSSValueColor).toColoredFont() + timeFormat;
         return ColorUtils.stringToRGB(ExtendedConfig.instance.realTimeColor).toColoredFont() + "Time: " + currentTime;
     }

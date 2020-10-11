@@ -104,6 +104,7 @@ equipment_armor_items.extended_config=Equipment Armor Items
 equipment_hand_items.extended_config=Equipment Hand Items
 potion_hud.extended_config=Potion HUD
 real_time.extended_config=Real Time
+twenty_four_time.extended_config=24 Hours Time Format
 game_time.extended_config=Game Time
 game_weather.extended_config=Game Weather
 moon_phase.extended_config=Moon Phase
