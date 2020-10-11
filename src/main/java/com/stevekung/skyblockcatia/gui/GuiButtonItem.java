@@ -1,9 +1,7 @@
 package com.stevekung.skyblockcatia.gui;
 
-import java.lang.reflect.Field;
-
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -28,18 +26,6 @@ public class GuiButtonItem extends GuiButton
     private final Minecraft mc;
     private String customName;
 
-    // Patcher Compatibility
-    private static Class<?> patcherConfig;
-    private boolean patcherInventoryPosition;
-
-    // Vanilla Enhancements Compatibility
-    private static Class<?> vanillaEnConfig;
-    private boolean vanillaEnFixInventory;
-
-    // Not Enough Updates Compatibility
-    private static Class<?> neuConfig;
-    private boolean neuhidePotionEffect;
-
     public GuiButtonItem(int buttonID, int xPos, int yPos, ItemStack itemStack)
     {
         this(buttonID, xPos, yPos, xPos, itemStack, itemStack.getDisplayName());
@@ -63,57 +49,12 @@ public class GuiButtonItem extends GuiButton
         this.itemStack = itemStack;
         this.mc = Minecraft.getMinecraft();
         this.customName = customName;
-
-        if (SkyBlockcatiaMod.isPatcherLoaded)
-        {
-            try
-            {
-                patcherConfig = Class.forName("club.sk1er.patcher.config.PatcherConfig");
-                Field inventoryPosition = patcherConfig.getDeclaredField("inventoryPosition");
-                this.patcherInventoryPosition = inventoryPosition.getBoolean(patcherConfig);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        if (SkyBlockcatiaMod.isVanillaEnhancementsLoaded)
-        {
-            try
-            {
-                vanillaEnConfig = Class.forName("com.orangemarshall.enhancements.config.Config");
-                Object instance = vanillaEnConfig.getDeclaredMethod("instance").invoke(vanillaEnConfig);
-                Field fixInventory = instance.getClass().getDeclaredField("fixInventory");
-                this.vanillaEnFixInventory = fixInventory.getBoolean(instance);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        if (SkyBlockcatiaMod.isNotEnoughUpdates)
-        {
-            try
-            {
-                neuConfig = Class.forName("io.github.moulberry.notenoughupdates.NotEnoughUpdates");
-                Object instance = neuConfig.getDeclaredMethod("INSTANCE").invoke(neuConfig);
-                Field manager = instance.getClass().getDeclaredField("manager");
-                Field config = manager.getClass().getDeclaredField("config");
-                Field hidePotionEffect = config.getClass().getDeclaredField("hidePotionEffect");
-                Field value = hidePotionEffect.getClass().getDeclaredField("value");
-                this.neuhidePotionEffect = value.getBoolean(hidePotionEffect);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
-        if (!(this.vanillaEnFixInventory || this.patcherInventoryPosition || this.neuhidePotionEffect || this.mc.currentScreen instanceof GuiSkyBlockData))
+        if (!(CompatibilityUtils.INSTANCE.hasInventoryFix() || this.mc.currentScreen instanceof GuiSkyBlockData))
         {
             boolean hasVisibleEffect = false;
 

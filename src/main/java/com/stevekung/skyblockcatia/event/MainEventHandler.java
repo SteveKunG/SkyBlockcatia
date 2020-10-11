@@ -242,10 +242,10 @@ public class MainEventHandler
                 item.visible = inventoryPage == 1;
                 event.buttonList.add(item);
 
-                GuiSmallArrow arrow = new GuiSmallArrow(1100, width + 48, height + 90, width + 132, 0);
+                GuiSmallArrow arrow = new GuiSmallArrow(1100, width + 72, height + 90, width + 132, 0);
                 arrow.visible = inventoryPage == 0;
                 event.buttonList.add(arrow);
-                arrow = new GuiSmallArrow(1101, width + 48, height + 90, width + 132, 1);
+                arrow = new GuiSmallArrow(1101, width + 72, height + 90, width + 132, 1);
                 arrow.visible = inventoryPage == 1;
                 event.buttonList.add(arrow);
             }

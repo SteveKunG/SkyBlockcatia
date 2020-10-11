@@ -71,7 +71,7 @@ public class SkyBlockcatiaMod
     public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
     public static boolean isPatcherLoaded = Loader.isModLoaded("patcher");
     public static boolean isTextOverflowScrollLoaded = Loader.isModLoaded("text_overflow_scroll");
-    public static boolean isNotEnoughUpdates = Loader.isModLoaded("notenoughupdates");
+    public static boolean isNotEnoughUpdatesLoaded = Loader.isModLoaded("notenoughupdates");
 
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     public static boolean isDevelopment;
