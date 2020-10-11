@@ -24,7 +24,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.scoreboard.IScoreObjectiveCriteria;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
@@ -41,32 +40,34 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
     private static Ordering<NetworkPlayerInfo> field_175252_a;
 
     private int playerCount;
+    private int pingWidth;
 
-    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.getStringWidth(Ljava/lang/String;)I", ordinal = 0))
-    private int addStringWidth(FontRenderer fontRenderer, String text, int width, Scoreboard scoreboard, @Nullable ScoreObjective scoreObjective)
+    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "java/lang/Math.max(II)I", remap = false, ordinal = 0))
+    private int modifyMax(int min, int max)
+    {
+        return Math.max(min, max + this.pingWidth);
+    }
+
+    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", remap = false, ordinal = 0))
+    private String getPingPlayerInfo(GuiPlayerTabOverlay overlay, NetworkPlayerInfo networkPlayerInfoIn)
     {
         boolean pingDelay = PingMode.getById(ExtendedConfig.instance.pingMode).equalsIgnoreCase("ping_and_delay");
-        int pingWidth = 0;
+        int ping = networkPlayerInfoIn.getResponseTime();
+        String pingText = String.valueOf(ping);
 
-        for (NetworkPlayerInfo info : field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap()))
+        if (pingDelay)
         {
-            int ping = info.getResponseTime();
-            String pingText = String.valueOf(ping);
-
-            if (pingDelay)
-            {
-                pingText = pingText + "/" + String.format("%.2f", ping / 1000.0F) + "s";
-                this.mc.fontRendererObj.setUnicodeFlag(true);
-            }
-
-            pingWidth = ConfigManagerIN.enableCustomPlayerList ? this.mc.fontRendererObj.getStringWidth(pingText) : 0;
-
-            if (pingDelay)
-            {
-                this.mc.fontRendererObj.setUnicodeFlag(false);
-            }
+            pingText = pingText + "/" + String.format("%.2f", ping / 1000.0F) + "s";
+            this.mc.fontRendererObj.setUnicodeFlag(true);
         }
-        return fontRenderer.getStringWidth(text) + (scoreObjective != null && scoreObjective.getRenderType() == IScoreObjectiveCriteria.EnumRenderType.HEARTS ? 0 : pingWidth);
+
+        this.pingWidth = ConfigManagerIN.enableCustomPlayerList ? this.mc.fontRendererObj.getStringWidth(pingText) : 0;
+
+        if (pingDelay)
+        {
+            this.mc.fontRendererObj.setUnicodeFlag(false);
+        }
+        return overlay.getPlayerName(networkPlayerInfoIn);
     }
 
     @Inject(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At("HEAD"))
