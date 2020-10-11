@@ -36,6 +36,10 @@ public class GuiButtonItem extends GuiButton
     private static Class<?> vanillaEnConfig;
     private boolean vanillaEnFixInventory;
 
+    // Not Enough Updates Compatibility
+    private static Class<?> neuConfig;
+    private boolean neuhidePotionEffect;
+
     public GuiButtonItem(int buttonID, int xPos, int yPos, ItemStack itemStack)
     {
         this(buttonID, xPos, yPos, xPos, itemStack, itemStack.getDisplayName());
@@ -87,12 +91,29 @@ public class GuiButtonItem extends GuiButton
                 e.printStackTrace();
             }
         }
+        if (SkyBlockcatiaMod.isNotEnoughUpdates)
+        {
+            try
+            {
+                neuConfig = Class.forName("io.github.moulberry.notenoughupdates.NotEnoughUpdates");
+                Object instance = neuConfig.getDeclaredMethod("INSTANCE").invoke(neuConfig);
+                Field manager = instance.getClass().getDeclaredField("manager");
+                Field config = manager.getClass().getDeclaredField("config");
+                Field hidePotionEffect = config.getClass().getDeclaredField("hidePotionEffect");
+                Field value = hidePotionEffect.getClass().getDeclaredField("value");
+                this.neuhidePotionEffect = value.getBoolean(hidePotionEffect);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
-        if (!(this.vanillaEnFixInventory || this.patcherInventoryPosition || this.mc.currentScreen instanceof GuiSkyBlockData))
+        if (!(this.vanillaEnFixInventory || this.patcherInventoryPosition || this.neuhidePotionEffect || this.mc.currentScreen instanceof GuiSkyBlockData))
         {
             boolean hasVisibleEffect = false;
 
