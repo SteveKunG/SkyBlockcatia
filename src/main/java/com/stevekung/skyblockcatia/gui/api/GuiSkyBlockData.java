@@ -3516,11 +3516,14 @@ public class GuiSkyBlockData extends GuiScreen
 
     private void getInventories(JsonObject currentProfile)
     {
-        this.armorItems.addAll(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.ARMOR));
+        this.armorItems.addAll(SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.ARMOR).stream().filter(itemStack -> itemStack == null || itemStack.getItem() != Item.getItemFromBlock(Blocks.barrier)).collect(Collectors.toList()));
 
-        for (int i = 0; i < 4; ++i)
+        if (this.armorItems.size() > 0)
         {
-            GuiSkyBlockData.TEMP_ARMOR_INVENTORY.setInventorySlotContents(i, this.armorItems.get(i));
+            for (int i = 0; i < 4; ++i)
+            {
+                GuiSkyBlockData.TEMP_ARMOR_INVENTORY.setInventorySlotContents(i, this.armorItems.get(i));
+            }
         }
 
         List<ItemStack> mainInventory = SkyBlockAPIUtils.decodeItem(currentProfile, SkyBlockInventoryType.INVENTORY);
