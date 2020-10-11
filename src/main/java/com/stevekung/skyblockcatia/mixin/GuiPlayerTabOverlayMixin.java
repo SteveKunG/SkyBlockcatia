@@ -17,6 +17,7 @@ import com.google.common.collect.Ordering;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.config.PingMode;
+import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.Minecraft;
@@ -73,7 +74,7 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
     @Inject(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At("HEAD"))
     private void injectPlayerCount(int width, Scoreboard scoreboard, @Nullable ScoreObjective scoreObjective, CallbackInfo info)
     {
-        if (ExtendedConfig.instance.lobbyPlayerCount)
+        if (ExtendedConfig.instance.lobbyPlayerCount && HypixelEventHandler.isSkyBlock)
         {
             List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
             list = list.subList(0, Math.min(list.size(), 80));
@@ -84,7 +85,7 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.listFormattedStringToWidth(Ljava/lang/String;I)Ljava/util/List;", ordinal = 0))
     private List<String> addLobbyPlayerCount(FontRenderer fontRenderer, String str, int wrapWidth)
     {
-        if (ExtendedConfig.instance.lobbyPlayerCount)
+        if (ExtendedConfig.instance.lobbyPlayerCount && HypixelEventHandler.isSkyBlock)
         {
             List<String> origin = new CopyOnWriteArrayList<>(fontRenderer.listFormattedStringToWidth(str, wrapWidth));
             origin.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(this.playerCount)).setChatStyle(JsonUtils.green())).getFormattedText());
