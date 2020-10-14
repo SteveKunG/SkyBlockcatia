@@ -1,7 +1,13 @@
 package com.stevekung.skyblockcatia.utils;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 import org.lwjgl.opengl.GL11;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.utils.ColorUtils.RGB;
@@ -57,13 +63,31 @@ public class RenderUtils
         NBTTagCompound texture = new NBTTagCompound();
         NBTTagList list = new NBTTagList();
         NBTTagCompound value = new NBTTagCompound();
-        value.setString("Value", skullValue);
+        value.setString("Value", RenderUtils.toSkullURL(skullValue));
         list.appendTag(value);
         texture.setTag("textures", list);
         properties.setTag("Properties", texture);
         compound.setTag("SkullOwner", properties);
         itemStack.setTagCompound(compound);
         return itemStack;
+    }
+
+    public static String decodeTextureURL(String source)
+    {
+        JsonObject obj = new JsonParser().parse(new String(Base64.getDecoder().decode(source))).getAsJsonObject();
+        String textureurl = obj.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
+        return textureurl.substring(textureurl.lastIndexOf("/") + 1);
+    }
+
+    private static String toSkullURL(String url)
+    {
+        JsonObject skin = new JsonObject();
+        skin.addProperty("url", "http://textures.minecraft.net/texture/" + url);
+        JsonObject textures = new JsonObject();
+        textures.add("SKIN", skin);
+        JsonObject root = new JsonObject();
+        root.add("textures", textures);
+        return Base64.getEncoder().encodeToString(new Gson().toJson(root).getBytes(StandardCharsets.UTF_8));
     }
 
     public static ItemStack getPlayerHead(String name)

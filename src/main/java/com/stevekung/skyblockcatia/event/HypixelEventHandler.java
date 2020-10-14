@@ -1238,9 +1238,9 @@ public class HypixelEventHandler
 
     private enum CoinType
     {
-        TYPE_1("2070f6cb-f5db-367a-acd0-64d39a7e5d1b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTM4MDcxNzIxY2M1YjRjZDQwNmNlNDMxYTEzZjg2MDgzYTg5NzNlMTA2NGQyZjg4OTc4Njk5MzBlZTZlNTIzNyJ9fX0="),
-        TYPE_2("8ce61ae1-7cb4-3bdd-b1be-448c6fabb355", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGZhMDg3ZWI3NmU3Njg3YTgxZTRlZjgxYTdlNjc3MjY0OTk5MGY2MTY3Y2ViMGY3NTBhNGM1ZGViNmM0ZmJhZCJ9fX0="),
-        TYPE_3("9dd5008a-08a1-3f4a-b8af-2499bdb8ff3b", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTM2ZTk0ZjZjMzRhMzU0NjVmY2U0YTkwZjJlMjU5NzYzODllYjk3MDlhMTIyNzM1NzRmZjcwZmQ0ZGFhNjg1MiJ9fX0=");
+        TYPE_1("2070f6cb-f5db-367a-acd0-64d39a7e5d1b", "538071721cc5b4cd406ce431a13f86083a8973e1064d2f8897869930ee6e5237"),
+        TYPE_2("8ce61ae1-7cb4-3bdd-b1be-448c6fabb355", "dfa087eb76e7687a81e4ef81a7e6772649990f6167ceb0f750a4c5deb6c4fbad"),
+        TYPE_3("9dd5008a-08a1-3f4a-b8af-2499bdb8ff3b", "e36e94f6c34a35465fce4a90f2e25976389eb9709a12273574ff70fd4daa6852");
 
         private final String id;
         private final String value;
