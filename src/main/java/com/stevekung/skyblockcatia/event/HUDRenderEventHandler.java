@@ -4,10 +4,10 @@ import java.util.*;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Ordering;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.EnumEquipment;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.PlayerCountMode;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.config.GuiRenderPreview;
 import com.stevekung.skyblockcatia.gui.toasts.GuiToast;
@@ -23,6 +23,7 @@ import net.minecraft.block.BlockEndPortalFrame;
 import net.minecraft.block.BlockLog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -57,7 +58,6 @@ public class HUDRenderEventHandler
     private Set<CoordsPair> recentlyLoadedChunks = new HashSet<>();
     private static final ImmutableList<AxisAlignedBB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AxisAlignedBB(-609, 9, -303, -631, 5, -320), new AxisAlignedBB(-622, 5, -321, -640, 5, -334), new AxisAlignedBB(-631, 7, -293, -648, 7, -312), new AxisAlignedBB(-658, 8, -308, -672, 7, -320), new AxisAlignedBB(-709, 9, -325, -694, 10, -315), new AxisAlignedBB(-702, 10, -303, -738, 5, -261), new AxisAlignedBB(-705, 5, -257, -678, 5, -296), new AxisAlignedBB(-657, 5, -210, -624, 8, -242), new AxisAlignedBB(-625, 7, -256, -662, 5, -286));
     private static final ImmutableList<BlockPos> END_PORTAL_FRAMES = ImmutableList.of(new BlockPos(-669, 9, -277), new BlockPos(-669, 9, -275), new BlockPos(-670, 9, -278), new BlockPos(-672, 9, -278), new BlockPos(-673, 9, -277), new BlockPos(-673, 9, -275), new BlockPos(-672, 9, -274), new BlockPos(-670, 9, -274));
-    private static final Ordering<NetworkPlayerInfo> field_175252_a = Ordering.from(new PlayerComparator());
 
     public HUDRenderEventHandler()
     {
@@ -286,11 +286,10 @@ public class HUDRenderEventHandler
                     rightInfo.add(ColorUtils.stringToRGB(ExtendedConfig.instance.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
                 }
 
-                if (ExtendedConfig.instance.lobbyPlayerCount && !this.mc.isSingleplayer())
+                if (ExtendedConfig.instance.lobbyPlayerCount && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND && PlayerCountMode.getById(ExtendedConfig.instance.playerCountMode).equalsIgnoreCase("hud") && !this.mc.isSingleplayer())
                 {
-                    List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
-                    list = list.subList(0, Math.min(list.size(), 80));
-                    rightInfo.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(list.size())).setChatStyle(JsonUtils.green())).getFormattedText());
+                    List<NetworkPlayerInfo> list = GuiPlayerTabOverlay.field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
+                    rightInfo.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(HUDRenderEventHandler.getPlayerCount(list))).setChatStyle(JsonUtils.green())).getFormattedText());
                 }
 
                 // equipments
@@ -473,6 +472,15 @@ public class HUDRenderEventHandler
     public GuiToast getToastGui()
     {
         return this.toastGui;
+    }
+
+    public static int getPlayerCount(List<NetworkPlayerInfo> list)
+    {
+        if (!list.isEmpty() && list.get(0).getDisplayName() != null && list.get(0).getDisplayName().getUnformattedText().startsWith("         Players ("))
+        {
+            return Integer.valueOf(list.get(0).getDisplayName().getUnformattedText().replaceAll("[^0-9]", ""));
+        }
+        return list.subList(0, Math.min(list.size(), 80)).size();
     }
 
     private double getItemDelay(int base, long delay)

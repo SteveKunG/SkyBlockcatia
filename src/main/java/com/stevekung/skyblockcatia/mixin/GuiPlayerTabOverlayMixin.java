@@ -13,12 +13,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.google.common.collect.Ordering;
 import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.config.PingMode;
+import com.stevekung.skyblockcatia.config.PlayerCountMode;
+import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -32,21 +34,17 @@ import net.minecraft.util.EnumChatFormatting;
 @Mixin(GuiPlayerTabOverlay.class)
 public abstract class GuiPlayerTabOverlayMixin extends Gui
 {
+    private int playerCount;
+    private int pingWidth;
+
     @Shadow
     @Final
     private Minecraft mc;
 
-    @Shadow
-    @Final
-    private static Ordering<NetworkPlayerInfo> field_175252_a;
-
-    private int playerCount;
-    private int pingWidth;
-
-    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "java/lang/Math.max(II)I", remap = false, ordinal = 0))
-    private int modifyMax(int min, int max)
+    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.getStringWidth(Ljava/lang/String;)I", ordinal = 0))
+    private int addPingWidth(FontRenderer font, String text)
     {
-        return Math.max(min, max + this.pingWidth);
+        return this.mc.fontRendererObj.getStringWidth(text) + this.pingWidth;
     }
 
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", remap = false, ordinal = 0))
@@ -74,18 +72,17 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
     @Inject(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At("HEAD"))
     private void injectPlayerCount(int width, Scoreboard scoreboard, @Nullable ScoreObjective scoreObjective, CallbackInfo info)
     {
-        if (ExtendedConfig.instance.lobbyPlayerCount && HypixelEventHandler.isSkyBlock)
+        if (this.isPlayerCountEnabled())
         {
-            List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
-            list = list.subList(0, Math.min(list.size(), 80));
-            this.playerCount = list.size();
+            List<NetworkPlayerInfo> list = GuiPlayerTabOverlay.field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
+            this.playerCount = HUDRenderEventHandler.getPlayerCount(list);
         }
     }
 
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.listFormattedStringToWidth(Ljava/lang/String;I)Ljava/util/List;", ordinal = 0))
     private List<String> addLobbyPlayerCount(FontRenderer fontRenderer, String str, int wrapWidth)
     {
-        if (ExtendedConfig.instance.lobbyPlayerCount && HypixelEventHandler.isSkyBlock)
+        if (this.isPlayerCountEnabled())
         {
             List<String> origin = new CopyOnWriteArrayList<>(fontRenderer.listFormattedStringToWidth(str, wrapWidth));
             origin.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(this.playerCount)).setChatStyle(JsonUtils.green())).getFormattedText());
@@ -136,5 +133,10 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
             }
             info.cancel();
         }
+    }
+
+    private boolean isPlayerCountEnabled()
+    {
+        return ExtendedConfig.instance.lobbyPlayerCount && PlayerCountMode.getById(ExtendedConfig.instance.playerCountMode).equalsIgnoreCase("tab_list") && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND;
     }
 }

@@ -31,6 +31,7 @@ public class GuiExtendedConfig extends GuiScreen
         OPTIONS.add(ExtendedConfig.Options.POTION_HUD_STYLE);
         OPTIONS.add(ExtendedConfig.Options.POTION_HUD_POSITION);
         OPTIONS.add(ExtendedConfig.Options.PING_MODE);
+        OPTIONS.add(ExtendedConfig.Options.PLAYER_COUNT_MODE);
     }
 
     public void display()

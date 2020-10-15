@@ -25,6 +25,7 @@ public class ExtendedConfig
     private static final String[] POTION_STATUS_HUD_STYLE = new String[] {"skyblockcatia.default", "potion_hud.icon_and_time"};
     private static final String[] POTION_STATUS_HUD_POSITION = new String[] {"skyblockcatia.left", "skyblockcatia.right", "skyblockcatia.hotbar_left", "skyblockcatia.hotbar_right"};
     private static final String[] PING_MODE = new String[] {"skyblockcatia.only_ping", "skyblockcatia.ping_and_delay"};
+    private static final String[] PLAYER_COUNT_MODE = new String[] {"skyblockcatia.tab_list", "skyblockcatia.hud"};
     private static final String[] TOAST_MODE_DISABLED = new String[] {"skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast", "skyblockcatia.disabled"};
     private static final String[] TOAST_MODE = new String[] {"skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast"};
     private static File file;
@@ -60,6 +61,7 @@ public class ExtendedConfig
     public int potionHUDStyle = 0;
     public int potionHUDPosition = 0;
     public int pingMode = 0;
+    public int playerCountMode = 0;
 
     // Offset
     public int armorHUDYOffset = 0;
@@ -205,6 +207,7 @@ public class ExtendedConfig
             this.potionHUDStyle = ExtendedConfig.getInteger(nbt, "PotionHUDStyle", this.potionHUDStyle);
             this.potionHUDPosition = ExtendedConfig.getInteger(nbt, "PotionHUDPosition", this.potionHUDPosition);
             this.pingMode = ExtendedConfig.getInteger(nbt, "PingMode", this.pingMode);
+            this.playerCountMode = ExtendedConfig.getInteger(nbt, "PlayerCountMode", this.playerCountMode);
             this.visitIslandToastMode = ExtendedConfig.getInteger(nbt, "VisitIslandToastMode", this.visitIslandToastMode);
             this.visitIslandToastTime = ExtendedConfig.getInteger(nbt, "VisitIslandToastTime", this.visitIslandToastTime);
             this.rareDropToastMode = ExtendedConfig.getInteger(nbt, "RareDropToastMode", this.rareDropToastMode);
@@ -351,6 +354,7 @@ public class ExtendedConfig
             nbt.setInteger("PotionHUDStyle", this.potionHUDStyle);
             nbt.setInteger("PotionHUDPosition", this.potionHUDPosition);
             nbt.setInteger("PingMode", this.pingMode);
+            nbt.setInteger("PlayerCountMode", this.playerCountMode);
             nbt.setInteger("VisitIslandToastMode", this.visitIslandToastMode);
             nbt.setInteger("VisitIslandToastTime", this.visitIslandToastTime);
             nbt.setInteger("RareDropToastMode", this.rareDropToastMode);
@@ -566,6 +570,10 @@ public class ExtendedConfig
         {
             return name + this.getTranslation(PING_MODE, this.pingMode);
         }
+        else if (options == ExtendedConfig.Options.PLAYER_COUNT_MODE)
+        {
+            return name + this.getTranslation(PLAYER_COUNT_MODE, this.playerCountMode);
+        }
         else if (options == ExtendedConfig.Options.VISIT_ISLAND_TOAST_MODE)
         {
             return name + this.getTranslation(TOAST_MODE_DISABLED, this.visitIslandToastMode);
@@ -621,6 +629,10 @@ public class ExtendedConfig
         else if (options == ExtendedConfig.Options.PING_MODE)
         {
             this.pingMode = (this.pingMode + value) % 2;
+        }
+        else if (options == ExtendedConfig.Options.PLAYER_COUNT_MODE)
+        {
+            this.playerCountMode = (this.playerCountMode + value) % 2;
         }
         else if (options == ExtendedConfig.Options.VISIT_ISLAND_TOAST_MODE)
         {
@@ -1298,6 +1310,7 @@ public class ExtendedConfig
         POTION_HUD_STYLE(false, false),
         POTION_HUD_POSITION(false, false),
         PING_MODE(false, false),
+        PLAYER_COUNT_MODE(false, false),
         VISIT_ISLAND_TOAST_MODE(false, false),
         RARE_DROP_TOAST_MODE(false, false),
         FISH_CATCH_TOAST_MODE(false, false),
