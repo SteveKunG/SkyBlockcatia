@@ -47,7 +47,7 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
         return this.mc.fontRendererObj.getStringWidth(text) + this.pingWidth;
     }
 
-    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", remap = false, ordinal = 0))
+    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", ordinal = 0))
     private String getPingPlayerInfo(GuiPlayerTabOverlay overlay, NetworkPlayerInfo networkPlayerInfoIn)
     {
         boolean pingDelay = PingMode.getById(ExtendedConfig.instance.pingMode).equalsIgnoreCase("ping_and_delay");
