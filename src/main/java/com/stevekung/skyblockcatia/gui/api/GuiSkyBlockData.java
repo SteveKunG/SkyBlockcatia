@@ -36,6 +36,7 @@ import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.integration.sba.SBABackpack;
 import com.stevekung.skyblockcatia.integration.textoverflow.TooltipOverflow;
 import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.SkyBlockPets.PetSkin;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -2544,8 +2545,11 @@ public class GuiSkyBlockData extends GuiScreen
                 String petRarity = SkyBlockPets.Tier.COMMON.name();
                 int candyUsed = 0;
                 JsonElement heldItemObj = element.getAsJsonObject().get("heldItem");
+                JsonElement skinObj = element.getAsJsonObject().get("skin");
                 SkyBlockPets.HeldItem heldItem = null;
                 String heldItemType = null;
+                String skin = null;
+                String skinName = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
@@ -2558,6 +2562,10 @@ public class GuiSkyBlockData extends GuiScreen
                 if (element.getAsJsonObject().get("candyUsed") != null)
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
+                }
+                if (!skinObj.isJsonNull())
+                {
+                    skin = skinObj.getAsString();
                 }
                 if (heldItemObj != null && !heldItemObj.isJsonNull())
                 {
@@ -2598,13 +2606,26 @@ public class GuiSkyBlockData extends GuiScreen
                     {
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(level.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getXpRequired())));
                     }
-                    if (candyUsed > 0 || heldItem != null || heldItemType != null)
+                    if (candyUsed > 0 || heldItem != null || heldItemType != null || skin != null)
                     {
                         list.appendTag(new NBTTagString(""));
                     }
                     if (candyUsed > 0)
                     {
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + 10));
+                    }
+                    if (skin != null)
+                    {
+                        for (PetSkin petSkin : SkyBlockPets.PET_SKIN)
+                        {
+                            if (skin.equals(petSkin.getSkin()))
+                            {
+                                itemStack = RenderUtils.setSkullSkin(itemStack.copy(), petSkin.getUUID(), petSkin.getTexture());
+                                skinName = petSkin.getName();
+                                break;
+                            }
+                        }
+                        list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName)));
                     }
                     if (heldItem != null)
                     {

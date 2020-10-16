@@ -1,0 +1,56 @@
+[
+    {
+        "skin": "ENDERMAN",
+        "displayName": "§5Spooky Enderman",
+        "uuid": "62d9011f-9a1c-3673-b60e-d38c5ce1e4af",
+        "texture": "ea84cc8818c293484fdaafc8fa2f0bf39e55733a247d68023df2c6c6b9b671d0"
+    },
+    {
+        "skin": "RABBIT",
+        "displayName": "§5Pretty Rabbit",
+        "uuid": "6e4a93dc-c051-33f0-ae3d-17c29da03219",
+        "texture": "a34631d940fddb689ddef6a3b352c50220c460dba05cd18dc83192b59dc647f8"
+    },
+    {
+        "skin": "ROCK_COOL",
+        "displayName": "§9Cool Rock",
+        "uuid": "0cee5ea7-7af9-30bc-8c91-222ccfc4bae0",
+        "texture": "fefcdbb7d95502acc1ae35a32a40ce4dec8f4c9f0da26c9d9fe7c2c3eb748f6"
+    },
+    {
+        "skin": "ROCK_SMILE",
+        "displayName": "§9Smiling Rock",
+        "uuid": "67981030-6f1c-3348-81c5-a3d572617693",
+        "texture": "713c8b2916a275db4c1762cf5f13d7b95b91d60baf5164a447d6efa7704cf11b"
+    },
+    {
+        "skin": "ROCK_THINKING",
+        "displayName": "§9Thinking Rock",
+        "uuid": "9562f758-0d5d-393c-abc1-482a2067b664",
+        "texture": "dd2f781f03c365bbc5dd1e7186ab38dc69465e836c9fe066a9a844f34a4da92"
+    },
+    {
+        "skin": "ROCK_EMBARRASSED",
+        "displayName": "§9Embarrassed Rock",
+        "uuid": "45ff4431-e837-38be-ac08-8cfc9ad09753",
+        "texture": "27ff34992e66599e8529008be3fb577cb0ab545294253e25a0cc988e416c849"
+    },
+    {
+        "skin": "ROCK_LAUGH",
+        "displayName": "§9Laughing Rock",
+        "uuid": "bec85db9-fd91-396d-861e-8ec67ac1eda9",
+        "texture": "8cc1ef513d5f616675242174acde7b9d6259a47c4fe8f6e4b6e20920319d7073"
+    },
+    {
+        "skin": "ROCK_DERP",
+        "displayName": "§9Derpy Rock",
+        "uuid": "7882fc9d-c633-3e5a-8105-8ea45cb6d9ce",
+        "texture": "c4f89fbd12c209f7f26c1f34a1bd7f47635814759c09688dd212b205c73a8c02"
+    },
+    {
+        "skin": "GUARDIAN",
+        "displayName": "§5Watcher Guardian",
+        "uuid": "36e3a30b-fa57-3aa6-ab40-76565a7ec96f",
+        "texture": "37cc76e7af29f5f3fbfd6ece794160811eff96f753459fa61d7ad176a064e3c5"
+    }
+]

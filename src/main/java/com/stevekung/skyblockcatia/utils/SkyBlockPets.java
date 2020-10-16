@@ -1,5 +1,9 @@
 package com.stevekung.skyblockcatia.utils;
 
+import java.io.BufferedReader;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.gui.api.ExpProgress;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData.SkillType;
 
@@ -8,6 +12,52 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class SkyBlockPets
 {
+    private static final Gson GSON = new Gson();
+    public static PetSkin[] PET_SKIN;
+
+    public static void getPetSkins() throws Exception
+    {
+        BufferedReader in = DataGetter.get("api/pet_skins.json");
+        PET_SKIN = GSON.fromJson(in, PetSkin[].class);
+    }
+
+    public static class PetSkin
+    {
+        private final String skin;
+        @SerializedName("displayName")
+        private final String name;
+        private final String uuid;
+        private final String texture;
+
+        public PetSkin(String skin, String name, String uuid, String texture)
+        {
+            this.skin = skin;
+            this.name = name;
+            this.uuid = uuid;
+            this.texture = texture;
+        }
+
+        public String getSkin()
+        {
+            return this.skin;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public String getUUID()
+        {
+            return this.uuid;
+        }
+
+        public String getTexture()
+        {
+            return this.texture;
+        }
+    }
+
     public enum Tier
     {
         COMMON(ExpProgress.PET_COMMON, EnumChatFormatting.WHITE),

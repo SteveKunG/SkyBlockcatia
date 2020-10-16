@@ -57,6 +57,11 @@ public class RenderUtils
     public static ItemStack getSkullItemStack(String skullId, String skullValue)
     {
         ItemStack itemStack = new ItemStack(Items.skull, 1, 3);
+        return RenderUtils.setSkullSkin(itemStack, skullId, skullValue);
+    }
+
+    public static ItemStack setSkullSkin(ItemStack itemStack, String skullId, String skullValue)
+    {
         NBTTagCompound compound = new NBTTagCompound();
         NBTTagCompound properties = new NBTTagCompound();
         properties.setString("Id", skullId);
@@ -67,8 +72,17 @@ public class RenderUtils
         list.appendTag(value);
         texture.setTag("textures", list);
         properties.setTag("Properties", texture);
-        compound.setTag("SkullOwner", properties);
-        itemStack.setTagCompound(compound);
+
+        if (!itemStack.hasTagCompound())
+        {
+            compound.setTag("SkullOwner", properties);
+            itemStack.setTagCompound(compound);
+        }
+        else
+        {
+            itemStack.getTagCompound().setTag("SkullOwner", properties);
+        }
+
         return itemStack;
     }
 
