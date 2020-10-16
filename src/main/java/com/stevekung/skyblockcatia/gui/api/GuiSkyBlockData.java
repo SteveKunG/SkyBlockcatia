@@ -2597,7 +2597,7 @@ public class GuiSkyBlockData extends GuiScreen
                     SkyBlockPets.Type type = SkyBlockPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
 
-                    itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
+                    itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkillType().getName() + " Pet"));
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
@@ -2649,6 +2649,7 @@ public class GuiSkyBlockData extends GuiScreen
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
                     list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
+                    itemStack.getSubCompound("ExtraAttributes", true).setString("id", "PET");
                     itemStack.getTagCompound().setBoolean("active", active);
                     petData.add(new PetData(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 

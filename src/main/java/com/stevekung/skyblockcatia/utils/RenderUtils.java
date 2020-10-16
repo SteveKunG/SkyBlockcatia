@@ -2,6 +2,8 @@ package com.stevekung.skyblockcatia.utils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.utils.ColorUtils.RGB;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -21,12 +22,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntitySkull;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 
 public class RenderUtils
 {
     private static final ResourceLocation RARITY = new ResourceLocation("skyblockcatia:textures/gui/rarity.png");
+    private static final Pattern PATTERN = Pattern.compile("(?<color>\\u00a7[0-9a-fk-or]).+");
+    private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or])[\\w ]+");
 
     public static void bindTexture(ResourceLocation resource)
     {
@@ -115,92 +118,91 @@ public class RenderUtils
         return itemStack;
     }
 
-    public static void drawRarity(ItemStack itemStack, int xPos, int yPos)
+    public static void renderRarity(ItemStack itemStack, int xPos, int yPos)
     {
         if (itemStack != null && itemStack.hasTagCompound())
         {
             NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
+            NBTTagCompound extra = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
+            String displayName = compound.getString("Name");
 
-            if (compound.getTagId("Lore") == 9)
+            if (extra.hasKey("id"))
             {
-                NBTTagList list = compound.getTagList("Lore", 8);
-
-                if (list.tagCount() > 0)
+                if (extra.getString("id").equals("PARTY_HAT_CRAB"))
                 {
-                    for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.COMMON);
+                }
+                if (extra.getString("id").equals("SKYBLOCK_MENU") || extra.getString("id").contains("GENERATOR") || extra.getString("id").contains("RUNE"))
+                {
+                    if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
                     {
-                        String lore = list.getStringTagAt(j1);
-                        RGB common = ColorUtils.stringToRGB("255,255,255");
-                        RGB uncommon = ColorUtils.stringToRGB("85,255,85");
-                        RGB rare = ColorUtils.stringToRGB("85,85,255");
-                        RGB epic = ColorUtils.stringToRGB("170,0,170");
-                        RGB legendary = ColorUtils.stringToRGB("255,170,0");
-                        RGB mythic = ColorUtils.stringToRGB("255,85,255");
-                        RGB special = ColorUtils.stringToRGB("255,85,85");
-                        RGB verySpecial = ColorUtils.stringToRGB("170,0,0");
+                        NBTTagList list = compound.getTagList("Lore", Constants.NBT.TAG_STRING);
 
-                        if (RenderUtils.checkRarityString(lore, EnumChatFormatting.WHITE, "COMMON"))
+                        if (list.tagCount() > 0)
                         {
-                            RenderUtils.renderRarity(xPos, yPos, common);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.GREEN, "UNCOMMON"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, uncommon);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.BLUE, "RARE"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, rare);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.DARK_PURPLE, "EPIC"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, epic);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.GOLD, "LEGENDARY"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, legendary);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.LIGHT_PURPLE, "MYTHIC"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, mythic);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.DARK_RED, "SUPREME"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, verySpecial);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.RED, "SPECIAL"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, special);
-                        }
-                        else if (RenderUtils.checkRarityString(lore, EnumChatFormatting.RED, "VERY SPECIAL"))
-                        {
-                            RenderUtils.renderRarity(xPos, yPos, verySpecial);
+                            for (int j1 = 0; j1 < list.tagCount(); ++j1)
+                            {
+                                String lore = list.getStringTagAt(j1);
+
+                                if (lore.contains("COSMETIC")) // temp
+                                {
+                                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(lore.charAt(0) + "" + lore.charAt(1)));
+                                }
+                            }
                         }
                     }
+                    return;
+                }
+
+                Matcher mat = PATTERN.matcher(displayName);
+
+                if (mat.matches())
+                {
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat.group("color")));
+                }
+
+                if (displayName.startsWith("\u00a7f\u00a7f"))
+                {
+                    displayName = displayName.substring(4);
+                }
+
+                Matcher mat1 = PET_PATTERN.matcher(displayName);
+
+                if (mat1.matches())
+                {
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
+                }
+            }
+            else
+            {
+                Matcher mat1 = PET_PATTERN.matcher(displayName);
+
+                if (mat1.matches())
+                {
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
                 }
             }
         }
     }
 
-    public static void renderRarity(int xPos, int yPos, RGB color)
+    private static void renderRarity(int xPos, int yPos, SkyBlockRarity rarity)
     {
-        float alpha = ExtendedConfig.instance.itemRarityOpacity / 100.0F;
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
-        GlStateManager.enableBlend();
-        GlStateManager.enableAlpha();
-        RenderUtils.bindTexture(RARITY);
-        GlStateManager.color(color.floatRed(), color.floatGreen(), color.floatBlue(), alpha);
-        GlStateManager.blendFunc(770, 771);
-        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
-        Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0, 0, 16, 16, 16, 16);
-        GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
-        GlStateManager.disableAlpha();
-    }
-
-    private static boolean checkRarityString(String lore, EnumChatFormatting color, String text)
-    {
-        return lore.startsWith(color + "" + EnumChatFormatting.BOLD + text) || lore.startsWith(color + "" + EnumChatFormatting.BOLD + EnumChatFormatting.OBFUSCATED + "a" + EnumChatFormatting.RESET + " " + color + EnumChatFormatting.BOLD + color + EnumChatFormatting.BOLD + text);
+        if (rarity != null)
+        {
+            float alpha = ExtendedConfig.instance.itemRarityOpacity / 100.0F;
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+            GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
+            RenderUtils.bindTexture(RARITY);
+            GlStateManager.color(rarity.getColorToRender().floatRed(), rarity.getColorToRender().floatGreen(), rarity.getColorToRender().floatBlue(), alpha);
+            GlStateManager.blendFunc(770, 771);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
+            Gui.drawModalRectWithCustomSizedTexture(xPos, yPos, 0, 0, 16, 16, 16, 16);
+            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
+            GlStateManager.disableAlpha();
+        }
     }
 }

@@ -26,7 +26,7 @@ public abstract class RenderItemMixin
     {
         if (ExtendedConfig.instance.showItemRarity)
         {
-            RenderUtils.drawRarity(itemStack, xPosition, yPosition);
+            RenderUtils.renderRarity(itemStack, xPosition, yPosition);
         }
     }
 

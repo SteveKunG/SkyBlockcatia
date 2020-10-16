@@ -28,7 +28,6 @@ import com.stevekung.skyblockcatia.gui.GuiNumberField;
 import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockAPIViewer;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.*;
-import com.stevekung.skyblockcatia.utils.ColorUtils.RGB;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.gui.*;
@@ -53,7 +52,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
     private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
     private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(EnumChatFormatting.GREEN + "Go Back", EnumChatFormatting.RED + "Close");
-    private static final Pattern PET_MENU_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or])[\\w ]+");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -371,67 +369,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                             }
                         }
                         info.cancel();
-                    }
-                }
-            }
-        }
-    }
-
-    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/RenderItem.renderItemAndEffectIntoGUI(Lnet/minecraft/item/ItemStack;II)V"))
-    private void renderRarity(Slot slot, CallbackInfo info)
-    {
-        if (ExtendedConfig.instance.showItemRarity)
-        {
-            if (this.that instanceof GuiChest)
-            {
-                GuiChest chest = (GuiChest)this.that;
-
-                if (this.isPeopleProfile(chest.lowerChestInventory) || chest.lowerChestInventory.getDisplayName().getUnformattedText().matches("\\(\\d+\\/\\d+\\) Pets") || chest.lowerChestInventory.getDisplayName().getUnformattedText().equals("Pets"))
-                {
-                    if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
-                    {
-                        Matcher matcher = PET_MENU_PATTERN.matcher(slot.getStack().getDisplayName());
-
-                        if (matcher.matches())
-                        {
-                            String color = matcher.group("color");
-                            RGB common = ColorUtils.stringToRGB("255,255,255");
-                            RGB uncommon = ColorUtils.stringToRGB("85,255,85");
-                            RGB rare = ColorUtils.stringToRGB("85,85,255");
-                            RGB epic = ColorUtils.stringToRGB("170,0,170");
-                            RGB legendary = ColorUtils.stringToRGB("255,170,0");
-                            RGB mythic = ColorUtils.stringToRGB("255,85,255");
-                            RGB special = ColorUtils.stringToRGB("255,85,85");
-
-                            if (color.equals(EnumChatFormatting.WHITE.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, common);
-                            }
-                            else if (color.equals(EnumChatFormatting.GREEN.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, uncommon);
-                            }
-                            else if (color.equals(EnumChatFormatting.BLUE.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, rare);
-                            }
-                            else if (color.equals(EnumChatFormatting.DARK_PURPLE.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, epic);
-                            }
-                            else if (color.equals(EnumChatFormatting.GOLD.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, legendary);
-                            }
-                            else if (color.equals(EnumChatFormatting.LIGHT_PURPLE.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, mythic);
-                            }
-                            else if (color.equals(EnumChatFormatting.RED.toString()))
-                            {
-                                RenderUtils.renderRarity(slot.xDisplayPosition, slot.yDisplayPosition, special);
-                            }
-                        }
                     }
                 }
             }
