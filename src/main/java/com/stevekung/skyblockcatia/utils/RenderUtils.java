@@ -125,14 +125,17 @@ public class RenderUtils
             NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
             NBTTagCompound extra = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
             String displayName = compound.getString("Name");
+            String id = extra.getString("id");
+            boolean upgrade = extra.hasKey("rarity_upgrades");
 
             if (extra.hasKey("id"))
             {
-                if (extra.getString("id").equals("PARTY_HAT_CRAB"))
+                if (id.equals("PARTY_HAT_CRAB"))
                 {
-                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.COMMON);
+                    SkyBlockRarity rarity = upgrade ? SkyBlockRarity.COMMON.getNextRarity() : SkyBlockRarity.COMMON;
+                    RenderUtils.renderRarity(xPos, yPos, rarity);
                 }
-                if (extra.getString("id").equals("SKYBLOCK_MENU") || extra.getString("id").contains("GENERATOR") || extra.getString("id").contains("RUNE"))
+                if (id.equals("SKYBLOCK_MENU") || id.contains("GENERATOR") || id.contains("RUNE"))
                 {
                     if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
                     {
