@@ -1,7 +1,9 @@
 package com.stevekung.skyblockcatia.mixin;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +21,7 @@ import com.stevekung.skyblockcatia.config.PingMode;
 import com.stevekung.skyblockcatia.config.PlayerCountMode;
 import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
 
@@ -26,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
@@ -45,6 +49,12 @@ public abstract class GuiPlayerTabOverlayMixin extends Gui
     private int addPingWidth(FontRenderer font, String text)
     {
         return this.mc.fontRendererObj.getStringWidth(text) + this.pingWidth;
+    }
+
+    @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/NetHandlerPlayClient.getPlayerInfoMap()Ljava/util/Collection;"))
+    private Collection<NetworkPlayerInfo> filterPlayerInfo(NetHandlerPlayClient nethandlerplayclient)
+    {
+        return nethandlerplayclient.getPlayerInfoMap().stream().filter(network -> !((IViewerLoader)network).isLoadedFromViewer()).collect(Collectors.toList());
     }
 
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", ordinal = 0))
