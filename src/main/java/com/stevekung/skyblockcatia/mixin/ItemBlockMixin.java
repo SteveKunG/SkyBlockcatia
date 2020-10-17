@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 @Mixin(ItemBlock.class)
 public abstract class ItemBlockMixin extends Item
 {
-    private static final ImmutableList<String> IGNORE_ITEM_USE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND");
+    private static final ImmutableList<String> IGNORE_ITEM_USE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND", "FLOWER_OF_TRUTH");
 
     @Inject(method = "onItemUse(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;FFF)Z", cancellable = true, at = @At("HEAD"))
     private void onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, CallbackInfoReturnable<Boolean> info)
