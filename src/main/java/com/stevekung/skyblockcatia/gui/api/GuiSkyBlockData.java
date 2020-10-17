@@ -2563,7 +2563,7 @@ public class GuiSkyBlockData extends GuiScreen
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
                 }
-                if (!skinObj.isJsonNull())
+                if (skinObj != null && !skinObj.isJsonNull())
                 {
                     skin = skinObj.getAsString();
                 }
