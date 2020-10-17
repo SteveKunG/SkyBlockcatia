@@ -118,7 +118,7 @@ public class RenderUtils
         return itemStack;
     }
 
-    public static boolean renderRarity(ItemStack itemStack, int xPos, int yPos)
+    public static void renderRarity(ItemStack itemStack, int xPos, int yPos)
     {
         if (itemStack != null && itemStack.hasTagCompound())
         {
@@ -133,7 +133,8 @@ public class RenderUtils
                 if (id.equals("PARTY_HAT_CRAB"))
                 {
                     SkyBlockRarity rarity = upgrade ? SkyBlockRarity.COMMON.getNextRarity() : SkyBlockRarity.COMMON;
-                    return RenderUtils.renderRarity(xPos, yPos, rarity);
+                    RenderUtils.renderRarity(xPos, yPos, rarity);
+                    return;
                 }
                 if (id.equals("SKYBLOCK_MENU") || id.contains("GENERATOR") || id.contains("RUNE"))
                 {
@@ -149,19 +150,19 @@ public class RenderUtils
 
                                 if (lore.contains("COSMETIC")) // temp
                                 {
-                                    return RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(lore.charAt(0) + "" + lore.charAt(1)));
+                                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(lore.charAt(0) + "" + lore.charAt(1)));
                                 }
                             }
                         }
                     }
-                    return false;
+                    return;
                 }
 
                 Matcher mat = PATTERN.matcher(displayName);
 
                 if (mat.matches())
                 {
-                    return RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat.group("color")));
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat.group("color")));
                 }
 
                 if (displayName.startsWith("\u00a7f\u00a7f"))
@@ -173,7 +174,7 @@ public class RenderUtils
 
                 if (mat1.matches())
                 {
-                    return RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
                 }
             }
             else
@@ -182,14 +183,13 @@ public class RenderUtils
 
                 if (mat1.matches())
                 {
-                    return RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
+                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
                 }
             }
         }
-        return false;
     }
 
-    private static boolean renderRarity(int xPos, int yPos, SkyBlockRarity rarity)
+    private static void renderRarity(int xPos, int yPos, SkyBlockRarity rarity)
     {
         if (rarity != null)
         {
@@ -207,8 +207,6 @@ public class RenderUtils
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
             GlStateManager.disableAlpha();
-            return true;
         }
-        return false;
     }
 }
