@@ -158,16 +158,16 @@ public class RenderUtils
                     return;
                 }
 
+                if (displayName.startsWith("\u00a7f\u00a7f"))
+                {
+                    displayName = displayName.substring(4);
+                }
+
                 Matcher mat = PATTERN.matcher(displayName);
 
                 if (mat.matches())
                 {
                     RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat.group("color")));
-                }
-
-                if (displayName.startsWith("\u00a7f\u00a7f"))
-                {
-                    displayName = displayName.substring(4);
                 }
 
                 Matcher mat1 = PET_PATTERN.matcher(displayName);
