@@ -3623,20 +3623,23 @@ public class GuiSkyBlockData extends GuiScreen
 
     private void setPlayerArmors()
     {
-        for (ItemStack armor : this.armorItems)
+        for (ItemStack armor : this.armorItems.stream().filter(itemStack -> itemStack != null && itemStack.getItem() != null && itemStack.getItem() != Item.getItemFromBlock(Blocks.air)).collect(Collectors.toList()))
         {
-            if (armor == null)
+            try
             {
-                continue;
+                int index = EntityLiving.getArmorPosition(armor);
+
+                if (index == 0 && armor.getItem() instanceof ItemBlock || index < 1)
+                {
+                    index = 4;
+                }
+
+                this.player.inventory.armorInventory[index - 1] = armor;
             }
-
-            int index = EntityLiving.getArmorPosition(armor);
-
-            if (index == 0 && armor.getItem() instanceof ItemBlock)
+            catch (Exception e)
             {
-                index = 4;
+                e.printStackTrace();
             }
-            this.player.setCurrentItemOrArmor(index, armor);
         }
     }
 
