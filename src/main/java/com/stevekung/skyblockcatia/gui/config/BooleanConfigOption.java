@@ -5,9 +5,11 @@ import java.util.function.Predicate;
 
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.gui.widget.button.ExtendedButton;
-import com.stevekung.stevekungslib.utils.LangUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
+import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class BooleanConfigOption extends ExtendedConfigOption
@@ -62,10 +64,13 @@ public class BooleanConfigOption extends ExtendedConfigOption
         return this.getter.test(SBExtendedConfig.INSTANCE);
     }
 
-    public String getDisplayString()
+    public ITextComponent getDisplayString()
     {
-        String on = this.yesNo ? LangUtils.translate("gui.yes") : "ON";
-        String off = this.yesNo ? LangUtils.translate("gui.no") : "OFF";
-        return this.getDisplayPrefix() + (this.get() ? TextFormatting.GREEN + on : TextFormatting.RED + off);
+        return TextComponentUtils.component(this.getDisplayPrefix() + this.optionsEnabled(this.get()));
+    }
+
+    private ITextComponent optionsEnabled(boolean isEnabled)
+    {
+        return isEnabled ? this.yesNo ? DialogTexts.GUI_YES.deepCopy().mergeStyle(TextFormatting.GREEN) : DialogTexts.OPTIONS_ON.deepCopy().mergeStyle(TextFormatting.GREEN) : this.yesNo ? DialogTexts.GUI_NO.deepCopy().mergeStyle(TextFormatting.RED) : DialogTexts.OPTIONS_OFF.deepCopy().mergeStyle(TextFormatting.RED);
     }
 }

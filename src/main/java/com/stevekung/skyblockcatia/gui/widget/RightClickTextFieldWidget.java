@@ -2,12 +2,13 @@ package com.stevekung.skyblockcatia.gui.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.StringTextComponent;
 
 public class RightClickTextFieldWidget extends TextFieldWidget
 {
     public RightClickTextFieldWidget(int x, int y, int width, int height)
     {
-        super(Minecraft.getInstance().fontRenderer, x, y, width, height, "");
+        super(Minecraft.getInstance().fontRenderer, x, y, width, height, StringTextComponent.EMPTY);
     }
 
     @Override

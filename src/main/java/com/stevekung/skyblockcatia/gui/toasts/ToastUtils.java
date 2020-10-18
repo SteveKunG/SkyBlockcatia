@@ -2,8 +2,6 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import javax.annotation.Nullable;
 
-import com.stevekung.stevekungslib.utils.ColorUtils;
-
 import net.minecraft.item.ItemStack;
 
 public class ToastUtils
@@ -117,7 +115,7 @@ public class ToastUtils
 
         public String getColor()
         {
-            return ColorUtils.stringToRGB(this.color).toColoredFont();
+            return this.color;
         }
 
         public boolean hasFormat()

@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
+import net.minecraft.util.text.ITextComponent;
 
 public class SBInventoryGroup
 {
@@ -61,7 +62,7 @@ public class SBInventoryGroup
         return this;
     }
 
-    public String getTranslationKey()
+    public ITextComponent getTranslationKey()
     {
         return LangUtils.translate("skyblock_group." + this.label);
     }

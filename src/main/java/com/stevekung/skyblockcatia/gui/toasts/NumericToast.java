@@ -3,12 +3,13 @@ package com.stevekung.skyblockcatia.gui.toasts;
 import java.text.DecimalFormat;
 import java.util.Random;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.IToast;
@@ -44,8 +45,9 @@ public class NumericToast implements IToast
         this.texture = new ResourceLocation(this.isFishingCoins || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public IToast.Visibility draw(ToastGui toastGui, long delta)
+    public IToast.Visibility func_230444_a_(MatrixStack matrixStack, ToastGui toastGui, long delta)
     {
         if (this.hasNewValue)
         {
@@ -56,12 +58,13 @@ public class NumericToast implements IToast
         ToastUtils.ItemDrop drop = this.output;
         String value = FORMAT.format(this.value);
         ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : SkyBlockEventHandler.getSkillItemStack(value, SBSkills.Type.byName(this.object));
-        String itemName = this.isCoins ? ColorUtils.stringToRGB("255,223,0").toColoredFont() + value + " Coins" : this.isPet ? TextFormatting.GREEN + itemStack.getDisplayName().getFormattedText() + TextFormatting.GREEN + " is now level " + TextFormatting.BLUE + value + TextFormatting.GREEN + "!" : itemStack.getDisplayName().getFormattedText();
+        //ColorUtils.stringToRGB().toColoredFont()
+        String itemName = this.isCoins ? TextComponentUtils.formattedString(value + " Coins", ColorUtils.toHex(255, 223, 0)) : this.isPet ? TextFormatting.GREEN + itemStack.getDisplayName().getString() + TextFormatting.GREEN + " is now level " + TextFormatting.BLUE + value + TextFormatting.GREEN + "!" : itemStack.getDisplayName().getString();
         toastGui.getMinecraft().getTextureManager().bindTexture(this.texture);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-        AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
-        toastGui.getMinecraft().fontRenderer.drawString(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).applyTextStyle(TextFormatting.BOLD).getFormattedText(), 30, 7, 16777215);
-        SBRenderUtils.drawLongItemName(toastGui, delta, this.firstDrawTime, itemName, this.isFishingCoins || this.isPet ? 1000L : 500L, this.maxDrawTime, 5000L, 8000L, false);
+        AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
+        toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
+        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, this.firstDrawTime, itemName, this.isFishingCoins || this.isPet ? 1000L : 500L, this.maxDrawTime, 5000L, 8000L, false);
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }

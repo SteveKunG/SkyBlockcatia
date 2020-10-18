@@ -1,9 +1,10 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.IToast;
@@ -28,14 +29,15 @@ public class VisitIslandToast implements IToast
         this.name = name;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public IToast.Visibility draw(ToastGui toastGui, long delta)
+    public IToast.Visibility func_230444_a_(MatrixStack matrixStack, ToastGui toastGui, long delta)
     {
         toastGui.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-        AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
-        toastGui.getMinecraft().fontRenderer.drawString(ColorUtils.stringToRGB("255,255,85").toColoredFont() + JsonUtils.create(this.name).applyTextStyle(TextFormatting.BOLD).getFormattedText(), 30, 7, 16777215);
-        toastGui.getMinecraft().fontRenderer.drawString("is visiting Your Island!", 30, 18, ColorUtils.rgbToDecimal(255, 255, 255));
+        AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
+        toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(this.name, TextFormatting.BOLD), 30, 7, ColorUtils.toDecimal(255, 255, 85));
+        toastGui.getMinecraft().fontRenderer.drawString(matrixStack, "is visiting Your Island!", 30, 18, ColorUtils.toDecimal(255, 255, 255));
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(this.itemStack, 8, 8);
         return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }

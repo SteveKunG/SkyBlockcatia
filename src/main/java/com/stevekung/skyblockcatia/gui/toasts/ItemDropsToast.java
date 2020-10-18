@@ -1,10 +1,11 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.IToast;
@@ -40,16 +41,17 @@ public class ItemDropsToast implements IToast
         this.maxDrawTime = this.isSpecialDrop ? 30000L : 15000L;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public IToast.Visibility draw(ToastGui toastGui, long delta)
+    public IToast.Visibility func_230444_a_(MatrixStack matrixStack, ToastGui toastGui, long delta)
     {
         ToastUtils.ItemDrop drop = this.rareDropOutput;
         ItemStack itemStack = drop.getItemStack();
-        String itemName = itemStack.getDisplayName().getFormattedText() + this.magicFind;
+        String itemName = itemStack.getDisplayName().getString() + this.magicFind;
 
         if (itemStack.getItem() == Items.ENCHANTED_BOOK)
         {
-            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1).getFormattedText();
+            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1).getString();
         }
 
         if (this.hasMagicFind)
@@ -57,7 +59,7 @@ public class ItemDropsToast implements IToast
             toastGui.getMinecraft().getTextureManager().bindTexture(TEXTURE);
             RenderSystem.color3f(1.0F, 1.0F, 1.0F);
             RenderSystem.enableDepthTest();
-            AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
+            AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
 
             RenderSystem.enableBlend();
             RenderSystem.depthFunc(514);
@@ -66,8 +68,8 @@ public class ItemDropsToast implements IToast
             {
                 RenderSystem.disableLighting();
                 RenderSystem.blendFunc(768, 1);
-                ColorUtils.RGB rgb = ColorUtils.stringToRGB("85,255,255");
-                RenderSystem.color4f(rgb.floatRed(), rgb.floatGreen(), rgb.floatBlue(), 0.25F);
+                float[] rgb = ColorUtils.toFloatArray(85, 255, 255);
+                RenderSystem.color4f(rgb[0], rgb[1], rgb[2], 0.25F);
                 RenderSystem.matrixMode(5890);
                 RenderSystem.loadIdentity();
                 RenderSystem.scalef(0.2F, 0.2F, 0.2F);
@@ -77,7 +79,7 @@ public class ItemDropsToast implements IToast
                 toastGui.getMinecraft().getTextureManager().bindTexture(MAGIC_FIND_GLINT);
                 RenderSystem.blendFunc(770, 771);
                 RenderSystem.blendFuncSeparate(770, 771, 1, 0);
-                AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
+                AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
             }
             RenderSystem.matrixMode(5890);
             RenderSystem.loadIdentity();
@@ -90,21 +92,21 @@ public class ItemDropsToast implements IToast
         {
             toastGui.getMinecraft().getTextureManager().bindTexture(TEXTURE);
             RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-            AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
+            AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
         }
 
         RenderHelper.disableStandardItemLighting();
 
         if (this.hasMagicFind)
         {
-            toastGui.getMinecraft().fontRenderer.drawStringWithShadow(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).applyTextStyle(TextFormatting.BOLD).getFormattedText(), 30, 7, 16777215);
+            toastGui.getMinecraft().fontRenderer.func_243248_b(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
         }
         else
         {
-            toastGui.getMinecraft().fontRenderer.drawString(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).applyTextStyle(TextFormatting.BOLD).getFormattedText(), 30, 7, 16777215);
+            toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
         }
 
-        SBRenderUtils.drawLongItemName(toastGui, delta, 0L, itemName, this.isSpecialDrop ? 5000L : 1000L, this.maxDrawTime, this.isSpecialDrop ? 10000L : 5000L, this.isSpecialDrop ? 10000L : 8000L, this.hasMagicFind);
+        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, itemName, this.isSpecialDrop ? 5000L : 1000L, this.maxDrawTime, this.isSpecialDrop ? 10000L : 5000L, this.isSpecialDrop ? 10000L : 8000L, this.hasMagicFind);
 
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, 8, 8);
         RenderSystem.translatef(0.0F, 0.0F, -32.0F);

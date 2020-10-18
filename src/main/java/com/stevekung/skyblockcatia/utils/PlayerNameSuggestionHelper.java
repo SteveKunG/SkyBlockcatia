@@ -21,18 +21,18 @@ public class PlayerNameSuggestionHelper extends CommandSuggestionHelper
     @Override
     public void init()
     {
-        String text = this.field_228095_d_.getText();
+        String text = this.inputField.getText();
 
-        if (!this.field_228110_s_)
+        if (!this.isApplyingSuggestion)
         {
-            this.field_228095_d_.setSuggestion(null);
+            this.inputField.setSuggestion(null);
             this.suggestions = null;
         }
 
-        this.field_228103_l_.clear();
-        int i = this.field_228095_d_.getCursorPosition();
+        this.exceptionList.clear();
+        int i = this.inputField.getCursorPosition();
         String s1 = text.substring(0, i);
-        int k = CommandSuggestionHelper.func_228121_a_(s1);
+        int k = CommandSuggestionHelper.getLastWhitespace(s1);
         Collection<String> collection = this.mc.player.connection.getSuggestionProvider().getPlayerNames();
         this.suggestionsFuture = ISuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k));
     }

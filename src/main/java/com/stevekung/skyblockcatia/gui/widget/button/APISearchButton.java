@@ -1,6 +1,8 @@
 package com.stevekung.skyblockcatia.gui.widget.button;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
 import net.minecraft.client.gui.AbstractGui;
@@ -13,14 +15,15 @@ public class APISearchButton extends Button
 
     public APISearchButton(int xPos, int yPos, Button.IPressable button)
     {
-        super(xPos, yPos, 18, 18, "API Search Button", button);
+        super(xPos, yPos, 18, 18, TextComponentUtils.component("API Search Button"), button);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks)
+    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         RenderUtils.bindTexture(TEXTURE);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        AbstractGui.blit(this.x, this.y, this.active && this.isHovered() ? 18 : !this.active ? 36 : 0, 0, this.width, this.height, 54, 18);
+        AbstractGui.blit(matrixStack, this.x, this.y, this.active && this.isHovered() ? 18 : !this.active ? 36 : 0, 0, this.width, this.height, 54, 18);
     }
 }

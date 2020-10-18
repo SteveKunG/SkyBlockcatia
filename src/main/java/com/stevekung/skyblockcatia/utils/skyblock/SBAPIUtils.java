@@ -11,7 +11,7 @@ import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.MaxFairySouls;
-import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -20,8 +20,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.datafix.fixes.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
@@ -132,7 +130,7 @@ public class SBAPIUtils
         {
             List<ItemStack> itemStack = new ArrayList<>();
             ItemStack barrier = new ItemStack(Blocks.BARRIER);
-            barrier.setDisplayName(JsonUtils.create(type.getName() + " is not available!").setStyle(new Style().setItalic(false)).applyTextStyle(TextFormatting.RED));
+            barrier.setDisplayName(TextComponentUtils.formatted(type.getName() + " is not available!", TextFormatting.RED).setStyle(Style.EMPTY.setItalic(false)));
 
             for (int i = 0; i < 36; ++i)
             {
@@ -191,12 +189,12 @@ public class SBAPIUtils
         if (sbTag != null)
         {
             ListNBT loreList = new ListNBT();
-            StringNBT name = StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(sbTag.getCompound("display").getString("Name"))));
+            StringNBT name = StringNBT.valueOf(TextComponentUtils.toJson(sbTag.getCompound("display").getString("Name")));
             ListNBT sbLore = sbTag.getCompound("display").getList("Lore", Constants.NBT.TAG_STRING);
 
             for (int loreI = 0; loreI < sbLore.size(); loreI++)
             {
-                loreList.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(sbLore.getString(loreI)))));
+                loreList.add(StringNBT.valueOf(TextComponentUtils.toJson(sbLore.getString(loreI))));
             }
 
             if (sbTag.contains("ench"))

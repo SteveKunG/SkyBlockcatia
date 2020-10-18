@@ -1,7 +1,8 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[34,)"
 updateJSONURL="https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json"
 issueTrackerURL="https://github.com/SteveKunG/SkyBlockcatia/issues"
+license="MIT License"
 
 [[mods]]
 modId="skyblockcatia"
@@ -9,28 +10,28 @@ version="2.0.0"
 displayName="SkyBlockcatia"
 description="Useful Hypixel Skyblock features, QOL and In-game API Viewer!"
 credits="Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible"
-displayURL="https://minecraft.curseforge.com/projects/skyblockcatia"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/skyblockcatia"
 authors="SteveKunG"
 logoFile="logo.png"
 
 [[dependencies.skyblockcatia]]
     modId="forge"
     mandatory=true
-    versionRange="[31.2.0,)"
+    versionRange="[34.1.0,)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.skyblockcatia]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.3]"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.skyblockcatia]]
     modId="stevekungs_lib"
     mandatory=true
-    versionRange="[3.0.8,)"
+    versionRange="[4.0.0,)"
     ordering="NONE"
     side="CLIENT"
 

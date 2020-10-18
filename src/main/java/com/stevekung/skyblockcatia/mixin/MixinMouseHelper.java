@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -21,7 +20,6 @@ public abstract class MixinMouseHelper
 {
     @Shadow
     @Final
-    @Mutable
     private Minecraft minecraft;
 
     @Redirect(method = "scrollCallback(JDD)V", at = @At(value = "INVOKE", target = "net/minecraft/entity/player/PlayerInventory.changeCurrentItem(D)V"))

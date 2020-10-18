@@ -18,6 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
@@ -30,10 +31,12 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelRank;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
 import com.stevekung.stevekungslib.utils.CommonUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -77,7 +80,7 @@ public class SkyBlockProfileViewerScreen extends Screen
 
     public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
     {
-        super(JsonUtils.create("API Viewer"));
+        super(TextComponentUtils.component("API Viewer"));
 
         if (state == GuiState.SEARCH)
         {
@@ -138,12 +141,12 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.checkButton.visible = !this.error;
         this.children.add(this.usernameTextField);
         this.suggestionHelper = new PlayerNameSuggestionHelper(this.minecraft, this, this.usernameTextField, this.font, true, true, 0, 7, false, Integer.MIN_VALUE);
-        this.suggestionHelper.func_228124_a_(true);
+        this.suggestionHelper.shouldAutoSuggest(true);
         this.suggestionHelper.init();
 
         if (this.error)
         {
-            this.closeButton.setMessage(LangUtils.translate("gui.back"));
+            this.closeButton.setMessage(DialogTexts.GUI_BACK);
         }
         if (this.fromError)
         {
@@ -199,7 +202,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             {
                 if (i2 == 0)
                 {
-                    button.setMessage(TextFormatting.YELLOW + "" + TextFormatting.BOLD + button.getMessage());
+                    button.setMessage(button.getMessage().deepCopy().mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD));
                 }
                 button.y += i2 * 22;
                 button.setProfileList(this.profiles);
@@ -215,7 +218,7 @@ public class SkyBlockProfileViewerScreen extends Screen
 
     @Override
     @Nullable
-    public IGuiEventListener getFocused()
+    public IGuiEventListener getListener()
     {
         return this.usernameTextField;
     }
@@ -285,7 +288,7 @@ public class SkyBlockProfileViewerScreen extends Screen
     }
 
     @Override
-    public void removed()
+    public void onClose()
     {
         this.minecraft.keyboardListener.enableRepeatEvents(false);
     }
@@ -308,60 +311,61 @@ public class SkyBlockProfileViewerScreen extends Screen
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground();
+        this.renderBackground(matrixStack);
 
         if (this.loadingApi)
         {
             String text = "Downloading SkyBlock stats";
             int i = this.font.getStringWidth(text);
-            this.drawCenteredString(this.font, text, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
-            this.drawString(this.font, downloadingStates[(int)(Util.milliTime() / 500L % downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
-            this.drawCenteredString(this.font, "Status: " + TextFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 15, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, text, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
+            AbstractGui.drawString(matrixStack, this.font, downloadingStates[(int)(Util.milliTime() / 500L % downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, "Status: " + TextFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 15, 16777215);
         }
         else
         {
-            this.drawCenteredString(this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
 
             if (this.error)
             {
                 if (this.errorInfo != null)
                 {
-                    this.errorInfo.render(mouseX, mouseY, partialTicks);
+                    this.errorInfo.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
                 else
                 {
-                    this.drawCenteredString(this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                    AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
                 }
-                super.render(mouseX, mouseY, partialTicks);
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             else
             {
                 if (!this.profiles.isEmpty())
                 {
-                    this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profiles" + this.guild, this.width / 2, 30, 16777215);
+                    AbstractGui.drawCenteredString(matrixStack, this.font, this.displayName + TextFormatting.GOLD + " Profiles" + this.guild, this.width / 2, 30, 16777215);
                 }
 
-                this.suggestionHelper.render(mouseX, mouseY);
-                this.usernameTextField.render(mouseX, mouseY, partialTicks);
+                this.suggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
+                this.usernameTextField.render(matrixStack, mouseX, mouseY, partialTicks);
 
                 if (this.suggestionHelper.suggestions == null && StringUtils.isNullOrEmpty(this.usernameTextField.getText()) && !this.usernameTextField.isFocused())
                 {
-                    this.drawString(this.font, "Enter username", this.width / 2 - 71, 51, 10526880);
+                    AbstractGui.drawString(matrixStack, this.font, "Enter username", this.width / 2 - 71, 51, 10526880);
                 }
 
-                super.render(mouseX, mouseY, partialTicks);
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
 
                 for (Widget button : this.buttons.stream().filter(button -> button instanceof SkyBlockProfileButton).collect(Collectors.toList()))
                 {
-                    boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+                    boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeightRealms();
                     button.visible = button.active = this.suggestionHelper.suggestions == null;
 
                     if (hover)
                     {
-                        GuiUtils.drawHoveringText(Collections.singletonList(((SkyBlockProfileButton)button).getLastActive()), mouseX, mouseY, this.width, this.height, -1, this.font);
+                        GuiUtils.drawHoveringText(matrixStack, Collections.singletonList(TextComponentUtils.component(((SkyBlockProfileButton)button).getLastActive())), mouseX, mouseY, this.width, this.height, -1, this.font);
                         RenderSystem.disableLighting();
                         break;
                     }
@@ -550,7 +554,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         if (sbProfile.isJsonNull())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.input, this.displayName, this.guild, uuid, gameProfile, -1);
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, TextComponentUtils.component("Avocado"), this.input, this.displayName, this.guild, uuid, gameProfile, -1);
             this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
             return;
         }
@@ -596,7 +600,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         {
             if (i2 == 0)
             {
-                button.setMessage(TextFormatting.YELLOW + "" + TextFormatting.BOLD + button.getMessage());
+                button.setMessage(button.getMessage().deepCopy().mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD));
             }
             button.y += i2 * 22;
             button.setProfileList(this.profiles);
@@ -614,7 +618,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.checkButton.visible = !this.error;
         this.checkButton.active = !this.error;
         this.usernameTextField.active = !this.error;
-        this.closeButton.setMessage(LangUtils.translate("gui.back"));
+        this.closeButton.setMessage(DialogTexts.GUI_BACK);
 
         if (errorList)
         {
@@ -628,7 +632,7 @@ public class SkyBlockProfileViewerScreen extends Screen
 
     private void setCommandResponder()
     {
-        this.suggestionHelper.func_228124_a_(true);
+        this.suggestionHelper.shouldAutoSuggest(true);
         this.suggestionHelper.init();
     }
 

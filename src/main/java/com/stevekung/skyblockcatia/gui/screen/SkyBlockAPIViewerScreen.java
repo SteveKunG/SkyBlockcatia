@@ -44,19 +44,23 @@ import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.*;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityType;
@@ -87,10 +91,9 @@ import net.minecraft.util.Util;
 import net.minecraft.util.datafix.fixes.EntityRenaming1510;
 import net.minecraft.util.datafix.fixes.ItemStackDataFlattening;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.common.util.Constants;
@@ -114,7 +117,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private JsonObject skyblockProfiles;
     private List<ProfileDataCallback> profiles;
     private final String sbProfileId;
-    private final String sbProfileName;
+    private final ITextComponent sbProfileName;
     private final String username;
     private final String displayName;
     private final String guild;
@@ -195,7 +198,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     public SkyBlockAPIViewerScreen(List<ProfileDataCallback> profiles, ProfileDataCallback callback)
     {
-        super(JsonUtils.create("SkyBlock Player Data"));
+        super(TextComponentUtils.component("SkyBlock Player Data"));
         this.firstLoad = true;
         this.skyBlockContainer = new SkyBlockContainer();
         this.skyBlockArmorContainer = new ArmorContainer();
@@ -250,7 +253,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null)));
-        this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, LangUtils.translate("gui.back"), button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.EMPTY, this.username, this.displayName, this.guild) : new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
+        this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, DialogTexts.GUI_BACK, button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.EMPTY, this.username, this.displayName, this.guild) : new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
         Button infoButton = ViewButton.PLAYER.button = new Button(this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_player"), button -> this.performedInfo(ViewButton.PLAYER));
         infoButton.active = false;
         this.addButton(infoButton);
@@ -311,7 +314,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Override
-    public void removed()
+    public void onClose()
     {
         TEMP_INVENTORY.clear();
         TEMP_ARMOR_INVENTORY.clear();
@@ -337,7 +340,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         return false;
                     }*/
-                    ClientUtils.printClientMessage(JsonUtils.create("Click to view ").appendSibling(this.hoveredSlot.getStack().getDisplayName().applyTextStyle(TextFormatting.GOLD).appendSibling(JsonUtils.create(" recipe").applyTextStyle(TextFormatting.GREEN))).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewrecipe " + itemId)).setColor(TextFormatting.GREEN)));
+                    ClientUtils.printClientMessage(TextComponentUtils.component("Click to view ").append(this.hoveredSlot.getStack().getDisplayName().deepCopy().mergeStyle(TextFormatting.GOLD).append(TextComponentUtils.formatted(" recipe", TextFormatting.GREEN))).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewrecipe " + itemId)).applyFormatting(TextFormatting.GREEN)));
                 }
             }
         }
@@ -354,19 +357,19 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Override
-    public void onClose()
+    public void closeScreen()
     {
         this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
     }
 
     @Override
-    public IGuiEventListener getFocused()
+    public IGuiEventListener getListener()
     {
         if (this.currentSlot != null)
         {
             return this.currentSlot;
         }
-        return super.getFocused();
+        return super.getListener();
     }
 
     @Override
@@ -502,42 +505,42 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground();
+        this.renderBackground(matrixStack);
 
         if (this.loadingApi)
         {
             String text = "Downloading SkyBlock stats";
             int i = this.font.getStringWidth(text);
-            this.drawCenteredString(this.font, text, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
-            this.drawString(this.font, SkyBlockProfileViewerScreen.downloadingStates[(int)(Util.milliTime() / 500L % SkyBlockProfileViewerScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
-            this.drawCenteredString(this.font, "Status: " + TextFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 15, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, text, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
+            AbstractGui.drawString(matrixStack, this.font, SkyBlockProfileViewerScreen.downloadingStates[(int)(Util.milliTime() / 500L % SkyBlockProfileViewerScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, "Status: " + TextFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 15, 16777215);
         }
         else
         {
             if (this.error)
             {
-                this.drawCenteredString(this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
+                AbstractGui.drawCenteredString(matrixStack, this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
 
                 if (this.errorInfo != null)
                 {
-                    this.errorInfo.render(mouseX, mouseY, partialTicks);
+                    this.errorInfo.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
                 else
                 {
-                    this.drawCenteredString(this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                    AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
                 }
-                super.render(mouseX, mouseY, partialTicks);
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             else
             {
                 if (this.currentSlot != null)
                 {
-                    this.currentSlot.render(mouseX, mouseY, partialTicks);
+                    this.currentSlot.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
 
-                this.drawCenteredString(this.font, this.displayName + TextFormatting.GOLD + " Profile: " + this.sbProfileName + this.guild, this.width / 2, 29, 16777215);
+                AbstractGui.drawCenteredString(matrixStack, this.font, this.displayName + TextFormatting.GOLD + " Profile: " + this.sbProfileName.getString() + this.guild, this.width / 2, 29, 16777215);
 
                 if (this.currentSlot != null && this.currentSlot instanceof EmptyStats)
                 {
@@ -545,11 +548,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                     if (stat.getType() == EmptyStats.Type.INVENTORY)
                     {
-                        this.drawGroupsBackgroundLayer(partialTicks, mouseX, mouseY);
+                        this.drawGroupsBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
                     }
                 }
 
-                super.render(mouseX, mouseY, partialTicks);
+                super.render(matrixStack, mouseX, mouseY, partialTicks);
 
                 if (this.currentSlot != null)
                 {
@@ -565,14 +568,14 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                         if (stat.getType() == EmptyStats.Type.INVENTORY)
                         {
-                            this.drawContainerSlot(mouseX, mouseY);
+                            this.drawContainerSlot(matrixStack, mouseX, mouseY);
 
                             RenderHelper.disableStandardItemLighting();
-                            this.drawTabsForegroundLayer();
+                            this.drawTabsForegroundLayer(matrixStack);
 
                             for (SBInventoryGroup group : SBInventoryGroup.GROUPS)
                             {
-                                if (this.renderGroupsHoveringText(group, mouseX, mouseY))
+                                if (this.renderGroupsHoveringText(matrixStack, group, mouseX, mouseY))
                                 {
                                     break;
                                 }
@@ -586,7 +589,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                             if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
                             {
-                                this.renderTooltip(this.hoveredSlot.getStack(), mouseX, mouseY);
+                                this.renderTooltip(matrixStack, this.hoveredSlot.getStack(), mouseX, mouseY);
                             }
                             /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)TODO
                             {
@@ -604,7 +607,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 int y = height + 12;
                                 int barY = y + 20 + height * i;
                                 int textY = y + height * i;
-                                this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
+                                this.renderSkillBar(matrixStack, info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
                                 ++i;
                             }
 
@@ -616,14 +619,14 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 int y = height + 12;
                                 int barY = y + 20 + height * i;
                                 int textY = y + height * i;
-                                this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
+                                this.renderSkillBar(matrixStack, info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
                                 ++i;
                             }
 
                             if (this.skillAvg != null)
                             {
                                 String avg = "AVG: " + this.skillAvg;
-                                this.drawString(ClientUtils.unicodeFontRenderer, avg, this.width - ClientUtils.unicodeFontRenderer.getStringWidth(avg) - 60, this.height - 38, 16777215);
+                                AbstractGui.drawString(matrixStack, ClientUtils.unicodeFontRenderer, avg, this.width - ClientUtils.unicodeFontRenderer.getStringWidth(avg) - 60, this.height - 38, 16777215);
                             }
                         }
                     }
@@ -631,21 +634,21 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         String total1 = TextFormatting.GRAY + "Total Amount Spent: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.slayerTotalAmountSpent);
                         String total2 = TextFormatting.GRAY + "Total Slayer XP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.totalSlayerXp);
-                        this.drawString(this.font, total1, this.width - this.font.getStringWidth(total1) - 60, this.height - 36, 16777215);
-                        this.drawString(this.font, total2, this.width - this.font.getStringWidth(total2) - 60, this.height - 46, 16777215);
+                        AbstractGui.drawString(matrixStack, this.font, total1, this.width - this.font.getStringWidth(total1) - 60, this.height - 36, 16777215);
+                        AbstractGui.drawString(matrixStack, this.font, total2, this.width - this.font.getStringWidth(total2) - 60, this.height - 46, 16777215);
 
                         if (this.activeSlayerType != null)
                         {
-                            this.drawString(this.font, TextFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
-                            this.drawString(this.font, TextFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
+                            AbstractGui.drawString(matrixStack, this.font, TextFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
+                            AbstractGui.drawString(matrixStack, this.font, TextFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
                         }
                     }
                     else if (this.currentSlot instanceof SkyBlockCraftedMinions)
                     {
                         String total1 = TextFormatting.GRAY + "Unique Minions: " + TextFormatting.YELLOW + this.craftedMinionCount + "/" + SkyBlockAPIViewerScreen.MAXED_UNIQUE_MINIONS + TextFormatting.GRAY + " (" + this.craftedMinionCount * 100 / SkyBlockAPIViewerScreen.MAXED_UNIQUE_MINIONS + "%)";
                         String total2 = TextFormatting.GRAY + "Current Minion Slot: " + TextFormatting.YELLOW + this.currentMinionSlot;
-                        this.drawString(this.font, total1, this.width - this.font.getStringWidth(total1) - 60, this.height - 68, 16777215);
-                        this.drawString(this.font, total2, this.width - this.font.getStringWidth(total2) - 60, this.height - 58, 16777215);
+                        AbstractGui.drawString(matrixStack, this.font, total1, this.width - this.font.getStringWidth(total1) - 60, this.height - 68, 16777215);
+                        AbstractGui.drawString(matrixStack, this.font, total2, this.width - this.font.getStringWidth(total2) - 60, this.height - 58, 16777215);
                     }
                 }
 
@@ -893,7 +896,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.backButton.visible = false;
         this.doneButton.x = this.width / 2 - 75;
         this.doneButton.y = this.height / 4 + 132;
-        this.doneButton.setMessage(LangUtils.translate("gui.back"));
+        this.doneButton.setMessage(DialogTexts.GUI_BACK);
 
         for (Widget button : this.buttons)
         {
@@ -978,11 +981,11 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     // Render
-    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
+    private void renderSkillBar(MatrixStack matrixStack, String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
     {
         this.minecraft.getTextureManager().bindTexture(XP_BARS);
         RenderSystem.color4f(0.5F, 1.0F, 0.0F, 1.0F);
-        AbstractGui.blit(xBar, yBar, 0, 0, 91, 5, 91, 10);
+        AbstractGui.blit(matrixStack, xBar, yBar, 0, 0, 91, 5, 91, 10);
 
         if (xpRequired > 0)
         {
@@ -990,27 +993,27 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (filled > 0)
             {
-                AbstractGui.blit(xBar, yBar, 0, 5, filled, 5, 91, 10);
+                AbstractGui.blit(matrixStack, xBar, yBar, 0, 5, filled, 5, 91, 10);
             }
 
-            this.drawCenteredString(this.font, TextFormatting.GRAY + name + TextFormatting.YELLOW + " " + currentLvl, xText, yText, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.GRAY + name + TextFormatting.YELLOW + " " + currentLvl, xText, yText, 16777215);
 
             if (reachLimit)
             {
-                this.drawCenteredString(this.font, SBNumberUtils.formatWithM(playerXp), xText, yText + 10, 16777215);
+                AbstractGui.drawCenteredString(matrixStack, this.font, SBNumberUtils.formatWithM(playerXp), xText, yText + 10, 16777215);
             }
             else
             {
-                this.drawCenteredString(this.font, NumberUtils.formatCompact((long)playerXp) + "/" + NumberUtils.formatCompact(xpRequired), xText, yText + 10, 16777215);
+                AbstractGui.drawCenteredString(matrixStack, this.font, NumberUtils.formatCompact((long)playerXp) + "/" + NumberUtils.formatCompact(xpRequired), xText, yText + 10, 16777215);
             }
         }
         else
         {
-            this.drawCenteredString(this.font, name, xText, yText + 8, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, name, xText, yText + 8, 16777215);
         }
     }
 
-    private void drawContainerSlot(int mouseX, int mouseY)
+    private void drawContainerSlot(MatrixStack matrixStack, int mouseX, int mouseY)
     {
         int i = this.guiLeft;
         int j = this.guiTop;
@@ -1024,7 +1027,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         for (Slot slot : this.skyBlockContainer.inventorySlots)
         {
-            this.drawSlot(slot);
+            this.drawSlot(matrixStack, slot);
 
             if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isEnabled())
             {
@@ -1039,7 +1042,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int j1 = slot.xPos;
                 int k1 = slot.yPos;
                 RenderSystem.colorMask(true, true, true, false);
-                this.fillGradient(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+                this.fillGradient(matrixStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
                 RenderSystem.colorMask(true, true, true, true);
                 RenderSystem.enableLighting();
                 RenderSystem.enableDepthTest();
@@ -1056,7 +1059,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    private void drawSlot(Slot slot)
+    private void drawSlot(MatrixStack matrixStack, Slot slot)
     {
         int i = slot.xPos;
         int j = slot.yPos;
@@ -1072,7 +1075,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 TextureAtlasSprite sprite = this.minecraft.getAtlasSpriteGetter(pair.getFirst()).apply(pair.getSecond());
                 this.minecraft.getTextureManager().bindTexture(sprite.getAtlasTexture().getTextureLocation());
-                blit(i, j, this.getBlitOffset(), 16, 16, sprite);
+                AbstractGui.blit(matrixStack, i, j, this.getBlitOffset(), 16, 16, sprite);
             }
         }
 
@@ -1113,7 +1116,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private boolean renderGroupsHoveringText(SBInventoryGroup group, int mouseX, int mouseY)
+    private boolean renderGroupsHoveringText(MatrixStack matrixStack, SBInventoryGroup group, int mouseX, int mouseY)
     {
         int i = group.getColumn();
         int j = 28 * i;
@@ -1134,7 +1137,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (this.isPointInRegion(j + 2, k + 3, 25, 25, mouseX, mouseY))
         {
-            this.renderTooltip(Collections.singletonList(group.getTranslationKey()), mouseX, mouseY);
+            this.renderTooltip(matrixStack, group.getTranslationKey(), mouseX, mouseY);
             return true;
         }
         else
@@ -1143,7 +1146,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void drawGroupsBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+    private void drawGroupsBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         SBInventoryGroup group = SBInventoryGroup.GROUPS[this.selectedTabIndex];
@@ -1154,12 +1157,12 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (group1.getIndex() != this.selectedTabIndex)
             {
-                this.drawGroup(group1);
+                this.drawGroup(matrixStack, group1);
             }
         }
 
         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("skyblockcatia:textures/gui/group_" + group.getBackgroundTexture()));
-        this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.blit(matrixStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.guiLeft + 182;
         int j = this.guiTop + 18;
@@ -1168,28 +1171,28 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (group.hasScrollbar())
         {
-            this.blit(i, j + (int)((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
+            this.blit(matrixStack, i, j + (int)((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
         }
 
-        this.drawGroup(group);
+        this.drawGroup(matrixStack, group);
         RenderSystem.disableRescaleNormal();
         RenderHelper.disableStandardItemLighting();
         RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
     }
 
-    private void drawTabsForegroundLayer()
+    private void drawTabsForegroundLayer(MatrixStack matrixStack)
     {
         SBInventoryGroup group = SBInventoryGroup.GROUPS[this.selectedTabIndex];
 
         if (group != null)
         {
             RenderSystem.disableBlend();
-            this.font.drawString(group.getTranslationKey(), this.guiLeft + 11, this.guiTop + 6, 4210752);
+            this.font.func_243248_b(matrixStack, group.getTranslationKey(), this.guiLeft + 11, this.guiTop + 6, 4210752);
         }
     }
 
-    private void drawGroup(SBInventoryGroup group)
+    private void drawGroup(MatrixStack matrixStack, SBInventoryGroup group)
     {
         boolean flag = group.getIndex() == this.selectedTabIndex;
         boolean flag1 = group.isOnTopRow();
@@ -1223,7 +1226,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        this.blit(l, i1, j, k, 28, j1);
+        this.blit(matrixStack, l, i1, j, k, 28, j1);
         this.setBlitOffset(100);
         this.itemRenderer.zLevel = 100.0F;
         l = l + 6;
@@ -1729,7 +1732,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase());
                         ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
-                        itemStack.setDisplayName(JsonUtils.create(slayerDrops.getDisplayName()));
+                        itemStack.setDisplayName(slayerDrops.getDisplayName());
                         ListNBT listEnch = new ListNBT();
                         listEnch.add(new CompoundNBT());
                         itemStack.getTag().put("Enchantments", listEnch);
@@ -1755,7 +1758,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             else
             {
                 ItemStack barrier = new ItemStack(Blocks.BARRIER);
-                barrier.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.RED + "Sacks is not available!"));
+//                barrier.setDisplayName(TextComponentUtils.create(TextFormatting.RED + "Sacks is not available!"));TODO
 
                 for (int i = 0; i < 36; ++i)
                 {
@@ -1781,7 +1784,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 itemStack.getTag().put("display", new CompoundNBT());
             }
             ListNBT itemCount = new ListNBT();
-            itemCount.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "Item Count: " + TextFormatting.GRAY + NumberUtils.NUMBER_FORMAT.format(count)))));
+            itemCount.add(StringNBT.valueOf(TextComponentUtils.toJson("Item Count: " + TextFormatting.GRAY + NumberUtils.NUMBER_FORMAT.format(count))));
             itemStack.getTag().getCompound("display").put("Lore", itemCount);
         }
     }
@@ -1847,19 +1850,19 @@ public class SkyBlockAPIViewerScreen extends Screen
                     SBPets.Type type = SBPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
 
-                    itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + type.getType().getName() + " Pet"))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + (active ? TextFormatting.GREEN + "Active Pet" : TextFormatting.RED + "Inactive Pet")))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent())))));
+                    itemStack.setDisplayName(TextComponentUtils.component(TextFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + type.getType().getName() + " Pet")));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((""))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + (active ? TextFormatting.GREEN + "Active Pet" : TextFormatting.RED + "Inactive Pet")))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent())))));
 
                     if (level.getCurrentPetLevel() < 100)
                     {
-                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Current EXP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired())))));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + TextFormatting.GRAY + "Current EXP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired())))));
                     }
                     if (candyUsed > 0)
                     {
-                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10))));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10))));
                     }
                     if (heldItem != null)
                     {
@@ -1869,12 +1872,12 @@ public class SkyBlockAPIViewerScreen extends Screen
                         {
                             heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase().replace("pet_item_", "").replace("_", " "));
                         }
-                        list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Held Item: " + heldItemName))));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + TextFormatting.GRAY + "Held Item: " + heldItemName))));
                     }
 
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(""))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(rarity + "" + TextFormatting.BOLD + tier + " PET"))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((""))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((rarity + "" + TextFormatting.BOLD + tier + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 
@@ -1902,8 +1905,8 @@ public class SkyBlockAPIViewerScreen extends Screen
                 catch (Exception e)
                 {
                     ItemStack itemStack = new ItemStack(Items.BONE);
-                    itemStack.setDisplayName(JsonUtils.create(TextFormatting.RESET + "" + TextFormatting.RED + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
-                    list.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "UNKNOWN PET"))));
+                    itemStack.setDisplayName(TextComponentUtils.formatted(WordUtils.capitalize(petType.toLowerCase().replace("_", " ")), TextFormatting.RED));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RED + "" + TextFormatting.BOLD + "UNKNOWN PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
                     SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
@@ -2230,8 +2233,8 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                     for (int j1 = 0; j1 < list.size(); ++j1)
                     {
-                        String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
-                        String lastLore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(list.size() - 1)).getString());
+                        String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                        String lastLore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(list.size() - 1)).getString());
                         Matcher matcher = STATS_PATTERN.matcher(lore);
 
                         if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY")))
@@ -2330,19 +2333,19 @@ public class SkyBlockAPIViewerScreen extends Screen
             firstJoinMillis = 1565111612000L;
         }
 
-        String heath = ColorUtils.stringToRGB("239,83,80").toColoredFont();
-        String defense = ColorUtils.stringToRGB("156,204,101").toColoredFont();
-        String trueDefense = ColorUtils.stringToRGB("255,255,255").toColoredFont();
-        String strength = ColorUtils.stringToRGB("181,33,30").toColoredFont();
-        String speed = ColorUtils.stringToRGB("255,255,255").toColoredFont();
-        String critChance = ColorUtils.stringToRGB("121,134,203").toColoredFont();
-        String critDamage = ColorUtils.stringToRGB("70,90,201").toColoredFont();
-        String attackSpeed = ColorUtils.stringToRGB("255,255,85").toColoredFont();
-        String intelligence = ColorUtils.stringToRGB("129,212,250").toColoredFont();
-        String fairySoulsColor = ColorUtils.stringToRGB("203,54,202").toColoredFont();
-        String seaCreatureChance = ColorUtils.stringToRGB("0,170,170").toColoredFont();
-        String magicFind = ColorUtils.stringToRGB("85,255,255").toColoredFont();
-        String petLuck = ColorUtils.stringToRGB("255,85,255").toColoredFont();
+        String heath = ColorUtils.toHex(239,83,80);//TODO Fix color
+        String defense = ColorUtils.toHex(156,204,101);
+        String trueDefense = ColorUtils.toHex(255,255,255);
+        String strength = ColorUtils.toHex(181,33,30);
+        String speed = ColorUtils.toHex(255,255,255);
+        String critChance = ColorUtils.toHex(121,134,203);
+        String critDamage = ColorUtils.toHex(70,90,201);
+        String attackSpeed = ColorUtils.toHex(255,255,85);
+        String intelligence = ColorUtils.toHex(129,212,250);
+        String fairySoulsColor = ColorUtils.toHex(203,54,202);
+        String seaCreatureChance = ColorUtils.toHex(0,170,170);
+        String magicFind = ColorUtils.toHex(85,255,255);
+        String petLuck = ColorUtils.toHex(255,85,255);
         String location = this.getLocation(objStatus, uuid);
 
         if (!StringUtils.isNullOrEmpty(location))
@@ -2675,7 +2678,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        auctions.add(0, new SBStats(new StringTextComponent("Auctions").applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+        auctions.add(0, new SBStats(new StringTextComponent("Auctions").mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getString(), 0.0F));
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
@@ -2739,14 +2742,14 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
         list.add(0, new SBStats(null, 0.0F));
-        list.add(1, new SBStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+        list.add(1, new SBStats(new StringTextComponent(name).mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getString(), 0.0F));
     }
 
     private void sortStatsByValue(List<SBStats> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         list.add(0, new SBStats(null, 0.0F));
-        list.add(1, new SBStats(new StringTextComponent(name).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), 0.0F));
+        list.add(1, new SBStats(new StringTextComponent(name).mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getString(), 0.0F));
     }
 
     private long checkSkyBlockItem(List<ItemStack> list, String type)
@@ -3014,19 +3017,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    private void drawItemStackSlot(int x, int y, ItemStack itemStack)
+    private void drawItemStackSlot(MatrixStack matrixStack, int x, int y, ItemStack itemStack)
     {
-        this.drawSprite(x + 1, y + 1);
+        this.drawSprite(matrixStack, x + 1, y + 1);
         RenderSystem.enableRescaleNormal();
         this.minecraft.getItemRenderer().renderItemIntoGUI(itemStack, x + 2, y + 2);
         RenderSystem.disableRescaleNormal();
     }
 
-    private void drawSprite(int left, int top)
+    private void drawSprite(MatrixStack matrixStack, int left, int top)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderUtils.bindTexture(AbstractGui.STATS_ICON_LOCATION);
-        AbstractGui.blit(left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
+        AbstractGui.blit(matrixStack, left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
     }
 
     public class SkyBlockInventory
@@ -3256,7 +3259,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(int index, int left, int right, int top) {}
+        protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top) {}
 
         public Type getType()
         {
@@ -3286,11 +3289,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(int index, int left, int right, int top)
+        protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             SkyBlockInfo stat = InfoStats.this.stats.get(index);
-            this.fontRenderer.drawString(stat.getTitle(), SkyBlockAPIViewerScreen.this.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
-            this.fontRenderer.drawString(stat.getValue(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getValue()) + 195, top, index % 2 == 0 ? 16777215 : 9474192);
+            this.fontRenderer.drawString(matrixStack, stat.getTitle(), SkyBlockAPIViewerScreen.this.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
+            this.fontRenderer.drawString(matrixStack, stat.getValue(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getValue()) + 195, top, index % 2 == 0 ? 16777215 : 9474192);
         }
     }
 
@@ -3312,7 +3315,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(int index, int left, int right, int top)
+        protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             SkyBlockSlayerInfo stat = this.stats.get(index);
 
@@ -3322,7 +3325,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (stat.getText().equals("Zombie"))
                 {
                     ZombieEntity zombie = new ZombieEntity(this.world);
-                    ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE).setDisplayName(JsonUtils.create("Reaper Scythe"));
+                    ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
                     ItemStack helmet = SBRenderUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.DIAMOND_CHESTPLATE);
                     ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
@@ -3345,7 +3348,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 else
                 {
                     WolfEntity wolf = new WolfEntity(EntityType.WOLF, this.world);
-                    wolf.setAngry(true);
+                    wolf.setAngerTime(Integer.MAX_VALUE);
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, wolf);
                 }
 
@@ -3357,11 +3360,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int playerSlayerXp = Integer.valueOf(xpSplit[0]);
                 int xpRequired = Integer.valueOf(xpSplit[1]);
                 int filled = Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
-                AbstractGui.blit(SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
+                AbstractGui.blit(matrixStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
                 if (filled > 0)
                 {
-                    AbstractGui.blit(SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
+                    AbstractGui.blit(matrixStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
                 }
 
                 RenderSystem.enableBlend();
@@ -3370,11 +3373,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             default:
                 if (this.getSize() == 1)
                 {
-                    this.fontRenderer.drawString(stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
+                    this.fontRenderer.drawString(matrixStack, stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
                 }
                 else
                 {
-                    this.fontRenderer.drawString(stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getText()) + 180, top, 16777215);
+                    this.fontRenderer.drawString(matrixStack, stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getText()) + 180, top, 16777215);
                 }
                 break;
             }
@@ -3398,7 +3401,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(int index, int left, int right, int top)
+        protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             if (!this.stats.isEmpty())
             {
@@ -3410,8 +3413,8 @@ public class SkyBlockAPIViewerScreen extends Screen
                     font = ClientUtils.unicodeFontRenderer;
                 }
 
-                font.drawString(StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
-                font.drawString(stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - font.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
+                font.drawString(matrixStack, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                font.drawString(matrixStack, stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - font.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
             }
         }
     }
@@ -3435,21 +3438,21 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(int index, int left, int right, int top)
+        protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             SBCollections collection = this.collection.get(index);
 
             if (!collection.getItemStack().isEmpty() && collection.getCollectionType() != null)
             {
-                this.parent.drawItemStackSlot(this.parent.guiLeft - 65, top, collection.getItemStack());
-                this.fontRenderer.drawString(collection.getItemStack().getDisplayName().getFormattedText() + " " + TextFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
-                this.fontRenderer.drawString(collection.getCollectionAmount(), this.parent.guiLeft - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 65, top, collection.getItemStack());
+                this.fontRenderer.drawString(matrixStack, collection.getItemStack().getDisplayName().getString() + " " + TextFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
+                this.fontRenderer.drawString(matrixStack, collection.getCollectionAmount(), this.parent.guiLeft - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (collection.getCollectionType() != null)
                 {
-                    this.fontRenderer.drawString(new StringTextComponent(collection.getCollectionType().getName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), this.parent.guiLeft - 65, top + 5, 16777215);
+                    this.fontRenderer.drawString(matrixStack, new StringTextComponent(collection.getCollectionType().getName()).mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getString(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }
             }
         }
@@ -3474,22 +3477,22 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(int index, int left, int right, int top)
+        protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             SBMinions.CraftedInfo craftedMinion = this.craftMinions.get(index);
 
             if (!craftedMinion.getMinionItem().isEmpty())
             {
                 String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
-                this.parent.drawItemStackSlot(this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
-                this.fontRenderer.drawString(name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
-                this.fontRenderer.drawString(craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.fontRenderer.getStringWidth(craftedMinion.getCraftedTiers()) + 192, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
+                this.fontRenderer.drawString(matrixStack, name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
+                this.fontRenderer.drawString(matrixStack, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.fontRenderer.getStringWidth(craftedMinion.getCraftedTiers()) + 192, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (craftedMinion.getMinionName() != null)
                 {
-                    this.fontRenderer.drawString(new StringTextComponent(craftedMinion.getMinionName()).applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getFormattedText(), this.parent.guiLeft - 100, top + 5, 16777215);
+                    this.fontRenderer.drawString(matrixStack, new StringTextComponent(craftedMinion.getMinionName()).mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getString(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
         }
@@ -3523,20 +3526,20 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private enum SlayerDrops
     {
-        TARANTULA_WEB(TextFormatting.RESET + "" + TextFormatting.GREEN + "Tarantula Web", Items.STRING),
-        REVENANT_FLESH(TextFormatting.RESET + "" + TextFormatting.GREEN + "Revenant Flesh", Items.ROTTEN_FLESH),
-        WOLF_TOOTH(TextFormatting.RESET + "" + TextFormatting.GREEN + "Wolf Tooth", Items.GHAST_TEAR);
+        TARANTULA_WEB(TextComponentUtils.formatted("Tarantula Web", TextFormatting.GREEN), Items.STRING),
+        REVENANT_FLESH(TextComponentUtils.formatted("Revenant Flesh", TextFormatting.GREEN), Items.ROTTEN_FLESH),
+        WOLF_TOOTH(TextComponentUtils.formatted("Wolf Tooth", TextFormatting.GREEN), Items.GHAST_TEAR);
 
-        private final String displayName;
+        private final IFormattableTextComponent displayName;
         private final Item baseItem;
 
-        private SlayerDrops(String displayName, Item baseItem)
+        private SlayerDrops(IFormattableTextComponent displayName, Item baseItem)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;
         }
 
-        public String getDisplayName()
+        public IFormattableTextComponent getDisplayName()
         {
             return this.displayName;
         }

@@ -27,7 +27,7 @@ public class BazaarViewerCommand implements IClientCommand
     {
         if (MainEventHandler.BAZAAR_DATA.isEmpty())
         {
-            ClientUtils.printClientMessage(LangUtils.translateComponent("commands.sbbazaar.empty_data").applyTextStyle(TextFormatting.RED));
+            ClientUtils.printClientMessage(LangUtils.translate("commands.sbbazaar.empty_data", TextFormatting.RED));
             return 1;
         }
         else if (MainEventHandler.BAZAAR_DATA.keySet().stream().anyMatch(product -> product.equals(itemId)))
@@ -42,7 +42,7 @@ public class BazaarViewerCommand implements IClientCommand
         }
         else
         {
-            ClientUtils.printClientMessage(LangUtils.translateComponent("commands.sbbazaar.id_not_found").applyTextStyle(TextFormatting.RED));
+            ClientUtils.printClientMessage(LangUtils.translate("commands.sbbazaar.id_not_found", TextFormatting.RED));
             return 1;
         }
     }

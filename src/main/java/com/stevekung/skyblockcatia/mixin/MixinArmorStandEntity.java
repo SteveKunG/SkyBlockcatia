@@ -15,7 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 @Mixin(ArmorStandEntity.class)
@@ -26,8 +26,8 @@ public abstract class MixinArmorStandEntity extends LivingEntity
         super(type, world);
     }
 
-    @Inject(method = "applyPlayerInteraction(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At("HEAD"))
-    private void applyPlayerInteraction(PlayerEntity player, Vec3d vec, Hand hand, CallbackInfoReturnable<ActionResultType> info)
+    @Inject(method = "applyPlayerInteraction(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/vector/Vector3d;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At("HEAD"))
+    private void applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand, CallbackInfoReturnable<ActionResultType> info)
     {
         for (ItemStack content : this.getEquipmentAndArmor())
         {

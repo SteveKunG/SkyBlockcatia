@@ -5,13 +5,13 @@ import java.util.*;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Ordering;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.event.GrapplingHookEvent;
 import com.stevekung.skyblockcatia.utils.CoordsPair;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
-import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.ModDecimalFormat;
 
 import net.minecraft.block.Block;
@@ -25,10 +25,9 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -101,7 +100,7 @@ public class HUDRenderEventHandler
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPreInfoRender(RenderGameOverlayEvent.Pre event)
     {
-        ForgeIngameGui.renderObjective = !this.mc.gameSettings.showDebugInfo;
+        MatrixStack matrixStack = event.getMatrixStack();
         double jungleAxeDelay = 0;
         double grapplingHookDelay = 0;
         double zealotRespawnDelay = 0;
@@ -182,7 +181,7 @@ public class HUDRenderEventHandler
                 float fontHeight = this.mc.fontRenderer.FONT_HEIGHT + 1;
                 float width = event.getWindow().getScaledWidth() / 2 + 1.0625F;
                 float height = event.getWindow().getScaledHeight() / 2 + 6 + fontHeight * center;
-                this.mc.fontRenderer.drawStringWithShadow(overlay.getColor() + overlay.getDelay(), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
+                this.mc.fontRenderer.drawStringWithShadow(matrixStack, overlay.color + overlay.getDelay(), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
                 center++;
             }
 
@@ -271,7 +270,7 @@ public class HUDRenderEventHandler
 
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
-            if (ZEALOT_SPAWN_AREA.stream().anyMatch(aabb -> aabb.contains(new Vec3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()))))
+            if (ZEALOT_SPAWN_AREA.stream().anyMatch(aabb -> aabb.contains(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ()))))
             {
                 if (entity instanceof EndermanEntity)
                 {
@@ -308,18 +307,13 @@ public class HUDRenderEventHandler
 
     static class CrosshairOverlay
     {
-        private final String color;
-        private final double delay;
+        final String color;
+        final double delay;
 
         CrosshairOverlay(String color, double delay)
         {
             this.color = color;
             this.delay = delay;
-        }
-
-        public String getColor()
-        {
-            return ColorUtils.stringToRGB(this.color).toColoredFont();
         }
 
         public String getDelay()

@@ -12,7 +12,6 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.stevekung.indicatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -21,14 +20,17 @@ import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
 import com.stevekung.skyblockcatia.gui.toasts.*;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.ToastMode;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
-import com.stevekung.stevekungslib.utils.*;
+import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.CommonUtils;
+import com.stevekung.stevekungslib.utils.GameProfileUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
@@ -65,7 +67,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SkyBlockEventHandler
 {
     private static final Pattern CUSTOM_FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-Z]");
-    private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/']");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
@@ -149,7 +150,7 @@ public class SkyBlockEventHandler
                     for (Score score1 : collection)
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.formatMemberName(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getFormattedText()).replaceAll("");
+                        String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.func_237500_a_(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getString()).replaceAll("");
 
                         if (scoreText.startsWith("Dragon HP: "))
                         {
@@ -170,7 +171,7 @@ public class SkyBlockEventHandler
                     for (Score score1 : collection)
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.formatMemberName(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getFormattedText()).replaceAll("");
+                        String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.func_237500_a_(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getString()).replaceAll("");
 
                         if (scoreText.endsWith("am"))
                         {
@@ -194,7 +195,7 @@ public class SkyBlockEventHandler
 
                     if (scoreObj != null)
                     {
-                        SkyBlockEventHandler.isSkyBlock = CUSTOM_FORMATTING_CODE_PATTERN.matcher(scoreObj.getDisplayName().getFormattedText()).replaceAll("").contains("SKYBLOCK");
+                        SkyBlockEventHandler.isSkyBlock = CUSTOM_FORMATTING_CODE_PATTERN.matcher(scoreObj.getDisplayName().getString()).replaceAll("").contains("SKYBLOCK");
                     }
                     else
                     {
@@ -213,7 +214,7 @@ public class SkyBlockEventHandler
     @SubscribeEvent
     public void onMouseClick(InputEvent.MouseInputEvent event)
     {
-        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && this.mc.pointedEntity != null && this.mc.pointedEntity instanceof RemoteClientPlayerEntity && this.mc.player.isSneaking() && InfoUtils.INSTANCE.isHypixel() && SBExtendedConfig.INSTANCE.sneakToTradeOtherPlayerIsland)
+        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && this.mc.pointedEntity != null && this.mc.pointedEntity instanceof RemoteClientPlayerEntity && this.mc.player.isSneaking() && SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.sneakToTradeOtherPlayerIsland)
         {
             RemoteClientPlayerEntity player = (RemoteClientPlayerEntity)this.mc.pointedEntity;
             ScoreObjective scoreObj = this.mc.world.getScoreboard().getObjectiveInDisplaySlot(1);
@@ -233,7 +234,7 @@ public class SkyBlockEventHandler
             for (Score score1 : collection)
             {
                 ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.formatMemberName(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getFormattedText()).replaceAll("");
+                String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.func_237500_a_(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getString()).replaceAll("");
 
                 if (scoreText.endsWith("'s Island"))
                 {
@@ -251,8 +252,8 @@ public class SkyBlockEventHandler
             return;
         }
 
-        String formattedMessage = event.getMessage().getFormattedText();
-        String message = event.getMessage().getString();
+        String formattedMessage = event.getMessage().getString();
+        String message = event.getMessage().getUnformattedComponentText();
         boolean cancelMessage = false;
 
         if (this.isHypixel())
@@ -339,12 +340,12 @@ public class SkyBlockEventHandler
                     calendar.add(Calendar.SECOND, second);
                     String date1 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
                     String date2 = new SimpleDateFormat("h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
-                    ClientUtils.printClientMessage(JsonUtils.create("Pet take care will be finished on " + date1 + " " + date2).applyTextStyle(TextFormatting.GREEN));
+                    ClientUtils.printClientMessage(TextComponentUtils.formatted("Pet take care will be finished on " + date1 + " " + date2, TextFormatting.GREEN));
                 }
 
                 if (SkyBlockcatiaMod.isIndicatiaLoaded && SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
                 {
-                    IndicatiaIntegration.savePartyChat();
+                    //                    IndicatiaIntegration.savePartyChat();TODO
                 }
                 if (SBExtendedConfig.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
@@ -372,7 +373,7 @@ public class SkyBlockEventHandler
 
                             if (SkyBlockEventHandler.isSkyBlock)
                             {
-                                ClientUtils.printClientMessage(JsonUtils.create("Current server day: ").applyTextStyles(TextFormatting.YELLOW, TextFormatting.BOLD).appendSibling(JsonUtils.create(String.valueOf(day)).applyTextStyles(TextFormatting.RESET, dayColor)));
+                                ClientUtils.printClientMessage(TextComponentUtils.formatted("Current server day: ", TextFormatting.YELLOW, TextFormatting.BOLD).append(TextComponentUtils.formatted(String.valueOf(day), TextFormatting.RESET, dayColor)));
                             }
                         }, 2500);
                     }
@@ -536,7 +537,7 @@ public class SkyBlockEventHandler
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
                             ItemStack itemStack = SBPets.Type.valueOf(TextFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase()).getPetItem();
-                            itemStack.setDisplayName(JsonUtils.create(name));
+                            itemStack.setDisplayName(TextComponentUtils.component(name));
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             ToastLog.logToast(message);
                             cancelMessage = isToast;
@@ -588,7 +589,7 @@ public class SkyBlockEventHandler
             if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
             {
                 ClientUtils.printClientMessage("Couldn't open API Viewer, Empty text in the Config!", TextFormatting.RED);
-                ClientUtils.printClientMessage(JsonUtils.create("Make sure you're in the Hypixel!").applyTextStyle(TextFormatting.YELLOW).appendSibling(JsonUtils.create(" Click Here to create an API key").applyTextStyle(TextFormatting.GOLD).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
+                ClientUtils.printClientMessage(TextComponentUtils.formatted("Make sure you're in the Hypixel!", TextFormatting.YELLOW).append(TextComponentUtils.formatted(" Click Here to create an API key", TextFormatting.GOLD).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
                 return;
             }
             if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
@@ -626,7 +627,7 @@ public class SkyBlockEventHandler
         {
             if (name.equals("records.13") && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.BLAZING_FORTRESS)
             {
-                this.mc.ingameGUI.displayTitle(JsonUtils.create("Preparing spawn...").applyTextStyle(TextFormatting.RED).getFormattedText(), JsonUtils.create("").getFormattedText(), 0, 1200, 20);
+                this.mc.ingameGUI.func_238452_a_(TextComponentUtils.formatted("Preparing spawn...", TextFormatting.RED), StringTextComponent.EMPTY, 0, 1200, 20);
                 this.mc.getSoundHandler().play(new SimpleSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP.getName(), SoundCategory.PLAYERS, 0.75F, 1.0F, false, 0, ISound.AttenuationType.NONE, (float)this.mc.player.getPosX() + 0.5F, (float)this.mc.player.getPosY() + 0.5F, (float)this.mc.player.getPosZ() + 0.5F, false));
             }
         }
@@ -673,7 +674,7 @@ public class SkyBlockEventHandler
                     DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
                     Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
                     String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
-                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Obtained: " + TextFormatting.RESET + formatted).applyTextStyle(TextFormatting.GRAY));
+                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Obtained: " + formatted, TextFormatting.GRAY));
                 }
                 if (SBExtendedConfig.INSTANCE.bazaarOnItemTooltip)
                 {
@@ -689,19 +690,19 @@ public class SkyBlockEventHandler
                                 double sellStack = 64 * product.getSellPrice();
                                 double buyCurrent = event.getItemStack().getCount() * product.getBuyPrice();
                                 double sellCurrent = event.getItemStack().getCount() * product.getSellPrice();
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Stack): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Buy/Sell (Stack): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
 
                                 if (event.getItemStack().getCount() > 1 && event.getItemStack().getCount() < 64)
                                 {
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (Current): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Buy/Sell (Current): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
                                 }
 
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Buy/Sell (One): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(entry.getValue().getLastUpdated())));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Buy/Sell (One): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(entry.getValue().getLastUpdated())));
                             }
                             else
                             {
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, JsonUtils.create("Press <SHIFT> to view Bazaar Buy/Sell").applyTextStyle(TextFormatting.GRAY));
+                                event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Press <SHIFT> to view Bazaar Buy/Sell", TextFormatting.GRAY));
                             }
                         }
                     }
@@ -714,7 +715,7 @@ public class SkyBlockEventHandler
         {
             for (ITextComponent tooltip : event.getToolTip())
             {
-                String lore = ITextComponent.Serializer.fromJson(ITextComponent.Serializer.toJson(tooltip)).getString();
+                String lore = TextComponentUtils.fromJson(tooltip);
 
                 SkyBlockEventHandler.replaceEventEstimateTime(lore, calendar, event.getToolTip(), dates, "Starts in: ");
                 SkyBlockEventHandler.replaceEventEstimateTime(lore, calendar, event.getToolTip(), dates, "Starting in: ");
@@ -733,7 +734,7 @@ public class SkyBlockEventHandler
     {
         if (event.getEntity() instanceof ArmorStandEntity && event.getEntity().hasCustomName())
         {
-            String name = event.getEntity().getCustomName().getFormattedText();
+            String name = event.getEntity().getCustomName().getString();
 
             if (name.contains("Sven Pup"))
             {
@@ -761,13 +762,13 @@ public class SkyBlockEventHandler
 
                 if (!previousItem.isEmpty())
                 {
-                    int amount = previousInventoryMap.getOrDefault(previousItem.getDisplayName().getFormattedText(), new ItemDropDiff(previousItem, 0)).count + previousItem.getCount();
-                    previousInventoryMap.put(previousItem.getDisplayName().getFormattedText(), new ItemDropDiff(previousItem, amount));
+                    int amount = previousInventoryMap.getOrDefault(previousItem.getDisplayName().getString(), new ItemDropDiff(previousItem, 0)).count + previousItem.getCount();
+                    previousInventoryMap.put(previousItem.getDisplayName().getString(), new ItemDropDiff(previousItem, amount));
                 }
                 if (!newItem.isEmpty())
                 {
-                    int amount = newInventoryMap.getOrDefault(newItem.getDisplayName().getFormattedText(), new ItemDropDiff(newItem, 0)).count + newItem.getCount();
-                    newInventoryMap.put(newItem.getDisplayName().getFormattedText(), new ItemDropDiff(newItem, amount));
+                    int amount = newInventoryMap.getOrDefault(newItem.getDisplayName().getString(), new ItemDropDiff(newItem, 0)).count + newItem.getCount();
+                    newInventoryMap.put(newItem.getDisplayName().getString(), new ItemDropDiff(newItem, amount));
                 }
             }
 
@@ -848,7 +849,8 @@ public class SkyBlockEventHandler
     public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
     {
         ItemStack itemStack = skill.getItemStack();
-        itemStack.setDisplayName(JsonUtils.create(ColorUtils.stringToRGB("255,255,85").toColoredFont() + exp + " " + skill.getName() + " XP"));
+        IFormattableTextComponent component = TextComponentUtils.component(exp + " " + skill.getName() + " XP");
+        itemStack.setDisplayName(component.setStyle(component.getStyle().setColor(Color.fromHex(ColorUtils.toHex(255, 255, 85)))));
         return itemStack;
     }
 
@@ -890,9 +892,9 @@ public class SkyBlockEventHandler
             calendar.add(Calendar.SECOND, secondF);
             String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ENGLISH).format(calendar.getTime());
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-            dates.add(JsonUtils.create("Event starts at: ").applyTextStyle(TextFormatting.GRAY));
-            dates.add(JsonUtils.create(TextFormatting.YELLOW + date1));
-            dates.add(JsonUtils.create(TextFormatting.YELLOW + date2));
+            dates.add(TextComponentUtils.component("Event starts at: ").mergeStyle(TextFormatting.GRAY));
+            dates.add(TextComponentUtils.component(TextFormatting.YELLOW + date1));
+            dates.add(TextComponentUtils.component(TextFormatting.YELLOW + date2));
 
             int indexToRemove = 0;
 
@@ -905,7 +907,7 @@ public class SkyBlockEventHandler
             }
             if (!ClientUtils.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, JsonUtils.create("Press <SHIFT> to view exact time").applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(indexToRemove + 1, TextComponentUtils.component("Press <SHIFT> to view exact time").mergeStyle(TextFormatting.GRAY));
             }
             else
             {
@@ -952,9 +954,9 @@ public class SkyBlockEventHandler
             }
 
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ENGLISH).format(calendar.getTime());
-            dates.add(JsonUtils.create("Interest receive at: ").applyTextStyle(TextFormatting.GRAY));
-            dates.add(JsonUtils.create(TextFormatting.YELLOW + date1));
-            dates.add(JsonUtils.create(TextFormatting.YELLOW + date2));
+            dates.add(TextComponentUtils.component("Interest receive at: ").mergeStyle(TextFormatting.GRAY));
+            dates.add(TextComponentUtils.component(TextFormatting.YELLOW + date1));
+            dates.add(TextComponentUtils.component(TextFormatting.YELLOW + date2));
 
             int indexToRemove = 0;
 
@@ -968,7 +970,7 @@ public class SkyBlockEventHandler
             }
             if (!ClientUtils.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, JsonUtils.create("Press <SHIFT> to view exact time").applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(indexToRemove + 1, TextComponentUtils.component("Press <SHIFT> to view exact time").mergeStyle(TextFormatting.GRAY));
             }
             else
             {
@@ -1035,13 +1037,13 @@ public class SkyBlockEventHandler
 
                 if (name.equals("Auction View"))
                 {
-                    dates.add(JsonUtils.create("Ends at: " + TextFormatting.YELLOW + date1 + ", " + date2).applyTextStyle(TextFormatting.GRAY));
+                    dates.add(TextComponentUtils.component("Ends at: " + TextFormatting.YELLOW + date1 + ", " + date2).mergeStyle(TextFormatting.GRAY));
                 }
                 else
                 {
-                    dates.add(JsonUtils.create("Ends at: ").applyTextStyle(TextFormatting.GRAY));
-                    dates.add(JsonUtils.create(TextFormatting.YELLOW + date1));
-                    dates.add(JsonUtils.create(TextFormatting.YELLOW + date2));
+                    dates.add(TextComponentUtils.component("Ends at: ").mergeStyle(TextFormatting.GRAY));
+                    dates.add(TextComponentUtils.component(TextFormatting.YELLOW + date1));
+                    dates.add(TextComponentUtils.component(TextFormatting.YELLOW + date2));
                 }
             }
 
@@ -1057,7 +1059,7 @@ public class SkyBlockEventHandler
             }
             if (!ClientUtils.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, JsonUtils.create("Press <SHIFT> to view exact time").applyTextStyle(TextFormatting.GRAY));
+                tooltip.add(indexToRemove + 1, TextComponentUtils.component("Press <SHIFT> to view exact time").mergeStyle(TextFormatting.GRAY));
             }
             else
             {

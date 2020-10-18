@@ -2,12 +2,15 @@ package com.stevekung.skyblockcatia.mixin;
 
 import java.util.List;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
@@ -26,6 +29,10 @@ public abstract class MixinEditSignScreen extends Screen
 {
     private final EditSignScreen that = (EditSignScreen) (Object) this;
     private SignSelectionList globalSelector;
+
+    @Shadow
+    @Final
+    private String[] field_238846_r_;
 
     public MixinEditSignScreen(ITextComponent title)
     {
@@ -82,8 +89,8 @@ public abstract class MixinEditSignScreen extends Screen
         }
     }
 
-    @Inject(method = "removed()V", at = @At("HEAD"))
-    private void removed(CallbackInfo info)
+    @Inject(method = "closeScreen()V", at = @At("HEAD"))
+    private void closeScreen(CallbackInfo info)
     {
         this.that.tileSign.markDirty();
 
@@ -93,14 +100,14 @@ public abstract class MixinEditSignScreen extends Screen
         }
     }
 
-    @Inject(method = "render(IIF)V", at = @At("RETURN"))
-    private void render(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
+    @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", at = @At("RETURN"))
+    private void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
             if (this.globalSelector != null)
             {
-                this.globalSelector.render(mouseX, mouseY, partialTicks);
+                this.globalSelector.render(matrixStack, mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -108,7 +115,7 @@ public abstract class MixinEditSignScreen extends Screen
     @Overwrite
     private void close()
     {
-        String text = this.that.tileSign.signText[0].getString();
+        String text = this.field_238846_r_[0];
 
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -146,7 +153,7 @@ public abstract class MixinEditSignScreen extends Screen
                         this.minecraft.displayGuiScreen(this);
                     }
                 }
-                , LangUtils.translateComponent("message.bid_confirm_title"), LangUtils.translateComponent("message.bid_confirm")));
+                , LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm")));
             }
             else
             {
@@ -168,36 +175,36 @@ public abstract class MixinEditSignScreen extends Screen
 
     private boolean isAuctionStartBidSign()
     {
-        return this.that.tileSign.signText[2].getString().equals("Your auction") && this.that.tileSign.signText[3].getString().equals("starting bid");
+        return this.field_238846_r_[2].equals("Your auction") && this.field_238846_r_[3].equals("starting bid");
     }
 
     private boolean isAuctionPrice()
     {
-        return this.that.tileSign.signText[2].getString().equals("auction bid") && this.that.tileSign.signText[3].getString().equals("amount");
+        return this.field_238846_r_[2].equals("auction bid") && this.field_238846_r_[3].equals("amount");
     }
 
     private boolean isBazaarPrice()
     {
-        return this.that.tileSign.signText[2].getString().equals("Enter price") && this.that.tileSign.signText[3].getString().equals("big nerd");
+        return this.field_238846_r_[2].equals("Enter price") && this.field_238846_r_[3].equals("big nerd");
     }
 
     private boolean isAuctionQuery()
     {
-        return this.that.tileSign.signText[3].getString().equals("Enter query");
+        return this.field_238846_r_[3].equals("Enter query");
     }
 
     private boolean isBankWithdraw()
     {
-        return this.that.tileSign.signText[2].getString().equals("Enter the amount") && this.that.tileSign.signText[3].getString().equals("to withdraw");
+        return this.field_238846_r_[2].equals("Enter the amount") && this.field_238846_r_[3].equals("to withdraw");
     }
 
     private boolean isBankDeposit()
     {
-        return this.that.tileSign.signText[2].getString().equals("Enter the amount") && this.that.tileSign.signText[3].getString().equals("to deposit");
+        return this.field_238846_r_[2].equals("Enter the amount") && this.field_238846_r_[3].equals("to deposit");
     }
 
     private boolean isBazaarOrder()
     {
-        return this.that.tileSign.signText[2].getString().equals("Enter amount") && this.that.tileSign.signText[3].getString().equals("to order");
+        return this.field_238846_r_[2].equals("Enter amount") && this.field_238846_r_[3].equals("to order");
     }
 }

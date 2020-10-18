@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
@@ -106,7 +107,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
     }
 
     @SuppressWarnings("deprecation")
-    public void render(int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder worldr = tess.getBuffer();
@@ -117,7 +118,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
 
         if (this.mc.world != null)
         {
-            GuiUtils.drawGradientRect(0, this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
+            GuiUtils.drawGradientRect(matrixStack.getLast().getMatrix(), 0, this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
         }
         else
         {
@@ -143,7 +144,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
 
             if (top <= this.bottom && top + slotBuffer >= this.top)
             {
-                this.drawPanel(index, this.left, this.right, top);
+                this.drawPanel(matrixStack, index, this.left, this.right, top);
             }
         }
 
@@ -202,7 +203,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
         return 1;
     }
 
-    protected abstract void drawPanel(int index, int left, int right, int top);
+    protected abstract void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top);
 
     private int getContentHeight()
     {

@@ -16,20 +16,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
 import com.stevekung.skyblockcatia.utils.SearchMode;
-import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.client.gui.NumberWidget;
 import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.ColorUtils.RGB;
 import com.stevekung.stevekungslib.utils.CommonUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
@@ -44,7 +43,6 @@ import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
@@ -52,6 +50,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -100,7 +99,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             {
                 this.minecraft.keyboardListener.enableRepeatEvents(true);
                 this.sentHistoryCursor = this.minecraft.ingameGUI.getChatGUI().getSentMessages().size();
-                this.inputField = new TextFieldWidget(this.font, 4, this.height - 12, this.width - 4, 12, I18n.format("chat.editBox"));
+                this.inputField = new TextFieldWidget(this.font, 4, this.height - 12, this.width - 4, 12, TextComponentUtils.component("chat.editBox"));
                 this.inputField.setMaxStringLength(256);
                 this.inputField.setEnableBackgroundDrawing(false);
                 this.inputField.setText("");
@@ -112,13 +111,13 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
             if (this.isPeopleAuction())
             {
-                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 70, 70, 20, "Copy Seller", button ->
+                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 70, 70, 20, TextComponentUtils.component("Copy Seller"), button ->
                 {
                     String title = this.title.getUnformattedComponentText();
-                    ClientUtils.printClientMessage(JsonUtils.create("Copied seller auction command!").applyTextStyle(TextFormatting.GREEN));
+                    ClientUtils.printClientMessage(TextComponentUtils.formatted("Copied seller auction command!", TextFormatting.GREEN));
                     this.minecraft.keyboardListener.setClipboardString("/ah " + title.replace(title.substring(title.indexOf('\'')), ""));
                 }));
-                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 92, 70, 20, "View API", button ->
+                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 92, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getUnformattedComponentText();
                     this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
@@ -126,7 +125,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
             if (this.isPeopleProfile())
             {
-                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, "View API", button ->
+                this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getUnformattedComponentText();
                     this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
@@ -162,8 +161,8 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    @Inject(method = "removed()V", at = @At("RETURN"))
-    private void removed(CallbackInfo info)
+    @Inject(method = "closeScreen()V", at = @At("RETURN"))
+    private void closeScreen(CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
@@ -195,8 +194,8 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    @Inject(method = "render(IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/Screen.render(IIF)V", shift = Shift.BEFORE))
-    private void render(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
+    @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/Screen.render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", shift = Shift.BEFORE))
+    private void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
@@ -209,17 +208,17 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     RenderSystem.disableAlphaTest();
                     RenderSystem.pushMatrix();
                     RenderSystem.translatef(0.0F, this.height - 48, 0.0F);
-                    this.renderChat();
+                    this.renderChat(matrixStack);
                     RenderSystem.popMatrix();
                 }
-                AbstractGui.fill(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
-                this.commandSuggestionHelper.render(mouseX, mouseY);
-                this.inputField.render(mouseX, mouseY, partialTicks);
+                AbstractGui.fill(matrixStack, 2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+                this.commandSuggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
+                this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             if (this.priceSearch != null && this.isAuctionBrowser())
             {
-                this.drawString(this.font, "Search for price:", this.that.getGuiLeft() + 180, this.that.getGuiTop() + 26, 10526880);
-                this.priceSearch.render(mouseX, mouseY, partialTicks);
+                AbstractGui.drawString(matrixStack, this.font, "Search for price:", this.that.getGuiLeft() + 180, this.that.getGuiTop() + 26, 10526880);
+                this.priceSearch.render(matrixStack, mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -393,7 +392,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
             if (this.that instanceof ChestScreen)
             {
-                String name = itemStack.getDisplayName().getFormattedText();
+                String name = itemStack.getDisplayName().getString();
 
                 if (mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
                 {
@@ -412,7 +411,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                             for (int j1 = 0; j1 < list.size(); ++j1)
                             {
-                                String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
+                                String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
 
                                 if (lore.startsWith("Seller: "))
                                 {
@@ -427,69 +426,70 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V"))
-    private void renderRarity(Slot slot, CallbackInfo info)
-    {
-        if (SBExtendedConfig.INSTANCE.showItemRarity)
-        {
-            SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
+    //XXX REMOVE
+    //    @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V"))
+    //    private void renderRarity(Slot slot, CallbackInfo info)
+    //    {
+    //        if (SBExtendedConfig.INSTANCE.showItemRarity)
+    //        {
+    //            SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
+    //
+    //            if (this.that instanceof ChestScreen)
+    //            {
+    //                if (this.getTitle().getUnformattedComponentText().matches("\\(\\d+\\/\\d+\\) Pets") || this.getTitle().getUnformattedComponentText().equals("Pets"))
+    //                {
+    //                    if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
+    //                    {
+    //                        Matcher matcher = PET_MENU_PATTERN.matcher(slot.getStack().getDisplayName().getString());
+    //
+    //                        if (matcher.matches())
+    //                        {
+    //                            String color = matcher.group("color");
+    //                            RGB common = ColorUtils.stringToRGB("255,255,255");
+    //                            RGB uncommon = ColorUtils.stringToRGB("85,255,85");
+    //                            RGB rare = ColorUtils.stringToRGB("85,85,255");
+    //                            RGB epic = ColorUtils.stringToRGB("170,0,170");
+    //                            RGB legendary = ColorUtils.stringToRGB("255,170,0");
+    //                            RGB mythic = ColorUtils.stringToRGB("255,85,255");
+    //                            RGB special = ColorUtils.stringToRGB("255,85,85");
+    //
+    //                            if (color.equals(TextFormatting.WHITE.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, common);
+    //                            }
+    //                            else if (color.equals(TextFormatting.GREEN.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, uncommon);
+    //                            }
+    //                            else if (color.equals(TextFormatting.BLUE.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, rare);
+    //                            }
+    //                            else if (color.equals(TextFormatting.DARK_PURPLE.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, epic);
+    //                            }
+    //                            else if (color.equals(TextFormatting.GOLD.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, legendary);
+    //                            }
+    //                            else if (color.equals(TextFormatting.LIGHT_PURPLE.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, mythic);
+    //                            }
+    //                            else if (color.equals(TextFormatting.RED.toString()))
+    //                            {
+    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, special);
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
 
-            if (this.that instanceof ChestScreen)
-            {
-                if (this.getTitle().getUnformattedComponentText().matches("\\(\\d+\\/\\d+\\) Pets") || this.getTitle().getUnformattedComponentText().equals("Pets"))
-                {
-                    if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
-                    {
-                        Matcher matcher = PET_MENU_PATTERN.matcher(slot.getStack().getDisplayName().getFormattedText());
-
-                        if (matcher.matches())
-                        {
-                            String color = matcher.group("color");
-                            RGB common = ColorUtils.stringToRGB("255,255,255");
-                            RGB uncommon = ColorUtils.stringToRGB("85,255,85");
-                            RGB rare = ColorUtils.stringToRGB("85,85,255");
-                            RGB epic = ColorUtils.stringToRGB("170,0,170");
-                            RGB legendary = ColorUtils.stringToRGB("255,170,0");
-                            RGB mythic = ColorUtils.stringToRGB("255,85,255");
-                            RGB special = ColorUtils.stringToRGB("255,85,85");
-
-                            if (color.equals(TextFormatting.WHITE.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, common);
-                            }
-                            else if (color.equals(TextFormatting.GREEN.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, uncommon);
-                            }
-                            else if (color.equals(TextFormatting.BLUE.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, rare);
-                            }
-                            else if (color.equals(TextFormatting.DARK_PURPLE.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, epic);
-                            }
-                            else if (color.equals(TextFormatting.GOLD.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, legendary);
-                            }
-                            else if (color.equals(TextFormatting.LIGHT_PURPLE.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, mythic);
-                            }
-                            else if (color.equals(TextFormatting.RED.toString()))
-                            {
-                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, special);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER))
-    private void renderAnvilLevel(Slot slot, CallbackInfo info)
+    @Inject(method = "moveItems(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER))
+    private void renderAnvilLevel(MatrixStack matrixStack, Slot slot, CallbackInfo info)
     {
         if (this.that instanceof ChestScreen)
         {
@@ -514,7 +514,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                         for (int j1 = 0; j1 < list.size(); ++j1)
                         {
-                            String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
+                            String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
 
                             if (lore.endsWith("Exp Levels") || lore.endsWith("Exp Level"))
                             {
@@ -554,21 +554,21 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 RenderSystem.pushMatrix();
                 RenderSystem.disableDepthTest();
                 RenderSystem.translatef(0.0F, 0.0F, 300.0F);
-                this.drawCenteredString(this.font, levelString, i + 8, j + 4, 0);
+                AbstractGui.drawCenteredString(matrixStack, this.font, levelString, i + 8, j + 4, 0);
                 RenderSystem.enableDepthTest();
                 RenderSystem.popMatrix();
             }
         }
     }
 
-    @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderBids(Slot slot, CallbackInfo info)
+    @Inject(method = "moveItems(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
+    private void renderBids(MatrixStack matrixStack, Slot slot, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
             if (MainEventHandler.bidHighlight && this.isRenderBids())
             {
-                this.renderBids(slot);
+                this.renderBids(matrixStack, slot);
             }
         }
     }
@@ -677,7 +677,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
     private void setCommandResponder()
     {
-        this.commandSuggestionHelper.func_228124_a_(false);
+        this.commandSuggestionHelper.shouldAutoSuggest(false);
         this.commandSuggestionHelper.init();
     }
 
@@ -706,17 +706,17 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     this.historyBuffer = this.inputField.getText();
                 }
                 this.inputField.setText(this.minecraft.ingameGUI.getChatGUI().getSentMessages().get(i));
-                this.commandSuggestionHelper.func_228124_a_(false);
+                this.commandSuggestionHelper.shouldAutoSuggest(false);
                 this.sentHistoryCursor = i;
             }
         }
     }
 
-    private void renderChat()
+    private void renderChat(MatrixStack matrixStack)
     {
         NewChatGui chat = this.minecraft.ingameGUI.getChatGUI();
 
-        if (chat.isChatVisible())
+        if (true)//TODO chat.isChatVisible()
         {
             int i = chat.getLineCount();
             int j = chat.drawnChatLines.size();
@@ -731,7 +731,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                 for (int i1 = 0; i1 + chat.scrollPos < chat.drawnChatLines.size() && i1 < i; ++i1)
                 {
-                    ChatLine chatline = chat.drawnChatLines.get(i1 + chat.scrollPos);
+                    ChatLine<IReorderingProcessor> chatline = chat.drawnChatLines.get(i1 + chat.scrollPos);
 
                     if (chatline != null)
                     {
@@ -744,9 +744,8 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                             if (l1 > 3)
                             {
                                 int k2 = -i1 * 9;
-                                String s = chatline.getChatComponent().getFormattedText();
                                 RenderSystem.enableBlend();
-                                this.font.drawStringWithShadow(s, 0.0F, k2 - 8, 16777215 + (l1 << 24));
+                                this.font.func_238407_a_(matrixStack, chatline.getLineString(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
                                 RenderSystem.disableAlphaTest();
                                 RenderSystem.disableBlend();
                             }
@@ -758,7 +757,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    private void renderBids(Slot slot)
+    private void renderBids(MatrixStack matrixStack, Slot slot)
     {
         if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
         {
@@ -774,21 +773,21 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     int slotTop = slot.yPos;
                     int slotRight = slotLeft + 16;
                     int slotBottom = slotTop + 16;
-                    String lore = TextFormatting.getTextWithoutFormattingCodes(ITextComponent.Serializer.fromJson(list.getString(j1)).getString());
+                    String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
                     Matcher matcher = Pattern.compile("(?:(?:Top|Starting) bid|Buy it now): (?<coin>[0-9,]+) coins").matcher(lore);
-                    int red = ColorUtils.to32BitColor(128, 255, 85, 85);
-                    int green = ColorUtils.to32BitColor(128, 85, 255, 85);
-                    int yellow = ColorUtils.to32BitColor(128, 255, 255, 85);
+                    int red = ColorUtils.to32Bit(255, 85, 85, 128);
+                    int green = ColorUtils.to32Bit(85, 255, 85, 128);
+                    int yellow = ColorUtils.to32Bit(255, 255, 85, 128);
 
                     if (((ITradeScreen)(ChestScreen)this.that).getNumberField() == null || ((ITradeScreen)(ChestScreen)this.that).getNumberField().getText().isEmpty())
                     {
                         if (lore.startsWith("Starting bid:"))
                         {
-                            this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, green, green);
+                            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
                         }
                         else if (lore.startsWith("Bidder:"))
                         {
-                            this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, red, red);
+                            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, red, red);
                         }
                     }
                     else
@@ -828,15 +827,15 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                                 if (lore.startsWith("Top bid:"))
                                 {
-                                    this.checkCondition(moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, yellow, red);
+                                    this.checkCondition(matrixStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, yellow, red);
                                 }
                                 else if (lore.startsWith("Starting bid:"))
                                 {
-                                    this.checkCondition(moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
+                                    this.checkCondition(matrixStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
                                 }
                                 else if (lore.startsWith("Buy it now:"))
                                 {
-                                    this.checkCondition(moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
+                                    this.checkCondition(matrixStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
                                 }
                             }
                         }
@@ -847,7 +846,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    private void checkCondition(int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)
+    private void checkCondition(MatrixStack matrixStack, int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)
     {
         switch (this.mode)
         {
@@ -855,41 +854,41 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         case SIMPLE:
             if (moneyFromText == moneyFromAh)
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
             }
             else
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
             }
             break;
         case MIN:
             if (moneyFromAh >= priceMin)
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
             }
             else
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
             }
             break;
         case MAX:
             if (moneyFromAh <= priceMax)
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
             }
             else
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
             }
             break;
         case RANGED:
             if (moneyFromAh >= priceMin && moneyFromAh <= priceMax)
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
             }
             else
             {
-                this.fillGradient(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
             }
             break;
         }

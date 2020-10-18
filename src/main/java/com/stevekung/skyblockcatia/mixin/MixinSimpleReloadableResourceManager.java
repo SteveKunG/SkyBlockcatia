@@ -6,7 +6,6 @@ import java.util.concurrent.Executor;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,11 +16,7 @@ import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.ClientResourcePackInfo;
-import net.minecraft.resources.IAsyncReloader;
-import net.minecraft.resources.IResourcePack;
-import net.minecraft.resources.ResourcePackType;
-import net.minecraft.resources.SimpleReloadableResourceManager;
+import net.minecraft.resources.*;
 import net.minecraft.util.Unit;
 
 @Mixin(SimpleReloadableResourceManager.class)
@@ -29,7 +24,6 @@ public abstract class MixinSimpleReloadableResourceManager
 {
     @Shadow
     @Final
-    @Mutable
     private ResourcePackType type;
 
     @Inject(method = "reloadResources(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/resources/IAsyncReloader;", at = @At("HEAD"))
@@ -39,7 +33,7 @@ public abstract class MixinSimpleReloadableResourceManager
         {
             boolean found = false;
 
-            for (ClientResourcePackInfo entry : Minecraft.getInstance().getResourcePackList().getEnabledPacks())
+            for (ResourcePackInfo entry : Minecraft.getInstance().getResourcePackList().getEnabledPacks())
             {
                 String packName = entry.getResourcePack().getName();
                 String packDesc = entry.getDescription().getUnformattedComponentText();

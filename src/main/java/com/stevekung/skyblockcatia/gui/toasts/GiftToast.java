@@ -2,9 +2,11 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.util.Random;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
-import com.stevekung.stevekungslib.utils.JsonUtils;
+import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.IToast;
@@ -29,24 +31,25 @@ public class GiftToast implements IToast
         this.texture = new ResourceLocation("skyblockcatia:textures/gui/gift_toasts_" + (santaGift ? 1 : Integer.valueOf(1 + this.rand.nextInt(2))) + ".png");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public IToast.Visibility draw(ToastGui toastGui, long delta)
+    public IToast.Visibility func_230444_a_(MatrixStack matrixStack, ToastGui toastGui, long delta)
     {
         ToastUtils.ItemDrop drop = this.itemDrop;
         boolean isSanta = this.itemDrop.getType() == ToastUtils.DropType.SANTA_TIER;
         ItemStack itemStack = drop.getItemStack();
-        String itemName = itemStack.getDisplayName().getFormattedText();
+        String itemName = itemStack.getDisplayName().getString();
 
         if (itemStack.getItem() == Items.ENCHANTED_BOOK)
         {
-            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1).getFormattedText();
+            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1).getString();
         }
 
         toastGui.getMinecraft().getTextureManager().bindTexture(this.texture);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-        AbstractGui.blit(0, 0, 0, 0, 160, 32, 160, 32);
-        toastGui.getMinecraft().fontRenderer.drawString(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).applyTextStyle(TextFormatting.BOLD).getFormattedText(), 30, 7, 16777215);
-        SBRenderUtils.drawLongItemName(toastGui, delta, 0L, itemName, isSanta ? 2000L : 500L, this.drawTime, 5000L, 8000L, false);
+        AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
+        toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
+        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, itemName, isSanta ? 2000L : 500L, this.drawTime, 5000L, 8000L, false);
         RenderSystem.translatef(0.0F, 0.0F, -32.0F);
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, 8, 8);
         toastGui.getMinecraft().getItemRenderer().renderItemOverlayIntoGUI(toastGui.getMinecraft().fontRenderer, itemStack, 8, 8, null);

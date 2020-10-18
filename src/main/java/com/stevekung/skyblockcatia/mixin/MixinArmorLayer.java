@@ -16,7 +16,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.ArmorLayer;
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -27,11 +27,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-@Mixin(ArmorLayer.class)
+@Mixin(BipedArmorLayer.class)
 public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedModel<T>, A extends BipedModel<T>> extends LayerRenderer<T, M>
 {
-    private final ArmorLayer<T, M, A> that = (ArmorLayer) (Object) this;
-
     @Shadow
     protected abstract void setModelSlotVisible(A modelIn, EquipmentSlotType slot);
 
@@ -40,6 +38,12 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
     @Shadow
     protected abstract boolean isLegSlot(EquipmentSlotType slot);
+
+    @Shadow
+    private A func_241736_a_(EquipmentSlotType slot)
+    {
+        return null;
+    }
 
     public MixinArmorLayer(IEntityRenderer<T, M> renderer)
     {
@@ -69,7 +73,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
             if (armorItem.getEquipmentSlot() == slot)
             {
-                A model = this.that.getModelFromSlot(slot);
+                A model = this.func_241736_a_(slot);
                 ResourceLocation location = this.getArmorType(itemStack.getTag().getCompound("ExtraAttributes").getString("id"), this.isLegSlot(slot));
                 model = this.getArmorModelHook(entity, itemStack, slot, model);
                 ((BipedModel)this.getEntityModel()).setModelAttributes(model);

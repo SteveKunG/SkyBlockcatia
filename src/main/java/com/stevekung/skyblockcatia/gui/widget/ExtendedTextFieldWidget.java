@@ -5,6 +5,7 @@ import com.stevekung.skyblockcatia.gui.config.TextFieldConfigOption;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.text.StringTextComponent;
 
 public class ExtendedTextFieldWidget extends TextFieldWidget
 {
@@ -14,7 +15,7 @@ public class ExtendedTextFieldWidget extends TextFieldWidget
 
     public ExtendedTextFieldWidget(int x, int y, int width, TextFieldConfigOption textFieldOption)
     {
-        super(Minecraft.getInstance().fontRenderer, x, y, width, 20, "");
+        super(Minecraft.getInstance().fontRenderer, x, y, width, 20, StringTextComponent.EMPTY);
         this.textFieldOption = textFieldOption;
         this.setText(textFieldOption.get());
         this.setVisible(true);

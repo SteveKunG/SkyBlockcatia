@@ -8,10 +8,11 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
-import com.stevekung.stevekungslib.utils.JsonUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -56,13 +57,13 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
         {
             this.addEntry(new Entry(element.getValue(), parent));
         }
-        Collections.reverse(this.children());
+        Collections.reverse(this.getEventListeners());
     }
 
     @Override
     protected boolean isFocused()
     {
-        return this.parent.getFocused() == this;
+        return this.parent.getListener() == this;
     }
 
     @Override
@@ -78,12 +79,12 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks)
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         int k = this.getRowLeft();
         int l = this.y0 + 4 - (int)this.getScrollAmount();
-        this.renderList(k, l, mouseX, mouseY, partialTicks);
-        this.minecraft.fontRenderer.drawString(this.title + ":", k, this.y0 - 12, 16777215);
+        this.renderList(matrixStack, k, l, mouseX, mouseY, partialTicks);
+        this.minecraft.fontRenderer.drawString(matrixStack, this.title + ":", k, this.y0 - 12, 16777215);
     }
 
     public void add(String value, EditSignScreen parent)
@@ -117,9 +118,9 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
         }
 
         @Override
-        public void render(int index, int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks)
+        public void render(MatrixStack matrixStack, int index, int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks)
         {
-            this.mc.fontRenderer.drawString(this.value, rowLeft + 2, rowTop + 2, 16777215);
+            this.mc.fontRenderer.drawString(matrixStack, this.value, rowLeft + 2, rowTop + 2, 16777215);
         }
 
         @Override
@@ -150,7 +151,7 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
                                     this.mc.displayGuiScreen(this.parent);
                                 }
                             }
-                            , LangUtils.translateComponent("message.bid_confirm_title"), LangUtils.translateComponent("message.bid_confirm")));
+                            , LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm")));
                         }
                         else
                         {
@@ -164,8 +165,8 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
                     return true;
                 }
                 SignSelectionList.this.setSelected(this);
-                sign.setText(0, JsonUtils.create(this.value));
-                ((EditSignScreen)this.mc.currentScreen).textInputUtil.putCursorAtEnd();
+                sign.setText(0, TextComponentUtils.component(this.value));
+                ((EditSignScreen)this.mc.currentScreen).textInputUtil.moveCursorToEnd();
                 this.lastClicked = Util.milliTime();
                 return true;
             }
@@ -215,7 +216,7 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
 
         if (clientplaynethandler != null)
         {
-            clientplaynethandler.sendPacket(new CUpdateSignPacket(sign.getPos(), sign.getText(0), sign.getText(1), sign.getText(2), sign.getText(3)));
+            clientplaynethandler.sendPacket(new CUpdateSignPacket(sign.getPos(), sign.getText(0).getString(), sign.getText(1).getString(), sign.getText(2).getString(), sign.getText(3).getString()));
         }
         sign.setEditable(true);
     }

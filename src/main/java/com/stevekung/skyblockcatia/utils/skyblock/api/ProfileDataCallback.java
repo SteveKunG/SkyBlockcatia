@@ -2,12 +2,15 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
+
+import net.minecraft.util.text.ITextComponent;
 
 public class ProfileDataCallback
 {
     private JsonObject sbProfile;
     private String sbProfileId;
-    private String profileName;
+    private ITextComponent profileName;
     private String username;
     private String displayName;
     private String uuid;
@@ -15,7 +18,7 @@ public class ProfileDataCallback
     private GameProfile profile;
     private long lastSave;
 
-    public ProfileDataCallback(String sbProfileId, String profileName, String username, String displayName, String guild, String uuid, GameProfile profile, long lastSave)
+    public ProfileDataCallback(String sbProfileId, ITextComponent profileName, String username, String displayName, String guild, String uuid, GameProfile profile, long lastSave)
     {
         this.sbProfileId = sbProfileId;
         this.profileName = profileName;
@@ -48,9 +51,9 @@ public class ProfileDataCallback
         return this.sbProfile == null ? this.sbProfileId : this.sbProfile.get("profile_id").getAsString();
     }
 
-    public String getProfileName()
+    public ITextComponent getProfileName()
     {
-        return this.sbProfile == null ? this.profileName : this.sbProfile.get("cute_name").getAsString();
+        return this.sbProfile == null ? this.profileName : TextComponentUtils.component(this.sbProfile.get("cute_name").getAsString());
     }
 
     public String getUsername()

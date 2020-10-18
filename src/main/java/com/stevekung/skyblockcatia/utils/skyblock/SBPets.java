@@ -114,12 +114,12 @@ public class SBPets
         PET_ITEM_IRON_CLAWS_COMMON("PET_ITEM_IRON_CLAWS", TextFormatting.WHITE),
         PET_ITEM_SHARPENED_CLAWS_UNCOMMON("PET_ITEM_SHARPENED_CLAWS", TextFormatting.GREEN),
         PET_ITEM_HARDENED_SCALES_UNCOMMON("PET_ITEM_HARDENED_SCALES", TextFormatting.GREEN),
-        PET_ITEM_BUBBLEGUM(null, TextFormatting.BLUE),
-        PET_ITEM_LUCKY_CLOVER(null, TextFormatting.DARK_PURPLE),
-        PET_ITEM_TEXTBOOK(null, TextFormatting.GOLD),
-        PET_ITEM_SADDLE(null, TextFormatting.GREEN),
-        PET_ITEM_EXP_SHARE(null, TextFormatting.DARK_PURPLE),
-        PET_ITEM_TIER_BOOST(null, TextFormatting.GOLD),
+        PET_ITEM_BUBBLEGUM(TextFormatting.BLUE),
+        PET_ITEM_LUCKY_CLOVER(TextFormatting.DARK_PURPLE),
+        PET_ITEM_TEXTBOOK(TextFormatting.GOLD),
+        PET_ITEM_SADDLE(TextFormatting.GREEN),
+        PET_ITEM_EXP_SHARE(TextFormatting.DARK_PURPLE),
+        PET_ITEM_TIER_BOOST(TextFormatting.GOLD),
         PET_ITEM_COMBAT_SKILL_BOOST_COMMON("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.WHITE),
         PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.GREEN),
         PET_ITEM_COMBAT_SKILL_BOOST_RARE("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.BLUE),
@@ -139,10 +139,24 @@ public class SBPets
         PET_ITEM_FARMING_SKILL_BOOST_COMMON("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.WHITE),
         PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.GREEN),
         PET_ITEM_FARMING_SKILL_BOOST_RARE("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.BLUE),
-        PET_ITEM_FARMING_SKILL_BOOST_EPIC("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.DARK_PURPLE);
+        PET_ITEM_FARMING_SKILL_BOOST_EPIC("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
+        REINFORCED_SCALES(TextFormatting.BLUE),
+        GOLD_CLAWS(TextFormatting.GREEN),
+        ALL_SKILLS_SUPER_BOOST(TextFormatting.WHITE),
+        BIGGER_TEETH(TextFormatting.GREEN),
+        SERRATED_CLAWS(TextFormatting.BLUE),
+        WASHED_UP_SOUVENIR("WASHED-UP_SOUVENIR", TextFormatting.GOLD),
+        ANTIQUE_REMEDIES(TextFormatting.DARK_PURPLE),
+        CROCHET_TIGER_PLUSHIE(TextFormatting.DARK_PURPLE),
+        DWARF_TURTLE_SHELMET(TextFormatting.BLUE);
 
         private final String altName;
         private final TextFormatting color;
+
+        private HeldItem(TextFormatting color)
+        {
+            this(null, color);
+        }
 
         private HeldItem(String altName, TextFormatting color)
         {

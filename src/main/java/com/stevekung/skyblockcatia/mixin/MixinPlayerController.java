@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -32,7 +31,6 @@ public class MixinPlayerController
 {
     @Shadow
     @Final
-    @Mutable
     private Minecraft mc;
 
     @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/math/BlockPos;)Z", cancellable = true, at = @At("HEAD"))
@@ -63,7 +61,7 @@ public class MixinPlayerController
         }
     }
 
-    @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/math/BlockPos;)Z", at = @At(value = "INVOKE", target = "net/minecraft/world/World.getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/IFluidState;", shift = Shift.BEFORE))
+    @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/math/BlockPos;)Z", at = @At(value = "INVOKE", target = "net/minecraft/world/World.getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState;", shift = Shift.BEFORE))
     private void addBlockBreakEvent(BlockPos pos, CallbackInfoReturnable<Boolean> info)
     {
         CommonUtils.post(new ClientBlockBreakEvent(this.mc.world, pos));

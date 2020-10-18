@@ -6,9 +6,11 @@ import java.util.function.Function;
 
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.gui.widget.ConfigOptionSliderWidget;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 
 public class DoubleConfigOption extends ExtendedConfigOption
 {
@@ -80,8 +82,8 @@ public class DoubleConfigOption extends ExtendedConfigOption
         return this.getter.apply(SBExtendedConfig.INSTANCE);
     }
 
-    public String getDisplayString()
+    public ITextComponent getDisplayString()
     {
-        return this.displayStringGetter.apply(SBExtendedConfig.INSTANCE, this);
+        return TextComponentUtils.component(this.displayStringGetter.apply(SBExtendedConfig.INSTANCE, this));
     }
 }

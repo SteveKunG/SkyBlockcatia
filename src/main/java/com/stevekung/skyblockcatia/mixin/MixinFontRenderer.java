@@ -12,13 +12,17 @@ import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 
 @Mixin(FontRenderer.class)
 public abstract class MixinFontRenderer
 {
-    @ModifyVariable(method = "renderString(Ljava/lang/String;FFILnet/minecraft/client/renderer/Matrix4f;Z)I", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "renderString(Ljava/lang/String;FFILnet/minecraft/util/math/vector/Matrix4f;ZZ)I", at = @At("HEAD"), argsOnly = true)
     private String renderString(String text)
     {
         if (SkyBlockEventHandler.isSkyBlock && text != null)
@@ -49,8 +53,8 @@ public abstract class MixinFontRenderer
 
         if (prevColorMat.matches())
         {
-            return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + prevColorMat.group("color"));
+            return text.replaceAll(namePatt, TextComponentUtils.formatted(name).setStyle(Style.EMPTY.setColor(Color.fromHex(ColorUtils.toHex(36, 224, 186)))).getString() + prevColorMat.group("color"));
         }
-        return text.replaceAll(namePatt, ColorUtils.stringToRGB("36,224,186").toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
+        return text.replaceAll(namePatt, TextComponentUtils.formatted(name).setStyle(Style.EMPTY.setColor(Color.fromHex(ColorUtils.toHex(36, 224, 186)))).getString() + name + TextFormatting.WHITE);
     }
 }

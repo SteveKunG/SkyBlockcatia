@@ -5,8 +5,10 @@ import java.util.function.BiFunction;
 
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.gui.widget.button.ExtendedButton;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.ITextComponent;
 
 public class StringConfigOption extends ExtendedConfigOption
 {
@@ -36,8 +38,8 @@ public class StringConfigOption extends ExtendedConfigOption
         SBExtendedConfig.INSTANCE.save();
     }
 
-    public String get()
+    public ITextComponent get()
     {
-        return this.setter.apply(SBExtendedConfig.INSTANCE, this);
+        return TextComponentUtils.component(this.setter.apply(SBExtendedConfig.INSTANCE, this));
     }
 }
