@@ -30,7 +30,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
     protected int headerHeight;
     private boolean scrolling;
     protected final World world;
-    protected final FontRenderer fontRenderer;
+    protected final FontRenderer font;
     protected final int border = 4;
     private final int barWidth = 6;
     private final int scrollBarLeft;
@@ -48,7 +48,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
         this.right = width + this.left;
         this.slotHeight = slotHeight;
         this.world = this.mc.world;
-        this.fontRenderer = this.mc.fontRenderer;
+        this.font = this.mc.fontRenderer;
         this.scrollBarRight = this.left + this.width;
         this.scrollBarLeft = this.scrollBarRight - this.barWidth;
         this.viewHeight = this.bottom - this.top;

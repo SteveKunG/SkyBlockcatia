@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
@@ -19,9 +18,9 @@ import net.minecraft.util.Hand;
 @Mixin(BlockItem.class)
 public abstract class MixinBlockItem extends Item
 {
-    public MixinBlockItem(Block block, Item.Properties builder)
+    private MixinBlockItem()
     {
-        super(builder);
+        super(null);
     }
 
     @Inject(method = "onItemUse(Lnet/minecraft/item/ItemUseContext;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At("HEAD"))

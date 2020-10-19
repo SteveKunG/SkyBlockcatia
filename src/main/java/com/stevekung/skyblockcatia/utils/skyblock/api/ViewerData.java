@@ -8,6 +8,8 @@ public class ViewerData
     private boolean hasBankHistory = true;
     private boolean hasSkills = true;
     private boolean hasSlayers = true;
+    private boolean hasDungeons = true;
+    private boolean hasInventories = true;
     private boolean hasCollections = true;
     private boolean hasMinions = true;
     private boolean hasOthersTab = true;
@@ -26,7 +28,7 @@ public class ViewerData
     {
         this.hasOthers = hasOthers;
     }
-    
+
     public void setHasBankHistory(boolean hasBankHistory)
     {
         this.hasBankHistory = hasBankHistory;
@@ -40,6 +42,16 @@ public class ViewerData
     public void setHasSlayers(boolean hasSlayers)
     {
         this.hasSlayers = hasSlayers;
+    }
+
+    public void setHasDungeons(boolean hasDungeons)
+    {
+        this.hasDungeons = hasDungeons;
+    }
+
+    public void setHasInventories(boolean hasInventories)
+    {
+        this.hasInventories = hasInventories;
     }
 
     public void setHasCollections(boolean hasCollections)
@@ -71,7 +83,7 @@ public class ViewerData
     {
         return this.hasOthers;
     }
-    
+
     public boolean hasBankHistory()
     {
         return this.hasBankHistory;
@@ -85,6 +97,16 @@ public class ViewerData
     public boolean hasSlayers()
     {
         return this.hasSlayers;
+    }
+
+    public boolean hasDungeons()
+    {
+        return this.hasDungeons;
+    }
+
+    public boolean hasInventories()
+    {
+        return this.hasInventories;
     }
 
     public boolean hasCollections()

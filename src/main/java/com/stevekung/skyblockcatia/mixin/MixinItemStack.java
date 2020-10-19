@@ -24,4 +24,4 @@ public abstract class MixinItemStack
             info.setReturnValue(true);
         }
     }
-} 
+}

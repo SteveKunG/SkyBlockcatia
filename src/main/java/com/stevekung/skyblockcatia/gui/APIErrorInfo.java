@@ -1,21 +1,28 @@
 package com.stevekung.skyblockcatia.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.IReorderingProcessor;
 
 public class APIErrorInfo extends ScrollingListScreen
 {
-    private final List<String> error;
+    private final List<IReorderingProcessor> error;
 
     public APIErrorInfo(Screen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<String> error)
     {
         super(parent, width, height, top, bottom, left, slotHeight);
-        this.error = error;
+        List<IReorderingProcessor> errorList = new ArrayList<>();
+
+        for (String errorLog : error)
+        {
+            errorList.addAll(this.font.trimStringToWidth(TextComponentUtils.component(errorLog), parent.width - 100));
+        }
+        this.error = errorList;
     }
 
     @Override
@@ -27,7 +34,7 @@ public class APIErrorInfo extends ScrollingListScreen
     @Override
     protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
     {
-        String stat = this.error.get(index);
-        AbstractGui.drawString(matrixStack, this.mc.fontRenderer, TextFormatting.RED.toString() + (index == 0 ? TextFormatting.BOLD.toString() + TextFormatting.UNDERLINE : "") + stat, 40, top, 16777215);
+        IReorderingProcessor stat = this.error.get(index);
+        this.font.func_238407_a_(matrixStack, stat, 40, top, 16777215);
     }
 }

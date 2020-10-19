@@ -80,6 +80,6 @@ public class ItemButton extends Button
 
     public void setItemStack(ItemStack itemStack)
     {
-        this.itemStack = itemStack;        
+        this.itemStack = itemStack;
     }
 }

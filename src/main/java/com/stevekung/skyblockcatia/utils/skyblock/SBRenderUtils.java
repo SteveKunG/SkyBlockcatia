@@ -1,17 +1,10 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
@@ -22,13 +15,12 @@ import com.stevekung.stevekungslib.utils.client.RenderUtils;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
@@ -38,77 +30,7 @@ public class SBRenderUtils
     private static final Pattern PATTERN = Pattern.compile("(?<color>\\u00a7[0-9a-fk-or]).+");
     private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or]).+");
 
-    public static ItemStack getSkullItemStack(String skullId, String skullValue)
-    {
-        ItemStack itemStack = new ItemStack(Items.PLAYER_HEAD);
-        return SBRenderUtils.setSkullSkin(itemStack, skullId, skullValue);
-    }
-
-    public static ItemStack setSkullSkin(ItemStack itemStack, String skullId, String skullValue)
-    {
-        CompoundNBT compound = new CompoundNBT();
-        CompoundNBT properties = new CompoundNBT();
-        properties.putIntArray("Id", SBRenderUtils.uuidToIntArray(skullId));
-        CompoundNBT texture = new CompoundNBT();
-        ListNBT list = new ListNBT();
-        CompoundNBT value = new CompoundNBT();
-        value.putString("Value", SBRenderUtils.toSkullURL(skullValue));
-        list.add(value);
-        texture.put("textures", list);
-        properties.put("Properties", texture);
-        compound.put("SkullOwner", properties);
-        itemStack.setTag(compound);
-
-        if (!itemStack.hasTag())
-        {
-            compound.put("SkullOwner", properties);
-            itemStack.setTag(compound);
-        }
-        else
-        {
-            itemStack.getTag().put("SkullOwner", properties);
-        }
-
-        return itemStack;
-    }
-
-    public static ItemStack getPlayerHead(String name)
-    {
-        ItemStack itemStack = new ItemStack(Items.PLAYER_HEAD);
-        CompoundNBT compound = new CompoundNBT();
-        GameProfile profile = SkullTileEntity.updateGameProfile(new GameProfile(null, name));
-        compound.remove("SkullOwner");
-        compound.put("SkullOwner", NBTUtil.writeGameProfile(new CompoundNBT(), profile));
-        itemStack.setTag(compound);
-        return itemStack;
-    }
-
-    public static int[] uuidToIntArray(String id)
-    {
-        UUID uuid = UUID.fromString(id);
-        long uuidMost = uuid.getMostSignificantBits();
-        long uuidLeast = uuid.getLeastSignificantBits();
-        return new int[]{(int)(uuidMost >> 32), (int)uuidMost, (int)(uuidLeast >> 32), (int)uuidLeast};
-    }
-
-    public static String decodeTextureURL(String source)
-    {
-        JsonObject obj = new JsonParser().parse(new String(Base64.getDecoder().decode(source))).getAsJsonObject();
-        String textureurl = obj.get("textures").getAsJsonObject().get("SKIN").getAsJsonObject().get("url").getAsString();
-        return textureurl.substring(textureurl.lastIndexOf("/") + 1);
-    }
-
-    private static String toSkullURL(String url)
-    {
-        JsonObject skin = new JsonObject();
-        skin.addProperty("url", "http://textures.minecraft.net/texture/" + url);
-        JsonObject textures = new JsonObject();
-        textures.add("SKIN", skin);
-        JsonObject root = new JsonObject();
-        root.add("textures", textures);
-        return Base64.getEncoder().encodeToString(new Gson().toJson(root).getBytes(StandardCharsets.UTF_8));
-    }
-
+    // Well, this is the best way to render rarity in 1.16 because TextFormatting on this version is sucks -.-
     public static void renderRarity(MatrixStack matrixStack, ItemStack itemStack, int xPos, int yPos)
     {
         if (!itemStack.isEmpty() && itemStack.hasTag())
@@ -118,7 +40,6 @@ public class SBRenderUtils
             String displayName = compound.getString("Name");
             String id = extra.getString("id");
             boolean upgrade = extra.contains("rarity_upgrades");
-
             IFormattableTextComponent component = TextComponentUtils.fromJson(displayName);
 
             if (component != null)
@@ -142,15 +63,49 @@ public class SBRenderUtils
 
                         for (int j1 = 0; j1 < list.size(); ++j1)
                         {
-                            String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
-
-                            if (lore.contains("COSMETIC")) // temp
+                            try
                             {
-                                SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(lore.charAt(0) + "" + lore.charAt(1)));
+                                IFormattableTextComponent lore = TextComponentUtils.fromJson(list.getString(list.size() - 1));
+
+                                if (lore.getString().contains("COSMETIC")) // temp
+                                {
+                                    Style color = null;
+
+                                    for (ITextComponent component2 : lore.getSiblings())
+                                    {
+                                        for (ITextComponent component3 : component2.getSiblings())
+                                        {
+                                            color = component3.getStyle();
+                                        }
+                                    }
+                                    SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(color.getColor().toString()).toString()));
+                                    break;
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
                             }
                         }
                     }
                     return;
+                }
+
+                try
+                {
+                    for (ITextComponent component2 : itemStack.getDisplayName().getSiblings())
+                    {
+                        for (ITextComponent component3 : component2.getSiblings())
+                        {
+                            SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(component3.getStyle().getColor().toString()).toString()));
+                            break;
+                        }
+                    }
+                    SBRenderUtils.renderPetRarity(displayName, itemStack, matrixStack, xPos, yPos);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
 
                 if (displayName.startsWith("\u00a7f\u00a7f"))
@@ -174,6 +129,15 @@ public class SBRenderUtils
             }
             else
             {
+                try
+                {
+                    SBRenderUtils.renderPetRarity(displayName, itemStack, matrixStack, xPos, yPos);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 Matcher mat1 = PET_PATTERN.matcher(displayName);
 
                 if (mat1.matches())
@@ -254,5 +218,25 @@ public class SBRenderUtils
         }
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    private static void renderPetRarity(String displayName, ItemStack itemStack, MatrixStack matrixStack, int xPos, int yPos)
+    {
+        if (displayName.startsWith("[Lvl "))
+        {
+            for (ITextComponent component2 : itemStack.getDisplayName().getSiblings())
+            {
+                for (int i = 0; i < component2.getSiblings().size(); i++)
+                {
+                    if (i == 1)
+                    {
+                        ITextComponent color = component2.getSiblings().get(i);
+                        SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(color.getStyle().getColor().toString()).toString()));
+                        break;
+                    }
+                }
+                break;
+            }
+        }
     }
 }

@@ -152,5 +152,16 @@ public class ClientEventHandler
         //String test = "     RARE REWARD! Adaptive Boots";
       //String test = "     RARE REWARD! " + itemStack.getDisplayName();
         //player.sendMessage(JsonUtils.create(test));
+        
+        // Mythos Drop
+        //String test = "RARE DROP! You dug out a " + itemStack.getDisplayName() + "!";
+        //player.addChatComponentMessage(JsonUtils.create(test));
+        //String coins = "Wow! You dug out " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
+        //player.addChatComponentMessage(JsonUtils.create(coins));
+        
+        // Bank Interest/Allowance
+        //String coins = "Since you've been away you earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins as interest in your personal bank account!";
+        //String coins = "ALLOWANCE! You earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
+        //player.addChatComponentMessage(JsonUtils.create(coins));
     }
 }

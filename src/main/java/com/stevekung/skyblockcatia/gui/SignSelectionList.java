@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.gui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +7,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.stevekungslib.utils.LangUtils;
@@ -27,13 +27,13 @@ import net.minecraft.util.Util;
 
 public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
 {
-    public static final List<Entry> AUCTION_STARTING_BID_PRICES = new ArrayList<>();
-    public static final List<Entry> AUCTION_BID_PRICES = new ArrayList<>();
-    public static final List<Entry> AUCTION_QUERIES = new ArrayList<>();
-    public static final List<Entry> BANK_WITHDRAW = new ArrayList<>();
-    public static final List<Entry> BANK_DEPOSIT = new ArrayList<>();
-    public static final List<Entry> BAZAAR_ORDER = new ArrayList<>();
-    public static final List<Entry> BAZAAR_PRICE = new ArrayList<>();
+    public static final List<Entry> AUCTION_STARTING_BID_PRICES = Lists.newArrayList();
+    public static final List<Entry> AUCTION_BID_PRICES = Lists.newArrayList();
+    public static final List<Entry> AUCTION_QUERIES = Lists.newArrayList();
+    public static final List<Entry> BANK_WITHDRAW = Lists.newArrayList();
+    public static final List<Entry> BANK_DEPOSIT = Lists.newArrayList();
+    public static final List<Entry> BAZAAR_ORDER = Lists.newArrayList();
+    public static final List<Entry> BAZAAR_PRICE = Lists.newArrayList();
     private final String title;
     private final List<SignSelectionList.Entry> list;
     private final EditSignScreen parent;

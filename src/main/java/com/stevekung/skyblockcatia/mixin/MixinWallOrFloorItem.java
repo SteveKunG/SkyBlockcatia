@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
@@ -20,9 +19,9 @@ import net.minecraft.world.World;
 @Mixin(WallOrFloorItem.class)
 public abstract class MixinWallOrFloorItem extends BlockItem
 {
-    public MixinWallOrFloorItem(Block floorBlock, Block wallBlock, Item.Properties properties)
+    private MixinWallOrFloorItem()
     {
-        super(floorBlock, properties);
+        super(null, null);
     }
 
     @Inject(method = "getStateForPlacement(Lnet/minecraft/item/BlockItemUseContext;)Lnet/minecraft/block/BlockState;", cancellable = true, at = @At("HEAD"))

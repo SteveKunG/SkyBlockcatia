@@ -24,7 +24,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
-import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
 import com.stevekung.skyblockcatia.utils.SearchMode;
@@ -44,7 +44,6 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
@@ -53,7 +52,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
@@ -64,7 +62,6 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
     private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
     private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close");
-    private static final Pattern PET_MENU_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] \\u00a7r(?<color>\\u00a7[0-9a-fk-or])[\\w ]+\\u00a7r");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -77,9 +74,9 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     // Auction
     private NumberWidget priceSearch;
 
-    public MixinContainerScreen(T screenContainer, PlayerInventory inv, ITextComponent title)
+    private MixinContainerScreen()
     {
-        super(title);
+        super(null);
     }
 
     @Inject(method = "init()V", at = @At("RETURN"))
@@ -121,7 +118,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 92, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getUnformattedComponentText();
-                    this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
+                    this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
             if (this.isPeopleProfile())
@@ -129,7 +126,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getUnformattedComponentText();
-                    this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
+                    this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
         }
@@ -195,6 +192,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/Screen.render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", shift = Shift.BEFORE))
     private void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
@@ -412,7 +410,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                             for (int j1 = 0; j1 < list.size(); ++j1)
                             {
-                                String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                                String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                                 if (lore.startsWith("Seller: "))
                                 {
@@ -427,68 +425,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
-    //XXX REMOVE
-    //    @Inject(method = "drawSlot(Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V"))
-    //    private void renderRarity(Slot slot, CallbackInfo info)
-    //    {
-    //        if (SBExtendedConfig.INSTANCE.showItemRarity)
-    //        {
-    //            SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
-    //
-    //            if (this.that instanceof ChestScreen)
-    //            {
-    //                if (this.getTitle().getUnformattedComponentText().matches("\\(\\d+\\/\\d+\\) Pets") || this.getTitle().getUnformattedComponentText().equals("Pets"))
-    //                {
-    //                    if (slot.getHasStack() && slot.slotNumber >= 0 && slot.slotNumber <= 53)
-    //                    {
-    //                        Matcher matcher = PET_MENU_PATTERN.matcher(slot.getStack().getDisplayName().getString());
-    //
-    //                        if (matcher.matches())
-    //                        {
-    //                            String color = matcher.group("color");
-    //                            RGB common = ColorUtils.stringToRGB("255,255,255");
-    //                            RGB uncommon = ColorUtils.stringToRGB("85,255,85");
-    //                            RGB rare = ColorUtils.stringToRGB("85,85,255");
-    //                            RGB epic = ColorUtils.stringToRGB("170,0,170");
-    //                            RGB legendary = ColorUtils.stringToRGB("255,170,0");
-    //                            RGB mythic = ColorUtils.stringToRGB("255,85,255");
-    //                            RGB special = ColorUtils.stringToRGB("255,85,85");
-    //
-    //                            if (color.equals(TextFormatting.WHITE.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, common);
-    //                            }
-    //                            else if (color.equals(TextFormatting.GREEN.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, uncommon);
-    //                            }
-    //                            else if (color.equals(TextFormatting.BLUE.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, rare);
-    //                            }
-    //                            else if (color.equals(TextFormatting.DARK_PURPLE.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, epic);
-    //                            }
-    //                            else if (color.equals(TextFormatting.GOLD.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, legendary);
-    //                            }
-    //                            else if (color.equals(TextFormatting.LIGHT_PURPLE.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, mythic);
-    //                            }
-    //                            else if (color.equals(TextFormatting.RED.toString()))
-    //                            {
-    //                                SBRenderUtils.renderRarity(slot.xPos, slot.yPos, special);
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-
+    @SuppressWarnings("deprecation")
     @Inject(method = "moveItems(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemAndEffectIntoGUI(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;II)V", shift = Shift.AFTER))
     private void renderAnvilLevel(MatrixStack matrixStack, Slot slot, CallbackInfo info)
     {
@@ -515,7 +452,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                         for (int j1 = 0; j1 < list.size(); ++j1)
                         {
-                            String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                            String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                             if (lore.endsWith("Exp Levels") || lore.endsWith("Exp Level"))
                             {
@@ -529,14 +466,14 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                                 if (level > 0)
                                 {
-                                if (this.minecraft.player.experienceLevel < level)
-                                {
-                                    levelString = TextFormatting.RED + String.valueOf(level);
-                                }
-                                else
-                                {
-                                    levelString = TextFormatting.GREEN + String.valueOf(level);
-                                }
+                                    if (this.minecraft.player.experienceLevel < level)
+                                    {
+                                        levelString = TextFormatting.RED + String.valueOf(level);
+                                    }
+                                    else
+                                    {
+                                        levelString = TextFormatting.GREEN + String.valueOf(level);
+                                    }
                                 }
                             }
                             else if (lore.endsWith("Coins") || lore.endsWith("Coin"))
@@ -550,7 +487,9 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 catch (ParseException e) {}
 
                                 if (coin > 0)
-                                levelString = TextFormatting.GOLD + String.valueOf(coin);
+                                {
+                                    levelString = TextFormatting.GOLD + String.valueOf(coin);
+                                }
                                 break;
                             }
                         }
@@ -575,16 +514,16 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             {
                 this.renderBids(matrixStack, slot);
             }
-            
+
             this.renderCurrentSelectedPet(matrixStack, slot);
-            
+
             if (SBExtendedConfig.INSTANCE.lobbyPlayerViewer && this.title.getUnformattedComponentText().contains("Hub Selector"))
             {
                 this.renderHubOverlay(matrixStack, slot);
             }
         }
     }
-    
+
     @Redirect(method = "moveItems(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
     private void renderPlayerCount(ItemRenderer renderer, FontRenderer font, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
     {
@@ -601,17 +540,17 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
 
                     for (int j1 = 0; j1 < list.size(); ++j1)
-                        {
-                        String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                    {
+                        String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
-                            if (lore.startsWith("Players: "))
-                            {
-                                lore = lore.substring(lore.indexOf(" ") + 1);
-                                String[] loreCount = lore.split("/");
-                                renderer.renderItemOverlayIntoGUI(font, stack, xPosition, yPosition, loreCount[0]);
-                                found = true;
-                                break;
-                            }
+                        if (lore.startsWith("Players: "))
+                        {
+                            lore = lore.substring(lore.indexOf(" ") + 1);
+                            String[] loreCount = lore.split("/");
+                            renderer.renderItemOverlayIntoGUI(font, stack, xPosition, yPosition, loreCount[0]);
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -761,11 +700,12 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void renderChat(MatrixStack matrixStack)
     {
         NewChatGui chat = this.minecraft.ingameGUI.getChatGUI();
 
-        if (true)//TODO chat.isChatVisible()
+        if (!chat.func_238496_i_())
         {
             int i = chat.getLineCount();
             int j = chat.drawnChatLines.size();
@@ -822,7 +762,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     int slotTop = slot.yPos;
                     int slotRight = slotLeft + 16;
                     int slotBottom = slotTop + 16;
-                    String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                    String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
                     Matcher matcher = Pattern.compile("(?:(?:Top|Starting) bid|Buy it now): (?<coin>[0-9,]+) coins").matcher(lore);
                     int red = ColorUtils.to32Bit(255, 85, 85, 128);
                     int green = ColorUtils.to32Bit(85, 255, 85, 128);
@@ -916,7 +856,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     int slotTop = slot.yPos;
                     int slotRight = slotLeft + 16;
                     int slotBottom = slotTop + 16;
-                    String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                    String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
                     int green = ColorUtils.to32Bit(85, 255, 85, 150);
 
                     if (lore.startsWith("Click to despawn"))
@@ -928,7 +868,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             }
         }
     }
-    
+
     private void renderHubOverlay(MatrixStack matrixStack, Slot slot)
     {
         if (slot.getStack() != null && slot.getStack().hasTag())
@@ -940,27 +880,27 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
 
                 for (int j1 = 0; j1 < list.size(); ++j1)
-                    {
-                        int slotLeft = slot.xPos;
-                        int slotTop = slot.yPos;
-                        int slotRight = slotLeft + 16;
-                        int slotBottom = slotTop + 16;
-                        String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                {
+                    int slotLeft = slot.xPos;
+                    int slotTop = slot.yPos;
+                    int slotRight = slotLeft + 16;
+                    int slotBottom = slotTop + 16;
+                    String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
-                        if (lore.startsWith("Players: "))
-                        {
-                            lore = lore.substring(lore.indexOf(" ") + 1);
-                            String[] loreCount = lore.split("/");
-                            int min = Integer.valueOf(loreCount[0]);
-                            int max = Integer.valueOf(loreCount[1]);
-                            int playerCountColor = this.getRGBPlayerCount(min, max);
-                            int color = ColorUtils.to32Bit(playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255, 128);
-                            this.setBlitOffset(300);
-                            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color, color);
-                            this.setBlitOffset(0);
-                            break;
-                        }
+                    if (lore.startsWith("Players: "))
+                    {
+                        lore = lore.substring(lore.indexOf(" ") + 1);
+                        String[] loreCount = lore.split("/");
+                        int min = Integer.valueOf(loreCount[0]);
+                        int max = Integer.valueOf(loreCount[1]);
+                        int playerCountColor = this.getRGBPlayerCount(min, max);
+                        int color = ColorUtils.to32Bit(playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255, 128);
+                        this.setBlitOffset(300);
+                        this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color, color);
+                        this.setBlitOffset(0);
+                        break;
                     }
+                }
             }
         }
     }

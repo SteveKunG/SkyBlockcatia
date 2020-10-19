@@ -2,21 +2,21 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.io.BufferedReader;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 
 public class SBMinions
 {
-    private static final Gson GSON = new Gson();
     public static SBMinions.Slot[] MINION_SLOTS;
 
     public static void getMinionSlotFromRemote() throws Exception
     {
         BufferedReader in = DataGetter.get("api/minion_slots.json");
-        MINION_SLOTS = GSON.fromJson(in, SBMinions.Slot[].class);
+        MINION_SLOTS = TextComponentUtils.GSON.fromJson(in, SBMinions.Slot[].class);
     }
 
     public class Slot
@@ -129,7 +129,7 @@ public class SBMinions
 
         public ItemStack getMinionItem()
         {
-            return SBRenderUtils.getSkullItemStack(this.uuid, this.value);
+            return SBItemUtils.getSkullItemStack(this.uuid, this.value);
         }
     }
 
@@ -200,14 +200,14 @@ public class SBMinions
 
     public static class CraftedInfo
     {
-        private final String minionName;
+        private final ITextComponent minionName;
         private final String displayName;
         private final int minionMaxTier;
         private final String craftedTiers;
         private final ItemStack minionItem;
         private final SBSkills.Type category;
 
-        public CraftedInfo(String minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem, SBSkills.Type category)
+        public CraftedInfo(ITextComponent minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem, SBSkills.Type category)
         {
             this.minionName = minionName;
             this.displayName = displayName;
@@ -217,7 +217,7 @@ public class SBMinions
             this.category = category;
         }
 
-        public String getMinionName()
+        public ITextComponent getMinionName()
         {
             return this.minionName;
         }

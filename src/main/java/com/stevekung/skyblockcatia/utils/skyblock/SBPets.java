@@ -106,7 +106,7 @@ public class SBPets
 
         public ItemStack getPetItem()
         {
-            return SBRenderUtils.getSkullItemStack(this.uuid, this.value);
+            return SBItemUtils.getSkullItemStack(this.uuid, this.value);
         }
     }
 

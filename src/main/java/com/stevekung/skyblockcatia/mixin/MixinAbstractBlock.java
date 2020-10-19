@@ -22,7 +22,7 @@ public abstract class MixinAbstractBlock
 
     //TODO Test
     @Inject(method = "getCollisionShape(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/shapes/ISelectionContext;)Lnet/minecraft/util/math/shapes/VoxelShape;", cancellable = true, at = @At("HEAD"))
-    private void collisionRayTrace(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context, CallbackInfoReturnable<VoxelShape> info)
+    private void getCollisionShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context, CallbackInfoReturnable<VoxelShape> info)
     {
         if (SBExtendedConfig.INSTANCE.ignoreBushHitbox && SkyBlockEventHandler.isSkyBlock)
         {

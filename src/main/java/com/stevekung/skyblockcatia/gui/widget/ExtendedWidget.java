@@ -11,6 +11,7 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.IFormattableTextComponent;
 
 public class ExtendedWidget extends Widget
 {
@@ -23,6 +24,7 @@ public class ExtendedWidget extends Widget
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
+        IFormattableTextComponent component = this.getMessage().deepCopy();
         Minecraft mc = Minecraft.getInstance();
         FontRenderer fontRenderer = mc.fontRenderer;
         mc.getTextureManager().bindTexture(WIDGETS_LOCATION);
@@ -36,10 +38,10 @@ public class ExtendedWidget extends Widget
         this.renderBg(matrixStack, mc, mouseX, mouseY);
         int j = this.getFGColor();
 
-        if (this.getMessage().getUnformattedComponentText().length() > 30)
+        if (component.getUnformattedComponentText().length() > 30)
         {
-            fontRenderer = ClientUtils.unicodeFontRenderer;
+            component.setStyle(component.getStyle().setFontId(ClientUtils.UNICODE));
         }
-        AbstractGui.drawCenteredString(matrixStack, fontRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+        AbstractGui.drawCenteredString(matrixStack, fontRenderer, component, this.x + this.width / 2, this.y + (this.height - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
     }
 }

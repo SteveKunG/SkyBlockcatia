@@ -2,8 +2,8 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import java.io.BufferedReader;
 
-import com.google.gson.Gson;
 import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 public class ExpProgress
 {
@@ -19,7 +19,7 @@ public class ExpProgress
     public static ExpProgress[] PET_RARE;
     public static ExpProgress[] PET_EPIC;
     public static ExpProgress[] PET_LEGENDARY;
-    private static final Gson GSON = new Gson();
+    public static ExpProgress[] DUNGEON;
 
     public ExpProgress(int level, double xp)
     {
@@ -40,7 +40,7 @@ public class ExpProgress
     public static ExpProgress[] getXpProgressFromRemote(Type type) throws Exception
     {
         BufferedReader in = DataGetter.get("api/exp_progress/" + type + ".json");
-        return GSON.fromJson(in, ExpProgress[].class);
+        return TextComponentUtils.GSON.fromJson(in, ExpProgress[].class);
     }
 
     public enum Type
@@ -54,7 +54,8 @@ public class ExpProgress
         PET_1,
         PET_2,
         PET_3,
-        PET_4;
+        PET_4,
+        DUNGEON;
 
         @Override
         public String toString()

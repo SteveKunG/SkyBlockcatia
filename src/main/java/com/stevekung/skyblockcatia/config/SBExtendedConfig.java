@@ -8,6 +8,7 @@ import com.stevekung.skyblockcatia.gui.config.BooleanConfigOption;
 import com.stevekung.skyblockcatia.gui.config.DoubleConfigOption;
 import com.stevekung.skyblockcatia.gui.config.StringConfigOption;
 import com.stevekung.skyblockcatia.gui.config.TextFieldConfigOption;
+import com.stevekung.skyblockcatia.utils.PlayerCountMode;
 import com.stevekung.skyblockcatia.utils.ToastMode;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
@@ -72,6 +73,7 @@ public class SBExtendedConfig
     public ToastMode fishCatchDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode giftDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode petDisplayMode = ToastMode.CHAT_AND_TOAST;
+    public PlayerCountMode playerCountMode = PlayerCountMode.TAB_LIST;
 
     public int itemRarityOpacity = 75;
     public int auctionBidConfirmValue = 500000;
@@ -121,6 +123,7 @@ public class SBExtendedConfig
     public static final StringConfigOption FISH_CATCH_DISPLAY_MODE = new StringConfigOption("fish_catch_display_mode", (config, value) -> config.fishCatchDisplayMode = ToastMode.byId(config.fishCatchDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.fishCatchDisplayMode.getTranslationKey()));
     public static final StringConfigOption GIFT_DISPLAY_MODE = new StringConfigOption("gift_display_mode", (config, value) -> config.giftDisplayMode = ToastMode.byId(config.giftDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.giftDisplayMode.getTranslationKey()));
     public static final StringConfigOption PET_DISPLAY_MODE = new StringConfigOption("pet_display_mode", (config, value) -> config.petDisplayMode = ToastMode.byId(config.petDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.petDisplayMode.getTranslationKey()));
+    public static final StringConfigOption PLAYER_COUNT_MODE = new StringConfigOption("player_count_mode", (config, value) -> config.playerCountMode = PlayerCountMode.byId(config.playerCountMode.getId() + value), (config, stringOpt) -> stringOpt.getDisplayPrefix() + LangUtils.translate(config.playerCountMode.getTranslationKey()));
 
 
     public static final TextFieldConfigOption AXE_COOLDOWN_COLOR = new TextFieldConfigOption("axe_cooldown_color", config -> config.axeCooldownColor, (config, value) -> config.axeCooldownColor = value);

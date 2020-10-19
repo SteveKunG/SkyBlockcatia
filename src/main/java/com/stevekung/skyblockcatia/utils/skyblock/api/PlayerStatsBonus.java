@@ -2,9 +2,9 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import java.io.BufferedReader;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 public class PlayerStatsBonus
 {
@@ -16,11 +16,11 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.Enchanting[] ENCHANTING;
     public static PlayerStatsBonus.Alchemy[] ALCHEMY;
     public static PlayerStatsBonus.Taming[] TAMING;
+    public static PlayerStatsBonus.CatacombsDungeon[] CATACOMBS_DUNGEON;
     public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
     public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
     public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
     public static PlayerStatsBonus.PetsScore[] PETS_SCORE;
-    private static final Gson GSON = new Gson();
 
     public static void getBonusFromRemote(Type type) throws Exception
     {
@@ -29,40 +29,43 @@ public class PlayerStatsBonus
         switch (type)
         {
         case FARMING:
-            FARMING = GSON.fromJson(in, PlayerStatsBonus.Farming[].class);
+            FARMING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Farming[].class);
             break;
         case FORAGING:
-            FORAGING = GSON.fromJson(in, PlayerStatsBonus.Foraging[].class);
+            FORAGING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Foraging[].class);
             break;
         case MINING:
-            MINING = GSON.fromJson(in, PlayerStatsBonus.Mining[].class);
+            MINING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Mining[].class);
             break;
         case FISHING:
-            FISHING = GSON.fromJson(in, PlayerStatsBonus.Fishing[].class);
+            FISHING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Fishing[].class);
             break;
         case COMBAT:
-            COMBAT = GSON.fromJson(in, PlayerStatsBonus.Combat[].class);
+            COMBAT = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Combat[].class);
             break;
         case ENCHANTING:
-            ENCHANTING = GSON.fromJson(in, PlayerStatsBonus.Enchanting[].class);
+            ENCHANTING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Enchanting[].class);
             break;
         case ALCHEMY:
-            ALCHEMY = GSON.fromJson(in, PlayerStatsBonus.Alchemy[].class);
+            ALCHEMY = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Alchemy[].class);
             break;
         case ZOMBIE_SLAYER:
-            ZOMBIE_SLAYER = GSON.fromJson(in, PlayerStatsBonus.ZombieSlayer[].class);
+            ZOMBIE_SLAYER = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.ZombieSlayer[].class);
             break;
         case SPIDER_SLAYER:
-            SPIDER_SLAYER = GSON.fromJson(in, PlayerStatsBonus.SpiderSlayer[].class);
+            SPIDER_SLAYER = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.SpiderSlayer[].class);
             break;
         case WOLF_SLAYER:
-            WOLF_SLAYER = GSON.fromJson(in, PlayerStatsBonus.WolfSlayer[].class);
+            WOLF_SLAYER = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.WolfSlayer[].class);
             break;
         case TAMING:
-            TAMING = GSON.fromJson(in, PlayerStatsBonus.Taming[].class);
+            TAMING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Taming[].class);
             break;
         case PETS_SCORE:
-            PETS_SCORE = GSON.fromJson(in, PlayerStatsBonus.PetsScore[].class);
+            PETS_SCORE = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.PetsScore[].class);
+            break;
+        case CATACOMBS_DUNGEON:
+            CATACOMBS_DUNGEON = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.CatacombsDungeon[].class);
             break;
         default:
         }
@@ -259,6 +262,30 @@ public class PlayerStatsBonus
         public double getPetLuck()
         {
             return this.petLuck;
+        }
+    }
+
+    public class CatacombsDungeon implements IBonusTemplate
+    {
+        private final int level;
+        private final double health;
+
+        public CatacombsDungeon(int level, double health)
+        {
+            this.level = level;
+            this.health = health;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getHealth()
+        {
+            return this.health;
         }
     }
 
@@ -509,6 +536,7 @@ public class PlayerStatsBonus
         ENCHANTING("skill"),
         ALCHEMY("skill"),
         TAMING("skill"),
+        CATACOMBS_DUNGEON("skill"),
         ZOMBIE_SLAYER("slayer"),
         SPIDER_SLAYER("slayer"),
         WOLF_SLAYER("slayer"),

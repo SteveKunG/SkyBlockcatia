@@ -11,7 +11,7 @@ public enum SBLocation
     YOUR_ISLAND("Your Island"),
 
     // Public Island
-    VILLAGE("Village", ImmutableList.of(Blocks.POPPY, Blocks.DANDELION, Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CARROTS, (Blocks.POTATOES), (Blocks.WHEAT), (Blocks.NETHER_WART))),
+    VILLAGE("Village", ImmutableList.of(Blocks.POPPY, Blocks.DANDELION, Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.NETHER_WART)),
     FARM("Farm", ImmutableList.of(Blocks.WHEAT)),
     COAL_MINE("Coal Mine", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE)),
     FOREST("Forest", ImmutableList.of(Blocks.OAK_LOG, Blocks.OAK_LEAVES)),

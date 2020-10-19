@@ -13,11 +13,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
-import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
-import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
+import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.stevekungslib.utils.CalendarUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -28,9 +27,8 @@ import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.ListNBT;
@@ -87,7 +85,7 @@ public class MainEventHandler
         {
             if (MainEventHandler.playerToView != null)
             {
-                this.mc.displayGuiScreen(new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
                 MainEventHandler.playerToView = null;
             }
         }
@@ -102,13 +100,16 @@ public class MainEventHandler
 
         if (SkyBlockEventHandler.isSkyBlock)
         {
+            ItemStack wardRobeItem = new ItemStack(Items.LEATHER_CHESTPLATE);
+            ((DyeableArmorItem)wardRobeItem.getItem()).setColor(wardRobeItem, 8339378);
+
             if (SBExtendedConfig.INSTANCE.shortcutButtonInInventory && gui instanceof InventoryScreen)
             {
                 event.removeWidget(event.getWidgetList().get(0));
                 event.addWidget(new ItemButton(width + 9, height + 86, Blocks.ENDER_CHEST.asItem(), button -> this.mc.player.sendChatMessage("/enderchest")));
                 event.addWidget(new ItemButton(width + 28, height + 86, Blocks.CRAFTING_TABLE.asItem(), button -> this.mc.player.sendChatMessage("/craft")));
                 event.addWidget(new ItemButton(width + 47, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
-                event.addWidget(new ItemButton(width + 66, height + 86, Items.LEATHER_CHESTPLATE, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
+                event.addWidget(new ItemButton(width + 66, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
             }
             else if (gui instanceof ChestScreen)
             {
@@ -126,8 +127,8 @@ public class MainEventHandler
                     if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, title))
                     {
                         String chat = MainEventHandler.showChat ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
-                        
-                        event.addWidget(new ItemButton(2, height - 35, Items.ENDER_EYE, TextComponentUtils.component("C"), button ->
+
+                        event.addWidget(new ItemButton(2, height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
                         {
                             MainEventHandler.showChat = !MainEventHandler.showChat;
                             ((ItemButton)button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + chat));
@@ -156,7 +157,7 @@ public class MainEventHandler
                     }
                     else if (title.getUnformattedComponentText().contains("Pets"))
                     {
-                        event.addWidget(new ItemButton(width + 88, height + 47, Items.LEATHER_CHESTPLATE, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
+                        event.addWidget(new ItemButton(width + 88, height + 47, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
                     }
                 }
 
@@ -183,18 +184,19 @@ public class MainEventHandler
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public void onPostGuiDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event)
     {
         Screen gui = event.getGui();
 
-        for (Widget button : gui.buttons.stream().filter(button -> button != null && button instanceof ItemButton).collect(Collectors.toList()))
+        for (ItemButton button : gui.buttons.stream().filter(button -> button != null && button instanceof ItemButton).map(button -> (ItemButton)button).collect(Collectors.toList()))
         {
             boolean hover = event.getMouseX() >= button.x && event.getMouseY() >= button.y && event.getMouseX() < button.x + button.getWidth() && event.getMouseY() < button.y + button.getHeightRealms();
 
             if (hover && button.visible)
             {
-                GuiUtils.drawHoveringText(event.getMatrixStack(), Collections.singletonList(((ItemButton)button).getName()), event.getMouseX(), event.getMouseY(), gui.width, gui.height, -1, this.mc.fontRenderer);
+                GuiUtils.drawHoveringText(event.getMatrixStack(), Collections.singletonList(button.getName()), event.getMouseX(), event.getMouseY(), gui.width, gui.height, -1, this.mc.fontRenderer);
                 RenderSystem.disableLighting();
                 break;
             }
@@ -221,19 +223,6 @@ public class MainEventHandler
         {
             return;
         }
-
-        //        if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))TODO REMOVE
-        //        {
-        //            ClientUtils.printClientMessage("Couldn't get bazaar data, Empty text in the Config!", TextFormatting.RED);
-        //            ClientUtils.printClientMessage(TextComponentUtils.component("Make sure you're in the Hypixel!").mergeStyle(TextFormatting.YELLOW).append(TextComponentUtils.component(" Click Here to create an API key").mergeStyle(TextFormatting.GOLD).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
-        //            return;
-        //        }
-        //        if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
-        //        {
-        //            ClientUtils.printClientMessage("Invalid UUID for Hypixel API Key!", TextFormatting.RED);
-        //            ClientUtils.printClientMessage("Example UUID pattern: " + UUID.randomUUID(), TextFormatting.YELLOW);
-        //            return;
-        //        }
 
         try
         {

@@ -3,7 +3,10 @@ package com.stevekung.skyblockcatia.gui.screen;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -13,6 +16,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.glfw.GLFW;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,9 +32,8 @@ import com.stevekung.skyblockcatia.gui.widget.button.APISearchButton;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SkyBlockProfileButton;
 import com.stevekung.skyblockcatia.utils.PlayerNameSuggestionHelper;
-import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
-import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelRank;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
 import com.stevekung.stevekungslib.utils.CommonUtils;
@@ -53,7 +56,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
-public class SkyBlockProfileViewerScreen extends Screen
+public class SkyBlockProfileSelectorScreen extends Screen
 {
     public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
     private static boolean firstLoad;
@@ -69,25 +72,25 @@ public class SkyBlockProfileViewerScreen extends Screen
     private boolean error;
     private String errorMessage;
     private String statusMessage;
-    private List<ProfileDataCallback> profiles = new ArrayList<>();
+    private List<ProfileDataCallback> profiles = Lists.newArrayList();
     private final StopWatch watch = new StopWatch();
     private boolean fromError;
     private PlayerNameSuggestionHelper suggestionHelper;
     private String guild = "";
     private ScrollingListScreen errorInfo;
-    private List<String> errorList = new ArrayList<>();
+    private List<String> errorList = Lists.newArrayList();
 
-    public SkyBlockProfileViewerScreen(GuiState state)
+    public SkyBlockProfileSelectorScreen(GuiState state)
     {
         this(state, "", "", "");
     }
 
-    public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName, String guild)
+    public SkyBlockProfileSelectorScreen(GuiState state, String username, String displayName, String guild)
     {
         this(state, username, displayName, guild, null);
     }
 
-    public SkyBlockProfileViewerScreen(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
+    public SkyBlockProfileSelectorScreen(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
     {
         super(TextComponentUtils.component("API Viewer"));
 
@@ -110,7 +113,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         {
             selfItemCache = new ItemStack(Items.SKELETON_SKULL);
         }
-        
+
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.addButton(this.checkButton = new APISearchButton(this.width / 2 + 78, 46, button ->
         {
@@ -145,8 +148,8 @@ public class SkyBlockProfileViewerScreen extends Screen
                 }
             });
         } ));
-        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null)));
-        this.addButton(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, this.guild))));
+        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null)));
+        this.addButton(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""))));
         this.usernameTextField = new RightClickTextFieldWidget(this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused2(true);
@@ -201,7 +204,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         }
         if (!this.profiles.isEmpty())
         {
-            List<SkyBlockProfileButton> buttons = new ArrayList<>();
+            List<SkyBlockProfileButton> buttons = Lists.newArrayList();
 
             for (ProfileDataCallback data : this.profiles)
             {
@@ -281,7 +284,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             }
             else if (key == GLFW.GLFW_KEY_F5 && !this.profiles.isEmpty())
             {
-                this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(GuiState.PLAYER, this.input, this.displayName, this.guild));
+                this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, this.input, this.displayName, this.guild));
             }
             else if (this.suggestionHelper.onKeyPressed(key, scanCode, modifiers))
             {
@@ -582,7 +585,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         }
 
         JsonArray profilesList = sbProfile.getAsJsonArray();
-        List<SkyBlockProfileButton> buttons = new ArrayList<>();
+        List<SkyBlockProfileButton> buttons = Lists.newArrayList();
 
         for (JsonElement profile : profilesList)
         {
@@ -661,7 +664,7 @@ public class SkyBlockProfileViewerScreen extends Screen
 
     private void setItemCache()
     {
-        selfItemCache = SBRenderUtils.getPlayerHead(GameProfileUtils.getUsername());
+        selfItemCache = SBItemUtils.getPlayerHead(GameProfileUtils.getUsername());
         this.selfButton.setItemStack(selfItemCache);
     }
 

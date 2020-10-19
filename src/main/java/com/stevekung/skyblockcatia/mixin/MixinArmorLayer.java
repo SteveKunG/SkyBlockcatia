@@ -15,7 +15,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -45,9 +44,9 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
         return null;
     }
 
-    public MixinArmorLayer(IEntityRenderer<T, M> renderer)
+    private MixinArmorLayer()
     {
-        super(renderer);
+        super(null);
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("RETURN"))

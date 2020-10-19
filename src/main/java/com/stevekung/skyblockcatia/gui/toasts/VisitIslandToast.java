@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -21,7 +21,7 @@ public class VisitIslandToast implements IToast
 
     public VisitIslandToast(String name)
     {
-        this.itemStack = SBRenderUtils.getPlayerHead(name);
+        this.itemStack = SBItemUtils.getPlayerHead(name);
         this.name = name;
     }
 

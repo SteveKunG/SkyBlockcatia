@@ -13,7 +13,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 
 import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.HeadLayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -28,6 +27,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(HeadLayer.class)
@@ -36,9 +36,9 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
     private static final ResourceLocation DIVER = new ResourceLocation("skyblockcatia:textures/entity/diver_head.png");
     private final GenericHeadModel head = new HumanoidHeadModel();
 
-    public MixinHeadLayer(IEntityRenderer<T, M> renderer)
+    private MixinHeadLayer()
     {
-        super(renderer);
+        super(null);
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("RETURN"))
@@ -77,7 +77,17 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
 
                 matrixStack.translate(-0.5D, 0.0D, -0.5D);
 
-                ResourceLocation location = this.getDragonEyeTexture(itemStack.getTag().getCompound("ExtraAttributes").getString("id"));
+                CompoundNBT compound = itemStack.getTag().getCompound("ExtraAttributes");
+                String id = compound.getString("id");
+                ResourceLocation location = this.getDragonEyeTexture(id);
+
+                if (compound.contains("skin"))
+                {
+                    if (id.equals("SUPERIOR_DRAGON_HELMET") && compound.getString("skin").equals("SUPERIOR_BABY"))
+                    {
+                        location = new ResourceLocation("skyblockcatia:textures/entity/superior_baby.png");
+                    }
+                }
 
                 if (location != null)
                 {

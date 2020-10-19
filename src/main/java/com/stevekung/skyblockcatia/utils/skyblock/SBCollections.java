@@ -1,8 +1,11 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
 import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 public class SBCollections
 {
@@ -60,9 +63,9 @@ public class SBCollections
             this.name = name;
         }
 
-        public String getName()
+        public ITextComponent getName()
         {
-            return this.name;
+            return TextComponentUtils.formatted(this.name, TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE);
         }
     }
 }

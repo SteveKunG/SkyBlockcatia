@@ -1,12 +1,11 @@
-package com.stevekung.skyblockcatia.utils.skyblock;
+package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-public class SBBankHistory
+public class BankHistory
 {
     private final float amount;
     private final long timestamp;
@@ -14,7 +13,7 @@ public class SBBankHistory
     @SerializedName("initiator_name")
     private final String name;
 
-    public SBBankHistory(float amount, long timestamp, Action action, String name)
+    public BankHistory(float amount, long timestamp, Action action, String name)
     {
         this.amount = amount;
         this.timestamp = timestamp;
@@ -44,14 +43,14 @@ public class SBBankHistory
 
     public static class Stats
     {
-        private final String stats;
+        private final ITextComponent stats;
 
-        public Stats(String stats)
+        public Stats(ITextComponent stats)
         {
             this.stats = stats;
         }
 
-        public String getStats()
+        public ITextComponent getStats()
         {
             return this.stats;
         }
@@ -59,14 +58,16 @@ public class SBBankHistory
 
     public enum Action
     {
-        WITHDRAW(TextComponentUtils.formatted("Withdraw", TextFormatting.RED)),
-        DEPOSIT(TextComponentUtils.formatted("Deposit", TextFormatting.GREEN));
+        WITHDRAW("Withdraw", TextFormatting.RED),
+        DEPOSIT("Deposit", TextFormatting.GREEN);
 
-        public final IFormattableTextComponent component;
+        public final String name;
+        public final TextFormatting color;
 
-        private Action(IFormattableTextComponent component)
+        private Action(String name, TextFormatting color)
         {
-            this.component = component;
+            this.name = name;
+            this.color = color;
         }
     }
 }

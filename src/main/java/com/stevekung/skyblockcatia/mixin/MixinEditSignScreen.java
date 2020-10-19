@@ -22,7 +22,6 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.StringUtils;
-import net.minecraft.util.text.ITextComponent;
 
 @Mixin(EditSignScreen.class)
 public abstract class MixinEditSignScreen extends Screen
@@ -34,9 +33,9 @@ public abstract class MixinEditSignScreen extends Screen
     @Final
     private String[] field_238846_r_;
 
-    public MixinEditSignScreen(ITextComponent title)
+    private MixinEditSignScreen()
     {
-        super(title);
+        super(null);
     }
 
     @Inject(method = "init()V", at = @At("RETURN"))
@@ -136,7 +135,7 @@ public abstract class MixinEditSignScreen extends Screen
             }
         }
 
-        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
+        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && !StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
         {
             int price = Integer.parseInt(text);
 

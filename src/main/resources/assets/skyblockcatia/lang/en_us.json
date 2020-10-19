@@ -14,6 +14,8 @@
     "toast_mode.chat": "Chat",
     "toast_mode.toast": "Toast",
     "toast_mode.chat_and_toast": "Chat & Toast",
+    "player_count.tab_list": "Tab List",
+    "player_count.hud": "HUD",
 
     "_comment": "EXTENDED CONFIG",
     "add_party_visit_island.extended_config": "Add Party when people visit island",
@@ -50,6 +52,7 @@
     "prevent_clicking_on_dummy_item.extended_config": "Prevent Clicking on Dummy Item",
     "shortcut_button_in_inventory.extended_config": "Shortcut Button in Inventory",
     "show_obtained_date.extended_config": "Show Obtained Date",
+    "player_count_mode.extended_config": "Player Count Mode",
 
     "_comment": "MESSAGE",
     "message.check": "Check",
@@ -64,6 +67,7 @@
     "gui.sb_view_player": "Player",
     "gui.sb_view_skills": "Skills",
     "gui.sb_view_slayers": "Slayers",
+    "gui.sb_view_dungeons": "Dungeons",
     "gui.sb_view_others": "Others",
     "gui.sb_others.kills": "Kills",
     "gui.sb_others.deaths": "Deaths",
@@ -79,6 +83,7 @@
     "_comment": "SKYBLOCK INVENTORY",
     "skyblock_group.inventory": "Inventory",
     "skyblock_group.ender_chest": "Ender Chest",
+    "skyblock_group.personal_vault": "Personal Vault",
     "skyblock_group.accessory": "Accessory Bag",
     "skyblock_group.potion": "Potion Bag",
     "skyblock_group.fishing": "Fishing Bag",

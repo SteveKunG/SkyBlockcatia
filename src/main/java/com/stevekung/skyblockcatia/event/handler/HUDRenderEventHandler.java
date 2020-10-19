@@ -1,9 +1,13 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
@@ -160,7 +164,7 @@ public class HUDRenderEventHandler
                 }
             }*/
 
-            List<CrosshairOverlay> crosshairInfo = new ArrayList<>();
+            List<CrosshairOverlay> crosshairInfo = Lists.newArrayList();
             int center = 0;
 
             if (SBExtendedConfig.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
@@ -290,6 +294,15 @@ public class HUDRenderEventHandler
         {
             this.lastZealotRespawn = -1;
         }
+    }
+
+    public static int getPlayerCount(List<NetworkPlayerInfo> list)
+    {
+        if (!list.isEmpty() && list.get(0).getDisplayName() != null && list.get(0).getDisplayName().getUnformattedComponentText().startsWith("         Players ("))
+        {
+            return Integer.valueOf(list.get(0).getDisplayName().getUnformattedComponentText().replaceAll("[^0-9]", ""));
+        }
+        return list.subList(0, Math.min(list.size(), 80)).size();
     }
 
     private double getItemDelay(int base, long delay)

@@ -130,6 +130,13 @@ public class NumericToast implements IToast
             case RARE_GIFT:
                 builder.append(GiftRareToast.class.getName());
                 break;
+            case MYTHOS_COINS:
+                builder.append(MythosCoinsToast.class.getName());
+                break;
+            case BANK_INTEREST:
+            case ALLOWANCE:
+                builder.append(CoinsToast.class.getName());
+                break;
             case GOOD_CATCH_COINS:
                 builder.append(GoodToast.class.getName());
                 break;
@@ -155,6 +162,22 @@ public class NumericToast implements IToast
     static class PetLevelUpToast extends NumericToast
     {
         public PetLevelUpToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
+        {
+            super(value, itemStack, object, rarity);
+        }
+    }
+
+    static class MythosCoinsToast extends NumericToast
+    {
+        public MythosCoinsToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
+        {
+            super(value, itemStack, object, rarity);
+        }
+    }
+
+    static class CoinsToast extends NumericToast
+    {
+        public CoinsToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
         {
             super(value, itemStack, object, rarity);
         }

@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,14 +15,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
 
 @Mixin(ArmorStandEntity.class)
 public abstract class MixinArmorStandEntity extends LivingEntity
 {
-    public MixinArmorStandEntity(EntityType<? extends ArmorStandEntity> type, World world)
+    private MixinArmorStandEntity()
     {
-        super(type, world);
+        super(null, null);
     }
 
     @Inject(method = "applyPlayerInteraction(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/vector/Vector3d;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At("HEAD"))

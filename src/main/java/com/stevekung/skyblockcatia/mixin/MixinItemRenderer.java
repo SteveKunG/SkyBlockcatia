@@ -27,4 +27,4 @@ public abstract class MixinItemRenderer
             matrixStack.pop();
         }
     }
-} 
+}

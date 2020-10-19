@@ -5,10 +5,6 @@ import java.io.BufferedReader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.DataGetter;
-import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
-import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
-import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
@@ -42,23 +38,7 @@ public class RefreshApiDataCommand implements IClientCommand
                     SkyBlockcatiaMod.SUPPORTERS_NAME.add(inputLine);
                 }
 
-                ExpProgress.SKILL = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.SKILL);
-                ExpProgress.ZOMBIE_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.ZOMBIE_SLAYER);
-                ExpProgress.SPIDER_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.SPIDER_SLAYER);
-                ExpProgress.WOLF_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.WOLF_SLAYER);
-                ExpProgress.RUNECRAFTING = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.RUNECRAFTING);
-                ExpProgress.PET_COMMON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_0);
-                ExpProgress.PET_UNCOMMON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_1);
-                ExpProgress.PET_RARE = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_2);
-                ExpProgress.PET_EPIC = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_3);
-                ExpProgress.PET_LEGENDARY = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_4);
-
-                for (PlayerStatsBonus.Type type : PlayerStatsBonus.Type.VALUES)
-                {
-                    PlayerStatsBonus.getBonusFromRemote(type);
-                }
-                SBAPIUtils.getFairySouls();
-                SBMinions.getMinionSlotFromRemote();
+                SkyBlockcatiaMod.downloadAPIData();
                 ClientUtils.printClientMessage("Finishing refresh API data!", TextFormatting.GREEN);
             }
             catch (Exception e)
