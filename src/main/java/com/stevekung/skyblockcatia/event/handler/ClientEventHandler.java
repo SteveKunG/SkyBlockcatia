@@ -35,15 +35,16 @@ public class ClientEventHandler
         char formatter = TextFormatting.values()[new Random().nextInt(TextFormatting.values().length)].formattingCode;
 
         // Pet Level Up
-        //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse"};
+      //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse","Flying Fish","Magma Cube"};
         //player.sendMessage(JsonUtils.create("§r§aYour §r§" + formatter + pet[rand.nextInt(pet.length)] + " §r§alevelled up to level §r§9" + rand.nextInt(100) + "§r§a!§r"));
 
         // Pet Drop
-        //player.sendMessage(JsonUtils.create("PET DROP! ").appendSibling(JsonUtils.create(itemStack.getDisplayName().getFormattedText().replace("[Lvl 1] ", ""))).appendSibling(JsonUtils.create(TextFormatting.getTextWithoutFormattingCodes(magic))));
+        //player.addChatComponentMessage(JsonUtils.create("PET DROP! " + EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName().replace("[Lvl 1] ", "")) + EnumChatFormatting.getTextWithoutFormattingCodes(magic)));
 
         // Rare Drop
         //String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
         //String test = "§r§6§lRARE DROP! " + "§r" + itemStack.getDisplayName().getFormattedText() + magic;
+      //String test = "§r§6§lRARE DROP! " + "§r§f" + EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName()) + magic;
         //player.sendMessage(JsonUtils.create(test));
 
         // Slayer Drop
@@ -147,6 +148,9 @@ public class ClientEventHandler
 
         // Dungeon Drop
         //String test = "You found a Top Quality Item! " + itemStack.getDisplayName().getFormattedText();
+        //String test = "You found a Top Quality Item! Skeleton Soldier Boots";
+        //String test = "     RARE REWARD! Adaptive Boots";
+      //String test = "     RARE REWARD! " + itemStack.getDisplayName();
         //player.sendMessage(JsonUtils.create(test));
     }
 }

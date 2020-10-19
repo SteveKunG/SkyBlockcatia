@@ -24,26 +24,27 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
+import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
-import com.stevekung.stevekungslib.utils.*;
+import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.CommonUtils;
+import com.stevekung.stevekungslib.utils.LangUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
@@ -99,12 +100,12 @@ import net.minecraft.world.GameType;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@SuppressWarnings("deprecation")
 public class SkyBlockAPIViewerScreen extends Screen
 {
     private static final ResourceLocation INVENTORY_TABS = new ResourceLocation("skyblockcatia:textures/gui/groups.png");
     private static final ResourceLocation XP_BARS = new ResourceLocation("skyblockcatia:textures/gui/skill_xp_bar.png");
-    private static final String[] REVENANT_HORROR_HEAD = new String[] {"0862e0b0-a14f-3f93-894f-013502936b59", "eyJ0aW1lc3RhbXAiOjE1Njg0NTc0MjAxMzcsInByb2ZpbGVJZCI6IjQxZDNhYmMyZDc0OTQwMGM5MDkwZDU0MzRkMDM4MzFiIiwicHJvZmlsZU5hbWUiOiJNZWdha2xvb24iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2RiYWQ5OWVkM2M4MjBiNzk3ODE5MGFkMDhhOTM0YTY4ZGZhOTBkOTk4NjgyNWRhMWM5N2Y2ZjIxZjQ5YWQ2MjYifX19"};
-    private static final ModDecimalFormat SKILL_FORMAT = new ModDecimalFormat("##.##");
+    private static final String[] REVENANT_HORROR_HEAD = new String[] {"0862e0b0-a14f-3f93-894f-013502936b59", "dbad99ed3c820b7978190ad08a934a68dfa90d9986825da1c97f6f21f49ad626"};
 
     // Based stuff
     private boolean firstLoad;
@@ -114,6 +115,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private String statusMessage;
     private Button doneButton;
     private Button backButton;
+    private ItemButton showArmorButton;
     private JsonObject skyblockProfiles;
     private List<ProfileDataCallback> profiles;
     private final String sbProfileId;
@@ -133,6 +135,9 @@ public class SkyBlockAPIViewerScreen extends Screen
     private int skillCount;
     private ScrollingListScreen errorInfo;
     private List<String> errorList = new ArrayList<>();
+    private boolean showArmor = true;
+    private float oldMouseX;
+    private float oldMouseY;
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -140,6 +145,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king");
     private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold").put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder").build();
+    private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").build();
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
@@ -148,6 +154,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final List<SBStats> sbKills = new ArrayList<>();
     private final List<SBStats> sbDeaths = new ArrayList<>();
     private final List<SBStats> sbOthers = new ArrayList<>();
+    private final List<SBBankHistory.Stats> sbBankHistories = new ArrayList<>();
     private final List<SBMinions.CraftedInfo> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
@@ -254,6 +261,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null)));
         this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, DialogTexts.GUI_BACK, button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.EMPTY, this.username, this.displayName, this.guild) : new SkyBlockProfileViewerScreen(SkyBlockProfileViewerScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
+        this.addButton(this.showArmorButton = new ItemButton(this.width / 2 - 115, this.height / 2 - 65, Items.DIAMOND_CHESTPLATE, TextComponentUtils.component("Show Armor: " + TextFormatting.GREEN + "ON"), button -> this.setShowArmor()));
         Button infoButton = ViewButton.PLAYER.button = new Button(this.width / 2 - 185, 6, 80, 20, LangUtils.translate("gui.sb_view_player"), button -> this.performedInfo(ViewButton.PLAYER));
         infoButton.active = false;
         this.addButton(infoButton);
@@ -261,11 +269,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.addButton(ViewButton.SLAYERS.button = new Button(this.width / 2 + 8, 6, 80, 20, LangUtils.translate("gui.sb_view_slayers"), button -> this.performedInfo(ViewButton.SLAYERS)));
         this.addButton(ViewButton.OTHERS.button = new Button(this.width / 2 + 104, 6, 80, 20, LangUtils.translate("gui.sb_view_others"), button -> this.performedInfo(ViewButton.OTHERS)));
 
-        Button statKillsButton = OthersViewButton.KILLS.button = new Button(this.width / 2 - 124, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.kills"), button -> this.performedOthers(OthersViewButton.KILLS));
+        Button statKillsButton = OthersViewButton.KILLS.button = new Button(this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.kills"), button -> this.performedOthers(OthersViewButton.KILLS));
         statKillsButton.active = false;
         this.addButton(statKillsButton);
-        this.addButton(OthersViewButton.DEATHS.button = new Button(this.width / 2 - 40, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.deaths"), button -> this.performedOthers(OthersViewButton.DEATHS)));
-        this.addButton(OthersViewButton.OTHER_STATS.button = new Button(this.width / 2 + 44, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.others_stats"), button -> this.performedOthers(OthersViewButton.OTHER_STATS)));
+        this.addButton(OthersViewButton.DEATHS.button = new Button(this.width / 2 - 84, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.deaths"), button -> this.performedOthers(OthersViewButton.DEATHS)));
+        this.addButton(OthersViewButton.OTHER_STATS.button = new Button(this.width / 2 + 4, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.others_stats"), button -> this.performedOthers(OthersViewButton.OTHER_STATS)));
+        this.addButton(OthersViewButton.BANK_HISTORY.button = new Button(this.width / 2 + 90, this.height - 48, 80, 20, LangUtils.translate("gui.sb_others.bank_history"), button -> this.performedOthers(OthersViewButton.BANK_HISTORY)));
 
         Button basicInfoButton = BasicInfoViewButton.PLAYER_STATS.button = new Button(this.width / 2 - 170, this.height - 48, 80, 20, LangUtils.translate("gui.sb_player_stats"), button -> this.performedBasicInfo(BasicInfoViewButton.PLAYER_STATS));
         basicInfoButton.active = false;
@@ -391,7 +400,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).getType() == EmptyStats.Type.INVENTORY)
+            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
             {
                 double i = mouseX - this.guiLeft;
                 double j = mouseY - this.guiTop;
@@ -431,7 +440,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).getType() == EmptyStats.Type.INVENTORY)
+            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
             {
                 double i = mouseX - this.guiLeft;
                 double j = mouseY - this.guiTop;
@@ -459,7 +468,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            if (this.isScrolling && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).getType() == EmptyStats.Type.INVENTORY)
+            if (this.isScrolling && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
             {
                 int i = this.guiTop + 18;
                 int j = i + 72;
@@ -483,7 +492,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             if (this.currentSlot != null)
             {
-                if (this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).getType() == EmptyStats.Type.INVENTORY)
+                if (this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
                 {
                     if (!this.needsScrollBars())
                     {
@@ -508,6 +517,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         this.renderBackground(matrixStack);
+        this.oldMouseX = mouseX;
+        this.oldMouseY = mouseY;
 
         if (this.loadingApi)
         {
@@ -546,7 +557,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     EmptyStats stat = (EmptyStats)this.currentSlot;
 
-                    if (stat.getType() == EmptyStats.Type.INVENTORY)
+                    if (stat.type == EmptyStats.Type.INVENTORY)
                     {
                         this.drawGroupsBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
                     }
@@ -560,13 +571,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                         RenderSystem.enableDepthTest();
-                        SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, 40, this.player);
+                        SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
                     }
                     else if (this.currentSlot instanceof EmptyStats)
                     {
                         EmptyStats stat = (EmptyStats)this.currentSlot;
 
-                        if (stat.getType() == EmptyStats.Type.INVENTORY)
+                        if (stat.type == EmptyStats.Type.INVENTORY)
                         {
                             this.drawContainerSlot(matrixStack, mouseX, mouseY);
 
@@ -585,7 +596,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             RenderSystem.disableLighting();
 
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                            SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, 40, this.player);
+                            SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
 
                             if (this.hoveredSlot != null && this.hoveredSlot.getHasStack())
                             {
@@ -640,7 +651,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                         if (this.activeSlayerType != null)
                         {
                             AbstractGui.drawString(matrixStack, this.font, TextFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
-                            AbstractGui.drawString(matrixStack, this.font, TextFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
+                            AbstractGui.drawString(matrixStack, this.font, TextFormatting.YELLOW + this.activeSlayerType.name + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
                         }
                     }
                     else if (this.currentSlot instanceof SkyBlockCraftedMinions)
@@ -677,7 +688,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.hideOthersButton();
             break;
         case SLAYERS:
-            this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 49, 59, 16, this.slayerInfo);
+            this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.slayerInfo);
             this.hideBasicInfoButton();
             this.hideOthersButton();
             break;
@@ -713,28 +724,27 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void performedOthers(OthersViewButton othersButton)
     {
-        SBStats.Type statType = SBStats.Type.KILLS;
-        List<SBStats> list = null;
+        List<?> list = null;
 
         switch (othersButton)
         {
         default:
         case KILLS:
-            statType = SBStats.Type.KILLS;
             list = this.sbKills;
             break;
         case DEATHS:
-            statType = SBStats.Type.DEATHS;
             list = this.sbDeaths;
             break;
         case OTHER_STATS:
-            statType = SBStats.Type.OTHERS;
             list = this.sbOthers;
+            break;
+        case BANK_HISTORY:
+            list = this.sbBankHistories;
             break;
         }
         if (list != null)
         {
-            this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, list, statType);
+            this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, list);
         }
         this.refreshOthersViewButton(othersButton, true);
     }
@@ -841,6 +851,15 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (view.button == OthersViewButton.OTHER_STATS.button)
                 {
                     if (!this.data.hasOthers())
+                    {
+                        view.button.active = false;
+                        view.button.visible = visible;
+                        continue;
+                    }
+                }
+                if (view.button == OthersViewButton.BANK_HISTORY.button)
+                {
+                    if (!this.data.hasBankHistory())
                     {
                         view.button.active = false;
                         view.button.visible = visible;
@@ -983,20 +1002,27 @@ public class SkyBlockAPIViewerScreen extends Screen
     // Render
     private void renderSkillBar(MatrixStack matrixStack, String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
     {
+        float[] color = ColorUtils.toFloatArray(128, 255, 0);
+
+        if (reachLimit)
+        {
+            color = ColorUtils.toFloatArray(255, 185, 0);
+        }
+
         this.minecraft.getTextureManager().bindTexture(XP_BARS);
-        RenderSystem.color4f(0.5F, 1.0F, 0.0F, 1.0F);
+        RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
         AbstractGui.blit(matrixStack, xBar, yBar, 0, 0, 91, 5, 91, 10);
 
         if (xpRequired > 0)
         {
-            int filled = Math.min((int)Math.floor(playerXp * 92 / xpRequired), 91);
+            int filled = reachLimit ? 91 : Math.min((int)Math.floor(playerXp * 92 / xpRequired), 91);
 
             if (filled > 0)
             {
                 AbstractGui.blit(matrixStack, xBar, yBar, 0, 5, filled, 5, 91, 10);
             }
 
-            AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.GRAY + name + TextFormatting.YELLOW + " " + currentLvl, xText, yText, 16777215);
+            AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.GRAY + name + (reachLimit ? TextFormatting.GOLD : TextFormatting.YELLOW) + " " + currentLvl, xText, yText, 16777215);
 
             if (reachLimit)
             {
@@ -1049,12 +1075,15 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
+        if (this.showArmor)
+        {
         for (Slot slot : this.skyBlockArmorContainer.inventorySlots)
         {
             if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isEnabled())
             {
                 this.hoveredSlot = slot;
             }
+        }
         }
         RenderSystem.popMatrix();
     }
@@ -1080,13 +1109,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         RenderSystem.enableDepthTest();
-
-        if (SBExtendedConfig.INSTANCE.showItemRarity)
-        {
-            SBRenderUtils.renderRarity(slot.getStack(), slot.xPos, slot.yPos);
-        }
-
         this.itemRenderer.renderItemAndEffectIntoGUI(itemStack, i, j);
+        
+        int slotLeft = slot.xPos;
+        int slotTop = slot.yPos;
+        int slotRight = slotLeft + 16;
+        int slotBottom = slotTop + 16;
+        int green = ColorUtils.to32Bit(85, 255, 85, 150);
+
+        if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().getBoolean("active"))
+        {
+            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
+        }
+        
         this.renderItemOverlayIntoGUI(itemStack, i, j);
         this.itemRenderer.zLevel = 0.0F;
         this.setBlitOffset(0);
@@ -1094,12 +1129,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void renderItemOverlayIntoGUI(ItemStack itemStack, int xPosition, int yPosition)
     {
-        if (!itemStack.isEmpty())
+        if (!itemStack.isEmpty() && itemStack.getCount() != 1)
         {
             MatrixStack matrixstack = new MatrixStack();
-
-            if (itemStack.getCount() != 1)
-            {
                 FontRenderer fontRenderer = this.font;
                 String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.getCount()));
 
@@ -1112,7 +1144,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                 IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
                 fontRenderer.renderString(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215, true, matrixstack.getLast().getMatrix(), irendertypebuffer$impl, false, 0, 15728880);
                 irendertypebuffer$impl.finish();
-            }
         }
     }
 
@@ -1250,7 +1281,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (this.skyblockProfiles == null)
         {
-            URL url = new URL(SBAPIUtils.SKYBLOCK_PROFILE + this.sbProfileId);
+            URL url = new URL(APIUrl.SKYBLOCK_PROFILE.getUrl() + this.sbProfileId);
             JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
             JsonElement profile = obj.get("profile");
 
@@ -1271,7 +1302,14 @@ public class SkyBlockAPIViewerScreen extends Screen
         for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
-            this.getCraftedMinions(profiles.get(userUUID).getAsJsonObject());
+            JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
+            this.getCraftedMinions(currentUserProfile);
+
+            if (banking != null)
+            {
+                this.getBankHistories(banking.getAsJsonObject());
+            }
+            this.data.setHasBankHistory(banking != null && this.sbBankHistories.size() > 0);
         }
 
         this.processCraftedMinions();
@@ -1316,6 +1354,20 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.refreshBasicInfoViewButton(this.basicInfoButton, true);
         this.refreshOthersViewButton(this.othersButton, false);
         this.loadingApi = false;
+    }
+    
+    private void getBankHistories(JsonObject banking)
+    {
+        SBBankHistory[] bankHistory = new Gson().fromJson(banking.get("transactions"), SBBankHistory[].class);
+        Collections.reverse(Arrays.asList(bankHistory));
+
+        for (SBBankHistory bank : bankHistory)
+        {
+            this.sbBankHistories.add(new SBBankHistory.Stats(TextFormatting.DARK_GRAY + "------------------------------"));
+            this.sbBankHistories.add(new SBBankHistory.Stats("Initiator: " + (bank.getName().equals("Bank Interest") ? TextComponentUtils.formattedString(bank.getName(), ColorUtils.toDecimal(255, 215, 0)) : bank.getName())));
+            this.sbBankHistories.add(new SBBankHistory.Stats(bank.getAction().component.getString() + " " + TextFormatting.GOLD + SBNumberUtils.formatWithM(bank.getAmount()) + TextFormatting.RESET + " about " + TimeUtils.getRelativeTime(bank.getTimestamp())));
+        }
+        this.sbBankHistories.add(new SBBankHistory.Stats(TextFormatting.DARK_GRAY + "------------------------------"));
     }
 
     private String getLocation(JsonObject objStatus, String uuid)
@@ -1539,17 +1591,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String[] split = unlockedTier.getAsString().toLowerCase().split("_");
                 String unlockedId = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
-
-                for (SBCollections.ItemId sbItem : SBCollections.ItemId.VALUES)
-                {
-                    String sbItemId = sbItem.name().toLowerCase();
-
-                    if (unlockedId.contains(sbItemId))
-                    {
-                        unlockedId = unlockedId.replace(sbItemId, sbItem.getMinecraftId());
-                    }
-                }
-                skyblockCollectionMap.put(unlockedId, unlockedLvl);
+                skyblockCollectionMap.put(this.replaceId(unlockedId), unlockedLvl);
             }
         }
 
@@ -1562,22 +1604,12 @@ public class SkyBlockAPIViewerScreen extends Screen
             List<SBCollections> combat = new ArrayList<>();
             List<SBCollections> foraging = new ArrayList<>();
             List<SBCollections> fishing = new ArrayList<>();
+            List<SBCollections> unknown = new ArrayList<>();
 
             for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
             {
-                String collectionId = collection.getKey().toLowerCase();
+                String collectionId = this.replaceId(collection.getKey().toLowerCase());
                 int collectionCount = collection.getValue().getAsInt();
-
-                for (SBCollections.ItemId sbItem : SBCollections.ItemId.VALUES)
-                {
-                    String sbItemId = sbItem.name().toLowerCase();
-
-                    if (collectionId.contains(sbItemId))
-                    {
-                        collectionId = collectionId.replace(sbItemId, sbItem.getMinecraftId());
-                    }
-                }
-
                 String[] split = collectionId.split(":");
                 String itemId = split[0];
                 int meta = 0;
@@ -1608,37 +1640,70 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (newItemReg != null)
                 {
                     itemId = EntityRenaming1510.ITEM_RENAME_MAP.getOrDefault(newItemReg, newItemReg);
+                    
+                    if (itemId.equals("minecraft:carved_pumpkin"))//TODO Map getOrDefault
+                    {
+                        itemId = "minecraft:pumpkin";
+                    }
                 }
-
+                
                 Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
-                SBCollections.Type type = SBCollections.Type.FARMING;
-                SBCollections itemCollection = new SBCollections(new ItemStack(item), type, collectionCount, level);
+                ItemStack itemStack = ItemStack.EMPTY;
 
+                if (item == null)//TODO
+                {
+                    ItemStack unknownCollection = new ItemStack(Blocks.BARRIER);
+
+                    if (itemId.startsWith("enchanted_"))
+                    {
+                        item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId.replace("enchanted_", "")));
+
+                        if (item == null)
+                        {
+                            item = Blocks.BARRIER.asItem();
+                        }
+
+                        unknownCollection = new ItemStack(item);
+                        CompoundNBT compound = new CompoundNBT();
+                        compound.put("Enchantments", new ListNBT());
+                        unknownCollection.setTag(compound);
+                        unknownCollection.setDisplayName(TextComponentUtils.component(WordUtils.capitalize(itemId.replace("_", " "))));
+                    }
+
+                    item = Blocks.BARRIER.asItem();
+                    itemStack = unknownCollection;
+                }
+                else
+                {
+                    itemStack = new ItemStack(item);
+                }
+                
                 if (item == Blocks.COBBLESTONE.asItem() || item == Items.COAL || item == Items.IRON_INGOT || item == Items.GOLD_INGOT || item == Items.DIAMOND || item == Items.EMERALD || item == Items.REDSTONE
                         || item == Items.QUARTZ || item == Blocks.OBSIDIAN.asItem() || item == Items.GLOWSTONE_DUST || item == Blocks.GRAVEL.asItem() || item == Blocks.ICE.asItem() || item == Blocks.NETHERRACK.asItem()
                         || item == Blocks.SAND.asItem() || item == Blocks.END_STONE.asItem() || item == Items.LAPIS_LAZULI)
                 {
-                    mining.add(itemCollection);
-                    type = SBCollections.Type.MINING;
+                    mining.add(new SBCollections(itemStack, SBCollections.Type.MINING, collectionCount, level));
                 }
                 else if (item == Items.ROTTEN_FLESH || item == Items.BONE || item == Items.STRING || item == Items.SPIDER_EYE || item == Items.GUNPOWDER || item == Items.ENDER_PEARL || item == Items.GHAST_TEAR || item == Items.SLIME_BALL || item == Items.BLAZE_ROD || item == Items.MAGMA_CREAM)
                 {
-                    combat.add(itemCollection);
-                    type = SBCollections.Type.COMBAT;
+                    combat.add(new SBCollections(itemStack, SBCollections.Type.COMBAT, collectionCount, level));
                 }
                 else if (item == Blocks.OAK_LOG.asItem() || item == Blocks.BIRCH_LOG.asItem() || item == Blocks.SPRUCE_LOG.asItem() || item == Blocks.ACACIA_LOG.asItem() || item == Blocks.JUNGLE_LOG.asItem() || item == Blocks.DARK_OAK_LOG.asItem())
                 {
-                    foraging.add(itemCollection);
-                    type = SBCollections.Type.FORAGING;
+                    foraging.add(new SBCollections(itemStack, SBCollections.Type.FORAGING, collectionCount, level));
                 }
                 else if (item == Items.COD || item == Items.SALMON || item == Items.PUFFERFISH || item == Items.TROPICAL_FISH || item == Items.PRISMARINE_SHARD || item == Items.PRISMARINE_CRYSTALS || item == Items.CLAY_BALL || item == Blocks.LILY_PAD.asItem() || item == Blocks.SPONGE.asItem() || item == Items.INK_SAC)
                 {
-                    fishing.add(itemCollection);
-                    type = SBCollections.Type.FISHING;
+                    fishing.add(new SBCollections(itemStack, SBCollections.Type.FISHING, collectionCount, level));
+                }
+                else if (item == Items.SUGAR_CANE || item == Blocks.PUMPKIN.asItem() || item == Items.CARROT || item == Items.WHEAT || item == Items.POTATO || item == Items.MELON || item == Items.COCOA_BEANS || item == Items.FEATHER || item == Items.CHICKEN
+                        || item == Items.PORKCHOP || item == Items.MUTTON || item == Items.LEATHER || item == Blocks.RED_MUSHROOM.asItem() || item == Items.NETHER_WART || item == Items.RABBIT || item == Items.WHEAT_SEEDS || item == Blocks.CACTUS.asItem())
+                {
+                    farming.add(new SBCollections(itemStack, SBCollections.Type.FARMING, collectionCount, level));
                 }
                 else
                 {
-                    farming.add(itemCollection);
+                    unknown.add(new SBCollections(itemStack, SBCollections.Type.UNKNOWN, collectionCount, level));
                 }
             }
 
@@ -1648,6 +1713,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             combat.sort(com);
             foraging.sort(com);
             fishing.sort(com);
+            unknown.sort(com);
 
             if (!farming.isEmpty())
             {
@@ -1678,6 +1744,12 @@ public class SkyBlockAPIViewerScreen extends Screen
                 this.collections.add(new SBCollections(ItemStack.EMPTY, SBCollections.Type.FISHING, -1, -1));
                 this.collections.addAll(fishing);
             }
+            if (!unknown.isEmpty())
+            {
+                this.collections.add(dummyCollection);
+                this.collections.add(new SBCollections(ItemStack.EMPTY, SBCollections.Type.UNKNOWN, -1, -1));
+                this.collections.addAll(unknown);
+            }
             this.collections.add(dummyCollection);
         }
         else
@@ -1699,18 +1771,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
                 {
                     int count = sackEntry.getValue().getAsInt();
-                    String sackId = sackEntry.getKey().toLowerCase();
-
-                    for (SBCollections.ItemId sbItem : SBCollections.ItemId.VALUES)
-                    {
-                        String sbItemId = sbItem.name().toLowerCase();
-
-                        if (sackId.contains(sbItemId))
-                        {
-                            sackId = sackId.replace(sbItemId, sbItem.getMinecraftId());
-                        }
-                    }
-
+                    String sackId = this.replaceId(sackEntry.getKey().toLowerCase());
                     String[] split = sackId.split(":");
                     String itemId = split[0];
                     int meta = 0;
@@ -1731,8 +1792,8 @@ public class SkyBlockAPIViewerScreen extends Screen
                     if (itemId.equals("revenant_flesh") || itemId.equals("tarantula_web") || itemId.equals("wolf_tooth"))
                     {
                         SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase());
-                        ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
-                        itemStack.setDisplayName(slayerDrops.getDisplayName());
+                        ItemStack itemStack = new ItemStack(slayerDrops.baseItem, count);
+                        itemStack.setDisplayName(slayerDrops.displayName);
                         ListNBT listEnch = new ListNBT();
                         listEnch.add(new CompoundNBT());
                         itemStack.getTag().put("Enchantments", listEnch);
@@ -1758,7 +1819,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             else
             {
                 ItemStack barrier = new ItemStack(Blocks.BARRIER);
-//                barrier.setDisplayName(TextComponentUtils.create(TextFormatting.RED + "Sacks is not available!"));TODO
+                //                barrier.setDisplayName(TextComponentUtils.create(TextFormatting.RED + "Sacks is not available!"));TODO
 
                 for (int i = 0; i < 36; ++i)
                 {
@@ -1777,7 +1838,10 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         if (count >= 1000)
         {
-            itemStack.setTag(new CompoundNBT());
+            if (!itemStack.hasTag())
+            {
+                itemStack.setTag(new CompoundNBT());
+            }
 
             if (!itemStack.getTag().contains("display", Constants.NBT.TAG_COMPOUND))
             {
@@ -1851,14 +1915,17 @@ public class SkyBlockAPIViewerScreen extends Screen
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setDisplayName(TextComponentUtils.component(TextFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " "))));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + type.getType().getName() + " Pet")));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.DARK_GRAY + type.getType().getName() + " Pet")));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson((""))));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + (active ? TextFormatting.GREEN + "Active Pet" : TextFormatting.RED + "Inactive Pet")))));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Next level is " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent())))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent()))));
 
                     if (level.getCurrentPetLevel() < 100)
                     {
-                        list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + TextFormatting.GRAY + "Current EXP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired())))));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired()))));
+                    }
+                    if (candyUsed > 0 || heldItem != null)
+                    {
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson((""))));
                     }
                     if (candyUsed > 0)
                     {
@@ -1879,6 +1946,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson((TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp())))));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson((rarity + "" + TextFormatting.BOLD + tier + " PET"))));
                     itemStack.getTag().getCompound("display").put("Lore", list);
+                    itemStack.getTag().putBoolean("active", active);
                     petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 
                     switch (tier)
@@ -2024,7 +2092,8 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.allStat.setHealth(250);
         }
-        for (ItemStack itemStack : this.armorItems.stream().filter(armor -> !armor.isEmpty() && armor.hasTag() && armor.getTag().getCompound("ExtraAttributes").getString("modifier").equals("renowned")).collect(Collectors.toList()))
+        
+        this.armorItems.stream().filter(armor -> !armor.isEmpty() && armor.hasTag() && armor.getTag().getCompound("ExtraAttributes").getString("modifier").equals("renowned")).collect(Collectors.toList()).forEach(itemStack ->
         {
             this.allStat.setHealth(Math.round(this.allStat.getHealth() * 1.01D));
             this.allStat.setDefense(Math.round(this.allStat.getDefense() * 1.01D));
@@ -2036,7 +2105,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.allStat.setSeaCreatureChance(Math.round(this.allStat.getSeaCreatureChance() * 1.01D));
             this.allStat.setMagicFind(Math.round(this.allStat.getMagicFind() * 1.01D));
             this.allStat.setPetLuck(Math.round(this.allStat.getPetLuck() * 1.01D));
-        }
+        });
     }
 
     private void calculatePlayerStats(JsonObject currentProfile)
@@ -2237,7 +2306,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                         String lastLore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(list.size() - 1)).getString());
                         Matcher matcher = STATS_PATTERN.matcher(lore);
 
-                        if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY")))
+                        if (!armor && !(lastLore.endsWith(" ACCESSORY") || lastLore.endsWith(" HATCCESSORY") || lastLore.endsWith(" ACCESSORY a") || lastLore.endsWith(" HATCCESSORY a")))
                         {
                             continue;
                         }
@@ -2373,9 +2442,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         Date firstJoinDate = new Date(firstJoinMillis);
         Date lastSaveDate = new Date(lastSaveMillis);
-        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ROOT);
         String lastLogout = logoutDate.format(lastSaveDate);
-        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ROOT);
         joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
         String firstJoinDateFormat = joinDate.format(firstJoinDate);
 
@@ -2865,7 +2934,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SlayerType type)
     {
         List<SkyBlockSlayerInfo> list = new ArrayList<>();
-        ExpProgress[] progress = type.getProgress();
+        ExpProgress[] progress = type.progress;
         JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase());
 
         if (slayer != null)
@@ -2879,6 +2948,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int slayerLvl = 0;
                 int levelToCheck = 0;
                 int xpToNextLvl = 0;
+                boolean reachLimit = false;
 
                 for (ExpProgress skill : progress)
                 {
@@ -2904,11 +2974,12 @@ public class SkyBlockAPIViewerScreen extends Screen
                 else
                 {
                     levelToCheck = progress.length;
+                    reachLimit = true;
                 }
 
                 this.setSlayerSkillLevel(type, slayerLvl);
 
-                list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + type.getName() + " Slayer: " + TextFormatting.YELLOW + "LVL " + slayerLvl));
+                list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + type.name + " Slayer: " + (reachLimit ? TextFormatting.GOLD : TextFormatting.YELLOW) + "LVL " + slayerLvl));
                 list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "EXP: " + TextFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? NumberUtils.NUMBER_FORMAT.format(playerSlayerXp) : NumberUtils.NUMBER_FORMAT.format(playerSlayerXp) + TextFormatting.DARK_PURPLE + "/" + TextFormatting.LIGHT_PURPLE + NumberUtils.NUMBER_FORMAT.format(xpRequired))));
 
                 if (xpToNextLvl != 0)
@@ -2916,7 +2987,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "XP to " + TextFormatting.YELLOW + "LVL " + levelToCheck + ": " + TextFormatting.LIGHT_PURPLE + NumberUtils.NUMBER_FORMAT.format(xpToNextLvl)));
                 }
 
-                list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl));
+                list.add(SkyBlockSlayerInfo.createMobAndXp(type.name, playerSlayerXp + "," + xpRequired + "," + xpToNextLvl, reachLimit));
                 int amount = 0;
 
                 for (int i = 1; i <= 4; i++)
@@ -2991,6 +3062,55 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         return NumberUtils.NUMBER_FORMAT.format(kills) + " kill" + (kills <= 1 ? "" : "s");
     }
+    
+    private String replaceId(String id)
+    {
+        for (Map.Entry<String, String> sbItem : SKYBLOCK_ITEM_ID_REMAP.entrySet())
+        {
+            String sbItemId = sbItem.getKey();
+
+            if (id.contains(sbItemId))
+            {
+                id = id.replace(sbItemId, sbItem.getValue());
+            }
+        }
+        return id;
+    }
+    
+    private void setShowArmor()
+    {
+        if (this.showArmor)
+        {
+            for (int i = 0; i < this.player.inventory.armorInventory.size(); i++)
+            {
+                this.player.setItemStackToSlot(EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, i), ItemStack.EMPTY);
+            }
+            this.showArmorButton.setName(TextComponentUtils.component("Show Armor: " + TextFormatting.RED + "OFF"));
+            this.showArmor = false;
+        }
+        else
+        {
+            this.setPlayerArmors();
+            this.showArmorButton.setName(TextComponentUtils.component("Show Armor: " + TextFormatting.GREEN + "ON"));
+            this.showArmor = true;
+        }
+    }
+    
+    private void setPlayerArmors()
+    {
+        for (ItemStack armor : this.armorItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList()))
+        {
+            try
+            {
+                EquipmentSlotType type = MobEntity.getSlotForItemStack(armor);
+                this.player.setItemStackToSlot(type, armor);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private static void renderEntity(int posX, int posY, int scale, LivingEntity entity)
     {
@@ -3016,12 +3136,57 @@ public class SkyBlockAPIViewerScreen extends Screen
         entityrenderermanager.setRenderShadow(true);
         RenderSystem.popMatrix();
     }
+    
+    public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity)//TODO
+    {
+        float f = (float)Math.atan((double)(mouseX / 40.0F));
+        float f1 = (float)Math.atan((double)(mouseY / 40.0F));
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float)posX, (float)posY, 1050.0F);
+        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
+        MatrixStack matrixstack = new MatrixStack();
+        matrixstack.translate(0.0D, 0.0D, 1000.0D);
+        matrixstack.scale((float)scale, (float)scale, (float)scale);
+        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
+        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
+        quaternion.multiply(quaternion1);
+        matrixstack.rotate(quaternion);
+        float f2 = livingEntity.renderYawOffset;
+        float f3 = livingEntity.rotationYaw;
+        float f4 = livingEntity.rotationPitch;
+        float f5 = livingEntity.prevRotationYawHead;
+        float f6 = livingEntity.rotationYawHead;
+//        livingEntity.renderYawOffset = 180.0F + f * 20.0F;
+//        livingEntity.rotationYaw = 180.0F + f * 40.0F;
+//        livingEntity.rotationPitch = -f1 * 20.0F;
+        
+        livingEntity.renderYawOffset = (float)Math.atan(mouseX / 40.0F) * 20.0F;
+        livingEntity.rotationYaw = (float)Math.atan(mouseX / 40.0F) * 40.0F;
+        livingEntity.rotationPitch = -((float)Math.atan(mouseY / 40.0F)) * 20.0F;
+        
+        livingEntity.rotationYawHead = livingEntity.rotationYaw;
+        livingEntity.prevRotationYawHead = livingEntity.rotationYaw;
+        EntityRendererManager entityrenderermanager = Minecraft.getInstance().getRenderManager();
+        quaternion1.conjugate();
+        entityrenderermanager.setCameraOrientation(quaternion1);
+        entityrenderermanager.setRenderShadow(false);
+        IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        RenderSystem.runAsFancy(() -> entityrenderermanager.renderEntityStatic(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880));
+        irendertypebuffer$impl.finish();
+        entityrenderermanager.setRenderShadow(true);
+        livingEntity.renderYawOffset = f2;
+        livingEntity.rotationYaw = f3;
+        livingEntity.rotationPitch = f4;
+        livingEntity.prevRotationYawHead = f5;
+        livingEntity.rotationYawHead = f6;
+        RenderSystem.popMatrix();
+     }
 
     private void drawItemStackSlot(MatrixStack matrixStack, int x, int y, ItemStack itemStack)
     {
         this.drawSprite(matrixStack, x + 1, y + 1);
         RenderSystem.enableRescaleNormal();
-        this.minecraft.getItemRenderer().renderItemIntoGUI(itemStack, x + 2, y + 2);
+        this.itemRenderer.renderItemIntoGUI(itemStack, x + 2, y + 2);
         RenderSystem.disableRescaleNormal();
     }
 
@@ -3031,13 +3196,34 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderUtils.bindTexture(AbstractGui.STATS_ICON_LOCATION);
         AbstractGui.blit(matrixStack, left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
     }
+    
+    private String getTextPercentage(int current, int total)
+    {
+        int size = 16;
+
+        if (current > total)
+        {
+            throw new IllegalArgumentException();
+        }
+
+        int donePercents = 100 * current / total;
+        int doneLength = size * donePercents / 100;
+
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < size; i++)
+        {
+            builder.append(i < doneLength ? TextFormatting.DARK_GREEN + "-" + TextFormatting.WHITE : TextFormatting.WHITE + "-");
+        }
+        return builder.toString();
+    }
 
     public class SkyBlockInventory
     {
-        private final List<ItemStack> items;
-        private final SBInventoryGroup group;
+        final List<ItemStack> items;
+        final SBInventoryGroup group;
 
-        public SkyBlockInventory(List<ItemStack> items, SBInventoryGroup group)
+        SkyBlockInventory(List<ItemStack> items, SBInventoryGroup group)
         {
             this.items = items;
             this.group = group;
@@ -3045,18 +3231,18 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         public List<ItemStack> getItems()
         {
-            return this.items;
+            return items;
         }
 
         public SBInventoryGroup getGroup()
         {
-            return this.group;
+            return group;
         }
     }
 
     static class ArmorContainer extends Container
     {
-        public ArmorContainer()
+        ArmorContainer()
         {
             super(null, 0);
             this.addSlot(new Slot(SkyBlockAPIViewerScreen.TEMP_ARMOR_INVENTORY, 0, -52, 75)); // boots
@@ -3094,7 +3280,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         public final NonNullList<ItemStack> itemList = NonNullList.create();
 
-        public SkyBlockContainer()
+        SkyBlockContainer()
         {
             super(null, 0);
 
@@ -3132,12 +3318,12 @@ public class SkyBlockAPIViewerScreen extends Screen
             return false;
         }
 
-        public boolean canScroll()
+        boolean canScroll()
         {
             return this.itemList.size() > SkyBlockAPIViewerScreen.SIZE;
         }
 
-        public void scrollTo(float scroll)
+        void scrollTo(float scroll)
         {
             int i = (this.itemList.size() + 9 - 1) / 9 - 4;
             int j = (int)(scroll * i + 0.5D);
@@ -3171,15 +3357,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         private final String title;
         private final String value;
 
-        public SkyBlockInfo(String title, String value)
+        SkyBlockInfo(String title, String value)
         {
             this.title = title;
             this.value = value;
-        }
-
-        public String getTitle()
-        {
-            return this.title;
         }
 
         public String getValue()
@@ -3201,48 +3382,35 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     static class SkyBlockSlayerInfo
     {
-        private final String text;
-        private String xp;
-        private Type type = Type.TEXT;
+        final String text;
+        String xp;
+        boolean reachLimit;
+        Type type = Type.TEXT;
 
-        public SkyBlockSlayerInfo(String text)
+        SkyBlockSlayerInfo(String text)
         {
             this.text = text;
         }
 
-        public SkyBlockSlayerInfo(String text, String xp, Type type)
+        SkyBlockSlayerInfo(String text, String xp, Type type, boolean reachLimit)
         {
             this(text);
             this.xp = xp;
             this.type = type;
+            this.reachLimit = reachLimit;
         }
 
-        public String getText()
+        static SkyBlockSlayerInfo createMobAndXp(String slayerType, String xp, boolean reachLimit)
         {
-            return this.text;
+            return new SkyBlockSlayerInfo(slayerType, xp, Type.XP_AND_MOB, reachLimit);
         }
 
-        public String getXp()
-        {
-            return this.xp;
-        }
-
-        public Type getType()
-        {
-            return this.type;
-        }
-
-        public static SkyBlockSlayerInfo createMobAndXp(String slayerType, String xp)
-        {
-            return new SkyBlockSlayerInfo(slayerType, xp, Type.XP_AND_MOB);
-        }
-
-        public static SkyBlockSlayerInfo empty()
+        static SkyBlockSlayerInfo empty()
         {
             return new SkyBlockSlayerInfo("");
         }
 
-        public enum Type
+        enum Type
         {
             TEXT, XP_AND_MOB;
         }
@@ -3250,9 +3418,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     static class EmptyStats extends ScrollingListScreen
     {
-        private final Type type;
+        final Type type;
 
-        public EmptyStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, Type type)
+        EmptyStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, Type type)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.type = type;
@@ -3260,11 +3428,6 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         @Override
         protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top) {}
-
-        public Type getType()
-        {
-            return this.type;
-        }
 
         enum Type
         {
@@ -3276,7 +3439,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         private final List<SkyBlockInfo> stats;
 
-        public InfoStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockInfo> stats)
+        InfoStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockInfo> stats)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3292,7 +3455,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             SkyBlockInfo stat = InfoStats.this.stats.get(index);
-            this.fontRenderer.drawString(matrixStack, stat.getTitle(), SkyBlockAPIViewerScreen.this.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
+            this.fontRenderer.drawString(matrixStack, stat.title, SkyBlockAPIViewerScreen.this.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
             this.fontRenderer.drawString(matrixStack, stat.getValue(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getValue()) + 195, top, index % 2 == 0 ? 16777215 : 9474192);
         }
     }
@@ -3301,7 +3464,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         private final List<SkyBlockSlayerInfo> stats;
 
-        public SlayerStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockSlayerInfo> stats)
+        SlayerStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockSlayerInfo> stats)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3319,10 +3482,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             SkyBlockSlayerInfo stat = this.stats.get(index);
 
-            switch (stat.getType())
+            switch (stat.type)
             {
             case XP_AND_MOB:
-                if (stat.getText().equals("Zombie"))
+                if (stat.text.equals("Zombie"))
                 {
                     ZombieEntity zombie = new ZombieEntity(this.world);
                     ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
@@ -3337,7 +3500,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     zombie.setItemStackToSlot(EquipmentSlotType.MAINHAND, heldItem);
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, zombie);
                 }
-                else if (stat.getText().equals("Spider"))
+                else if (stat.text.equals("Spider"))
                 {
                     SpiderEntity spider = new SpiderEntity(EntityType.SPIDER, this.world);
                     CaveSpiderEntity cave = new CaveSpiderEntity(EntityType.CAVE_SPIDER, this.world);
@@ -3352,14 +3515,22 @@ public class SkyBlockAPIViewerScreen extends Screen
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, wolf);
                 }
 
+                float[] color = ColorUtils.toFloatArray(0, 255, 255);
+                boolean reachLimit = stat.reachLimit;
+
+                if (reachLimit)
+                {
+                    color = ColorUtils.toFloatArray(255, 185, 0);
+                }
+
                 this.mc.getTextureManager().bindTexture(XP_BARS);
-                RenderSystem.color4f(0.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
                 RenderSystem.disableBlend();
 
-                String[] xpSplit = stat.getXp().split(",");
+                String[] xpSplit = stat.xp.split(",");
                 int playerSlayerXp = Integer.valueOf(xpSplit[0]);
                 int xpRequired = Integer.valueOf(xpSplit[1]);
-                int filled = Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
+                int filled = stat.reachLimit ? 91 : Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
                 AbstractGui.blit(matrixStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
                 if (filled > 0)
@@ -3373,11 +3544,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             default:
                 if (this.getSize() == 1)
                 {
-                    this.fontRenderer.drawString(matrixStack, stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
+                    this.fontRenderer.drawString(matrixStack, stat.text, SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
                 }
                 else
                 {
-                    this.fontRenderer.drawString(matrixStack, stat.getText(), SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.getText()) + 180, top, 16777215);
+                    this.fontRenderer.drawString(matrixStack, stat.text, SkyBlockAPIViewerScreen.this.guiLeft - this.fontRenderer.getStringWidth(stat.text) + 180, top, 16777215);
                 }
                 break;
             }
@@ -3386,9 +3557,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     class Others extends ScrollingListScreen
     {
-        private final List<SBStats> stats;
+        private final List<?> stats;
 
-        public Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBStats> stats, SBStats.Type type)
+        Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<?> stats)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3406,15 +3577,25 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (!this.stats.isEmpty())
             {
                 FontRenderer font = this.fontRenderer;
-                SBStats stat = this.stats.get(index);
+                Object obj = this.stats.get(index);
 
-                if (!StringUtils.isNullOrEmpty(stat.getName()) && this.fontRenderer.getStringWidth(stat.getName()) > 200)
+                if (obj instanceof SBStats)
                 {
-                    font = ClientUtils.unicodeFontRenderer;
-                }
+                    SBStats stat = (SBStats)obj;
+                    
+                    if (!StringUtils.isNullOrEmpty(stat.getName()) && this.fontRenderer.getStringWidth(stat.getName()) > 200)
+                    {
+                        font = ClientUtils.unicodeFontRenderer;
+                    }
 
-                font.drawString(matrixStack, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
-                font.drawString(matrixStack, stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - font.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
+                    font.drawString(matrixStack, StringUtils.isNullOrEmpty(stat.getName()) ? "" : stat.getName(), SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                    font.drawString(matrixStack, stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - font.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
+                }
+                else if (obj instanceof SBBankHistory.Stats)
+                {
+                    SBBankHistory.Stats stat = (SBBankHistory.Stats)obj;
+                    font.drawString(matrixStack, stat.getStats(), SkyBlockAPIViewerScreen.this.guiLeft - 55, top, 16777215);
+                }
             }
         }
     }
@@ -3424,7 +3605,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         private final List<SBCollections> collection;
         private final SkyBlockAPIViewerScreen parent;
 
-        public SkyBlockCollections(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBCollections> collection)
+        SkyBlockCollections(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBCollections> collection)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.collection = collection;
@@ -3441,18 +3622,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
         {
             SBCollections collection = this.collection.get(index);
-
-            if (!collection.getItemStack().isEmpty() && collection.getCollectionType() != null)
+            
+            if (collection.getCollectionType() != null)
             {
-                this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 65, top, collection.getItemStack());
-                this.fontRenderer.drawString(matrixStack, collection.getItemStack().getDisplayName().getString() + " " + TextFormatting.GOLD + collection.getLevel(), this.parent.guiLeft - 41, top + 6, 16777215);
-                this.fontRenderer.drawString(matrixStack, collection.getCollectionAmount(), this.parent.guiLeft - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
-            }
-            else
-            {
-                if (collection.getCollectionType() != null)
+                if (!collection.getItemStack().isEmpty())
                 {
-                    this.fontRenderer.drawString(matrixStack, new StringTextComponent(collection.getCollectionType().getName()).mergeStyle(TextFormatting.YELLOW, TextFormatting.BOLD, TextFormatting.UNDERLINE).getString(), this.parent.guiLeft - 65, top + 5, 16777215);
+                    String collectionLvl = collection.getCollectionType() == SBCollections.Type.UNKNOWN ? "" : " " + TextFormatting.GOLD + collection.getLevel();
+                    this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 65, top, collection.getItemStack());
+                    this.fontRenderer.drawString(matrixStack, (collection.getCollectionType() == SBCollections.Type.UNKNOWN ? TextFormatting.RED : "") + collection.getItemStack().getDisplayName().getString() + collectionLvl, this.parent.guiLeft - 41, top + 6, 16777215);
+                    this.fontRenderer.drawString(matrixStack, collection.getCollectionAmount(), this.parent.guiLeft - this.fontRenderer.getStringWidth(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                }
+                else
+                {
+                    this.fontRenderer.drawString(matrixStack, TextFormatting.YELLOW + "" + TextFormatting.BOLD + TextFormatting.UNDERLINE + collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }
             }
         }
@@ -3463,7 +3645,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         private final List<SBMinions.CraftedInfo> craftMinions;
         private final SkyBlockAPIViewerScreen parent;
 
-        public SkyBlockCraftedMinions(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBMinions.CraftedInfo> craftMinions)
+        SkyBlockCraftedMinions(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBMinions.CraftedInfo> craftMinions)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.craftMinions = craftMinions;
@@ -3498,61 +3680,41 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private enum SlayerType
+    enum SlayerType
     {
         ZOMBIE("Zombie", ExpProgress.ZOMBIE_SLAYER),
         SPIDER("Spider", ExpProgress.SPIDER_SLAYER),
         WOLF("Wolf", ExpProgress.WOLF_SLAYER);
 
-        private final String name;
-        private final ExpProgress[] progress;
+        final String name;
+        final ExpProgress[] progress;
 
         private SlayerType(String name, ExpProgress[] progress)
         {
             this.name = name;
             this.progress = progress;
         }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        public ExpProgress[] getProgress()
-        {
-            return this.progress;
-        }
     }
 
-    private enum SlayerDrops
+    enum SlayerDrops
     {
         TARANTULA_WEB(TextComponentUtils.formatted("Tarantula Web", TextFormatting.GREEN), Items.STRING),
         REVENANT_FLESH(TextComponentUtils.formatted("Revenant Flesh", TextFormatting.GREEN), Items.ROTTEN_FLESH),
         WOLF_TOOTH(TextComponentUtils.formatted("Wolf Tooth", TextFormatting.GREEN), Items.GHAST_TEAR);
 
-        private final IFormattableTextComponent displayName;
-        private final Item baseItem;
+        final IFormattableTextComponent displayName;
+        final Item baseItem;
 
         private SlayerDrops(IFormattableTextComponent displayName, Item baseItem)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;
         }
-
-        public IFormattableTextComponent getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public Item getBaseItem()
-        {
-            return this.baseItem;
-        }
     }
 
-    private static class ExtendedInventory extends Inventory
+    static class ExtendedInventory extends Inventory
     {
-        public ExtendedInventory(int slotCount)
+        ExtendedInventory(int slotCount)
         {
             super(slotCount);
         }
@@ -3564,7 +3726,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private enum ViewButton
+    enum ViewButton
     {
         PLAYER,
         SKILLS,
@@ -3575,17 +3737,18 @@ public class SkyBlockAPIViewerScreen extends Screen
         Button button;
     }
 
-    private enum OthersViewButton
+    enum OthersViewButton
     {
         KILLS,
         DEATHS,
-        OTHER_STATS;
+        OTHER_STATS,
+        BANK_HISTORY;
 
         protected static final OthersViewButton[] VALUES = OthersViewButton.values();
         Button button;
     }
 
-    private enum BasicInfoViewButton
+    enum BasicInfoViewButton
     {
         PLAYER_STATS,
         INVENTORY,

@@ -2,10 +2,13 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -18,6 +21,12 @@ import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 public abstract class MixinMinecraft
 {
     private final Minecraft that = (Minecraft) (Object) this;
+
+    @Inject(method = "run()V", at = @At("HEAD"))
+    private void run(CallbackInfo info)
+    {
+        SBAPIUtils.getSupportedPackNames();
+    }
 
     @Redirect(method = "processKeyBinds()V", at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isPressed()Z", ordinal = 3))
     private boolean disableInventory(KeyBinding key)

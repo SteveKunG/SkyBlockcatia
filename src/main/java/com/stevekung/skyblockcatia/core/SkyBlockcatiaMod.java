@@ -43,7 +43,6 @@ public class SkyBlockcatiaMod
     static
     {
         ToastLog.setup();
-        SBAPIUtils.getSupportedPackNames();
 
         CommonUtils.runAsync(() ->
         {

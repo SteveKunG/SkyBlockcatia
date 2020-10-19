@@ -1,8 +1,8 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -10,10 +10,6 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -25,7 +21,7 @@ public class VisitIslandToast implements IToast
 
     public VisitIslandToast(String name)
     {
-        this.itemStack = VisitIslandToast.getPlayerHead(name);
+        this.itemStack = SBRenderUtils.getPlayerHead(name);
         this.name = name;
     }
 
@@ -40,16 +36,5 @@ public class VisitIslandToast implements IToast
         toastGui.getMinecraft().fontRenderer.drawString(matrixStack, "is visiting Your Island!", 30, 18, ColorUtils.toDecimal(255, 255, 255));
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(this.itemStack, 8, 8);
         return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
-    }
-
-    private static ItemStack getPlayerHead(String name)
-    {
-        ItemStack itemStack = new ItemStack(Items.PLAYER_HEAD);
-        CompoundNBT compound = new CompoundNBT();
-        GameProfile profile = SkullTileEntity.updateGameProfile(new GameProfile(null, name));
-        compound.remove("SkullOwner");
-        compound.put("SkullOwner", NBTUtil.writeGameProfile(new CompoundNBT(), profile));
-        itemStack.setTag(compound);
-        return itemStack;
     }
 }

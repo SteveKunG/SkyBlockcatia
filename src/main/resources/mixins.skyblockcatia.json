@@ -24,6 +24,8 @@
         "MixinHeadLayer",
         "MixinHeldBlockLayer",
         "MixinItem",
+        "MixinItemRenderer",
+        "MixinItemStack",
         "MixinItemStackTileEntityRenderer",
         "MixinMinecraft",
         "MixinMouseHelper",

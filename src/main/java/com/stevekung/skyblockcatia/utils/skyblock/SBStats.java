@@ -37,9 +37,4 @@ public class SBStats
         }
         return NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.value);
     }
-
-    public enum Type
-    {
-        KILLS, DEATHS, OTHERS;
-    }
 }

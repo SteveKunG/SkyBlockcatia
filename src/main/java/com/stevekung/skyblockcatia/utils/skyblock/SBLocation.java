@@ -11,7 +11,7 @@ public enum SBLocation
     YOUR_ISLAND("Your Island"),
 
     // Public Island
-    VILLAGE("Village", ImmutableList.of(Blocks.POPPY, Blocks.DANDELION, Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CARROTS)),
+    VILLAGE("Village", ImmutableList.of(Blocks.POPPY, Blocks.DANDELION, Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CARROTS, (Blocks.POTATOES), (Blocks.WHEAT), (Blocks.NETHER_WART))),
     FARM("Farm", ImmutableList.of(Blocks.WHEAT)),
     COAL_MINE("Coal Mine", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE)),
     FOREST("Forest", ImmutableList.of(Blocks.OAK_LOG, Blocks.OAK_LEAVES)),
@@ -64,6 +64,11 @@ public enum SBLocation
 
     DUNGEON_HUB("Dungeon Hub"),
     DUNGEON("Dungeon"),
+    THE_CATACOMBS_E("The Catacombs (E)"),
+    THE_CATACOMBS_F1("The Catacombs (F1)"),
+    THE_CATACOMBS_F2("The Catacombs (F2)"),
+    THE_CATACOMBS_F3("The Catacombs (F3)"),
+    THE_CATACOMBS_F4("The Catacombs (F4)"),
     ;
 
     public static final SBLocation[] VALUES = SBLocation.values();
@@ -88,7 +93,7 @@ public enum SBLocation
 
     public boolean ignore()
     {
-        return this == SBLocation.YOUR_ISLAND || this == SBLocation.DUNGEON;
+        return this == SBLocation.YOUR_ISLAND || this == SBLocation.THE_CATACOMBS_E || this == SBLocation.THE_CATACOMBS_F1 || this == SBLocation.THE_CATACOMBS_F2 || this == SBLocation.THE_CATACOMBS_F3 || this == SBLocation.THE_CATACOMBS_F4;
     }
 
     public String getLocation()

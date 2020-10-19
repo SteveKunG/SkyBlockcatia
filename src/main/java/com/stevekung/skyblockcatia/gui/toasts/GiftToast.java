@@ -22,12 +22,12 @@ public class GiftToast implements IToast
     private final Random rand = new Random();
     private final ResourceLocation texture;
     private final ToastUtils.ItemDrop itemDrop;
-    private final long drawTime;
+    private final long maxDrawTime;
 
     public GiftToast(ItemStack itemStack, ToastUtils.DropType rarity, boolean santaGift)
     {
         this.itemDrop = new ToastUtils.ItemDrop(itemStack, rarity);
-        this.drawTime = this.itemDrop.getType() == ToastUtils.DropType.SANTA_TIER ? 20000L : 10000L;
+        this.maxDrawTime = this.itemDrop.getType().getTime();
         this.texture = new ResourceLocation("skyblockcatia:textures/gui/gift_toasts_" + (santaGift ? 1 : Integer.valueOf(1 + this.rand.nextInt(2))) + ".png");
     }
 
@@ -36,7 +36,6 @@ public class GiftToast implements IToast
     public IToast.Visibility func_230444_a_(MatrixStack matrixStack, ToastGui toastGui, long delta)
     {
         ToastUtils.ItemDrop drop = this.itemDrop;
-        boolean isSanta = this.itemDrop.getType() == ToastUtils.DropType.SANTA_TIER;
         ItemStack itemStack = drop.getItemStack();
         String itemName = itemStack.getDisplayName().getString();
 
@@ -49,11 +48,11 @@ public class GiftToast implements IToast
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
-        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, itemName, isSanta ? 2000L : 500L, this.drawTime, 5000L, 8000L, false);
+        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, this.maxDrawTime, itemName, false);
         RenderSystem.translatef(0.0F, 0.0F, -32.0F);
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, 8, 8);
         toastGui.getMinecraft().getItemRenderer().renderItemOverlayIntoGUI(toastGui.getMinecraft().fontRenderer, itemStack, 8, 8, null);
         RenderSystem.disableLighting();
-        return delta >= this.drawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
+        return delta >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
 }

@@ -7,17 +7,21 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.text.WordUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileViewerScreen;
@@ -28,21 +32,18 @@ import com.stevekung.stevekungslib.client.gui.NumberWidget;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.gui.CommandSuggestionHelper;
-import net.minecraft.client.gui.NewChatGui;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
@@ -374,7 +375,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
             if (!itemStack.isEmpty())
             {
-                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                if (SBExtendedConfig.INSTANCE.preventClickingOnDummyItem && this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
                     info.cancel();
                 }
@@ -522,10 +523,12 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                                 try
                                 {
-                                    level = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
+                                    level = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
                                 }
                                 catch (ParseException e) {}
 
+                                if (level > 0)
+                                {
                                 if (this.minecraft.player.experienceLevel < level)
                                 {
                                     levelString = TextFormatting.RED + String.valueOf(level);
@@ -534,6 +537,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                                 {
                                     levelString = TextFormatting.GREEN + String.valueOf(level);
                                 }
+                                }
                             }
                             else if (lore.endsWith("Coins") || lore.endsWith("Coin"))
                             {
@@ -541,10 +545,11 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                                 try
                                 {
-                                    coin = NumberFormat.getNumberInstance(Locale.US).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
+                                    coin = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
                                 }
                                 catch (ParseException e) {}
 
+                                if (coin > 0)
                                 levelString = TextFormatting.GOLD + String.valueOf(coin);
                                 break;
                             }
@@ -562,7 +567,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     }
 
     @Inject(method = "moveItems(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderBids(MatrixStack matrixStack, Slot slot, CallbackInfo info)
+    private void renderOverlays(MatrixStack matrixStack, Slot slot, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
@@ -570,6 +575,50 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             {
                 this.renderBids(matrixStack, slot);
             }
+            
+            this.renderCurrentSelectedPet(matrixStack, slot);
+            
+            if (SBExtendedConfig.INSTANCE.lobbyPlayerViewer && this.title.getUnformattedComponentText().contains("Hub Selector"))
+            {
+                this.renderHubOverlay(matrixStack, slot);
+            }
+        }
+    }
+    
+    @Redirect(method = "moveItems(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/inventory/container/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/ItemRenderer.renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V"))
+    private void renderPlayerCount(ItemRenderer renderer, FontRenderer font, ItemStack stack, int xPosition, int yPosition, @Nullable String text)
+    {
+        boolean found = false;
+
+        if (SBExtendedConfig.INSTANCE.lobbyPlayerViewer && this.that instanceof ChestScreen)
+        {
+            if (this.title.getUnformattedComponentText().contains("Hub Selector") && !stack.isEmpty() && stack.hasTag())
+            {
+                CompoundNBT compound = stack.getTag().getCompound("display");
+
+                if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
+                {
+                    ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
+
+                    for (int j1 = 0; j1 < list.size(); ++j1)
+                        {
+                        String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+
+                            if (lore.startsWith("Players: "))
+                            {
+                                lore = lore.substring(lore.indexOf(" ") + 1);
+                                String[] loreCount = lore.split("/");
+                                renderer.renderItemOverlayIntoGUI(font, stack, xPosition, yPosition, loreCount[0]);
+                                found = true;
+                                break;
+                            }
+                    }
+                }
+            }
+        }
+        if (!found)
+        {
+            renderer.renderItemOverlayIntoGUI(font, stack, xPosition, yPosition, text);
         }
     }
 
@@ -779,6 +828,11 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                     int green = ColorUtils.to32Bit(85, 255, 85, 128);
                     int yellow = ColorUtils.to32Bit(255, 255, 85, 128);
 
+                    if (lore.startsWith("Status: Sold!"))
+                    {
+                        this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
+                    }
+
                     if (((ITradeScreen)(ChestScreen)this.that).getNumberField() == null || ((ITradeScreen)(ChestScreen)this.that).getNumberField().getText().isEmpty())
                     {
                         if (lore.startsWith("Starting bid:"))
@@ -844,6 +898,81 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 }
             }
         }
+    }
+
+    private void renderCurrentSelectedPet(MatrixStack matrixStack, Slot slot)
+    {
+        if (slot.getStack() != null && slot.getStack().hasTag())
+        {
+            CompoundNBT compound = slot.getStack().getTag().getCompound("display");
+
+            if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
+            {
+                ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
+
+                for (int j1 = 0; j1 < list.size(); ++j1)
+                {
+                    int slotLeft = slot.xPos;
+                    int slotTop = slot.yPos;
+                    int slotRight = slotLeft + 16;
+                    int slotBottom = slotTop + 16;
+                    String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+                    int green = ColorUtils.to32Bit(85, 255, 85, 150);
+
+                    if (lore.startsWith("Click to despawn"))
+                    {
+                        this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    private void renderHubOverlay(MatrixStack matrixStack, Slot slot)
+    {
+        if (slot.getStack() != null && slot.getStack().hasTag())
+        {
+            CompoundNBT compound = slot.getStack().getTag().getCompound("display");
+
+            if (compound.getTagId("Lore") == Constants.NBT.TAG_LIST)
+            {
+                ListNBT list = compound.getList("Lore", Constants.NBT.TAG_STRING);
+
+                for (int j1 = 0; j1 < list.size(); ++j1)
+                    {
+                        int slotLeft = slot.xPos;
+                        int slotTop = slot.yPos;
+                        int slotRight = slotLeft + 16;
+                        int slotBottom = slotTop + 16;
+                        String lore = TextFormatting.getTextWithoutFormattingCodes(TextComponentUtils.fromJson(list.getString(j1)).getString());
+
+                        if (lore.startsWith("Players: "))
+                        {
+                            lore = lore.substring(lore.indexOf(" ") + 1);
+                            String[] loreCount = lore.split("/");
+                            int min = Integer.valueOf(loreCount[0]);
+                            int max = Integer.valueOf(loreCount[1]);
+                            int playerCountColor = this.getRGBPlayerCount(min, max);
+                            int color = ColorUtils.to32Bit(playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255, 128);
+                            this.setBlitOffset(300);
+                            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color, color);
+                            this.setBlitOffset(0);
+                            break;
+                        }
+                    }
+            }
+        }
+    }
+
+    private int getRGBPlayerCount(int playerCount, int maxedPlayerCount)
+    {
+        return MathHelper.hsvToRGB(Math.max(0.0F, (float) (1.0F - this.getPlayerCount(playerCount, maxedPlayerCount))) / 3.0F, 1.0F, 1.0F);
+    }
+
+    private double getPlayerCount(int playerCount, int maxedPlayerCount)
+    {
+        return (double) playerCount / maxedPlayerCount;
     }
 
     private void checkCondition(MatrixStack matrixStack, int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)

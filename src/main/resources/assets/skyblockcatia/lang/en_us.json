@@ -47,6 +47,9 @@
     "lobby_player_count.extended_config": "Lobby Player Count",
     "display_item_ability_max_used.extended_config": "Display Max Used of Item Ability",
     "prevent_scroll_hotbar_while_fight_dragon.extended_config": "Prevent Scroll Hotbar while Fighting Dragon",
+    "prevent_clicking_on_dummy_item.extended_config": "Prevent Clicking on Dummy Item",
+    "shortcut_button_in_inventory.extended_config": "Shortcut Button in Inventory",
+    "show_obtained_date.extended_config": "Show Obtained Date",
 
     "_comment": "MESSAGE",
     "message.check": "Check",
@@ -65,6 +68,7 @@
     "gui.sb_others.kills": "Kills",
     "gui.sb_others.deaths": "Deaths",
     "gui.sb_others.others_stats": "Other Stats",
+    "gui.sb_others.bank_history": "Bank History",
     "gui.sb_player_stats": "Stats",
     "gui.sb_inventory": "Inventory",
     "gui.close": "Close",

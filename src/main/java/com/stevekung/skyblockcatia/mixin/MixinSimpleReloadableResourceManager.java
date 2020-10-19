@@ -31,37 +31,44 @@ public abstract class MixinSimpleReloadableResourceManager
     {
         if (this.type == ResourcePackType.CLIENT_RESOURCES)
         {
-            boolean found = false;
-
-            for (ResourcePackInfo entry : Minecraft.getInstance().getResourcePackList().getEnabledPacks())
+            if (SBAPIUtils.PACKS != null)
             {
-                String packName = entry.getResourcePack().getName();
-                String packDesc = entry.getDescription().getUnformattedComponentText();
+                boolean found = false;
 
-                if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                for (ResourcePackInfo entry : Minecraft.getInstance().getResourcePackList().getEnabledPacks())
                 {
-                    SkyBlockEventHandler.skyBlockPackResolution = "16";
-                }
-                if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
-                {
-                    SkyBlockEventHandler.skyBlockPackResolution = "32";
-                }
+                    String packName = entry.getResourcePack().getName();
+                    String packDesc = entry.getDescription().getUnformattedComponentText();
 
-                if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
-                {
-                    SkyBlockEventHandler.foundSkyBlockPack = true;
-                    found = true;
-                    break;
+                    if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                    {
+                        SkyBlockEventHandler.skyBlockPackResolution = "16";
+                    }
+                    if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
+                    {
+                        SkyBlockEventHandler.skyBlockPackResolution = "32";
+                    }
+
+                    if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
+                    {
+                        SkyBlockEventHandler.foundSkyBlockPack = true;
+                        found = true;
+                        break;
+                    }
                 }
-            }
-            if (found)
-            {
-                SkyBlockcatiaMod.LOGGER.info("Found SkyBlock Pack with x" + SkyBlockEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
+                if (found)
+                {
+                    SkyBlockcatiaMod.LOGGER.info("Found SkyBlock Pack with x" + SkyBlockEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
+                }
+                else
+                {
+                    SkyBlockEventHandler.foundSkyBlockPack = false;
+                    SkyBlockcatiaMod.LOGGER.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
+                }
             }
             else
             {
-                SkyBlockEventHandler.foundSkyBlockPack = false;
-                SkyBlockcatiaMod.LOGGER.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
+                SkyBlockcatiaMod.LOGGER.warning("SupportedPack is null, Glowing Armor Overlay will not loaded!");
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
-import java.text.DecimalFormat;
 import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -9,6 +8,7 @@ import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.gui.AbstractGui;
@@ -26,12 +26,10 @@ public class NumericToast implements IToast
     private int value;
     private final String object;
     private final boolean isCoins;
-    private final boolean isFishingCoins;
     private final boolean isPet;
     private long firstDrawTime;
     private boolean hasNewValue;
     private final long maxDrawTime;
-    private static final DecimalFormat FORMAT = new DecimalFormat("###,###");
 
     public NumericToast(int value, ItemStack itemStack, String object, ToastUtils.DropType rarity)
     {
@@ -40,9 +38,8 @@ public class NumericToast implements IToast
         this.object = object;
         this.isCoins = this.object.equals("Coins");
         this.isPet = this.object.equals("Pet");
-        this.isFishingCoins = rarity.isFishingCoins();
-        this.maxDrawTime = this.isFishingCoins || this.isPet ? 15000L : 10000L;
-        this.texture = new ResourceLocation(this.isFishingCoins || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
+        this.maxDrawTime = rarity.getTime();
+        this.texture = new ResourceLocation(rarity.matches(ToastUtils.DropCondition.COINS) || this.isPet ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + this.rand.nextInt(2)) + ".png");
     }
 
     @SuppressWarnings("deprecation")
@@ -56,7 +53,7 @@ public class NumericToast implements IToast
         }
 
         ToastUtils.ItemDrop drop = this.output;
-        String value = FORMAT.format(this.value);
+        String value = NumberUtils.NUMBER_FORMAT.format(this.value);
         ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : SkyBlockEventHandler.getSkillItemStack(value, SBSkills.Type.byName(this.object));
         //ColorUtils.stringToRGB().toColoredFont()
         String itemName = this.isCoins ? TextComponentUtils.formattedString(value + " Coins", ColorUtils.toHex(255, 223, 0)) : this.isPet ? TextFormatting.GREEN + itemStack.getDisplayName().getString() + TextFormatting.GREEN + " is now level " + TextFormatting.BLUE + value + TextFormatting.GREEN + "!" : itemStack.getDisplayName().getString();
@@ -64,7 +61,7 @@ public class NumericToast implements IToast
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
-        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, this.firstDrawTime, itemName, this.isFishingCoins || this.isPet ? 1000L : 500L, this.maxDrawTime, 5000L, 8000L, false);
+        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, this.firstDrawTime, this.maxDrawTime, itemName, false);
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
@@ -143,7 +140,7 @@ public class NumericToast implements IToast
                 builder.append(PetLevelUpToast.class.getName());
                 break;
             }
-            if (!rarity.isFishingCoins() && rarity != ToastUtils.DropType.PET_LEVEL_UP)
+            if (!rarity.matches(ToastUtils.DropCondition.COINS) && rarity != ToastUtils.DropType.PET_LEVEL_UP)
             {
                 builder.append("$" + object);
             }

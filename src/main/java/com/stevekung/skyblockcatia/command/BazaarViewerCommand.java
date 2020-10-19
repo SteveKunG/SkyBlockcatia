@@ -1,13 +1,12 @@
 package com.stevekung.skyblockcatia.command;
 
-import java.text.DecimalFormat;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.stevekung.skyblockcatia.command.arguments.SkyblockBazaarItemIdArgumentType;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.stevekungslib.utils.LangUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 import com.stevekung.stevekungslib.utils.client.command.IClientCommand;
@@ -32,12 +31,11 @@ public class BazaarViewerCommand implements IClientCommand
         }
         else if (MainEventHandler.BAZAAR_DATA.keySet().stream().anyMatch(product -> product.equals(itemId)))
         {
-            DecimalFormat format = new DecimalFormat("#,###.#");
             BazaarData data = MainEventHandler.BAZAAR_DATA.get(itemId);
             ClientUtils.printClientMessage(TextFormatting.YELLOW + "Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(data.getLastUpdated()));
             ClientUtils.printClientMessage(TextFormatting.YELLOW + "Product: " + TextFormatting.GOLD + itemId);
-            ClientUtils.printClientMessage(TextFormatting.YELLOW + "Buy/Sell (Stack): " + TextFormatting.GOLD + format.format(data.getProduct().getBuyPrice() * 64.0D) + "/" + format.format(data.getProduct().getSellPrice() * 64.0D));
-            ClientUtils.printClientMessage(TextFormatting.YELLOW + "Buy/Sell (One): " + TextFormatting.GOLD + format.format(data.getProduct().getBuyPrice()) + "/" + format.format(data.getProduct().getSellPrice()));
+            ClientUtils.printClientMessage(TextFormatting.YELLOW + "Buy/Sell (Stack): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(data.getProduct().getBuyPrice() * 64.0D) + "/" + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(data.getProduct().getSellPrice() * 64.0D));
+            ClientUtils.printClientMessage(TextFormatting.YELLOW + "Buy/Sell (One): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(data.getProduct().getBuyPrice()) + "/" + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(data.getProduct().getSellPrice()));
             return 1;
         }
         else

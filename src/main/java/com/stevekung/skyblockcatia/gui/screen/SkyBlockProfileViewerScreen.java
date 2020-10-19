@@ -25,12 +25,16 @@ import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
 import com.stevekung.skyblockcatia.gui.widget.RightClickTextFieldWidget;
 import com.stevekung.skyblockcatia.gui.widget.button.APISearchButton;
+import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SkyBlockProfileButton;
 import com.stevekung.skyblockcatia.utils.PlayerNameSuggestionHelper;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelRank;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
 import com.stevekung.stevekungslib.utils.CommonUtils;
+import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -41,6 +45,8 @@ import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.Util;
@@ -50,9 +56,12 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class SkyBlockProfileViewerScreen extends Screen
 {
     public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
+    private static boolean firstLoad;
+    private static ItemStack selfItemCache;
     private RightClickTextFieldWidget usernameTextField;
     private APISearchButton checkButton;
     private Button closeButton;
+    private ItemButton selfButton;
     private String input = "";
     private String displayName = "";
     private boolean openFromPlayer;
@@ -97,6 +106,11 @@ public class SkyBlockProfileViewerScreen extends Screen
     @Override
     public void init()
     {
+        if (selfItemCache == null)
+        {
+            selfItemCache = new ItemStack(Items.SKELETON_SKULL);
+        }
+        
         this.minecraft.keyboardListener.enableRepeatEvents(true);
         this.addButton(this.checkButton = new APISearchButton(this.width / 2 + 78, 46, button ->
         {
@@ -132,6 +146,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             });
         } ));
         this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileViewerScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null)));
+        this.addButton(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.displayGuiScreen(new SkyBlockProfileViewerScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, this.guild))));
         this.usernameTextField = new RightClickTextFieldWidget(this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused2(true);
@@ -285,6 +300,12 @@ public class SkyBlockProfileViewerScreen extends Screen
     {
         this.usernameTextField.tick();
         this.checkButton.active = this.usernameTextField.getText().trim().length() > 0;
+
+        if (!firstLoad && !selfItemCache.isEmpty() && selfItemCache.getItem() == Items.SKELETON_SKULL)
+        {
+            CommonUtils.runAsync(this::setItemCache);
+            firstLoad = true;
+        }
     }
 
     @Override
@@ -316,6 +337,7 @@ public class SkyBlockProfileViewerScreen extends Screen
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         this.renderBackground(matrixStack);
+        this.selfButton.visible = !this.loadingApi && !this.error;
 
         if (this.loadingApi)
         {
@@ -353,7 +375,7 @@ public class SkyBlockProfileViewerScreen extends Screen
 
                 if (this.suggestionHelper.suggestions == null && StringUtils.isNullOrEmpty(this.usernameTextField.getText()) && !this.usernameTextField.isFocused())
                 {
-                    AbstractGui.drawString(matrixStack, this.font, "Enter username", this.width / 2 - 71, 51, 10526880);
+                    AbstractGui.drawString(matrixStack, this.font, "Enter Username or UUID", this.width / 2 - 71, 51, 10526880);
                 }
 
                 super.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -380,7 +402,7 @@ public class SkyBlockProfileViewerScreen extends Screen
 
         if (this.input.length() == 32)
         {
-            url = new URL(SBAPIUtils.PLAYER_UUID + this.input);
+            url = new URL(APIUrl.PLAYER_UUID.getUrl() + this.input);
         }
         else
         {
@@ -391,7 +413,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             }
             else
             {
-                url = new URL(SBAPIUtils.PLAYER_NAME + this.input);
+                url = new URL(APIUrl.PLAYER_NAME.getUrl() + this.input);
             }
         }
 
@@ -536,7 +558,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         }
 
         String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
-        URL urlGuild = new URL(SBAPIUtils.GUILD + uuid);
+        URL urlGuild = new URL(APIUrl.GUILD.getUrl() + uuid);
         JsonObject objGuild = new JsonParser().parse(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
         JsonElement guild = objGuild.get("guild");
 
@@ -546,7 +568,7 @@ public class SkyBlockProfileViewerScreen extends Screen
             this.guild = TextFormatting.YELLOW + " Guild: " + TextFormatting.GOLD + guildName;
         }
 
-        URL urlSB = new URL(SBAPIUtils.SKYBLOCK_PROFILES + uuid);
+        URL urlSB = new URL(APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
         JsonObject objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
         JsonElement sbProfile = objSB.get("profiles");
         GameProfile gameProfile = SkullTileEntity.updateGameProfile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
@@ -617,6 +639,7 @@ public class SkyBlockProfileViewerScreen extends Screen
         this.loadingApi = false;
         this.checkButton.visible = !this.error;
         this.checkButton.active = !this.error;
+        this.selfButton.visible = !this.error;
         this.usernameTextField.active = !this.error;
         this.closeButton.setMessage(DialogTexts.GUI_BACK);
 
@@ -634,6 +657,12 @@ public class SkyBlockProfileViewerScreen extends Screen
     {
         this.suggestionHelper.shouldAutoSuggest(true);
         this.suggestionHelper.init();
+    }
+
+    private void setItemCache()
+    {
+        selfItemCache = SBRenderUtils.getPlayerHead(GameProfileUtils.getUsername());
+        this.selfButton.setItemStack(selfItemCache);
     }
 
     public enum GuiState

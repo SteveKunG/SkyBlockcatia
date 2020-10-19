@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
@@ -24,7 +25,6 @@ public class ItemDropsToast implements IToast
     private final ToastUtils.ItemDrop rareDropOutput;
     private String magicFind;
     private final boolean hasMagicFind;
-    private final boolean isSpecialDrop;
     private final long maxDrawTime;
 
     public ItemDropsToast(ItemStack itemStack, ToastUtils.DropType type)
@@ -36,9 +36,8 @@ public class ItemDropsToast implements IToast
     {
         this.rareDropOutput = new ToastUtils.ItemDrop(itemStack, type);
         this.hasMagicFind = magicFind != null;
-        this.isSpecialDrop = this.hasMagicFind || type.isSpecialDrop();
         this.magicFind = this.hasMagicFind ? TextFormatting.AQUA + " (" + magicFind + "% Magic Find!)" : "";
-        this.maxDrawTime = this.isSpecialDrop ? 30000L : 15000L;
+        this.maxDrawTime = this.hasMagicFind ? SBExtendedConfig.INSTANCE.specialDropToastTime * 1000L : type.getTime();
     }
 
     @SuppressWarnings("deprecation")
@@ -106,7 +105,7 @@ public class ItemDropsToast implements IToast
             toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
         }
 
-        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, itemName, this.isSpecialDrop ? 5000L : 1000L, this.maxDrawTime, this.isSpecialDrop ? 10000L : 5000L, this.isSpecialDrop ? 10000L : 8000L, this.hasMagicFind);
+        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, this.maxDrawTime, itemName, this.hasMagicFind);
 
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, 8, 8);
         RenderSystem.translatef(0.0F, 0.0F, -32.0F);
