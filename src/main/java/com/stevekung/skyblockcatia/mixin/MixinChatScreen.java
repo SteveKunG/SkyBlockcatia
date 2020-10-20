@@ -2,6 +2,9 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
+
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 
@@ -13,16 +16,16 @@ public abstract class MixinChatScreen extends Screen
         super(null);
     }
 
-    //    @Override
-    //    public void sendMessage(String text)
-    //    {
-    //        //        if (SkyBlockcatiaMod.isIndicatiaLoaded)TODO
-    //        //        {
-    //        //            this.sendMessage(IndicatiaIntegration.sendMessage(text), true);
-    //        //        }
-    //        //        else
-    //        //        {
-    //        //            super.sendMessage(text);
-    //        //        }
-    //    }
+    @Override
+    public void sendMessage(String text)
+    {
+        if (SkyBlockcatiaMod.isIndicatiaLoaded)
+        {
+            this.sendMessage(IndicatiaIntegration.sendMessage(text), true);
+        }
+        else
+        {
+            super.sendMessage(text);
+        }
+    }
 }

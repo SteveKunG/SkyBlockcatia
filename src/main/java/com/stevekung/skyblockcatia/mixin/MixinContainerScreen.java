@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
@@ -90,8 +90,6 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.priceSearch = new NumberWidget(this.font, this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 100, 20);
                 this.priceSearch.setText(MainEventHandler.auctionPrice);
                 this.priceSearch.setCanLoseFocus(true);
-                this.children.add(this.priceSearch);
-                this.setFocusedDefault(this.priceSearch);
             }
             if (this.isChatableGui())
             {
@@ -105,19 +103,18 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.children.add(this.inputField);
                 this.commandSuggestionHelper = new CommandSuggestionHelper(this.minecraft, this, this.inputField, this.font, false, false, 1, 10, true, -805306368);
                 this.commandSuggestionHelper.init();
-                this.setFocusedDefault(this.inputField);
             }
             if (this.isPeopleAuction())
             {
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 70, 70, 20, TextComponentUtils.component("Copy Seller"), button ->
                 {
-                    String title = this.title.getUnformattedComponentText();
+                    String title = this.title.getString();
                     ClientUtils.printClientMessage(TextComponentUtils.formatted("Copied seller auction command!", TextFormatting.GREEN));
                     this.minecraft.keyboardListener.setClipboardString("/ah " + title.replace(title.substring(title.indexOf('\'')), ""));
                 }));
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 92, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
-                    String title = this.title.getUnformattedComponentText();
+                    String title = this.title.getString();
                     this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
@@ -125,7 +122,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             {
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
-                    String title = this.title.getUnformattedComponentText();
+                    String title = this.title.getString();
                     this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
@@ -373,7 +370,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
             if (!itemStack.isEmpty())
             {
-                if (SBExtendedConfig.INSTANCE.preventClickingOnDummyItem && this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
                     info.cancel();
                 }
@@ -435,7 +432,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             int j = 0;
             String levelString = "";
 
-            if (this.getTitle().getUnformattedComponentText().equals("Anvil") || this.getTitle().getUnformattedComponentText().equals("Reforge Item"))
+            if (this.getTitle().getString().equals("Anvil") || this.getTitle().getString().equals("Reforge Item"))
             {
                 Slot anvilSlot = this.that.getContainer().inventorySlots.get(31);
                 ItemStack itemStack = this.that.getContainer().inventorySlots.get(22).getStack();
@@ -517,7 +514,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
             this.renderCurrentSelectedPet(matrixStack, slot);
 
-            if (SBExtendedConfig.INSTANCE.lobbyPlayerViewer && this.title.getUnformattedComponentText().contains("Hub Selector"))
+            if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.title.getString().contains("Hub Selector"))
             {
                 this.renderHubOverlay(matrixStack, slot);
             }
@@ -529,9 +526,9 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     {
         boolean found = false;
 
-        if (SBExtendedConfig.INSTANCE.lobbyPlayerViewer && this.that instanceof ChestScreen)
+        if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.that instanceof ChestScreen)
         {
-            if (this.title.getUnformattedComponentText().contains("Hub Selector") && !stack.isEmpty() && stack.hasTag())
+            if (this.title.getString().contains("Hub Selector") && !stack.isEmpty() && stack.hasTag())
             {
                 CompoundNBT compound = stack.getTag().getCompound("display");
 
@@ -559,6 +556,21 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
         {
             renderer.renderItemOverlayIntoGUI(font, stack, xPosition, yPosition, text);
         }
+    }
+
+    @Override
+    @Nullable
+    public IGuiEventListener getListener()
+    {
+        if (this.priceSearch != null)
+        {
+            return this.priceSearch;
+        }
+        else if (this.inputField != null)
+        {
+            return this.inputField;
+        }
+        return super.getListener();
     }
 
     @Override
@@ -629,37 +641,37 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
     private boolean isAuctionBrowser()
     {
-        String title = this.title.getUnformattedComponentText();
+        String title = this.title.getString();
         return title.equals("Auctions Browser") || title.endsWith("'s Auctions");
     }
 
     private boolean isRenderBids()
     {
-        String title = this.title.getUnformattedComponentText();
+        String title = this.title.getString();
         return title.equals("Auctions Browser") || title.equals("Manage Auctions") || title.equals("Your Bids") || title.endsWith("'s Auctions");
     }
 
     private boolean isPeopleAuction()
     {
-        String title = this.title.getUnformattedComponentText();
+        String title = this.title.getString();
         return title.endsWith("'s Auctions");
     }
 
     private boolean isPeopleProfile()
     {
-        String title = this.title.getUnformattedComponentText();
+        String title = this.title.getString();
         return title.endsWith("'s Profile") || title.endsWith("' Profile");
     }
 
     private boolean isChatableGui()
     {
-        String title = this.title.getUnformattedComponentText();
+        String title = this.title.getString();
         return MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> title.contains(invName));
     }
 
     private boolean canViewSeller()
     {
-        String title = this.title.getUnformattedComponentText();
+        String title = this.title.getString();
         return title.equals("Auctions Browser") || title.equals("Your Bids") || title.equals("Auction View");
     }
 

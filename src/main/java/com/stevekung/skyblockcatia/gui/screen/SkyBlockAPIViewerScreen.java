@@ -43,10 +43,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
-import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.CommonUtils;
-import com.stevekung.stevekungslib.utils.LangUtils;
-import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
@@ -109,7 +106,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     // Based stuff
     private boolean firstLoad;
     private boolean loadingApi = true;
-    private boolean error = false;
+    private boolean error;
     private String errorMessage;
     private String statusMessage;
     private Button doneButton;
@@ -146,9 +143,16 @@ public class SkyBlockAPIViewerScreen extends Screen
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold")
             .put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder")
             .put("mythos_burrows_chains_complete_common", "mythos_burrows_common_chains_complete").put("mythos_burrows_chains_complete_epic", "mythos_burrows_epic_chains_complete").put("mythos_burrows_chains_complete_legendary", "mythos_burrows_legendary_chains_complete").put("mythos_burrows_chains_complete_rare", "mythos_burrows_rare_chains_complete").put("mythos_burrows_dug_combat_common", "mythos_burrows_dug_common_monsters").put("mythos_burrows_dug_combat_epic", "mythos_burrows_dug_epic_monsters").put("mythos_burrows_dug_combat_legendary", "mythos_burrows_dug_legendary_monsters").put("mythos_burrows_dug_combat_rare", "mythos_burrows_dug_rare_monsters").put("mythos_burrows_dug_next_common", "mythos_burrows_dug_common_arrows").put("mythos_burrows_dug_next_epic", "mythos_burrows_dug_epic_arrows").put("mythos_burrows_dug_next_legendary", "mythos_burrows_dug_legendary_arrows").put("mythos_burrows_dug_next_rare", "mythos_burrows_dug_rare_arrows").put("mythos_burrows_dug_treasure_common", "mythos_burrows_dug_common_treasure").put("mythos_burrows_dug_treasure_epic", "mythos_burrows_dug_epic_treasure").put("mythos_burrows_dug_treasure_legendary", "mythos_burrows_dug_legendary_treasure").put("mythos_burrows_dug_treasure_rare", "mythos_burrows_dug_rare_treasure").build();
-    private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").build();
+    private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").put("raw_beef", "beef").build();
     private static final Map<String, String> SBITEM_ID_TO_MC_REMAP = ImmutableMap.<String, String>builder().put("minecraft:carved_pumpkin", "minecraft:pumpkin").build();
     private static final ImmutableList<String> BLACKLIST_STATS = ImmutableList.of("highest_crit_damage", "mythos_burrows_dug_combat", "mythos_burrows_dug_combat_null", "mythos_burrows_dug_treasure", "mythos_burrows_dug_next", "mythos_burrows_dug_treasure_null", "mythos_burrows_chains_complete", "mythos_burrows_chains_complete_null", "mythos_burrows_dug_next_null");
+    private static final Map<SBCollections.Type, ImmutableList<IItemProvider>> COLLECTION_MAP = ImmutableMap.<SBCollections.Type, ImmutableList<IItemProvider>>builder()
+            .put(SBCollections.Type.MINING, ImmutableList.of(Blocks.COBBLESTONE, Items.COAL, Items.IRON_INGOT, Items.GOLD_INGOT, Items.DIAMOND, Items.EMERALD, Items.REDSTONE, Items.QUARTZ, Blocks.OBSIDIAN, Items.GLOWSTONE_DUST, Blocks.GRAVEL, Blocks.ICE, Blocks.NETHERRACK, Blocks.SAND, Blocks.END_STONE, Items.LAPIS_LAZULI))
+            .put(SBCollections.Type.COMBAT, ImmutableList.of(Items.ROTTEN_FLESH, Items.BONE, Items.STRING, Items.SPIDER_EYE, Items.GUNPOWDER, Items.ENDER_PEARL, Items.GHAST_TEAR, Items.SLIME_BALL, Items.BLAZE_ROD, Items.MAGMA_CREAM))
+            .put(SBCollections.Type.FORAGING, ImmutableList.of(Blocks.OAK_LOG, Blocks.BIRCH_LOG, Blocks.SPRUCE_LOG, Blocks.ACACIA_LOG, Blocks.JUNGLE_LOG, Blocks.DARK_OAK_LOG))
+            .put(SBCollections.Type.FISHING, ImmutableList.of(Items.COD, Items.SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH, Items.PRISMARINE_SHARD, Items.PRISMARINE_CRYSTALS, Items.CLAY_BALL, Blocks.LILY_PAD, Blocks.SPONGE, Items.INK_SAC))
+            .put(SBCollections.Type.FARMING, ImmutableList.of(Items.SUGAR_CANE, Blocks.PUMPKIN, Items.CARROT, Items.WHEAT, Items.POTATO, Items.MELON, Items.COCOA_BEANS, Items.FEATHER, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.LEATHER, Blocks.RED_MUSHROOM, Items.NETHER_WART, Items.RABBIT, Items.WHEAT_SEEDS, Blocks.CACTUS))
+            .build();
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = Lists.newArrayList();
     private final List<SBSkills.Info> skillLeftList = Lists.newArrayList();
@@ -554,6 +558,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             AbstractGui.drawCenteredString(matrixStack, this.font, text, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
             AbstractGui.drawString(matrixStack, this.font, SkyBlockProfileSelectorScreen.downloadingStates[(int)(Util.milliTime() / 500L % SkyBlockProfileSelectorScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
             AbstractGui.drawCenteredString(matrixStack, this.font, "Status: " + TextFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 15, 16777215);
+            this.showArmorButton.visible = false;
         }
         else
         {
@@ -569,6 +574,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
                 }
+                this.showArmorButton.visible = false;
                 super.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             else
@@ -635,7 +641,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             {
                                 this.renderTooltip(matrixStack, this.hoveredSlot.getStack(), mouseX, mouseY);
                             }
-                            /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)TODO
+                            /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded) TODO
                             {
                                 SkyBlockAddonsBackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
                             }*/
@@ -1058,7 +1064,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             return;
         }
-        /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)TODO
+        /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded) TODO
         {
             SkyBlockAddonsBackpack.INSTANCE.clearRenderBackpack();
         }*/
@@ -1141,10 +1147,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     this.hoveredSlot = slot;
 
-                    /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockAddonsBackpack.INSTANCE.isFreezeBackpack())
-                {
-                    continue;TODO
-                }*/
+                    /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockAddonsBackpack.INSTANCE.isFreezeBackpack()) TODO
+                    {
+                        continue;
+                    }*/
                     RenderSystem.disableLighting();
                     RenderSystem.disableDepthTest();
                     int j1 = slot.xPos;
@@ -1462,6 +1468,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.refreshViewButton(this.viewButton);
         this.refreshBasicInfoViewButton(this.basicInfoButton, true);
         this.refreshOthersViewButton(this.othersButton, false);
+        this.showArmorButton.visible = true;
         this.loadingApi = false;
     }
 
@@ -1867,6 +1874,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             List<SBCollections> foraging = Lists.newArrayList();
             List<SBCollections> fishing = Lists.newArrayList();
             List<SBCollections> unknown = Lists.newArrayList();
+            List<IItemProvider> allItem = Lists.newArrayList();
 
             for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
             {
@@ -1905,63 +1913,71 @@ public class SkyBlockAPIViewerScreen extends Screen
                     itemId = SBITEM_ID_TO_MC_REMAP.getOrDefault(itemId, itemId);
                 }
 
-                Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+                Item item = null;
                 ItemStack itemStack = ItemStack.EMPTY;
 
-                if (item == null)//TODO
+                if (itemId.startsWith("enchanted_"))
                 {
-                    ItemStack unknownCollection = new ItemStack(Blocks.BARRIER);
-
-                    if (itemId.startsWith("enchanted_"))
-                    {
-                        item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId.replace("enchanted_", "")));
-
-                        if (item == null)
-                        {
-                            item = Blocks.BARRIER.asItem();
-                        }
-
-                        unknownCollection = new ItemStack(item);
-                        CompoundNBT compound = new CompoundNBT();
-                        compound.put("Enchantments", new ListNBT());
-                        unknownCollection.setTag(compound);
-                        unknownCollection.setDisplayName(TextComponentUtils.component(WordUtils.capitalize(itemId.replace("_", " "))));
-                    }
-
-                    item = Blocks.BARRIER.asItem();
+                    item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId.replace("enchanted_", "")));
+                    ItemStack unknownCollection = new ItemStack(item == Items.AIR ? Blocks.BARRIER : item);
+                    CompoundNBT compound = new CompoundNBT();
+                    ListNBT list = new ListNBT();
+                    list.add(new CompoundNBT());
+                    compound.put("Enchantments", list);
+                    unknownCollection.setTag(compound);
+                    unknownCollection.setDisplayName(TextComponentUtils.component(WordUtils.capitalize(itemId.replace("_", " "))));
                     itemStack = unknownCollection;
                 }
                 else
                 {
+                    item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
                     itemStack = new ItemStack(item);
                 }
 
-                if (item == Blocks.COBBLESTONE.asItem() || item == Items.COAL || item == Items.IRON_INGOT || item == Items.GOLD_INGOT || item == Items.DIAMOND || item == Items.EMERALD || item == Items.REDSTONE
-                        || item == Items.QUARTZ || item == Blocks.OBSIDIAN.asItem() || item == Items.GLOWSTONE_DUST || item == Blocks.GRAVEL.asItem() || item == Blocks.ICE.asItem() || item == Blocks.NETHERRACK.asItem()
-                        || item == Blocks.SAND.asItem() || item == Blocks.END_STONE.asItem() || item == Items.LAPIS_LAZULI)
+                if (itemStack.isEmpty())
                 {
-                    mining.add(new SBCollections(itemStack, SBCollections.Type.MINING, collectionCount, level));
+                    item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+                    ItemStack unknownCollection = new ItemStack(item == Items.AIR ? Blocks.BARRIER : item);
+                    unknownCollection.setDisplayName(TextComponentUtils.component(WordUtils.capitalize(itemId.replace("_", " "))));
+                    itemStack = unknownCollection;
                 }
-                else if (item == Items.ROTTEN_FLESH || item == Items.BONE || item == Items.STRING || item == Items.SPIDER_EYE || item == Items.GUNPOWDER || item == Items.ENDER_PEARL || item == Items.GHAST_TEAR || item == Items.SLIME_BALL || item == Items.BLAZE_ROD || item == Items.MAGMA_CREAM)
+
+                for (Map.Entry<SBCollections.Type, ImmutableList<IItemProvider>> entry : COLLECTION_MAP.entrySet())
                 {
-                    combat.add(new SBCollections(itemStack, SBCollections.Type.COMBAT, collectionCount, level));
+                    allItem.addAll(entry.getValue());
+
+                    if (!itemId.startsWith("enchanted_") && this.matchesCollection(entry.getValue(), item))
+                    {
+                        switch (entry.getKey())
+                        {
+                        case COMBAT:
+                            this.addToCollection(combat, entry.getKey(), itemStack, collectionCount, level);
+                            break;
+                        case FARMING:
+                            this.addToCollection(farming, entry.getKey(), itemStack, collectionCount, level);
+                            break;
+                        case FISHING:
+                            this.addToCollection(fishing, entry.getKey(), itemStack, collectionCount, level);
+                            break;
+                        case FORAGING:
+                            this.addToCollection(foraging, entry.getKey(), itemStack, collectionCount, level);
+                            break;
+                        case MINING:
+                            this.addToCollection(mining, entry.getKey(), itemStack, collectionCount, level);
+                            break;
+                        default:
+                            break;
+                        }
+                    }
                 }
-                else if (item == Blocks.OAK_LOG.asItem() || item == Blocks.BIRCH_LOG.asItem() || item == Blocks.SPRUCE_LOG.asItem() || item == Blocks.ACACIA_LOG.asItem() || item == Blocks.JUNGLE_LOG.asItem() || item == Blocks.DARK_OAK_LOG.asItem())
+
+                if (itemId.startsWith("enchanted_"))
                 {
-                    foraging.add(new SBCollections(itemStack, SBCollections.Type.FORAGING, collectionCount, level));
+                    this.addToCollection(unknown, SBCollections.Type.UNKNOWN, itemStack, collectionCount, level);
                 }
-                else if (item == Items.COD || item == Items.SALMON || item == Items.PUFFERFISH || item == Items.TROPICAL_FISH || item == Items.PRISMARINE_SHARD || item == Items.PRISMARINE_CRYSTALS || item == Items.CLAY_BALL || item == Blocks.LILY_PAD.asItem() || item == Blocks.SPONGE.asItem() || item == Items.INK_SAC)
+                else if (!this.matchesCollection(allItem, item))
                 {
-                    fishing.add(new SBCollections(itemStack, SBCollections.Type.FISHING, collectionCount, level));
-                }
-                else if (item == Items.SUGAR_CANE || item == Blocks.PUMPKIN.asItem() || item == Items.CARROT || item == Items.WHEAT || item == Items.POTATO || item == Items.MELON || item == Items.COCOA_BEANS || item == Items.FEATHER || item == Items.CHICKEN
-                        || item == Items.PORKCHOP || item == Items.MUTTON || item == Items.LEATHER || item == Blocks.RED_MUSHROOM.asItem() || item == Items.NETHER_WART || item == Items.RABBIT || item == Items.WHEAT_SEEDS || item == Blocks.CACTUS.asItem())
-                {
-                    farming.add(new SBCollections(itemStack, SBCollections.Type.FARMING, collectionCount, level));
-                }
-                else
-                {
-                    unknown.add(new SBCollections(itemStack, SBCollections.Type.UNKNOWN, collectionCount, level));
+                    this.addToCollection(unknown, SBCollections.Type.UNKNOWN, itemStack, collectionCount, level);
                 }
             }
 
@@ -2014,6 +2030,16 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.data.setHasCollections(false);
         }
+    }
+
+    private boolean matchesCollection(List<IItemProvider> list, Item item)
+    {
+        return list.stream().anyMatch(miningItem -> item == miningItem.asItem());
+    }
+
+    private void addToCollection(List<SBCollections> list, SBCollections.Type type, ItemStack itemStack, int collectionCount, int level)
+    {
+        list.add(new SBCollections(itemStack, type, collectionCount, level));
     }
 
     private void getSacks(JsonObject currentProfile)
@@ -2700,7 +2726,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             firstJoinMillis = 1565111612000L;
         }
 
-        String heath = ColorUtils.toHex(239,83,80);//TODO Fix color
+        String heath = ColorUtils.toHex(239,83,80);
         String defense = ColorUtils.toHex(156,204,101);
         String trueDefense = ColorUtils.toHex(255,255,255);
         String strength = ColorUtils.toHex(181,33,30);
@@ -2786,55 +2812,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.infoList.add(new SkyBlockInfo("Last Updated (Date)", lastSaveMillis != -1 ? lastLogout : TextFormatting.RED + "No last save data!"));
 
         this.infoList.add(new SkyBlockInfo("Death Count", NumberUtils.NUMBER_FORMAT.format(deathCounts)));
-
-        //        if (!StringUtils.isNullOrEmpty(location))
-        //        {
-        //            this.infoList.add(new SkyBlockInfo("\u23E3 Current Location", location));
-        //        }
-        //
-        //        this.infoList.add(new SkyBlockInfo(fairySoulsColor + "Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
-        //        this.infoList.add(new SkyBlockInfo("", ""));
-        //        this.infoList.add(new SkyBlockInfo(heath + "\u2764 Health", heath + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getHealth())));
-        //        this.infoList.add(new SkyBlockInfo(heath + "\u2665 Effective Health", heath + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getEffectiveHealth())));
-        //        this.infoList.add(new SkyBlockInfo(defense + "\u2748 Defense", defense + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getDefense())));
-        //        this.infoList.add(new SkyBlockInfo(trueDefense + "\u2742 True Defense", trueDefense + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getTrueDefense())));
-        //        this.infoList.add(new SkyBlockInfo(strength + "\u2741 Strength", strength + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getStrength())));
-        //        this.infoList.add(new SkyBlockInfo(speed + "\u2726 Speed", speed + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSpeed())));
-        //        this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritChance()) + "%"));
-        //        this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getCritDamage()) + "%"));
-        //        this.infoList.add(new SkyBlockInfo(attackSpeed + "\u2694 Attack Speed", attackSpeed + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getAttackSpeed()) + "%"));
-        //        this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getIntelligence())));
-        //        this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSeaCreatureChance()) + "%"));
-        //        this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getMagicFind())));
-        //        this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getPetLuck())));
-        //
-        //        this.infoList.add(new SkyBlockInfo("", ""));
-        //
-        //        Date firstJoinDate = new Date(firstJoinMillis);
-        //        Date lastSaveDate = new Date(lastSaveMillis);
-        //        SimpleDateFormat logoutDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ROOT);
-        //        String lastLogout = logoutDate.format(lastSaveDate);
-        //        SimpleDateFormat joinDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.ROOT);
-        //        joinDate.setTimeZone(this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4") ? TimeZone.getTimeZone("GMT") : TimeZone.getDefault());
-        //        String firstJoinDateFormat = joinDate.format(firstJoinDate);
-        //
-        //        this.infoList.add(new SkyBlockInfo("Joined", firstJoinMillis != -1 ? TimeUtils.getRelativeTime(firstJoinDate.getTime()) + " (" + TimeUtils.getRelativeDay(firstJoinDate.getTime()) + ")" : TextFormatting.RED + "No first join data!"));
-        //        this.infoList.add(new SkyBlockInfo("Joined (Date)", firstJoinMillis != -1 ? firstJoinDateFormat : TextFormatting.RED + "No first join data!"));
-        //        this.infoList.add(new SkyBlockInfo("Last Updated", lastSaveMillis != -1 ? String.valueOf(lastSaveDate.getTime()) : TextFormatting.RED + "No last save data!"));
-        //        this.infoList.add(new SkyBlockInfo("Last Updated (Date)", lastSaveMillis != -1 ? lastLogout : TextFormatting.RED + "No last save data!"));
-        //
-        //        this.infoList.add(new SkyBlockInfo("Death Count", String.valueOf(deathCounts)));
-        //
-        //        if (banking != null)
-        //        {
-        //            double balance = banking.getAsJsonObject().get("balance").getAsDouble();
-        //            this.infoList.add(new SkyBlockInfo("Banking Account", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(balance)));
-        //        }
-        //        else
-        //        {
-        //            this.infoList.add(new SkyBlockInfo("Banking Account", TextFormatting.RED + "API is not enabled!"));
-        //        }
-        //        this.infoList.add(new SkyBlockInfo("Purse", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(coins)));
     }
 
     private BonusStatTemplate getFairySouls(int fairyExchanges)
@@ -3492,7 +3469,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity)//TODO
+    public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity)
     {
         float f = (float)Math.atan(mouseX / 40.0F);
         float f1 = (float)Math.atan(mouseY / 40.0F);
@@ -3848,7 +3825,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     ZombieEntity zombie = new ZombieEntity(this.world);
                     ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
-                    ItemStack helmet = SBItemUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
+                    ItemStack helmet = ItemUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.DIAMOND_CHESTPLATE);
                     ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
                     ItemStack boots = new ItemStack(Items.DIAMOND_BOOTS);

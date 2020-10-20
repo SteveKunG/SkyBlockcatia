@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.utils.skyblock.SBNumberUtils;
@@ -93,7 +93,7 @@ public abstract class MixinEditSignScreen extends Screen
     {
         this.that.tileSign.markDirty();
 
-        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && this.isAuctionStartBidSign())
+        if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && this.isAuctionStartBidSign())
         {
             info.cancel();
         }
@@ -135,11 +135,11 @@ public abstract class MixinEditSignScreen extends Screen
             }
         }
 
-        if (SBExtendedConfig.INSTANCE.auctionBidConfirm && !StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
+        if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && !StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
         {
             int price = Integer.parseInt(text);
 
-            if (price >= SBExtendedConfig.INSTANCE.auctionBidConfirmValue)
+            if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
             {
                 this.minecraft.displayGuiScreen(new ConfirmScreen(confirm ->
                 {

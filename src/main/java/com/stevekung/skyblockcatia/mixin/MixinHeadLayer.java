@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 
@@ -34,6 +34,7 @@ import net.minecraft.util.ResourceLocation;
 public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityModel<T> & IHasHead> extends LayerRenderer<T, M>
 {
     private static final ResourceLocation DIVER = new ResourceLocation("skyblockcatia:textures/entity/diver_head.png");
+    private static final ResourceLocation SUPERIOR_BABY = new ResourceLocation("skyblockcatia:textures/entity/superior_baby.png");
     private final GenericHeadModel head = new HumanoidHeadModel();
 
     private MixinHeadLayer()
@@ -44,7 +45,7 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
     @Inject(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ILnet/minecraft/entity/LivingEntity;FFFFFF)V", at = @At("RETURN"))
     private void render(MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info)
     {
-        if (!SBExtendedConfig.INSTANCE.glowingDragonArmor)
+        if (!SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
         {
             return;
         }
@@ -85,7 +86,7 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
                 {
                     if (id.equals("SUPERIOR_DRAGON_HELMET") && compound.getString("skin").equals("SUPERIOR_BABY"))
                     {
-                        location = new ResourceLocation("skyblockcatia:textures/entity/superior_baby.png");
+                        location = SUPERIOR_BABY;
                     }
                 }
 

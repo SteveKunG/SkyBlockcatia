@@ -33,13 +33,9 @@ import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SkyBlockProfileButton;
 import com.stevekung.skyblockcatia.utils.PlayerNameSuggestionHelper;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
-import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelRank;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
-import com.stevekung.stevekungslib.utils.CommonUtils;
-import com.stevekung.stevekungslib.utils.GameProfileUtils;
-import com.stevekung.stevekungslib.utils.LangUtils;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
+import com.stevekung.stevekungslib.utils.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -664,7 +660,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
     private void setItemCache()
     {
-        selfItemCache = SBItemUtils.getPlayerHead(GameProfileUtils.getUsername());
+        selfItemCache = ItemUtils.getPlayerHead(GameProfileUtils.getUsername());
         this.selfButton.setItemStack(selfItemCache);
     }
 

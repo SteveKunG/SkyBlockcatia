@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
@@ -153,7 +153,7 @@ public class SBRenderUtils
     {
         if (rarity != null)
         {
-            float alpha = SBExtendedConfig.INSTANCE.itemRarityOpacity / 100.0F;
+            float alpha = SkyBlockcatiaSettings.INSTANCE.itemRarityOpacity / 100.0F;
             RenderSystem.disableLighting();
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();

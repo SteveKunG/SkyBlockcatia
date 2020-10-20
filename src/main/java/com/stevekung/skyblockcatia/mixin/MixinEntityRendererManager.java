@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 
@@ -22,7 +22,7 @@ public abstract class MixinEntityRendererManager
     @Inject(method = "renderDebugBoundingBox(Lcom/mojang/blaze3d/matrix/MatrixStack;Lcom/mojang/blaze3d/vertex/IVertexBuilder;Lnet/minecraft/entity/Entity;F)V", cancellable = true, at = @At("HEAD"))
     private void renderDebugBoundingBox(MatrixStack matrixStack, IVertexBuilder buffer, Entity entity, float partialTicks, CallbackInfo info)
     {
-        if (SBExtendedConfig.INSTANCE.showDragonHitboxOnly && !(entity instanceof EnderDragonEntity || entity instanceof EnderCrystalEntity) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
+        if (SkyBlockcatiaSettings.INSTANCE.showDragonHitboxOnly && !(entity instanceof EnderDragonEntity || entity instanceof EnderCrystalEntity) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
             info.cancel();
         }

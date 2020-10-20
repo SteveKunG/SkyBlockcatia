@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.stevekungslib.client.event.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
@@ -37,7 +37,7 @@ public class ItemDropsToast implements IToast
         this.rareDropOutput = new ToastUtils.ItemDrop(itemStack, type);
         this.hasMagicFind = magicFind != null;
         this.magicFind = this.hasMagicFind ? TextFormatting.AQUA + " (" + magicFind + "% Magic Find!)" : "";
-        this.maxDrawTime = this.hasMagicFind ? SBExtendedConfig.INSTANCE.specialDropToastTime * 1000L : type.getTime();
+        this.maxDrawTime = this.hasMagicFind ? SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L : type.getTime();
     }
 
     @SuppressWarnings("deprecation")

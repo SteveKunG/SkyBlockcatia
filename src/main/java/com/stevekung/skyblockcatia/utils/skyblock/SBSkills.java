@@ -1,9 +1,9 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.IItemProvider;
 
 public class SBSkills
 {
@@ -14,7 +14,7 @@ public class SBSkills
         MINING("Mining", Items.DIAMOND_PICKAXE),
         FISHING("Fishing", Items.FISHING_ROD),
         COMBAT("Combat", Items.DIAMOND_SWORD),
-        ENCHANTING("Enchanting", Blocks.ENCHANTING_TABLE.asItem()),
+        ENCHANTING("Enchanting", Blocks.ENCHANTING_TABLE),
         ALCHEMY("Alchemy", Items.BREWING_STAND),
         RUNECRAFTING("Runecrafting"),
         CARPENTRY("Carpentry"),
@@ -28,7 +28,7 @@ public class SBSkills
             this(name, ItemStack.EMPTY);
         }
 
-        private Type(String name, Item item)
+        private Type(String name, IItemProvider item)
         {
             this(name, new ItemStack(item));
         }

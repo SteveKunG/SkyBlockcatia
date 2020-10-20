@@ -1,41 +1,35 @@
-//package com.stevekung.skyblockcatia.integration;
-//
-//import java.lang.reflect.Field;
-//
-//import com.stevekung.indicatia.config.ExtendedConfig;
-//import com.stevekung.indicatia.gui.screen.IndicatiaChatScreen.ChatMode;
-//
-//import net.minecraft.util.text.TextFormatting;
-//
-//public class IndicatiaIntegration
-//{
-//    public static final ChatMode SKYBLOCK_COOP = ChatMode.create("SKYBLOCK_COOP", "menu.chat_mode.sb_coop_chat", TextFormatting.AQUA, 31, 98, 28, 20, "COOP", "/cc");
-//
-//    public static String sendMessage(String defaultValue)
-//    {
-//        if (ExtendedConfig.INSTANCE.chatMode == SKYBLOCK_COOP.ordinal())
-//        {
-//            try
-//            {
-//                Field field = SKYBLOCK_COOP.getClass().getDeclaredField("command");
-//                field.setAccessible(true);
-//                return field.get(SKYBLOCK_COOP) + " " + defaultValue;
-//            }
-//            catch (Exception e)
-//            {
-//                e.printStackTrace();
-//                return defaultValue;
-//            }
-//        }
-//        else
-//        {
-//            return defaultValue;
-//        }
-//    }
-//
-//    public static void savePartyChat()
-//    {
-//        ExtendedConfig.INSTANCE.chatMode = 0;
-//        ExtendedConfig.INSTANCE.save();
-//    }
-//}
+package com.stevekung.skyblockcatia.integration;
+
+import com.stevekung.indicatia.config.IndicatiaSettings;
+import com.stevekung.indicatia.gui.screen.IndicatiaChatScreen;
+import com.stevekung.stevekungslib.utils.CommonUtils;
+
+import net.minecraft.util.text.TextFormatting;
+
+public class IndicatiaIntegration
+{
+    public static final IndicatiaChatScreen.ChatMode SKYBLOCK_COOP = IndicatiaChatScreen.ChatMode.create("SKYBLOCK_COOP", "menu.chat_mode.sb_coop_chat", TextFormatting.AQUA, 31, 98, 28, 20, "COOP", "/cc");
+
+    public static void registerHandler()
+    {
+        CommonUtils.registerEventHandler(new RenderSkyBlockInfo());
+    }
+
+    public static String sendMessage(String defaultValue)
+    {
+        if (IndicatiaSettings.INSTANCE.chatMode == SKYBLOCK_COOP.ordinal())
+        {
+            return SKYBLOCK_COOP.command + " " + defaultValue;
+        }
+        else
+        {
+            return defaultValue;
+        }
+    }
+
+    public static void savePartyChat()
+    {
+        IndicatiaSettings.INSTANCE.chatMode = 0;
+        IndicatiaSettings.INSTANCE.save();
+    }
+}

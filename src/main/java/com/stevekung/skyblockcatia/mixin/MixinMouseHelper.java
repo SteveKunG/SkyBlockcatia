@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.client.Minecraft;
@@ -35,7 +35,7 @@ public abstract class MixinMouseHelper
                 break;
             }
         }
-        if (!(SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.preventScrollHotbarWhileFightDragon && foundDragon))
+        if (!(SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.preventScrollHotbarWhileFightDragon && foundDragon))
         {
             playerInv.changeCurrentItem(direction);
         }

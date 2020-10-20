@@ -7,7 +7,7 @@
     "target": "@env(DEFAULT)",
     "mixins": [],
     "client": [
-        "MixinAbstractBlock",
+        "MixinAbstractBlock_AbstractBlockState",
         "MixinArmorLayer",
         "MixinArmorStandEntity",
         "MixinBlockItem",
@@ -33,6 +33,7 @@
         "MixinParticleManager",
         "MixinPlayerController",
         "MixinPlayerRenderer",
+        "MixinResourceLocation",
         "MixinPlayerTabOverlayGui",
         "MixinSimpleReloadableResourceManager",
         "MixinWallOrFloorItem"

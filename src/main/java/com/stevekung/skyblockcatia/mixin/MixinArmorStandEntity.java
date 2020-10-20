@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.entity.LivingEntity;
@@ -29,7 +29,7 @@ public abstract class MixinArmorStandEntity extends LivingEntity
     {
         for (ItemStack content : this.getEquipmentAndArmor())
         {
-            if (SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.ignoreInteractInvisibleArmorStand && (content.isEmpty() || !content.isEmpty() && content.getCount() == 0) && this.isInvisible())
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.ignoreInteractInvisibleArmorStand && (content.isEmpty() || !content.isEmpty() && content.getCount() == 0) && this.isInvisible())
             {
                 info.setReturnValue(ActionResultType.PASS);
             }

@@ -3,6 +3,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
+import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
 
 import net.minecraft.item.ItemStack;
@@ -106,7 +107,7 @@ public class SBPets
 
         public ItemStack getPetItem()
         {
-            return SBItemUtils.getSkullItemStack(this.uuid, this.value);
+            return ItemUtils.getSkullItemStack(this.uuid, this.value);
         }
     }
 

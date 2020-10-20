@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
@@ -59,7 +59,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
     private void renderGlowingLayer(MatrixStack matrixStack, IRenderTypeBuffer buffer, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, EquipmentSlotType slot, int packedLight)
     {
-        if (!SkyBlockEventHandler.foundSkyBlockPack || !SBExtendedConfig.INSTANCE.glowingDragonArmor)
+        if (!SkyBlockEventHandler.foundSkyBlockPack || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
         {
             return;
         }

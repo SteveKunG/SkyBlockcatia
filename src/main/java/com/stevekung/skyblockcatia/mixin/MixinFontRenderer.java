@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
@@ -23,7 +23,7 @@ public abstract class MixinFontRenderer
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            if (SBExtendedConfig.INSTANCE.supportersFancyColor)
+            if (SkyBlockcatiaSettings.INSTANCE.supportersFancyColor)
             {
                 for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
                 {

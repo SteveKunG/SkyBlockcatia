@@ -16,6 +16,7 @@ import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
+import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
@@ -37,6 +38,7 @@ public class SkyBlockcatiaMod
 {
     public static final String MOD_ID = "skyblockcatia";
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
+    public static boolean isSkyblockAddonsLoaded;
     public static boolean isIndicatiaLoaded;
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
 
@@ -70,6 +72,7 @@ public class SkyBlockcatiaMod
         CommonUtils.addModListener(this::phaseOne);
         CommonUtils.addModListener(this::loadComplete);
 
+        SkyBlockcatiaMod.isSkyblockAddonsLoaded = ModList.get().isLoaded("skyblockaddons");
         SkyBlockcatiaMod.isIndicatiaLoaded = ModList.get().isLoaded("indicatia");
     }
 
@@ -82,6 +85,11 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
         CommonUtils.registerEventHandler(new SkyBlockEventHandler());
         CommonUtils.registerEventHandler(new ClientEventHandler());
+
+        if (SkyBlockcatiaMod.isIndicatiaLoaded)
+        {
+            IndicatiaIntegration.registerHandler();
+        }
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
         ClientCommands.register(new BazaarViewerCommand());

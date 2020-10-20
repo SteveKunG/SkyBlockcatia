@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 
 import net.minecraft.item.ItemStack;
 
@@ -143,7 +143,7 @@ public class ToastUtils
             case MYTHOS_COINS:
             case PET_DROP:
             case DRAGON_CRYSTAL_FRAGMENT:
-                return SBExtendedConfig.INSTANCE.rareDropToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.rareDropToastTime * 1000L;
             case BOSS_DROP:
             case SLAYER_RARE_DROP:
             case SLAYER_VERY_RARE_DROP_BLUE:
@@ -152,18 +152,18 @@ public class ToastUtils
             case SANTA_TIER:
             case DUNGEON_QUALITY_DROP:
             case DUNGEON_REWARD_DROP:
-                return SBExtendedConfig.INSTANCE.specialDropToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
             case GOOD_CATCH:
             case GREAT_CATCH:
             case GOOD_CATCH_COINS:
             case GREAT_CATCH_COINS:
-                return SBExtendedConfig.INSTANCE.specialDropToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
             case COMMON_GIFT:
             case SWEET_GIFT:
             case RARE_GIFT:
-                return SBExtendedConfig.INSTANCE.giftToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.giftToastTime * 1000L;
             case PET_LEVEL_UP:
-                return SBExtendedConfig.INSTANCE.petToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.petToastTime * 1000L;
             default:
                 return 5000L;
             }

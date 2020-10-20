@@ -8,8 +8,8 @@ import com.stevekung.stevekungslib.utils.client.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -21,7 +21,7 @@ public class ItemButton extends Button
     private final Minecraft mc;
     private ITextComponent customName;
 
-    public ItemButton(int xPos, int yPos, Item item, Button.IPressable onPress)
+    public ItemButton(int xPos, int yPos, IItemProvider item, Button.IPressable onPress)
     {
         this(xPos, yPos, new ItemStack(item), onPress);
     }
@@ -31,7 +31,7 @@ public class ItemButton extends Button
         this(xPos, yPos, item, item.getDisplayName(), onPress);
     }
 
-    public ItemButton(int xPos, int yPos, Item item, ITextComponent component, Button.IPressable onPress)
+    public ItemButton(int xPos, int yPos, IItemProvider item, ITextComponent component, Button.IPressable onPress)
     {
         this(xPos, yPos, new ItemStack(item), component, onPress);
     }

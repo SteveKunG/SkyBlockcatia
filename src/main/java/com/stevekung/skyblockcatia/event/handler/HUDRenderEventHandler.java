@@ -8,15 +8,17 @@ import java.util.Set;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.event.GrapplingHookEvent;
+import com.stevekung.skyblockcatia.integration.sba.SBAMana;
 import com.stevekung.skyblockcatia.utils.CoordsPair;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.stevekungslib.utils.ModDecimalFormat;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -25,13 +27,17 @@ import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.GameType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -48,8 +54,6 @@ public class HUDRenderEventHandler
     public static boolean foundDragon;
     private Set<CoordsPair> recentlyLoadedChunks = new HashSet<>();
     private static final ImmutableList<AxisAlignedBB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AxisAlignedBB(-609, 9, -303, -631, 5, -320), new AxisAlignedBB(-622, 5, -321, -640, 5, -334), new AxisAlignedBB(-631, 7, -293, -648, 7, -312), new AxisAlignedBB(-658, 8, -308, -672, 7, -320), new AxisAlignedBB(-709, 9, -325, -694, 10, -315), new AxisAlignedBB(-702, 10, -303, -738, 5, -261), new AxisAlignedBB(-705, 5, -257, -678, 5, -296), new AxisAlignedBB(-657, 5, -210, -624, 8, -242), new AxisAlignedBB(-625, 7, -256, -662, 5, -286));
-    private static final ImmutableList<BlockPos> END_PORTAL_FRAMES = ImmutableList.of(new BlockPos(-669, 9, -277), new BlockPos(-669, 9, -275), new BlockPos(-670, 9, -278), new BlockPos(-672, 9, -278), new BlockPos(-673, 9, -277), new BlockPos(-673, 9, -275), new BlockPos(-672, 9, -274), new BlockPos(-670, 9, -274));
-    private static final Ordering<NetworkPlayerInfo> ENTRY_ORDERING = Ordering.from(new PlayerComparator());
 
     public HUDRenderEventHandler()
     {
@@ -94,7 +98,7 @@ public class HUDRenderEventHandler
         {
             ChestScreen chest = (ChestScreen)this.mc.currentScreen;
 
-            if (MainEventHandler.showChat && MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> chest.getTitle().getUnformattedComponentText().contains(invName)))
+            if (MainEventHandler.showChat && MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> chest.getTitle().getString().contains(invName)))
             {
                 event.setCanceled(true);
             }
@@ -109,15 +113,15 @@ public class HUDRenderEventHandler
         double grapplingHookDelay = 0;
         double zealotRespawnDelay = 0;
 
-        if (SBExtendedConfig.INSTANCE.axeCooldown)
+        if (SkyBlockcatiaSettings.INSTANCE.axeCooldown)
         {
             jungleAxeDelay = this.getItemDelay(2000, this.lastBlockBreak);
         }
-        if (SBExtendedConfig.INSTANCE.grapplingHookCooldown)
+        if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown)
         {
             grapplingHookDelay = this.getItemDelay(2000, this.lastGrapplingHookUse);
         }
-        if (SBExtendedConfig.INSTANCE.zealotRespawnCooldown)
+        if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown)
         {
             zealotRespawnDelay = this.getItemDelay(11000, this.lastZealotRespawn);
         }
@@ -129,7 +133,7 @@ public class HUDRenderEventHandler
                 return;
             }
 
-            /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBExtendedConfig.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getHeldItemMainhand().isEmpty())TODO
+            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getHeldItemMainhand().isEmpty())
             {
                 ItemStack itemStack = this.mc.player.getHeldItemMainhand();
 
@@ -143,7 +147,7 @@ public class HUDRenderEventHandler
 
                         for (int j1 = 0; j1 < list.size(); ++j1)
                         {
-                            String lore = TextFormatting.getTextWithoutFormattingCodes(list.getString(j1));
+                            String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                             if (lore.startsWith("Mana Cost: "))
                             {
@@ -155,29 +159,29 @@ public class HUDRenderEventHandler
                                     float fontHeight = this.mc.fontRenderer.FONT_HEIGHT + 1;
                                     float width = event.getWindow().getScaledWidth() / 2 + 1.0625F;
                                     float height = event.getWindow().getScaledHeight() / 2 - 24 + fontHeight;
-                                    this.mc.fontRenderer.drawStringWithShadow(usedCount, width - this.mc.fontRenderer.getStringWidth(usedCount) / 2, height, 16777215);
+                                    this.mc.fontRenderer.drawStringWithShadow(matrixStack, usedCount, width - this.mc.fontRenderer.getStringWidth(usedCount) / 2, height, 16777215);
                                 }
                                 break;
                             }
                         }
                     }
                 }
-            }*/
+            }
 
             List<CrosshairOverlay> crosshairInfo = Lists.newArrayList();
             int center = 0;
 
-            if (SBExtendedConfig.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
+            if (SkyBlockcatiaSettings.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
             {
-                crosshairInfo.add(new CrosshairOverlay(SBExtendedConfig.INSTANCE.axeCooldownColor, jungleAxeDelay));
+                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.axeCooldownColor, jungleAxeDelay));
             }
-            if (SBExtendedConfig.INSTANCE.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
+            if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
             {
-                crosshairInfo.add(new CrosshairOverlay(SBExtendedConfig.INSTANCE.grapplingHookCooldownColor, grapplingHookDelay));
+                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldownColor, grapplingHookDelay));
             }
-            if (SBExtendedConfig.INSTANCE.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
+            if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
             {
-                crosshairInfo.add(new CrosshairOverlay(SBExtendedConfig.INSTANCE.zealotRespawnCooldownColor, zealotRespawnDelay));
+                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldownColor, zealotRespawnDelay));
             }
 
             for (CrosshairOverlay overlay : crosshairInfo)
@@ -188,33 +192,6 @@ public class HUDRenderEventHandler
                 this.mc.fontRenderer.drawStringWithShadow(matrixStack, overlay.color + overlay.getDelay(), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
                 center++;
             }
-
-            /*if (SkyBlockcatiaConfig.enableRenderInfo)// TODO Indicatia support
-            {
-                List<String> leftInfo = new LinkedList<>();
-                List<String> rightInfo = new LinkedList<>();
-
-                if (SBExtendedConfig.INSTANCE.placedSummoningEyeTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
-                {
-                    int summoningEyeCount = 0;
-
-                    for (BlockPos pos : END_PORTAL_FRAMES)
-                    {
-                        if (this.mc.world.getBlockState(pos).getBlock() == Blocks.END_PORTAL_FRAME && this.mc.world.getBlockState(pos).get(EndPortalFrameBlock.EYE))
-                        {
-                            ++summoningEyeCount;
-                        }
-                    }
-                    String color = ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.placedSummoningEyeValueColor).toColoredFont();
-                    rightInfo.add(ColorUtils.stringToRGB(SBExtendedConfig.INSTANCE.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
-                }
-                            if (SBExtendedConfig.INSTANCE.lobbyPlayerCount && !this.mc.isSingleplayer())
-            {
-                List<NetworkPlayerInfo> list = ENTRY_ORDERING.sortedCopy(this.mc.player.connection.getPlayerInfoMap());
-                list = list.subList(0, Math.min(list.size(), 80));
-                rightInfo.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(list.size())).setChatStyle(JsonUtils.green())).getFormattedText());
-            }
-            }*/
         }
     }
 
@@ -231,7 +208,7 @@ public class HUDRenderEventHandler
             {
                 HUDRenderEventHandler.foundDragon = true;
 
-                if (SBExtendedConfig.INSTANCE.showHitboxWhenDragonSpawned)
+                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                 {
                     this.mc.getRenderManager().setDebugBoundingBox(true);
                 }
@@ -248,7 +225,7 @@ public class HUDRenderEventHandler
             {
                 HUDRenderEventHandler.foundDragon = false;
 
-                if (SBExtendedConfig.INSTANCE.showHitboxWhenDragonSpawned)
+                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                 {
                     this.mc.getRenderManager().setDebugBoundingBox(false);
                 }
@@ -298,9 +275,9 @@ public class HUDRenderEventHandler
 
     public static int getPlayerCount(List<NetworkPlayerInfo> list)
     {
-        if (!list.isEmpty() && list.get(0).getDisplayName() != null && list.get(0).getDisplayName().getUnformattedComponentText().startsWith("         Players ("))
+        if (!list.isEmpty() && list.get(0).getDisplayName() != null && list.get(0).getDisplayName().getString().startsWith("         Players ("))
         {
-            return Integer.valueOf(list.get(0).getDisplayName().getUnformattedComponentText().replaceAll("[^0-9]", ""));
+            return Integer.valueOf(list.get(0).getDisplayName().getString().replaceAll("[^0-9]", ""));
         }
         return list.subList(0, Math.min(list.size(), 80)).size();
     }

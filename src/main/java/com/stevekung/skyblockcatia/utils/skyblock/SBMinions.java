@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.item.ItemStack;
@@ -129,7 +130,7 @@ public class SBMinions
 
         public ItemStack getMinionItem()
         {
-            return SBItemUtils.getSkullItemStack(this.uuid, this.value);
+            return ItemUtils.getSkullItemStack(this.uuid, this.value);
         }
     }
 

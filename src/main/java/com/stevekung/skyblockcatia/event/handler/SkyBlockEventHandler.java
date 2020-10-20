@@ -12,24 +12,25 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.gui.toasts.*;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
+import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.ToastMode;
-import com.stevekung.skyblockcatia.utils.skyblock.*;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
+import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
+import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
-import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.CommonUtils;
-import com.stevekung.stevekungslib.utils.GameProfileUtils;
-import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
@@ -222,7 +223,7 @@ public class SkyBlockEventHandler
     @SubscribeEvent
     public void onMouseClick(InputEvent.MouseInputEvent event)
     {
-        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && this.mc.pointedEntity != null && this.mc.pointedEntity instanceof RemoteClientPlayerEntity && this.mc.player.isSneaking() && SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.sneakToTradeOtherPlayerIsland)
+        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && this.mc.pointedEntity != null && this.mc.pointedEntity instanceof RemoteClientPlayerEntity && this.mc.player.isSneaking() && SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland)
         {
             RemoteClientPlayerEntity player = (RemoteClientPlayerEntity)this.mc.pointedEntity;
             ScoreObjective scoreObj = this.mc.world.getScoreboard().getObjectiveInDisplaySlot(1);
@@ -313,12 +314,12 @@ public class SkyBlockEventHandler
                 {
                     String name = visitIslandMatcher.group("name");
 
-                    if (SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.CHAT_AND_TOAST)
+                    if (SkyBlockcatiaSettings.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SkyBlockcatiaSettings.INSTANCE.visitIslandDisplayMode == ToastMode.CHAT_AND_TOAST)
                     {
                         SkyBlockEventHandler.addVisitingToast(this.mc, name);
                         ToastLog.logToast(message);
                     }
-                    cancelMessage = SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.visitIslandDisplayMode == ToastMode.DISABLED;
+                    cancelMessage = SkyBlockcatiaSettings.INSTANCE.visitIslandDisplayMode == ToastMode.TOAST || SkyBlockcatiaSettings.INSTANCE.visitIslandDisplayMode == ToastMode.DISABLED;
                 }
                 else if (uuidMatcher.matches())
                 {
@@ -362,13 +363,13 @@ public class SkyBlockEventHandler
 
                 if (SkyBlockcatiaMod.isIndicatiaLoaded && SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
                 {
-                    //                    IndicatiaIntegration.savePartyChat();TODO
+                    IndicatiaIntegration.savePartyChat();
                 }
-                if (SBExtendedConfig.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
+                if (SkyBlockcatiaSettings.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
                     this.mc.player.sendChatMessage("/p leave");
                 }
-                if (SBExtendedConfig.INSTANCE.automaticOpenMaddox)
+                if (SkyBlockcatiaSettings.INSTANCE.automaticOpenMaddox)
                 {
                     for (ITextComponent component : event.getMessage().getSiblings())
                     {
@@ -381,7 +382,7 @@ public class SkyBlockEventHandler
 
                 if (SkyBlockEventHandler.isSkyBlock)
                 {
-                    if (SBExtendedConfig.INSTANCE.currentServerDay && message.startsWith("Sending to server"))
+                    if (SkyBlockcatiaSettings.INSTANCE.currentServerDay && message.startsWith("Sending to server"))
                     {
                         TimeUtils.schedule(() ->
                         {
@@ -399,7 +400,7 @@ public class SkyBlockEventHandler
                         SkyBlockEventHandler.dragonHealth = 0;
                         HUDRenderEventHandler.foundDragon = false;
 
-                        if (SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.showHitboxWhenDragonSpawned)
+                        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                         {
                             this.mc.getRenderManager().setDebugBoundingBox(false);
                         }
@@ -411,7 +412,7 @@ public class SkyBlockEventHandler
                         HUDRenderEventHandler.foundDragon = true;
                         this.dragonType = type;
 
-                        if (SkyBlockEventHandler.isSkyBlock && SBExtendedConfig.INSTANCE.showHitboxWhenDragonSpawned)
+                        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                         {
                             this.mc.getRenderManager().setDebugBoundingBox(true);
                         }
@@ -421,7 +422,7 @@ public class SkyBlockEventHandler
                     {
                         String coin = bankInterestPattern.group("coin");
                         CoinType coinType = CoinType.TYPE_3;
-                        ItemStack coinSkull = SBItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                        ItemStack coinSkull = ItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
                         NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.BANK_INTEREST, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                         ToastLog.logToast(formattedMessage);
                         cancelMessage = true;
@@ -430,13 +431,13 @@ public class SkyBlockEventHandler
                     {
                         String coin = allowancePattern.group("coin");
                         CoinType coinType = CoinType.TYPE_3;
-                        ItemStack coinSkull = SBItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                        ItemStack coinSkull = ItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
                         NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.ALLOWANCE, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                         ToastLog.logToast(formattedMessage);
                         cancelMessage = true;
                     }
 
-                    if (SBExtendedConfig.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.fishCatchDisplayMode == ToastMode.CHAT_AND_TOAST)
+                    if (SkyBlockcatiaSettings.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST || SkyBlockcatiaSettings.INSTANCE.fishCatchDisplayMode == ToastMode.CHAT_AND_TOAST)
                     {
                         if (fishCatchPattern.matches())
                         {
@@ -444,31 +445,31 @@ public class SkyBlockEventHandler
                             String name = fishCatchPattern.group("item");
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
                             ToastLog.logToast(formattedMessage);
-                            cancelMessage = SBExtendedConfig.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST;
+                            cancelMessage = SkyBlockcatiaSettings.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST;
                         }
                         else if (coinsCatchPattern.matches())
                         {
                             String type = coinsCatchPattern.group("type");
                             String coin = coinsCatchPattern.group("coin");
                             CoinType coinType = type.equals("GOOD") ? CoinType.TYPE_1 : CoinType.TYPE_2;
-                            ItemStack coinSkull = SBItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                            ItemStack coinSkull = ItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), type.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH_COINS : ToastUtils.DropType.GREAT_CATCH_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             ToastLog.logToast(formattedMessage);
-                            cancelMessage = SBExtendedConfig.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST;
+                            cancelMessage = SkyBlockcatiaSettings.INSTANCE.fishCatchDisplayMode == ToastMode.TOAST;
                         }
                     }
 
-                    if (SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.CHAT_AND_TOAST)
+                    if (SkyBlockcatiaSettings.INSTANCE.giftDisplayMode == ToastMode.TOAST || SkyBlockcatiaSettings.INSTANCE.giftDisplayMode == ToastMode.CHAT_AND_TOAST)
                     {
                         if (coinsGiftPattern.matches())
                         {
                             String type = coinsGiftPattern.group("type");
                             String coin = coinsGiftPattern.group("coin");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
-                            ItemStack coinSkull = SBItemUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
+                            ItemStack coinSkull = ItemUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), rarity, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             ToastLog.logToast(message);
-                            cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
+                            cancelMessage = SkyBlockcatiaSettings.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
                         else if (skillExpGiftPattern.matches())
                         {
@@ -478,7 +479,7 @@ public class SkyBlockEventHandler
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), rarity, Integer.valueOf(exp.replace(",", "")), null, skill);
                             ToastLog.logToast(message);
-                            cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
+                            cancelMessage = SkyBlockcatiaSettings.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
                         else if (itemDropGiftPattern.matches())
                         {
@@ -487,20 +488,20 @@ public class SkyBlockEventHandler
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, rarity, ToastUtils.ToastType.GIFT));
                             ToastLog.logToast(message);
-                            cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
+                            cancelMessage = SkyBlockcatiaSettings.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
                         else if (santaTierPattern.matches())
                         {
                             String name = santaTierPattern.group("item");
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.SANTA_TIER, ToastUtils.ToastType.GIFT));
                             ToastLog.logToast(message);
-                            cancelMessage = SBExtendedConfig.INSTANCE.giftDisplayMode == ToastMode.TOAST;
+                            cancelMessage = SkyBlockcatiaSettings.INSTANCE.giftDisplayMode == ToastMode.TOAST;
                         }
                     }
 
-                    if (SBExtendedConfig.INSTANCE.itemLogDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.itemLogDisplayMode == ToastMode.CHAT_AND_TOAST)
+                    if (SkyBlockcatiaSettings.INSTANCE.itemLogDisplayMode == ToastMode.TOAST || SkyBlockcatiaSettings.INSTANCE.itemLogDisplayMode == ToastMode.CHAT_AND_TOAST)
                     {
-                        boolean isToast = SBExtendedConfig.INSTANCE.itemLogDisplayMode == ToastMode.TOAST;
+                        boolean isToast = SkyBlockcatiaSettings.INSTANCE.itemLogDisplayMode == ToastMode.TOAST;
 
                         if (message.contains("You destroyed an Ender Crystal!"))
                         {
@@ -528,7 +529,7 @@ public class SkyBlockEventHandler
                         {
                             String coin = coinsMythosPattern.group("coin");
                             CoinType coinType = CoinType.TYPE_1;
-                            ItemStack coinSkull = SBItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
+                            ItemStack coinSkull = ItemUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.MYTHOS_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             ToastLog.logToast(formattedMessage);
                             cancelMessage = isToast;
@@ -572,9 +573,9 @@ public class SkyBlockEventHandler
                         }
                     }
 
-                    if (SBExtendedConfig.INSTANCE.petDisplayMode == ToastMode.TOAST || SBExtendedConfig.INSTANCE.petDisplayMode == ToastMode.CHAT_AND_TOAST)
+                    if (SkyBlockcatiaSettings.INSTANCE.petDisplayMode == ToastMode.TOAST || SkyBlockcatiaSettings.INSTANCE.petDisplayMode == ToastMode.CHAT_AND_TOAST)
                     {
-                        boolean isToast = SBExtendedConfig.INSTANCE.petDisplayMode == ToastMode.TOAST;
+                        boolean isToast = SkyBlockcatiaSettings.INSTANCE.petDisplayMode == ToastMode.TOAST;
 
                         if (petLevelUpPattern.matches())
                         {
@@ -713,14 +714,14 @@ public class SkyBlockEventHandler
                 CompoundNBT extraAttrib = event.getItemStack().getTag().getCompound("ExtraAttributes");
                 int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
 
-                if (SBExtendedConfig.INSTANCE.showObtainedDate && extraAttrib.contains("timestamp"))
+                if (SkyBlockcatiaSettings.INSTANCE.showObtainedDate && extraAttrib.contains("timestamp"))
                 {
                     DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
                     Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
                     String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
                     event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Obtained: " + formatted, TextFormatting.GRAY));
                 }
-                if (SBExtendedConfig.INSTANCE.bazaarOnItemTooltip)
+                if (SkyBlockcatiaSettings.INSTANCE.bazaarOnItemTooltip)
                 {
                     for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                     {

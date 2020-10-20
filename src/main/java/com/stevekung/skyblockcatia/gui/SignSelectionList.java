@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.stevekungslib.utils.LangUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -134,11 +134,11 @@ public class SignSelectionList extends ExtendedList<SignSelectionList.Entry>
 
                 if (Util.milliTime() - this.lastClicked < 250L)
                 {
-                    if (SBExtendedConfig.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
+                    if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
                     {
                         int price = Integer.valueOf(this.value);
 
-                        if (price >= SBExtendedConfig.INSTANCE.auctionBidConfirmValue)
+                        if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
                         {
                             this.mc.displayGuiScreen(new ConfirmScreen(confirm ->
                             {

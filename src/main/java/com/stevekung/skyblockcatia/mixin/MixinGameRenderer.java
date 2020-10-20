@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.stevekung.skyblockcatia.config.SBExtendedConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.block.BlockState;
@@ -39,7 +39,7 @@ public abstract class MixinGameRenderer
     @Inject(method = "isDrawBlockOutline()Z", cancellable = true, at = @At("HEAD"))
     private void isDrawBlockOutline(CallbackInfoReturnable info)
     {
-        if (SBExtendedConfig.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore())
+        if (SkyBlockcatiaSettings.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore())
         {
             RayTraceResult raytraceresult = this.mc.objectMouseOver;
 
