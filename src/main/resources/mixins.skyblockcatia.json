@@ -4,6 +4,7 @@
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
+    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
     "target": "@env(DEFAULT)",
     "mixins": [],
     "client": [
@@ -27,6 +28,7 @@
         "MixinItemRenderer",
         "MixinItemStack",
         "MixinItemStackTileEntityRenderer",
+        "MixinItemStackTileEntityRendererOptifine",
         "MixinMinecraft",
         "MixinMouseHelper",
         "MixinNetworkPlayerInfo",
