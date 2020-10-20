@@ -52,5 +52,11 @@
         "displayName": "§5Watcher Guardian",
         "uuid": "36e3a30b-fa57-3aa6-ab40-76565a7ec96f",
         "texture": "37cc76e7af29f5f3fbfd6ece794160811eff96f753459fa61d7ad176a064e3c5"
+    },
+    {
+        "skin": "TIGER_TWILIGHT",
+        "displayName": "§dTwilight Tiger",
+        "uuid": "76dba2c8-4555-317e-b3f5-550d29427354",
+        "texture": "896211dc599368dbd9056c0116ab61063991db793be93066a858eb4e9ce56438"
     }
 ]
