@@ -397,6 +397,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
     private void checkAPI() throws IOException
     {
+        this.buttons.removeIf(b -> b instanceof SkyBlockProfileButton);
         URL url = null;
 
         if (this.input.length() == 32)
