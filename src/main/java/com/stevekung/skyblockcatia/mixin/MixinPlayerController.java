@@ -76,7 +76,7 @@ public class MixinPlayerController
         {
             CompoundNBT extraAttrib = itemStack.getTag().getCompound("ExtraAttributes");
 
-            if (extraAttrib.getString("id").equals("SNOW_BLASTER") || extraAttrib.getString("id").equals("SNOW_CANNON") || extraAttrib.getString("id").equals("WEIRD_TUBA"))
+            if (extraAttrib.getString("id").equals("BAT_WAND") || extraAttrib.getString("id").equals("FLOWER_OF_TRUTH"))
             {
                 info.setReturnValue(ActionResultType.PASS);
             }

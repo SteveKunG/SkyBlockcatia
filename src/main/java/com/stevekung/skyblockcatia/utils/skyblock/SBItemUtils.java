@@ -30,7 +30,7 @@ import net.minecraftforge.common.util.Constants;
 public class SBItemUtils
 {
     public static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER", "SNOW_CANNON");
-    public static final ImmutableList<String> CLICKABLE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND");
+    public static final ImmutableList<String> CLICKABLE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND", "FLOWER_OF_TRUTH");
 
     public static List<ItemStack> decodeItem(JsonObject currentProfile, InventoryType type)
     {

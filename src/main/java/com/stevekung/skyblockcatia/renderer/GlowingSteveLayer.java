@@ -14,6 +14,8 @@ import net.minecraft.util.math.MathHelper;
 
 public class GlowingSteveLayer extends LayerRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>>
 {
+    private static final ResourceLocation TEXTURE = new ResourceLocation("skyblockcatia:textures/entity/stevekung.png");
+
     public GlowingSteveLayer(IEntityRenderer<AbstractClientPlayerEntity, PlayerModel<AbstractClientPlayerEntity>> renderer)
     {
         super(renderer);
@@ -31,7 +33,7 @@ public class GlowingSteveLayer extends LayerRenderer<AbstractClientPlayerEntity,
             {
                 alpha = 0.7F;
             }
-            IVertexBuilder ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(new ResourceLocation("skyblockcatia:textures/entity/stevekung.png")));
+            IVertexBuilder ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(GlowingSteveLayer.TEXTURE));
             this.getEntityModel().render(matrixStack, ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
         }
     }

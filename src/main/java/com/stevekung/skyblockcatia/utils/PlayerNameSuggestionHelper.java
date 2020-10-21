@@ -14,9 +14,9 @@ import net.minecraft.command.ISuggestionProvider;
 
 public class PlayerNameSuggestionHelper extends CommandSuggestionHelper
 {
-    public PlayerNameSuggestionHelper(Minecraft mc, Screen screen, TextFieldWidget textField, FontRenderer font, boolean p_i225919_5_, boolean p_i225919_6_, int p_i225919_7_, int p_i225919_8_, boolean p_i225919_9_, int p_i225919_10_)
+    public PlayerNameSuggestionHelper(Minecraft mc, Screen screen, TextFieldWidget textField, FontRenderer font, int maxAmountRendered)
     {
-        super(mc, screen, textField, font, p_i225919_5_, p_i225919_6_, p_i225919_7_, p_i225919_8_, p_i225919_9_, p_i225919_10_);
+        super(mc, screen, textField, font, true, true, 0, maxAmountRendered, false, Integer.MIN_VALUE);
     }
 
     @Override

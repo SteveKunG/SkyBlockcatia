@@ -55,7 +55,6 @@ public class NumericToast implements IToast
         ToastUtils.ItemDrop drop = this.output;
         String value = NumberUtils.NUMBER_FORMAT.format(this.value);
         ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : SkyBlockEventHandler.getSkillItemStack(value, SBSkills.Type.byName(this.object));
-        //ColorUtils.stringToRGB().toColoredFont()
         String itemName = this.isCoins ? TextComponentUtils.formattedString(value + " Coins", ColorUtils.toHex(255, 223, 0)) : this.isPet ? TextFormatting.GREEN + itemStack.getDisplayName().getString() + TextFormatting.GREEN + " is now level " + TextFormatting.BLUE + value + TextFormatting.GREEN + "!" : itemStack.getDisplayName().getString();
         toastGui.getMinecraft().getTextureManager().bindTexture(this.texture);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);

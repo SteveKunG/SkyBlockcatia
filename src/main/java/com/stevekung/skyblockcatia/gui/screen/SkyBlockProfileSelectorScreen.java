@@ -154,7 +154,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         this.checkButton.active = this.usernameTextField.getText().trim().length() > 0;
         this.checkButton.visible = !this.error;
         this.children.add(this.usernameTextField);
-        this.suggestionHelper = new PlayerNameSuggestionHelper(this.minecraft, this, this.usernameTextField, this.font, true, true, 0, 7, false, Integer.MIN_VALUE);
+        this.suggestionHelper = new PlayerNameSuggestionHelper(this.minecraft, this, this.usernameTextField, this.font, 10);
         this.suggestionHelper.shouldAutoSuggest(true);
         this.suggestionHelper.init();
 
