@@ -1,32 +1,26 @@
 # Change Log
 
-* + Added Dungeon API Viewer (WIP), release for testing
-* + Added Catacombs Dungeon stat bonus
-* + Added Griffin/Megalodon Pet to API Viewer
-* + Added Community Upgrades to player stats
-* + Added New Pet items to API Viewer
-* + Added New glowing textures for Holy Dragon and Baby Superior
-* + Added New Sea Creatures into kills list
-* + Added Mythos Burrows stats
-* + Added support for Dungeon Sacks item
-* + Added Toast for Mythos Events
-* * Prevent scroll inventory in API Viewer when tooltip overflow from screen (Text Overflow Scroll compatibility)
-* * Automatic support if Pet has a new Pet Item applied
-* * Move Bazaar on Item Tooltip API warning into tooltip instead of spamming chat
-* * Sacks item now sort with item count
-* * Update Pet Care and events estimate time
-* * Display pet rarity in player profile viewer
-* * Player Base Stats now group into thier categories
-* * Display sack item count into display name
-* * Change Pet 'Max Level' to bold
-* * Attempt to fix locale issues
-* * Fixed latest SBA Beta Backpack methods
-* * Fixed item disappear from API Inventory (caused by skyblock update)
-* * Fixed crash when entered empty text in Confirmation Bids
-* * Fixed rare crash with Show Armor button
-* * Fixed show obtained date config not working, Closed #18
-* * Fixed empty bank history length
-* * Fixed guild remain to displayed for one profile
-* * Fixed rare 'ArrayIndexOutOfBound' for armor items
-* - Removed unused chat shortcut
-* - Removed hide renderObjective from debug overlay
+* + Added Toast for Bank Interest and Allowance
+* + Added Personal Vault tab
+* + Added shortcut buttons for Auction House and Bazaar in inventory
+* + Added 24 Hours time format, Implemented #14
+* + Added Version Checker notification
+* + Added support for new Skyblock tab list for lobby player count
+* + Added 1.16 Ignore glass collision for third person camera
+* + Added support for pet skins
+* + Added Dark Auction to Skyblock Location
+* + Added FLOWER_OF_TRUTH to right clicked blacklist
+* + Added Ferocity stats
+* * NEU Compatibility with inventory potion shift
+* * Reorganize inventory tabs
+* * Update Wardrobe leather chestplate color
+* * Item Rarity is now detected by base item color
+* * Disabled Inventory Viewer if API Disabled or Empty Slot
+* * Display Armor tooltip in Player Info tab
+* * Display player lobby count only in Skyblock
+* * Fixed name for Washed-up Souvenir
+* * Fixed events estimated time
+* * Fixed performance issue with Player Overlay Tab
+* * Fixed dungeon items regex pattern
+* * Attempt to fix ArrayIndexOutOfBounds for ItemBlock
+* - Removed duplicate sea creatures stats in kills list
