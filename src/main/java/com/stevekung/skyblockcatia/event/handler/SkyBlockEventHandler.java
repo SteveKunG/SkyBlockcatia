@@ -262,7 +262,7 @@ public class SkyBlockEventHandler
         }
 
         String formattedMessage = event.getMessage().getString();
-        String message = event.getMessage().getUnformattedComponentText();
+        String message = TextFormatting.getTextWithoutFormattingCodes(formattedMessage);
         boolean cancelMessage = false;
 
         if (Utils.isHypixel())
@@ -775,7 +775,7 @@ public class SkyBlockEventHandler
 
                 if (this.mc.currentScreen != null && this.mc.currentScreen instanceof ChestScreen)
                 {
-                    String name = this.mc.currentScreen.getTitle().getUnformattedComponentText();
+                    String name = this.mc.currentScreen.getTitle().getString();
 
                     if (name.equals("Community Shop"))
                     {
@@ -1126,7 +1126,7 @@ public class SkyBlockEventHandler
 
             if (mc.currentScreen != null && mc.currentScreen instanceof ChestScreen)
             {
-                String name = mc.currentScreen.getTitle().getUnformattedComponentText();
+                String name = mc.currentScreen.getTitle().getString();
 
                 if (name.equals("Auction View"))
                 {

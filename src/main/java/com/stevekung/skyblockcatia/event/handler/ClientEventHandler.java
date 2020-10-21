@@ -2,9 +2,12 @@ package com.stevekung.skyblockcatia.event.handler;
 
 import java.util.Random;
 
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -35,57 +38,57 @@ public class ClientEventHandler
         char formatter = TextFormatting.values()[new Random().nextInt(TextFormatting.values().length)].formattingCode;
 
         // Pet Level Up
-      //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse","Flying Fish","Magma Cube"};
-        //player.sendMessage(JsonUtils.create("§r§aYour §r§" + formatter + pet[rand.nextInt(pet.length)] + " §r§alevelled up to level §r§9" + rand.nextInt(100) + "§r§a!§r"));
+        //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse","Flying Fish","Magma Cube"};
+        //player.sendMessage(TextComponentUtils.component("§r§aYour §r§" + formatter + pet[rand.nextInt(pet.length)] + " §r§alevelled up to level §r§9" + rand.nextInt(100) + "§r§a!§r"), Util.DUMMY_UUID);
 
         // Pet Drop
-        //player.addChatComponentMessage(JsonUtils.create("PET DROP! " + EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName().replace("[Lvl 1] ", "")) + EnumChatFormatting.getTextWithoutFormattingCodes(magic)));
+        //player.sendMessage(TextComponentUtils.component("PET DROP! " + TextFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName().getString().replaceAll("\\[Lvl \\d+\\] ", "")) + TextFormatting.getTextWithoutFormattingCodes(magic)), Util.DUMMY_UUID);
 
         // Rare Drop
-        //String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName() + magic;
-        //String test = "§r§6§lRARE DROP! " + "§r" + itemStack.getDisplayName().getFormattedText() + magic;
-      //String test = "§r§6§lRARE DROP! " + "§r§f" + EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName()) + magic;
-        //player.sendMessage(JsonUtils.create(test));
+        //String test = "§r§6§lRARE DROP! " + "§r§" + formatter + itemStack.getDisplayName().getString() + magic;
+        //String test = "§r§6§lRARE DROP! " + "§r" + itemStack.getDisplayName().getString() + magic;
+        //String test = "§r§6§lRARE DROP! " + "§r§f" + TextFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName().getString()) + magic;
+        //player.sendMessage(TextComponentUtils.component(test), Util.DUMMY_UUID);
 
         // Slayer Drop
         /*switch (rand.nextInt(4))
         {
         case 0:
         default:
-            player.sendMessage(JsonUtils.create("§r§b§lRARE DROP! §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
-            player.sendMessage(JsonUtils.create("§r§b§lRARE DROP! §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.sendMessage(TextComponentUtils.component("§r§b§lRARE DROP! §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
+            player.sendMessage(TextComponentUtils.component("§r§b§lRARE DROP! §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         case 1:
-            player.sendMessage(JsonUtils.create("§r§9§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
-            player.sendMessage(JsonUtils.create("§r§9§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.sendMessage(TextComponentUtils.component("§r§9§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
+            player.sendMessage(TextComponentUtils.component("§r§9§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         case 2:
-            player.sendMessage(JsonUtils.create("§r§5§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
-            player.sendMessage(JsonUtils.create("§r§5§lVERY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.sendMessage(TextComponentUtils.component("§r§5§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
+            player.sendMessage(TextComponentUtils.component("§r§5§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         case 3:
-            player.sendMessage(JsonUtils.create("§r§d§lCRAZY RARE DROP!  §r§7(").appendSibling(JsonUtils.create(itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
-            player.sendMessage(JsonUtils.create("§r§d§lCRAZY RARE DROP!  §r§7(").appendSibling(JsonUtils.create("§r§" + formatter + itemStack.getDisplayName().getFormattedText())).appendSibling(JsonUtils.create("§r§7" + ")" + magic)));
+            player.sendMessage(TextComponentUtils.component("§r§d§lCRAZY RARE DROP!  §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
+            player.sendMessage(TextComponentUtils.component("§r§d§lCRAZY RARE DROP!  §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         }*/
 
         // Dragon Drop
-        //player.sendMessage(JsonUtils.create(com.stevekung.stevekungslib.utils.GameProfileUtils.getUsername() + " has obtained " + itemStack.getDisplayName().getFormattedText() + "!"));
+        //player.sendMessage(TextComponentUtils.component(com.stevekung.stevekungslib.utils.GameProfileUtils.getUsername() + " has obtained " + itemStack.getDisplayName().getString() + "!"), Util.DUMMY_UUID);
 
         // Gift Item Drop
         /*switch (rand.nextInt(4))
         {
         case 0:
-            player.sendMessage(JsonUtils.create("COMMON! ").appendSibling(itemStack.getDisplayName()).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.sendMessage(TextComponentUtils.component("COMMON! ").append(itemStack.getDisplayName()).append(TextComponentUtils.component(" gift with TEST!")), Util.DUMMY_UUID);
             break;
         case 1:
-            player.sendMessage(JsonUtils.create("SWEET! ").appendSibling(itemStack.getDisplayName()).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.sendMessage(TextComponentUtils.component("SWEET! ").append(itemStack.getDisplayName()).append(TextComponentUtils.component(" gift with TEST!")), Util.DUMMY_UUID);
             break;
         case 2:
-            player.sendMessage(JsonUtils.create("RARE! ").appendSibling(itemStack.getDisplayName()).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.sendMessage(TextComponentUtils.component("RARE! ").append(itemStack.getDisplayName()).append(TextComponentUtils.component(" gift with TEST!")), Util.DUMMY_UUID);
             break;
         case 3:
-            player.sendMessage(JsonUtils.create("SANTA TIER! ").appendSibling(itemStack.getDisplayName()).appendSibling(JsonUtils.create(" gift with TEST!")));
+            player.sendMessage(TextComponentUtils.component("SANTA TIER! ").append(itemStack.getDisplayName()).append(TextComponentUtils.component(" gift with TEST!")), Util.DUMMY_UUID);
             break;
         }*/
 
@@ -96,13 +99,13 @@ public class ClientEventHandler
         switch (rand.nextInt(3))
         {
         case 0:
-            player.sendMessage(JsonUtils.create("COMMON! " + exp));
+            player.sendMessage(TextComponentUtils.component("COMMON! " + exp), Util.DUMMY_UUID);
             break;
         case 1:
-            player.sendMessage(JsonUtils.create("SWEET! " + exp));
+            player.sendMessage(TextComponentUtils.component("SWEET! " + exp), Util.DUMMY_UUID);
             break;
         case 2:
-            player.sendMessage(JsonUtils.create("RARE! " + exp));
+            player.sendMessage(TextComponentUtils.component("RARE! " + exp), Util.DUMMY_UUID);
             break;
         }*/
 
@@ -112,13 +115,13 @@ public class ClientEventHandler
         switch (rand.nextInt(3))
         {
         case 0:
-            player.sendMessage(JsonUtils.create("COMMON! " + coins));
+            player.sendMessage(TextComponentUtils.component("COMMON! " + coins), Util.DUMMY_UUID);
             break;
         case 1:
-            player.sendMessage(JsonUtils.create("SWEET! " + coins));
+            player.sendMessage(TextComponentUtils.component("SWEET! " + coins), Util.DUMMY_UUID);
             break;
         case 2:
-            player.sendMessage(JsonUtils.create("RARE! " + coins));
+            player.sendMessage(TextComponentUtils.component("RARE! " + coins), Util.DUMMY_UUID);
             break;
         }*/
 
@@ -127,11 +130,11 @@ public class ClientEventHandler
 
         if (rand.nextBoolean())
         {
-            player.sendMessage(JsonUtils.create("GOOD CATCH! You found " + coin + " Coins."));
+            player.sendMessage(TextComponentUtils.component("GOOD CATCH! You found " + coin + " Coins."), Util.DUMMY_UUID);
         }
         else
         {
-            player.sendMessage(JsonUtils.create("GREAT CATCH! You found " + coin + " Coins."));
+            player.sendMessage(TextComponentUtils.component("GREAT CATCH! You found " + coin + " Coins."), Util.DUMMY_UUID);
         }*/
 
         // Fishing Drop
@@ -139,29 +142,29 @@ public class ClientEventHandler
         {
         case 0:
         default:
-            player.sendMessage(JsonUtils.create("GOOD CATCH! You found a ").appendSibling(itemStack.getDisplayName()).appendSibling(JsonUtils.create("!")));
+            player.sendMessage(TextComponentUtils.component("GOOD CATCH! You found a ").append(itemStack.getDisplayName()).append(TextComponentUtils.component("!")), Util.DUMMY_UUID);
             break;
         case 1:
-            player.sendMessage(JsonUtils.create("GREAT CATCH! You found a ").appendSibling(itemStack.getDisplayName()).appendSibling(JsonUtils.create("!")));
+            player.sendMessage(TextComponentUtils.component("GREAT CATCH! You found a ").append(itemStack.getDisplayName()).append(TextComponentUtils.component("!")), Util.DUMMY_UUID);
             break;
         }*/
 
         // Dungeon Drop
-        //String test = "You found a Top Quality Item! " + itemStack.getDisplayName().getFormattedText();
+        //String test = "You found a Top Quality Item! " + itemStack.getDisplayName().getString();
         //String test = "You found a Top Quality Item! Skeleton Soldier Boots";
         //String test = "     RARE REWARD! Adaptive Boots";
-      //String test = "     RARE REWARD! " + itemStack.getDisplayName();
-        //player.sendMessage(JsonUtils.create(test));
-        
+        //String test = "     RARE REWARD! " + itemStack.getDisplayName().getString();
+        //player.sendMessage(TextComponentUtils.component(test), Util.DUMMY_UUID);
+
         // Mythos Drop
-        //String test = "RARE DROP! You dug out a " + itemStack.getDisplayName() + "!";
-        //player.addChatComponentMessage(JsonUtils.create(test));
+        //String test = "RARE DROP! You dug out a " + itemStack.getDisplayName().getString() + "!";
+        //player.sendMessage(TextComponentUtils.component(test), Util.DUMMY_UUID);
         //String coins = "Wow! You dug out " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
-        //player.addChatComponentMessage(JsonUtils.create(coins));
-        
+        //player.sendMessage(TextComponentUtils.component(coins), Util.DUMMY_UUID);
+
         // Bank Interest/Allowance
         //String coins = "Since you've been away you earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins as interest in your personal bank account!";
         //String coins = "ALLOWANCE! You earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
-        //player.addChatComponentMessage(JsonUtils.create(coins));
+        //player.sendMessage(TextComponentUtils.component(coins), Util.DUMMY_UUID);
     }
 }
