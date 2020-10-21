@@ -38,6 +38,6 @@ logoFile="logo.png"
 [[dependencies.skyblockcatia]]
     modId="indicatia"
     mandatory=false
-    versionRange="[3.0.6,)"
+    versionRange="[4.0.0,)"
     ordering="NONE"
     side="CLIENT"
