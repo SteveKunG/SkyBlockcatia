@@ -118,6 +118,10 @@ public class SBItemUtils
                 }
                 sbTag.putString("Potion", potionId == null ? "minecraft:water" : potionId);
             }
+            if (itemId.equals("minecraft:spawn_egg") && damage == 0)
+            {
+                itemId = "minecraft:polar_bear_spawn_egg";
+            }
         }
 
         if (sbTag != null)
