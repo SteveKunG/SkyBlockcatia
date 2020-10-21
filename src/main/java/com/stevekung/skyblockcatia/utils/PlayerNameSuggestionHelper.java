@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.utils;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 
@@ -33,7 +34,7 @@ public class PlayerNameSuggestionHelper extends CommandSuggestionHelper
         int i = this.inputField.getCursorPosition();
         String s1 = text.substring(0, i);
         int k = CommandSuggestionHelper.getLastWhitespace(s1);
-        Collection<String> collection = this.mc.player.connection.getSuggestionProvider().getPlayerNames();
+        Collection<String> collection = this.mc.player.connection.getSuggestionProvider().getPlayerNames().stream().filter(s -> !s.startsWith("!")).collect(Collectors.toList());
         this.suggestionsFuture = ISuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k));
     }
 }
