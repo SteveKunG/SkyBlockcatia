@@ -56,19 +56,15 @@ public class ClientEventHandler
         case 0:
         default:
             player.sendMessage(TextComponentUtils.component("§r§b§lRARE DROP! §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
-            player.sendMessage(TextComponentUtils.component("§r§b§lRARE DROP! §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         case 1:
             player.sendMessage(TextComponentUtils.component("§r§9§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
-            player.sendMessage(TextComponentUtils.component("§r§9§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         case 2:
             player.sendMessage(TextComponentUtils.component("§r§5§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
-            player.sendMessage(TextComponentUtils.component("§r§5§lVERY RARE DROP!  §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         case 3:
             player.sendMessage(TextComponentUtils.component("§r§d§lCRAZY RARE DROP!  §r§7(").append(TextComponentUtils.component(itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
-            player.sendMessage(TextComponentUtils.component("§r§d§lCRAZY RARE DROP!  §r§7(").append(TextComponentUtils.component("§r§" + formatter + itemStack.getDisplayName().getString())).append(TextComponentUtils.component("§r§7" + ")" + magic)), Util.DUMMY_UUID);
             break;
         }*/
 

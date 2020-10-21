@@ -745,15 +745,15 @@ public class SkyBlockEventHandler
                                     double sellStack = 64 * product.getSellPrice();
                                     double buyCurrent = event.getItemStack().getCount() * product.getBuyPrice();
                                     double sellCurrent = event.getItemStack().getCount() * product.getSellPrice();
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Buy/Sell (Stack): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Buy/Sell (Stack): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
 
                                     if (event.getItemStack().getCount() > 1 && event.getItemStack().getCount() < 64)
                                     {
-                                        event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Buy/Sell (Current): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
+                                        event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Buy/Sell (Current): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
                                     }
 
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Buy/Sell (One): " + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.component("Last Updated: " + TextFormatting.WHITE + TimeUtils.getRelativeTime(entry.getValue().getLastUpdated())));
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Buy/Sell (One): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
+                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Last Updated: ", TextFormatting.GRAY).append(TextComponentUtils.formatted(TimeUtils.getRelativeTime(entry.getValue().getLastUpdated()), TextFormatting.WHITE)));
                                 }
                             }
                             else
@@ -865,7 +865,7 @@ public class SkyBlockEventHandler
 
                             if (drop.getType() == ToastUtils.DropType.PET_DROP)
                             {
-                                if (("[Lvl 1] " + dropName).equals(TextFormatting.getTextWithoutFormattingCodes(key)))//key.replaceAll("\u00a7r$", "") TODO
+                                if (("[Lvl 1] " + dropName).equals(TextFormatting.getTextWithoutFormattingCodes(key)))
                                 {
                                     newItem.setCount(diff);
 
