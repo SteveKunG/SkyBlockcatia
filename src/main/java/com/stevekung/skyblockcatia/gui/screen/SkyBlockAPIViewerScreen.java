@@ -204,7 +204,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
-    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0);
+    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0);
 
     // GuiContainer fields
     private int xSize;
@@ -1453,7 +1453,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
 
                 this.data.setHasInventories(this.totalDisabledInv != 11);
-                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID, communityUpgrade);
                 break;
             }
@@ -2476,6 +2476,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         double seaCreatureChanceTemp = 0;
         double magicFindTemp = 0;
         double petLuckTemp = 0;
+        double ferocityTemp = 0;
 
         for (int i = 0; i < bonus.length; ++i)
         {
@@ -2510,6 +2511,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 double seaCreatureChance = bonus[i].getSeaCreatureChance();
                 double magicFind = bonus[i].getMagicFind();
                 double petLuck = bonus[i].getPetLuck();
+                double ferocity = bonus[i].getFerocity();
 
                 for (int level = levelToCheck; level <= skillLevel; level++)
                 {
@@ -2529,10 +2531,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                     seaCreatureChanceTemp += seaCreatureChance;
                     magicFindTemp += magicFind;
                     petLuckTemp += petLuck;
+                    ferocityTemp += ferocity;
                 }
             }
         }
-        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp);
+        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp);
     }
 
     private void getHealthFromCake(CompoundNBT extraAttrib)
@@ -2590,6 +2593,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         double seaCreatureChanceTemp = 0;
         double magicFindTemp = 0;
         double petLuckTemp = 0;
+        double ferocityTemp = 0;
 
         for (ItemStack itemStack : inventory)
         {
@@ -2685,13 +2689,16 @@ public class SkyBlockAPIViewerScreen extends Screen
                             case "Bonus Attack Speed":
                                 attackSpeedTemp += valueD;
                                 break;
+                            case "Ferocity":
+                                ferocityTemp += valueD;
+                                break;
                             }
                         }
                     }
                 }
             }
         }
-        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp));
+        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp));
     }
 
     private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid, CommunityUpgrades communityUpgrade)
@@ -2741,6 +2748,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         String petLuck = ColorUtils.toHex(255,85,255);
         String bank = ColorUtils.toHex(255,215,0);
         String purseColor = ColorUtils.toHex(255,165,0);
+        String ferocity = ColorUtils.toHex(224,120,0);
         String location = this.getLocation(objStatus, uuid);
 
         this.infoList.add(new SkyBlockInfo(TextFormatting.YELLOW.toString() + TextFormatting.BOLD + TextFormatting.UNDERLINE + "Base Stats", ""));
@@ -2757,6 +2765,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.infoList.add(new SkyBlockInfo("\u03B1 Sea Creature Chance", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getSeaCreatureChance()) + "%", seaCreatureChance));
         this.infoList.add(new SkyBlockInfo("\u272F Magic Find", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getMagicFind()), magicFind));
         this.infoList.add(new SkyBlockInfo("\u2663 Pet Luck", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getPetLuck()), petLuck));
+        this.infoList.add(new SkyBlockInfo("\u2AFD Ferocity", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getFerocity()), ferocity));
         this.infoList.add(new SkyBlockInfo("\u2618 Fairy Souls Collected", this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS, fairySoulsColor));
 
         this.infoList.add(new SkyBlockInfo("", ""));
@@ -2827,7 +2836,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             defenseBase += (i + 1) % 5 == 0 ? 2 : 1;
             strengthBase += (i + 1) % 5 == 0 ? 2 : 1;
         }
-        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0, 0, 0, 0, 0);
+        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speedBase, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     private BonusStatTemplate getMagicFindFromPets(int petsScore)
@@ -2844,7 +2853,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 magicFindBase = magicFind;
             }
         }
-        return new BonusStatTemplate(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, magicFindBase, 0);
+        return new BonusStatTemplate(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, magicFindBase, 0, 0);
     }
 
     private String replaceStatsString(String statName, String replace)

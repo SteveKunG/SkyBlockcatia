@@ -15,8 +15,9 @@ public class BonusStatTemplate
     private double seaCreatureChance;
     private double magicFind;
     private double petLuck;
+    private double ferocity;
 
-    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck)
+    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck, double ferocity)
     {
         this.health = health;
         this.defense = defense;
@@ -31,6 +32,7 @@ public class BonusStatTemplate
         this.seaCreatureChance = seaCreatureChance;
         this.magicFind = magicFind;
         this.petLuck = petLuck;
+        this.ferocity = ferocity;
     }
 
     public BonusStatTemplate add(BonusStatTemplate toAdd)
@@ -48,7 +50,8 @@ public class BonusStatTemplate
         this.seaCreatureChance += toAdd.seaCreatureChance;
         this.magicFind += toAdd.magicFind;
         this.petLuck += toAdd.petLuck;
-        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck);
+        this.ferocity += toAdd.ferocity;
+        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity);
     }
 
     public double getHealth()
@@ -124,6 +127,11 @@ public class BonusStatTemplate
         return this.petLuck;
     }
 
+    public double getFerocity()
+    {
+        return this.ferocity;
+    }
+
     public void setHealth(double health)
     {
         this.health = health;
@@ -187,6 +195,11 @@ public class BonusStatTemplate
     public void setPetLuck(double petLuck)
     {
         this.petLuck = petLuck;
+    }
+
+    public void setFerocity(double ferocity)
+    {
+        this.ferocity = ferocity;
     }
 
     public BonusStatTemplate addHealth(double health)
@@ -264,6 +277,12 @@ public class BonusStatTemplate
     public BonusStatTemplate addPetLuck(double petLuck)
     {
         this.petLuck += petLuck;
+        return this;
+    }
+
+    public BonusStatTemplate addFerocity(double ferocity)
+    {
+        this.ferocity += ferocity;
         return this;
     }
 }
