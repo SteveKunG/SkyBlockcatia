@@ -134,7 +134,7 @@ curseforge {
     if (project.hasProperty("upload_api_key")) {
         apiKey = project.upload_api_key
         project {
-            id = "296019"
+            id = "397441"
             changelog = file("CHANGE_LOG.md")
             changelogType = "markdown"
             releaseType = "release"
@@ -143,6 +143,7 @@ curseforge {
             mainArtifact(jar) {
                 displayName = "SkyBlockcatia-" + mcVersion + "-" + version
                 relations {
+                    requiredLibrary "stevekungs-lib"
                     optionalLibrary "indicatia"
                 }
             }
