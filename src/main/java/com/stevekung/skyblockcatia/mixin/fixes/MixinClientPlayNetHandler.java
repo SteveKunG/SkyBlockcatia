@@ -24,7 +24,7 @@ public abstract class MixinClientPlayNetHandler
     {
         Entity entity = this.world.getEntityByID(packet.getEntityId());
 
-        if (Utils.isHypixel() && entity == null)
+        if (Utils.isHypixel() && entity == null) // prevent error
         {
             info.cancel();
         } 

@@ -33,23 +33,26 @@ public class RenderSkyBlockInfo
     @SubscribeEvent
     public void onInfoRender(InfoOverlayEvent event)
     {
-        if (SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
+        if (SkyBlockEventHandler.isSkyBlock)
         {
-            int summoningEyeCount = 0;
-
-            for (BlockPos pos : END_PORTAL_FRAMES)
+            if (SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
             {
-                if (this.mc.world.getBlockState(pos).getBlock() == Blocks.END_PORTAL_FRAME && this.mc.world.getBlockState(pos).get(EndPortalFrameBlock.EYE))
+                int summoningEyeCount = 0;
+
+                for (BlockPos pos : END_PORTAL_FRAMES)
                 {
-                    ++summoningEyeCount;
+                    if (this.mc.world.getBlockState(pos).getBlock() == Blocks.END_PORTAL_FRAME && this.mc.world.getBlockState(pos).get(EndPortalFrameBlock.EYE))
+                    {
+                        ++summoningEyeCount;
+                    }
                 }
+                event.getInfos().add(new InfoOverlay("Placed Eye", summoningEyeCount + "/8", SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeColor, SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeValueColor, InfoOverlay.Position.RIGHT));
             }
-            event.getInfos().add(new InfoOverlay("Placed Eye", summoningEyeCount + "/8", SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeColor, SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeValueColor, InfoOverlay.Position.RIGHT));
-        }
-        if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerCount && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND && !this.mc.isSingleplayer())
-        {
-            List<NetworkPlayerInfo> list = PlayerTabOverlayGui.ENTRY_ORDERING.sortedCopy(this.mc.player.connection.getPlayerInfoMap());
-            event.getInfos().add(new InfoOverlay("Lobby Players Count", String.valueOf(HUDRenderEventHandler.getPlayerCount(list)), ColorUtils.decimalToRgb(TextFormatting.GOLD.getColor()), ColorUtils.decimalToRgb(TextFormatting.GREEN.getColor()), InfoOverlay.Position.RIGHT));
+            if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerCount && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND && !this.mc.isSingleplayer())
+            {
+                List<NetworkPlayerInfo> list = PlayerTabOverlayGui.ENTRY_ORDERING.sortedCopy(this.mc.player.connection.getPlayerInfoMap());
+                event.getInfos().add(new InfoOverlay("Lobby Players Count", String.valueOf(HUDRenderEventHandler.getPlayerCount(list)), ColorUtils.decimalToRgb(TextFormatting.GOLD.getColor()), ColorUtils.decimalToRgb(TextFormatting.GREEN.getColor()), InfoOverlay.Position.RIGHT));
+            }
         }
     }
 }

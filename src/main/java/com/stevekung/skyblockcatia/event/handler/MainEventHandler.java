@@ -128,7 +128,7 @@ public class MainEventHandler
                     {
                         String chat = MainEventHandler.showChat ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
 
-                        event.addWidget(new ItemButton(2, height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
+                        event.addWidget(new ItemButton(2, event.getGui().height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
                         {
                             MainEventHandler.showChat = !MainEventHandler.showChat;
                             ((ItemButton)button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + (MainEventHandler.showChat ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF")));
