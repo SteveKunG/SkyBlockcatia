@@ -27,7 +27,7 @@ public class SBNumberUtils
 
     public static String formatWithM(double number)
     {
-        char[] suffix = {' ', 'k', 'M', 'B', 'T', 'P', 'E'};
+        char[] suffix = {' ', 'K', 'M', 'B', 'T', 'P', 'E'};
         int value = (int) Math.floor(Math.log10(number));
         int base = value / 3;
 

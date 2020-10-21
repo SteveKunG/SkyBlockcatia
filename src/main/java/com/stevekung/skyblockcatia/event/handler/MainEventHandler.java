@@ -131,52 +131,52 @@ public class MainEventHandler
                         event.addWidget(new ItemButton(2, height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
                         {
                             MainEventHandler.showChat = !MainEventHandler.showChat;
-                            ((ItemButton)button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + chat));
+                            ((ItemButton)button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + (MainEventHandler.showChat ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF")));
                         }));
                     }
 
-                    if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, title) && !title.getUnformattedComponentText().equals("Ender Chest"))
+                    if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, title) && !title.getString().equals("Ender Chest"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
                         event.addWidget(new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
                         event.addWidget(new ItemButton(width + 88, height + 85, skyBlockMenu, button -> this.mc.player.sendChatMessage("/sbmenu")));
                     }
-                    else if (title.getUnformattedComponentText().equals("Craft Item"))
+                    else if (title.getString().equals("Craft Item"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
                         event.addWidget(new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.sendChatMessage("/sbmenu")));
                     }
-                    else if (title.getUnformattedComponentText().equals("Ender Chest"))
+                    else if (title.getString().equals("Ender Chest"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
                         event.addWidget(new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.sendChatMessage("/sbmenu")));
                     }
-                    else if (title.getUnformattedComponentText().contains("Wardrobe"))
+                    else if (title.getString().contains("Wardrobe"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
                     }
-                    else if (title.getUnformattedComponentText().contains("Pets"))
+                    else if (title.getString().contains("Pets"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
                     }
                 }
 
-                if (title.getUnformattedComponentText().equals("Auctions Browser"))
+                if (title.getString().equals("Auctions Browser"))
                 {
                     String bid = MainEventHandler.bidHighlight ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
                     event.addWidget(new ItemButton(width + 89, height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
                     {
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
-                        ((ItemButton)button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + bid));
+                        ((ItemButton)button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF")));
                     }));
                 }
-                else if (title.getUnformattedComponentText().contains("Hub Selector"))
+                else if (title.getString().contains("Hub Selector"))
                 {
                     String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
                     event.addWidget(new ItemButton(width + 89, height + 29, Items.COMPASS, TextComponentUtils.component("Lobby Player Overlay: " + overlay), button ->
                     {
                         SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
-                        ((ItemButton)button).setName(TextComponentUtils.component("Lobby Player Overlay: " + overlay));
+                        ((ItemButton)button).setName(TextComponentUtils.component("Lobby Player Overlay: " + (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF")));
                         SkyBlockcatiaSettings.INSTANCE.save();
                     }));
                 }
@@ -258,6 +258,6 @@ public class MainEventHandler
 
     public static <T extends Container> boolean isSuitableForGUI(List<String> invList, ITextComponent title)
     {
-        return invList.stream().anyMatch(invName -> title.getUnformattedComponentText().contains(invName));
+        return invList.stream().anyMatch(invName -> title.getString().contains(invName));
     }
 }

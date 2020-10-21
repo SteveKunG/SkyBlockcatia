@@ -24,6 +24,7 @@ import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.ToastMode;
+import com.stevekung.skyblockcatia.utils.Utils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
@@ -39,7 +40,6 @@ import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -169,7 +169,7 @@ public class SkyBlockEventHandler
 
                                 if (this.dragonType != null)
                                 {
-                                    //SkyBlockBossBar.healthScale = HypixelEventHandler.dragonHealth / this.dragonType.getMaxHealth();
+                                    //SkyBlockBossBar.healthScale = HypixelEventHandler.dragonHealth / this.dragonType.getMaxHealth();TODO
                                 }
                                 break;
                             }
@@ -265,7 +265,7 @@ public class SkyBlockEventHandler
         String message = event.getMessage().getUnformattedComponentText();
         boolean cancelMessage = false;
 
-        if (this.isHypixel())
+        if (Utils.isHypixel())
         {
             // Common matcher
             Matcher visitIslandMatcher = SkyBlockEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
@@ -945,12 +945,6 @@ public class SkyBlockEventHandler
             copy.add(item.copy());
         }
         return copy;
-    }
-
-    private boolean isHypixel()
-    {
-        ServerData server = this.mc.getCurrentServerData();
-        return server != null && server.serverIP.contains("hypixel");
     }
 
     private static void addVisitingToast(Minecraft mc, String name)

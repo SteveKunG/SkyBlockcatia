@@ -35,10 +35,13 @@
         "MixinParticleManager",
         "MixinPlayerController",
         "MixinPlayerRenderer",
-        "MixinResourceLocation",
         "MixinPlayerTabOverlayGui",
         "MixinSimpleReloadableResourceManager",
-        "MixinWallOrFloorItem"
+        "MixinWallOrFloorItem",
+        "fixes.MixinClientPlayNetHandler",
+        "fixes.MixinEntityDataManager",
+        "fixes.MixinResourceLocation",
+        "fixes.MixinScoreboard"
     ],
     "injectors": {
         "defaultRequire": 1

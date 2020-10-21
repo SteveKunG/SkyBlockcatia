@@ -78,7 +78,15 @@ public class SBRenderUtils
                                             color = component3.getStyle();
                                         }
                                     }
-                                    SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(color.getColor().toString()).toString()));
+
+                                    if (color != null)
+                                    {
+                                        SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(color.getColor().toString()).toString()));
+                                    }
+                                    else
+                                    {
+                                        SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(lore.getString().charAt(0) + "" + lore.getString().charAt(1)));
+                                    }
                                     break;
                                 }
                             }
