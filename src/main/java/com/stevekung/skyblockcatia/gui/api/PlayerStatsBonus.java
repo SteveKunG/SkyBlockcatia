@@ -527,6 +527,11 @@ public class PlayerStatsBonus
         {
             return 0;
         }
+
+        default double getFerocity()
+        {
+            return 0;
+        }
     }
 
     public enum Type
