@@ -12,7 +12,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -23,8 +22,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.datafix.fixes.*;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 public class SBItemUtils
@@ -60,18 +57,7 @@ public class SBItemUtils
             }
             return itemStack;
         }
-        else
-        {
-            List<ItemStack> itemStack = Lists.newArrayList();
-            ItemStack barrier = new ItemStack(Blocks.BARRIER);
-            barrier.setDisplayName(TextComponentUtils.formatted(type.getName() + " is not available!", TextFormatting.RED).setStyle(Style.EMPTY.setItalic(false)));
-
-            for (int i = 0; i < 36; ++i)
-            {
-                itemStack.add(barrier);
-            }
-            return itemStack;
-        }
+        return Collections.emptyList();
     }
 
     public static ItemStack flatteningItemStack(CompoundNBT apiCompound)

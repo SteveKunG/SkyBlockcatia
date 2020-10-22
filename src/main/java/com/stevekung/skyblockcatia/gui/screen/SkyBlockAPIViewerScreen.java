@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -2093,16 +2094,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
             sacks.sort((itemStack1, itemStack2) -> new CompareToBuilder().append(itemStack2.getCount(), itemStack1.getCount()).build());
         }
-        else
-        {
-            ItemStack barrier = new ItemStack(Blocks.BARRIER);
-            barrier.setDisplayName(TextComponentUtils.formatted("Sacks is not available!", TextFormatting.RED));
-
-            for (int i = 0; i < 36; ++i)
-            {
-                sacks.add(barrier);
-            }
-        }
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(sacks, SBInventoryGroup.SACKS));
     }
 
@@ -3178,9 +3169,15 @@ public class SkyBlockAPIViewerScreen extends Screen
         return list.stream().filter(armor -> !armor.isEmpty() && armor.hasTag() && armor.getTag().getCompound("ExtraAttributes").getString("id").startsWith(type)).count();
     }
 
+    @Deprecated // Removed in Java 11
+    private <T> Predicate<T> not(Predicate<T> predicate)
+    {
+        return predicate.negate();
+    }
+
     private void getInventories(JsonObject currentProfile)
     {
-        this.armorItems.addAll(SBItemUtils.decodeItem(currentProfile, InventoryType.ARMOR).stream().filter(itemStack -> itemStack.isEmpty() || itemStack.getItem() != Blocks.BARRIER.asItem()).collect(Collectors.toList()));
+        this.armorItems.addAll(SBItemUtils.decodeItem(currentProfile, InventoryType.ARMOR).stream().filter(this.not(ItemStack::isEmpty)).collect(Collectors.toList()));
 
         if (this.armorItems.size() > 0)
         {

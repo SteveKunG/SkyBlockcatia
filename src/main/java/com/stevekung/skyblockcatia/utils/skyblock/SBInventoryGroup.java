@@ -129,7 +129,7 @@ public class SBInventoryGroup
             if (inventory.getGroup() == this)
             {
                 List<ItemStack> itemList = inventory.getItems();
-                return itemList.isEmpty() || itemList.stream().allMatch(itemStack -> !itemStack.isEmpty() && itemStack.getItem() == Blocks.BARRIER.asItem() || itemStack.isEmpty());
+                return itemList.isEmpty() || itemList.stream().allMatch(ItemStack::isEmpty);
             }
         }
         return false;
