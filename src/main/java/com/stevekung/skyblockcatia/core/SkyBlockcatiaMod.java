@@ -21,10 +21,12 @@ import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
+import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
+import com.stevekung.stevekungslib.utils.VersionChecker;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 
 import net.minecraftforge.fml.ModList;
@@ -41,6 +43,8 @@ public class SkyBlockcatiaMod
     public static boolean isSkyblockAddonsLoaded;
     public static boolean isIndicatiaLoaded;
     public static final List<String> SUPPORTERS_NAME = Lists.newCopyOnWriteArrayList();
+    public static VersionChecker CHECKER;
+    private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
 
     static
     {
@@ -74,11 +78,13 @@ public class SkyBlockcatiaMod
 
         SkyBlockcatiaMod.isSkyblockAddonsLoaded = ModList.get().isLoaded("skyblockaddons");
         SkyBlockcatiaMod.isIndicatiaLoaded = ModList.get().isLoaded("indicatia");
+        SkyBlockcatiaMod.CHECKER = new VersionChecker(this, "SkyBlockcatia", URL);
     }
 
     private void phaseOne(FMLCommonSetupEvent event)
     {
         KeyBindingHandler.init();
+        SkyBlockcatiaMod.CHECKER.startCheck();
 
         CommonUtils.registerEventHandler(this);
         CommonUtils.registerEventHandler(new MainEventHandler());
@@ -126,6 +132,7 @@ public class SkyBlockcatiaMod
             }
             SBAPIUtils.getFairySouls();
             SBMinions.getMinionSlotFromRemote();
+            SBPets.getPetSkins();
         }
         catch (Throwable e)
         {

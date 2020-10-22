@@ -134,6 +134,12 @@ public class SkyBlockEventHandler
     {
         if (this.mc.player != null)
         {
+            if (!SkyBlockcatiaMod.CHECKER.isChecked())
+            {
+                SkyBlockcatiaMod.CHECKER.startCheckIfFailed();
+                SkyBlockcatiaMod.CHECKER.printInfo(this.mc.player);
+                SkyBlockcatiaMod.CHECKER.setChecked(true);
+            }
             if (event.phase == TickEvent.Phase.START)
             {
                 if (this.mc.player.ticksExisted % 5 == 0)

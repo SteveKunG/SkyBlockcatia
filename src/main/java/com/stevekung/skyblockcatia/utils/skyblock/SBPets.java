@@ -1,16 +1,28 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
+import java.io.BufferedReader;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 public class SBPets
 {
+    public static Skin[] PET_SKIN;
+
+    public static void getPetSkins() throws Exception
+    {
+        BufferedReader in = DataGetter.get("api/pet_skins.json");
+        PET_SKIN = TextComponentUtils.GSON.fromJson(in, Skin[].class);
+    }
+
     public enum Tier
     {
         COMMON(ExpProgress.PET_COMMON, TextFormatting.WHITE),
@@ -176,6 +188,43 @@ public class SBPets
         public TextFormatting getColor()
         {
             return this.color;
+        }
+    }
+
+    public static class Skin
+    {
+        private final String skin;
+        @SerializedName("displayName")
+        private final String name;
+        private final String uuid;
+        private final String texture;
+
+        public Skin(String skin, String name, String uuid, String texture)
+        {
+            this.skin = skin;
+            this.name = name;
+            this.uuid = uuid;
+            this.texture = texture;
+        }
+
+        public String getSkin()
+        {
+            return this.skin;
+        }
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public String getUUID()
+        {
+            return this.uuid;
+        }
+
+        public String getTexture()
+        {
+            return this.texture;
         }
     }
 

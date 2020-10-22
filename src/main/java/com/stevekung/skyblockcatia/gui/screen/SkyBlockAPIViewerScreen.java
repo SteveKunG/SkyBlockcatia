@@ -139,7 +139,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
     private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king", "nurse_shark", "blue_shark", "tiger_shark", "great_white_shark");
-    private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").build();
+    private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").put("dark_auction", "Dark Auction").build();
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold")
             .put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder")
             .put("mythos_burrows_chains_complete_common", "mythos_burrows_common_chains_complete").put("mythos_burrows_chains_complete_epic", "mythos_burrows_epic_chains_complete").put("mythos_burrows_chains_complete_legendary", "mythos_burrows_legendary_chains_complete").put("mythos_burrows_chains_complete_rare", "mythos_burrows_rare_chains_complete").put("mythos_burrows_dug_combat_common", "mythos_burrows_dug_common_monsters").put("mythos_burrows_dug_combat_epic", "mythos_burrows_dug_epic_monsters").put("mythos_burrows_dug_combat_legendary", "mythos_burrows_dug_legendary_monsters").put("mythos_burrows_dug_combat_rare", "mythos_burrows_dug_rare_monsters").put("mythos_burrows_dug_next_common", "mythos_burrows_dug_common_arrows").put("mythos_burrows_dug_next_epic", "mythos_burrows_dug_epic_arrows").put("mythos_burrows_dug_next_legendary", "mythos_burrows_dug_legendary_arrows").put("mythos_burrows_dug_next_rare", "mythos_burrows_dug_rare_arrows").put("mythos_burrows_dug_treasure_common", "mythos_burrows_dug_common_treasure").put("mythos_burrows_dug_treasure_epic", "mythos_burrows_dug_epic_treasure").put("mythos_burrows_dug_treasure_legendary", "mythos_burrows_dug_legendary_treasure").put("mythos_burrows_dug_treasure_rare", "mythos_burrows_dug_rare_treasure").build();
@@ -2190,8 +2190,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String petRarity = SBPets.Tier.COMMON.name();
                 int candyUsed = 0;
                 JsonElement heldItemObj = element.getAsJsonObject().get("heldItem");
+                JsonElement skinObj = element.getAsJsonObject().get("skin");
                 SBPets.HeldItem heldItem = null;
                 String heldItemType = null;
+                String skin = null;
+                String skinName = null;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
@@ -2204,6 +2207,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (element.getAsJsonObject().get("candyUsed") != null)
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
+                }
+                if (skinObj != null && !skinObj.isJsonNull())
+                {
+                    skin = skinObj.getAsString();
                 }
                 if (heldItemObj != null && !heldItemObj.isJsonNull())
                 {
@@ -2244,13 +2251,28 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired()))));
                     }
-                    if (candyUsed > 0 || heldItem != null || heldItemType != null)
+                    if (candyUsed > 0 || heldItem != null || heldItemType != null || skin != null)
                     {
                         list.add(StringNBT.valueOf(TextComponentUtils.toJson("")));
                     }
                     if (candyUsed > 0)
                     {
                         list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10)));
+                    }
+                    if (skin != null)
+                    {
+                        for (SBPets.Skin petSkin : SBPets.PET_SKIN)
+                        {
+                            if (skin.equals(petSkin.getSkin()))
+                            {
+                                ItemStack tmp = itemStack.copy();
+                                itemStack = ItemUtils.setSkullSkin(itemStack, petSkin.getUUID(), petSkin.getTexture());
+                                itemStack.setDisplayName(tmp.getDisplayName());
+                                skinName = petSkin.getName();
+                                break;
+                            }
+                        }
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName))));
                     }
                     if (heldItem != null)
                     {
