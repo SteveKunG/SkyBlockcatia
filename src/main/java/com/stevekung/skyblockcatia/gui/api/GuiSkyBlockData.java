@@ -43,6 +43,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -73,6 +74,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.WorldSettings;
+import net.minecraft.world.WorldType;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 public class GuiSkyBlockData extends GuiScreen
@@ -115,6 +119,7 @@ public class GuiSkyBlockData extends GuiScreen
     private boolean showArmor = true;
     private float oldMouseX;
     private float oldMouseY;
+    private static final WorldClient FAKE_WORLD = new WorldClient(Minecraft.getMinecraft().getNetHandler(), new WorldSettings(0L, WorldSettings.GameType.SURVIVAL, false, false, WorldType.DEFAULT), 0, EnumDifficulty.NORMAL, Minecraft.getMinecraft().mcProfiler);
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -3625,7 +3630,7 @@ public class GuiSkyBlockData extends GuiScreen
             this.mc.getNetHandler().playerInfoMap.put(this.profile.getId(), ((IViewerLoader)new NetworkPlayerInfo(this.profile)).setLoadedFromViewer(true)); // hack into map to show their skin :D
         }
 
-        this.player = new EntityOtherFakePlayer(this.mc.theWorld, this.profile);
+        this.player = new EntityOtherFakePlayer(FAKE_WORLD, this.profile);
         GuiSkyBlockData.renderSecondLayer = true;
         this.setPlayerArmors();
     }
@@ -4516,7 +4521,7 @@ public class GuiSkyBlockData extends GuiScreen
             case XP_AND_MOB:
                 if (stat.getText().equals("Zombie"))
                 {
-                    EntityZombie zombie = new EntityZombie(this.parent.mc.theWorld);
+                    EntityZombie zombie = new EntityZombie(FAKE_WORLD);
                     ItemStack heldItem = new ItemStack(Items.diamond_hoe).setStackDisplayName("Reaper Scythe");
                     ItemStack helmet = RenderUtils.getSkullItemStack(GuiSkyBlockData.REVENANT_HORROR_HEAD[0], GuiSkyBlockData.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.diamond_chestplate);
@@ -4531,7 +4536,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 else if (stat.getText().equals("Spider"))
                 {
-                    EntitySpider spider = new EntitySpider(this.parent.mc.theWorld);
+                    EntitySpider spider = new EntitySpider(FAKE_WORLD);
                     EntityCaveSpider cave = new EntityCaveSpider(this.parent.mc.theWorld);
                     GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
                     GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
@@ -4539,7 +4544,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
                 else
                 {
-                    EntityWolf wolf = new EntityWolf(this.parent.mc.theWorld);
+                    EntityWolf wolf = new EntityWolf(FAKE_WORLD);
                     wolf.setAngry(true);
                     GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
                 }
