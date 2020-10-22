@@ -38,7 +38,6 @@
         "MixinPlayerTabOverlayGui",
         "MixinSimpleReloadableResourceManager",
         "MixinWallOrFloorItem",
-        "fixes.MixinClientPlayNetHandler",
         "fixes.MixinEntityDataManager",
         "fixes.MixinResourceLocation",
         "fixes.MixinScoreboard"
