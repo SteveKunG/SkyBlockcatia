@@ -2044,88 +2044,103 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void getSacks(JsonObject currentProfile)
     {
         List<ItemStack> sacks = Lists.newArrayList();
+        JsonElement sacksCounts = currentProfile.get("sacks_counts");
 
-        try
+        if (sacksCounts != null)
         {
-            JsonElement sacksCounts = currentProfile.get("sacks_counts");
-
-            if (sacksCounts != null)
+            for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
             {
-                for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
+                int count = sackEntry.getValue().getAsInt();
+                String sackId = this.replaceId(sackEntry.getKey().toLowerCase());
+                String[] split = sackId.split(":");
+                String itemId = split[0];
+                int meta = 0;
+
+                try
                 {
-                    int count = sackEntry.getValue().getAsInt();
-                    String sackId = this.replaceId(sackEntry.getKey().toLowerCase());
-                    String[] split = sackId.split(":");
-                    String itemId = split[0];
-                    int meta = 0;
+                    meta = Integer.parseInt(split[1]);
+                }
+                catch (Exception e) {}
 
-                    try
+                String newItemReg = ItemStackDataFlattening.updateItem("minecraft:" + itemId, meta);
+
+                if (newItemReg != null)
+                {
+                    itemId = EntityRenaming1510.ITEM_RENAME_MAP.getOrDefault(newItemReg, newItemReg);
+                }
+
+                if (count > 1)
+                {
+                    if (this.matchSackId(itemId, SlayerDrops.values()))
                     {
-                        meta = Integer.parseInt(split[1]);
+                        this.checkSlayerSack(itemId, count, sacks);
                     }
-                    catch (Exception e) {}
-
-                    String newItemReg = ItemStackDataFlattening.updateItem("minecraft:" + itemId, meta);
-
-                    if (newItemReg != null)
+                    else if (this.matchSackId(itemId, DungeonDrops.values()))
                     {
-                        itemId = EntityRenaming1510.ITEM_RENAME_MAP.getOrDefault(newItemReg, newItemReg);
-                    }
-
-                    if (itemId.equals("revenant_flesh") || itemId.equals("tarantula_web") || itemId.equals("wolf_tooth"))
-                    {
-                        try
-                        {
-                            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
-                            ItemStack itemStack = new ItemStack(slayerDrops.baseItem, count);
-                            this.addSackItemStackCount(itemStack, count, slayerDrops.displayName, true);
-                            sacks.add(itemStack);
-                        }
-                        catch (Exception e)
-                        {
-                            DungeonDrops dungeonDrops = DungeonDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
-                            ItemStack itemStack = new ItemStack(dungeonDrops.baseItem, count);
-                            this.addSackItemStackCount(itemStack, count, dungeonDrops.displayName, false);
-                            sacks.add(itemStack);
-                        }
+                        this.checkDungeonSack(itemId, count, sacks);
                     }
                     else
                     {
                         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+                        this.addSackItemStackCount(item, count, null, false, sacks);
 
-                        if (count > 1)
+                        if (item == Items.AIR)
                         {
-                            if (item != null)
-                            {
-                                ItemStack itemStack = new ItemStack(item, count);
-                                this.addSackItemStackCount(itemStack, count, null, false);
-                                sacks.add(itemStack);
-                            }
+                            this.addSackItemStackCount(Blocks.BARRIER, count, TextComponentUtils.formatted(itemId, TextFormatting.RED), false, sacks);
                         }
                     }
                 }
-                sacks.sort((itemStack1, itemStack2) -> new CompareToBuilder().append(itemStack2.getCount(), itemStack1.getCount()).build());
             }
-            else
-            {
-                ItemStack barrier = new ItemStack(Blocks.BARRIER);
-                barrier.setDisplayName(TextComponentUtils.formatted("Sacks is not available!", TextFormatting.RED));
+            sacks.sort((itemStack1, itemStack2) -> new CompareToBuilder().append(itemStack2.getCount(), itemStack1.getCount()).build());
+        }
+        else
+        {
+            ItemStack barrier = new ItemStack(Blocks.BARRIER);
+            barrier.setDisplayName(TextComponentUtils.formatted("Sacks is not available!", TextFormatting.RED));
 
-                for (int i = 0; i < 36; ++i)
-                {
-                    sacks.add(barrier);
-                }
+            for (int i = 0; i < 36; ++i)
+            {
+                sacks.add(barrier);
             }
+        }
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(sacks, SBInventoryGroup.SACKS));
+    }
+
+    private <T extends Enum> boolean matchSackId(String itemId, T[] enums)
+    {
+        return Arrays.stream(enums).anyMatch(drop -> itemId.contains(drop.name().toLowerCase()));
+    }
+
+    private void checkSlayerSack(String itemId, int count, List<ItemStack> sacks)
+    {
+        try
+        {
+            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
+            this.addSackItemStackCount(slayerDrops.baseItem, count, slayerDrops.displayName, true, sacks);
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(sacks, SBInventoryGroup.SACKS));
     }
 
-    private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable ITextComponent altName, boolean ench)
+    private void checkDungeonSack(String itemId, int count, List<ItemStack> sacks)
     {
+        try
+        {
+            DungeonDrops dungeonDrops = DungeonDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
+            this.addSackItemStackCount(dungeonDrops.baseItem, count, dungeonDrops.displayName, dungeonDrops.enchanted, sacks);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void addSackItemStackCount(IItemProvider item, int count, @Nullable ITextComponent altName, boolean ench, List<ItemStack> sacks)
+    {
+        ItemStack itemStack = new ItemStack(item, count);
+
         if (count >= 1000)
         {
             if (altName != null)
@@ -2154,6 +2169,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             listEnch.add(new CompoundNBT());
             itemStack.getTag().put("Enchantments", listEnch);
         }
+        sacks.add(itemStack);
     }
 
     private void getPets(JsonObject currentUserProfile)
@@ -4053,18 +4069,20 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     enum DungeonDrops
     {
-        SPIRIT_LEAP(TextComponentUtils.formatted("Spirit Leap", TextFormatting.BLUE), Items.ENDER_PEARL),
-        DUNGEON_DECOY(TextComponentUtils.formatted("Decoy", TextFormatting.GREEN), Items.POLAR_BEAR_SPAWN_EGG),
-        INFLATABLE_JERRY(TextComponentUtils.formatted("Inflatable Jerry", TextFormatting.WHITE), Items.VILLAGER_SPAWN_EGG),
-        DUNGEON_TRAP(TextComponentUtils.formatted("Dungeon Trap", TextFormatting.GREEN), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
+        SPIRIT_LEAP(TextComponentUtils.formatted("Spirit Leap", TextFormatting.BLUE), Items.ENDER_PEARL, true),
+        DUNGEON_DECOY(TextComponentUtils.formatted("Decoy", TextFormatting.GREEN), Items.POLAR_BEAR_SPAWN_EGG, false),
+        INFLATABLE_JERRY(TextComponentUtils.formatted("Inflatable Jerry", TextFormatting.WHITE), Items.VILLAGER_SPAWN_EGG, false),
+        DUNGEON_TRAP(TextComponentUtils.formatted("Dungeon Trap", TextFormatting.GREEN), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, false);
 
         final ITextComponent displayName;
         final IItemProvider baseItem;
+        final boolean enchanted;
 
-        DungeonDrops(ITextComponent displayName, IItemProvider baseItem)
+        DungeonDrops(ITextComponent displayName, IItemProvider baseItem, boolean enchanted)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;
+            this.enchanted = enchanted;
         }
     }
 
