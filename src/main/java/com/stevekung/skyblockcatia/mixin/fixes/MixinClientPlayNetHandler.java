@@ -27,6 +27,6 @@ public abstract class MixinClientPlayNetHandler
         if (Utils.isHypixel() && entity == null) // prevent error
         {
             info.cancel();
-        } 
+        }
     }
 }

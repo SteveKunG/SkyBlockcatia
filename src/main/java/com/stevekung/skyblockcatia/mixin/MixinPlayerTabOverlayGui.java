@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.mixin;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -15,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
@@ -65,7 +65,7 @@ public abstract class MixinPlayerTabOverlayGui
     {
         if (this.isPlayerCountEnabled())
         {
-            List<IReorderingProcessor> origin = new CopyOnWriteArrayList<>(fontRenderer.trimStringToWidth(str, wrapWidth));
+            List<IReorderingProcessor> origin = Lists.newCopyOnWriteArrayList(fontRenderer.trimStringToWidth(str, wrapWidth));
             origin.add(TextComponentUtils.formatted("Lobby Players Count: ", TextFormatting.GOLD).append(TextComponentUtils.formatted(String.valueOf(this.playerCount), TextFormatting.GREEN)).func_241878_f());
             return origin;
         }

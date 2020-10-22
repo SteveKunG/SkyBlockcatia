@@ -115,7 +115,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 92, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getString();
-                    this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
+                    this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
             if (this.isPeopleProfile())
@@ -123,7 +123,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getString();
-                    this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
+                    this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
         }

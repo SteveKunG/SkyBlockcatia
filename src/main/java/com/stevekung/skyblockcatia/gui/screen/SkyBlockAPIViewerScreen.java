@@ -72,7 +72,6 @@ import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.BlockItem;
@@ -181,9 +180,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     // Info & Inventory
     private static final int SIZE = 36;
-    private static final ExtendedInventory TEMP_INVENTORY = new ExtendedInventory(SkyBlockAPIViewerScreen.SIZE);
-    private static final ExtendedInventory TEMP_ARMOR_INVENTORY = new ExtendedInventory(4);
-    public static final List<SkyBlockInventory> SKYBLOCK_INV = Lists.newArrayList();
+    private static final SBInventoryGroup.ExtendedInventory TEMP_INVENTORY = new SBInventoryGroup.ExtendedInventory(SkyBlockAPIViewerScreen.SIZE);
+    private static final SBInventoryGroup.ExtendedInventory TEMP_ARMOR_INVENTORY = new SBInventoryGroup.ExtendedInventory(4);
+    public static final List<SBInventoryGroup.Data> SKYBLOCK_INV = Lists.newArrayList();
     private int selectedTabIndex = SBInventoryGroup.INVENTORY.getIndex();
     private float currentScroll;
     private boolean isScrolling;
@@ -236,8 +235,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     @Override
     public void init()
     {
-        this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null)));
-        this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, DialogTexts.GUI_BACK, button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY, this.username, this.displayName, "") : new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
+        this.addButton(this.doneButton = new Button(this.width / 2 - 154, this.height - 25, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null)));
+        this.addButton(this.backButton = new Button(this.width / 2 + 4, this.height - 25, 150, 20, DialogTexts.GUI_BACK, button -> this.minecraft.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.EMPTY, this.username, this.displayName, "") : new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.SEARCH, this.username, this.displayName, this.guild, this.profiles))));
         this.addButton(this.showArmorButton = new ItemButton(this.width / 2 - 115, this.height / 2 - 65, Items.DIAMOND_CHESTPLATE, TextComponentUtils.component("Show Armor: " + TextFormatting.GREEN + "ON"), button -> this.setShowArmor()));
         Button infoButton = ViewButton.PLAYER.button = new Button(this.width / 2 - 197, 6, 70, 20, LangUtils.translate("gui.sb_view_player"), button -> this.performedInfo(ViewButton.PLAYER));
         infoButton.active = false;
@@ -379,7 +378,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     @Override
     public void closeScreen()
     {
-        this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
+        this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.SEARCH, this.username, this.displayName, this.guild, this.profiles));
     }
 
     @Override
@@ -419,7 +418,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
+            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyList && ((EmptyList)this.currentSlot).type == EmptyList.Type.INVENTORY)
             {
                 double i = mouseX - this.guiLeft;
                 double j = mouseY - this.guiTop;
@@ -467,7 +466,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
+            if (state == 0 && this.currentSlot != null && this.currentSlot instanceof EmptyList && ((EmptyList)this.currentSlot).type == EmptyList.Type.INVENTORY)
             {
                 double i = mouseX - this.guiLeft;
                 double j = mouseY - this.guiTop;
@@ -495,7 +494,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         else
         {
-            if (this.isScrolling && this.currentSlot != null && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
+            if (this.isScrolling && this.currentSlot != null && this.currentSlot instanceof EmptyList && ((EmptyList)this.currentSlot).type == EmptyList.Type.INVENTORY)
             {
                 int i = this.guiTop + 18;
                 int j = i + 72;
@@ -519,7 +518,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             if (this.currentSlot != null)
             {
-                if (this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).type == EmptyStats.Type.INVENTORY)
+                if (this.currentSlot instanceof EmptyList && ((EmptyList)this.currentSlot).type == EmptyList.Type.INVENTORY)
                 {
                     if (!this.needsScrollBars())
                     {
@@ -586,11 +585,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 AbstractGui.drawCenteredString(matrixStack, this.font, this.displayName + TextFormatting.GOLD + " Profile: " + this.sbProfileName.getString() + this.guild, this.width / 2, 29, 16777215);
 
-                if (this.currentSlot != null && this.currentSlot instanceof EmptyStats)
+                if (this.currentSlot != null && this.currentSlot instanceof EmptyList)
                 {
-                    EmptyStats stat = (EmptyStats)this.currentSlot;
+                    EmptyList stat = (EmptyList)this.currentSlot;
 
-                    if (stat.type == EmptyStats.Type.INVENTORY)
+                    if (stat.type == EmptyList.Type.INVENTORY)
                     {
                         this.drawGroupsBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
                     }
@@ -600,7 +599,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 if (this.currentSlot != null)
                 {
-                    if (this.currentSlot instanceof InfoStats)
+                    if (this.currentSlot instanceof InfosList)
                     {
                         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                         RenderSystem.enableDepthTest();
@@ -612,11 +611,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                             this.renderTooltip(matrixStack, this.hoveredSlot.getStack(), mouseX, mouseY);
                         }
                     }
-                    else if (this.currentSlot instanceof EmptyStats)
+                    else if (this.currentSlot instanceof EmptyList)
                     {
-                        EmptyStats stat = (EmptyStats)this.currentSlot;
+                        EmptyList stat = (EmptyList)this.currentSlot;
 
-                        if (stat.type == EmptyStats.Type.INVENTORY)
+                        if (stat.type == EmptyList.Type.INVENTORY)
                         {
                             this.drawContainerSlot(matrixStack, mouseX, mouseY, false);
 
@@ -646,7 +645,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 SkyBlockAddonsBackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
                             }*/
                         }
-                        else if (stat.type == EmptyStats.Type.DUNGEON)//TODO
+                        else if (stat.type == EmptyList.Type.DUNGEON)//TODO
                         {
                             int i = 0;
 
@@ -694,7 +693,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             }
                         }
                     }
-                    else if (this.currentSlot instanceof SlayerStats)
+                    else if (this.currentSlot instanceof SlayersList)
                     {
                         String total1 = TextFormatting.GRAY + "Total Amount Spent: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.slayerTotalAmountSpent);
                         String total2 = TextFormatting.GRAY + "Total Slayer XP: " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.totalSlayerXp);
@@ -707,7 +706,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             AbstractGui.drawString(matrixStack, this.font, TextFormatting.YELLOW + this.activeSlayerType.name + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
                         }
                     }
-                    else if (this.currentSlot instanceof SkyBlockCraftedMinions)
+                    else if (this.currentSlot instanceof CraftedMinionsList)
                     {
                         String total1 = TextFormatting.GRAY + "Unique Minions: " + TextFormatting.YELLOW + this.craftedMinionCount + "/" + SkyBlockAPIViewerScreen.MAXED_UNIQUE_MINIONS + TextFormatting.GRAY + " (" + this.craftedMinionCount * 100 / SkyBlockAPIViewerScreen.MAXED_UNIQUE_MINIONS + "%)";
                         String total2 = TextFormatting.GRAY + "Current Minion Slot: " + TextFormatting.YELLOW + this.currentMinionSlot + (this.additionalMinionSlot > 0 ? TextFormatting.GOLD + " (Bonus +" + this.additionalMinionSlot + ")" : "");
@@ -729,23 +728,23 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
         case PLAYER:
         default:
-            this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
+            this.currentSlot = new InfosList(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
             this.refreshBasicInfoViewButton(this.basicInfoButton, true);
             this.refreshOthersViewButton(this.othersButton, false);
             this.performedBasicInfo(this.basicInfoButton);
             break;
         case SKILLS:
-            this.currentSlot = new EmptyStats(this, this.width - 119, this.height, 40, this.height - 28, 59, 12, EmptyStats.Type.SKILL);
+            this.currentSlot = new EmptyList(this, this.width - 119, this.height, 40, this.height - 28, 59, 12, EmptyList.Type.SKILL);
             this.hideBasicInfoButton();
             this.hideOthersButton();
             break;
         case SLAYERS:
-            this.currentSlot = new SlayerStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.slayerInfo);
+            this.currentSlot = new SlayersList(this, this.width - 119, this.height, 40, this.height - 50, 59, 16, this.slayerInfo);
             this.hideBasicInfoButton();
             this.hideOthersButton();
             break;
         case DUNGEONS:
-            this.currentSlot = new EmptyStats(this, this.width - 119, this.height, 40, this.height - 28, 59, 12, EmptyStats.Type.DUNGEON);
+            this.currentSlot = new EmptyList(this, this.width - 119, this.height, 40, this.height - 28, 59, 12, EmptyList.Type.DUNGEON);
             this.hideBasicInfoButton();
             this.hideOthersButton();
             break;
@@ -763,24 +762,24 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
         case PLAYER_STATS:
         default:
-            this.currentSlot = new InfoStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
+            this.currentSlot = new InfosList(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
             this.showArmorButton.visible = true;
             this.showArmorButton.x = this.width / 2 - 114;
             this.skyBlockArmorContainer = new ArmorContainer(true);
             break;
         case INVENTORY:
-            this.currentSlot = new EmptyStats(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, EmptyStats.Type.INVENTORY);
+            this.currentSlot = new EmptyList(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, EmptyList.Type.INVENTORY);
             this.setCurrentGroup(SBInventoryGroup.GROUPS[this.selectedTabIndex]);
             this.showArmorButton.visible = true;
             this.showArmorButton.x = this.width / 2 - 104;
             this.skyBlockArmorContainer = new ArmorContainer(false);
             break;
         case COLLECTIONS:
-            this.currentSlot = new SkyBlockCollections(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.collections);
+            this.currentSlot = new CollectionsList(this, this.width - 119, this.height, 40, this.height - 50, 59, 20, this.collections);
             this.showArmorButton.visible = false;
             break;
         case CRAFTED_MINIONS:
-            this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.sbCraftedMinions);
+            this.currentSlot = new CraftedMinionsList(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.sbCraftedMinions);
             this.showArmorButton.visible = false;
             break;
         }
@@ -809,7 +808,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
         if (list != null)
         {
-            this.currentSlot = new Others(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, list);
+            this.currentSlot = new OthersList(this, this.width - 119, this.height, 40, this.height - 50, 59, 12, list);
             this.showArmorButton.visible = false;
         }
         this.refreshOthersViewButton(othersButton, true);
@@ -1507,7 +1506,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Deprecated
-    private final List<String> dungeonData = new ArrayList<>();
+    private final List<String> dungeonData = Lists.newArrayList();
     private void getDungeons(JsonObject currentUserProfile)//TODO
     {
         JsonElement dungeon = currentUserProfile.get("dungeons");
@@ -2122,7 +2121,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             e.printStackTrace();
         }
-        SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SBInventoryGroup.SACKS));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(sacks, SBInventoryGroup.SACKS));
     }
 
     private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable ITextComponent altName, boolean ench)
@@ -2269,7 +2268,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson(rarity + "" + TextFormatting.BOLD + tier + " PET")));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     itemStack.getTag().putBoolean("active", active);
-                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Collections.singletonList(itemStack)));
 
                     switch (tier)
                     {
@@ -2308,7 +2307,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 petItem.addAll(data.getItemStack());
             }
         }
-        SKYBLOCK_INV.add(new SkyBlockInventory(petItem, SBInventoryGroup.PET));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(petItem, SBInventoryGroup.PET));
         this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
@@ -2462,7 +2461,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.WOLF_SLAYER, this.wolfSlayerLevel));
     }
 
-    private BonusStatTemplate calculateSkillBonus(PlayerStatsBonus.IBonusTemplate[] bonus, int skillLevel)
+    private BonusStatTemplate calculateSkillBonus(IBonusTemplate[] bonus, int skillLevel)
     {
         double healthTemp = 0;
         double defenseTemp = 0;
@@ -3178,15 +3177,15 @@ public class SkyBlockAPIViewerScreen extends Screen
         List<ItemStack> mainInventory = SBItemUtils.decodeItem(currentProfile, InventoryType.INVENTORY);
         List<ItemStack> accessoryInventory = SBItemUtils.decodeItem(currentProfile, InventoryType.ACCESSORY_BAG);
 
-        SKYBLOCK_INV.add(new SkyBlockInventory(mainInventory, SBInventoryGroup.INVENTORY));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.ENDER_CHEST), SBInventoryGroup.ENDER_CHEST));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.PERSONAL_VAULT), SBInventoryGroup.PERSONAL_VAULT));
-        SKYBLOCK_INV.add(new SkyBlockInventory(accessoryInventory, SBInventoryGroup.ACCESSORY));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.POTION_BAG), SBInventoryGroup.POTION));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.FISHING_BAG), SBInventoryGroup.FISHING));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.QUIVER), SBInventoryGroup.QUIVER));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.CANDY), SBInventoryGroup.CANDY));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBItemUtils.decodeItem(currentProfile, InventoryType.WARDROBE), SBInventoryGroup.WARDROBE));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(mainInventory, SBInventoryGroup.INVENTORY));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.ENDER_CHEST), SBInventoryGroup.ENDER_CHEST));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.PERSONAL_VAULT), SBInventoryGroup.PERSONAL_VAULT));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(accessoryInventory, SBInventoryGroup.ACCESSORY));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.POTION_BAG), SBInventoryGroup.POTION));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.FISHING_BAG), SBInventoryGroup.FISHING));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.QUIVER), SBInventoryGroup.QUIVER));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.CANDY), SBInventoryGroup.CANDY));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.WARDROBE), SBInventoryGroup.WARDROBE));
 
         this.inventoryToStats.addAll(mainInventory);
         this.inventoryToStats.addAll(accessoryInventory);
@@ -3478,7 +3477,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity)
+    private static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity)
     {
         float f = (float)Math.atan(mouseX / 40.0F);
         float f1 = (float)Math.atan(mouseY / 40.0F);
@@ -3552,28 +3551,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             builder.append(i < doneLength ? TextFormatting.DARK_GREEN + "-" + TextFormatting.WHITE : TextFormatting.WHITE + "-");
         }
         return builder.toString();
-    }
-
-    public class SkyBlockInventory
-    {
-        final List<ItemStack> items;
-        final SBInventoryGroup group;
-
-        SkyBlockInventory(List<ItemStack> items, SBInventoryGroup group)
-        {
-            this.items = items;
-            this.group = group;
-        }
-
-        public List<ItemStack> getItems()
-        {
-            return this.items;
-        }
-
-        public SBInventoryGroup getGroup()
-        {
-            return this.group;
-        }
     }
 
     static class ArmorContainer extends Container
@@ -3760,11 +3737,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    static class EmptyStats extends ScrollingListScreen
+    static class EmptyList extends ScrollingListScreen
     {
         final Type type;
 
-        EmptyStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, Type type)
+        EmptyList(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, Type type)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.type = type;
@@ -3779,11 +3756,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    class InfoStats extends ScrollingListScreen
+    class InfosList extends ScrollingListScreen
     {
         private final List<SkyBlockInfo> stats;
 
-        InfoStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockInfo> stats)
+        InfosList(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockInfo> stats)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3805,11 +3782,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    class SlayerStats extends ScrollingListScreen
+    class SlayersList extends ScrollingListScreen
     {
         private final List<SkyBlockSlayerInfo> stats;
 
-        SlayerStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockSlayerInfo> stats)
+        SlayersList(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SkyBlockSlayerInfo> stats)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3900,11 +3877,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    class Others extends ScrollingListScreen
+    class OthersList extends ScrollingListScreen
     {
         private final List<?> stats;
 
-        Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<?> stats)
+        OthersList(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<?> stats)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.stats = stats;
@@ -3945,12 +3922,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    class SkyBlockCollections extends ScrollingListScreen
+    class CollectionsList extends ScrollingListScreen
     {
         private final List<SBCollections> collection;
         private final SkyBlockAPIViewerScreen parent;
 
-        SkyBlockCollections(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBCollections> collection)
+        CollectionsList(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBCollections> collection)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.collection = collection;
@@ -3985,12 +3962,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    class SkyBlockCraftedMinions extends ScrollingListScreen
+    class CraftedMinionsList extends ScrollingListScreen
     {
         private final List<SBMinions.CraftedInfo> craftMinions;
         private final SkyBlockAPIViewerScreen parent;
 
-        SkyBlockCraftedMinions(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBMinions.CraftedInfo> craftMinions)
+        CraftedMinionsList(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<SBMinions.CraftedInfo> craftMinions)
         {
             super(parent, width, height, top, bottom, left, slotHeight);
             this.craftMinions = craftMinions;
@@ -4088,20 +4065,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.displayName = displayName;
             this.baseItem = baseItem;
-        }
-    }
-
-    static class ExtendedInventory extends Inventory
-    {
-        ExtendedInventory(int slotCount)
-        {
-            super(slotCount);
-        }
-
-        @Override
-        public int getInventoryStackLimit()
-        {
-            return 20160;
         }
     }
 

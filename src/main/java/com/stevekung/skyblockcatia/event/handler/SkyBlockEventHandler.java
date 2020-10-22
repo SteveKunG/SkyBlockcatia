@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -110,7 +111,7 @@ public class SkyBlockEventHandler
     private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("(?:\\u00a7r){0,1}\\u00a7aYour (?<name>\\u00a7r\\u00a7[0-9a-fk-or][\\w ]+) \\u00a7r\\u00a7alevelled up to level \\u00a7r\\u00a79(?<level>\\d+)\\u00a7r\\u00a7a!\\u00a7r");
     private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
 
-    private static final List<String> LEFT_PARTY_MESSAGE = new ArrayList<>(Arrays.asList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left."));
+    private static final List<String> LEFT_PARTY_MESSAGE = Lists.newArrayList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left.");
     private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("\u25C6 Ice Rune", "\u25C6 Ice Rune I").build();
     public static boolean isSkyBlock = false;
     public static boolean foundSkyBlockPack;
@@ -649,16 +650,16 @@ public class SkyBlockEventHandler
 
                 if (this.mc.player.connection.getPlayerInfoMap().stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName().getString())))
                 {
-                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, player.getDisplayName().getString(), "", ""));
+                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, player.getDisplayName().getString(), "", ""));
                 }
                 else
                 {
-                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY));
+                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.EMPTY));
                 }
             }
             else
             {
-                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.EMPTY));
             }
         }
     }
@@ -820,8 +821,8 @@ public class SkyBlockEventHandler
     private void getInventoryDifference(NonNullList<ItemStack> currentInventory)
     {
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
-        Map<String, ItemDropDiff> previousInventoryMap = new HashMap<>();
-        Map<String, ItemDropDiff> newInventoryMap = new HashMap<>();
+        Map<String, ItemDropDiff> previousInventoryMap = Maps.newHashMap();
+        Map<String, ItemDropDiff> newInventoryMap = Maps.newHashMap();
         SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.removeIf(drop -> this.removeUndisplayedToast(drop));
 
         if (this.previousInventory != null)
@@ -938,7 +939,7 @@ public class SkyBlockEventHandler
 
     private List<ItemStack> copyInventory(NonNullList<ItemStack> inventory)
     {
-        List<ItemStack> copy = new ArrayList<>(inventory.size());
+        List<ItemStack> copy = Lists.newArrayListWithCapacity(inventory.size());
 
         for (ItemStack item : inventory)
         {

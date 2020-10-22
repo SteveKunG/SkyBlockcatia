@@ -2,11 +2,11 @@ package com.stevekung.skyblockcatia.core;
 
 import java.io.BufferedReader;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.RefreshApiDataCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
@@ -40,7 +40,7 @@ public class SkyBlockcatiaMod
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
     public static boolean isSkyblockAddonsLoaded;
     public static boolean isIndicatiaLoaded;
-    public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
+    public static final List<String> SUPPORTERS_NAME = Lists.newCopyOnWriteArrayList();
 
     static
     {

@@ -1,8 +1,8 @@
 package com.stevekung.skyblockcatia.gui;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -16,7 +16,7 @@ public class APIErrorInfo extends ScrollingListScreen
     public APIErrorInfo(Screen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<String> error)
     {
         super(parent, width, height, top, bottom, left, slotHeight);
-        List<IReorderingProcessor> errorList = new ArrayList<>();
+        List<IReorderingProcessor> errorList = Lists.newArrayList();
 
         for (String errorLog : error)
         {

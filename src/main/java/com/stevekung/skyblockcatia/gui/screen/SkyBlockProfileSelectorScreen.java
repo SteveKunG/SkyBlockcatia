@@ -76,27 +76,27 @@ public class SkyBlockProfileSelectorScreen extends Screen
     private ScrollingListScreen errorInfo;
     private List<String> errorList = Lists.newArrayList();
 
-    public SkyBlockProfileSelectorScreen(GuiState state)
+    public SkyBlockProfileSelectorScreen(Mode mode)
     {
-        this(state, "", "", "");
+        this(mode, "", "", "");
     }
 
-    public SkyBlockProfileSelectorScreen(GuiState state, String username, String displayName, String guild)
+    public SkyBlockProfileSelectorScreen(Mode mode, String username, String displayName, String guild)
     {
-        this(state, username, displayName, guild, null);
+        this(mode, username, displayName, guild, null);
     }
 
-    public SkyBlockProfileSelectorScreen(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
+    public SkyBlockProfileSelectorScreen(Mode mode, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
     {
         super(TextComponentUtils.component("API Viewer"));
 
-        if (state == GuiState.SEARCH)
+        if (mode == Mode.SEARCH)
         {
             this.profiles = profiles;
         }
-        this.loadingApi = state == GuiState.PLAYER;
-        this.openFromPlayer = state == GuiState.PLAYER;
-        this.fromError = state == GuiState.ERROR;
+        this.loadingApi = mode == Mode.PLAYER;
+        this.openFromPlayer = mode == Mode.PLAYER;
+        this.fromError = mode == Mode.ERROR;
         this.displayName = displayName;
         this.input = username;
         this.guild = guild;
@@ -144,8 +144,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
             });
         } ));
-        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null)));
-        this.addButton(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""))));
+        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(Mode.ERROR, this.input, this.displayName, this.guild) : null)));
+        this.addButton(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(Mode.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""))));
         this.usernameTextField = new RightClickTextFieldWidget(this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxStringLength(32767);
         this.usernameTextField.setFocused2(true);
@@ -280,7 +280,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             }
             else if (key == GLFW.GLFW_KEY_F5 && !this.profiles.isEmpty())
             {
-                this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, this.input, this.displayName, this.guild));
+                this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(Mode.PLAYER, this.input, this.displayName, this.guild));
             }
             else if (this.suggestionHelper.onKeyPressed(key, scanCode, modifiers))
             {
@@ -665,7 +665,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         this.selfButton.setItemStack(selfItemCache);
     }
 
-    public enum GuiState
+    public enum Mode
     {
         EMPTY, ERROR, PLAYER, SEARCH;
     }

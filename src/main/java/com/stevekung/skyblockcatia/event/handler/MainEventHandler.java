@@ -2,11 +2,15 @@ package com.stevekung.skyblockcatia.event.handler;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -47,12 +51,12 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class MainEventHandler
 {
     private final Minecraft mc;
-    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Backpack", "Chest"));
+    private static final List<String> INVENTORY_LIST = Lists.newArrayList("Trades", "Shop Trading Options", "Backpack", "Chest");
     public static String auctionPrice = "";
-    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal", "Reforge Accessory Bag", "Catacombs Gate"));
+    public static final List<String> CHATABLE_LIST = Lists.newArrayList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal", "Reforge Accessory Bag", "Catacombs Gate");
     public static boolean showChat;
     public static String playerToView;
-    public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
+    public static final Map<String, BazaarData> BAZAAR_DATA = Maps.newHashMap();
     public static boolean bidHighlight = true;
 
     public MainEventHandler()
@@ -85,7 +89,7 @@ public class MainEventHandler
         {
             if (MainEventHandler.playerToView != null)
             {
-                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, MainEventHandler.playerToView, "", ""));
                 MainEventHandler.playerToView = null;
             }
         }

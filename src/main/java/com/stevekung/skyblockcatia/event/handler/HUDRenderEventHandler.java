@@ -1,13 +1,11 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -30,12 +28,10 @@ import net.minecraft.entity.monster.EndermanEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.GameType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -52,7 +48,7 @@ public class HUDRenderEventHandler
     private long lastGrapplingHookUse = -1;
     private long lastZealotRespawn = -1;
     public static boolean foundDragon;
-    private Set<CoordsPair> recentlyLoadedChunks = new HashSet<>();
+    private Set<CoordsPair> recentlyLoadedChunks = Sets.newHashSet();
     private static final ImmutableList<AxisAlignedBB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AxisAlignedBB(-609, 9, -303, -631, 5, -320), new AxisAlignedBB(-622, 5, -321, -640, 5, -334), new AxisAlignedBB(-631, 7, -293, -648, 7, -312), new AxisAlignedBB(-658, 8, -308, -672, 7, -320), new AxisAlignedBB(-709, 9, -325, -694, 10, -315), new AxisAlignedBB(-702, 10, -303, -738, 5, -261), new AxisAlignedBB(-705, 5, -257, -678, 5, -296), new AxisAlignedBB(-657, 5, -210, -624, 8, -242), new AxisAlignedBB(-625, 7, -256, -662, 5, -286));
 
     public HUDRenderEventHandler()
@@ -309,17 +305,6 @@ public class HUDRenderEventHandler
         public String getDelay()
         {
             return String.valueOf(this.delay);
-        }
-    }
-
-    static class PlayerComparator implements Comparator<NetworkPlayerInfo>
-    {
-        @Override
-        public int compare(NetworkPlayerInfo p_compare_1_, NetworkPlayerInfo p_compare_2_)
-        {
-            ScorePlayerTeam scoreplayerteam = p_compare_1_.getPlayerTeam();
-            ScorePlayerTeam scoreplayerteam1 = p_compare_2_.getPlayerTeam();
-            return ComparisonChain.start().compareTrueFirst(p_compare_1_.getGameType() != GameType.SPECTATOR, p_compare_2_.getGameType() != GameType.SPECTATOR).compare(scoreplayerteam != null ? scoreplayerteam.getName() : "", scoreplayerteam1 != null ? scoreplayerteam1.getName() : "").compare(p_compare_1_.getGameProfile().getName(), p_compare_2_.getGameProfile().getName(), String::compareToIgnoreCase).result();
         }
     }
 }
