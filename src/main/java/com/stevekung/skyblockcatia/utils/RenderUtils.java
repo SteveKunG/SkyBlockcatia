@@ -161,6 +161,11 @@ public class RenderUtils
                 if (displayName.startsWith("\u00a7f\u00a7f"))
                 {
                     displayName = displayName.substring(4);
+
+                    if (displayName.matches("\\u00a7[0-9a-fk-or]\\d.*"))
+                    {
+                        displayName = displayName.replaceAll("\\u00a7[0-9a-fk-or]\\d.*x \\u00a7f", "");
+                    }
                 }
 
                 Matcher mat = PATTERN.matcher(displayName);
