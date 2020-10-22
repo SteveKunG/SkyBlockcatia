@@ -53,8 +53,10 @@ public abstract class GuiScreenMixin extends Gui
 
             if (result)
             {
+                String text = sign.tileSign.signText[0].getUnformattedText();
                 sign.tileSign.markDirty();
                 SignSelectionList.processSignData(sign.tileSign);
+                ((IEditSign)sign).getSignSelectionList().add(text);
                 this.that.mc.displayGuiScreen(null);
             }
             else

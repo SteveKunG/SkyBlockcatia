@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -105,7 +106,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 
                 if (!StringUtils.isNullOrEmpty(text))
                 {
-                    if (NumberUtils.isNumericWithKM(text) && (this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
+                    if (NumberUtils.isNumericWithKM(text) && (!ExtendedConfig.instance.auctionBidConfirm && this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                     {
                         this.globalSelector.add(text);
                     }
@@ -119,8 +120,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
                     }
                 }
             }
-
-            if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionStartBidSign()))
+            if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionPrice()))
             {
                 SignSelectionList.processSignData(this.that.tileSign);
             }
@@ -128,35 +128,29 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
         }
     }
 
-    @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", cancellable = true, at = @At("HEAD"))
+    @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/tileentity/TileEntitySign.markDirty()V", shift = Shift.AFTER))
     private void actionPerformed(GuiButton button, CallbackInfo info) throws IOException
     {
         if (ExtendedConfig.instance.auctionBidConfirm)
         {
-            if (button.enabled)
+            String text = this.that.tileSign.signText[0].getUnformattedText();
+
+            if (!StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionPrice())
             {
-                if (button.id == 0)
+                int price = Integer.parseInt(text);
+
+                if (price >= ExtendedConfig.instance.auctionBidConfirmValue)
                 {
-                    String text = this.that.tileSign.signText[0].getUnformattedText();
-
-                    if (!StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
-                    {
-                        int price = Integer.parseInt(text);
-
-                        if (price >= ExtendedConfig.instance.auctionBidConfirmValue)
-                        {
-                            this.mc.displayGuiScreen(new GuiYesNo(this, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
-                        }
-                        else
-                        {
-                            this.that.tileSign.markDirty();
-                            SignSelectionList.processSignData(this.that.tileSign);
-                            this.mc.displayGuiScreen(null);
-                        }
-                    }
+                    this.mc.displayGuiScreen(new GuiYesNo(this, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
+                    info.cancel();
+                }
+                else
+                {
+                    this.that.tileSign.markDirty();
+                    SignSelectionList.processSignData(this.that.tileSign);
+                    this.globalSelector.add(text);
                 }
             }
-            info.cancel();
         }
     }
 
@@ -219,6 +213,14 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
             ((IModifiedSign)this.that.tileSign).resetSelectionState();
             GlStateManager.popMatrix();
             super.drawScreen(mouseX, mouseY, partialTicks);
+
+            if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+            {
+                if (this.globalSelector != null)
+                {
+                    this.globalSelector.drawScreen(mouseX, mouseY, partialTicks);
+                }
+            }
             info.cancel();
         }
     }
@@ -226,7 +228,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("RETURN"))
     private void drawScreenPost(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+        if (!ConfigManagerIN.enableOverwriteSignEditing && HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
         {
             if (this.globalSelector != null)
             {
