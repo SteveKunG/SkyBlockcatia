@@ -38,6 +38,8 @@ public class ConfigManagerIN
     public static boolean enable1_15ArmorEnchantedGlint;
     public static boolean enableMovementHandler;
     public static boolean enableEnchantedGlintForSkull;
+    public static boolean enableOverwriteSignEditing;
+    public static boolean enableSignSelectionList;
 
     // Key Binding Settings
     public static String keyToggleSprint;
@@ -153,6 +155,15 @@ public class ConfigManagerIN
 
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Enchanted Glint for Skulls", true);
         ConfigManagerIN.enableEnchantedGlintForSkull = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Overwrite Sign Editing", true);
+        prop.comment = LangUtils.translate("gui.config.skyblockcatia.overwrite_sign_editing");
+        ConfigManagerIN.enableOverwriteSignEditing = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Sign Selection List", true);
+        ConfigManagerIN.enableSignSelectionList = prop.getBoolean();
         propOrder.add(prop.getName());
 
         return propOrder;

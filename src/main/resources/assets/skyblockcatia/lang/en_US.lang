@@ -16,6 +16,7 @@ gui.config.skyblockcatia.custom_server_selection=Show response time as number in
 gui.config.skyblockcatia.confirm_to_disconnect=This will display confirmation screen if you want to disconnect from the server.
 gui.config.skyblockcatia.old_fishing_rod=Replaced vanilla fishing line and fishing rod model rendering.
 gui.config.skyblockcatia.movement_handler=Enable this to use Toggle Sprint/Sneak. Disable if it conflict with other mods.
+gui.config.skyblockcatia.overwrite_sign_editing=Enable this will overwrite current sign editing functionally to use 1.14 system.
 
 # KEY BINDING
 key.skyblockcatia.category=SkyBlockcatia

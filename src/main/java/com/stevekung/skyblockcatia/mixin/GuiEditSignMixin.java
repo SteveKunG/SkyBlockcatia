@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
@@ -27,7 +27,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
 
-@Mixin(value = GuiEditSign.class, priority = 500)
+@Mixin(GuiEditSign.class)
 public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
 {
     private final GuiEditSign that = (GuiEditSign) (Object) this;
@@ -45,7 +45,7 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
     {
         this.textInputUtil = new TextInputUtil(this.fontRendererObj, () -> ((IModifiedSign)this.that.tileSign).getText(this.editLine).getUnformattedText(), text -> ((IModifiedSign)this.that.tileSign).setText(this.editLine, new ChatComponentText(text)), 90);
 
-        if (HypixelEventHandler.isSkyBlock)
+        if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
         {
             List<SignSelectionList.Entry> list = null;
             String title = null;
@@ -92,187 +92,141 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
         }
     }
 
-    @Override
-    public void onGuiClosed()
+    @Inject(method = "onGuiClosed()V", cancellable = true, at = @At("HEAD"))
+    private void onGuiClosed(CallbackInfo info)
     {
-        Keyboard.enableRepeatEvents(false);
-
-        if (HypixelEventHandler.isSkyBlock)
+        if (ConfigManagerIN.enableSignSelectionList)
         {
-            String text = this.that.tileSign.signText[0].getUnformattedText();
+            Keyboard.enableRepeatEvents(false);
 
-            if (!StringUtils.isNullOrEmpty(text))
-            {
-                if (NumberUtils.isNumericWithKM(text) && (this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
-                {
-                    this.globalSelector.add(text);
-                }
-                else if (NumberUtils.isNumeric(text) && this.isBazaarOrder())
-                {
-                    this.globalSelector.add(text);
-                }
-                else if (this.isAuctionQuery())
-                {
-                    this.globalSelector.add(text);
-                }
-            }
-        }
-
-        if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionStartBidSign()))
-        {
-            SignSelectionList.processSignData(this.that.tileSign);
-        }
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException
-    {
-        if (button.enabled)
-        {
-            if (button.id == 0)
+            if (HypixelEventHandler.isSkyBlock)
             {
                 String text = this.that.tileSign.signText[0].getUnformattedText();
 
-                if (ExtendedConfig.instance.auctionBidConfirm && !StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
+                if (!StringUtils.isNullOrEmpty(text))
                 {
-                    int price = Integer.parseInt(text);
-
-                    if (price >= ExtendedConfig.instance.auctionBidConfirmValue)
+                    if (NumberUtils.isNumericWithKM(text) && (this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                     {
-                        this.mc.displayGuiScreen(new GuiYesNo(this, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
+                        this.globalSelector.add(text);
                     }
-                    else
+                    else if (NumberUtils.isNumeric(text) && this.isBazaarOrder())
                     {
-                        this.that.tileSign.markDirty();
-                        SignSelectionList.processSignData(this.that.tileSign);
-                        this.mc.displayGuiScreen(null);
+                        this.globalSelector.add(text);
+                    }
+                    else if (this.isAuctionQuery())
+                    {
+                        this.globalSelector.add(text);
                     }
                 }
-                else
+            }
+
+            if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionStartBidSign()))
+            {
+                SignSelectionList.processSignData(this.that.tileSign);
+            }
+            info.cancel();
+        }
+    }
+
+    @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", cancellable = true, at = @At("HEAD"))
+    private void actionPerformed(GuiButton button, CallbackInfo info) throws IOException
+    {
+        if (ExtendedConfig.instance.auctionBidConfirm)
+        {
+            if (button.enabled)
+            {
+                if (button.id == 0)
                 {
-                    this.that.tileSign.markDirty();
-                    this.mc.displayGuiScreen(null);
+                    String text = this.that.tileSign.signText[0].getUnformattedText();
+
+                    if (!StringUtils.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
+                    {
+                        int price = Integer.parseInt(text);
+
+                        if (price >= ExtendedConfig.instance.auctionBidConfirmValue)
+                        {
+                            this.mc.displayGuiScreen(new GuiYesNo(this, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
+                        }
+                        else
+                        {
+                            this.that.tileSign.markDirty();
+                            SignSelectionList.processSignData(this.that.tileSign);
+                            this.mc.displayGuiScreen(null);
+                        }
+                    }
                 }
             }
+            info.cancel();
         }
     }
 
-    @Override
-    public void confirmClicked(boolean result, int id)
+    @Inject(method = "keyTyped(CI)V", cancellable = true, at = @At("HEAD"))
+    private void keyTyped(char typedChar, int keyCode, CallbackInfo info) throws IOException
     {
-        super.confirmClicked(result, id);
-
-        if (result)
+        if (ConfigManagerIN.enableOverwriteSignEditing)
         {
-            this.that.tileSign.markDirty();
-            SignSelectionList.processSignData(this.that.tileSign);
-            this.mc.displayGuiScreen(null);
-        }
-        else
-        {
-            this.mc.displayGuiScreen(this);
+            this.textInputUtil.insert(typedChar);
+            this.keyPressed(keyCode);
+            info.cancel();
         }
     }
 
-    @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+    @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("HEAD"))
+    private void drawScreenPre(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if (HypixelEventHandler.isSkyBlock)
+        if (ConfigManagerIN.enableOverwriteSignEditing)
         {
-            if (this.globalSelector != null)
+            this.drawDefaultBackground();
+            this.drawCenteredString(this.fontRendererObj, LangUtils.translate("sign.edit"), this.width / 2, 40, 16777215);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(this.width / 2, 0.0F, 50.0F);
+            float f = 93.75F;
+            GlStateManager.scale(-f, -f, -f);
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            Block block = this.that.tileSign.getBlockType();
+
+            if (block == Blocks.standing_sign)
             {
-                this.globalSelector.mouseClicked(mouseX, mouseY, mouseButton);
+                float f1 = this.that.tileSign.getBlockMetadata() * 360 / 16.0F;
+                GlStateManager.rotate(f1, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translate(0.0F, -1.0625F, 0.0F);
             }
+            else
+            {
+                int i = this.that.tileSign.getBlockMetadata();
+                float f2 = 0.0F;
+
+                if (i == 2)
+                {
+                    f2 = 180.0F;
+                }
+
+                if (i == 4)
+                {
+                    f2 = 90.0F;
+                }
+
+                if (i == 5)
+                {
+                    f2 = -90.0F;
+                }
+                GlStateManager.rotate(f2, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translate(0.0F, -1.0625F, 0.0F);
+            }
+            ((IModifiedSign)this.that.tileSign).setSelectionState(this.editLine, this.textInputUtil.getSelectionStart(), this.textInputUtil.getSelectionEnd(), this.updateCounter / 6 % 2 == 0);
+            TileEntityRendererDispatcher.instance.renderTileEntityAt(this.that.tileSign, -0.5D, -0.75D, -0.5D, 0.0F);
+            ((IModifiedSign)this.that.tileSign).resetSelectionState();
+            GlStateManager.popMatrix();
+            super.drawScreen(mouseX, mouseY, partialTicks);
+            info.cancel();
         }
     }
 
-    @Override
-    public void mouseReleased(int mouseX, int mouseY, int state)
+    @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("RETURN"))
+    private void drawScreenPost(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        super.mouseReleased(mouseX, mouseY, state);
-
-        if (HypixelEventHandler.isSkyBlock)
-        {
-            if (this.globalSelector != null)
-            {
-                this.globalSelector.mouseReleased(mouseX, mouseY, state);
-            }
-        }
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException
-    {
-        super.handleMouseInput();
-
-        if (HypixelEventHandler.isSkyBlock)
-        {
-            if (this.globalSelector != null)
-            {
-                this.globalSelector.handleMouseInput();
-            }
-        }
-    }
-
-    @Override
-    @Overwrite
-    protected void keyTyped(char typedChar, int keyCode) throws IOException
-    {
-        this.textInputUtil.insert(typedChar);
-        this.keyPressed(keyCode);
-    }
-
-    @Override
-    @Overwrite
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, LangUtils.translate("sign.edit"), this.width / 2, 40, 16777215);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(this.width / 2, 0.0F, 50.0F);
-        float f = 93.75F;
-        GlStateManager.scale(-f, -f, -f);
-        GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-        Block block = this.that.tileSign.getBlockType();
-
-        if (block == Blocks.standing_sign)
-        {
-            float f1 = this.that.tileSign.getBlockMetadata() * 360 / 16.0F;
-            GlStateManager.rotate(f1, 0.0F, 1.0F, 0.0F);
-            GlStateManager.translate(0.0F, -1.0625F, 0.0F);
-        }
-        else
-        {
-            int i = this.that.tileSign.getBlockMetadata();
-            float f2 = 0.0F;
-
-            if (i == 2)
-            {
-                f2 = 180.0F;
-            }
-
-            if (i == 4)
-            {
-                f2 = 90.0F;
-            }
-
-            if (i == 5)
-            {
-                f2 = -90.0F;
-            }
-            GlStateManager.rotate(f2, 0.0F, 1.0F, 0.0F);
-            GlStateManager.translate(0.0F, -1.0625F, 0.0F);
-        }
-        ((IModifiedSign)this.that.tileSign).setSelectionState(this.editLine, this.textInputUtil.getSelectionStart(), this.textInputUtil.getSelectionEnd(), this.updateCounter / 6 % 2 == 0);
-        TileEntityRendererDispatcher.instance.renderTileEntityAt(this.that.tileSign, -0.5D, -0.75D, -0.5D, 0.0F);
-        ((IModifiedSign)this.that.tileSign).resetSelectionState();
-        GlStateManager.popMatrix();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-
-        if (HypixelEventHandler.isSkyBlock)
+        if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
         {
             if (this.globalSelector != null)
             {
@@ -285,6 +239,12 @@ public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
     public TextInputUtil getTextInputUtil()
     {
         return this.textInputUtil;
+    }
+
+    @Override
+    public SignSelectionList getSignSelectionList()
+    {
+        return this.globalSelector;
     }
 
     private boolean keyPressed(int keyCode)

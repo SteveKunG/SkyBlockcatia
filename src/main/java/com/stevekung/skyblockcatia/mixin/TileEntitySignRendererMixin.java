@@ -9,10 +9,13 @@ import javax.annotation.Nullable;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Lists;
+import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import com.stevekung.skyblockcatia.utils.CachedEnum;
 import com.stevekung.skyblockcatia.utils.IModifiedSign;
 
@@ -45,126 +48,129 @@ public abstract class TileEntitySignRendererMixin extends TileEntitySpecialRende
     @Final
     private ModelSign model;
 
-    @Override
-    @Overwrite
-    public void renderTileEntityAt(TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage)
+    @Inject(method = "renderTileEntityAt(Lnet/minecraft/tileentity/TileEntitySign;DDDFI)V", cancellable = true, at = @At("HEAD"))
+    private void renderTileEntityAt(TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage, CallbackInfo info)
     {
-        Block block = te.getBlockType();
-        GlStateManager.pushMatrix();
-        float f = 0.6666667F;
-
-        if (block == Blocks.standing_sign)
+        if (ConfigManagerIN.enableOverwriteSignEditing)
         {
-            GlStateManager.translate((float)x + 0.5F, (float)y + 0.75F * f, (float)z + 0.5F);
-            float f1 = te.getBlockMetadata() * 360 / 16.0F;
-            GlStateManager.rotate(-f1, 0.0F, 1.0F, 0.0F);
-            this.model.signStick.showModel = true;
-        }
-        else
-        {
-            int k = te.getBlockMetadata();
-            float f2 = 0.0F;
-
-            if (k == 2)
-            {
-                f2 = 180.0F;
-            }
-
-            if (k == 4)
-            {
-                f2 = 90.0F;
-            }
-
-            if (k == 5)
-            {
-                f2 = -90.0F;
-            }
-
-            GlStateManager.translate((float)x + 0.5F, (float)y + 0.75F * f, (float)z + 0.5F);
-            GlStateManager.rotate(-f2, 0.0F, 1.0F, 0.0F);
-            GlStateManager.translate(0.0F, -0.3125F, -0.4375F);
-            this.model.signStick.showModel = false;
-        }
-
-        if (destroyStage >= 0)
-        {
-            this.bindTexture(DESTROY_STAGES[destroyStage]);
-            GlStateManager.matrixMode(5890);
+            Block block = te.getBlockType();
             GlStateManager.pushMatrix();
-            GlStateManager.scale(4.0F, 2.0F, 1.0F);
-            GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
-            GlStateManager.matrixMode(5888);
-        }
-        else
-        {
-            this.bindTexture(SIGN_TEXTURE);
-        }
+            float f = 0.6666667F;
 
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(f, -f, -f);
-        this.model.renderSign();
-        GlStateManager.popMatrix();
-        FontRenderer font = this.getFontRenderer();
-        float f3 = 0.015625F * f;
-        GlStateManager.translate(0.0F, 0.5F * f, 0.07F * f);
-        GlStateManager.scale(f3, -f3, f3);
-        GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
-        GlStateManager.depthMask(false);
-
-        if (destroyStage < 0)
-        {
-            for (int i = 0; i < te.signText.length; ++i)
+            if (block == Blocks.standing_sign)
             {
-                if (te.signText[i] != null)
+                GlStateManager.translate((float)x + 0.5F, (float)y + 0.75F * f, (float)z + 0.5F);
+                float f1 = te.getBlockMetadata() * 360 / 16.0F;
+                GlStateManager.rotate(-f1, 0.0F, 1.0F, 0.0F);
+                this.model.signStick.showModel = true;
+            }
+            else
+            {
+                int k = te.getBlockMetadata();
+                float f2 = 0.0F;
+
+                if (k == 2)
                 {
-                    IChatComponent ichatcomponent = te.signText[i];
-                    List<IChatComponent> list = this.splitText(ichatcomponent, 90, font, false, true);
-                    String text = list != null && list.size() > 0 ? list.get(0).getUnformattedText() : "";
+                    f2 = 180.0F;
+                }
 
-                    font.drawString(text, -font.getStringWidth(text) / 2, i * 10 - te.signText.length * 5, 0, false);
+                if (k == 4)
+                {
+                    f2 = 90.0F;
+                }
 
-                    if (i == te.lineBeingEdited && ((IModifiedSign)te).getSelectionStart() >= 0)
+                if (k == 5)
+                {
+                    f2 = -90.0F;
+                }
+
+                GlStateManager.translate((float)x + 0.5F, (float)y + 0.75F * f, (float)z + 0.5F);
+                GlStateManager.rotate(-f2, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translate(0.0F, -0.3125F, -0.4375F);
+                this.model.signStick.showModel = false;
+            }
+
+            if (destroyStage >= 0)
+            {
+                this.bindTexture(DESTROY_STAGES[destroyStage]);
+                GlStateManager.matrixMode(5890);
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(4.0F, 2.0F, 1.0F);
+                GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
+                GlStateManager.matrixMode(5888);
+            }
+            else
+            {
+                this.bindTexture(SIGN_TEXTURE);
+            }
+
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(f, -f, -f);
+            this.model.renderSign();
+            GlStateManager.popMatrix();
+            FontRenderer font = this.getFontRenderer();
+            float f3 = 0.015625F * f;
+            GlStateManager.translate(0.0F, 0.5F * f, 0.07F * f);
+            GlStateManager.scale(f3, -f3, f3);
+            GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
+            GlStateManager.depthMask(false);
+
+            if (destroyStage < 0)
+            {
+                for (int i = 0; i < te.signText.length; ++i)
+                {
+                    if (te.signText[i] != null)
                     {
-                        int k = font.getStringWidth(text.substring(0, Math.max(Math.min(((IModifiedSign)te).getSelectionStart(), text.length()), 0)));
-                        int l = font.getBidiFlag() ? -1 : 1;
-                        int i1 = (k - font.getStringWidth(text) / 2) * l;
-                        int j1 = i * 10 - te.signText.length * 5;
+                        IChatComponent ichatcomponent = te.signText[i];
+                        List<IChatComponent> list = this.splitText(ichatcomponent, 90, font, false, true);
+                        String text = list != null && list.size() > 0 ? list.get(0).getUnformattedText() : "";
 
-                        if (((IModifiedSign)te).getCaretVisible())
-                        {
-                            if (((IModifiedSign)te).getSelectionStart() < text.length())
-                            {
-                                Gui.drawRect(i1, j1 - 1, i1 + 1, j1 + 9, -16777216);
-                            }
-                            else
-                            {
-                                font.drawString("_", i1, j1, 0, false);
-                            }
-                        }
+                        font.drawString(text, -font.getStringWidth(text) / 2, i * 10 - te.signText.length * 5, 0, false);
 
-                        if (((IModifiedSign)te).getSelectionEnd() != ((IModifiedSign)te).getSelectionStart())
+                        if (i == te.lineBeingEdited && ((IModifiedSign)te).getSelectionStart() >= 0)
                         {
-                            int k1 = Math.min(((IModifiedSign)te).getSelectionStart(), ((IModifiedSign)te).getSelectionEnd());
-                            int l1 = Math.max(((IModifiedSign)te).getSelectionStart(), ((IModifiedSign)te).getSelectionEnd());
-                            int i2 = (font.getStringWidth(text.substring(0, k1)) - font.getStringWidth(text) / 2) * l;
-                            int j2 = (font.getStringWidth(text.substring(0, l1)) - font.getStringWidth(text) / 2) * l;
-                            this.invertSelection(Math.min(i2, j2), j1, Math.max(i2, j2), j1 + 9);
+                            int k = font.getStringWidth(text.substring(0, Math.max(Math.min(((IModifiedSign)te).getSelectionStart(), text.length()), 0)));
+                            int l = font.getBidiFlag() ? -1 : 1;
+                            int i1 = (k - font.getStringWidth(text) / 2) * l;
+                            int j1 = i * 10 - te.signText.length * 5;
+
+                            if (((IModifiedSign)te).getCaretVisible())
+                            {
+                                if (((IModifiedSign)te).getSelectionStart() < text.length())
+                                {
+                                    Gui.drawRect(i1, j1 - 1, i1 + 1, j1 + 9, -16777216);
+                                }
+                                else
+                                {
+                                    font.drawString("_", i1, j1, 0, false);
+                                }
+                            }
+
+                            if (((IModifiedSign)te).getSelectionEnd() != ((IModifiedSign)te).getSelectionStart())
+                            {
+                                int k1 = Math.min(((IModifiedSign)te).getSelectionStart(), ((IModifiedSign)te).getSelectionEnd());
+                                int l1 = Math.max(((IModifiedSign)te).getSelectionStart(), ((IModifiedSign)te).getSelectionEnd());
+                                int i2 = (font.getStringWidth(text.substring(0, k1)) - font.getStringWidth(text) / 2) * l;
+                                int j2 = (font.getStringWidth(text.substring(0, l1)) - font.getStringWidth(text) / 2) * l;
+                                this.invertSelection(Math.min(i2, j2), j1, Math.max(i2, j2), j1 + 9);
+                            }
                         }
                     }
                 }
             }
-        }
 
-        GlStateManager.depthMask(true);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.popMatrix();
-
-        if (destroyStage >= 0)
-        {
-            GlStateManager.matrixMode(5890);
+            GlStateManager.depthMask(true);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.popMatrix();
-            GlStateManager.matrixMode(5888);
+
+            if (destroyStage >= 0)
+            {
+                GlStateManager.matrixMode(5890);
+                GlStateManager.popMatrix();
+                GlStateManager.matrixMode(5888);
+            }
+            info.cancel();
         }
     }
 

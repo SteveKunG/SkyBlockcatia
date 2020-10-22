@@ -25,10 +25,8 @@ import com.google.common.collect.ObjectArrays;
 import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.event.MainEventHandler;
 import com.stevekung.skyblockcatia.gui.GuiNumberField;
-import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockAPIViewer;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.*;
-import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -523,48 +521,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException
-    {
-        if (this.that instanceof GuiChest)
-        {
-            GuiChest chest = (GuiChest)this.that;
-
-            if (button.id == 155)
-            {
-                String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-                ClientUtils.printClientMessage(JsonUtils.create("Copied seller auction command!").setChatStyle(JsonUtils.green()));
-                GuiScreen.setClipboardString("/ah " + text.replace(text.substring(text.indexOf('\'')), ""));
-            }
-            else if (button.id == 156)
-            {
-                String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
-            }
-        }
-    }
-
-    @Override
-    protected void setText(String newChatText, boolean shouldOverwrite)
-    {
-        if (this.that instanceof GuiChest)
-        {
-            GuiChest chest = (GuiChest)this.that;
-
-            if (this.isChatableGui(chest.lowerChestInventory))
-            {
-                if (shouldOverwrite)
-                {
-                    this.inputField.setText(newChatText);
-                }
-                else
-                {
-                    this.inputField.writeText(newChatText);
-                }
-            }
-        }
-    }
-
-    @Override
     public void onAutocompleteResponse(String[] list)
     {
         if (this.waitingOnAutocomplete)
@@ -608,6 +564,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     public GuiNumberField getNumberField()
     {
         return this.priceSearch;
+    }
+
+    @Override
+    public GuiTextField getChatTextField()
+    {
+        return this.inputField;
     }
 
     @Override
