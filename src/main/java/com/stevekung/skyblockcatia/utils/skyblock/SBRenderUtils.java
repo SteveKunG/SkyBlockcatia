@@ -67,6 +67,7 @@ public class SBRenderUtils
                             {
                                 IFormattableTextComponent lore = TextComponentUtils.fromJson(list.getString(list.size() - 1));
 
+                                //TODO Fix for rune in auction house
                                 if (lore.getString().contains("COSMETIC")) // temp
                                 {
                                     Style color = null;
@@ -103,6 +104,19 @@ public class SBRenderUtils
                 {
                     for (ITextComponent component2 : itemStack.getDisplayName().getSiblings())
                     {
+                        if (displayName.matches("\\d.*"))
+                        {
+                            for (int i = 0; i < component2.getSiblings().size(); i++)
+                            {
+                                if (i == 1)
+                                {
+                                    ITextComponent color = component2.getSiblings().get(i);
+                                    SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(color.getStyle().getColor().toString()).toString()));
+                                    break;
+                                }
+                            }
+                        }
+
                         for (ITextComponent component3 : component2.getSiblings())
                         {
                             SBRenderUtils.renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(TextFormatting.getValueByName(component3.getStyle().getColor().toString()).toString()));
@@ -114,11 +128,6 @@ public class SBRenderUtils
                 catch (Exception e)
                 {
                     e.printStackTrace();
-                }
-
-                if (displayName.startsWith("\u00a7f\u00a7f"))
-                {
-                    displayName = displayName.substring(4);
                 }
 
                 Matcher mat = PATTERN.matcher(displayName);
