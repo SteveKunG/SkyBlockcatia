@@ -154,7 +154,11 @@ public class SkyBlockcatiaMod
         {
             ColorUtils.init();
         }
+
         CHECKER.startCheck();
+
+        ScheduledExecutorService exec1 = Executors.newSingleThreadScheduledExecutor();
+        exec1.scheduleAtFixedRate(PetStats::scheduleDownloadPetStats, 0, 2, TimeUnit.MINUTES);
     }
 
     @SubscribeEvent

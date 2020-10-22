@@ -92,7 +92,7 @@ public class HUDRenderEventHandler
         long now = System.currentTimeMillis();
         Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
 
-        if (now - this.lastBlockBreak > 2000L && block instanceof BlockLog)
+        if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && block instanceof BlockLog)
         {
             this.lastBlockBreak = now;
         }
@@ -121,7 +121,7 @@ public class HUDRenderEventHandler
 
         if (ExtendedConfig.instance.jungleAxeCooldown)
         {
-            jungleAxeDelay = this.getItemDelay(2000, this.lastBlockBreak);
+            jungleAxeDelay = this.getItemDelay(PetStats.INSTANCE.getAxeCooldown(2000), this.lastBlockBreak);
         }
         if (ExtendedConfig.instance.grapplingHookCooldown)
         {
