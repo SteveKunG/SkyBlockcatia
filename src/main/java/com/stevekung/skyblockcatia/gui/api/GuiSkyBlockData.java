@@ -585,7 +585,7 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 if (this.showArmor)
                 {
-                    for (int i = 0; i <= 4; i++)
+                    for (int i = 0; i < this.player.inventory.armorInventory.length; i++)
                     {
                         this.player.setCurrentItemOrArmor(i, null);
                     }
