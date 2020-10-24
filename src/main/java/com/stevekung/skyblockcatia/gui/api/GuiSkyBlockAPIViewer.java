@@ -363,7 +363,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
 
                     if (isHover)
                     {
-                        GuiUtils.drawHoveringText(Collections.singletonList(button.getLastActive()), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.fontRendererObj);
+                        GuiUtils.drawHoveringText(Arrays.asList(button.getLastActive(), button.getGameMode()), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.fontRendererObj);
                         GlStateManager.disableLighting();
                     }
                 }
@@ -604,7 +604,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         if (sbProfile.isJsonNull())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.input, this.displayName, this.guild, uuid, gameProfile, -1);
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.input, this.displayName, EnumChatFormatting.GOLD + "Normal", this.guild, uuid, gameProfile, -1);
             this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, callback));
             return;
         }
@@ -618,6 +618,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             boolean hasOneProfile = profilesList.size() == 1;
             long lastSave = -1;
             JsonObject availableProfile = null;
+            JsonElement gameModeType = profile.getAsJsonObject().get("game_mode");
+            String gameMode = EnumChatFormatting.GOLD + "Normal";
+
+            if (gameModeType != null)
+            {
+                gameMode = gameModeType.getAsString().equals("ironman") ? EnumChatFormatting.GRAY + "\u2672 Iron Man" : EnumChatFormatting.RED + gameModeType.getAsString();
+            }
 
             for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
             {
@@ -630,7 +637,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             }
 
             availableProfile = profile.getAsJsonObject();
-            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
+            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
             GuiSBProfileButton button = new GuiSBProfileButton(i + 1000, this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)

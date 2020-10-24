@@ -100,6 +100,7 @@ public class GuiSkyBlockData extends GuiScreen
     private final String sbProfileName;
     private final String username;
     private final String displayName;
+    private final String gameMode;
     private final String guild;
     private final String uuid;
     private final GameProfile profile;
@@ -208,6 +209,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.sbProfileName = callback.getProfileName();
         this.username = callback.getUsername();
         this.displayName = callback.getDisplayName();
+        this.gameMode = callback.getGameMode();
         this.guild = callback.getGuild();
         this.uuid = callback.getUUID();
         this.profile = callback.getGameProfile();
@@ -639,7 +641,7 @@ public class GuiSkyBlockData extends GuiScreen
         else if (keyCode == 63)
         {
             this.skyblockProfiles = null;
-            this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.guild, this.uuid, this.profile, -1)));
+            this.mc.displayGuiScreen(new GuiSkyBlockData(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.gameMode, this.guild, this.uuid, this.profile, -1)));
         }
     }
 
@@ -723,7 +725,7 @@ public class GuiSkyBlockData extends GuiScreen
                     this.currentSlot.drawScreen(mouseX, mouseY, partialTicks);
                 }
 
-                this.drawCenteredString(this.fontRendererObj, this.displayName + EnumChatFormatting.YELLOW + " Profile: " + EnumChatFormatting.GOLD + this.sbProfileName + this.guild, this.width / 2, 29, 16777215);
+                this.drawCenteredString(this.fontRendererObj, this.displayName + EnumChatFormatting.YELLOW + " Profile: " + EnumChatFormatting.GOLD + this.sbProfileName + EnumChatFormatting.YELLOW + " Game Mode: " + this.gameMode + this.guild, this.width / 2, 29, 16777215);
 
                 if (this.currentSlot instanceof EmptyStats)
                 {

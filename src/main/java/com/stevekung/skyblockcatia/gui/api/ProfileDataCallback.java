@@ -10,28 +10,31 @@ public class ProfileDataCallback
     private String profileName;
     private String username;
     private String displayName;
+    private String gameMode;
     private String uuid;
     private String guild;
     private GameProfile profile;
     private long lastSave;
 
-    public ProfileDataCallback(String sbProfileId, String profileName, String username, String displayName, String guild, String uuid, GameProfile profile, long lastSave)
+    public ProfileDataCallback(String sbProfileId, String profileName, String username, String displayName, String gameMode, String guild, String uuid, GameProfile profile, long lastSave)
     {
         this.sbProfileId = sbProfileId;
         this.profileName = profileName;
         this.username = username;
         this.displayName = displayName;
+        this.gameMode = gameMode;
         this.guild = guild;
         this.uuid = uuid;
         this.profile = profile;
         this.lastSave = lastSave;
     }
 
-    public ProfileDataCallback(JsonObject sbProfile, String username, String displayName, String guild, String uuid, GameProfile gameProfile, long lastSave)
+    public ProfileDataCallback(JsonObject sbProfile, String username, String displayName, String gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave)
     {
         this.sbProfile = sbProfile;
         this.username = username;
         this.displayName = displayName;
+        this.gameMode = gameMode;
         this.guild = guild;
         this.uuid = uuid;
         this.profile = gameProfile;
@@ -61,6 +64,11 @@ public class ProfileDataCallback
     public String getDisplayName()
     {
         return this.displayName;
+    }
+
+    public String getGameMode()
+    {
+        return this.gameMode;
     }
 
     public String getGuild()

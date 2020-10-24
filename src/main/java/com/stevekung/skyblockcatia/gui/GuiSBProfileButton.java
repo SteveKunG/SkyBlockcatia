@@ -53,4 +53,9 @@ public class GuiSBProfileButton extends GuiButton
         }
         return "Last active: " + time;
     }
+
+    public String getGameMode()
+    {
+        return "Game Mode: " + this.callback.getGameMode();
+    }
 }
