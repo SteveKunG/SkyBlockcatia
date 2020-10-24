@@ -6,9 +6,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
@@ -147,8 +144,6 @@ public class SkyBlockcatiaMod
         new ThreadMinigameData().run();
         SkyBlockAPIUtils.setApiKey();
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
 
         if (ClientUtils.isEffectiveClient())
         {
@@ -156,9 +151,6 @@ public class SkyBlockcatiaMod
         }
 
         CHECKER.startCheck();
-
-        ScheduledExecutorService exec1 = Executors.newSingleThreadScheduledExecutor();
-        exec1.scheduleAtFixedRate(PetStats::scheduleDownloadPetStats, 0, 2, TimeUnit.MINUTES);
     }
 
     @SubscribeEvent
@@ -204,6 +196,7 @@ public class SkyBlockcatiaMod
             {
                 PlayerStatsBonus.getBonusFromRemote(type);
             }
+
             SkyBlockAPIUtils.getFairySouls();
             SkyBlockMinion.getMinionSlotFromRemote();
             SkyBlockPets.getPetSkins();

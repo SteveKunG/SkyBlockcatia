@@ -3,6 +3,9 @@ package com.stevekung.skyblockcatia.event;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -109,6 +112,7 @@ public class HypixelEventHandler
     private SkyBlockBossBar.DragonType dragonType;
     private final Minecraft mc;
     private boolean initVersionCheck;
+    private boolean initApiData;
 
     public HypixelEventHandler()
     {
@@ -716,6 +720,14 @@ public class HypixelEventHandler
                 SkyBlockcatiaMod.CHECKER.startCheckIfFailed();
                 SkyBlockcatiaMod.CHECKER.printInfo(this.mc.thePlayer);
                 this.initVersionCheck = true;
+            }
+            if (!this.initApiData && InfoUtils.INSTANCE.isHypixel())
+            {
+                ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+                exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
+                ScheduledExecutorService exec1 = Executors.newSingleThreadScheduledExecutor();
+                exec1.scheduleAtFixedRate(PetStats::scheduleDownloadPetStats, 0, 2, TimeUnit.MINUTES);
+                this.initApiData = true;
             }
         }
     }
