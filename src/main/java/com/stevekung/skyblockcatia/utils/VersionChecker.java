@@ -29,13 +29,16 @@ public class VersionChecker
     {
         ForgeVersion.CheckResult result = ForgeVersion.getResult(Loader.instance().getModObjectList().inverse().get(this.mod));
 
-        for (Map.Entry<ComparableVersion, String> entry : result.changes.entrySet())
+        if (result.changes != null)
         {
-            ComparableVersion version = entry.getKey();
-
-            if (result.status == ForgeVersion.Status.OUTDATED)
+            for (Map.Entry<ComparableVersion, String> entry : result.changes.entrySet())
             {
-                this.latestVersion = version.toString();
+                ComparableVersion version = entry.getKey();
+
+                if (result.status == ForgeVersion.Status.OUTDATED)
+                {
+                    this.latestVersion = version.toString();
+                }
             }
         }
     }
