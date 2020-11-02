@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.gui.api;
 
 import java.io.BufferedReader;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -561,7 +562,7 @@ public class PlayerStatsBonus
         @Override
         public String toString()
         {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
 
         public String getPath()

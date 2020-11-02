@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.config;
 
+import java.util.Locale;
+
 public class EnumEquipment
 {
     public static enum Ordering
@@ -10,7 +12,7 @@ public class EnumEquipment
 
         public static String getById(int mode)
         {
-            return values[mode].toString().toLowerCase();
+            return values[mode].toString().toLowerCase(Locale.ROOT);
         }
     }
 
@@ -22,7 +24,7 @@ public class EnumEquipment
 
         public static String getById(int mode)
         {
-            return values[mode].toString().toLowerCase();
+            return values[mode].toString().toLowerCase(Locale.ROOT);
         }
     }
 
@@ -34,7 +36,7 @@ public class EnumEquipment
 
         public static String getById(int mode)
         {
-            return values[mode].toString().toLowerCase();
+            return values[mode].toString().toLowerCase(Locale.ROOT);
         }
     }
 
@@ -46,7 +48,7 @@ public class EnumEquipment
 
         public static String getById(int mode)
         {
-            return values[mode].toString().toLowerCase();
+            return values[mode].toString().toLowerCase(Locale.ROOT);
         }
     }
 }

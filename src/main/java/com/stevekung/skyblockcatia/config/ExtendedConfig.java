@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.config;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import com.stevekung.skyblockcatia.utils.*;
 
@@ -1485,7 +1486,7 @@ public class ExtendedConfig
 
         public String getTranslation()
         {
-            return LangUtils.translate(this.name().toLowerCase() + ".extended_config");
+            return LangUtils.translate(this.name().toLowerCase(Locale.ROOT) + ".extended_config");
         }
 
         public float getValueMin()

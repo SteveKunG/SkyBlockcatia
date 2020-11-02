@@ -219,7 +219,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
 
                 if (itemStack != null && itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("ExtraAttributes"))
                 {
-                    String itemId = itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                    String itemId = itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                     itemId = WordUtils.capitalize(itemId);
                     this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                     this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, this.fandomUrl, 10000, true));
@@ -959,7 +959,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             int i = this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false);
             this.foundPlayerNames.clear();
             this.autocompleteIndex = 0;
-            String s = this.inputField.getText().substring(i).toLowerCase();
+            String s = this.inputField.getText().substring(i).toLowerCase(Locale.ROOT);
             String s1 = this.inputField.getText().substring(0, this.inputField.getCursorPosition());
             this.sendAutocompleteRequest(s1, s);
 

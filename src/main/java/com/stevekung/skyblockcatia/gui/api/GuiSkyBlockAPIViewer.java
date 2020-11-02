@@ -704,7 +704,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
             int i = this.usernameTextField.func_146197_a(-1, this.usernameTextField.getCursorPosition(), false);
             this.foundPlayerNames.clear();
             this.autocompleteIndex = 0;
-            String s = this.usernameTextField.getText().substring(i).toLowerCase();
+            String s = this.usernameTextField.getText().substring(i).toLowerCase(Locale.ROOT);
             String s1 = this.usernameTextField.getText().substring(0, this.usernameTextField.getCursorPosition());
             this.sendAutocompleteRequest(s1, s);
 

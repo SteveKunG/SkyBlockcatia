@@ -1963,7 +1963,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (classExp != null)
                 {
-                    SkyBlockSkillInfo info2 = this.calculateDungeonSkill(classExp.getAsDouble(), DungeonSkillType.valueOf(entry.getKey().toUpperCase()));
+                    SkyBlockSkillInfo info2 = this.calculateDungeonSkill(classExp.getAsDouble(), DungeonSkillType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
                     this.dungeonData.add(EnumChatFormatting.RED + info2.getName() + EnumChatFormatting.RESET + ", Level: " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
                     i++;
                 }
@@ -2266,7 +2266,7 @@ public class GuiSkyBlockData extends GuiScreen
 
             for (JsonElement unlockedTier : unlockedTiers)
             {
-                String[] split = unlockedTier.getAsString().toLowerCase().split("_");
+                String[] split = unlockedTier.getAsString().toLowerCase(Locale.ROOT).split("_");
                 String unlockedId = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
                 skyblockCollectionMap.put(this.replaceId(unlockedId), unlockedLvl);
@@ -2286,7 +2286,7 @@ public class GuiSkyBlockData extends GuiScreen
 
             for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
             {
-                String collectionId = this.replaceId(collection.getKey().toLowerCase());
+                String collectionId = this.replaceId(collection.getKey().toLowerCase(Locale.ROOT));
                 int collectionCount = collection.getValue().getAsInt();
                 String[] split = collectionId.split(":");
                 String itemId = split[0];
@@ -2437,7 +2437,7 @@ public class GuiSkyBlockData extends GuiScreen
                 for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
                 {
                     int count = sackEntry.getValue().getAsInt();
-                    String sackId = this.replaceId(sackEntry.getKey().toLowerCase());
+                    String sackId = this.replaceId(sackEntry.getKey().toLowerCase(Locale.ROOT));
                     String[] split = sackId.split(":");
                     String itemId = split[0];
                     int meta = 0;
@@ -2604,7 +2604,7 @@ public class GuiSkyBlockData extends GuiScreen
                     SkyBlockPets.Type type = SkyBlockPets.Type.valueOf(petType);
                     ItemStack itemStack = type.getPetItem();
 
-                    itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
+                    itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkillType().getName() + " Pet"));
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
@@ -2636,11 +2636,11 @@ public class GuiSkyBlockData extends GuiScreen
                     }
                     if (heldItem != null)
                     {
-                        String heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.toString().toLowerCase().replace("pet_item_", "").replace("_", " "));
+                        String heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.toString().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
 
                         if (heldItem.getAltName() != null)
                         {
-                            heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase().replace("pet_item_", "").replace("_", " "));
+                            heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
                         }
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + heldItemName));
                     }
@@ -2684,7 +2684,7 @@ public class GuiSkyBlockData extends GuiScreen
                 catch (Exception e)
                 {
                     ItemStack itemStack = new ItemStack(Items.bone);
-                    itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + WordUtils.capitalize(petType.toLowerCase().replace("_", " ")));
+                    itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "UNKNOWN PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                     petData.add(new PetData(SkyBlockPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
@@ -3411,7 +3411,7 @@ public class GuiSkyBlockData extends GuiScreen
 
         for (Map.Entry<String, JsonElement> stat : stats.entrySet().stream().filter(entry -> !BLACKLIST_STATS.stream().anyMatch(stat -> entry.getKey().equals(stat))).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())).entrySet())
         {
-            String statName = stat.getKey().toLowerCase();
+            String statName = stat.getKey().toLowerCase(Locale.ROOT);
             double value = stat.getValue().getAsDouble();
 
             if (statName.startsWith("kills") || statName.endsWith("kills"))
@@ -3663,7 +3663,7 @@ public class GuiSkyBlockData extends GuiScreen
     {
         List<SkyBlockSlayerInfo> list = new ArrayList<>();
         ExpProgress[] progress = type.getProgress();
-        JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase());
+        JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase(Locale.ROOT));
 
         if (slayer != null)
         {
@@ -4743,7 +4743,7 @@ public class GuiSkyBlockData extends GuiScreen
 
             if (craftedMinion.getMinionItem() != null)
             {
-                String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase().replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase().replace("_", " "));
+                String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase(Locale.ROOT).replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase(Locale.ROOT).replace("_", " "));
                 this.parent.drawItemStackSlot(this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
                 this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
                 this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) + 192, top + 6, index % 2 == 0 ? 16777215 : 9474192);

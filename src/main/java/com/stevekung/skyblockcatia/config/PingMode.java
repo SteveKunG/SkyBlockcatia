@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.config;
 
+import java.util.Locale;
+
 public enum PingMode
 {
     ONLY_PING, PING_AND_DELAY;
@@ -8,6 +10,6 @@ public enum PingMode
 
     public static String getById(int mode)
     {
-        return values[mode].toString().toLowerCase();
+        return values[mode].toString().toLowerCase(Locale.ROOT);
     }
 }
