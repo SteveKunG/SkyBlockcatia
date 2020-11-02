@@ -2,12 +2,12 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name "forge"
+            url "https://files.minecraftforge.net/maven"
         }
         maven {
-            name = "sponge"
-            url = "https://repo.spongepowered.org/maven"
+            name "sponge"
+            url "https://repo.spongepowered.org/maven"
         }
     }
     dependencies {
@@ -29,7 +29,7 @@ apply plugin: "org.spongepowered.mixin"
 version = project.version
 group = "com.stevekung.skyblockcatia"
 archivesBaseName = "SkyBlockcatia"
-sourceCompatibility = targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = 1.8
 
 minecraft {
     version = "${forge_version}"
@@ -54,15 +54,17 @@ dependencies {
         exclude module: "commons-io"
         exclude module: "log4j-core"
     }
-    compileOnly files("libs/SkyblockAddons-1.5.2-for-MC-1.8.9.jar")
+    compileOnly files("libs/SkyblockAddons.jar")
 }
 
 repositories {
     maven {
+        name "CurseGradle"
         url "https://plugins.gradle.org/m2/"
     }
     maven {
-        url "http://repo.spongepowered.org/maven/"
+        name "sponge"
+        url "https://repo.spongepowered.org/maven/"
     }
 }
 
@@ -76,8 +78,6 @@ jar {
             "TweakOrder": "0",
             "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
     )
-    exclude "codes/biscuit/**"
-    exclude "com/github/**"
     exclude "test/**"
     baseName = "SkyBlockcatia-" + mcVersion
 }
@@ -116,7 +116,7 @@ artifacts {
 }
 
 curseforge {
-    if (project.hasProperty('upload_api_key')) {
+    if (project.hasProperty("upload_api_key")) {
         apiKey = project.upload_api_key
         project {
             id = "397441"
@@ -135,7 +135,7 @@ curseforge {
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
-    if (project.hasProperty('upload_api_key')) {
+    if (project.hasProperty("upload_api_key")) {
         keyStore = project.keystore_path
         alias = project.alias
         storePass = project.keystore_pass
