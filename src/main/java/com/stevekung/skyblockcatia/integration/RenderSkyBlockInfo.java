@@ -3,8 +3,8 @@ package com.stevekung.skyblockcatia.integration;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.stevekung.indicatia.hud.InfoOverlay;
 import com.stevekung.indicatia.utils.event.InfoOverlayEvent;
+import com.stevekung.indicatia.utils.hud.InfoOverlay;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
