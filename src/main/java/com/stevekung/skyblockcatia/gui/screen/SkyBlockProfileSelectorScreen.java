@@ -3,7 +3,6 @@ package com.stevekung.skyblockcatia.gui.screen;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -387,7 +386,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                     if (hover)
                     {
-                        GuiUtils.drawHoveringText(matrixStack, Arrays.asList(TextComponentUtils.component(((SkyBlockProfileButton)button).getLastActive()), ((SkyBlockProfileButton)button).getGameMode()), mouseX, mouseY, this.width, this.height, -1, this.font);
+                        GuiUtils.drawHoveringText(matrixStack, Lists.newArrayList(TextComponentUtils.component(((SkyBlockProfileButton)button).getLastActive()), ((SkyBlockProfileButton)button).getGameMode()), mouseX, mouseY, this.width, this.height, -1, this.font);
                         RenderSystem.disableLighting();
                         break;
                     }

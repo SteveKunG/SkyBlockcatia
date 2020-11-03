@@ -2340,7 +2340,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     itemStack.setDisplayName(TextComponentUtils.formatted(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), TextFormatting.RED));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RED + "" + TextFormatting.BOLD + "UNKNOWN PET")));
                     itemStack.getTag().getCompound("display").put("Lore", list);
-                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Lists.newArrayList(itemStack)));
                     SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
                 }
                 petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getCurrentXp(), o1.getCurrentXp()).build());
