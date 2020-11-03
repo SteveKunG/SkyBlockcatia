@@ -3,7 +3,7 @@ package com.stevekung.skyblockcatia.gui.screen;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -49,6 +49,7 @@ import net.minecraft.item.Items;
 import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
@@ -386,7 +387,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                     if (hover)
                     {
-                        GuiUtils.drawHoveringText(matrixStack, Collections.singletonList(TextComponentUtils.component(((SkyBlockProfileButton)button).getLastActive())), mouseX, mouseY, this.width, this.height, -1, this.font);
+                        GuiUtils.drawHoveringText(matrixStack, Arrays.asList(TextComponentUtils.component(((SkyBlockProfileButton)button).getLastActive()), ((SkyBlockProfileButton)button).getGameMode()), mouseX, mouseY, this.width, this.height, -1, this.font);
                         RenderSystem.disableLighting();
                         break;
                     }
@@ -576,7 +577,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         if (sbProfile.isJsonNull())
         {
             this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, TextComponentUtils.component("Avocado"), this.input, this.displayName, this.guild, uuid, gameProfile, -1);
+            ProfileDataCallback callback = new ProfileDataCallback(uuid, TextComponentUtils.component("Avocado"), this.input, this.displayName, TextComponentUtils.formatted("Normal", TextFormatting.GOLD), this.guild, uuid, gameProfile, -1);
             this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
             return;
         }
@@ -589,6 +590,13 @@ public class SkyBlockProfileSelectorScreen extends Screen
             boolean hasOneProfile = profilesList.size() == 1;
             long lastSave = -1;
             JsonObject availableProfile = null;
+            JsonElement gameModeType = profile.getAsJsonObject().get("game_mode");
+            ITextComponent gameMode = TextComponentUtils.formatted("Normal", TextFormatting.GOLD);
+
+            if (gameModeType != null)
+            {
+                gameMode = gameModeType.getAsString().equals("ironman") ? TextComponentUtils.formatted("\u2672 Iron Man", TextFormatting.GRAY) : TextComponentUtils.formatted(gameModeType.getAsString(), TextFormatting.RED);
+            }
 
             for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
             {
@@ -601,7 +609,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             }
 
             availableProfile = profile.getAsJsonObject();
-            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
+            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
             SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)

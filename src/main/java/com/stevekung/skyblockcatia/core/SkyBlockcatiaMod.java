@@ -2,9 +2,6 @@ package com.stevekung.skyblockcatia.core;
 
 import java.io.BufferedReader;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
@@ -106,8 +103,6 @@ public class SkyBlockcatiaMod
     {
         SBAPIUtils.setApiKey();
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
     }
 
     public static void downloadAPIData()

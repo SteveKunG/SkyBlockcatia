@@ -5,9 +5,11 @@ import java.util.List;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.ITextComponent;
 
 public class SkyBlockProfileButton extends Button
 {
@@ -47,5 +49,10 @@ public class SkyBlockProfileButton extends Button
             time = TimeUtils.getRelativeTime(this.callback.getLastSave());
         }
         return "Last active: " + time;
+    }
+
+    public ITextComponent getGameMode()
+    {
+        return TextComponentUtils.component("Game Mode: ").append(this.callback.getGameMode());
     }
 }

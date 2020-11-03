@@ -15,6 +15,7 @@ import com.stevekung.skyblockcatia.integration.sba.SBAMana;
 import com.stevekung.skyblockcatia.utils.CoordsPair;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
+import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 import com.stevekung.stevekungslib.utils.ModDecimalFormat;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -80,7 +81,7 @@ public class HUDRenderEventHandler
         {
             Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
 
-            if (now - this.lastBlockBreak > 2000L && block.isIn(BlockTags.LOGS))
+            if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && block.isIn(BlockTags.LOGS))
             {
                 this.lastBlockBreak = now;
             }
@@ -111,7 +112,7 @@ public class HUDRenderEventHandler
 
         if (SkyBlockcatiaSettings.INSTANCE.axeCooldown)
         {
-            jungleAxeDelay = this.getItemDelay(2000, this.lastBlockBreak);
+            jungleAxeDelay = this.getItemDelay(PetStats.INSTANCE.getAxeCooldown(2000), this.lastBlockBreak);
         }
         if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown)
         {

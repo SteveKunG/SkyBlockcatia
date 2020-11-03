@@ -63,6 +63,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -91,6 +93,8 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.GameType;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -117,6 +121,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final ITextComponent sbProfileName;
     private final String username;
     private final String displayName;
+    private final ITextComponent gameMode;
     private final String guild;
     private final String uuid;
     private final GameProfile profile;
@@ -133,6 +138,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private boolean showArmor = true;
     private float oldMouseX;
     private float oldMouseY;
+    private static final ClientWorld FAKE_WORLD = new ClientWorld(Minecraft.getInstance().getConnection(), new ClientWorld.ClientWorldInfo(Difficulty.NORMAL, false, false), Minecraft.getInstance().world.getDimensionKey(), DimensionType.OVERWORLD_TYPE, 0, Minecraft.getInstance()::getProfiler, Minecraft.getInstance().worldRenderer, false, 0);
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
@@ -205,7 +211,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private int wolfSlayerLevel;
     private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0);
 
-    // GuiContainer fields
+    // ContainerScreen fields
     private int xSize;
     private int ySize;
     private int guiLeft;
@@ -224,6 +230,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.sbProfileName = callback.getProfileName();
         this.username = callback.getUsername();
         this.displayName = callback.getDisplayName();
+        this.gameMode = callback.getGameMode();
         this.guild = callback.getGuild();
         this.uuid = callback.getUUID();
         this.profile = callback.getGameProfile();
@@ -366,7 +373,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         else if (key == GLFW.GLFW_KEY_F5)
         {
             this.skyblockProfiles = null;
-            this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.guild, this.uuid, this.profile, -1)));
+            this.minecraft.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.gameMode, this.guild, this.uuid, this.profile, -1)));
         }
         /*if (SkyBlockcatiaMod.isSkyblockAddonsLoaded) TODO
         {
@@ -557,7 +564,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             AbstractGui.drawCenteredString(matrixStack, this.font, text, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
             AbstractGui.drawString(matrixStack, this.font, SkyBlockProfileSelectorScreen.downloadingStates[(int)(Util.milliTime() / 500L % SkyBlockProfileSelectorScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 35, 16777215);
             AbstractGui.drawCenteredString(matrixStack, this.font, "Status: " + TextFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.FONT_HEIGHT * 2 - 15, 16777215);
-            this.showArmorButton.visible = false;
+
+            if (this.showArmorButton != null)
+            {
+                this.showArmorButton.visible = false;
+            }
         }
         else
         {
@@ -573,7 +584,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     AbstractGui.drawCenteredString(matrixStack, this.font, TextFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
                 }
-                this.showArmorButton.visible = false;
+                if (this.showArmorButton != null)
+                {
+                    this.showArmorButton.visible = false;
+                }
                 super.render(matrixStack, mouseX, mouseY, partialTicks);
             }
             else
@@ -583,7 +597,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.currentSlot.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
 
-                AbstractGui.drawCenteredString(matrixStack, this.font, this.displayName + TextFormatting.GOLD + " Profile: " + this.sbProfileName.getString() + this.guild, this.width / 2, 29, 16777215);
+                AbstractGui.drawCenteredString(matrixStack, this.font, TextComponentUtils.component(this.displayName).append(TextComponentUtils.formatted(" Profile: ", TextFormatting.YELLOW)).append(this.sbProfileName.deepCopy().mergeStyle(TextFormatting.GOLD)).append(TextComponentUtils.formatted(" Game Mode: ", TextFormatting.YELLOW)).append(this.gameMode).appendString(this.guild), this.width / 2, 29, 16777215);
 
                 if (this.currentSlot != null && this.currentSlot instanceof EmptyList)
                 {
@@ -2295,6 +2309,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp()))));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson(rarity + "" + TextFormatting.BOLD + tier + " PET")));
                     itemStack.getTag().getCompound("display").put("Lore", list);
+                    itemStack.getOrCreateChildTag("ExtraAttributes").putString("id", "PET");
                     itemStack.getTag().putBoolean("active", active);
                     petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Collections.singletonList(itemStack)));
 
@@ -3285,7 +3300,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
-        this.player = new SBFakePlayerEntity(this.minecraft.world, this.profile);
+        this.player = new SBFakePlayerEntity(FAKE_WORLD, this.profile);
         SkyBlockAPIViewerScreen.renderSecondLayer = true;
 
         for (ItemStack armor : this.armorItems)
@@ -3494,10 +3509,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         MatrixStack matrixstack = new MatrixStack();
         matrixstack.translate(0.0D, 0.0D, 1000.0D);
         matrixstack.scale(scale, scale, scale);
-        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-        Quaternion quaternion1 = Vector3f.YP.rotationDegrees(ClientEventHandler.renderPartialTicks);
+        Quaternion quaternion = Vector3f.ZP.rotationDegrees(-180.0F);
+        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(-10.0F);
+        Quaternion quaternion2 = Vector3f.YP.rotationDegrees(-190.0F);
         quaternion.multiply(quaternion1);
         matrixstack.rotate(quaternion);
+        matrixstack.rotate(quaternion2);
         entity.rotationYaw = (float)(Math.atan(0) * 40.0F);
         entity.rotationYawHead = entity.rotationYaw;
         EntityRendererManager entityrenderermanager = Minecraft.getInstance().getRenderManager();
@@ -3843,30 +3860,34 @@ public class SkyBlockAPIViewerScreen extends Screen
             case XP_AND_MOB:
                 if (stat.text.equals("Zombie"))
                 {
-                    ZombieEntity zombie = new ZombieEntity(this.world);
+                    ZombieEntity zombie = new ZombieEntity(FAKE_WORLD);
                     ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
+                    heldItem.addEnchantment(Enchantments.UNBREAKING, 1);
                     ItemStack helmet = ItemUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.DIAMOND_CHESTPLATE);
+                    chestplate.addEnchantment(Enchantments.UNBREAKING, 1);
                     ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
+                    leggings.addEnchantment(Enchantments.UNBREAKING, 1);
                     ItemStack boots = new ItemStack(Items.DIAMOND_BOOTS);
                     zombie.setItemStackToSlot(EquipmentSlotType.HEAD, helmet);
                     zombie.setItemStackToSlot(EquipmentSlotType.CHEST, chestplate);
                     zombie.setItemStackToSlot(EquipmentSlotType.LEGS, leggings);
                     zombie.setItemStackToSlot(EquipmentSlotType.FEET, boots);
                     zombie.setItemStackToSlot(EquipmentSlotType.MAINHAND, heldItem);
+                    zombie.ticksExisted = ClientEventHandler.ticks;
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, zombie);
                 }
                 else if (stat.text.equals("Spider"))
                 {
-                    SpiderEntity spider = new SpiderEntity(EntityType.SPIDER, this.world);
-                    CaveSpiderEntity cave = new CaveSpiderEntity(EntityType.CAVE_SPIDER, this.world);
+                    SpiderEntity spider = new SpiderEntity(EntityType.SPIDER, FAKE_WORLD);
+                    CaveSpiderEntity cave = new CaveSpiderEntity(EntityType.CAVE_SPIDER, FAKE_WORLD);
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 40, 40, cave);
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, spider);
                     RenderSystem.blendFunc(770, 771);
                 }
                 else
                 {
-                    WolfEntity wolf = new WolfEntity(EntityType.WOLF, this.world);
+                    WolfEntity wolf = new WolfEntity(EntityType.WOLF, FAKE_WORLD);
                     wolf.setAngerTime(Integer.MAX_VALUE);
                     SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, wolf);
                 }

@@ -3,6 +3,9 @@ package com.stevekung.skyblockcatia.event.handler;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,6 +35,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
+import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
@@ -123,6 +127,7 @@ public class SkyBlockEventHandler
     private List<ItemStack> previousInventory;
     private DragonType dragonType;
     private final Minecraft mc;
+    private boolean initApiData;
 
     public SkyBlockEventHandler()
     {
@@ -693,6 +698,15 @@ public class SkyBlockEventHandler
             this.previousInventory = null;
             SkyBlockEventHandler.dragonHealth = 0;
             ITEM_DROP_CHECK_LIST.clear();
+
+            if (!this.initApiData && Utils.isHypixel())
+            {
+                ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+                exec.scheduleAtFixedRate(MainEventHandler::getBazaarData, 0, 10, TimeUnit.SECONDS);
+                ScheduledExecutorService exec1 = Executors.newSingleThreadScheduledExecutor();
+                exec1.scheduleAtFixedRate(PetStats::scheduleDownloadPetStats, 0, 2, TimeUnit.MINUTES);
+                this.initApiData = true;
+            }
         }
     }
 
