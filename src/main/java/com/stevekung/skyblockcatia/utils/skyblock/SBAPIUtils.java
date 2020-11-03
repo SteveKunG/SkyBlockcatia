@@ -58,7 +58,8 @@ public class SBAPIUtils
         SKYBLOCK_PROFILES("https://api.hypixel.net/skyblock/profiles?key=", "&uuid="),
         SKYBLOCK_AUCTION("https://api.hypixel.net/skyblock/auction?key=", "&profile="),
         BAZAAR("https://api.hypixel.net/skyblock/bazaar?key="),
-        GUILD("https://api.hypixel.net/guild?key=", "&player=");
+        GUILD("https://api.hypixel.net/guild?key=", "&player="),
+        STATUS("https://api.hypixel.net/status?key=", "&uuid=");
 
         private final String head;
         private final String tail;

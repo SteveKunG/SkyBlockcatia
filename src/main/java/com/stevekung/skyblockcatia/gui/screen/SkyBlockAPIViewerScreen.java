@@ -32,7 +32,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
-import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
@@ -1427,7 +1426,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (userUUID.equals(this.uuid))
             {
                 JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
-                URL urlStatus = new URL("https://api.hypixel.net/status?key=" + SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get() + "&uuid=" + this.uuid);
+                URL urlStatus = new URL(SBAPIUtils.APIUrl.STATUS.getUrl() + this.uuid);
                 JsonObject objStatus = new JsonParser().parse(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
 
                 this.getSkills(currentUserProfile);
