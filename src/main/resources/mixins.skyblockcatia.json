@@ -33,6 +33,7 @@
         "MixinMouseHelper",
         "MixinNetworkPlayerInfo",
         "MixinParticleManager",
+        "MixinPlayerContainer",
         "MixinPlayerController",
         "MixinPlayerRenderer",
         "MixinPlayerTabOverlayGui",
