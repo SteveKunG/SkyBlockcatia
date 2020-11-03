@@ -117,7 +117,7 @@ public class SkyBlockEventHandler
 
     private static final List<String> LEFT_PARTY_MESSAGE = Lists.newArrayList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left.");
     private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("\u25C6 Ice Rune", "\u25C6 Ice Rune I").build();
-    public static boolean isSkyBlock = false;
+    public static boolean isSkyBlock;
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
     public static SBLocation SKY_BLOCK_LOCATION = SBLocation.YOUR_ISLAND;
