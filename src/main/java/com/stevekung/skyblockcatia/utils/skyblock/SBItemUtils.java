@@ -7,11 +7,14 @@ import java.util.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.DataFixUtils;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,6 +29,25 @@ import net.minecraftforge.common.util.Constants;
 
 public class SBItemUtils
 {
+    private static final Int2ObjectMap<String> ID_MAP_1_8 = DataFixUtils.make(new Int2ObjectOpenHashMap<>(), obj -> {
+        obj.put(409, "minecraft:prismarine_shard");
+        obj.put(410, "minecraft:prismarine_crystals");
+        obj.put(411, "minecraft:rabbit");
+        obj.put(412, "minecraft:cooked_rabbit");
+        obj.put(413, "minecraft:rabbit_stew");
+        obj.put(414, "minecraft:rabbit_foot");
+        obj.put(415, "minecraft:rabbit_hide");
+        obj.put(416, "minecraft:armor_stand");
+
+        obj.put(423, "minecraft:mutton");
+        obj.put(424, "minecraft:cooked_mutton");
+        obj.put(427, "minecraft:spruce_door");
+        obj.put(428, "minecraft:birch_door");
+        obj.put(429, "minecraft:jungle_door");
+        obj.put(430, "minecraft:acacia_door");
+        obj.put(431, "minecraft:dark_oak_door");
+        obj.defaultReturnValue("minecraft:air");
+    });
     public static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER", "SNOW_CANNON");
     public static final ImmutableList<String> CLICKABLE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND", "FLOWER_OF_TRUTH");
 
@@ -67,7 +89,7 @@ public class SBItemUtils
         short oldItemId = apiCompound.getShort("id");
         short damage = apiCompound.getShort("Damage");
         CompoundNBT sbTag = apiCompound.getCompound("tag");
-        String newItemReg = ItemStackDataFlattening.updateItem(ItemIntIDToString.getItem(oldItemId), damage);
+        String newItemReg = ItemStackDataFlattening.updateItem(oldItemId == 425 ? "minecraft:banner" : ItemIntIDToString.getItem(oldItemId), damage);
 
         if (newItemReg != null)
         {
@@ -92,6 +114,11 @@ public class SBItemUtils
             catch (NoSuchElementException e)
             {
                 itemId = ItemIntIDToString.getItem(oldItemId);
+            }
+
+            if (oldItemId >= 409 && oldItemId <= 416 || oldItemId >= 423 && oldItemId <= 431)
+            {
+                itemId = ID_MAP_1_8.get(oldItemId);
             }
 
             if (itemId.equals("minecraft:potion"))
