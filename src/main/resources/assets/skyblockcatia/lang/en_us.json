@@ -1,6 +1,6 @@
 {
     "_comment": "KEY BINDING",
-    "key.skyblockcatia.categories": "SkyBlockcatia",
+    "key.categories.skyblockcatia": "SkyBlockcatia",
     "key.sb_ender_chest.desc": "SkyBlock Ender Chest",
     "key.sb_crafted_minions.desc": "SkyBlock Crafted Minions",
     "key.sb_crafting_table.desc": "SkyBlock Crafting Table",
