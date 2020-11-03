@@ -49,6 +49,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -3853,7 +3854,8 @@ public class GuiSkyBlockData extends GuiScreen
         GlStateManager.translate(posX, posY, 50.0F);
         GlStateManager.scale(-scale, scale, scale);
         GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(ClientEventHandler.renderPartialTicks, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(20.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(-10.0F, 0.0F, 1.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
         entity.rotationYaw = (float)(Math.atan(0) * 40.0F);
         entity.rotationYawHead = entity.rotationYaw;
@@ -4524,16 +4526,20 @@ public class GuiSkyBlockData extends GuiScreen
                 if (stat.getText().equals("Zombie"))
                 {
                     EntityZombie zombie = new EntityZombie(FAKE_WORLD);
-                    ItemStack heldItem = new ItemStack(Items.diamond_hoe).setStackDisplayName("Reaper Scythe");
+                    ItemStack heldItem = new ItemStack(Items.diamond_hoe);
+                    heldItem.addEnchantment(Enchantment.unbreaking, 1);
                     ItemStack helmet = RenderUtils.getSkullItemStack(GuiSkyBlockData.REVENANT_HORROR_HEAD[0], GuiSkyBlockData.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.diamond_chestplate);
+                    chestplate.addEnchantment(Enchantment.unbreaking, 1);
                     ItemStack leggings = new ItemStack(Items.chainmail_leggings);
+                    leggings.addEnchantment(Enchantment.unbreaking, 1);
                     ItemStack boots = new ItemStack(Items.diamond_boots);
                     zombie.setCurrentItemOrArmor(0, heldItem);
                     zombie.setCurrentItemOrArmor(1, boots);
                     zombie.setCurrentItemOrArmor(2, leggings);
                     zombie.setCurrentItemOrArmor(3, chestplate);
                     zombie.setCurrentItemOrArmor(4, helmet);
+                    zombie.ticksExisted = ClientEventHandler.ticks;
                     GuiSkyBlockData.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, zombie);
                 }
                 else if (stat.getText().equals("Spider"))
