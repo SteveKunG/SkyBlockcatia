@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import java.io.BufferedReader;
+import java.util.Locale;
 
 import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -60,7 +61,7 @@ public class ExpProgress
         @Override
         public String toString()
         {
-            return this.name().toLowerCase();
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
 }

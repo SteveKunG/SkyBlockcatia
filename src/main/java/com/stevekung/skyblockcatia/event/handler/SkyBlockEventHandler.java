@@ -415,7 +415,7 @@ public class SkyBlockEventHandler
                     if (dragonSpawnedMatcher.matches())
                     {
                         String dragon = dragonSpawnedMatcher.group("dragon");
-                        DragonType type = DragonType.valueOf(dragon.toUpperCase());
+                        DragonType type = DragonType.valueOf(dragon.toUpperCase(Locale.ROOT));
                         HUDRenderEventHandler.foundDragon = true;
                         this.dragonType = type;
 
@@ -588,7 +588,7 @@ public class SkyBlockEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            ItemStack itemStack = SBPets.Type.valueOf(TextFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase()).getPetItem();
+                            ItemStack itemStack = SBPets.Type.valueOf(TextFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ROOT)).getPetItem();
                             itemStack.setDisplayName(TextComponentUtils.component(name));
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
                             ToastLog.logToast(message);

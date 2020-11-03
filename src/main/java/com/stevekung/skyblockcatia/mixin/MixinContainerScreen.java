@@ -235,7 +235,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                 if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                 {
-                    String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                    String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                     itemId = WordUtils.capitalize(itemId);
                     this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                     this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(this::openFandom, this.fandomUrl, true));
@@ -307,7 +307,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                             if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                             {
-                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                                 itemId = WordUtils.capitalize(itemId);
                                 this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                                 this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(this::openFandom, this.fandomUrl, true));
@@ -347,7 +347,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
                             if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                             {
-                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase().replace("_", " ");
+                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                                 itemId = WordUtils.capitalize(itemId);
                                 this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                                 this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen(this::openFandom, this.fandomUrl, true));
