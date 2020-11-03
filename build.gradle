@@ -62,8 +62,8 @@ shadowJar {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
-    compile files("libs/SteveKunG's-Lib-${mc_version}-4.0.0-deobf.jar")
-    compile files("libs/Indicatia-${mc_version}-4.0.0-deobf.jar")
+    compile files("libs/SteveKunG's-Lib-${mc_version}-${stevekung_lib_version}-deobf.jar")
+    compile files("libs/Indicatia-${mc_version}-${indicatia_version}-deobf.jar")
     embed("org.apache.commons:commons-text:1.8") {
         exclude group: "org.apache.commons", module: "commons-lang3"
     }
