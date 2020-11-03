@@ -1,6 +1,8 @@
 package com.stevekung.skyblockcatia.utils;
 
 import java.io.BufferedReader;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -64,10 +66,20 @@ public class SkyBlockPets
         UNCOMMON(ExpProgress.PET_UNCOMMON, EnumChatFormatting.GREEN),
         RARE(ExpProgress.PET_RARE, EnumChatFormatting.BLUE),
         EPIC(ExpProgress.PET_EPIC, EnumChatFormatting.DARK_PURPLE),
-        LEGENDARY(ExpProgress.PET_LEGENDARY, EnumChatFormatting.GOLD);
+        LEGENDARY(ExpProgress.PET_LEGENDARY, EnumChatFormatting.GOLD),
+        MYTHIC(ExpProgress.PET_LEGENDARY, EnumChatFormatting.LIGHT_PURPLE);
 
+        private static final Tier[] VALUES = Arrays.stream(values()).sorted(Comparator.comparingInt(Tier::ordinal)).toArray(size -> new Tier[size]);
         private final ExpProgress[] progression;
         private final EnumChatFormatting color;
+
+        static
+        {
+            for (Tier rarity : values())
+            {
+                VALUES[rarity.ordinal()] = rarity;
+            }
+        }
 
         private Tier(ExpProgress[] progression, EnumChatFormatting color)
         {
@@ -83,6 +95,11 @@ public class SkyBlockPets
         public EnumChatFormatting getTierColor()
         {
             return this.color;
+        }
+
+        public Tier getNextRarity()
+        {
+            return VALUES[(this.ordinal() + 1) % VALUES.length];
         }
     }
 

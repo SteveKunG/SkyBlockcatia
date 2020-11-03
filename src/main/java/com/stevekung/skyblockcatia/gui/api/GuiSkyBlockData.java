@@ -2594,7 +2594,7 @@ public class GuiSkyBlockData extends GuiScreen
 
                 if (heldItem != null && heldItem == SkyBlockPets.HeldItem.PET_ITEM_TIER_BOOST)
                 {
-                    tier = SkyBlockPets.Tier.values()[Math.min(SkyBlockPets.Tier.values().length - 1, tier.ordinal() + 1)];
+                    tier = tier.getNextRarity();
                 }
 
                 PetLevel level = this.checkPetLevel(exp, tier);
