@@ -19,6 +19,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
+import com.stevekung.skyblockcatia.gui.widget.button.SmallArrowButton;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
@@ -58,6 +59,7 @@ public class MainEventHandler
     public static String playerToView;
     public static final Map<String, BazaarData> BAZAAR_DATA = Maps.newHashMap();
     public static boolean bidHighlight = true;
+    private static int inventoryPage;
 
     public MainEventHandler()
     {
@@ -110,10 +112,7 @@ public class MainEventHandler
             if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory && gui instanceof InventoryScreen)
             {
                 event.removeWidget(event.getWidgetList().get(0));
-                event.addWidget(new ItemButton(width + 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
-                event.addWidget(new ItemButton(width + 28, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
-                event.addWidget(new ItemButton(width + 47, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
-                event.addWidget(new ItemButton(width + 66, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
+                this.addButtonsToInventory(event, wardRobeItem, width, height);
             }
             else if (gui instanceof ChestScreen)
             {
@@ -262,6 +261,33 @@ public class MainEventHandler
 
     public static <T extends Container> boolean isSuitableForGUI(List<String> invList, ITextComponent title)
     {
-        return invList.stream().anyMatch(invName -> title.getString().contains(invName));
+        return invList.stream().anyMatch(title.getString()::contains);
+    }
+
+    private void addButtonsToInventory(GuiScreenEvent.InitGuiEvent.Post event, ItemStack wardRobeItem, int width, int height)
+    {
+        if (inventoryPage == 0)
+        {
+            event.addWidget(new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
+            event.addWidget(new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
+            event.addWidget(new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
+            event.addWidget(new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
+            event.addWidget(new SmallArrowButton(width + 72, height + 90, 0, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
+        }
+        else
+        {
+            event.addWidget(new ItemButton(width - 9, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.sendChatMessage("/ah")));
+            event.addWidget(new ItemButton(width + 10, height + 86, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.sendChatMessage("/bz")));
+            event.addWidget(new SmallArrowButton(width + 72, height + 90, 1, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
+        }
+    }
+
+    private void changeButtonPage(GuiScreenEvent.InitGuiEvent.Post event, ItemStack wardRobeItem, int width, int height)
+    {
+        inventoryPage++;
+        inventoryPage %= 2;
+        event.getGui().buttons.removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
+        event.getGui().getEventListeners().removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
+        this.addButtonsToInventory(event, wardRobeItem, width, height);
     }
 }
