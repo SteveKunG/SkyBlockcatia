@@ -27,9 +27,9 @@ public class CommonUtils
         }
     });
 
-    public static void runAsync(Runnable runnable)
+    public static CompletableFuture<Void> runAsync(Runnable runnable)
     {
-        CompletableFuture.runAsync(runnable, CommonUtils.POOL);
+        return CompletableFuture.runAsync(runnable, CommonUtils.POOL);
     }
 
     public static void registerEventHandler(Object event)
