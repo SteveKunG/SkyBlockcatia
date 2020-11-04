@@ -30,7 +30,7 @@ public abstract class MixinBlockItem extends Item
         {
             CompoundNBT extraAttrib = context.getItem().getTag().getCompound("ExtraAttributes");
 
-            if (SBItemUtils.CLICKABLE.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
+            if (SBItemUtils.CLICKABLE.stream().anyMatch(extraAttrib.getString("id")::equals))
             {
                 context.getPlayer().swingArm(Hand.MAIN_HAND);
                 info.setReturnValue(ActionResultType.PASS);

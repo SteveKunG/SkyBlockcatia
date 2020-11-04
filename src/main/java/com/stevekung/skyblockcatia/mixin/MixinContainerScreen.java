@@ -390,7 +390,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
             {
                 String name = itemStack.getDisplayName().getString();
 
-                if (mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
+                if (mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(name::equals)))
                 {
                     this.minecraft.playerController.windowClick(this.that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
                     info.cancel();
@@ -666,7 +666,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
     private boolean isChatableGui()
     {
         String title = this.title.getString();
-        return MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> title.contains(invName));
+        return MainEventHandler.CHATABLE_LIST.stream().anyMatch(title::contains);
     }
 
     private boolean canViewSeller()
@@ -683,7 +683,7 @@ public abstract class MixinContainerScreen<T extends Container> extends Screen i
 
     private boolean ignoreNullItem(ItemStack itemStack, List<String> ignores)
     {
-        return ignores.stream().anyMatch(name -> itemStack.getDisplayName().getString().equals(name));
+        return ignores.stream().anyMatch(itemStack.getDisplayName().getString()::equals);
     }
 
     private void getSentHistory(int msgPos)

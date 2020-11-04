@@ -95,7 +95,7 @@ public class HUDRenderEventHandler
         {
             ChestScreen chest = (ChestScreen)this.mc.currentScreen;
 
-            if (MainEventHandler.showChat && MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> chest.getTitle().getString().contains(invName)))
+            if (MainEventHandler.showChat && MainEventHandler.CHATABLE_LIST.stream().anyMatch(chest.getTitle().getString()::contains))
             {
                 event.setCanceled(true);
             }

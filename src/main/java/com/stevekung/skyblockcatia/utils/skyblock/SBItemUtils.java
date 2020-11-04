@@ -196,7 +196,7 @@ public class SBItemUtils
         {
             CompoundNBT extraAttrib = itemStack.getTag().getCompound("ExtraAttributes");
 
-            if (!BLACKLIST.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
+            if (!BLACKLIST.stream().anyMatch(extraAttrib.getString("id")::equals))
             {
                 player.swingArm(Hand.MAIN_HAND);
             }
@@ -210,7 +210,7 @@ public class SBItemUtils
         {
             CompoundNBT extraAttrib = itemStack.getTag().getCompound("ExtraAttributes");
 
-            if (!BLACKLIST.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
+            if (!BLACKLIST.stream().anyMatch(extraAttrib.getString("id")::equals))
             {
                 player.swingArm(Hand.MAIN_HAND);
                 return ActionResultType.SUCCESS;

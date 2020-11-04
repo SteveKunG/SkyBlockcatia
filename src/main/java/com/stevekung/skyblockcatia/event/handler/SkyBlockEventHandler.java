@@ -373,7 +373,7 @@ public class SkyBlockEventHandler
                     cancelMessage = true;
                 }
 
-                if (SkyBlockcatiaMod.isIndicatiaLoaded && SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
+                if (SkyBlockcatiaMod.isIndicatiaLoaded && SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(message::equals))
                 {
                     IndicatiaIntegration.savePartyChat();
                 }

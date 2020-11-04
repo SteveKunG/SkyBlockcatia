@@ -29,7 +29,7 @@ public class SmallArrowButton extends Button
     {
         if (this.visible)
         {
-            mc.getTextureManager().bindTexture(TEXTURE);
+            this.mc.getTextureManager().bindTexture(TEXTURE);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             AbstractGui.blit(matrixStack, this.x, this.y, this.isHovered() ? 7 : 0, this.type == 0 ? 0 : 11, this.width, this.height, 14, 22);
         }

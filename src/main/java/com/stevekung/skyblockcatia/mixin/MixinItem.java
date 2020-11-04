@@ -30,7 +30,7 @@ public abstract class MixinItem implements IForgeItem
         {
             CompoundNBT extraAttrib = itemStack.getTag().getCompound("ExtraAttributes");
 
-            if (SBItemUtils.CLICKABLE.stream().anyMatch(id -> extraAttrib.getString("id").equals(id)))
+            if (SBItemUtils.CLICKABLE.stream().anyMatch(extraAttrib.getString("id")::equals))
             {
                 player.swingArm(Hand.MAIN_HAND);
                 info.setReturnValue(ActionResult.resultPass(player.getHeldItem(hand)));

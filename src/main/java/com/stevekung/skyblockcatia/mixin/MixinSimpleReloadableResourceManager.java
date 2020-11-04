@@ -40,11 +40,11 @@ public abstract class MixinSimpleReloadableResourceManager
                     String packName = entry.getResourcePack().getName();
                     String packDesc = entry.getDescription().getUnformattedComponentText();
 
-                    if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                    if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(packName::contains))
                     {
                         SkyBlockEventHandler.skyBlockPackResolution = "16";
                     }
-                    if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
+                    if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(packName::contains))
                     {
                         SkyBlockEventHandler.skyBlockPackResolution = "32";
                     }

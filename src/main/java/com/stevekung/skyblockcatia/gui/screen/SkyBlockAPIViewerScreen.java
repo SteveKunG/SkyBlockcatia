@@ -3487,7 +3487,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void setPlayerArmors()
     {
-        for (ItemStack armor : this.armorItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList()))
+        for (ItemStack armor : this.armorItems.stream().filter(this.not(ItemStack::isEmpty)).collect(Collectors.toList()))
         {
             try
             {
