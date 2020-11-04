@@ -69,6 +69,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class SkyBlockEventHandler
 {
@@ -276,8 +277,9 @@ public class SkyBlockEventHandler
         String formattedMessage = event.getMessage().getString();
         String message = TextFormatting.getTextWithoutFormattingCodes(formattedMessage);
         boolean cancelMessage = false;
+        boolean dev = this.mc.isSingleplayer() && !FMLEnvironment.production;
 
-        if (Utils.isHypixel())
+        if (Utils.isHypixel() || dev)
         {
             // Common matcher
             Matcher visitIslandMatcher = SkyBlockEventHandler.VISIT_ISLAND_PATTERN.matcher(message);
@@ -320,7 +322,7 @@ public class SkyBlockEventHandler
             Matcher petLevelUpPattern = SkyBlockEventHandler.PET_LEVEL_UP_PATTERN.matcher(formattedMessage);
             Matcher petDropPattern = SkyBlockEventHandler.PET_DROP_PATTERN.matcher(message);
 
-            if (event.getType() == ChatType.CHAT)
+            if (event.getType() == ChatType.CHAT || dev)
             {
                 if (visitIslandMatcher.matches())
                 {
@@ -392,7 +394,7 @@ public class SkyBlockEventHandler
                     }
                 }
 
-                if (SkyBlockEventHandler.isSkyBlock)
+                if (SkyBlockEventHandler.isSkyBlock || dev)
                 {
                     if (SkyBlockcatiaSettings.INSTANCE.currentServerDay && message.startsWith("Sending to server"))
                     {

@@ -222,8 +222,7 @@ public class SBRenderUtils
         GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, trans);
         float xpos = trans[12];
 
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) ((xpos + 29) * scale), (int) ((height - 196) * scale), (int) (126 * scale), (int) (195 * scale));
+        RenderSystem.enableScissor((int) ((xpos + 29) * scale), (int) ((height - 196) * scale), (int) (126 * scale), (int) (195 * scale));
 
         if (shadow)
         {
@@ -234,7 +233,7 @@ public class SBRenderUtils
             toastGui.getMinecraft().fontRenderer.drawString(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
 
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        RenderSystem.disableScissor();
     }
 
     private static void renderPetRarity(String displayName, ItemStack itemStack, MatrixStack matrixStack, int xPos, int yPos)

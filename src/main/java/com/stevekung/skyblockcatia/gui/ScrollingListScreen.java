@@ -111,10 +111,8 @@ public abstract class ScrollingListScreen implements IGuiEventListener
     {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder worldr = tess.getBuffer();
-
         double scale = this.mc.getMainWindow().getGuiScaleFactor();
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int)(this.left  * scale), (int)(this.mc.getMainWindow().getHeight() - this.bottom * scale), (int)(this.width * scale), (int)(this.viewHeight * scale));
+        RenderSystem.enableScissor((int)(this.left * scale), (int)(this.mc.getMainWindow().getHeight() - this.bottom * scale), (int)(this.width * scale), (int)(this.viewHeight * scale));
 
         if (this.mc.world != null)
         {
@@ -195,7 +193,7 @@ public abstract class ScrollingListScreen implements IGuiEventListener
         RenderSystem.shadeModel(GL11.GL_FLAT);
         RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        RenderSystem.disableScissor();
     }
 
     protected int getSize()
