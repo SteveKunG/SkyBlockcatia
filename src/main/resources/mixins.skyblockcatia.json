@@ -39,9 +39,12 @@
         "MixinPlayerTabOverlayGui",
         "MixinSimpleReloadableResourceManager",
         "MixinWallOrFloorItem",
+        "fixes.MixinCommandSuggestionHelper",
         "fixes.MixinEntityDataManager",
+        "fixes.MixinFilterList",
         "fixes.MixinResourceLocation",
-        "fixes.MixinScoreboard"
+        "fixes.MixinScoreboard",
+        "fixes.MixinSocialInteractionsScreen"
     ],
     "injectors": {
         "defaultRequire": 1
