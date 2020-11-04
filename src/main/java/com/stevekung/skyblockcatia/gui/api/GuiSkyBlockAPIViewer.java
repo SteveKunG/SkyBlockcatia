@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -61,7 +59,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     private String guild = "";
     private GuiScrollingList errorInfo;
     private List<String> errorList = new ArrayList<>();
-    private CompletableFuture<Void> apiThread;
 
     public GuiSkyBlockAPIViewer(GuiState state)
     {
@@ -120,7 +117,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
         {
             this.openFromPlayer = false;
 
-            this.apiThread = CommonUtils.runAsync(() ->
+            CommonUtils.runAsync(() ->
             {
                 try
                 {
@@ -198,22 +195,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
-
-        if (this.apiThread != null)
-        {
-            CommonUtils.runAsync(() ->
-            {
-                try
-                {
-                    this.apiThread.get();
-                    LoggerIN.info("Cancelled API Download thread");
-                }
-                catch (InterruptedException | ExecutionException e)
-                {
-                    e.printStackTrace();
-                }
-            });
-        }
     }
 
     @Override
@@ -229,7 +210,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen implements ITabComplete
                 this.guild = "";
                 this.loadingApi = true;
 
-                this.apiThread = CommonUtils.runAsync(() ->
+                CommonUtils.runAsync(() ->
                 {
                     try
                     {
