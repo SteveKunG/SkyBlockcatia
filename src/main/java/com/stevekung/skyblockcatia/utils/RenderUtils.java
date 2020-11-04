@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,7 +15,6 @@ import com.stevekung.skyblockcatia.config.ExtendedConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -32,7 +30,6 @@ public class RenderUtils
     private static final ResourceLocation RARITY = new ResourceLocation("skyblockcatia:textures/gui/rarity.png");
     private static final Pattern PATTERN = Pattern.compile("(?<color>\\u00a7[0-9a-fk-or]).+");
     private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or]).+");
-    private static final ImmutableList<String> RARITY_GUI_BLACKLIST = ImmutableList.of("Bazaar", "Toggle Potion Effects");
 
     public static void bindTexture(ResourceLocation resource)
     {
@@ -123,17 +120,6 @@ public class RenderUtils
 
     public static void renderRarity(ItemStack itemStack, int xPos, int yPos)
     {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        if (mc.currentScreen != null && mc.currentScreen instanceof GuiChest)
-        {
-            GuiChest chest = (GuiChest)mc.currentScreen;
-
-            if (RARITY_GUI_BLACKLIST.stream().anyMatch(chest.lowerChestInventory.getDisplayName().getUnformattedText()::startsWith))
-            {
-                return;
-            }
-        }
         if (itemStack != null && itemStack.hasTagCompound())
         {
             NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
