@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(ItemStackTileEntityRenderer.class)
-public abstract class MixinItemStackTileEntityRenderer
+public class MixinItemStackTileEntityRenderer
 {
     private final GenericHeadModel head = new HumanoidHeadModel();
 

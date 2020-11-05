@@ -16,7 +16,7 @@ import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.player.PlayerInventory;
 
 @Mixin(MouseHelper.class)
-public abstract class MixinMouseHelper
+public class MixinMouseHelper
 {
     @Shadow
     @Final

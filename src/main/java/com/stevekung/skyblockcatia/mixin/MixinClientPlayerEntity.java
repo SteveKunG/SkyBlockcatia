@@ -7,17 +7,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
+public class MixinClientPlayerEntity
 {
-    private MixinClientPlayerEntity()
-    {
-        super(null, null);
-    }
-
     @Redirect(method = "setPlayerSPHealth(F)V", at = @At(value = "FIELD", target = "net/minecraft/client/entity/player/ClientPlayerEntity.hurtTime:I", opcode = Opcodes.PUTFIELD))
     private void setNoHurtTime(ClientPlayerEntity entity, int oldValue)
     {

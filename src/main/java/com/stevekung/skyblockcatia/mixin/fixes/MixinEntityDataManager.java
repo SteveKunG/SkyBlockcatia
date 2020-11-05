@@ -12,7 +12,7 @@ import com.stevekung.skyblockcatia.utils.Utils;
 import net.minecraft.network.datasync.EntityDataManager;
 
 @Mixin(EntityDataManager.class)
-public abstract class MixinEntityDataManager
+public class MixinEntityDataManager
 {
     @Inject(method = "setEntryValue(Lnet/minecraft/network/datasync/EntityDataManager$DataEntry;Lnet/minecraft/network/datasync/EntityDataManager$DataEntry;)V", cancellable = true, at = @At("HEAD"))
     private <T> void setEntryValue(EntityDataManager.DataEntry<T> target, EntityDataManager.DataEntry<?> source, CallbackInfo info)

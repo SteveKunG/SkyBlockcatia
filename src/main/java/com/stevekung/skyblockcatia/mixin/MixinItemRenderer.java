@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.item.ItemStack;
 
 @Mixin(ItemRenderer.class)
-public abstract class MixinItemRenderer
+public class MixinItemRenderer
 {
     @Inject(method = "renderItemModelIntoGUI(Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/renderer/model/IBakedModel;)V", at = @At("HEAD"))
     private void renderItemModelIntoGUI(ItemStack itemStack, int x, int y, IBakedModel bakedmodel, CallbackInfo info)

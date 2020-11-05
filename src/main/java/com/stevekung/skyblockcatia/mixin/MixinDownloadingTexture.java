@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.DownloadingTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 
 @Mixin(DownloadingTexture.class)
-public abstract class MixinDownloadingTexture
+public class MixinDownloadingTexture
 {
     @Shadow
     private static void setAreaTransparent(NativeImage image, int x, int y, int width, int height) {}

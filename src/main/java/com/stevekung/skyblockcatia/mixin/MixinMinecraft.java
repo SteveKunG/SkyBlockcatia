@@ -18,7 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 
 @Mixin(Minecraft.class)
-public abstract class MixinMinecraft
+public class MixinMinecraft
 {
     private final Minecraft that = (Minecraft) (Object) this;
 

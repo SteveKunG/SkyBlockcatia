@@ -13,7 +13,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 @Mixin(ParticleManager.class)
-public abstract class MixinParticleManager
+public class MixinParticleManager
 {
     @Inject(method = "addBlockDestroyEffects(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", cancellable = true, at = @At("HEAD"))
     private void addBlockDestroyEffects(BlockPos pos, BlockState state, CallbackInfo info)

@@ -12,7 +12,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 
 @Mixin(Scoreboard.class)
-public abstract class MixinScoreboard
+public class MixinScoreboard
 {
     private final Scoreboard that = (Scoreboard) (Object) this;
 

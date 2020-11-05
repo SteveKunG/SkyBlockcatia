@@ -12,7 +12,7 @@ import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 
 @Mixin(SocialInteractionsScreen.class)
-public abstract class MixinSocialInteractionsScreen
+public class MixinSocialInteractionsScreen
 {
     @Redirect(method = "func_244680_a(Lnet/minecraft/client/Minecraft;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/play/ClientPlayNetHandler.getPlayerInfoMap()Ljava/util/Collection;"))
     private Collection<NetworkPlayerInfo> filterPlayer(ClientPlayNetHandler handler)

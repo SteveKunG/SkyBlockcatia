@@ -16,7 +16,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
 @Mixin(AbstractBlock.AbstractBlockState.class)
-public abstract class MixinAbstractBlock_AbstractBlockState
+public class MixinAbstractBlock_AbstractBlockState
 {
     private final AbstractBlock.AbstractBlockState that = (AbstractBlock.AbstractBlockState) (Object) this;
 

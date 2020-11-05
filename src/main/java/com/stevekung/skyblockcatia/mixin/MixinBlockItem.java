@@ -9,20 +9,14 @@ import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 
 @Mixin(BlockItem.class)
-public abstract class MixinBlockItem extends Item
+public class MixinBlockItem
 {
-    private MixinBlockItem()
-    {
-        super(null);
-    }
-
     @Inject(method = "onItemUse(Lnet/minecraft/item/ItemUseContext;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At("HEAD"))
     private void onItemUse(ItemUseContext context, CallbackInfoReturnable<ActionResultType> info)
     {

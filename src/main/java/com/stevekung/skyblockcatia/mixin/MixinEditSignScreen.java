@@ -24,7 +24,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.StringUtils;
 
 @Mixin(EditSignScreen.class)
-public abstract class MixinEditSignScreen extends Screen
+public class MixinEditSignScreen extends Screen
 {
     private final EditSignScreen that = (EditSignScreen) (Object) this;
     private SignSelectionList globalSelector;

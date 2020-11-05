@@ -56,7 +56,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 @Mixin(ContainerScreen.class)
-public abstract class MixinContainerScreen<T extends Container> extends Screen implements ITradeScreen
+public class MixinContainerScreen<T extends Container> extends Screen implements ITradeScreen
 {
     private final ContainerScreen that = (ContainerScreen) (Object) this;
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");

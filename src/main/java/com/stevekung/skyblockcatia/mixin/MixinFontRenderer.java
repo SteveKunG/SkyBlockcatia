@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.math.vector.Matrix4f;
 
 @Mixin(FontRenderer.class)
-public abstract class MixinFontRenderer
+public class MixinFontRenderer
 {
     //TODO
     @Redirect(method = "renderString(Ljava/lang/String;FFILnet/minecraft/util/math/vector/Matrix4f;ZZ)I", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.func_238411_a_(Ljava/lang/String;FFIZLnet/minecraft/util/math/vector/Matrix4f;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ZIIZ)I"))

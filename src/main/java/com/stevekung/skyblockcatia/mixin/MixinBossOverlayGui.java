@@ -10,7 +10,7 @@ import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import net.minecraft.client.gui.overlay.BossOverlayGui;
 
 @Mixin(BossOverlayGui.class)
-public abstract class MixinBossOverlayGui
+public class MixinBossOverlayGui
 {
     @Inject(method = "shouldDarkenSky()Z", cancellable = true, at = @At("HEAD"))
     private void disableDarkenSky(CallbackInfoReturnable<Boolean> info)

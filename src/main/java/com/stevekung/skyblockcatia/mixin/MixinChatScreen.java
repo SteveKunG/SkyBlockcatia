@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 
 @Mixin(ChatScreen.class)
-public abstract class MixinChatScreen extends Screen
+public class MixinChatScreen extends Screen
 {
     private MixinChatScreen()
     {

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.entity.player.PlayerModelPart;
 
 @Mixin(PlayerRenderer.class)
-public abstract class MixinPlayerRenderer
+public class MixinPlayerRenderer
 {
     private final PlayerRenderer that = (PlayerRenderer) (Object) this;
 

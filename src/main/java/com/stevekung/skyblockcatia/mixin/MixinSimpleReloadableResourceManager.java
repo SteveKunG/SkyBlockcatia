@@ -20,7 +20,7 @@ import net.minecraft.resources.*;
 import net.minecraft.util.Unit;
 
 @Mixin(SimpleReloadableResourceManager.class)
-public abstract class MixinSimpleReloadableResourceManager
+public class MixinSimpleReloadableResourceManager
 {
     @Shadow
     @Final

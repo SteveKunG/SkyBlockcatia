@@ -18,7 +18,7 @@ import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 
 @Mixin(FilterList.class)
-public abstract class MixinFilterList
+public class MixinFilterList
 {
     @Shadow
     @Final

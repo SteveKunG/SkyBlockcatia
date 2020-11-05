@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 
 @Mixin(GameRenderer.class)
-public abstract class MixinGameRenderer
+public class MixinGameRenderer
 {
     @Shadow
     @Final

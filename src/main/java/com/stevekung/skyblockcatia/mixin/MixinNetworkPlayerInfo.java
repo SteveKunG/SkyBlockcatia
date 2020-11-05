@@ -7,7 +7,7 @@ import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 
 @Mixin(NetworkPlayerInfo.class)
-public abstract class MixinNetworkPlayerInfo implements IViewerLoader
+public class MixinNetworkPlayerInfo implements IViewerLoader
 {
     private final NetworkPlayerInfo that = (NetworkPlayerInfo) (Object) this;
     private boolean loadedFromViewer;

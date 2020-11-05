@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.entity.layers.HeldBlockLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 
 @Mixin(HeldBlockLayer.class)
-public abstract class MixinHeldBlockLayer
+public class MixinHeldBlockLayer
 {
     @SuppressWarnings("deprecation")
     @Redirect(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ILnet/minecraft/entity/monster/EndermanEntity;FFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/BlockRendererDispatcher.renderBlock(Lnet/minecraft/block/BlockState;Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;II)V"))

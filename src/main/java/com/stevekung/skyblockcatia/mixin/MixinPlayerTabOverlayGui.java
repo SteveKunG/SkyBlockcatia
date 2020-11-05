@@ -35,8 +35,8 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
 
-@Mixin(value = PlayerTabOverlayGui.class, priority = 1500)
-public abstract class MixinPlayerTabOverlayGui
+@Mixin(PlayerTabOverlayGui.class)
+public class MixinPlayerTabOverlayGui
 {
     private int playerCount;
 
