@@ -8,7 +8,7 @@ import com.stevekung.skyblockcatia.config.ConfigManagerIN;
 import net.minecraft.client.renderer.entity.layers.LayerCape;
 
 @Mixin(LayerCape.class)
-public abstract class LayerCapeMixin
+public class LayerCapeMixin
 {
     @Overwrite
     public boolean shouldCombineTextures()

@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IChatComponent;
 
 @Mixin(TileEntitySign.class)
-public abstract class TileEntitySignMixin implements IModifiedSign
+public class TileEntitySignMixin implements IModifiedSign
 {
     private final TileEntitySign that = (TileEntitySign) (Object) this;
     private int selectionStart = -1;

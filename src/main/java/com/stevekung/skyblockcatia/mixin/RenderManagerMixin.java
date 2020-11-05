@@ -20,7 +20,7 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.AxisAlignedBB;
 
 @Mixin(RenderManager.class)
-public abstract class RenderManagerMixin
+public class RenderManagerMixin
 {
     @Shadow
     private double renderPosX;

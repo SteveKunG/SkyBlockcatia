@@ -15,7 +15,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 @Mixin(Block.class)
-public abstract class BlockMixin
+public class BlockMixin
 {
     private final Block that = (Block) (Object) this;
 

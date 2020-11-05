@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
 @Mixin(RenderPlayer.class)
-public abstract class RenderPlayerMixin
+public class RenderPlayerMixin
 {
     private final RenderPlayer that = (RenderPlayer) (Object) this;
 

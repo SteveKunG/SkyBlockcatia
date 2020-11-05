@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 
 @Mixin(Render.class)
-public abstract class RenderMixin
+public class RenderMixin
 {
     @Shadow
     @Final

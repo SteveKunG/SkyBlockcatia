@@ -5,12 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.renderer.GlStateManager;
 
 @Mixin(GuiNewChat.class)
-public abstract class GuiNewChatMixin extends Gui
+public class GuiNewChatMixin
 {
     @Inject(method = "drawChat(I)V", at = @At("HEAD"))
     private void renderDepthPre(int updateCounter, CallbackInfo info)

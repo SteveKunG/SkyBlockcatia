@@ -25,7 +25,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 @Mixin(EntityRenderer.class)
-public abstract class EntityRendererMixin
+public class EntityRendererMixin
 {
     @Shadow
     private Minecraft mc;

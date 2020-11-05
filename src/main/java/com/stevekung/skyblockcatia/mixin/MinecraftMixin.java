@@ -23,7 +23,7 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.player.InventoryPlayer;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftMixin
+public class MinecraftMixin
 {
     private final Minecraft that = (Minecraft) (Object) this;
 

@@ -29,7 +29,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StringUtils;
 
 @Mixin(GuiEditSign.class)
-public abstract class GuiEditSignMixin extends GuiScreen implements IEditSign
+public class GuiEditSignMixin extends GuiScreen implements IEditSign
 {
     private final GuiEditSign that = (GuiEditSign) (Object) this;
     private TextInputUtil textInputUtil;

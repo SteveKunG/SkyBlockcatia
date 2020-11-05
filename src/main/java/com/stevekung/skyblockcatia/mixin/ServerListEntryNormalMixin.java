@@ -16,7 +16,6 @@ import com.stevekung.skyblockcatia.utils.CommonUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiListExtended;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.ServerListEntryNormal;
 import net.minecraft.client.multiplayer.ServerData;
@@ -27,7 +26,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 @Mixin(ServerListEntryNormal.class)
-public abstract class ServerListEntryNormalMixin implements GuiListExtended.IGuiListEntry
+public abstract class ServerListEntryNormalMixin
 {
     private final ServerListEntryNormal that = (ServerListEntryNormal) (Object) this;
 

@@ -10,7 +10,7 @@ import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
 import net.minecraft.client.gui.GuiIngame;
 
 @Mixin(GuiIngame.class)
-public abstract class GuiIngameMixin
+public class GuiIngameMixin
 {
     @Inject(method = "func_181029_i()V", at = @At("RETURN"))
     private void resetToast(CallbackInfo info)

@@ -14,7 +14,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 
 @Mixin(GuiChat.class)
-public abstract class GuiChatMixin extends GuiScreen
+public class GuiChatMixin extends GuiScreen
 {
     @Inject(method = "initGui()V", at = @At("RETURN"))
     private void initGui(CallbackInfo info)

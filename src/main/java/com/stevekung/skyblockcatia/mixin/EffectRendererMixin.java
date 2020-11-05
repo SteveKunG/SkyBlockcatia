@@ -13,7 +13,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 @Mixin(EffectRenderer.class)
-public abstract class EffectRendererMixin
+public class EffectRendererMixin
 {
     @Inject(method = "addBlockDestroyEffects(Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;)V", cancellable = true, at = @At("HEAD"))
     private void addBlockDestroyEffects(BlockPos pos, IBlockState state, CallbackInfo info)

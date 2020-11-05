@@ -11,7 +11,7 @@ import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
 
 @Mixin(RenderWither.class)
-public abstract class RenderWitherMixin
+public class RenderWitherMixin
 {
     @Redirect(method = "doRender(Lnet/minecraft/entity/boss/EntityWither;DDDFF)V", at = @At(value = "INVOKE", target = "net/minecraft/entity/boss/BossStatus.setBossStatus(Lnet/minecraft/entity/boss/IBossDisplayData;Z)V"))
     private void setBossStatus(IBossDisplayData displayData, boolean hasColorModifier)

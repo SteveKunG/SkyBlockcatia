@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin
+public class ItemStackMixin
 {
     @Shadow
     private NBTTagCompound stackTagCompound;

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.util.EnumFacing;
 
 @Mixin(TileEntitySkullRenderer.class)
-public abstract class TileEntitySkullRendererMixin
+public class TileEntitySkullRendererMixin
 {
     @Inject(method = "renderSkull(FFFLnet/minecraft/util/EnumFacing;FILcom/mojang/authlib/GameProfile;I)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.enableAlpha()V", shift = At.Shift.AFTER))
     private void renderPre(float x, float y, float z, EnumFacing facing, float netHeadYaw, int skullType, GameProfile profile, int destroyStage, CallbackInfo info)

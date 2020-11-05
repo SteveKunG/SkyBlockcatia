@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.event.HypixelEventHandler;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 @Mixin(ItemBlock.class)
-public abstract class ItemBlockMixin extends Item
+public class ItemBlockMixin
 {
     private static final ImmutableList<String> IGNORE_ITEM_USE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND", "FLOWER_OF_TRUTH");
 

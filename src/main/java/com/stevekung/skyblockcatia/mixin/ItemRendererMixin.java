@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.util.MathHelper;
 
 @Mixin(ItemRenderer.class)
-public abstract class ItemRendererMixin
+public class ItemRendererMixin
 {
     @Shadow
     @Final

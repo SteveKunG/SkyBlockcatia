@@ -14,7 +14,7 @@ import com.stevekung.skyblockcatia.utils.CommonUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 @Mixin(EntityPlayerSP.class)
-public abstract class EntityPlayerSPMixin
+public class EntityPlayerSPMixin
 {
     private final EntityPlayerSP that = (EntityPlayerSP) (Object) this;
 

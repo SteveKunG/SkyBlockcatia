@@ -28,7 +28,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(LayerCustomHead.class)
-public abstract class LayerCustomHeadMixin
+public class LayerCustomHeadMixin
 {
     private final ModelSkeletonHead humanoidHead = new ModelHumanoidHead();
 

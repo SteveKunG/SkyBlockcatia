@@ -20,7 +20,6 @@ import com.stevekung.skyblockcatia.utils.IEditSign;
 import com.stevekung.skyblockcatia.utils.ITradeGUI;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -30,7 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
 @Mixin(GuiScreen.class)
-public abstract class GuiScreenMixin extends Gui
+public class GuiScreenMixin
 {
     private final GuiScreen that = (GuiScreen) (Object) this;
     private static final List<String> IGNORE_TOOLTIPS = new ArrayList<>(Arrays.asList(" "));

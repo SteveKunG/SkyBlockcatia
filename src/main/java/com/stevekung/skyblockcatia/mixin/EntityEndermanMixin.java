@@ -9,7 +9,7 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityMob;
 
 @Mixin(EntityEnderman.class)
-public abstract class EntityEndermanMixin extends EntityMob
+public class EntityEndermanMixin extends EntityMob
 {
     private EntityEndermanMixin()
     {

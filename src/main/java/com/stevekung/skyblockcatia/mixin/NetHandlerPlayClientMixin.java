@@ -13,7 +13,7 @@ import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.server.S3APacketTabComplete;
 
 @Mixin(NetHandlerPlayClient.class)
-public abstract class NetHandlerPlayClientMixin
+public class NetHandlerPlayClientMixin
 {
     @Shadow
     private Minecraft gameController;

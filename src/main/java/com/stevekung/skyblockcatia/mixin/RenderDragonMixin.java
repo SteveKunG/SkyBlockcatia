@@ -14,7 +14,7 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.util.EnumChatFormatting;
 
 @Mixin(RenderDragon.class)
-public abstract class RenderDragonMixin
+public class RenderDragonMixin
 {
     @Inject(method = "doRender(Lnet/minecraft/entity/boss/EntityDragon;DDDFF)V", at = @At("HEAD"))
     private void setBossStatus(EntityDragon entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info)

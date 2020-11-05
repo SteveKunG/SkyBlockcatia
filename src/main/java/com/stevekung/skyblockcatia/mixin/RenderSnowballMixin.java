@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 
 @Mixin(RenderSnowball.class)
-public abstract class RenderSnowballMixin
+public class RenderSnowballMixin
 {
     private final RenderSnowball that = (RenderSnowball) (Object) this;
 

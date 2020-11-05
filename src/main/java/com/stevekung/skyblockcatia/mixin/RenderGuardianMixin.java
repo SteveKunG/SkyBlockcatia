@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.RenderGuardian;
 import net.minecraft.entity.monster.EntityGuardian;
 
 @Mixin(RenderGuardian.class)
-public abstract class RenderGuardianMixin
+public class RenderGuardianMixin
 {
     @Inject(method = "doRender(Lnet/minecraft/entity/monster/EntityGuardian;DDDFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.popMatrix()V", shift = At.Shift.BEFORE))
     private void render(EntityGuardian entity, double x, double y, double z, float entityYaw, float partialTicks, CallbackInfo info)

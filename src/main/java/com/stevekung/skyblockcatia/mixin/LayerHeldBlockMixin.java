@@ -16,7 +16,7 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.init.Blocks;
 
 @Mixin(LayerHeldBlock.class)
-public abstract class LayerHeldBlockMixin
+public class LayerHeldBlockMixin
 {
     @Redirect(method = "doRenderLayer(Lnet/minecraft/entity/monster/EntityEnderman;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/BlockRendererDispatcher.renderBlockBrightness(Lnet/minecraft/block/state/IBlockState;F)V"))
     private void changeSpecialZealotBlock(BlockRendererDispatcher blockrendererdispatcher, IBlockState state, float brightness)

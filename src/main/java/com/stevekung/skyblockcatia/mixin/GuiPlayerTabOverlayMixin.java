@@ -27,7 +27,6 @@ import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
@@ -36,7 +35,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
 
 @Mixin(GuiPlayerTabOverlay.class)
-public abstract class GuiPlayerTabOverlayMixin extends Gui
+public class GuiPlayerTabOverlayMixin
 {
     private int playerCount;
     private int pingWidth;
