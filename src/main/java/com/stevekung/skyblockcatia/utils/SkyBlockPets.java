@@ -216,7 +216,8 @@ public class SkyBlockPets
         WASHED_UP_SOUVENIR("WASHED-UP_SOUVENIR", EnumChatFormatting.GOLD),
         ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
-        DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE);
+        DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE),
+        SPOOKY_CUPCAKE(EnumChatFormatting.GREEN);
 
         private final String altName;
         private final EnumChatFormatting color;
