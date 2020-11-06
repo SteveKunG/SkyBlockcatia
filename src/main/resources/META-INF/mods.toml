@@ -6,7 +6,7 @@ license="MIT License"
 
 [[mods]]
 modId="skyblockcatia"
-version="2.0.0"
+version="2.0.1"
 displayName="SkyBlockcatia"
 description="Useful Hypixel Skyblock features, QOL and In-game API Viewer!"
 credits="Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible"
