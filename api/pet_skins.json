@@ -58,5 +58,41 @@
         "displayName": "§dTwilight Tiger",
         "uuid": "76dba2c8-4555-317e-b3f5-550d29427354",
         "texture": "896211dc599368dbd9056c0116ab61063991db793be93066a858eb4e9ce56438"
+    },
+    {
+        "skin": "SHEEP_PINK",
+        "displayName": "§aPink Sheep",
+        "uuid": "8899dc3a-c587-3d3e-8c1a-aa0fba9c38d5",
+        "texture": "afa7747684dcb96192d90342cea62742ec363da07cb5e6e25eecec888cd2076"
+    },
+    {
+        "skin": "SHEEP_PURPLE",
+        "displayName": "§aPurple Sheep",
+        "uuid": "98d9a319-e671-34a0-b1da-a912ef421fc9",
+        "texture": "99a88cf7dd33063587c6b540e6130abc5d07f1a65c47573ab3c1ad3ccec8857f"
+    },
+    {
+        "skin": "SHEEP_WHITE",
+        "displayName": "§aWhite Sheep",
+        "uuid": "354676d5-1529-327c-b06e-899b92132403",
+        "texture": "b92a1a5c325f25f7438a0abb4f86ba6cf75552d02c7349a7292981459b31d2f7"
+    },
+    {
+        "skin": "SHEEP_LIGHT_BLUE",
+        "displayName": "§aLight Blue Sheep",
+        "uuid": "5ee3925d-b768-331c-af39-d00e1363aa1f",
+        "texture": "722220de1a863bc5d9b9e7a6a3b03214c9f3d698ed3fe0d28220f3b93b7685c5"
+    },
+    {
+        "skin": "SHEEP_LIGHT_GREEN",
+        "displayName": "§aLime Sheep",
+        "uuid": "235159c0-4c38-356f-8a2b-519b15d03730",
+        "texture": "cf183ec2fe58faa43e568419b7a0dc446ece4ea0be52ec784c94e1d74b75939d"
+    },
+    {
+        "skin": "SHEEP_BLACK",
+        "displayName": "§aBlack Sheep",
+        "uuid": "a44786f8-b0f4-3e43-ad1b-64956113adec",
+        "texture": "aa9dcda642a807cd2daa4aa6be87cef96e08a8c8f5cec2657dda4266c6a884c2"
     }
 ]
