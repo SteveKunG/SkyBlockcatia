@@ -71,6 +71,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
+@SuppressWarnings("deprecation")
 public class SkyBlockEventHandler
 {
     private static final Pattern CUSTOM_FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-Z]");

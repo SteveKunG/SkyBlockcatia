@@ -143,7 +143,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
-    private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king", "nurse_shark", "blue_shark", "tiger_shark", "great_white_shark");
+    private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king", "nurse_shark", "blue_shark", "tiger_shark", "great_white_shark", "nightmare", "scarecrow", "werewolf", "phantom_fisherman", "grim_reaper");
     private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").put("dark_auction", "Dark Auction").build();
     private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold")
             .put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder")
@@ -1740,11 +1740,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             for (int skipped : skippedList)
             {
-                minionList.add(TextFormatting.RED + "" + skipped);
+                minionList.add(TextFormatting.RED.toString() + skipped);
             }
             for (int crafted : craftedList)
             {
-                minionList.add(TextFormatting.GREEN + "" + crafted);
+                minionList.add(TextFormatting.GREEN.toString() + crafted);
             }
 
             minionList.sort((text1, text2) -> new CompareToBuilder().append(Integer.parseInt(TextFormatting.getTextWithoutFormattingCodes(text1)), Integer.parseInt(TextFormatting.getTextWithoutFormattingCodes(text2))).build());
@@ -2242,9 +2242,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 ListNBT list = new ListNBT();
 
-                if (heldItem != null && heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST)
+                if (heldItem != null && (heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST || heldItem == SBPets.HeldItem.VAMPIRE_FANG))
                 {
-                    tier = SBPets.Tier.values()[Math.min(SBPets.Tier.values().length - 1, tier.ordinal() + 1)];
+                    tier = tier.getNextRarity();
                 }
 
                 SBPets.Info level = this.checkPetLevel(exp, tier);
@@ -2256,9 +2256,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setDisplayName(TextComponentUtils.component(TextFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.DARK_GRAY + type.getType().getName() + " Pet")));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.DARK_GRAY + type.getType().getName() + " Pet")));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson("")));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent()))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent()))));
 
                     if (level.getCurrentPetLevel() < 100)
                     {
@@ -2270,7 +2270,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     if (candyUsed > 0)
                     {
-                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10)));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.GRAY + "Candy Used: " + TextFormatting.YELLOW + candyUsed + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + 10)));
                     }
                     if (skin != null)
                     {
@@ -2285,7 +2285,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 break;
                             }
                         }
-                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName))));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName))));
                     }
                     if (heldItem != null)
                     {
@@ -2295,19 +2295,19 @@ public class SkyBlockAPIViewerScreen extends Screen
                         {
                             heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
                         }
-                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Held Item: " + heldItemName)));
+                        list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.GRAY + "Held Item: " + heldItemName)));
                     }
                     else
                     {
                         if (heldItemType != null)
                         {
-                            list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Held Item: " + TextFormatting.RED + heldItemType)));
+                            list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.GRAY + "Held Item: " + TextFormatting.RED + heldItemType)));
                         }
                     }
 
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson("")));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + "" + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp()))));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(rarity + "" + TextFormatting.BOLD + tier + " PET")));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.GRAY + "Total XP: " + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp()))));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(rarity.toString() + TextFormatting.BOLD + tier + " PET")));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     itemStack.getOrCreateChildTag("ExtraAttributes").putString("id", "PET");
                     itemStack.getTag().putBoolean("active", active);
@@ -2338,7 +2338,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     ItemStack itemStack = new ItemStack(Items.BONE);
                     itemStack.setDisplayName(TextComponentUtils.formatted(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), TextFormatting.RED));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RED + "" + TextFormatting.BOLD + "UNKNOWN PET")));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RED.toString() + TextFormatting.BOLD + "UNKNOWN PET")));
                     itemStack.getTag().getCompound("display").put("Lore", list);
                     petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Lists.newArrayList(itemStack)));
                     SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);

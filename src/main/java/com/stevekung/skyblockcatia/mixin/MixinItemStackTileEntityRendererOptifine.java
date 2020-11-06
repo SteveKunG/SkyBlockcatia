@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
-import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.model.GenericHeadModel;
@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(ItemStackTileEntityRenderer.class)
@@ -32,7 +33,14 @@ public class MixinItemStackTileEntityRendererOptifine
             matrixStack.push();
             matrixStack.translate(-0.5D, 0.0D, -0.5D);
 
-            ResourceLocation location = this.getDragonEyeTexture(itemStack.getTag().getCompound("ExtraAttributes").getString("id"));
+            CompoundNBT compound = itemStack.getTag().getCompound("ExtraAttributes");
+            String id = compound.getString("id");
+            ResourceLocation location = SBRenderUtils.getDragonEyeTexture(id);
+
+            if (compound.contains("skin"))
+            {
+                location = SBRenderUtils.getDragonSkinTexture(id, compound.getString("skin"));
+            }
 
             if (location != null)
             {
@@ -47,11 +55,5 @@ public class MixinItemStackTileEntityRendererOptifine
             }
             matrixStack.pop();
         }
-    }
-
-    private ResourceLocation getDragonEyeTexture(String id)
-    {
-        DragonType dragonType = DragonType.getDragonTypeById(id);
-        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/entity/" + (dragonType.isWhiteEye() ? "white_eye" : dragonType.getShortName()) + ".png") : null;
     }
 }

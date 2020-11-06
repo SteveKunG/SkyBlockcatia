@@ -9,7 +9,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
-import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 
 import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -33,8 +33,6 @@ import net.minecraft.util.ResourceLocation;
 @Mixin(HeadLayer.class)
 public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityModel<T> & IHasHead> extends LayerRenderer<T, M>
 {
-    private static final ResourceLocation DIVER = new ResourceLocation("skyblockcatia:textures/entity/diver_head.png");
-    private static final ResourceLocation SUPERIOR_BABY = new ResourceLocation("skyblockcatia:textures/entity/superior_baby.png");
     private final GenericHeadModel head = new HumanoidHeadModel();
 
     private MixinHeadLayer()
@@ -80,14 +78,11 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
 
                 CompoundNBT compound = itemStack.getTag().getCompound("ExtraAttributes");
                 String id = compound.getString("id");
-                ResourceLocation location = this.getDragonEyeTexture(id);
+                ResourceLocation location = SBRenderUtils.getDragonEyeTexture(id);
 
                 if (compound.contains("skin"))
                 {
-                    if (id.equals("SUPERIOR_DRAGON_HELMET") && compound.getString("skin").equals("SUPERIOR_BABY"))
-                    {
-                        location = SUPERIOR_BABY;
-                    }
+                    location = SBRenderUtils.getDragonSkinTexture(id, compound.getString("skin"));
                 }
 
                 if (location != null)
@@ -104,11 +99,5 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
             }
             matrixStack.pop();
         }
-    }
-
-    private ResourceLocation getDragonEyeTexture(String id)
-    {
-        DragonType dragonType = DragonType.getDragonTypeById(id);
-        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/entity/" + (dragonType.isWhiteEye() ? "white_eye" : dragonType.getShortName()) + ".png") : id.equals("DIVER_HELMET") ? DIVER : null;
     }
 }

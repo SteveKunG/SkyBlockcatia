@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.RenderUtils;
@@ -29,6 +30,15 @@ public class SBRenderUtils
     private static final ResourceLocation RARITY = new ResourceLocation("skyblockcatia:textures/gui/rarity.png");
     private static final Pattern PATTERN = Pattern.compile("(?<color>\\u00a7[0-9a-fk-or]).+");
     private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or]).+");
+
+    private static final ResourceLocation SUPERIOR_BABY = new ResourceLocation("skyblockcatia:textures/entity/superior_baby.png");
+    private static final ResourceLocation HOLY_BABY = new ResourceLocation("skyblockcatia:textures/entity/holy_baby.png");
+    private static final ResourceLocation OLD_BABY = new ResourceLocation("skyblockcatia:textures/entity/old_baby.png");
+    private static final ResourceLocation STRONG_BABY = new ResourceLocation("skyblockcatia:textures/entity/strong_baby.png");
+    private static final ResourceLocation PROTECTOR_BABY = new ResourceLocation("skyblockcatia:textures/entity/protector_baby.png");
+    private static final ResourceLocation UNSTABLE_BABY = new ResourceLocation("skyblockcatia:textures/entity/unstable_baby.png");
+    private static final ResourceLocation WISE_BABY = new ResourceLocation("skyblockcatia:textures/entity/wise_baby.png");
+    private static final ResourceLocation YOUNG_BABY = new ResourceLocation("skyblockcatia:textures/entity/young_baby.png");
 
     // Well, this is the best way to render rarity in 1.16 because TextFormatting on this version is sucks -.-
     public static void renderRarity(MatrixStack matrixStack, ItemStack itemStack, int xPos, int yPos)
@@ -234,6 +244,75 @@ public class SBRenderUtils
         }
 
         RenderSystem.disableScissor();
+    }
+
+    public static ResourceLocation getDragonEyeTexture(String id)
+    {
+        DragonType dragonType = DragonType.getDragonTypeById(id);
+        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/entity/" + (dragonType.isWhiteEye() ? "white_eye" : dragonType.getShortName()) + ".png") : null;
+    }
+
+    public static ResourceLocation getDragonSkinTexture(String id, String skin)
+    {
+        DragonType dragonType = DragonType.getDragonTypeById(id);
+
+        if (dragonType != null)
+        {
+            switch (dragonType)
+            {
+            case HOLY_DRAGON:
+                if (skin.equals("HOLY_BABY"))
+                {
+                    return HOLY_BABY;
+                }
+                break;
+            case OLD_DRAGON:
+                if (skin.equals("OLD_BABY"))
+                {
+                    return OLD_BABY;
+                }
+                break;
+            case PROTECTOR_DRAGON:
+                if (skin.equals("PROTECTOR_BABY"))
+                {
+                    return PROTECTOR_BABY;
+                }
+                break;
+            case STRONG_DRAGON:
+                if (skin.equals("STRONG_BABY"))
+                {
+                    return STRONG_BABY;
+                }
+                break;
+            case SUPERIOR_DRAGON:
+                if (skin.equals("SUPERIOR_BABY"))
+                {
+                    return SUPERIOR_BABY;
+                }
+                break;
+            case UNSTABLE_DRAGON:
+                if (skin.equals("UNSTABLE_BABY"))
+                {
+                    return UNSTABLE_BABY;
+                }
+                break;
+            case WISE_DRAGON:
+                if (skin.equals("WISE_BABY"))
+                {
+                    return WISE_BABY;
+                }
+                break;
+            case YOUNG_DRAGON:
+                if (skin.equals("YOUNG_BABY"))
+                {
+                    return YOUNG_BABY;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        return null;
     }
 
     private static void renderPetRarity(String displayName, ItemStack itemStack, MatrixStack matrixStack, int xPos, int yPos)

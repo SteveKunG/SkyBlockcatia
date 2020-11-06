@@ -1,6 +1,8 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.io.BufferedReader;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
@@ -29,10 +31,20 @@ public class SBPets
         UNCOMMON(ExpProgress.PET_UNCOMMON, TextFormatting.GREEN),
         RARE(ExpProgress.PET_RARE, TextFormatting.BLUE),
         EPIC(ExpProgress.PET_EPIC, TextFormatting.DARK_PURPLE),
-        LEGENDARY(ExpProgress.PET_LEGENDARY, TextFormatting.GOLD);
+        LEGENDARY(ExpProgress.PET_LEGENDARY, TextFormatting.GOLD),
+        MYTHIC(ExpProgress.PET_LEGENDARY, TextFormatting.LIGHT_PURPLE);
 
+        private static final Tier[] VALUES = Arrays.stream(values()).sorted(Comparator.comparingInt(Tier::ordinal)).toArray(size -> new Tier[size]);
         private final ExpProgress[] progression;
         private final TextFormatting color;
+
+        static
+        {
+            for (Tier rarity : values())
+            {
+                VALUES[rarity.ordinal()] = rarity;
+            }
+        }
 
         private Tier(ExpProgress[] progression, TextFormatting color)
         {
@@ -48,6 +60,11 @@ public class SBPets
         public TextFormatting getTierColor()
         {
             return this.color;
+        }
+
+        public Tier getNextRarity()
+        {
+            return VALUES[(this.ordinal() + 1) % VALUES.length];
         }
     }
 
@@ -164,7 +181,9 @@ public class SBPets
         WASHED_UP_SOUVENIR("WASHED-UP_SOUVENIR", TextFormatting.GOLD),
         ANTIQUE_REMEDIES(TextFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(TextFormatting.DARK_PURPLE),
-        DWARF_TURTLE_SHELMET(TextFormatting.BLUE);
+        DWARF_TURTLE_SHELMET(TextFormatting.BLUE),
+        SPOOKY_CUPCAKE(TextFormatting.GREEN),
+        VAMPIRE_FANG(TextFormatting.GOLD);
 
         private final String altName;
         private final TextFormatting color;
