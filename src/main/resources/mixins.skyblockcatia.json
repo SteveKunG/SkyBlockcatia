@@ -2,6 +2,7 @@
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
     "compatibilityLevel": "JAVA_8",
+    "plugin": "com.stevekung.skyblockcatia.plugin.SkyBlockcatiaMixinPlugin",
     "verbose": true,
     "mixins": [
         "EntityPlayerSPMixin",
@@ -50,6 +51,7 @@
         "LayerHeldBlockMixin",
         "EntityFirework_OverlayFXMixin",
         "ItemStackMixin",
-        "RenderSnowballMixin"
+        "RenderSnowballMixin",
+        "FontRendererHookMixin"
     ]
 }
