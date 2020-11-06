@@ -2,7 +2,7 @@
 
 * + Added Game Mode to displayed in API Viewer
 * + Added support for mythic pets
-* + Added Spooky Cupcake pet item in API Viewer
+* + Added Spooky Cupcake/Vampire Fang pet item in API Viewer
 * + Added Spooky Sea Creatures kill list in API Viewer
 * + Added more baby skin for Glowing Dragon Head
 * * Update slayer visual
