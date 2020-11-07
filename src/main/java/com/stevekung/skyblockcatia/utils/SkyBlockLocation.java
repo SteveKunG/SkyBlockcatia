@@ -12,6 +12,7 @@ public enum SkyBlockLocation
 
     // Public Island
     VILLAGE("Village", ImmutableList.of(BlockMetadata.create(Blocks.red_flower), BlockMetadata.create(Blocks.yellow_flower), BlockMetadata.create(Blocks.carrots), BlockMetadata.create(Blocks.potatoes), BlockMetadata.create(Blocks.wheat), BlockMetadata.create(Blocks.nether_wart))),
+    FARMHOUSE("Farmhouse", ImmutableList.of(BlockMetadata.create(Blocks.potatoes), BlockMetadata.create(Blocks.wheat), BlockMetadata.create(Blocks.nether_wart))),
     FARM("Farm", ImmutableList.of(BlockMetadata.create(Blocks.wheat))),
     COAL_MINE("Coal Mine", ImmutableList.of(BlockMetadata.create(Blocks.stone, 0), BlockMetadata.create(Blocks.cobblestone), BlockMetadata.create(Blocks.coal_ore))),
     FOREST("Forest", ImmutableList.of(BlockMetadata.create(Blocks.log), BlockMetadata.create(Blocks.leaves))),
@@ -70,6 +71,12 @@ public enum SkyBlockLocation
     THE_CATACOMBS_F2("The Catacombs (F2)"),
     THE_CATACOMBS_F3("The Catacombs (F3)"),
     THE_CATACOMBS_F4("The Catacombs (F4)"),
+    THE_CATACOMBS_F5("The Catacombs (F5)"),
+    THE_CATACOMBS_F6("The Catacombs (F6)"),
+    THE_CATACOMBS_F7("The Catacombs (F7)"),
+    THE_CATACOMBS_F8("The Catacombs (F8)"),
+    THE_CATACOMBS_F9("The Catacombs (F9)"),
+    THE_CATACOMBS_F10("The Catacombs (F10)"),
     ;
 
     private final String location;
