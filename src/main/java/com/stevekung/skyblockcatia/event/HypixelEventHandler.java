@@ -70,7 +70,7 @@ public class HypixelEventHandler
     private static final Pattern PET_CARE_PATTERN = Pattern.compile("\\u00a7r\\u00a7aI'm currently taking care of your \\u00a7r(?<pet>\\u00a7[0-9a-fk-or][\\w ]+)\\u00a7r\\u00a7a! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).\\u00a7r");
     private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("\\u00A7r +\\u00A7r\\u00A76\\u00A7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
     private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
-    private static final Pattern ESTIMATED_TIME_PATTERN = Pattern.compile("\\((?<time>\\d+d \\d+h \\d+m \\d+s)\\)");
+    private static final Pattern ESTIMATED_TIME_PATTERN = Pattern.compile("\\((?<time>(?:\\d+d ){0,1}(?:\\d+h ){0,1}(?:\\d+m ){0,1}(?:\\d+s)|(?:\\d+h))\\)");
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
@@ -858,11 +858,15 @@ public class HypixelEventHandler
                 {
                     HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starts in:", "Event starts at:");
                 }
+
+                if (!name.equals("SkyBlock Menu"))
+                {
+                    HypixelEventHandler.replaceEstimatedTime(lore, event.toolTip, i);
+                }
             }
 
             HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starting in:", "Starts at:");
             HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time left:", "Finished on:");
-            HypixelEventHandler.replaceEstimatedTime(lore, event.toolTip, i);
             HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Interest in: ");
             HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Until interest: ");
             HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, i, "Ends in: ");
@@ -1128,8 +1132,10 @@ public class HypixelEventHandler
 
         if (mat.find())
         {
+            lore = mat.group("time");
             Calendar calendar = Calendar.getInstance();
-            String[] timeEstimate = Arrays.stream(mat.group("time").split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
+            String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
+            boolean isHour = lore.endsWith("h");
 
             int dayF = 0;
             int hourF = 0;
@@ -1149,10 +1155,20 @@ public class HypixelEventHandler
             }
             else
             {
-                dayF = Integer.valueOf(timeEstimate[0]);
-                hourF = Integer.valueOf(timeEstimate[1]);
-                minuteF = Integer.valueOf(timeEstimate[2]);
-                secondF = Integer.valueOf(timeEstimate[3]);
+                if (timeEstimate.length == 1)
+                {
+                    if (isHour)
+                    {
+                        hourF = Integer.valueOf(timeEstimate[0]);
+                    }
+                }
+                else
+                {
+                    dayF = Integer.valueOf(timeEstimate[0]);
+                    hourF = Integer.valueOf(timeEstimate[1]);
+                    minuteF = Integer.valueOf(timeEstimate[2]);
+                    secondF = Integer.valueOf(timeEstimate[3]);
+                }
             }
 
             calendar.add(Calendar.DATE, dayF);
@@ -1160,6 +1176,12 @@ public class HypixelEventHandler
             calendar.add(Calendar.MINUTE, minuteF);
             calendar.add(Calendar.SECOND, secondF);
             String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ROOT).format(calendar.getTime());
+
+            if (timeEstimate.length == 1)
+            {
+                date1 = new SimpleDateFormat("EEEE h:00 a", Locale.ROOT).format(calendar.getTime());
+            }
+
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
 
             if (!GuiScreen.isShiftKeyDown())
