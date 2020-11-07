@@ -2,9 +2,7 @@ package com.stevekung.skyblockcatia.mixin;
 
 import java.util.Deque;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import club.sk1er.patcher.hooks.FontRendererHook;
 import club.sk1er.patcher.util.enhancement.text.CachedString;
 import club.sk1er.patcher.util.hash.StringHash;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 
 @Mixin(value = FontRendererHook.class, remap = false)
@@ -25,10 +22,6 @@ public abstract class FontRendererHookMixin
     private int greenN;
     private int blueN;
     private static final int MARKER = 59136;
-
-    @Shadow
-    @Final
-    private FontRenderer fontRenderer;
 
     @Inject(method = "renderStringAtPos(Ljava/lang/String;Z)Z", remap = false, cancellable = true, at = @At(value = "INVOKE", remap = false, target = "java/lang/String.charAt(I)C", shift = Shift.AFTER, ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void renderStringAtPos(String text, boolean shadow, CallbackInfoReturnable info,
