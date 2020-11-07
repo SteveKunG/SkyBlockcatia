@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.lwjgl.input.Keyboard;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -29,9 +31,11 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.scoreboard.Score;
@@ -122,6 +126,22 @@ public class HypixelEventHandler
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
+        if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F7))
+        {
+            if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer)
+            {
+                GuiContainer container = (GuiContainer)this.mc.currentScreen;
+                Slot slot = container.getSlotUnderMouse();
+
+                if (slot != null && slot.getHasStack())
+                {
+                    ItemStack itemStack = slot.getStack();
+                    GuiScreen.setClipboardString("/give @p " + itemStack.getItem().getRegistryName() + " " + 1 + " " + itemStack.getItemDamage() + " " + itemStack.getTagCompound());
+                    ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied item data!");
+                }
+            }
+        }
+
         if (this.mc.thePlayer != null)
         {
             if (event.phase == TickEvent.Phase.START)
