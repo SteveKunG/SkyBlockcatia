@@ -62,7 +62,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 public class HypixelEventHandler
 {
-    private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/']");
+    private static final Pattern LETTERS_NUMBERS = Pattern.compile("[^a-z A-Z:0-9/'()]");
     private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + HypixelEventHandler.UUID_PATTERN_STRING + ")");
