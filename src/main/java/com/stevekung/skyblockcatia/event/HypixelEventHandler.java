@@ -1,7 +1,9 @@
 package com.stevekung.skyblockcatia.event;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -762,102 +764,107 @@ public class HypixelEventHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemTooltip(ItemTooltipEvent event)
     {
-        if (!HypixelEventHandler.isSkyBlock)
-        {
-            return;
-        }
-
-        List<String> dates = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
+        ItemStack itemStack = event.itemStack;
 
-        try
+        if (itemStack.hasTagCompound())
         {
-            if (event.itemStack.hasTagCompound())
+            NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
+            ModDecimalFormat format = new ModDecimalFormat("#,###.#");
+            int insertAt = event.toolTip.size();
+            insertAt--; // rarity
+
+            if (this.mc.gameSettings.advancedItemTooltips)
             {
-                NBTTagCompound extraAttrib = event.itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
-                int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
-                ModDecimalFormat format = new ModDecimalFormat("#,###.#");
+                insertAt -= 2; // item name + nbt
 
-                if (ExtendedConfig.instance.showObtainedDate && extraAttrib.hasKey("timestamp"))
+                if (itemStack.isItemDamaged())
                 {
-                    DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
-                    Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
-                    String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
-                    event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.GRAY + "Obtained: " + EnumChatFormatting.RESET + formatted);
+                    insertAt--; // 1 damage
                 }
-                if (ExtendedConfig.instance.bazaarOnTooltips)
+            }
+
+            if (ExtendedConfig.instance.showObtainedDate && extraAttrib.hasKey("timestamp"))
+            {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[MM/dd/yy h:mm a][M/dd/yy h:mm a][M/d/yy h:mm a]", Locale.ENGLISH);
+                LocalDateTime datetime = LocalDateTime.parse(extraAttrib.getString("timestamp"), formatter);
+                Date convertedDatetime = Date.from(datetime.atZone(ZoneId.systemDefault()).toInstant());
+                String formatted = new SimpleDateFormat("d MMMM yyyy h:mm aa", Locale.ROOT).format(convertedDatetime);
+                event.toolTip.add(insertAt++, EnumChatFormatting.GRAY + "Obtained: " + EnumChatFormatting.RESET + formatted);
+            }
+            if (ExtendedConfig.instance.bazaarOnTooltips)
+            {
+                for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                 {
-                    for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
+                    BazaarData.Product product = entry.getValue().getProduct();
+
+                    if (extraAttrib.getString("id").equals(entry.getKey()))
                     {
-                        BazaarData.Product product = entry.getValue().getProduct();
-
-                        if (extraAttrib.getString("id").equals(entry.getKey()))
+                        if (ClientUtils.isShiftKeyDown())
                         {
-                            if (ClientUtils.isShiftKeyDown())
+                            if (StringUtils.isNullOrEmpty(ConfigManagerIN.hypixelApiKey))
                             {
-                                if (StringUtils.isNullOrEmpty(ConfigManagerIN.hypixelApiKey))
-                                {
-                                    event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.RED + "Couldn't get bazaar data, Empty text in the Config!");
-                                }
-                                else if (!ConfigManagerIN.hypixelApiKey.matches(HypixelEventHandler.UUID_PATTERN_STRING))
-                                {
-                                    event.toolTip.add(event.toolTip.size() - toAdd, EnumChatFormatting.RED + "Invalid UUID for Hypixel API Key!");
-                                }
-                                else
-                                {
-                                    double buyStack = 64 * product.getBuyPrice();
-                                    double sellStack = 64 * product.getSellPrice();
-                                    double buyCurrent = event.itemStack.stackSize * product.getBuyPrice();
-                                    double sellCurrent = event.itemStack.stackSize * product.getSellPrice();
-                                    event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(buyStack) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellStack) + " coins");
-
-                                    if (event.itemStack.stackSize > 1 && event.itemStack.stackSize < 64)
-                                    {
-                                        event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(buyCurrent) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellCurrent) + " coins");
-                                    }
-
-                                    event.toolTip.add(event.toolTip.size() - toAdd, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
-                                    event.toolTip.add(event.toolTip.size() - toAdd, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
-                                }
+                                event.toolTip.add(insertAt++, EnumChatFormatting.RED + "Couldn't get bazaar data, Empty text in the Config!");
+                            }
+                            else if (!ConfigManagerIN.hypixelApiKey.matches(HypixelEventHandler.UUID_PATTERN_STRING))
+                            {
+                                event.toolTip.add(insertAt++, EnumChatFormatting.RED + "Invalid UUID for Hypixel API Key!");
                             }
                             else
                             {
-                                event.toolTip.add(event.toolTip.size() - toAdd, "Press <SHIFT> to view Bazaar Buy/Sell");
+                                double buyStack = 64 * product.getBuyPrice();
+                                double sellStack = 64 * product.getSellPrice();
+                                double buyCurrent = itemStack.stackSize * product.getBuyPrice();
+                                double sellCurrent = itemStack.stackSize * product.getSellPrice();
+                                event.toolTip.add(insertAt++, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(buyStack) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellStack) + " coins");
+
+                                if (itemStack.stackSize > 1 && itemStack.stackSize < 64)
+                                {
+                                    event.toolTip.add(insertAt++, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(buyCurrent) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellCurrent) + " coins");
+                                }
+
+                                event.toolTip.add(insertAt++, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
+                                event.toolTip.add(insertAt++, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
                             }
+                        }
+                        else
+                        {
+                            event.toolTip.add(insertAt++, "Press <SHIFT> to view Bazaar Buy/Sell");
                         }
                     }
                 }
             }
-            for (String tooltip : event.toolTip)
-            {
-                String lore = EnumChatFormatting.getTextWithoutFormattingCodes(tooltip);
-
-                if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiChest)
-                {
-                    GuiChest chest = (GuiChest)this.mc.currentScreen;
-                    String name = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-
-                    if (name.equals("Community Shop"))
-                    {
-                        HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Starts in: ", "Starts at: ");
-                    }
-                    else
-                    {
-                        HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Starts in: ", "Event starts at: ");
-                    }
-                }
-
-                HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Starting in: ", "Event starts at: ");
-
-                HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, dates, "Interest in: ");
-                HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, dates, "Until interest: ");
-
-                HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, dates, "Ends in: ");
-
-                HypixelEventHandler.replaceEstimateTime(lore, calendar, event.toolTip, dates, "Time left: ", "Ends at: ");
-            }
         }
-        catch (Exception e) {}
+
+        for (int i = 0; i < event.toolTip.size(); i++)
+        {
+            String lore = EnumChatFormatting.getTextWithoutFormattingCodes(event.toolTip.get(i));
+
+            if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiChest)
+            {
+                GuiChest chest = (GuiChest)this.mc.currentScreen;
+                String name = chest.lowerChestInventory.getDisplayName().getUnformattedText();
+
+                if (name.equals("SkyBlock Menu"))
+                {
+                    HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Ends in:", "Ends at:");
+                }
+                else if (name.equals("Community Shop"))
+                {
+                    HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starts in:", "Starts at:");
+                }
+                else
+                {
+                    HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starts in:", "Event starts at:");
+                }
+            }
+
+            HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starting in:", "Starts at:");
+            HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time left:", "Ends at:");
+            HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Interest in: ");
+            HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Until interest: ");
+            HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, i, "Ends in: ");
+        }
     }
 
     @SubscribeEvent
@@ -1055,12 +1062,18 @@ public class HypixelEventHandler
         CommonUtils.runAsync(() -> HUDRenderEventHandler.INSTANCE.getToastGui().add(new VisitIslandToast(name)));
     }
 
-    private static void replaceEstimateTime(String lore, Calendar calendar, List<String> tooltip, List<String> dates, String replacedText, String newText)
+    private static void replaceText(String lore, Calendar calendar, List<String> tooltip, int i, String startWith, String newText)
     {
-        if (lore.startsWith(replacedText))
+        if (lore.startsWith(startWith))
         {
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^a-zA-Z0-9 ]|^[a-zA-Z ]+", "");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
+
+            for (int j = 0; j < timeEstimate.length; j++)
+            {
+                timeEstimate[j] = timeEstimate[j].replaceAll("[^0-9]+", "");
+            }
+
             int dayF = 0;
             int hourF = 0;
             int minuteF = 0;
@@ -1091,34 +1104,30 @@ public class HypixelEventHandler
             calendar.add(Calendar.SECOND, secondF);
             String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ROOT).format(calendar.getTime());
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
-            dates.add(newText);
-            dates.add(EnumChatFormatting.YELLOW + date1);
-            dates.add(EnumChatFormatting.YELLOW + date2);
+            List<String> newStrings = Lists.newArrayList();
+            newStrings.add(newText);
+            newStrings.add(EnumChatFormatting.YELLOW + date1);
+            newStrings.add(EnumChatFormatting.YELLOW + date2);
 
-            int indexToRemove = 0;
-
-            for (int i = 0; i < tooltip.size(); i++)
-            {
-                if (tooltip.get(i).contains(replacedText))
-                {
-                    indexToRemove = i;
-                }
-            }
             if (!GuiScreen.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, "Press <SHIFT> to view exact time");
+                tooltip.add(i + 1, "Press <SHIFT> to view exact time");
             }
             else
             {
-                tooltip.remove(indexToRemove);
-                tooltip.addAll(indexToRemove, dates);
+                tooltip.remove(i);
+
+                for (String text : newStrings)
+                {
+                    tooltip.add(i++, text);
+                }
             }
         }
     }
 
-    private static void replaceBankInterestTime(String lore, Calendar calendar, List<String> tooltip, List<String> dates, String replacedText)
+    private static void replaceBankInterestTime(String lore, Calendar calendar, List<String> tooltip, int i, String startWith)
     {
-        if (lore.startsWith(replacedText))
+        if (lore.startsWith(startWith))
         {
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^0-9]+", " ");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
@@ -1153,37 +1162,32 @@ public class HypixelEventHandler
             }
 
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
-            dates.add("Interest receive at: ");
-            dates.add(EnumChatFormatting.YELLOW + date1);
-            dates.add(EnumChatFormatting.YELLOW + date2);
+            List<String> newStrings = Lists.newArrayList();
+            newStrings.add("Interest receive at: ");
+            newStrings.add(EnumChatFormatting.YELLOW + date1);
+            newStrings.add(EnumChatFormatting.YELLOW + date2);
 
-            int indexToRemove = 0;
-
-            for (int i = 0; i < tooltip.size(); i++)
-            {
-                if (tooltip.get(i).contains(replacedText))
-                {
-                    indexToRemove = i;
-                    break;
-                }
-            }
             if (!GuiScreen.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, "Press <SHIFT> to view exact time");
+                tooltip.add(i + 1, "Press <SHIFT> to view exact time");
             }
             else
             {
-                tooltip.remove(indexToRemove);
-                tooltip.addAll(indexToRemove, dates);
+                tooltip.remove(i);
+
+                for (String text : newStrings)
+                {
+                    tooltip.add(i++, text);
+                }
             }
         }
     }
 
-    private static void replaceAuctionTime(String lore, Calendar calendar, List<String> tooltip, List<String> dates, String replacedText)
+    private static void replaceAuctionTime(String lore, Calendar calendar, List<String> tooltip, int i, String startWith)
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (lore.startsWith(replacedText))
+        if (lore.startsWith(startWith))
         {
             boolean isDay = lore.endsWith("d");
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^0-9]+", " ");
@@ -1192,6 +1196,7 @@ public class HypixelEventHandler
             int hourF = 0;
             int minuteF = 0;
             int secondF = 0;
+            List<String> newStrings = Lists.newArrayList();
 
             if (timeEstimate.length == 1)
             {
@@ -1236,34 +1241,28 @@ public class HypixelEventHandler
 
                 if (name.equals("Auction View"))
                 {
-                    dates.add("Ends at: " + EnumChatFormatting.YELLOW + date1 + ", " + date2);
+                    newStrings.add("Ends at: " + EnumChatFormatting.YELLOW + date1 + ", " + date2);
                 }
                 else
                 {
-                    dates.add("Ends at: ");
-                    dates.add(EnumChatFormatting.YELLOW + date1);
-                    dates.add(EnumChatFormatting.YELLOW + date2);
+                    newStrings.add("Ends at: ");
+                    newStrings.add(EnumChatFormatting.YELLOW + date1);
+                    newStrings.add(EnumChatFormatting.YELLOW + date2);
                 }
             }
 
-            int indexToRemove = 0;
-
-            for (int i = 0; i < tooltip.size(); i++)
-            {
-                if (tooltip.get(i).contains(replacedText))
-                {
-                    indexToRemove = i;
-                    break;
-                }
-            }
             if (!GuiScreen.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, "Press <SHIFT> to view exact time");
+                tooltip.add(i + 1, "Press <SHIFT> to view exact time");
             }
             else
             {
-                tooltip.remove(indexToRemove);
-                tooltip.addAll(indexToRemove, dates);
+                tooltip.remove(i);
+
+                for (String text : newStrings)
+                {
+                    tooltip.add(i++, text);
+                }
             }
         }
     }
