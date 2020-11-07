@@ -293,7 +293,7 @@ public class MainEventHandler
                     }
                 }
 
-                if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser"))
+                if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser") || lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Auctions:"))
                 {
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                     event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));

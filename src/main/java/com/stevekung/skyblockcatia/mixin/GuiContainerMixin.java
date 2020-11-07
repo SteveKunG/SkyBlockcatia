@@ -829,7 +829,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     private boolean isAuctionBrowser(IInventory lowerChestInventory)
     {
         String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.equals("Auctions Browser") || name.endsWith("'s Auctions");
+        return name.equals("Auctions Browser") || name.startsWith("Auctions:") || name.endsWith("'s Auctions");
     }
 
     private boolean isRenderBids(IInventory lowerChestInventory)
