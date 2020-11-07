@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

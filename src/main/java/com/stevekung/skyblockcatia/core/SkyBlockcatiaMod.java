@@ -23,12 +23,8 @@ import com.stevekung.skyblockcatia.gui.api.PlayerStatsBonus;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.*;
 
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.init.Items;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -109,13 +105,6 @@ public class SkyBlockcatiaMod
         ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingHandler.init();
         CHECKER = new VersionChecker(INSTANCE, "SkyBlockcatia", URL);
-
-        if (ConfigManagerIN.enableOldFishingRodRenderModel)
-        {
-            ModelLoader.setCustomModelResourceLocation(Items.fishing_rod, 0, new ModelResourceLocation("skyblockcatia:fishing_rod", "inventory"));
-            ModelBakery.registerItemVariants(Items.fishing_rod, new ModelResourceLocation("skyblockcatia:fishing_rod_cast", "inventory"));
-            LoggerIN.info("Successfully replacing vanilla Fishing Rod item model");
-        }
 
         CommonUtils.registerEventHandler(this);
         CommonUtils.registerEventHandler(new MainEventHandler());

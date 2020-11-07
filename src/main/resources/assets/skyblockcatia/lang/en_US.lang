@@ -14,7 +14,6 @@ gui.config.skyblockcatia.additional_blockhit_animation=When Eating/Blocking/Bowi
 gui.config.skyblockcatia.transparent_skull_render=Same as alternate player model but this is for Skull.
 gui.config.skyblockcatia.custom_server_selection=Show response time as number instead and improved server info.
 gui.config.skyblockcatia.confirm_to_disconnect=This will display confirmation screen if you want to disconnect from the server.
-gui.config.skyblockcatia.old_fishing_rod=Replaced vanilla fishing line and fishing rod model rendering.
 gui.config.skyblockcatia.movement_handler=Enable this to use Toggle Sprint/Sneak. Disable if it conflict with other mods.
 gui.config.skyblockcatia.overwrite_sign_editing=Enable this will overwrite current sign editing functionally to use 1.14 system.
 

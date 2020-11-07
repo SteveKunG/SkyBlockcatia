@@ -34,7 +34,6 @@ public class ConfigManagerIN
     public static boolean enableSkinRenderingFix;
     public static boolean disableHurtCameraEffect;
     public static boolean enableShortcutGameButton;
-    public static boolean enableOldFishingRodRenderModel;
     public static boolean enable1_15ArmorEnchantedGlint;
     public static boolean enableMovementHandler;
     public static boolean enableEnchantedGlintForSkull;
@@ -137,11 +136,6 @@ public class ConfigManagerIN
 
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Shortcut Game Button", true);
         ConfigManagerIN.enableShortcutGameButton = prop.getBoolean();
-        propOrder.add(prop.getName());
-
-        prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable Old Fishing Rod render model", false).setRequiresMcRestart(true);
-        prop.comment = LangUtils.translate("gui.config.skyblockcatia.old_fishing_rod");
-        ConfigManagerIN.enableOldFishingRodRenderModel = prop.getBoolean();
         propOrder.add(prop.getName());
 
         prop = ConfigManagerIN.getProperty(ConfigManagerIN.MAIN_SETTINGS, "Enable 1.15 Armor Enchanted Glint", false);
