@@ -70,6 +70,7 @@ public class HypixelEventHandler
     private static final Pattern PET_CARE_PATTERN = Pattern.compile("\\u00a7r\\u00a7aI'm currently taking care of your \\u00a7r(?<pet>\\u00a7[0-9a-fk-or][\\w ]+)\\u00a7r\\u00a7a! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).\\u00a7r");
     private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("\\u00A7r +\\u00A7r\\u00A76\\u00A7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
     private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
+    private static final Pattern ESTIMATED_TIME_PATTERN = Pattern.compile("\\((?<time>\\d+d \\d+h \\d+m \\d+s)\\)");
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
@@ -860,7 +861,8 @@ public class HypixelEventHandler
             }
 
             HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starting in:", "Starts at:");
-            HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time left:", "Ends at:");
+            HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time left:", "Finished on:");
+            HypixelEventHandler.replaceEstimatedTime(lore, event.toolTip, i);
             HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Interest in: ");
             HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Until interest: ");
             HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, i, "Ends in: ");
@@ -1069,11 +1071,6 @@ public class HypixelEventHandler
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^a-zA-Z0-9 ]|^[a-zA-Z ]+", "");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
 
-            for (int j = 0; j < timeEstimate.length; j++)
-            {
-                timeEstimate[j] = timeEstimate[j].replaceAll("[^0-9]+", "");
-            }
-
             int dayF = 0;
             int hourF = 0;
             int minuteF = 0;
@@ -1121,6 +1118,57 @@ public class HypixelEventHandler
                 {
                     tooltip.add(i++, text);
                 }
+            }
+        }
+    }
+
+    private static void replaceEstimatedTime(String lore, List<String> tooltip, int i)
+    {
+        Matcher mat = ESTIMATED_TIME_PATTERN.matcher(lore);
+
+        if (mat.find())
+        {
+            Calendar calendar = Calendar.getInstance();
+            String[] timeEstimate = Arrays.stream(mat.group("time").split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
+
+            int dayF = 0;
+            int hourF = 0;
+            int minuteF = 0;
+            int secondF = 0;
+
+            if (timeEstimate.length == 2)
+            {
+                minuteF = Integer.valueOf(timeEstimate[0]);
+                secondF = Integer.valueOf(timeEstimate[1]);
+            }
+            else if (timeEstimate.length == 3)
+            {
+                hourF = Integer.valueOf(timeEstimate[0]);
+                minuteF = Integer.valueOf(timeEstimate[1]);
+                secondF = Integer.valueOf(timeEstimate[2]);
+            }
+            else
+            {
+                dayF = Integer.valueOf(timeEstimate[0]);
+                hourF = Integer.valueOf(timeEstimate[1]);
+                minuteF = Integer.valueOf(timeEstimate[2]);
+                secondF = Integer.valueOf(timeEstimate[3]);
+            }
+
+            calendar.add(Calendar.DATE, dayF);
+            calendar.add(Calendar.HOUR, hourF);
+            calendar.add(Calendar.MINUTE, minuteF);
+            calendar.add(Calendar.SECOND, secondF);
+            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ROOT).format(calendar.getTime());
+            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
+
+            if (!GuiScreen.isShiftKeyDown())
+            {
+                tooltip.add(i + 1, "Press <SHIFT> to view exact time");
+            }
+            else
+            {
+                tooltip.add(i + 1, date2 + " " + date1);
             }
         }
     }
