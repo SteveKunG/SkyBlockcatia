@@ -835,7 +835,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     private boolean isRenderBids(IInventory lowerChestInventory)
     {
         String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.equals("Auctions Browser") || name.equals("Manage Auctions") || name.equals("Your Bids") || name.endsWith("'s Auctions");
+        return name.equals("Auctions Browser") || name.startsWith("Auctions:") || name.equals("Manage Auctions") || name.equals("Your Bids") || name.endsWith("'s Auctions");
     }
 
     private boolean isPeopleAuction(IInventory lowerChestInventory)
