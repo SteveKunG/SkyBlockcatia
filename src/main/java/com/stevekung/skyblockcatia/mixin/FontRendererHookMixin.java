@@ -23,7 +23,7 @@ public abstract class FontRendererHookMixin
     private int blueN;
     private static final int MARKER = 59136;
 
-    @Inject(method = "renderStringAtPos(Ljava/lang/String;Z)Z", remap = false, cancellable = true, at = @At(value = "INVOKE", remap = false, target = "java/lang/String.charAt(I)C", shift = Shift.AFTER, ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "renderStringAtPos(Ljava/lang/String;Z)Z", remap = false, at = @At(value = "INVOKE", remap = false, target = "java/lang/String.charAt(I)C", shift = Shift.AFTER, ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void renderStringAtPos(String text, boolean shadow, CallbackInfoReturnable info,
             int list, float posX, float posY, float red, float green, float blue, float alpha, StringHash hash, GlStateManager.TextureState textureStates[], int activeTextureUnit, GlStateManager.TextureState textureState, boolean cacheFontData, CachedString cachedString, boolean obfuscated, CachedString value, int colorCode[], Deque underline, Deque strikeThough, int messageChar)
     {

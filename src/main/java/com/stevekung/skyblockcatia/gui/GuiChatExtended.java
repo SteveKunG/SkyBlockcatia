@@ -261,12 +261,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                         if (!StringUtils.isNullOrEmpty(command.getUUID()))
                         {
                             String texture = command.getTexture();
-
-                            if (texture.matches("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$"))
-                            {
-                                texture = RenderUtils.decodeTextureURL(texture);
-                            }
-
                             skull = RenderUtils.getSkullItemStack(command.getUUID(), texture);
                         }
                         gameBtn.add(new GuiButtonCustomize(width, command.getName(), command.getCommand(), command.isMinigame(), skull));
