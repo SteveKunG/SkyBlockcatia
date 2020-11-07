@@ -1,4 +1,4 @@
-package com.stevekung.skyblockcatia.mixin;
+package com.stevekung.skyblockcatia.mixin.patcher;
 
 import java.util.Deque;
 

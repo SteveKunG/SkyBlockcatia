@@ -21,7 +21,7 @@ import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 import net.minecraft.client.gui.FontRenderer;
 
 @Mixin(FontRenderer.class)
-public abstract class ColoredFontRendererMixin
+public abstract class FontRendererMixin
 {
     private boolean dropShadow;
     private int state;
