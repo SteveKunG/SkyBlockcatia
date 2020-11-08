@@ -218,7 +218,7 @@ public class SkyBlockPets
         CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
         DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE),
         SPOOKY_CUPCAKE(EnumChatFormatting.GREEN),
-        VAMPIRE_FANG(EnumChatFormatting.GOLD);
+        PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD);
 
         private final String altName;
         private final EnumChatFormatting color;

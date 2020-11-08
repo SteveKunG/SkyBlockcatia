@@ -2592,7 +2592,7 @@ public class GuiSkyBlockData extends GuiScreen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 NBTTagList list = new NBTTagList();
 
-                if (heldItem != null && (heldItem == SkyBlockPets.HeldItem.PET_ITEM_TIER_BOOST || heldItem == SkyBlockPets.HeldItem.VAMPIRE_FANG))
+                if (heldItem != null && (heldItem == SkyBlockPets.HeldItem.PET_ITEM_TIER_BOOST || heldItem == SkyBlockPets.HeldItem.PET_ITEM_VAMPIRE_FANG))
                 {
                     tier = tier.getNextRarity();
                 }
