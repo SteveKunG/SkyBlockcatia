@@ -2539,11 +2539,6 @@ public class GuiSkyBlockData extends GuiScreen
         }
 
         JsonArray pets = petsObj.getAsJsonArray();
-        int commonScore = 0;
-        int uncommonScore = 0;
-        int rareScore = 0;
-        int epicScore = 0;
-        int legendaryScore = 0;
 
         if (pets.size() > 0)
         {
@@ -2664,19 +2659,22 @@ public class GuiSkyBlockData extends GuiScreen
                     switch (tier)
                     {
                     case COMMON:
-                        commonScore += 1;
+                        this.petScore += 1;
                         break;
                     case UNCOMMON:
-                        uncommonScore += 2;
+                        this.petScore += 2;
                         break;
                     case RARE:
-                        rareScore += 3;
+                        this.petScore += 3;
                         break;
                     case EPIC:
-                        epicScore += 4;
+                        this.petScore += 4;
                         break;
                     case LEGENDARY:
-                        legendaryScore += 5;
+                        this.petScore += 5;
+                        break;
+                    case MYTHIC:
+                        this.petScore += 6;
                         break;
                     default:
                         break;
@@ -2699,7 +2697,6 @@ public class GuiSkyBlockData extends GuiScreen
             }
         }
         SKYBLOCK_INV.add(new SkyBlockInventory(petItem, SkyBlockInventoryTabs.PET));
-        this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
     private PetLevel checkPetLevel(double petExp, SkyBlockPets.Tier tier)
