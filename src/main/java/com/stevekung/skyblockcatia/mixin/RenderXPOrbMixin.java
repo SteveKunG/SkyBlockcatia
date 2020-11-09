@@ -7,11 +7,12 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderXPOrb;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.util.MathHelper;
 
 @Mixin(RenderXPOrb.class)
-public abstract class RenderXPOrbMixin extends Render<EntityXPOrb>
+public abstract class RenderXPOrbMixin extends Render<Entity>
 {
     private RenderXPOrbMixin()
     {
@@ -20,13 +21,13 @@ public abstract class RenderXPOrbMixin extends Render<EntityXPOrb>
 
     @Override
     @Overwrite
-    public void doRender(EntityXPOrb entity, double x, double y, double z, float entityYaw, float partialTicks)
+    public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         GlStateManager.pushMatrix();
         GlStateManager.translate((float)x, (float)y, (float)z);
         this.bindEntityTexture(entity);
         RenderHelper.enableStandardItemLighting();
-        int i = entity.getTextureByXP();
+        int i = ((EntityXPOrb)entity).getTextureByXP();
         float f = (i % 4 * 16 + 0) / 64.0F;
         float f1 = (i % 4 * 16 + 16) / 64.0F;
         float f2 = (i / 4 * 16 + 0) / 64.0F;
@@ -36,7 +37,7 @@ public abstract class RenderXPOrbMixin extends Render<EntityXPOrb>
         int l = j / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, k, l);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        float f9 = (entity.xpColor + partialTicks) / 2.0F;
+        float f9 = (((EntityXPOrb)entity).xpColor + partialTicks) / 2.0F;
         l = (int)((MathHelper.sin(f9 + 0.0F) + 1.0F) * 0.5F * 255.0F);
         int j1 = (int)((MathHelper.sin(f9 + 4.1887903F) + 1.0F) * 0.1F * 255.0F);
         GlStateManager.translate(0.0F, 0.1F, 0.0F);

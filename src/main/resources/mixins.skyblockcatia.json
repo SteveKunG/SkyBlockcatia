@@ -1,9 +1,11 @@
 {
+	"required": true,
+	"minVersion": "0.7.11",
+	"compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
-    "compatibilityLevel": "JAVA_8",
+    "target": "@env(DEFAULT)",
     "plugin": "com.stevekung.skyblockcatia.plugin.SkyBlockcatiaMixinPlugin",
-    "verbose": true,
     "mixins": [
 		"BlockMixin",
 		"EffectRendererMixin",
@@ -53,5 +55,8 @@
 		"TileEntitySkullRendererMixin",
 		"debug.ChatAllowedCharactersMixin",
 		"patcher.FontRendererHookMixin"
-    ]
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
 }

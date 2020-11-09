@@ -42,18 +42,12 @@ minecraft {
 }
 
 configurations {
-    provided
-    compile.extendsFrom(provided)
+    embed
+    implementation.extendsFrom(embed)
 }
 
 dependencies {
-    provided("org.spongepowered:mixin:0.6.4-SNAPSHOT") {
-        exclude module: "launchwrapper"
-        exclude module: "guava"
-        exclude module: "gson"
-        exclude module: "commons-io"
-        exclude module: "log4j-core"
-    }
+    embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") { transitive = false }
     compileOnly files("libs/SkyblockAddons.jar")
 }
 
@@ -68,24 +62,27 @@ repositories {
     }
 }
 
+sourceSets {
+    main {
+        ext.refMap = "mixins.skyblockcatia.refmap.json"
+    }
+}
+
 jar {
-    from(configurations.provided.asFileTree.files.collect { it.isDirectory() ? it : zipTree(it) }) {
+    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }) {
         exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
     }
-    manifest.attributes(
-            "FMLAT": "skyblockcatia_at.cfg",
-            "MixinConfigs": "mixins.skyblockcatia.json",
-            "TweakOrder": "0",
-            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
-    )
+    manifest {
+        attributes("FMLAT": "skyblockcatia_at.cfg",
+                   "FMLCorePluginContainsFMLMod": "true",
+                   "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+                   "MixinConfigs": "mixins.skyblockcatia.json",
+                   "ForceLoadAsMod": "true"
+        )
+    }
     exclude "test/**"
     exclude "club/**"
     baseName = "SkyBlockcatia-" + mcVersion
-}
-
-mixin {
-    defaultObfuscationEnv searge
-    add sourceSets.main, "mixins.skyblockcatia.refmap.json"
 }
 
 task sourcesJar(type: Jar) {
@@ -97,15 +94,17 @@ task sourcesJar(type: Jar) {
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    from(configurations.provided.asFileTree.files.collect { it.isDirectory() ? it : zipTree(it) }) {
+    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }) {
         exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
     }
-    manifest.attributes(
-            "FMLAT": "skyblockcatia_at.cfg",
-            "MixinConfigs": "mixins.skyblockcatia.json",
-            "TweakOrder": "0",
-            "TweakClass": "com.stevekung.skyblockcatia.tweaker.MixinsLoadingTweaker"
-    )
+    manifest {
+        attributes("FMLAT": "skyblockcatia_at.cfg",
+                   "FMLCorePluginContainsFMLMod": "true",
+                   "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+                   "MixinConfigs": "mixins.skyblockcatia.json",
+                   "ForceLoadAsMod": "true"
+        )
+    }
     exclude "test/**"
     baseName = "SkyBlockcatia-" + mcVersion
     classifier = "deobf"

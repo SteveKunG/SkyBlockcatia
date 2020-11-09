@@ -11,10 +11,11 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLightningBolt;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 
 @Mixin(RenderLightningBolt.class)
-public abstract class RenderLightningBoltMixin extends Render<EntityLightningBolt>
+public abstract class RenderLightningBoltMixin extends Render<Entity>
 {
     private RenderLightningBoltMixin()
     {
@@ -23,7 +24,7 @@ public abstract class RenderLightningBoltMixin extends Render<EntityLightningBol
 
     @Override
     @Overwrite
-    public void doRender(EntityLightningBolt entity, double x, double y, double z, float entityYaw, float partialTicks)
+    public void doRender(Entity entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
@@ -39,7 +40,7 @@ public abstract class RenderLightningBoltMixin extends Render<EntityLightningBol
         double[] adouble1 = new double[8];
         double d0 = 0.0D;
         double d1 = 0.0D;
-        Random random = new Random(entity.boltVertex);
+        Random random = new Random(((EntityLightningBolt)entity).boltVertex);
 
         for (int i = 7; i >= 0; --i)
         {
@@ -51,7 +52,7 @@ public abstract class RenderLightningBoltMixin extends Render<EntityLightningBol
 
         for (int k1 = 0; k1 < 4; ++k1)
         {
-            Random random1 = new Random(entity.boltVertex);
+            Random random1 = new Random(((EntityLightningBolt)entity).boltVertex);
 
             for (int j = 0; j < 3; ++j)
             {
