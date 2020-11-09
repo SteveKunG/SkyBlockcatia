@@ -217,7 +217,7 @@ public class SkyBlockPets
         ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
         DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE),
-        SPOOKY_CUPCAKE(EnumChatFormatting.GREEN),
+        PET_ITEM_SPOOKY_CUPCAKE(EnumChatFormatting.GREEN),
         PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD);
 
         private final String altName;
