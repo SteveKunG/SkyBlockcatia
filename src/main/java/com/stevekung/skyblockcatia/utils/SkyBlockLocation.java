@@ -110,7 +110,7 @@ public enum SkyBlockLocation
 
     public boolean ignore()
     {
-        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.THE_CATACOMBS_E || this == SkyBlockLocation.THE_CATACOMBS_F1 || this == SkyBlockLocation.THE_CATACOMBS_F2 || this == SkyBlockLocation.THE_CATACOMBS_F3 || this == SkyBlockLocation.THE_CATACOMBS_F4;
+        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.THE_CATACOMBS_E || this == SkyBlockLocation.THE_CATACOMBS_F1 || this == SkyBlockLocation.THE_CATACOMBS_F2 || this == SkyBlockLocation.THE_CATACOMBS_F3 || this == SkyBlockLocation.THE_CATACOMBS_F4 || this == SkyBlockLocation.THE_CATACOMBS_F5 || this == SkyBlockLocation.THE_CATACOMBS_F6 || this == SkyBlockLocation.THE_CATACOMBS_F7 || this == SkyBlockLocation.THE_CATACOMBS_F8 || this == SkyBlockLocation.THE_CATACOMBS_F9 || this == SkyBlockLocation.THE_CATACOMBS_F10;
     }
 
     public static class BlockMetadata
