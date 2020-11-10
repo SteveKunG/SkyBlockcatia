@@ -152,14 +152,14 @@ curseforge {
 }
 
 task signJar(type: SignJar, dependsOn: jar) {
-	if (project.hasProperty("upload_api_key")) {
-	    keyStore = project.keystore_path
-	    alias = project.alias
-	    storePass = project.keystore_pass
-	    keyPass = project.keystore_pass
-	    inputFile = jar.archivePath
-	    outputFile = jar.archivePath
-	}
+    if (project.hasProperty("upload_api_key")) {
+        keyStore = project.keystore_path
+        alias = project.alias
+        storePass = project.keystore_pass
+        keyPass = project.keystore_pass
+        inputFile = jar.archivePath
+        outputFile = jar.archivePath
+    }
 }
 
 build.dependsOn signJar
