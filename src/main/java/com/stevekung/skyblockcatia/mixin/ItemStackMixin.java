@@ -6,6 +6,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.stevekung.skyblockcatia.config.ExtendedConfig;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
@@ -19,7 +21,7 @@ public class ItemStackMixin
     @Inject(method = "isItemEnchanted()Z", cancellable = true, at = @At("HEAD"))
     private void addSkyblockEnchantTag(CallbackInfoReturnable info)
     {
-        if (this.stackTagCompound != null && this.stackTagCompound.hasKey("ExtraAttributes", Constants.NBT.TAG_COMPOUND) && this.stackTagCompound.getCompoundTag("ExtraAttributes").hasKey("enchantments", Constants.NBT.TAG_COMPOUND) && !this.stackTagCompound.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").hasNoTags())
+        if (ExtendedConfig.instance.fixSkyblockEnchantTag && this.stackTagCompound != null && this.stackTagCompound.hasKey("ExtraAttributes", Constants.NBT.TAG_COMPOUND) && this.stackTagCompound.getCompoundTag("ExtraAttributes").hasKey("enchantments", Constants.NBT.TAG_COMPOUND) && !this.stackTagCompound.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").hasNoTags())
         {
             info.setReturnValue(true);
         }
