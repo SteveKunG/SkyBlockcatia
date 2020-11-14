@@ -123,29 +123,34 @@ public class MainEventHandler
     {
         MovementInput movement = event.getMovementInput();
         EntityPlayer player = event.getEntityPlayer();
-        String[] keyTS = ConfigManagerIN.keyToggleSprint.split(",");
-        int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
-        int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
 
-        if (this.mc.currentScreen == null && this.mc.gameSettings.keyBindSneak.getKeyCode() != Keyboard.KEY_LCONTROL && keyTGCtrl == Keyboard.KEY_LCONTROL && keyTGOther == Keyboard.KEY_S && Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+        try
         {
-            ++movement.moveForward;
-        }
+            String[] keyTS = ConfigManagerIN.keyToggleSprint.split(",");
+            int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
+            int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
 
-        // toggle sneak
-        movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || ExtendedConfig.instance.toggleSneak && !event.getEntityPlayer().isSpectator();
+            if (this.mc.currentScreen == null && this.mc.gameSettings.keyBindSneak.getKeyCode() != Keyboard.KEY_LCONTROL && keyTGCtrl == Keyboard.KEY_LCONTROL && keyTGOther == Keyboard.KEY_S && Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+            {
+                ++movement.moveForward;
+            }
 
-        if (ExtendedConfig.instance.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
-        {
-            movement.moveStrafe = (float)(movement.moveStrafe * 0.3D);
-            movement.moveForward = (float)(movement.moveForward * 0.3D);
-        }
+            // toggle sneak
+            movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || ExtendedConfig.instance.toggleSneak && !event.getEntityPlayer().isSpectator();
 
-        // toggle sprint
-        if (ExtendedConfig.instance.toggleSprint && !player.isPotionActive(Potion.blindness) && !ExtendedConfig.instance.toggleSneak)
-        {
-            player.setSprinting(true);
+            if (ExtendedConfig.instance.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
+            {
+                movement.moveStrafe = (float)(movement.moveStrafe * 0.3D);
+                movement.moveForward = (float)(movement.moveForward * 0.3D);
+            }
+
+            // toggle sprint
+            if (ExtendedConfig.instance.toggleSprint && !player.isPotionActive(Potion.blindness) && !ExtendedConfig.instance.toggleSneak)
+            {
+                player.setSprinting(true);
+            }
         }
+        catch (Exception e) {}
     }
 
     @SubscribeEvent
