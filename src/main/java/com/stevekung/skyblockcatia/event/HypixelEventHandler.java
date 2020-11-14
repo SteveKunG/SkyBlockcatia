@@ -209,6 +209,12 @@ public class HypixelEventHandler
 
                         for (SkyBlockLocation location : CachedEnum.locationValues)
                         {
+                            if (scoreText.endsWith("'s Island"))
+                            {
+                                HUDRenderEventHandler.otherPlayerIsland = true;
+                                found = true;
+                                break;
+                            }
                             if (scoreText.endsWith(location.getLocation()))
                             {
                                 HypixelEventHandler.SKY_BLOCK_LOCATION = location;
@@ -230,6 +236,7 @@ public class HypixelEventHandler
                     if (!found)
                     {
                         HypixelEventHandler.SKY_BLOCK_LOCATION = SkyBlockLocation.NONE;
+                        HUDRenderEventHandler.otherPlayerIsland = false;
                     }
                     SkyBlockBossBar.renderBossBar = foundDrag;
                 }
