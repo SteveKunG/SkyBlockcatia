@@ -94,5 +94,11 @@
         "displayName": "§aBlack Sheep",
         "uuid": "a44786f8-b0f4-3e43-ad1b-64956113adec",
         "texture": "aa9dcda642a807cd2daa4aa6be87cef96e08a8c8f5cec2657dda4266c6a884c2"
+    },
+    {
+        "skin": "WITHER",
+        "displayName": "§5Dark Wither Skeleton",
+        "uuid": "f336e789-b720-36ff-9326-71c8bf135db4",
+        "texture": "224c2d14a0219af5ccfcaa36e8a333e271724ed61276611f9529e16c10273a0d"
     }
 ]
