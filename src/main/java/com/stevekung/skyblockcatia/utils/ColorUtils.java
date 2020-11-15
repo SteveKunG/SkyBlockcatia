@@ -10,6 +10,8 @@ import net.minecraft.util.ResourceLocation;
 public class ColorUtils
 {
     public static FontRenderer unicodeFontRenderer;
+    public static int randomColorIndex;
+    public static final String[] RANDOM_COLOR = new String[] { "178,109,237", "117,151,255", "97,0,201", "0,224,146", "224,67,0" };
 
     public static void init()
     {
