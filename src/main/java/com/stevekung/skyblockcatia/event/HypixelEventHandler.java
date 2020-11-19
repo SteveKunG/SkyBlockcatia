@@ -257,7 +257,7 @@ public class HypixelEventHandler
 
                     if (!this.mc.thePlayer.isSneaking() && this.mc.thePlayer.getHeldItem() == null && ExtendedConfig.instance.rightClickToAddParty)
                     {
-                        if (this.mc.thePlayer.sendQueue.getPlayerInfoMap().stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
+                        if (CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue).stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
                         {
                             this.mc.thePlayer.sendChatMessage("/p " + player.getName());
                             event.setCanceled(true);
@@ -692,7 +692,7 @@ public class HypixelEventHandler
             {
                 EntityOtherPlayerMP player = (EntityOtherPlayerMP)this.mc.pointedEntity;
 
-                if (this.mc.thePlayer.sendQueue.getPlayerInfoMap().stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
+                if (CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue).stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
                 {
                     this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, player.getDisplayNameString(), "", ""));
                 }

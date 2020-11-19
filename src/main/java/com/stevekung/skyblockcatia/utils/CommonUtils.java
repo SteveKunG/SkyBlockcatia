@@ -2,12 +2,16 @@ package com.stevekung.skyblockcatia.utils;
 
 import java.awt.Desktop;
 import java.net.URI;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovementInput;
 import net.minecraftforge.common.MinecraftForge;
@@ -148,6 +152,11 @@ public class CommonUtils
         long timeElapsed = current - timeDiff;
         int days = Math.round(timeElapsed / 86400);
         return days + " day" + (days == 1 ? "" : "s");
+    }
+
+    public static Collection<NetworkPlayerInfo> getPlayerInfoMap(NetHandlerPlayClient handler)
+    {
+        return handler.getPlayerInfoMap().stream().filter(info -> !info.getGameProfile().getName().startsWith("!")).collect(Collectors.toList());
     }
 
     private static String convertCorrectTime(int time, String text, boolean an)

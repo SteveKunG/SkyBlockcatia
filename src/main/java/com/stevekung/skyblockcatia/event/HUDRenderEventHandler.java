@@ -289,7 +289,7 @@ public class HUDRenderEventHandler
 
                 if (ExtendedConfig.instance.lobbyPlayerCount && HypixelEventHandler.isSkyBlock && !otherPlayerIsland && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND && PlayerCountMode.getById(ExtendedConfig.instance.playerCountMode).equalsIgnoreCase("hud") && !this.mc.isSingleplayer())
                 {
-                    List<NetworkPlayerInfo> list = GuiPlayerTabOverlay.field_175252_a.sortedCopy(this.mc.thePlayer.sendQueue.getPlayerInfoMap());
+                    List<NetworkPlayerInfo> list = GuiPlayerTabOverlay.field_175252_a.sortedCopy(CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue));
                     rightInfo.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(HUDRenderEventHandler.getPlayerCount(list))).setChatStyle(JsonUtils.green())).getFormattedText());
                 }
 

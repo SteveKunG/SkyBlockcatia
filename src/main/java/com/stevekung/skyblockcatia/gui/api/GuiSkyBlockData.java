@@ -1934,7 +1934,7 @@ public class GuiSkyBlockData extends GuiScreen
                     this.additionalMinionSlot = tier;
                 }
 
-                info.add(new SkyBlockInfo(color + data.getDisplayName(), color + (tier + "/" + maxed)));
+                info.add(new SkyBlockInfo(color + data.getDisplayName(), color + tier + "/" + maxed));
             }
         }
         return info;

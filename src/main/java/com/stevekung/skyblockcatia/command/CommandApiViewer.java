@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.utils.CommonUtils;
 import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 
 import net.minecraft.client.Minecraft;
@@ -39,7 +40,7 @@ public class CommandApiViewer extends ClientCommandBase
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
         NetHandlerPlayClient connection = Minecraft.getMinecraft().thePlayer.sendQueue;
-        List<NetworkPlayerInfo> playerInfo = new ArrayList<>(connection.getPlayerInfoMap());
+        List<NetworkPlayerInfo> playerInfo = new ArrayList<>(CommonUtils.getPlayerInfoMap(connection));
 
         if (args.length == 1)
         {
