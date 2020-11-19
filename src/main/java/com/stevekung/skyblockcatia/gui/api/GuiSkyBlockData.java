@@ -3267,6 +3267,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SkillType.CARPENTRY));
 
         double avg = 0.0D;
+        double progress = 0.0D;
         int count = 0;
         List<SkyBlockSkillInfo> skills = new ArrayList<>();
         skills.addAll(this.skillLeftList);
@@ -3278,12 +3279,17 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 continue;
             }
+
             avg += skill.getCurrentLvl();
+            progress += skill.getSkillProgress();
             ++count;
         }
+
+        double allProgress = new BigDecimal(progress / count).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
         if (avg > 0)
         {
-            double realAvg = avg / count;
+            double realAvg = avg / count + allProgress;
             this.skillAvg = realAvg > 50 ? String.valueOf(50) : new BigDecimal(realAvg).setScale(2, RoundingMode.HALF_UP).toString();
         }
         if (this.skillCount == 0)
@@ -3344,8 +3350,9 @@ public class GuiSkyBlockData extends GuiScreen
             }
             if (type != SkillType.RUNECRAFTING && type != SkillType.CARPENTRY)
             {
-                skillProgress = Math.max(0, Math.min(currentXp / xpToNextLvl, 1));
+                skillProgress = currentXp / xpRequired;
             }
+
             this.setSkillLevel(type, currentLvl);
             this.skillCount += 1;
             return new SkyBlockSkillInfo(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
