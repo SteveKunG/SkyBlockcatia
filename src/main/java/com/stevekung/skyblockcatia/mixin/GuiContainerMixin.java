@@ -311,9 +311,9 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
         {
             ItemStack itemStack = slot.getStack();
 
-            if (itemStack != null)
+            if (ExtendedConfig.instance.preventClickingOnDummyItem && itemStack != null)
             {
-                if (ExtendedConfig.instance.preventClickingOnDummyItem && this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
                     info.cancel();
                 }
@@ -333,7 +333,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             {
                 GuiChest chest = (GuiChest)this.that;
 
-                if (itemStack != null)
+                if (ExtendedConfig.instance.preventClickingOnDummyItem && itemStack != null)
                 {
                     String name = itemStack.getDisplayName();
 
