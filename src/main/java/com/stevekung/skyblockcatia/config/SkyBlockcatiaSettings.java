@@ -46,7 +46,6 @@ public class SkyBlockcatiaSettings extends Settings
     public boolean showHitboxWhenDragonSpawned = false;
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
-    public boolean currentServerDay = true;
     public boolean lobbyPlayerViewer = true;
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
@@ -64,6 +63,7 @@ public class SkyBlockcatiaSettings extends Settings
     public boolean preventClickingOnDummyItem = true;
     public boolean shortcutButtonInInventory = true;
     public boolean showObtainedDate = true;
+    public boolean fixSkyblockEnchantTag = true;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -102,7 +102,6 @@ public class SkyBlockcatiaSettings extends Settings
     public static final BooleanSettings<SkyBlockcatiaSettings> SHOW_HITBOX_WHEN_DRAGON_SPAWNED = new BooleanSettings<>("skyblockcatia_setting.show_hitbox_when_dragon_spawned", config -> config.showHitboxWhenDragonSpawned, (config, value) -> config.showHitboxWhenDragonSpawned = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SNEAK_TO_OPEN_INVENTORY = new BooleanSettings<>("skyblockcatia_setting.sneak_to_open_inventory", config -> config.sneakToOpenInventoryWhileFightDragon, (config, value) -> config.sneakToOpenInventoryWhileFightDragon = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> LEAVE_PARTY_WHEN_LAST_EYE_PLACED = new BooleanSettings<>("skyblockcatia_setting.leave_party_when_last_eye_placed", config -> config.leavePartyWhenLastEyePlaced, (config, value) -> config.leavePartyWhenLastEyePlaced = value);
-    public static final BooleanSettings<SkyBlockcatiaSettings> CURRENT_SERVER_DAY = new BooleanSettings<>("skyblockcatia_setting.current_server_day", config -> config.currentServerDay, (config, value) -> config.currentServerDay = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> PLAYER_COUNT_LOBBY_VIEWER = new BooleanSettings<>("skyblockcatia_setting.player_count_lobby_viewer", config -> config.lobbyPlayerViewer, (config, value) -> config.lobbyPlayerViewer = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> AUCTION_BID_CONFIRM = new BooleanSettings<>("skyblockcatia_setting.auction_bid_confirm", config -> config.auctionBidConfirm, (config, value) -> config.auctionBidConfirm = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> DISABLE_BLOCK_PARTICLES = new BooleanSettings<>("skyblockcatia_setting.disable_block_particles", config -> config.disableBlockParticles, (config, value) -> config.disableBlockParticles = value);
@@ -120,6 +119,7 @@ public class SkyBlockcatiaSettings extends Settings
     public static final BooleanSettings<SkyBlockcatiaSettings> PREVENT_CLICKING_ON_DUMMY_ITEM  = new BooleanSettings<>("skyblockcatia_setting.prevent_clicking_on_dummy_item", config -> config.preventClickingOnDummyItem, (config, value) -> config.preventClickingOnDummyItem = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SHORTCUT_BUTTON_IN_INVENTORY  = new BooleanSettings<>("skyblockcatia_setting.shortcut_button_in_inventory", config -> config.shortcutButtonInInventory, (config, value) -> config.shortcutButtonInInventory = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SHOW_OBTAINED_DATE  = new BooleanSettings<>("skyblockcatia_setting.show_obtained_date", config -> config.showObtainedDate, (config, value) -> config.showObtainedDate = value);
+    public static final BooleanSettings<SkyBlockcatiaSettings> FIX_SKYBLOCK_ENCHANT_TAG  = new BooleanSettings<>("skyblockcatia_setting.fix_skyblock_enchant_tag", config -> config.fixSkyblockEnchantTag, (config, value) -> config.fixSkyblockEnchantTag = value);
 
 
     public static final IteratableSettings<SkyBlockcatiaSettings> VISIT_ISLAND_DISPLAY_MODE = new IteratableSettings<>("skyblockcatia_setting.visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getGenericValueComponent(LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey())));
@@ -166,7 +166,6 @@ public class SkyBlockcatiaSettings extends Settings
             this.showHitboxWhenDragonSpawned = this.getBoolean(nbt, "ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             this.sneakToOpenInventoryWhileFightDragon = this.getBoolean(nbt, "SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             this.leavePartyWhenLastEyePlaced = this.getBoolean(nbt, "LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
-            this.currentServerDay = this.getBoolean(nbt, "CurrentServerDay", this.currentServerDay);
             this.lobbyPlayerViewer = this.getBoolean(nbt, "LobbyPlayerViewer", this.lobbyPlayerViewer);
             this.auctionBidConfirm = this.getBoolean(nbt, "AuctionBidConfirm", this.auctionBidConfirm);
             this.disableBlockParticles = this.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
@@ -184,6 +183,7 @@ public class SkyBlockcatiaSettings extends Settings
             this.preventClickingOnDummyItem = this.getBoolean(nbt, "PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
             this.shortcutButtonInInventory = this.getBoolean(nbt, "ShortcutButtonInInventory", this.shortcutButtonInInventory);
             this.showObtainedDate = this.getBoolean(nbt, "ShowObtainedDate", this.showObtainedDate);
+            this.fixSkyblockEnchantTag = this.getBoolean(nbt, "FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -232,7 +232,6 @@ public class SkyBlockcatiaSettings extends Settings
             nbt.putBoolean("ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             nbt.putBoolean("SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             nbt.putBoolean("LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
-            nbt.putBoolean("CurrentServerDay", this.currentServerDay);
             nbt.putBoolean("LobbyPlayerViewer", this.lobbyPlayerViewer);
             nbt.putBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.putBoolean("DisableBlockParticles", this.disableBlockParticles);
@@ -250,6 +249,7 @@ public class SkyBlockcatiaSettings extends Settings
             nbt.putBoolean("PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
             nbt.putBoolean("ShortcutButtonInInventory", this.shortcutButtonInInventory);
             nbt.putBoolean("ShowObtainedDate", this.showObtainedDate);
+            nbt.putBoolean("FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());

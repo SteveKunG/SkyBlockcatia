@@ -164,7 +164,7 @@ public class MainEventHandler
                     }
                 }
 
-                if (title.getString().equals("Auctions Browser"))
+                if (title.getString().equals("Auctions Browser") || title.getString().startsWith("Auctions:"))
                 {
                     String bid = MainEventHandler.bidHighlight ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
                     event.addWidget(new ItemButton(width + 89, height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->

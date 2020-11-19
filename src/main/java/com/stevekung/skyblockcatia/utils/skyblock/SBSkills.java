@@ -49,6 +49,11 @@ public class SBSkills
             return this.itemStack;
         }
 
+        public boolean isCosmetic()
+        {
+            return this == RUNECRAFTING || this == CARPENTRY;
+        }
+
         public static SBSkills.Type byName(String name)
         {
             for (SBSkills.Type type : SBSkills.Type.values())

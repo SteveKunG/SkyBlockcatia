@@ -1,7 +1,9 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -82,6 +84,7 @@ public class SkyBlockEventHandler
     private static final Pattern PET_CARE_PATTERN = Pattern.compile("\\u00a7r\\u00a7aI'm currently taking care of your \\u00a7r(?<pet>\\u00a7[0-9a-fk-or][\\w ]+)\\u00a7r\\u00a7a! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).\\u00a7r");
     private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("(?:\\u00a7r){0,1} +\\u00A7r\\u00A76\\u00A7l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!\\u00a7r");
     private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("\\u00A75\\u262C \\u00A7r\\u00A7d\\u00A7lThe \\u00A7r\\u00A75\\u00A7c\\u00A7l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon\\u00A7r\\u00A7d\\u00A7l has spawned!\\u00A7r");
+    private static final Pattern ESTIMATED_TIME_PATTERN = Pattern.compile("\\((?<time>(?:\\d+d ){0,1}(?:\\d+h ){0,1}(?:\\d+m ){0,1}(?:\\d+s)|(?:\\d+h))\\)");
 
     // Item Drop Stuff
     private static final String ITEM_PATTERN = "[\\w\\'\\u25C6\\[\\] -]+";
@@ -207,6 +210,12 @@ public class SkyBlockEventHandler
 
                         for (SBLocation location : SBLocation.VALUES)
                         {
+                            if (SkyBlockcatiaMod.isIndicatiaLoaded && scoreText.endsWith("'s Island"))
+                            {
+                                IndicatiaIntegration.otherPlayerIsland = true;
+                                found = true;
+                                break;
+                            }
                             if (scoreText.endsWith(location.getLocation()))
                             {
                                 SkyBlockEventHandler.SKY_BLOCK_LOCATION = location;
@@ -228,6 +237,11 @@ public class SkyBlockEventHandler
                     if (!found)
                     {
                         SkyBlockEventHandler.SKY_BLOCK_LOCATION = SBLocation.NONE;
+
+                        if (SkyBlockcatiaMod.isIndicatiaLoaded)
+                        {
+                            IndicatiaIntegration.otherPlayerIsland = true;
+                        }
                     }
                 }
             }
@@ -397,19 +411,6 @@ public class SkyBlockEventHandler
 
                 if (SkyBlockEventHandler.isSkyBlock || dev)
                 {
-                    if (SkyBlockcatiaSettings.INSTANCE.currentServerDay && message.startsWith("Sending to server"))
-                    {
-                        TimeUtils.schedule(() ->
-                        {
-                            long day = this.mc.world.getDayTime() / 24000L;
-                            TextFormatting dayColor = day >= 29 ? TextFormatting.RED : TextFormatting.GREEN;
-
-                            if (SkyBlockEventHandler.isSkyBlock)
-                            {
-                                ClientUtils.printClientMessage(TextComponentUtils.formatted("Current server day: ", TextFormatting.YELLOW, TextFormatting.BOLD).append(TextComponentUtils.formatted(String.valueOf(day), TextFormatting.RESET, dayColor)));
-                            }
-                        }, 2500);
-                    }
                     if (dragonDownMatcher.matches())
                     {
                         SkyBlockEventHandler.dragonHealth = 0;
@@ -723,27 +724,35 @@ public class SkyBlockEventHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemTooltip(ItemTooltipEvent event)
     {
-        if (!SkyBlockEventHandler.isSkyBlock)
-        {
-            return;
-        }
-
-        List<ITextComponent> dates = Lists.newArrayList();
-        Calendar calendar = Calendar.getInstance();
-
         try
         {
+            Calendar calendar = Calendar.getInstance();
+            ItemStack itemStack = event.getItemStack();
+            List<ITextComponent> tooltip = event.getToolTip();
+
             if (event.getItemStack().hasTag())
             {
                 CompoundNBT extraAttrib = event.getItemStack().getTag().getCompound("ExtraAttributes");
-                int toAdd = this.mc.gameSettings.advancedItemTooltips ? 3 : 1;
+                int insertAt = tooltip.size();
+                insertAt--; // rarity
+
+                if (this.mc.gameSettings.advancedItemTooltips)
+                {
+                    insertAt -= 2; // item name + nbt
+
+                    if (itemStack.isDamaged())
+                    {
+                        insertAt--; // 1 damage
+                    }
+                }
 
                 if (SkyBlockcatiaSettings.INSTANCE.showObtainedDate && extraAttrib.contains("timestamp"))
                 {
-                    DateFormat parseFormat = new SimpleDateFormat("MM/dd/yy HH:mm a");
-                    Date date = parseFormat.parse(extraAttrib.getString("timestamp"));
-                    String formatted = new SimpleDateFormat("d MMMM yyyy").format(date);
-                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Obtained: " + formatted, TextFormatting.GRAY));
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[MM/dd/yy h:mm a][M/dd/yy h:mm a][M/d/yy h:mm a]", Locale.ENGLISH);
+                    LocalDateTime datetime = LocalDateTime.parse(extraAttrib.getString("timestamp"), formatter);
+                    Date convertedDatetime = Date.from(datetime.atZone(ZoneId.systemDefault()).toInstant());
+                    String formatted = new SimpleDateFormat("d MMMM yyyy h:mm aa", Locale.ROOT).format(convertedDatetime);
+                    tooltip.add(insertAt++, TextComponentUtils.formatted("Obtained: " + formatted, TextFormatting.GRAY));
                 }
                 if (SkyBlockcatiaSettings.INSTANCE.bazaarOnItemTooltip)
                 {
@@ -757,11 +766,11 @@ public class SkyBlockEventHandler
                             {
                                 if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
                                 {
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Couldn't get bazaar data, Empty text in the Config!", TextFormatting.RED));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Couldn't get bazaar data, Empty text in the Config!", TextFormatting.RED));
                                 }
                                 else if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
                                 {
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Invalid UUID for Hypixel API Key!", TextFormatting.RED));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Invalid UUID for Hypixel API Key!", TextFormatting.RED));
                                 }
                                 else
                                 {
@@ -769,56 +778,58 @@ public class SkyBlockEventHandler
                                     double sellStack = 64 * product.getSellPrice();
                                     double buyCurrent = event.getItemStack().getCount() * product.getBuyPrice();
                                     double sellCurrent = event.getItemStack().getCount() * product.getSellPrice();
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Buy/Sell (Stack): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (Stack): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
 
                                     if (event.getItemStack().getCount() > 1 && event.getItemStack().getCount() < 64)
                                     {
-                                        event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Buy/Sell (Current): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
+                                        tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (Current): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
                                     }
 
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Buy/Sell (One): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
-                                    event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Last Updated: ", TextFormatting.GRAY).append(TextComponentUtils.formatted(TimeUtils.getRelativeTime(entry.getValue().getLastUpdated()), TextFormatting.WHITE)));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (One): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Last Updated: ", TextFormatting.GRAY).append(TextComponentUtils.formatted(TimeUtils.getRelativeTime(entry.getValue().getLastUpdated()), TextFormatting.WHITE)));
                                 }
                             }
                             else
                             {
-                                event.getToolTip().add(event.getToolTip().size() - toAdd, TextComponentUtils.formatted("Press <SHIFT> to view Bazaar Buy/Sell", TextFormatting.GRAY));
+                                tooltip.add(insertAt++, TextComponentUtils.formatted("Press <SHIFT> to view Bazaar Buy/Sell", TextFormatting.GRAY));
                             }
                         }
                     }
                 }
             }
-        }
-        catch (Exception e) {}
 
-        try
-        {
-            for (ITextComponent tooltip : event.getToolTip())
+            for (int i = 0; i < tooltip.size(); i++)
             {
-                String lore = TextComponentUtils.fromJson(tooltip);
+                String lore = TextComponentUtils.fromJson(tooltip.get(i));
 
                 if (this.mc.currentScreen != null && this.mc.currentScreen instanceof ChestScreen)
                 {
                     String name = this.mc.currentScreen.getTitle().getString();
 
-                    if (name.equals("Community Shop"))
+                    if (name.equals("SkyBlock Menu"))
                     {
-                        SkyBlockEventHandler.replaceEstimateTime(lore, calendar, event.getToolTip(), dates, "Starts in: ", "Starts at: ");
+                        SkyBlockEventHandler.replaceText(lore, calendar, tooltip, i, "Ends in:", "Ends at:");
+                        SkyBlockEventHandler.replaceText(lore, calendar, tooltip, i, "Starting in:", "Starts at:");
+                    }
+                    else if (name.equals("Community Shop"))
+                    {
+                        SkyBlockEventHandler.replaceText(lore, calendar, tooltip, i, "Starts in:", "Starts at:");
                     }
                     else
                     {
-                        SkyBlockEventHandler.replaceEstimateTime(lore, calendar, event.getToolTip(), dates, "Starts in: ", "Event starts at: ");
+                        SkyBlockEventHandler.replaceText(lore, calendar, tooltip, i, "Starts in:", "Event starts at:");
+                    }
+
+                    if (!name.equals("SkyBlock Menu"))
+                    {
+                        SkyBlockEventHandler.replaceEstimatedTime(lore, tooltip, i);
+                        SkyBlockEventHandler.replaceAuctionTime(lore, calendar, tooltip, i, "Ends in: ");
                     }
                 }
 
-                SkyBlockEventHandler.replaceEstimateTime(lore, calendar, event.getToolTip(), dates, "Starting in: ", "Event starts at: ");
-
-                SkyBlockEventHandler.replaceBankInterestTime(lore, calendar, event.getToolTip(), dates, "Interest in: ");
-                SkyBlockEventHandler.replaceBankInterestTime(lore, calendar, event.getToolTip(), dates, "Until interest: ");
-
-                SkyBlockEventHandler.replaceAuctionTime(this.mc, lore, calendar, event.getToolTip(), dates, "Ends in: ");
-
-                SkyBlockEventHandler.replaceEstimateTime(lore, calendar, event.getToolTip(), dates, "Time left: ", "Ends at: ");
+                SkyBlockEventHandler.replaceText(lore, calendar, tooltip, i, "Time left:", "Finished on:");
+                SkyBlockEventHandler.replaceBankInterestTime(lore, calendar, tooltip, i, "Interest in: ");
+                SkyBlockEventHandler.replaceBankInterestTime(lore, calendar, tooltip, i, "Until interest: ");
             }
         }
         catch (Exception e) {}
@@ -976,12 +987,13 @@ public class SkyBlockEventHandler
         CommonUtils.runAsync(() -> mc.getToastGui().add(new VisitIslandToast(name)));
     }
 
-    private static void replaceEstimateTime(String lore, Calendar calendar, List<ITextComponent> tooltip, List<ITextComponent> dates, String replacedText, String newText)
+    private static void replaceText(String lore, Calendar calendar, List<ITextComponent> tooltip, int i, String startWith, String newText)
     {
-        if (lore.startsWith(replacedText))
+        if (lore.startsWith(startWith))
         {
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^a-zA-Z0-9 ]|^[a-zA-Z ]+", "");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
+
             int dayF = 0;
             int hourF = 0;
             int minuteF = 0;
@@ -1012,34 +1024,99 @@ public class SkyBlockEventHandler
             calendar.add(Calendar.SECOND, secondF);
             String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ROOT).format(calendar.getTime());
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
-            dates.add(TextComponentUtils.formatted(newText, TextFormatting.GRAY));
-            dates.add(TextComponentUtils.formatted(date1, TextFormatting.YELLOW));
-            dates.add(TextComponentUtils.formatted(date2, TextFormatting.YELLOW));
+            List<ITextComponent> newStrings = Lists.newArrayList();
+            newStrings.add(TextComponentUtils.formatted(newText, TextFormatting.GRAY));
+            newStrings.add(TextComponentUtils.formatted(date1, TextFormatting.YELLOW));
+            newStrings.add(TextComponentUtils.formatted(date2, TextFormatting.YELLOW));
 
-            int indexToRemove = 0;
-
-            for (int i = 0; i < tooltip.size(); i++)
-            {
-                if (tooltip.get(i).getString().contains(replacedText))
-                {
-                    indexToRemove = i;
-                }
-            }
             if (!ClientUtils.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
+                tooltip.add(i + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
             }
             else
             {
-                tooltip.remove(indexToRemove);
-                tooltip.addAll(indexToRemove, dates);
+                tooltip.remove(i);
+
+                for (ITextComponent text : newStrings)
+                {
+                    tooltip.add(i++, text);
+                }
             }
         }
     }
 
-    private static void replaceBankInterestTime(String lore, Calendar calendar, List<ITextComponent> tooltip, List<ITextComponent> dates, String replacedText)
+    private static void replaceEstimatedTime(String lore, List<ITextComponent> tooltip, int i)
     {
-        if (lore.startsWith(replacedText))
+        Matcher mat = ESTIMATED_TIME_PATTERN.matcher(lore);
+
+        if (mat.find())
+        {
+            lore = mat.group("time");
+            Calendar calendar = Calendar.getInstance();
+            String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
+            boolean isHour = lore.endsWith("h");
+
+            int dayF = 0;
+            int hourF = 0;
+            int minuteF = 0;
+            int secondF = 0;
+
+            if (timeEstimate.length == 2)
+            {
+                minuteF = Integer.valueOf(timeEstimate[0]);
+                secondF = Integer.valueOf(timeEstimate[1]);
+            }
+            else if (timeEstimate.length == 3)
+            {
+                hourF = Integer.valueOf(timeEstimate[0]);
+                minuteF = Integer.valueOf(timeEstimate[1]);
+                secondF = Integer.valueOf(timeEstimate[2]);
+            }
+            else
+            {
+                if (timeEstimate.length == 1)
+                {
+                    if (isHour)
+                    {
+                        hourF = Integer.valueOf(timeEstimate[0]);
+                    }
+                }
+                else
+                {
+                    dayF = Integer.valueOf(timeEstimate[0]);
+                    hourF = Integer.valueOf(timeEstimate[1]);
+                    minuteF = Integer.valueOf(timeEstimate[2]);
+                    secondF = Integer.valueOf(timeEstimate[3]);
+                }
+            }
+
+            calendar.add(Calendar.DATE, dayF);
+            calendar.add(Calendar.HOUR, hourF);
+            calendar.add(Calendar.MINUTE, minuteF);
+            calendar.add(Calendar.SECOND, secondF);
+            String date1 = new SimpleDateFormat("EEEE h:mm:ss a", Locale.ROOT).format(calendar.getTime());
+
+            if (timeEstimate.length == 1)
+            {
+                date1 = new SimpleDateFormat("EEEE h:00 a", Locale.ROOT).format(calendar.getTime());
+            }
+
+            String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
+
+            if (!ClientUtils.isShiftKeyDown())
+            {
+                tooltip.add(i + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
+            }
+            else
+            {
+                tooltip.add(i + 1, TextComponentUtils.formatted(date2 + " " + date1, TextFormatting.YELLOW));
+            }
+        }
+    }
+
+    private static void replaceBankInterestTime(String lore, Calendar calendar, List<ITextComponent> tooltip, int i, String startWith)
+    {
+        if (lore.startsWith(startWith))
         {
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^0-9]+", " ");
             String[] timeEstimate = Arrays.stream(lore.split(" ")).map(time -> time.replaceAll("[^0-9]+", "")).toArray(size -> new String[size]);
@@ -1074,35 +1151,32 @@ public class SkyBlockEventHandler
             }
 
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
-            dates.add(TextComponentUtils.formatted("Interest receive at: ", TextFormatting.GRAY));
-            dates.add(TextComponentUtils.formatted(date1, TextFormatting.YELLOW));
-            dates.add(TextComponentUtils.formatted(date2, TextFormatting.YELLOW));
+            List<ITextComponent> newStrings = Lists.newArrayList();
+            newStrings.add(TextComponentUtils.formatted("Interest receive at: ", TextFormatting.GRAY));
+            newStrings.add(TextComponentUtils.formatted(date1, TextFormatting.YELLOW));
+            newStrings.add(TextComponentUtils.formatted(date2, TextFormatting.YELLOW));
 
-            int indexToRemove = 0;
-
-            for (int i = 0; i < tooltip.size(); i++)
-            {
-                if (tooltip.get(i).getString().contains(replacedText))
-                {
-                    indexToRemove = i;
-                    break;
-                }
-            }
             if (!ClientUtils.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
+                tooltip.add(i + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
             }
             else
             {
-                tooltip.remove(indexToRemove);
-                tooltip.addAll(indexToRemove, dates);
+                tooltip.remove(i);
+
+                for (ITextComponent text : newStrings)
+                {
+                    tooltip.add(i++, text);
+                }
             }
         }
     }
 
-    private static void replaceAuctionTime(Minecraft mc, String lore, Calendar calendar, List<ITextComponent> tooltip, List<ITextComponent> dates, String replacedText)
+    private static void replaceAuctionTime(String lore, Calendar calendar, List<ITextComponent> tooltip, int i, String startWith)
     {
-        if (lore.startsWith(replacedText))
+        Minecraft mc = Minecraft.getInstance();
+
+        if (lore.startsWith(startWith))
         {
             boolean isDay = lore.endsWith("d");
             lore = lore.substring(lore.indexOf(":") + 2).replaceAll("[^0-9]+", " ");
@@ -1111,6 +1185,7 @@ public class SkyBlockEventHandler
             int hourF = 0;
             int minuteF = 0;
             int secondF = 0;
+            List<ITextComponent> newStrings = Lists.newArrayList();
 
             if (timeEstimate.length == 1)
             {
@@ -1154,34 +1229,28 @@ public class SkyBlockEventHandler
 
                 if (name.equals("Auction View"))
                 {
-                    dates.add(TextComponentUtils.formatted("Ends at: " + TextFormatting.YELLOW + date1 + ", " + date2, TextFormatting.GRAY));
+                    newStrings.add(TextComponentUtils.formatted("Ends at: " + TextFormatting.YELLOW + date1 + ", " + date2, TextFormatting.GRAY));
                 }
                 else
                 {
-                    dates.add(TextComponentUtils.formatted("Ends at: ", TextFormatting.GRAY));
-                    dates.add(TextComponentUtils.formatted(date1, TextFormatting.YELLOW));
-                    dates.add(TextComponentUtils.formatted(date2, TextFormatting.YELLOW));
+                    newStrings.add(TextComponentUtils.formatted("Ends at: ", TextFormatting.GRAY));
+                    newStrings.add(TextComponentUtils.formatted(date1, TextFormatting.YELLOW));
+                    newStrings.add(TextComponentUtils.formatted(date2, TextFormatting.YELLOW));
                 }
             }
 
-            int indexToRemove = 0;
-
-            for (int i = 0; i < tooltip.size(); i++)
-            {
-                if (tooltip.get(i).getString().contains(replacedText))
-                {
-                    indexToRemove = i;
-                    break;
-                }
-            }
             if (!ClientUtils.isShiftKeyDown())
             {
-                tooltip.add(indexToRemove + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
+                tooltip.add(i + 1, TextComponentUtils.formatted("Press <SHIFT> to view exact time", TextFormatting.GRAY));
             }
             else
             {
-                tooltip.remove(indexToRemove);
-                tooltip.addAll(indexToRemove, dates);
+                tooltip.remove(i);
+
+                for (ITextComponent text : newStrings)
+                {
+                    tooltip.add(i++, text);
+                }
             }
         }
     }

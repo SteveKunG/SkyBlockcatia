@@ -368,9 +368,9 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
         {
             ItemStack itemStack = slot.getStack();
 
-            if (!itemStack.isEmpty())
+            if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && !itemStack.isEmpty())
             {
-                if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && this.ignoreNullItem(itemStack, IGNORE_ITEMS))
+                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
                     info.cancel();
                 }
@@ -390,7 +390,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
             {
                 String name = itemStack.getDisplayName().getString();
 
-                if (mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(name::equals)))
+                if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(name::equals)))
                 {
                     this.minecraft.playerController.windowClick(this.that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
                     info.cancel();
@@ -642,13 +642,13 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     private boolean isAuctionBrowser()
     {
         String title = this.title.getString();
-        return title.equals("Auctions Browser") || title.endsWith("'s Auctions");
+        return title.equals("Auctions Browser") || title.startsWith("Auctions:") || title.endsWith("'s Auctions");
     }
 
     private boolean isRenderBids()
     {
         String title = this.title.getString();
-        return title.equals("Auctions Browser") || title.equals("Manage Auctions") || title.equals("Your Bids") || title.endsWith("'s Auctions");
+        return title.equals("Auctions Browser") || title.startsWith("Auctions:") || title.equals("Manage Auctions") || title.equals("Your Bids") || title.endsWith("'s Auctions");
     }
 
     private boolean isPeopleAuction()

@@ -13,6 +13,7 @@
         "MixinArmorStandEntity",
         "MixinBlockItem",
         "MixinBossOverlayGui",
+        "MixinBucketItem",
         "MixinChatScreen",
         "MixinClientPlayerEntity",
         "MixinContainerScreen",

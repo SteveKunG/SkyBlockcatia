@@ -58,6 +58,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -1247,6 +1248,24 @@ public class SkyBlockAPIViewerScreen extends Screen
             fontRenderer.func_243247_a(component, xPosition + 19 - 2 - fontRenderer.getStringPropertyWidth(component), yPosition + 6 + 3, 16777215, true, matrixstack.getLast().getMatrix(), irendertypebuffer$impl, false, 0, 15728880);
             irendertypebuffer$impl.finish();
         }
+        if (itemStack.getItem().showDurabilityBar(itemStack))
+        {
+            RenderSystem.disableDepthTest();
+            RenderSystem.disableTexture();
+            RenderSystem.disableAlphaTest();
+            RenderSystem.disableBlend();
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder bufferbuilder = tessellator.getBuffer();
+            double health = itemStack.getItem().getDurabilityForDisplay(itemStack);
+            int i = Math.round(13.0F - (float)health * 13.0F);
+            int j = itemStack.getItem().getRGBDurabilityForDisplay(itemStack);
+            this.itemRenderer.draw(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+            this.itemRenderer.draw(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+            RenderSystem.enableBlend();
+            RenderSystem.enableAlphaTest();
+            RenderSystem.enableTexture();
+            RenderSystem.enableDepthTest();
+        }
     }
 
     private boolean renderGroupsHoveringText(MatrixStack matrixStack, SBInventoryGroup group, int mouseX, int mouseY)
@@ -1507,13 +1526,15 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 CommunityUpgrades.Data data = CommunityUpgrades.Data.getData(type, Collections.max(upgradeStateMap.get(type)));
                 int tier = data.getTier();
+                int maxed = data.getType().getMaxed();
+                String color = tier == maxed ? TextFormatting.GOLD.toString() : "";
 
                 if (data.getType() == CommunityUpgrades.Type.MINION_SLOTS)
                 {
                     this.additionalMinionSlot = tier;
                 }
 
-                info.add(new SkyBlockInfo(data.getDisplayName(), "Tier " + NumberUtils.intToRoman(tier)));
+                info.add(new SkyBlockInfo(color + data.getDisplayName(), color + tier + "/" + maxed));
             }
         }
         return info;
@@ -2189,11 +2210,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         JsonArray pets = petsObj.getAsJsonArray();
-        int commonScore = 0;
-        int uncommonScore = 0;
-        int rareScore = 0;
-        int epicScore = 0;
-        int legendaryScore = 0;
 
         if (pets.size() > 0)
         {
@@ -2208,6 +2224,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String heldItemType = null;
                 String skin = null;
                 String skinName = null;
+                boolean addEmpty = false;
 
                 if (element.getAsJsonObject().get("exp") != null)
                 {
@@ -2220,20 +2237,24 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (element.getAsJsonObject().get("candyUsed") != null)
                 {
                     candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
+                    addEmpty = candyUsed > 0;
                 }
                 if (skinObj != null && !skinObj.isJsonNull())
                 {
                     skin = skinObj.getAsString();
+                    addEmpty = skin != null;
                 }
                 if (heldItemObj != null && !heldItemObj.isJsonNull())
                 {
                     try
                     {
                         heldItem = SBPets.HeldItem.valueOf(heldItemObj.getAsString());
+                        addEmpty = heldItem != null;
                     }
                     catch (Exception e)
                     {
                         heldItemType = heldItemObj.getAsString();
+                        addEmpty = heldItemType != null;
                     }
                 }
 
@@ -2242,7 +2263,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 ListNBT list = new ListNBT();
 
-                if (heldItem != null && (heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST || heldItem == SBPets.HeldItem.VAMPIRE_FANG))
+                if (heldItem != null && (heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST || heldItem == SBPets.HeldItem.PET_ITEM_VAMPIRE_FANG))
                 {
                     tier = tier.getNextRarity();
                 }
@@ -2264,7 +2285,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + TextFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level.getCurrentPetXp()) + TextFormatting.GOLD + "/" + TextFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired()))));
                     }
-                    if (candyUsed > 0 || heldItem != null || heldItemType != null || skin != null)
+                    if (addEmpty)
                     {
                         list.add(StringNBT.valueOf(TextComponentUtils.toJson("")));
                     }
@@ -2316,19 +2337,22 @@ public class SkyBlockAPIViewerScreen extends Screen
                     switch (tier)
                     {
                     case COMMON:
-                        commonScore += 1;
+                        this.petScore += 1;
                         break;
                     case UNCOMMON:
-                        uncommonScore += 2;
+                        this.petScore += 2;
                         break;
                     case RARE:
-                        rareScore += 3;
+                        this.petScore += 3;
                         break;
                     case EPIC:
-                        epicScore += 4;
+                        this.petScore += 4;
                         break;
                     case LEGENDARY:
-                        legendaryScore += 5;
+                        this.petScore += 5;
+                        break;
+                    case MYTHIC:
+                        this.petScore += 6;
                         break;
                     default:
                         break;
@@ -2351,7 +2375,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(petItem, SBInventoryGroup.PET));
-        this.petScore = commonScore + uncommonScore + rareScore + epicScore + legendaryScore;
     }
 
     private SBPets.Info checkPetLevel(double petExp, SBPets.Tier tier)
@@ -2919,6 +2942,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SBSkills.Type.CARPENTRY));
 
         double avg = 0.0D;
+        double progress = 0.0D;
         int count = 0;
         List<SBSkills.Info> skills = Lists.newArrayList();
         skills.addAll(this.skillLeftList);
@@ -2931,11 +2955,15 @@ public class SkyBlockAPIViewerScreen extends Screen
                 continue;
             }
             avg += skill.getCurrentLvl();
+            progress += skill.getSkillProgress();
             ++count;
         }
+
+        double allProgress = new BigDecimal(progress / count).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
         if (avg > 0)
         {
-            double realAvg = avg / count;
+            double realAvg = avg / count + allProgress;
             this.skillAvg = realAvg > 50 ? String.valueOf(50) : new BigDecimal(realAvg).setScale(2, RoundingMode.HALF_UP).toString();
         }
         if (this.skillCount == 0)
@@ -2994,9 +3022,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 currentXp = (int)(xpRequired - xpToNextLvl);
                 currentLvl = progress.length - 1;
             }
-            if (type != SBSkills.Type.RUNECRAFTING && type != SBSkills.Type.CARPENTRY)
+            if (!type.isCosmetic())
             {
-                skillProgress = Math.max(0, Math.min(currentXp / xpToNextLvl, 1));
+                skillProgress = currentLvl < 50 ? currentXp / xpRequired : 0.0D;
             }
             this.setSkillLevel(type, currentLvl);
             this.skillCount += 1;

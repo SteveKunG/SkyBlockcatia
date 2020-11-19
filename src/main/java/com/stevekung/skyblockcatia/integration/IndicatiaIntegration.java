@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextFormatting;
 public class IndicatiaIntegration
 {
     public static final IndicatiaChatScreen.ChatMode SKYBLOCK_COOP = IndicatiaChatScreen.ChatMode.create("SKYBLOCK_COOP", "menu.chat_mode.sb_coop_chat", TextFormatting.AQUA, 31, 98, 28, 20, "COOP", "/cc");
+    public static boolean otherPlayerIsland;
 
     public static void registerHandler()
     {

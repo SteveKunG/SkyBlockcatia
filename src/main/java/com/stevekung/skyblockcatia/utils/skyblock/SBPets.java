@@ -182,8 +182,8 @@ public class SBPets
         ANTIQUE_REMEDIES(TextFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(TextFormatting.DARK_PURPLE),
         DWARF_TURTLE_SHELMET(TextFormatting.BLUE),
-        SPOOKY_CUPCAKE(TextFormatting.GREEN),
-        VAMPIRE_FANG(TextFormatting.GOLD);
+        PET_ITEM_SPOOKY_CUPCAKE(TextFormatting.GREEN),
+        PET_ITEM_VAMPIRE_FANG(TextFormatting.GOLD);
 
         private final String altName;
         private final TextFormatting color;
