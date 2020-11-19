@@ -846,6 +846,7 @@ public class HypixelEventHandler
                     if (name.equals("SkyBlock Menu"))
                     {
                         HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Ends in:", "Ends at:");
+                        HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starting in:", "Starts at:");
                     }
                     else if (name.equals("Community Shop"))
                     {
@@ -859,14 +860,13 @@ public class HypixelEventHandler
                     if (!name.equals("SkyBlock Menu"))
                     {
                         HypixelEventHandler.replaceEstimatedTime(lore, event.toolTip, i);
+                        HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, i, "Ends in: ");
                     }
                 }
 
-                HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Starting in:", "Starts at:");
                 HypixelEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time left:", "Finished on:");
                 HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Interest in: ");
                 HypixelEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Until interest: ");
-                HypixelEventHandler.replaceAuctionTime(lore, calendar, event.toolTip, i, "Ends in: ");
             }
         }
         catch (Exception e) {}
