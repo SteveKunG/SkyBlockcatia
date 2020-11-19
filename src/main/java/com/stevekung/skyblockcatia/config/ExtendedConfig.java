@@ -139,7 +139,6 @@ public class ExtendedConfig
     public boolean showHitboxWhenDragonSpawned = false;
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
-    public boolean currentServerDay = true;
     public boolean lobbyPlayerViewer = true;
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
@@ -292,7 +291,6 @@ public class ExtendedConfig
             this.showHitboxWhenDragonSpawned = ExtendedConfig.getBoolean(nbt, "ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             this.sneakToOpenInventoryWhileFightDragon = ExtendedConfig.getBoolean(nbt, "SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             this.leavePartyWhenLastEyePlaced = ExtendedConfig.getBoolean(nbt, "LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
-            this.currentServerDay = ExtendedConfig.getBoolean(nbt, "CurrentServerDay", this.currentServerDay);
             this.lobbyPlayerViewer = ExtendedConfig.getBoolean(nbt, "LobbyPlayerViewer", this.lobbyPlayerViewer);
             this.auctionBidConfirm = ExtendedConfig.getBoolean(nbt, "AuctionBidConfirm", this.auctionBidConfirm);
             this.disableBlockParticles = ExtendedConfig.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
@@ -436,7 +434,6 @@ public class ExtendedConfig
             nbt.setBoolean("ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             nbt.setBoolean("SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             nbt.setBoolean("LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
-            nbt.setBoolean("CurrentServerDay", this.currentServerDay);
             nbt.setBoolean("LobbyPlayerViewer", this.lobbyPlayerViewer);
             nbt.setBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
@@ -779,10 +776,6 @@ public class ExtendedConfig
         else if (options == ExtendedConfig.Options.LEAVE_PARTY_WHEN_LAST_EYE_PLACED)
         {
             this.leavePartyWhenLastEyePlaced = !this.leavePartyWhenLastEyePlaced;
-        }
-        else if (options == ExtendedConfig.Options.CURRENT_SERVER_DAY)
-        {
-            this.currentServerDay = !this.currentServerDay;
         }
         else if (options == ExtendedConfig.Options.LOBBY_PLAYER_VIEWER)
         {
@@ -1181,8 +1174,6 @@ public class ExtendedConfig
             return this.sneakToOpenInventoryWhileFightDragon;
         case LEAVE_PARTY_WHEN_LAST_EYE_PLACED:
             return this.leavePartyWhenLastEyePlaced;
-        case CURRENT_SERVER_DAY:
-            return this.currentServerDay;
         case LOBBY_PLAYER_VIEWER:
             return this.lobbyPlayerViewer;
         case AUCTION_BID_CONFIRM:
@@ -1400,7 +1391,6 @@ public class ExtendedConfig
         SHOW_HITBOX_WHEN_DRAGON_SPAWNED(false, true),
         SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON(false, true),
         LEAVE_PARTY_WHEN_LAST_EYE_PLACED(false, true),
-        CURRENT_SERVER_DAY(false, true),
         LOBBY_PLAYER_VIEWER(false, true),
         AUCTION_BID_CONFIRM(false, true),
         DISABLE_BLOCK_PARTICLES(false, true),

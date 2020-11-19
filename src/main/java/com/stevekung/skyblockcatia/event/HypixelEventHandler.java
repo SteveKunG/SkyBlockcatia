@@ -439,19 +439,6 @@ public class HypixelEventHandler
 
                 if (HypixelEventHandler.isSkyBlock || SkyBlockcatiaMod.isDevelopment)
                 {
-                    if (ExtendedConfig.instance.currentServerDay && message.startsWith("Sending to server"))
-                    {
-                        InfoUtils.INSTANCE.schedule(() ->
-                        {
-                            long day = this.mc.theWorld.getWorldTime() / 24000L;
-                            EnumChatFormatting dayColor = day >= 29 ? EnumChatFormatting.RED : EnumChatFormatting.GREEN;
-
-                            if (HypixelEventHandler.isSkyBlock)
-                            {
-                                ClientUtils.printClientMessage(JsonUtils.create("Current server day: ").setChatStyle(JsonUtils.yellow().setBold(true)).appendSibling(JsonUtils.create(String.valueOf(day)).setChatStyle(JsonUtils.style().setBold(false).setColor(dayColor))));
-                            }
-                        }, 2500);
-                    }
                     if (dragonDownMatcher.matches())
                     {
                         this.clearBossData();

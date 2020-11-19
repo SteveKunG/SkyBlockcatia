@@ -178,7 +178,6 @@ show_hitbox_when_dragon_spawned.extended_config=Show Hitbox when Dragon Spawned
 show_dragon_hitbox_only.extended_config=Show Only Dragon Hitbox
 sneak_to_open_inventory_while_fight_dragon.extended_config=Sneak to Open Inventory while Fighting Dragon
 leave_party_when_last_eye_placed.extended_config=Leave Party when Last Eye placed
-current_server_day.extended_config=Current Server Day
 lobby_player_viewer.extended_config=Lobby Player Viewer
 auction_bid_confirm.extended_config=Auction Bid Confirmation
 auction_bid_confirm_value.extended_config=Auction Bid Confirm Value
