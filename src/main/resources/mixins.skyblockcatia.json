@@ -24,6 +24,7 @@
         "GuiScreenMixin",
         "ImageBufferDownloadMixin",
         "ItemBlockMixin",
+        "ItemBucketMixin",
         "ItemFishingRodMixin",
         "ItemMixin",
         "ItemRendererMixin",
