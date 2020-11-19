@@ -3372,7 +3372,7 @@ public class GuiSkyBlockData extends GuiScreen
             }
             if (type != SkillType.RUNECRAFTING && type != SkillType.CARPENTRY)
             {
-                skillProgress = currentXp / xpRequired;
+                skillProgress = currentLvl < 50 ? currentXp / xpRequired : 0.0D;
             }
 
             this.setSkillLevel(type, currentLvl);
