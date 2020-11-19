@@ -74,9 +74,6 @@ public enum SkyBlockLocation
     THE_CATACOMBS_F5("The Catacombs (F5)"),
     THE_CATACOMBS_F6("The Catacombs (F6)"),
     THE_CATACOMBS_F7("The Catacombs (F7)"),
-    THE_CATACOMBS_F8("The Catacombs (F8)"),
-    THE_CATACOMBS_F9("The Catacombs (F9)"),
-    THE_CATACOMBS_F10("The Catacombs (F10)"),
     ;
 
     private final String location;
@@ -110,7 +107,7 @@ public enum SkyBlockLocation
 
     public boolean ignore()
     {
-        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.THE_CATACOMBS_E || this == SkyBlockLocation.THE_CATACOMBS_F1 || this == SkyBlockLocation.THE_CATACOMBS_F2 || this == SkyBlockLocation.THE_CATACOMBS_F3 || this == SkyBlockLocation.THE_CATACOMBS_F4 || this == SkyBlockLocation.THE_CATACOMBS_F5 || this == SkyBlockLocation.THE_CATACOMBS_F6 || this == SkyBlockLocation.THE_CATACOMBS_F7 || this == SkyBlockLocation.THE_CATACOMBS_F8 || this == SkyBlockLocation.THE_CATACOMBS_F9 || this == SkyBlockLocation.THE_CATACOMBS_F10;
+        return this == SkyBlockLocation.YOUR_ISLAND || this == SkyBlockLocation.THE_CATACOMBS_E || this == SkyBlockLocation.THE_CATACOMBS_F1 || this == SkyBlockLocation.THE_CATACOMBS_F2 || this == SkyBlockLocation.THE_CATACOMBS_F3 || this == SkyBlockLocation.THE_CATACOMBS_F4 || this == SkyBlockLocation.THE_CATACOMBS_F5 || this == SkyBlockLocation.THE_CATACOMBS_F6 || this == SkyBlockLocation.THE_CATACOMBS_F7;
     }
 
     public static class BlockMetadata
