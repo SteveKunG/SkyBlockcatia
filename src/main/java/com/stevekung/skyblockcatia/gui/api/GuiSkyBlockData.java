@@ -1926,13 +1926,15 @@ public class GuiSkyBlockData extends GuiScreen
             {
                 CommunityUpgrades.Data data = CommunityUpgrades.Data.getData(type, Collections.max(upgradeStateMap.get(type)));
                 int tier = data.getTier();
+                int maxed = data.getType().getMaxed();
+                String color = tier == maxed ? EnumChatFormatting.GOLD.toString() : "";
 
                 if (data.getType() == CommunityUpgrades.Type.MINION_SLOTS)
                 {
                     this.additionalMinionSlot = tier;
                 }
 
-                info.add(new SkyBlockInfo(data.getDisplayName(), "Tier " + NumberUtils.intToRoman(tier)));
+                info.add(new SkyBlockInfo(color + data.getDisplayName(), color + (tier + "/" + maxed)));
             }
         }
         return info;

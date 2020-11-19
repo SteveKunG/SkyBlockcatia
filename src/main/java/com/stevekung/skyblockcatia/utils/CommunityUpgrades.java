@@ -47,7 +47,7 @@ public class CommunityUpgrades
         @Override
         public String toString()
         {
-            return WordUtils.capitalize(this.upgrade.replace("_", " ") + " " + NumberUtils.intToRoman(this.tier));
+            return WordUtils.capitalize(this.upgrade.replace("_", " ") + ": Tier " + this.tier);
         }
     }
 
@@ -118,17 +118,24 @@ public class CommunityUpgrades
 
     public enum Type
     {
-        ISLAND_SIZE("Island Size"),
-        MINION_SLOTS("Minion Slots"),
-        GUESTS_COUNT("Guests Limit"),
-        COOP_SLOTS("Co-op Slots"),
-        COINS_ALLOWANCE("Coins Allowance");
+        ISLAND_SIZE("Island Size", 10),
+        MINION_SLOTS("Minion Slots", 5),
+        GUESTS_COUNT("Guests Limit", 5),
+        COOP_SLOTS("Co-op Slots", 3),
+        COINS_ALLOWANCE("Coins Allowance", 5);
 
         String name;
+        private final int maxed;
 
-        private Type(String name)
+        private Type(String name, int maxed)
         {
             this.name = name;
+            this.maxed = maxed;
+        }
+
+        public int getMaxed()
+        {
+            return this.maxed;
         }
     }
 }
