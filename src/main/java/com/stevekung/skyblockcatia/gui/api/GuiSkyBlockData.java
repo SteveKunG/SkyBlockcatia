@@ -1559,22 +1559,44 @@ public class GuiSkyBlockData extends GuiScreen
 
     private void renderItemOverlayIntoGUI(ItemStack itemStack, int xPosition, int yPosition)
     {
-        if (itemStack != null && itemStack.stackSize != 1)
+        if (itemStack != null)
         {
-            FontRenderer fontRenderer = this.fontRendererObj;
-            String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.stackSize));
-            GlStateManager.disableLighting();
-            GlStateManager.disableDepth();
-            GlStateManager.disableBlend();
-
-            if (itemStack.stackSize >= 100)
+            if (itemStack.stackSize != 1)
             {
-                fontRenderer = ColorUtils.unicodeFontRenderer;
-            }
+                FontRenderer fontRenderer = this.fontRendererObj;
+                String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.stackSize));
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableBlend();
 
-            fontRenderer.drawStringWithShadow(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215);
-            GlStateManager.enableLighting();
-            GlStateManager.enableDepth();
+                if (itemStack.stackSize >= 100)
+                {
+                    fontRenderer = ColorUtils.unicodeFontRenderer;
+                }
+
+                fontRenderer.drawStringWithShadow(stackSize, xPosition + 19 - 2 - fontRenderer.getStringWidth(stackSize), yPosition + 6 + 3, 16777215);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+            }
+            if (itemStack.getItem().showDurabilityBar(itemStack))
+            {
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableTexture2D();
+                GlStateManager.disableAlpha();
+                GlStateManager.disableBlend();
+                Tessellator tessellator = Tessellator.getInstance();
+                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                double health = itemStack.getItem().getDurabilityForDisplay(itemStack);
+                int i = Math.round(13.0F - (float)health * 13.0F);
+                int j = MathHelper.hsvToRGB(Math.max(0.0F, (float) (1.0F - health)) / 3.0F, 1.0F, 1.0F);
+                this.itemRender.func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+                this.itemRender.func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+                GlStateManager.enableAlpha();
+                GlStateManager.enableTexture2D();
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+            }
         }
     }
 
