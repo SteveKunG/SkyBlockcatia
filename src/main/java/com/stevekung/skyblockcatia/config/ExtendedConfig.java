@@ -159,6 +159,7 @@ public class ExtendedConfig
     public boolean shortcutButtonInInventory = true;
     public boolean showObtainedDate = true;
     public boolean fixSkyblockEnchantTag = true;
+    public boolean disableNightVision = false;
 
     private ExtendedConfig() {}
 
@@ -309,6 +310,7 @@ public class ExtendedConfig
             this.shortcutButtonInInventory = ExtendedConfig.getBoolean(nbt, "ShortcutButtonInInventory", this.shortcutButtonInInventory);
             this.showObtainedDate = ExtendedConfig.getBoolean(nbt, "ShowObtainedDate", this.showObtainedDate);
             this.fixSkyblockEnchantTag = ExtendedConfig.getBoolean(nbt, "FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
+            this.disableNightVision = ExtendedConfig.getBoolean(nbt, "DisableNightVision", this.disableNightVision);
 
             LoggerIN.info("Loading extended config {}", ExtendedConfig.file.getPath());
         }
@@ -452,6 +454,7 @@ public class ExtendedConfig
             nbt.setBoolean("ShortcutButtonInInventory", this.shortcutButtonInInventory);
             nbt.setBoolean("ShowObtainedDate", this.showObtainedDate);
             nbt.setBoolean("FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
+            nbt.setBoolean("DisableNightVision", this.disableNightVision);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             nbt.setInteger("ItemRarityOpacity", this.itemRarityOpacity);
@@ -849,6 +852,10 @@ public class ExtendedConfig
         {
             this.fixSkyblockEnchantTag = !this.fixSkyblockEnchantTag;
         }
+        else if (options == ExtendedConfig.Options.DISABLE_NIGHT_VISION)
+        {
+            this.disableNightVision = !this.disableNightVision;
+        }
     }
 
     public void setOptionFloatValue(ExtendedConfig.Options options, float value)
@@ -1210,6 +1217,8 @@ public class ExtendedConfig
             return this.showObtainedDate;
         case FIX_SKYBLOCK_ENCHANT_TAG:
             return this.fixSkyblockEnchantTag;
+        case DISABLE_NIGHT_VISION:
+            return this.disableNightVision;
         default:
             return false;
         }
@@ -1409,6 +1418,7 @@ public class ExtendedConfig
         SHORTCUT_BUTTON_IN_INVENTORY(false, true),
         SHOW_OBTAINED_DATE(false, true),
         FIX_SKYBLOCK_ENCHANT_TAG(false, true),
+        DISABLE_NIGHT_VISION(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         VISIT_ISLAND_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),

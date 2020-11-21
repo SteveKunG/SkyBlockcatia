@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
@@ -80,6 +81,15 @@ public class EntityRendererMixin
     private MovingObjectPosition rayTraceBlocks(WorldClient world, Vec3 from, Vec3 to)
     {
         return this.rayTraceBlocks(world, from, to, false, true, true);
+    }
+
+    @Inject(method = "getNightVisionBrightness(Lnet/minecraft/entity/EntityLivingBase;F)F", cancellable = true, at = @At("HEAD"))
+    private void getNightVisionBrightness(EntityLivingBase living, float partialTicks, CallbackInfoReturnable info)
+    {
+        if (ExtendedConfig.instance.disableNightVision)
+        {
+            info.setReturnValue(0.0F);
+        }
     }
 
     private MovingObjectPosition rayTraceBlocks(World world, Vec3 vec31, Vec3 vec32, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock)

@@ -94,6 +94,7 @@ potion_hud_style.extended_config=Potion HUD Style
 potion_hud_position.extended_config=Potion HUD Position
 ping_mode.extended_config=Ping Mode
 player_count_mode.extended_config=Player Count Mode
+disable_night_vision.extended_config=Disable Night Vision
 fps.extended_config=FPS
 xyz.extended_config=XYZ
 direction.extended_config=Direction
