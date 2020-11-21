@@ -31,11 +31,14 @@ public abstract class EntityArmorStandMixin extends EntityLivingBase
     @Inject(method = "interactAt(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/Vec3;)Z", cancellable = true, at = @At("HEAD"))
     private void interactAt(EntityPlayer player, Vec3 targetVec3, CallbackInfoReturnable info)
     {
-        for (ItemStack content : this.contents)
+        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.ignoreInteractInvisibleArmorStand)
         {
-            if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.ignoreInteractInvisibleArmorStand && (content == null || content != null && content.stackSize == 0) && this.isInvisible())
+            for (ItemStack content : this.contents)
             {
-                info.setReturnValue(false);
+                if ((content == null || content != null && content.stackSize == 0) && this.isInvisible())
+                {
+                    info.setReturnValue(false);
+                }
             }
         }
     }

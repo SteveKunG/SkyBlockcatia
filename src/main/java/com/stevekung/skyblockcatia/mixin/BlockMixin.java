@@ -22,7 +22,7 @@ public class BlockMixin
     @Inject(method = "collisionRayTrace(Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/Vec3;Lnet/minecraft/util/Vec3;)Lnet/minecraft/util/MovingObjectPosition;", cancellable = true, at = @At("HEAD"))
     private void collisionRayTrace(World world, BlockPos pos, Vec3 start, Vec3 end, CallbackInfoReturnable<MovingObjectPosition> info)
     {
-        if (ExtendedConfig.instance.ignoreBushHitbox && HypixelEventHandler.isSkyBlock)
+        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.ignoreBushHitbox)
         {
             if (this.that instanceof BlockFlower || this.that instanceof BlockTallGrass || this.that instanceof BlockDoublePlant || this.that instanceof BlockMushroom)
             {
