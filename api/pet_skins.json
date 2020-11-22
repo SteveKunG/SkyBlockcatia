@@ -100,5 +100,11 @@
         "displayName": "§5Dark Wither Skeleton",
         "uuid": "f336e789-b720-36ff-9326-71c8bf135db4",
         "texture": "224c2d14a0219af5ccfcaa36e8a333e271724ed61276611f9529e16c10273a0d"
+    },
+    {
+        "skin": "SILVERFISH",
+        "displayName": "§5Fortified Silverfish",
+        "uuid": "ee81d609-06c4-38e7-97e5-dd3ef196a4ba",
+        "texture": "d8552ff591042c4a38f8ba0626784ae28c4545a97d423fd9037c341035593273"
     }
 ]
