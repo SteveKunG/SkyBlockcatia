@@ -751,7 +751,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                             int max = Integer.valueOf(loreCount[1]);
                             int playerCountColor = this.getRGBPlayerCount(min, max);
                             int color = ColorUtils.to32BitColor(128, playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255);
-                            this.zLevel = 300.0F;
+                            this.zLevel = 260.0F;
                             this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color, color);
                             this.zLevel = 0.0F;
                             break;
