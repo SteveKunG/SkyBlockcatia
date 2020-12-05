@@ -4,7 +4,7 @@ import java.util.Locale;
 
 public class EnumEquipment
 {
-    public static enum Ordering
+    public enum Ordering
     {
         DEFAULT, REVERSE;
 
@@ -16,7 +16,7 @@ public class EnumEquipment
         }
     }
 
-    public static enum Direction
+    public enum Direction
     {
         VERTICAL, HORIZONTAL;
 
@@ -28,7 +28,7 @@ public class EnumEquipment
         }
     }
 
-    public static enum Status
+    public enum Status
     {
         DAMAGE_AND_MAX_DAMAGE, PERCENT, ONLY_DAMAGE, NONE, COUNT, COUNT_AND_STACK;
 
@@ -40,7 +40,7 @@ public class EnumEquipment
         }
     }
 
-    public static enum Position
+    public enum Position
     {
         LEFT, RIGHT, HOTBAR;
 

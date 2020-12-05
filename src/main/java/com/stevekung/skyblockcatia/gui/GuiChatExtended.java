@@ -234,7 +234,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                 list.add(data.getName());
             }
 
-            String max = Collections.max(list, Comparator.comparing(text -> text.length()));
+            String max = Collections.max(list, Comparator.comparing(String::length));
             int length = mc.fontRendererObj.getStringWidth(max) + 32;
 
             buttonList.add(this.dropdown = new GuiDropdownMinigames(this, width - length, 2, list));

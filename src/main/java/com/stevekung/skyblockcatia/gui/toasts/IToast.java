@@ -15,7 +15,7 @@ public interface IToast<T>
         return NO_TOKEN;
     }
 
-    public static enum Visibility
+    public enum Visibility
     {
         SHOW("skyblockcatia:ui.toast.in"),
         HIDE("skyblockcatia:ui.toast.out");

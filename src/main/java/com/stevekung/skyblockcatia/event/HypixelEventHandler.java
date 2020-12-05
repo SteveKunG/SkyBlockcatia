@@ -901,7 +901,7 @@ public class HypixelEventHandler
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
         Map<String, ItemDropDiff> previousInventoryMap = new HashMap<>();
         Map<String, ItemDropDiff> newInventoryMap = new HashMap<>();
-        HypixelEventHandler.ITEM_DROP_CHECK_LIST.removeIf(drop -> this.removeUndisplayedToast(drop));
+        HypixelEventHandler.ITEM_DROP_CHECK_LIST.removeIf(this::removeUndisplayedToast);
 
         if (this.previousInventory != null)
         {

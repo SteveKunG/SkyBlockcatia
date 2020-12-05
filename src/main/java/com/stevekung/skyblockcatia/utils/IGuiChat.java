@@ -6,11 +6,11 @@ import net.minecraft.client.gui.GuiButton;
 
 public interface IGuiChat
 {
-    public void initGui(List<GuiButton> buttonList, int width, int height);
-    public void drawScreen(List<GuiButton> buttonList, int mouseX, int mouseY, float partialTicks);
-    public void updateScreen(List<GuiButton> buttonList, int width, int height);
-    public void actionPerformed(GuiButton button);
-    public void onGuiClosed();
-    public void handleMouseInput(int width, int height);
-    public String sendChatMessage(String original);
+    void initGui(List<GuiButton> buttonList, int width, int height);
+    void drawScreen(List<GuiButton> buttonList, int mouseX, int mouseY, float partialTicks);
+    void updateScreen(List<GuiButton> buttonList, int width, int height);
+    void actionPerformed(GuiButton button);
+    void onGuiClosed();
+    void handleMouseInput(int width, int height);
+    String sendChatMessage(String original);
 }

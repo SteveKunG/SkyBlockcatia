@@ -17,7 +17,7 @@ public class HotbarEquipmentOverlay extends EquipmentOverlay
         return this.side;
     }
 
-    public static enum Side
+    public enum Side
     {
         LEFT, RIGHT;
     }

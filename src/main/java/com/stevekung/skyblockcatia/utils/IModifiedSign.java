@@ -4,11 +4,11 @@ import net.minecraft.util.IChatComponent;
 
 public interface IModifiedSign
 {
-    public IChatComponent getText(int line);
-    public void setText(int line, IChatComponent component);
-    public void setSelectionState(int currentRow, int selectionStart, int selectionEnd, boolean caretVisible);
-    public void resetSelectionState();
-    public boolean getCaretVisible();
-    public int getSelectionStart();
-    public int getSelectionEnd();
+    IChatComponent getText(int line);
+    void setText(int line, IChatComponent component);
+    void setSelectionState(int currentRow, int selectionStart, int selectionEnd, boolean caretVisible);
+    void resetSelectionState();
+    boolean getCaretVisible();
+    int getSelectionStart();
+    int getSelectionEnd();
 }

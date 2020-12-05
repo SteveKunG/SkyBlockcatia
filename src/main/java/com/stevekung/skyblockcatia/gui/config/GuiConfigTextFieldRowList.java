@@ -83,7 +83,7 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
 
     public void saveCurrentValue()
     {
-        this.options.forEach(row -> row.saveCurrentValue());
+        this.options.forEach(Row::saveCurrentValue);
     }
 
     public void mouseClickedText(int mouseX, int mouseY, int mouseEvent)
@@ -93,7 +93,7 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
 
     public void updateCursorCounter()
     {
-        this.options.forEach(row -> row.updateCursorCounter());
+        this.options.forEach(Row::updateCursorCounter);
     }
 
     public void textboxKeyTyped(char typedChar, int keyCode)

@@ -1311,7 +1311,7 @@ public class ExtendedConfig
         return LangUtils.translate(strArray[index]);
     }
 
-    public static enum Options
+    public enum Options
     {
         SWAP_INFO_POS(false, true),
         EQUIPMENT_DIRECTION(false, false),
