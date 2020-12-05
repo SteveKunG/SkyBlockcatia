@@ -857,7 +857,7 @@ public class SkyBlockEventHandler
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
         Map<String, ItemDropDiff> previousInventoryMap = Maps.newHashMap();
         Map<String, ItemDropDiff> newInventoryMap = Maps.newHashMap();
-        SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.removeIf(drop -> this.removeUndisplayedToast(drop));
+        SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.removeIf(this::removeUndisplayedToast);
 
         if (this.previousInventory != null)
         {

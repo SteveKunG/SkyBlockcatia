@@ -1599,7 +1599,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (tierCompletion != null)
             {
-                for (Map.Entry<String, JsonElement> entry : tierCompletion.getAsJsonObject().entrySet().stream().filter(entry -> !entry.getKey().equals("0")).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())).entrySet())
+                for (Map.Entry<String, JsonElement> entry : tierCompletion.getAsJsonObject().entrySet().stream().filter(entry -> !entry.getKey().equals("0")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
                 {
                     builder.append("Floor: " + entry.getKey() + "/" + NumberUtils.NUMBER_FORMAT.format(entry.getValue().getAsInt()) + ", ");
                 }
@@ -3087,7 +3087,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         int emperorKills = 0;
         int deepMonsterKills = 0;
 
-        for (Map.Entry<String, JsonElement> stat : stats.entrySet().stream().filter(entry -> !BLACKLIST_STATS.stream().anyMatch(stat -> entry.getKey().equals(stat))).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())).entrySet())
+        for (Map.Entry<String, JsonElement> stat : stats.entrySet().stream().filter(entry -> !BLACKLIST_STATS.stream().anyMatch(stat -> entry.getKey().equals(stat))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
         {
             String statName = stat.getKey().toLowerCase(Locale.ROOT);
             double value = stat.getValue().getAsDouble();
