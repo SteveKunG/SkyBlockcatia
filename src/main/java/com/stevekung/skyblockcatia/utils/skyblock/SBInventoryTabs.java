@@ -3,13 +3,13 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer.SkyBlockInventory;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 import com.stevekung.skyblockcatia.utils.RenderUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -122,7 +122,7 @@ public class SBInventoryTabs
 
     public void displayAllItems(List<ItemStack> items)
     {
-        for (SkyBlockInventory inventory : GuiSkyBlockAPIViewer.SKYBLOCK_INV)
+        for (SBInventoryTabs.Data inventory : GuiSkyBlockAPIViewer.SKYBLOCK_INV)
         {
             if (inventory.getTab() == this)
             {
@@ -133,7 +133,7 @@ public class SBInventoryTabs
 
     public boolean isDisabled()
     {
-        for (SkyBlockInventory inventory : GuiSkyBlockAPIViewer.SKYBLOCK_INV)
+        for (SBInventoryTabs.Data inventory : GuiSkyBlockAPIViewer.SKYBLOCK_INV)
         {
             if (inventory.getTab() == this)
             {
@@ -142,5 +142,41 @@ public class SBInventoryTabs
             }
         }
         return false;
+    }
+
+    public static class Data
+    {
+        private final List<ItemStack> items;
+        private final SBInventoryTabs tab;
+
+        public Data(List<ItemStack> items, SBInventoryTabs tab)
+        {
+            this.items = items;
+            this.tab = tab;
+        }
+
+        public List<ItemStack> getItems()
+        {
+            return this.items;
+        }
+
+        public SBInventoryTabs getTab()
+        {
+            return this.tab;
+        }
+    }
+
+    public static class InventoryExtended extends InventoryBasic
+    {
+        public InventoryExtended(int slotCount)
+        {
+            super("tmp", false, slotCount);
+        }
+
+        @Override
+        public int getInventoryStackLimit()
+        {
+            return 20160;
+        }
     }
 }

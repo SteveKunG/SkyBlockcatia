@@ -30,12 +30,12 @@ public class PetStats
     public static final PetStats INSTANCE = new PetStats();
     private double axeCooldown;
 
-    public void setClientStatByType(SBPets.Type type, int level, boolean active)
+    public void setClientStatByType(SBPets.Type type, int level)
     {
         switch (type)
         {
         case MONKEY:
-            this.setAxeCooldown(active ? level * 0.5D : 0);
+            this.setAxeCooldown(level * 0.5D);
             System.out.println("axe cooldown: " + this.axeCooldown);
             System.out.println("real axe cooldown: " + this.getAxeCooldown(2000));
             break;
@@ -150,7 +150,6 @@ public class PetStats
                         }
 
                         SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
-                        boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                         String petType = element.getAsJsonObject().get("type").getAsString();
 
                         if (heldItem != null && heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST)
@@ -163,7 +162,7 @@ public class PetStats
                         try
                         {
                             SBPets.Type type = SBPets.Type.valueOf(petType);
-                            PetStats.INSTANCE.setClientStatByType(type, level, active);
+                            PetStats.INSTANCE.setClientStatByType(type, level);
                         }
                         catch (Exception e) {e.printStackTrace();}
                     }

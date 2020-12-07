@@ -52,7 +52,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -64,7 +63,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -141,14 +139,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private static final ImmutableList<String> BLACKLIST_STATS = ImmutableList.of("highest_crit_damage", "mythos_burrows_dug_combat", "mythos_burrows_dug_combat_null", "mythos_burrows_dug_treasure", "mythos_burrows_dug_next", "mythos_burrows_dug_treasure_null", "mythos_burrows_chains_complete", "mythos_burrows_chains_complete_null", "mythos_burrows_dug_next_null");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
-    private final List<SkyBlockSkillInfo> skillLeftList = new ArrayList<>();
-    private final List<SkyBlockSkillInfo> skillRightList = new ArrayList<>();
+    private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
+    private final List<SBSkills.Info> skillRightList = new ArrayList<>();
     private final List<SkyBlockSlayerInfo> slayerInfo = new ArrayList<>();
     private final List<SBStats> sbKills = new ArrayList<>();
     private final List<SBStats> sbDeaths = new ArrayList<>();
     private final List<SBStats> sbOthers = new ArrayList<>();
     private final List<BankHistory.Stats> sbBankHistories = new ArrayList<>();
-    private final List<CraftedMinion> sbCraftedMinions = new ArrayList<>();
+    private final List<SBMinions.CraftedInfo> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
     private final List<SBCollections> collections = new ArrayList<>();
@@ -163,13 +161,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private String skillAvg;
     private int petScore;
     private int activeSlayerTier;
-    private SlayerType activeSlayerType;
+    private SBSlayers.Type activeSlayerType;
 
     // Info & Inventory
     private static final int SIZE = 36;
-    private static final InventoryExtended TEMP_INVENTORY = new InventoryExtended(GuiSkyBlockAPIViewer.SIZE);
-    private static final InventoryExtended TEMP_ARMOR_INVENTORY = new InventoryExtended(4);
-    public static final List<SkyBlockInventory> SKYBLOCK_INV = new ArrayList<>();
+    private static final SBInventoryTabs.InventoryExtended TEMP_INVENTORY = new SBInventoryTabs.InventoryExtended(GuiSkyBlockAPIViewer.SIZE);
+    private static final SBInventoryTabs.InventoryExtended TEMP_ARMOR_INVENTORY = new SBInventoryTabs.InventoryExtended(4);
+    public static final List<SBInventoryTabs.Data> SKYBLOCK_INV = new ArrayList<>();
     private int selectedTabIndex = SBInventoryTabs.INVENTORY.getTabIndex();
     private float currentScroll;
     private boolean isScrolling;
@@ -842,7 +840,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         int i = 0;
                         int height = this.height / 7;
 
-                        for (SkyBlockSkillInfo info : this.skillLeftList)
+                        for (SBSkills.Info info : this.skillLeftList)
                         {
                             int x = this.width / 2 - 120;
                             int y = height + 12;
@@ -854,7 +852,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                         i = 0;
 
-                        for (SkyBlockSkillInfo info : this.skillRightList)
+                        for (SBSkills.Info info : this.skillRightList)
                         {
                             int x = this.width / 2 + 30;
                             int y = height + 12;
@@ -1966,7 +1964,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
             if (catacombsExp != null)
             {
-                SkyBlockSkillInfo info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), DungeonSkillType.THE_CATACOMBS);
+                SBSkills.Info info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), SBDungeons.Type.THE_CATACOMBS);
                 this.catacombsLevel = info.getCurrentLvl();
                 this.dungeonData.add(EnumChatFormatting.RED + info.getName() + EnumChatFormatting.RESET + ", Level: " + info.getCurrentLvl() + " " + (int)Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
                 i++;
@@ -1990,7 +1988,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                 if (classExp != null)
                 {
-                    SkyBlockSkillInfo info2 = this.calculateDungeonSkill(classExp.getAsDouble(), DungeonSkillType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
+                    SBSkills.Info info2 = this.calculateDungeonSkill(classExp.getAsDouble(), SBDungeons.Type.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
                     this.dungeonData.add(EnumChatFormatting.RED + info2.getName() + EnumChatFormatting.RESET + ", Level: " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
                     i++;
                 }
@@ -2013,7 +2011,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.data.setHasDungeons(dungeon != null && i > 0);
     }
 
-    private SkyBlockSkillInfo calculateDungeonSkill(double playerXp, DungeonSkillType type)
+    private SBSkills.Info calculateDungeonSkill(double playerXp, SBDungeons.Type type)
     {
         ExpProgress[] progress = ExpProgress.DUNGEON;
         int xpRequired = 0;
@@ -2055,7 +2053,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             currentXp = xpRequired - xpToNextLvl;
             currentLvl = progress.length - 1;
         }
-        return new SkyBlockSkillInfo(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
+        return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
     }
 
     private void getBankHistories(JsonObject banking)
@@ -2120,8 +2118,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             }
         }
 
-        List<MinionLevel> minionLevels = new ArrayList<>();
-        List<MinionData> minionDatas = new ArrayList<>();
+        List<SBMinions.Info> minionLevels = new ArrayList<>();
+        List<SBMinions.Data> minionDatas = new ArrayList<>();
         int level = 1;
 
         for (SBMinions.Type minion : SBMinions.Type.VALUES)
@@ -2134,7 +2132,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     break;
                 }
             }
-            minionLevels.add(new MinionLevel(minion.name(), minion.getAltName(), minion.getMinionItem(), level, minion.getMinionCategory()));
+            minionLevels.add(new SBMinions.Info(minion.name(), minion.getAltName(), minion.getMinionItem(), level, minion.getMinionCategory()));
         }
 
         int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
@@ -2183,23 +2181,23 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
                 ++i;
             }
-            minionDatas.add(new MinionData(minionType, builder.toString()));
+            minionDatas.add(new SBMinions.Data(minionType, builder.toString()));
         }
 
-        List<CraftedMinion> farmingMinion = new ArrayList<>();
-        List<CraftedMinion> miningMinion = new ArrayList<>();
-        List<CraftedMinion> combatMinion = new ArrayList<>();
-        List<CraftedMinion> foragingMinion = new ArrayList<>();
-        List<CraftedMinion> fishingMinion = new ArrayList<>();
-        CraftedMinion dummy = new CraftedMinion(null, null, 0, null, null, null);
+        List<SBMinions.CraftedInfo> farmingMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> miningMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> combatMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> foragingMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> fishingMinion = new ArrayList<>();
+        SBMinions.CraftedInfo dummy = new SBMinions.CraftedInfo(null, null, 0, null, null, null);
         String displayName = null;
         ItemStack itemStack = null;
-        SkillType category = null;
-        Comparator<CraftedMinion> com = (cm1, cm2) -> new CompareToBuilder().append(cm1.getMinionName(), cm2.getMinionName()).build();
+        SBSkills.Type category = null;
+        Comparator<SBMinions.CraftedInfo> com = (cm1, cm2) -> new CompareToBuilder().append(cm1.getMinionName(), cm2.getMinionName()).build();
 
-        for (MinionData minionData : minionDatas)
+        for (SBMinions.Data minionData : minionDatas)
         {
-            for (MinionLevel minionLevel : minionLevels)
+            for (SBMinions.Info minionLevel : minionLevels)
             {
                 if (minionLevel.getMinionType().equals(minionData.getMinionType()))
                 {
@@ -2211,7 +2209,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
             }
 
-            CraftedMinion min = new CraftedMinion(minionData.getMinionType(), displayName, level, minionData.getCraftedTiers(), itemStack, category);
+            SBMinions.CraftedInfo min = new SBMinions.CraftedInfo(minionData.getMinionType(), displayName, level, minionData.getCraftedTiers(), itemStack, category);
 
             switch (category)
             {
@@ -2242,35 +2240,35 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         if (!farmingMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Farming", null, 0, null, null, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Farming", null, 0, null, null, null));
             this.sbCraftedMinions.addAll(farmingMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!miningMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Mining", null, 0, null, null, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Mining", null, 0, null, null, null));
             this.sbCraftedMinions.addAll(miningMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!combatMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Combat", null, 0, null, null, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Combat", null, 0, null, null, null));
             this.sbCraftedMinions.addAll(combatMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!foragingMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Foraging", null, 0, null, null, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Foraging", null, 0, null, null, null));
             this.sbCraftedMinions.addAll(foragingMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
         if (!fishingMinion.isEmpty())
         {
-            this.sbCraftedMinions.add(new CraftedMinion("Fishing", null, 0, null, null, null));
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Fishing", null, 0, null, null, null));
             this.sbCraftedMinions.addAll(fishingMinion);
             this.sbCraftedMinions.add(dummy);
         }
@@ -2489,14 +2487,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         {
                             try
                             {
-                                SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
+                                SBSlayers.Drops slayerDrops = SBSlayers.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
                                 ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
                                 this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName(), true);
                                 sacks.add(itemStack);
                             }
                             catch (Exception e)
                             {
-                                DungeonDrops dungeonDrops = DungeonDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
+                                SBDungeons.Drops dungeonDrops = SBDungeons.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
                                 ItemStack itemStack = dungeonDrops.getBaseItem();
                                 itemStack.stackSize = count;
                                 this.addSackItemStackCount(itemStack, count, dungeonDrops.getDisplayName(), false);
@@ -2522,7 +2520,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         {
             e.printStackTrace();
         }
-        SKYBLOCK_INV.add(new SkyBlockInventory(sacks, SBInventoryTabs.SACKS));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(sacks, SBInventoryTabs.SACKS));
     }
 
     private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable String altName, boolean ench)
@@ -2554,7 +2552,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     private void getPets(JsonObject currentUserProfile)
     {
-        List<PetData> petData = new ArrayList<>();
+        List<SBPets.Data> petData = new ArrayList<>();
         List<ItemStack> petItem = new ArrayList<>();
         JsonElement petsObj = currentUserProfile.get("pets");
 
@@ -2618,7 +2616,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     tier = tier.getNextRarity();
                 }
 
-                PetLevel level = this.checkPetLevel(exp, tier);
+                SBPets.Info level = this.checkPetLevel(exp, tier);
 
                 try
                 {
@@ -2680,7 +2678,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                     itemStack.getSubCompound("ExtraAttributes", true).setString("id", "PET");
                     itemStack.getTagCompound().setBoolean("active", active);
-                    petData.add(new PetData(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
 
                     switch (tier)
                     {
@@ -2712,20 +2710,20 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "UNKNOWN PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
-                    petData.add(new PetData(SBPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
                     LoggerIN.warning("Found an unknown pet! type: {}", petType);
                 }
                 petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getCurrentXp(), o1.getCurrentXp()).build());
             }
-            for (PetData data : petData)
+            for (SBPets.Data data : petData)
             {
                 petItem.addAll(data.getItemStack());
             }
         }
-        SKYBLOCK_INV.add(new SkyBlockInventory(petItem, SBInventoryTabs.PET));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(petItem, SBInventoryTabs.PET));
     }
 
-    private PetLevel checkPetLevel(double petExp, SBPets.Tier tier)
+    private SBPets.Info checkPetLevel(double petExp, SBPets.Tier tier)
     {
         ExpProgress[] progress = tier.getProgression();
         int totalPetTypeXp = 0;
@@ -2765,7 +2763,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             currentLvl = progress.length + 1;
             xpRequired = 0;
         }
-        return new PetLevel(currentLvl, levelToCheck, currentXp, xpRequired, petExp, totalPetTypeXp);
+        return new SBPets.Info(currentLvl, levelToCheck, currentXp, xpRequired, petExp, totalPetTypeXp);
     }
 
     private void applyBonuses()
@@ -3289,26 +3287,26 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     private void getSkills(JsonObject currentProfile)
     {
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_farming"), SkillType.FARMING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SkillType.FORAGING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SkillType.MINING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SkillType.FISHING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SkillType.RUNECRAFTING, ExpProgress.RUNECRAFTING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_farming"), SBSkills.Type.FARMING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SBSkills.Type.FORAGING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SBSkills.Type.MINING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SBSkills.Type.FISHING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SBSkills.Type.RUNECRAFTING, ExpProgress.RUNECRAFTING));
 
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SkillType.COMBAT));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SkillType.ENCHANTING));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_alchemy"), SkillType.ALCHEMY));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SkillType.TAMING));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SkillType.CARPENTRY));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SBSkills.Type.COMBAT));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SBSkills.Type.ENCHANTING));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_alchemy"), SBSkills.Type.ALCHEMY));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SBSkills.Type.TAMING));
+        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SBSkills.Type.CARPENTRY));
 
         double avg = 0.0D;
         double progress = 0.0D;
         int count = 0;
-        List<SkyBlockSkillInfo> skills = new ArrayList<>();
+        List<SBSkills.Info> skills = new ArrayList<>();
         skills.addAll(this.skillLeftList);
         skills.addAll(this.skillRightList);
 
-        for (SkyBlockSkillInfo skill : skills)
+        for (SBSkills.Info skill : skills)
         {
             if (skill.getName().contains("Runecrafting") || skill.getName().contains("Carpentry"))
             {
@@ -3333,12 +3331,12 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
     }
 
-    private SkyBlockSkillInfo checkSkill(JsonElement element, SkillType type)
+    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type)
     {
         return this.checkSkill(element, type, ExpProgress.SKILL);
     }
 
-    private SkyBlockSkillInfo checkSkill(JsonElement element, SkillType type, ExpProgress[] progress)
+    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type, ExpProgress[] progress)
     {
         if (element != null)
         {
@@ -3383,22 +3381,22 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 currentXp = (int)(xpRequired - xpToNextLvl);
                 currentLvl = progress.length - 1;
             }
-            if (type != SkillType.RUNECRAFTING && type != SkillType.CARPENTRY)
+            if (type != SBSkills.Type.RUNECRAFTING && type != SBSkills.Type.CARPENTRY)
             {
                 skillProgress = currentLvl < 50 ? currentXp / xpRequired : 0.0D;
             }
 
             this.setSkillLevel(type, currentLvl);
             this.skillCount += 1;
-            return new SkyBlockSkillInfo(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
+            return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, skillProgress, xpToNextLvl <= 0);
         }
         else
         {
-            return new SkyBlockSkillInfo(EnumChatFormatting.RED + type.getName() + " is not available!", 0, 0, 0, 0, false);
+            return new SBSkills.Info(EnumChatFormatting.RED + type.getName() + " is not available!", 0, 0, 0, 0, false);
         }
     }
 
-    private void setSkillLevel(SkillType type, int currentLevel)
+    private void setSkillLevel(SBSkills.Type type, int currentLevel)
     {
         switch (type)
         {
@@ -3608,15 +3606,15 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         List<ItemStack> mainInventory = SBAPIUtils.decodeItem(currentProfile, InventoryType.INVENTORY);
         List<ItemStack> accessoryInventory = SBAPIUtils.decodeItem(currentProfile, InventoryType.ACCESSORY_BAG);
 
-        SKYBLOCK_INV.add(new SkyBlockInventory(mainInventory, SBInventoryTabs.INVENTORY));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.ENDER_CHEST), SBInventoryTabs.ENDER_CHEST));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.PERSONAL_VAULT), SBInventoryTabs.PERSONAL_VAULT));
-        SKYBLOCK_INV.add(new SkyBlockInventory(accessoryInventory, SBInventoryTabs.ACCESSORY));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.POTION_BAG), SBInventoryTabs.POTION));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.FISHING_BAG), SBInventoryTabs.FISHING));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.QUIVER), SBInventoryTabs.QUIVER));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.CANDY), SBInventoryTabs.CANDY));
-        SKYBLOCK_INV.add(new SkyBlockInventory(SBAPIUtils.decodeItem(currentProfile, InventoryType.WARDROBE), SBInventoryTabs.WARDROBE));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(mainInventory, SBInventoryTabs.INVENTORY));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.ENDER_CHEST), SBInventoryTabs.ENDER_CHEST));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.PERSONAL_VAULT), SBInventoryTabs.PERSONAL_VAULT));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(accessoryInventory, SBInventoryTabs.ACCESSORY));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.POTION_BAG), SBInventoryTabs.POTION));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.FISHING_BAG), SBInventoryTabs.FISHING));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.QUIVER), SBInventoryTabs.QUIVER));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.CANDY), SBInventoryTabs.CANDY));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile, InventoryType.WARDROBE), SBInventoryTabs.WARDROBE));
 
         this.inventoryToStats.addAll(mainInventory);
         this.inventoryToStats.addAll(accessoryInventory);
@@ -3631,7 +3629,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         {
             try
             {
-                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ROOT));
+                this.activeSlayerType = SBSlayers.Type.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ROOT));
                 this.activeSlayerTier = 1 + slayerQuest.getAsJsonObject().get("tier").getAsInt();
             }
             catch (Exception e)
@@ -3642,9 +3640,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         if (slayerBosses != null)
         {
-            List<SkyBlockSlayerInfo> zombie = this.getSlayer(slayerBosses, SlayerType.ZOMBIE);
-            List<SkyBlockSlayerInfo> spider = this.getSlayer(slayerBosses, SlayerType.SPIDER);
-            List<SkyBlockSlayerInfo> wolf = this.getSlayer(slayerBosses, SlayerType.WOLF);
+            List<SkyBlockSlayerInfo> zombie = this.getSlayer(slayerBosses, SBSlayers.Type.ZOMBIE);
+            List<SkyBlockSlayerInfo> spider = this.getSlayer(slayerBosses, SBSlayers.Type.SPIDER);
+            List<SkyBlockSlayerInfo> wolf = this.getSlayer(slayerBosses, SBSlayers.Type.WOLF);
 
             if (!zombie.isEmpty())
             {
@@ -3699,7 +3697,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
     }
 
-    private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SlayerType type)
+    private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SBSlayers.Type type)
     {
         List<SkyBlockSlayerInfo> list = new ArrayList<>();
         ExpProgress[] progress = type.getProgress();
@@ -3775,7 +3773,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         return new ArrayList<>();
     }
 
-    private void setSlayerSkillLevel(SlayerType type, int currentLevel)
+    private void setSlayerSkillLevel(SBSlayers.Type type, int currentLevel)
     {
         switch (type)
         {
@@ -3955,249 +3953,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         return builder.toString();
     }
 
-    class MinionLevel
-    {
-        private final String minionType;
-        private final String displayName;
-        private final ItemStack minionItem;
-        private final int minionMaxTier;
-        private final SkillType category;
-
-        public MinionLevel(String minionType, String displayName, ItemStack minionItem, int minionMaxTier, SkillType category)
-        {
-            this.minionType = minionType;
-            this.displayName = displayName;
-            this.minionItem = minionItem;
-            this.minionMaxTier = minionMaxTier;
-            this.category = category;
-        }
-
-        public String getMinionType()
-        {
-            return this.minionType;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public ItemStack getMinionItem()
-        {
-            return this.minionItem;
-        }
-
-        public int getMinionMaxTier()
-        {
-            return this.minionMaxTier;
-        }
-
-        public SkillType getMinionCategory()
-        {
-            return this.category;
-        }
-    }
-
-    class MinionData
-    {
-        private final String minionType;
-        private final String craftedTiers;
-
-        public MinionData(String minionType, String craftedTiers)
-        {
-            this.minionType = minionType;
-            this.craftedTiers = craftedTiers;
-        }
-
-        public String getMinionType()
-        {
-            return this.minionType;
-        }
-
-        public String getCraftedTiers()
-        {
-            return this.craftedTiers;
-        }
-    }
-
-    class CraftedMinion
-    {
-        private final String minionName;
-        private final String displayName;
-        private final int minionMaxTier;
-        private final String craftedTiers;
-        private final ItemStack minionItem;
-        private final SkillType category;
-
-        public CraftedMinion(String minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem, SkillType category)
-        {
-            this.minionName = minionName;
-            this.displayName = displayName;
-            this.minionMaxTier = minionMaxTier;
-            this.craftedTiers = craftedTiers;
-            this.minionItem = minionItem;
-            this.category = category;
-        }
-
-        public String getMinionName()
-        {
-            return this.minionName;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public int getMinionMaxTier()
-        {
-            return this.minionMaxTier;
-        }
-
-        public String getCraftedTiers()
-        {
-            return this.craftedTiers;
-        }
-
-        public ItemStack getMinionItem()
-        {
-            return this.minionItem;
-        }
-
-        public SkillType getMinionCategory()
-        {
-            return this.category;
-        }
-    }
-
-    public class SkyBlockInventory
-    {
-        private final List<ItemStack> items;
-        private final SBInventoryTabs tab;
-
-        public SkyBlockInventory(List<ItemStack> items, SBInventoryTabs tab)
-        {
-            this.items = items;
-            this.tab = tab;
-        }
-
-        public List<ItemStack> getItems()
-        {
-            return this.items;
-        }
-
-        public SBInventoryTabs getTab()
-        {
-            return this.tab;
-        }
-    }
-
-    private class PetData
-    {
-        private final SBPets.Tier tier;
-        private final int currentLevel;
-        private final double currentXp;
-        private final boolean isActive;
-        private final List<ItemStack> itemStack;
-
-        public PetData(SBPets.Tier tier, int currentLevel, double currentXp, boolean isActive, List<ItemStack> itemStack)
-        {
-            this.tier = tier;
-            this.currentLevel = currentLevel;
-            this.currentXp = currentXp;
-            this.isActive = isActive;
-            this.itemStack = itemStack;
-        }
-
-        public SBPets.Tier getTier()
-        {
-            return this.tier;
-        }
-
-        public List<ItemStack> getItemStack()
-        {
-            return this.itemStack;
-        }
-
-        public int getCurrentLevel()
-        {
-            return this.currentLevel;
-        }
-
-        public double getCurrentXp()
-        {
-            return this.currentXp;
-        }
-
-        public boolean isActive()
-        {
-            return this.isActive;
-        }
-    }
-
-    private class PetLevel
-    {
-        private final int currentPetLevel;
-        private final int nextPetLevel;
-        private final double currentPetXp;
-        private final int xpRequired;
-        private final double petXp;
-        private final int totalPetTypeXp;
-
-        public PetLevel(int currentPetLevel, int nextPetLevel, double currentPetXp, int xpRequired, double petXp, int totalPetTypeXp)
-        {
-            this.currentPetLevel = currentPetLevel;
-            this.nextPetLevel = nextPetLevel;
-            this.currentPetXp = currentPetXp;
-            this.xpRequired = xpRequired;
-            this.petXp = petXp;
-            this.totalPetTypeXp = totalPetTypeXp;
-        }
-
-        public int getCurrentPetLevel()
-        {
-            return this.currentPetLevel;
-        }
-
-        public int getNextPetLevel()
-        {
-            return this.nextPetLevel;
-        }
-
-        public double getCurrentPetXp()
-        {
-            return this.currentPetXp;
-        }
-
-        public int getXpRequired()
-        {
-            return this.xpRequired;
-        }
-
-        public double getPetXp()
-        {
-            return this.petXp;
-        }
-
-        public int getTotalPetTypeXp()
-        {
-            return this.totalPetTypeXp;
-        }
-
-        public String getPercent()
-        {
-            if (this.xpRequired > 0)
-            {
-                double percent = this.currentPetXp * 100.0D / this.xpRequired;
-                return new ModDecimalFormat("##.#").format(percent) + "%";
-            }
-            else
-            {
-                return EnumChatFormatting.AQUA.toString() + EnumChatFormatting.BOLD + "MAX LEVEL";
-            }
-        }
-    }
-
     static class ContainerArmor extends Container
     {
         public ContainerArmor(boolean info)
@@ -4344,56 +4099,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
             }
             return this.value;
-        }
-    }
-
-    class SkyBlockSkillInfo
-    {
-        private final String name;
-        private final double currentXp;
-        private final int xpRequired;
-        private final int currentLvl;
-        private final double skillProgress;
-        private final boolean reachLimit;
-
-        public SkyBlockSkillInfo(String name, double currentXp, int xpRequired, int currentLvl, double skillProgress, boolean reachLimit)
-        {
-            this.name = name;
-            this.currentXp = currentXp;
-            this.xpRequired = xpRequired;
-            this.currentLvl = currentLvl;
-            this.skillProgress = skillProgress;
-            this.reachLimit = reachLimit;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        public double getCurrentXp()
-        {
-            return this.currentXp;
-        }
-
-        public int getXpRequired()
-        {
-            return this.xpRequired;
-        }
-
-        public int getCurrentLvl()
-        {
-            return this.currentLvl;
-        }
-
-        public double getSkillProgress()
-        {
-            return this.skillProgress;
-        }
-
-        public boolean isReachLimit()
-        {
-            return this.reachLimit;
         }
     }
 
@@ -4765,10 +4470,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     class SkyBlockCraftedMinions extends GuiScrollingList
     {
-        private final List<CraftedMinion> craftMinions;
+        private final List<SBMinions.CraftedInfo> craftMinions;
         private final GuiSkyBlockAPIViewer parent;
 
-        public SkyBlockCraftedMinions(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<CraftedMinion> craftMinions)
+        public SkyBlockCraftedMinions(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SBMinions.CraftedInfo> craftMinions)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.craftMinions = craftMinions;
@@ -4784,7 +4489,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         @Override
         protected void drawSlot(int index, int right, int top, int height, Tessellator tess)
         {
-            CraftedMinion craftedMinion = this.craftMinions.get(index);
+            SBMinions.CraftedInfo craftedMinion = this.craftMinions.get(index);
 
             if (craftedMinion.getMinionItem() != null)
             {
@@ -4815,147 +4520,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
     }
 
-    public enum SkillType
-    {
-        FARMING("Farming"),
-        FORAGING("Foraging"),
-        MINING("Mining"),
-        FISHING("Fishing"),
-        COMBAT("Combat"),
-        ENCHANTING("Enchanting"),
-        ALCHEMY("Alchemy"),
-        RUNECRAFTING("Runecrafting"),
-        CARPENTRY("Carpentry"),
-        TAMING("Taming");
-
-        private final String name;
-
-        private SkillType(String name)
-        {
-            this.name = name;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
-    public enum DungeonSkillType
-    {
-        HEALER("Healer"),
-        MAGE("Mage"),
-        BERSERK("Berserk"),
-        ARCHER("Archer"),
-        TANK("Tank"),
-        THE_CATACOMBS("The Catacombs");
-
-        private final String name;
-
-        private DungeonSkillType(String name)
-        {
-            this.name = name;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-    }
-
-    private enum SlayerType
-    {
-        ZOMBIE("Zombie", ExpProgress.ZOMBIE_SLAYER),
-        SPIDER("Spider", ExpProgress.SPIDER_SLAYER),
-        WOLF("Wolf", ExpProgress.WOLF_SLAYER);
-
-        private final String name;
-        private final ExpProgress[] progress;
-
-        private SlayerType(String name, ExpProgress[] progress)
-        {
-            this.name = name;
-            this.progress = progress;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        public ExpProgress[] getProgress()
-        {
-            return this.progress;
-        }
-    }
-
-    private static class InventoryExtended extends InventoryBasic
-    {
-        public InventoryExtended(int slotCount)
-        {
-            super("tmp", false, slotCount);
-        }
-
-        @Override
-        public int getInventoryStackLimit()
-        {
-            return 20160;
-        }
-    }
-
-    private enum SlayerDrops
-    {
-        TARANTULA_WEB(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Tarantula Web", Items.string),
-        REVENANT_FLESH(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Revenant Flesh", Items.rotten_flesh),
-        WOLF_TOOTH(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Wolf Tooth", Items.ghast_tear);
-
-        private final String displayName;
-        private final Item baseItem;
-
-        private SlayerDrops(String displayName, Item baseItem)
-        {
-            this.displayName = displayName;
-            this.baseItem = baseItem;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public Item getBaseItem()
-        {
-            return this.baseItem;
-        }
-    }
-
-    private enum DungeonDrops
-    {
-        SPIRIT_LEAP(EnumChatFormatting.RESET.toString() + EnumChatFormatting.BLUE + "Spirit Leap", new ItemStack(Items.ender_pearl)),
-        DUNGEON_DECOY(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Decoy", new ItemStack(Items.spawn_egg)),
-        INFLATABLE_JERRY(EnumChatFormatting.RESET.toString() + EnumChatFormatting.WHITE + "Inflatable Jerry", new ItemStack(Items.spawn_egg, 0, EntityList.getIDFromString("Villager"))),
-        DUNGEON_TRAP(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "Dungeon Trap", new ItemStack(Blocks.heavy_weighted_pressure_plate));
-
-        private final String displayName;
-        private final ItemStack baseItem;
-
-        private DungeonDrops(String displayName, ItemStack baseItem)
-        {
-            this.displayName = displayName;
-            this.baseItem = baseItem;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public ItemStack getBaseItem()
-        {
-            return this.baseItem;
-        }
-    }
-
     private enum ViewButton
     {
         PLAYER(10),
@@ -4965,7 +4529,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         OTHERS(14);
 
         private final int id;
-        protected static final ViewButton[] VALUES = ViewButton.values();
 
         private ViewButton(int id)
         {
@@ -4974,7 +4537,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         public static ViewButton getTypeForButton(GuiButton button)
         {
-            for (ViewButton viewButton : ViewButton.VALUES)
+            for (ViewButton viewButton : ViewButton.values())
             {
                 if (viewButton.id == button.id)
                 {
@@ -4993,7 +4556,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         BANK_HISTORY(23);
 
         private final int id;
-        protected static final OthersViewButton[] VALUES = OthersViewButton.values();
 
         private OthersViewButton(int id)
         {
@@ -5002,7 +4564,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         public static OthersViewButton getTypeForButton(GuiButton button)
         {
-            for (OthersViewButton viewButton : OthersViewButton.VALUES)
+            for (OthersViewButton viewButton : OthersViewButton.values())
             {
                 if (viewButton.id == button.id)
                 {
@@ -5021,7 +4583,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         CRAFTED_MINIONS(33);
 
         private final int id;
-        protected static final BasicInfoViewButton[] VALUES = BasicInfoViewButton.values();
 
         private BasicInfoViewButton(int id)
         {
@@ -5030,7 +4591,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         public static BasicInfoViewButton getTypeForButton(GuiButton button)
         {
-            for (BasicInfoViewButton viewButton : BasicInfoViewButton.VALUES)
+            for (BasicInfoViewButton viewButton : BasicInfoViewButton.values())
             {
                 if (viewButton.id == button.id)
                 {

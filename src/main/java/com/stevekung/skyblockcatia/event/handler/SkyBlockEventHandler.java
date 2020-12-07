@@ -45,8 +45,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.event.ClickEvent;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -1026,39 +1024,6 @@ public class SkyBlockEventHandler
         SkyBlockEventHandler.dragonHealth = 0;
         this.dragonType = null;
         HUDRenderEventHandler.foundDragon = false;
-    }
-
-    public static ItemStack getSkillItemStack(String exp, String skill)
-    {
-        ItemStack itemStack;
-
-        switch (skill)
-        {
-        default:
-        case "Farming":
-            itemStack = new ItemStack(Items.diamond_hoe);
-            break;
-        case "Mining":
-            itemStack = new ItemStack(Items.diamond_pickaxe);
-            break;
-        case "Combat":
-            itemStack = new ItemStack(Items.diamond_sword);
-            break;
-        case "Foraging":
-            itemStack = new ItemStack(Items.diamond_axe);
-            break;
-        case "Fishing":
-            itemStack = new ItemStack(Items.fishing_rod);
-            break;
-        case "Enchanting":
-            itemStack = new ItemStack(Blocks.enchanting_table);
-            break;
-        case "Alchemy":
-            itemStack = new ItemStack(Items.brewing_stand);
-            break;
-        }
-        itemStack.setStackDisplayName(ColorUtils.stringToRGB("255,255,85").toColoredFont() + exp + " " + skill + " XP");
-        return itemStack;
     }
 
     private List<ItemStack> copyInventory(ItemStack[] inventory)
