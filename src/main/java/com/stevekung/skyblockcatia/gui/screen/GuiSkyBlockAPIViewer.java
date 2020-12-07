@@ -89,7 +89,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     // Based stuff
     private boolean firstLoad;
     private boolean loadingApi = true;
-    private boolean error = false;
+    private boolean error;
     private String errorMessage;
     private String statusMessage;
     private GuiButton doneButton;
@@ -189,7 +189,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
-    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0, 0);
+    private BonusStatTemplate allStat = BonusStatTemplate.getDefault();
 
     // GuiContainer fields
     private int xSize;
@@ -1816,7 +1816,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
 
                 this.data.setHasInventories(this.totalDisabledInv != 11);
-                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                this.allStat.setEffectiveHealth(this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)));
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID, communityUpgrade);
                 break;
             }
@@ -2857,8 +2857,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             fairyExchanges = fairyExchangesEle.getAsInt();
         }
 
-        this.allStat.add(this.getFairySouls(fairyExchanges));
-        this.allStat.add(this.getMagicFindFromPets(this.petScore));
+        this.getFairySouls(fairyExchanges);
+        this.getMagicFindFromPets(this.petScore);
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FARMING, this.farmingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FORAGING, this.foragingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.MINING, this.miningLevel));
@@ -3188,7 +3188,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
         this.infoList.add(new SkyBlockInfo(ferocity + "\u2AFD Ferocity", ferocity + SKILL_AVG.format(this.allStat.getFerocity())));
-        this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2AFD Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage())));
+        this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2739 Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage())));
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "\u2618 Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
 
         this.infoList.add(new SkyBlockInfo("", ""));
@@ -3246,7 +3246,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.infoList.add(new SkyBlockInfo("Death Count", FORMAT.format(deathCounts)));
     }
 
-    private BonusStatTemplate getFairySouls(int fairyExchanges)
+    private void getFairySouls(int fairyExchanges)
     {
         double healthBase = 0;
         double defenseBase = 0;
@@ -3259,10 +3259,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             defenseBase += (i + 1) % 5 == 0 ? 2 : 1;
             strengthBase += (i + 1) % 5 == 0 ? 2 : 1;
         }
-        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speed, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        this.allStat.addHealth(healthBase);
+        this.allStat.addDefense(defenseBase);
+        this.allStat.addStrength(strengthBase);
+        this.allStat.addSpeed(speed);
     }
 
-    private BonusStatTemplate getMagicFindFromPets(int petsScore)
+    private void getMagicFindFromPets(int petsScore)
     {
         double magicFindBase = 0;
 
@@ -3276,7 +3279,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 magicFindBase = magicFind;
             }
         }
-        return new BonusStatTemplate(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, magicFindBase, 0, 0, 0);
+        this.allStat.addMagicFind(magicFindBase);
     }
 
     private String replaceStatsString(String statName, String replace)

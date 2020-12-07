@@ -57,6 +57,11 @@ public class BonusStatTemplate
         return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity, this.abilityDamage);
     }
 
+    public static BonusStatTemplate getDefault()
+    {
+        return new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0, 0);
+    }
+
     public double getHealth()
     {
         return this.health;
