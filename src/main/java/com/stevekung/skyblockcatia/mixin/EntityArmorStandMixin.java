@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -31,7 +31,7 @@ public abstract class EntityArmorStandMixin extends EntityLivingBase
     @Inject(method = "interactAt(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/Vec3;)Z", cancellable = true, at = @At("HEAD"))
     private void interactAt(EntityPlayer player, Vec3 targetVec3, CallbackInfoReturnable info)
     {
-        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.ignoreInteractInvisibleArmorStand)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.ignoreInteractInvisibleArmorStand)
         {
             for (ItemStack content : this.contents)
             {

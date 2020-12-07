@@ -7,9 +7,12 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.gui.GuiDropdownMinigames.IDropboxCallback;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonCustomize;
+import com.stevekung.skyblockcatia.gui.widget.button.GuiDropdownMinigamesButton;
+import com.stevekung.skyblockcatia.gui.widget.button.GuiDropdownMinigamesButton.IDropboxCallback;
+import com.stevekung.skyblockcatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.Minecraft;
@@ -27,7 +30,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiChatExtended implements IGuiChat, IDropboxCallback
 {
-    private GuiDropdownMinigames dropdown;
+    private GuiDropdownMinigamesButton dropdown;
     private int prevSelect = -1;
     private ChatMode mode = ChatMode.ALL;
     private final Minecraft mc;
@@ -41,7 +44,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
     public void initGui(List<GuiButton> buttonList, int width, int height)
     {
         this.updateButton(buttonList, width, height);
-        this.mode = ChatMode.VALUES[ExtendedConfig.instance.chatMode];
+        this.mode = ChatMode.VALUES[SkyBlockcatiaSettings.instance.chatMode];
     }
 
     @Override
@@ -62,7 +65,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
             }
         });
 
-        if (ConfigManagerIN.enableChatMode && InfoUtils.INSTANCE.isHypixel())
+        if (SkyBlockcatiaConfig.enableChatMode && InfoUtils.INSTANCE.isHypixel())
         {
             Minecraft mc = Minecraft.getMinecraft();
             String chatMode = "CHAT MODE: " + JsonUtils.create(this.mode.getDesc()).setChatStyle(new ChatStyle().setColor(this.mode.getColor()).setBold(true)).getFormattedText();
@@ -78,10 +81,10 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
     {
         if (InfoUtils.INSTANCE.isHypixel())
         {
-            if (this.prevSelect != ExtendedConfig.instance.selectedHypixelMinigame)
+            if (this.prevSelect != SkyBlockcatiaSettings.instance.selectedHypixelMinigame)
             {
                 this.updateButton(buttonList, width, height);
-                this.prevSelect = ExtendedConfig.instance.selectedHypixelMinigame;
+                this.prevSelect = SkyBlockcatiaSettings.instance.selectedHypixelMinigame;
             }
 
             if (this.dropdown != null)
@@ -126,21 +129,21 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
         case 200:
             this.mode = ChatMode.ALL;
             player.sendChatMessage("/chat a");
-            ExtendedConfig.instance.chatMode = 0;
+            SkyBlockcatiaSettings.instance.chatMode = 0;
             break;
         case 201:
             this.mode = ChatMode.PARTY;
             player.sendChatMessage("/chat p");
-            ExtendedConfig.instance.chatMode = 1;
+            SkyBlockcatiaSettings.instance.chatMode = 1;
             break;
         case 202:
             this.mode = ChatMode.GUILD;
             player.sendChatMessage("/chat g");
-            ExtendedConfig.instance.chatMode = 2;
+            SkyBlockcatiaSettings.instance.chatMode = 2;
             break;
         case 203:
             this.mode = ChatMode.SKYBLOCK_COOP;
-            ExtendedConfig.instance.chatMode = 3;
+            SkyBlockcatiaSettings.instance.chatMode = 3;
             break;
         }
     }
@@ -161,7 +164,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
     @Override
     public void onGuiClosed()
     {
-        ExtendedConfig.instance.save();
+        SkyBlockcatiaSettings.instance.save();
     }
 
     @Override
@@ -195,16 +198,16 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
     }
 
     @Override
-    public void onSelectionChanged(GuiDropdownMinigames dropdown, int selection)
+    public void onSelectionChanged(GuiDropdownMinigamesButton dropdown, int selection)
     {
-        ExtendedConfig.instance.selectedHypixelMinigame = selection;
-        ExtendedConfig.instance.save();
+        SkyBlockcatiaSettings.instance.selectedHypixelMinigame = selection;
+        SkyBlockcatiaSettings.instance.save();
     }
 
     @Override
-    public int getInitialSelection(GuiDropdownMinigames dropdown)
+    public int getInitialSelection(GuiDropdownMinigamesButton dropdown)
     {
-        return ExtendedConfig.instance.selectedHypixelMinigame;
+        return SkyBlockcatiaSettings.instance.selectedHypixelMinigame;
     }
 
     private void updateButton(List<GuiButton> buttonList, int width, int height)
@@ -214,7 +217,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
 
         if (InfoUtils.INSTANCE.isHypixel())
         {
-            if (ConfigManagerIN.enableChatMode)
+            if (SkyBlockcatiaConfig.enableChatMode)
             {
                 // hypixel chat
                 buttonList.add(new GuiButton(200, width - 23, height - 35, 20, 20, "A"));
@@ -222,7 +225,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                 buttonList.add(new GuiButton(202, width - 23, height - 77, 20, 20, "G"));
                 buttonList.add(new GuiButton(203, width - 31, height - 98, 28, 20, "COOP"));
             }
-            if (!ConfigManagerIN.enableShortcutGameButton || this.mc.gameSettings.showDebugInfo)
+            if (!SkyBlockcatiaConfig.enableShortcutGameButton || this.mc.gameSettings.showDebugInfo)
             {
                 return;
             }
@@ -237,9 +240,9 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
             String max = Collections.max(list, Comparator.comparing(String::length));
             int length = mc.fontRendererObj.getStringWidth(max) + 32;
 
-            buttonList.add(this.dropdown = new GuiDropdownMinigames(this, width - length, 2, list));
+            buttonList.add(this.dropdown = new GuiDropdownMinigamesButton(this, width - length, 2, list));
             this.dropdown.width = length;
-            this.prevSelect = ExtendedConfig.instance.selectedHypixelMinigame;
+            this.prevSelect = SkyBlockcatiaSettings.instance.selectedHypixelMinigame;
 
             List<GuiButtonCustomize> gameBtn = new ArrayList<>();
             int xPos2 = width - 99;
@@ -247,7 +250,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
             if (this.prevSelect > list.size())
             {
                 this.prevSelect = 0;
-                ExtendedConfig.instance.selectedHypixelMinigame = 0;
+                SkyBlockcatiaSettings.instance.selectedHypixelMinigame = 0;
             }
 
             for (MinigameData data : MinigameData.getMinigameData())
@@ -299,7 +302,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
 
         for (GuiButton button : buttonList)
         {
-            if (!button.getClass().equals(GuiDropdownMinigames.class) && !(button.id >= 0 && button.id <= 203))
+            if (!button.getClass().equals(GuiDropdownMinigamesButton.class) && !(button.id >= 0 && button.id <= 203))
             {
                 button.visible = false;
             }

@@ -22,11 +22,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
-import com.stevekung.skyblockcatia.gui.GuiNumberField;
-import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.gui.widget.GuiNumberField;
+import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
+import com.stevekung.skyblockcatia.utils.ColorUtils;
+import com.stevekung.skyblockcatia.utils.CommonUtils;
+import com.stevekung.skyblockcatia.utils.IExtendedChatGui;
+import com.stevekung.skyblockcatia.utils.SearchMode;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRecipeViewer;
 
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -44,7 +48,7 @@ import net.minecraft.util.*;
 import net.minecraftforge.client.ClientCommandHandler;
 
 @Mixin(GuiContainer.class)
-public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
+public abstract class GuiContainerMixin extends GuiScreen implements IExtendedChatGui
 {
     private final GuiContainer that = (GuiContainer) (Object) this;
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
@@ -208,12 +212,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     {
         if (this.theSlot != null)
         {
-            if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKeyCode())
+            if (keyCode == KeyBindingsSB.KEY_SB_VIEW_RECIPE.getKeyCode())
             {
-                SkyBlockRecipeViewer.viewRecipe(this.that.mc.thePlayer, this.theSlot, keyCode);
+                SBRecipeViewer.viewRecipe(this.that.mc.thePlayer, this.theSlot, keyCode);
                 info.cancel();
             }
-            else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getKeyCode())
+            else if (keyCode == KeyBindingsSB.KEY_SB_OPEN_WIKI.getKeyCode())
             {
                 ItemStack itemStack = this.theSlot.getStack();
 
@@ -311,7 +315,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
         {
             ItemStack itemStack = slot.getStack();
 
-            if (ExtendedConfig.instance.preventClickingOnDummyItem && itemStack != null)
+            if (SkyBlockcatiaSettings.instance.preventClickingOnDummyItem && itemStack != null)
             {
                 if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
@@ -333,7 +337,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
             {
                 GuiChest chest = (GuiChest)this.that;
 
-                if (ExtendedConfig.instance.preventClickingOnDummyItem && itemStack != null)
+                if (SkyBlockcatiaSettings.instance.preventClickingOnDummyItem && itemStack != null)
                 {
                     String name = itemStack.getDisplayName();
 
@@ -471,7 +475,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
 
             this.drawCurrentSelectedPet(slot);
 
-            if (ExtendedConfig.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
+            if (SkyBlockcatiaSettings.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
             {
                 this.renderHubOverlay(slot);
             }
@@ -483,7 +487,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
     {
         boolean found = false;
 
-        if (ExtendedConfig.instance.lobbyPlayerViewer && this.that instanceof GuiChest)
+        if (SkyBlockcatiaSettings.instance.lobbyPlayerViewer && this.that instanceof GuiChest)
         {
             GuiChest chest = (GuiChest)this.that;
 
@@ -623,7 +627,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements ITradeGUI
                             this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
                         }
 
-                        if (((ITradeGUI)(GuiChest)this.that).getNumberField() == null || ((ITradeGUI)(GuiChest)this.that).getNumberField().getText().isEmpty())
+                        if (((IExtendedChatGui)(GuiChest)this.that).getNumberField() == null || ((IExtendedChatGui)(GuiChest)this.that).getNumberField().getText().isEmpty())
                         {
                             if (lore.startsWith("Starting bid:"))
                             {

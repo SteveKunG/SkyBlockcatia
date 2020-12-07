@@ -3,11 +3,12 @@ package com.stevekung.skyblockcatia.gui.toasts;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
+import com.stevekung.skyblockcatia.utils.ToastUtils;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GLAllocation;
@@ -53,7 +54,7 @@ public class NumericToast implements IToast<NumericToast>
 
         ToastUtils.ItemDrop drop = this.output;
         String value = FORMAT.format(this.value);
-        ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : HypixelEventHandler.getSkillItemStack(value, this.object);
+        ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : SkyBlockEventHandler.getSkillItemStack(value, this.object);
         String itemName = this.isCoins ? ColorUtils.stringToRGB("255,223,0").toColoredFont() + value + " Coins" : this.isPet ? EnumChatFormatting.GREEN + itemStack.getDisplayName() + EnumChatFormatting.GREEN + " is now level " + EnumChatFormatting.BLUE + value + EnumChatFormatting.GREEN + "!" : itemStack.getDisplayName();
         toastGui.mc.getTextureManager().bindTexture(this.texture);
         GlStateManager.color(1.0F, 1.0F, 1.0F);

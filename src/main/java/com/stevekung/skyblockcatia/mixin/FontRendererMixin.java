@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -68,9 +68,9 @@ public abstract class FontRendererMixin
     @ModifyVariable(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At(value = "FIELD", target = "net/minecraft/client/gui/FontRenderer.bidiFlag:Z"), argsOnly = true)
     private String renderString(String text)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
-            if (ExtendedConfig.instance.supportersFancyColor)
+            if (SkyBlockcatiaSettings.instance.supportersFancyColor)
             {
                 for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
                 {

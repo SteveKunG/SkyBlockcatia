@@ -7,21 +7,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class ClientUtils
 {
-    public static boolean isClient()
-    {
-        return FMLCommonHandler.instance().getSide() == Side.CLIENT;
-    }
-
-    public static boolean isEffectiveClient()
-    {
-        return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT;
-    }
-
     public static boolean isShiftKeyDown()
     {
         return GuiScreen.isShiftKeyDown();

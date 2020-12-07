@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.gui.config.widget.GuiConfigButtonRowList;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
 import net.minecraft.client.gui.GuiButton;
@@ -14,15 +15,15 @@ public class GuiOffsetSettings extends GuiScreen
 {
     private final GuiScreen parent;
     private GuiConfigButtonRowList optionsRowList;
-    private static final List<ExtendedConfig.Options> OPTIONS = new ArrayList<>();
+    private static final List<SkyBlockcatiaSettings.Options> OPTIONS = new ArrayList<>();
 
     static
     {
-        OPTIONS.add(ExtendedConfig.Options.ARMOR_HUD_Y);
-        OPTIONS.add(ExtendedConfig.Options.POTION_HUD_Y);
-        OPTIONS.add(ExtendedConfig.Options.MAXIMUM_POTION_DISPLAY);
-        OPTIONS.add(ExtendedConfig.Options.POTION_LENGTH_Y_OFFSET);
-        OPTIONS.add(ExtendedConfig.Options.POTION_LENGTH_Y_OFFSET_OVERLAP);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.ARMOR_HUD_Y);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_HUD_Y);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.MAXIMUM_POTION_DISPLAY);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_LENGTH_Y_OFFSET);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_LENGTH_Y_OFFSET_OVERLAP);
     }
 
     public GuiOffsetSettings(GuiScreen parent)
@@ -37,7 +38,7 @@ public class GuiOffsetSettings extends GuiScreen
         this.buttonList.add(new GuiButton(200, this.width / 2 + 5, this.height - 25, 100, 20, LangUtils.translate("gui.done")));
         this.buttonList.add(new GuiButton(201, this.width / 2 - 105, this.height - 25, 100, 20, LangUtils.translate("message.preview")));
 
-        ExtendedConfig.Options[] options = new ExtendedConfig.Options[OPTIONS.size()];
+        SkyBlockcatiaSettings.Options[] options = new SkyBlockcatiaSettings.Options[OPTIONS.size()];
         options = OPTIONS.toArray(options);
         this.optionsRowList = new GuiConfigButtonRowList(this.width, this.height, 32, this.height - 32, 25, options, false);
     }
@@ -54,7 +55,7 @@ public class GuiOffsetSettings extends GuiScreen
     {
         if (keyCode == 1)
         {
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.save();
             this.mc.displayGuiScreen(this.parent);
         }
     }
@@ -78,7 +79,7 @@ public class GuiOffsetSettings extends GuiScreen
     {
         if (button.enabled)
         {
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.save();
 
             if (button.id == 200)
             {

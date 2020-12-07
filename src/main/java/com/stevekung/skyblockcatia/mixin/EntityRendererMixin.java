@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.ClientUtils;
 
 import net.minecraft.block.Block;
@@ -35,7 +35,7 @@ public class EntityRendererMixin
     @Inject(method = "renderHand(FI)V", at = @At("HEAD"))
     private void renderPre(float partialTicks, int xOffset, CallbackInfo info)
     {
-        if (ConfigManagerIN.enableTransparentSkinRender)
+        if (SkyBlockcatiaConfig.enableTransparentSkinRender)
         {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(770, 771);
@@ -45,7 +45,7 @@ public class EntityRendererMixin
     @Inject(method = "renderHand(FI)V", at = @At("RETURN"))
     private void renderPost(float partialTicks, int xOffset, CallbackInfo info)
     {
-        if (ConfigManagerIN.enableTransparentSkinRender)
+        if (SkyBlockcatiaConfig.enableTransparentSkinRender)
         {
             GlStateManager.disableBlend();
         }
@@ -54,7 +54,7 @@ public class EntityRendererMixin
     @Inject(method = "hurtCameraEffect(F)V", cancellable = true, at = @At("HEAD"))
     private void hurtCameraEffect(float partialTicks, CallbackInfo info)
     {
-        if (ConfigManagerIN.disableHurtCameraEffect)
+        if (SkyBlockcatiaConfig.disableHurtCameraEffect)
         {
             info.cancel();
         }
@@ -63,13 +63,13 @@ public class EntityRendererMixin
     @Inject(method = "isDrawBlockOutline()Z", cancellable = true, at = @At("HEAD"))
     private void isDrawBlockOutline(CallbackInfoReturnable info)
     {
-        if (ExtendedConfig.instance.onlyMineableHitbox && HypixelEventHandler.isSkyBlock && !HypixelEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
+        if (SkyBlockcatiaSettings.instance.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
         {
             if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
                 IBlockState state = this.mc.theWorld.getBlockState(this.mc.objectMouseOver.getBlockPos());
 
-                if (!HypixelEventHandler.SKY_BLOCK_LOCATION.getMineableList().stream().anyMatch(block -> block.getMeta() == -1 ? state.getBlock() == block.getBlock() : state.getBlock() == block.getBlock() && state.getBlock().getMetaFromState(state) == block.getMeta()))
+                if (!SkyBlockEventHandler.SKY_BLOCK_LOCATION.getMineableList().stream().anyMatch(block -> block.getMeta() == -1 ? state.getBlock() == block.getBlock() : state.getBlock() == block.getBlock() && state.getBlock().getMetaFromState(state) == block.getMeta()))
                 {
                     info.setReturnValue(false);
                 }
@@ -86,7 +86,7 @@ public class EntityRendererMixin
     @Inject(method = "getNightVisionBrightness(Lnet/minecraft/entity/EntityLivingBase;F)F", cancellable = true, at = @At("HEAD"))
     private void getNightVisionBrightness(EntityLivingBase living, float partialTicks, CallbackInfoReturnable info)
     {
-        if (ExtendedConfig.instance.disableNightVision)
+        if (SkyBlockcatiaSettings.instance.disableNightVision)
         {
             info.setReturnValue(0.0F);
         }

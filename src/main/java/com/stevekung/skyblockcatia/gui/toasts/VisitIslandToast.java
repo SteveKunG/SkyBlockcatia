@@ -1,6 +1,6 @@
 package com.stevekung.skyblockcatia.gui.toasts;
 
-import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
+import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 import com.stevekung.skyblockcatia.utils.RenderUtils;

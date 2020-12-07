@@ -3,7 +3,7 @@ package com.stevekung.skyblockcatia.command;
 import java.io.File;
 import java.util.*;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
@@ -48,7 +48,7 @@ public class CommandProfile extends ClientCommandBase
                     return;
                 }
 
-                for (File file : ExtendedConfig.userDir.listFiles())
+                for (File file : SkyBlockcatiaSettings.userDir.listFiles())
                 {
                     if (name.equalsIgnoreCase(file.getName().replace(".dat", "")))
                     {
@@ -63,7 +63,7 @@ public class CommandProfile extends ClientCommandBase
                 else
                 {
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.profile_added", name)));
-                    ExtendedConfig.instance.save(name);
+                    SkyBlockcatiaSettings.instance.save(name);
                 }
             }
             else if ("load".equalsIgnoreCase(args[0]))
@@ -75,7 +75,7 @@ public class CommandProfile extends ClientCommandBase
 
                 String name = args[1];
 
-                for (File file : ExtendedConfig.userDir.listFiles())
+                for (File file : SkyBlockcatiaSettings.userDir.listFiles())
                 {
                     if (file.getName().contains(name) && file.getName().endsWith(".dat") && !file.exists())
                     {
@@ -84,11 +84,11 @@ public class CommandProfile extends ClientCommandBase
                     }
                 }
 
-                ExtendedConfig.instance.setCurrentProfile(name);
-                ExtendedConfig.saveProfileFile(name);
-                ExtendedConfig.instance.load();
+                SkyBlockcatiaSettings.instance.setCurrentProfile(name);
+                SkyBlockcatiaSettings.saveProfileFile(name);
+                SkyBlockcatiaSettings.instance.load();
                 sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.load_profile", name)));
-                ExtendedConfig.instance.save(name); // save current settings
+                SkyBlockcatiaSettings.instance.save(name); // save current settings
             }
             else if ("save".equalsIgnoreCase(args[0]))
             {
@@ -100,7 +100,7 @@ public class CommandProfile extends ClientCommandBase
                 String name = args[1];
                 boolean exist = false;
 
-                for (File file : ExtendedConfig.userDir.listFiles())
+                for (File file : SkyBlockcatiaSettings.userDir.listFiles())
                 {
                     if (name.equalsIgnoreCase(file.getName().replace(".dat", "")))
                     {
@@ -110,7 +110,7 @@ public class CommandProfile extends ClientCommandBase
 
                 if (exist)
                 {
-                    ExtendedConfig.instance.save(name);
+                    SkyBlockcatiaSettings.instance.save(name);
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.save_profile", name)));
                 }
                 else
@@ -135,7 +135,7 @@ public class CommandProfile extends ClientCommandBase
 
                 boolean exist = false;
 
-                for (File file : ExtendedConfig.userDir.listFiles())
+                for (File file : SkyBlockcatiaSettings.userDir.listFiles())
                 {
                     if (name.equalsIgnoreCase(file.getName().replace(".dat", "")))
                     {
@@ -145,10 +145,10 @@ public class CommandProfile extends ClientCommandBase
 
                 if (exist)
                 {
-                    File toDel = new File(ExtendedConfig.userDir, name + ".dat");
+                    File toDel = new File(SkyBlockcatiaSettings.userDir, name + ".dat");
                     toDel.delete();
-                    ExtendedConfig.instance.setCurrentProfile("default");
-                    ExtendedConfig.instance.load();
+                    SkyBlockcatiaSettings.instance.setCurrentProfile("default");
+                    SkyBlockcatiaSettings.instance.load();
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.remove_profile", name)));
                 }
                 else
@@ -158,7 +158,7 @@ public class CommandProfile extends ClientCommandBase
             }
             else if ("list".equalsIgnoreCase(args[0]))
             {
-                Collection<File> collection = new ArrayList<>(Arrays.asList(ExtendedConfig.userDir.listFiles()));
+                Collection<File> collection = new ArrayList<>(Arrays.asList(SkyBlockcatiaSettings.userDir.listFiles()));
 
                 if (collection.isEmpty())
                 {
@@ -184,7 +184,7 @@ public class CommandProfile extends ClientCommandBase
                     {
                         String name = file.getName();
                         String realName = name.replace(".dat", "");
-                        boolean current = realName.equals(ExtendedConfig.currentProfile);
+                        boolean current = realName.equals(SkyBlockcatiaSettings.currentProfile);
 
                         if (name.endsWith(".dat"))
                         {
@@ -211,11 +211,11 @@ public class CommandProfile extends ClientCommandBase
         {
             if ("load".equalsIgnoreCase(args[0]) || "remove".equalsIgnoreCase(args[0]) || "save".equalsIgnoreCase(args[0]))
             {
-                if (ExtendedConfig.userDir.exists())
+                if (SkyBlockcatiaSettings.userDir.exists())
                 {
                     List<String> list = new LinkedList<>();
 
-                    for (File file : ExtendedConfig.userDir.listFiles())
+                    for (File file : SkyBlockcatiaSettings.userDir.listFiles())
                     {
                         String name = file.getName();
 

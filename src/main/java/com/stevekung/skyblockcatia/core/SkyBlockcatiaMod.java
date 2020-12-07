@@ -11,17 +11,20 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
 import com.stevekung.skyblockcatia.command.*;
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.ClientEventHandler;
-import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
+import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.GuiChatExtended;
-import com.stevekung.skyblockcatia.gui.api.ExpProgress;
-import com.stevekung.skyblockcatia.gui.api.PlayerStatsBonus;
-import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
+import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
+import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
+import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
+import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
@@ -57,7 +60,7 @@ public class SkyBlockcatiaMod
     private static SkyBlockcatiaMod INSTANCE;
     public static VersionChecker CHECKER;
 
-    public static final File profile = new File(ExtendedConfig.userDir, "profile.txt");
+    public static final File profile = new File(SkyBlockcatiaSettings.userDir, "profile.txt");
     private static final Splitter COLON_SPLITTER = Splitter.on(':');
     public static boolean isSkyblockAddonsLoaded = Loader.isModLoaded("skyblockaddons");
     public static boolean isIngameAccountSwitcherLoaded = Loader.isModLoaded("IngameAccountSwitcher");
@@ -102,14 +105,14 @@ public class SkyBlockcatiaMod
     public void preInit(FMLPreInitializationEvent event)
     {
         SkyBlockcatiaMod.init(event.getModMetadata());
-        ConfigManagerIN.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
-        KeyBindingHandler.init();
+        SkyBlockcatiaConfig.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
+        KeyBindingsSB.init();
         CHECKER = new VersionChecker(INSTANCE, "SkyBlockcatia", URL);
 
         CommonUtils.registerEventHandler(this);
         CommonUtils.registerEventHandler(new MainEventHandler());
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
-        CommonUtils.registerEventHandler(new HypixelEventHandler());
+        CommonUtils.registerEventHandler(new SkyBlockEventHandler());
         CommonUtils.registerEventHandler(new ClientEventHandler());
 
         ClientUtils.registerCommand(new CommandMojangStatusCheck());
@@ -131,14 +134,9 @@ public class SkyBlockcatiaMod
     {
         GuiChatRegistry.register(new GuiChatExtended());
         new ThreadMinigameData().run();
-        SkyBlockAPIUtils.setApiKey();
+        SBAPIUtils.setApiKey();
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
-
-        if (ClientUtils.isEffectiveClient())
-        {
-            ColorUtils.init();
-        }
-
+        ColorUtils.init();
         CHECKER.startCheck();
     }
 
@@ -147,8 +145,8 @@ public class SkyBlockcatiaMod
     {
         if (event.modID.equalsIgnoreCase(SkyBlockcatiaMod.MOD_ID))
         {
-            ConfigManagerIN.syncConfig(false);
-            SkyBlockAPIUtils.setApiKey();
+            SkyBlockcatiaConfig.syncConfig(false);
+            SBAPIUtils.setApiKey();
         }
     }
 
@@ -186,9 +184,9 @@ public class SkyBlockcatiaMod
                 PlayerStatsBonus.getBonusFromRemote(type);
             }
 
-            SkyBlockAPIUtils.getFairySouls();
-            SkyBlockMinion.getMinionSlotFromRemote();
-            SkyBlockPets.getPetSkins();
+            SBAPIUtils.getFairySouls();
+            SBMinions.getMinionSlotFromRemote();
+            SBPets.getPetSkins();
         }
         catch (Throwable e)
         {
@@ -215,11 +213,11 @@ public class SkyBlockcatiaMod
         {
             return;
         }
-        if (!ExtendedConfig.defaultConfig.exists())
+        if (!SkyBlockcatiaSettings.defaultConfig.exists())
         {
             LoggerIN.info("Initializing default profile...");
-            ExtendedConfig.instance.setCurrentProfile("default");
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.setCurrentProfile("default");
+            SkyBlockcatiaSettings.instance.save();
         }
 
         NBTTagCompound nbt = new NBTTagCompound();
@@ -248,24 +246,24 @@ public class SkyBlockcatiaMod
             if ("profile".equals(property))
             {
                 LoggerIN.info("Loaded current profile by name '{}'", key);
-                ExtendedConfig.instance.setCurrentProfile(key);
-                ExtendedConfig.instance.load();
+                SkyBlockcatiaSettings.instance.setCurrentProfile(key);
+                SkyBlockcatiaSettings.instance.load();
             }
         }
     }
 
     private static void initProfileFile()
     {
-        if (!ExtendedConfig.skyblockcatiaDir.exists())
+        if (!SkyBlockcatiaSettings.skyblockcatiaDir.exists())
         {
-            ExtendedConfig.skyblockcatiaDir.mkdirs();
+            SkyBlockcatiaSettings.skyblockcatiaDir.mkdirs();
         }
-        else if (!ExtendedConfig.userDir.exists())
+        else if (!SkyBlockcatiaSettings.userDir.exists())
         {
-            ExtendedConfig.userDir.mkdirs();
+            SkyBlockcatiaSettings.userDir.mkdirs();
         }
 
-        File profile = new File(ExtendedConfig.userDir, "profile.txt");
+        File profile = new File(SkyBlockcatiaSettings.userDir, "profile.txt");
 
         if (!profile.exists())
         {

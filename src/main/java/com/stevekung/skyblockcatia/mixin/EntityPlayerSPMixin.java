@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.CommonUtils;
 
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -21,7 +21,7 @@ public class EntityPlayerSPMixin
     @Inject(method = "onLivingUpdate()V", at = @At(value = "INVOKE", target = "net/minecraft/util/MovementInput.updatePlayerMoveState()V", shift = At.Shift.AFTER))
     private void updateMovementInput(CallbackInfo info)
     {
-        if (ConfigManagerIN.enableMovementHandler)
+        if (SkyBlockcatiaConfig.enableMovementHandler)
         {
             CommonUtils.onInputUpdate(this.that, this.that.movementInput);
         }
@@ -30,6 +30,6 @@ public class EntityPlayerSPMixin
     @Redirect(method = "setPlayerSPHealth(F)V", at = @At(value = "FIELD", target = "net/minecraft/client/entity/EntityPlayerSP.hurtTime:I", opcode = Opcodes.PUTFIELD))
     private void setNoHurtTime(EntityPlayerSP entity, int oldValue)
     {
-        entity.hurtTime = HypixelEventHandler.isSkyBlock ? 0 : oldValue;
+        entity.hurtTime = SkyBlockEventHandler.isSkyBlock ? 0 : oldValue;
     }
 }

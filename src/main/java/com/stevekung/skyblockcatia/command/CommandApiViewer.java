@@ -3,7 +3,7 @@ package com.stevekung.skyblockcatia.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.utils.CommonUtils;
 import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 

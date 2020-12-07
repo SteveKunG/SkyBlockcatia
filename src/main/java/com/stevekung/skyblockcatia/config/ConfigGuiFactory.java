@@ -37,7 +37,7 @@ public class ConfigGuiFactory implements IModGuiFactory
     {
         public GuiMainConfig(GuiScreen gui)
         {
-            super(gui, ConfigManagerIN.getConfigElements(), SkyBlockcatiaMod.MOD_ID, false, false, LangUtils.translate("gui.config.skyblockcatia.name"));
+            super(gui, SkyBlockcatiaConfig.getConfigElements(), SkyBlockcatiaMod.MOD_ID, false, false, LangUtils.translate("gui.config.skyblockcatia.name"));
         }
     }
 }

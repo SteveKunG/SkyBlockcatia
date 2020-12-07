@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.gui.config;
 
 import java.io.IOException;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
 import net.minecraft.client.gui.GuiButton;
@@ -29,7 +29,7 @@ public class GuiCustomColorSettings extends GuiScreen
     {
         if (keyCode == 1)
         {
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.save();
             this.mc.displayGuiScreen(this.parent);
         }
     }

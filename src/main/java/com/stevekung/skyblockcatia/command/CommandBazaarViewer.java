@@ -2,8 +2,12 @@ package com.stevekung.skyblockcatia.command;
 
 import java.util.List;
 
-import com.stevekung.skyblockcatia.event.MainEventHandler;
-import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.utils.ClientUtils;
+import com.stevekung.skyblockcatia.utils.CommonUtils;
+import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
+import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;

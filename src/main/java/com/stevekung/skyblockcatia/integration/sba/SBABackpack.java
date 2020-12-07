@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.integration.sba;
 
 import java.lang.reflect.Method;
 
-import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockData;
+import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
 
 import codes.biscuit.skyblockaddons.SkyblockAddons;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook;
@@ -20,7 +20,7 @@ public class SBABackpack
     public static final SBABackpack INSTANCE = new SBABackpack();
     private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
-    public void drawBackpacks(GuiSkyBlockData gui, int mouseX, int mouseY, float partialTicks)
+    public void drawBackpacks(GuiSkyBlockAPIViewer gui, int mouseX, int mouseY, float partialTicks)
     {
         try
         {

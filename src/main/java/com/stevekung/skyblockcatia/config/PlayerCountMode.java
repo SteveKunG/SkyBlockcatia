@@ -1,15 +1,16 @@
 package com.stevekung.skyblockcatia.config;
 
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public enum PlayerCountMode
 {
     TAB_LIST, HUD;
 
-    private static final PlayerCountMode[] values = values();
+    private static final PlayerCountMode[] VALUES = Arrays.stream(values()).sorted(Comparator.comparingInt(PlayerCountMode::ordinal)).toArray(id -> new PlayerCountMode[id]);
 
-    public static String getById(int mode)
+    public static PlayerCountMode byId(int id)
     {
-        return values[mode].toString().toLowerCase(Locale.ROOT);
+        return VALUES[Math.floorMod(id, VALUES.length)];
     }
 }

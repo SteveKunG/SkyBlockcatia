@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.utils.ClientUtils;
 import com.stevekung.skyblockcatia.utils.CommonUtils;
 
@@ -71,7 +71,7 @@ public abstract class ServerListEntryNormalMixin
     @Inject(method = "drawEntry(IIIIIIIZ)V", cancellable = true, at = @At("HEAD"))
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected, CallbackInfo info)
     {
-        if (ConfigManagerIN.enableCustomServerSelectionGui)
+        if (SkyBlockcatiaConfig.enableCustomServerSelectionGui)
         {
             if (!this.field_148301_e.field_78841_f)
             {

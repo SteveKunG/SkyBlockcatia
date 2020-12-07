@@ -5,7 +5,7 @@
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
     "target": "@env(DEFAULT)",
-    "plugin": "com.stevekung.skyblockcatia.plugin.SkyBlockcatiaMixinPlugin",
+    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
     "mixins": [
         "BlockMixin",
         "EffectRendererMixin",

@@ -1,6 +1,6 @@
 package com.stevekung.skyblockcatia.utils;
 
-import com.stevekung.skyblockcatia.event.ClientEventHandler;
+import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

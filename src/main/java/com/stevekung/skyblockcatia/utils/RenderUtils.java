@@ -11,7 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.utils.skyblock.SBRarity;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -30,32 +31,6 @@ public class RenderUtils
     private static final ResourceLocation RARITY = new ResourceLocation("skyblockcatia:textures/gui/rarity.png");
     private static final Pattern PATTERN = Pattern.compile("(?<color>\\u00a7[0-9a-fk-or]).+");
     private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or]).+");
-
-    public static void bindTexture(ResourceLocation resource)
-    {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
-    }
-
-    public static void bindTexture(String resource)
-    {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(resource));
-    }
-
-    public static void disableLighting()
-    {
-        GlStateManager.disableLighting();
-        GlStateManager.disableLight(0);
-        GlStateManager.disableLight(1);
-        GlStateManager.disableColorMaterial();
-    }
-
-    public static void enableLighting()
-    {
-        GlStateManager.enableLighting();
-        GlStateManager.enableLight(0);
-        GlStateManager.enableLight(1);
-        GlStateManager.enableColorMaterial();
-    }
 
     public static ItemStack getSkullItemStack(String skullId, String skullValue)
     {
@@ -132,7 +107,7 @@ public class RenderUtils
             {
                 if (id.equals("PARTY_HAT_CRAB"))
                 {
-                    SkyBlockRarity rarity = upgrade ? SkyBlockRarity.COMMON.getNextRarity() : SkyBlockRarity.COMMON;
+                    SBRarity rarity = upgrade ? SBRarity.COMMON.getNextRarity() : SBRarity.COMMON;
                     RenderUtils.renderRarity(xPos, yPos, rarity);
                     return;
                 }
@@ -150,7 +125,7 @@ public class RenderUtils
 
                                 if (lore.contains("COSMETIC")) // temp
                                 {
-                                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(lore.charAt(0) + "" + lore.charAt(1)));
+                                    RenderUtils.renderRarity(xPos, yPos, SBRarity.byBaseColor(lore.charAt(0) + "" + lore.charAt(1)));
                                 }
                             }
                         }
@@ -172,14 +147,14 @@ public class RenderUtils
 
                 if (mat.matches())
                 {
-                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat.group("color")));
+                    RenderUtils.renderRarity(xPos, yPos, SBRarity.byBaseColor(mat.group("color")));
                 }
 
                 Matcher mat1 = PET_PATTERN.matcher(displayName);
 
                 if (mat1.matches())
                 {
-                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
+                    RenderUtils.renderRarity(xPos, yPos, SBRarity.byBaseColor(mat1.group("color")));
                 }
             }
             else
@@ -188,22 +163,22 @@ public class RenderUtils
 
                 if (mat1.matches())
                 {
-                    RenderUtils.renderRarity(xPos, yPos, SkyBlockRarity.byBaseColor(mat1.group("color")));
+                    RenderUtils.renderRarity(xPos, yPos, SBRarity.byBaseColor(mat1.group("color")));
                 }
             }
         }
     }
 
-    private static void renderRarity(int xPos, int yPos, SkyBlockRarity rarity)
+    private static void renderRarity(int xPos, int yPos, SBRarity rarity)
     {
         if (rarity != null)
         {
-            float alpha = ExtendedConfig.instance.itemRarityOpacity / 100.0F;
+            float alpha = SkyBlockcatiaSettings.instance.itemRarityOpacity / 100.0F;
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             GlStateManager.enableBlend();
             GlStateManager.enableAlpha();
-            RenderUtils.bindTexture(RARITY);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(RARITY);
             GlStateManager.color(rarity.getColorToRender().floatRed(), rarity.getColorToRender().floatGreen(), rarity.getColorToRender().floatBlue(), alpha);
             GlStateManager.blendFunc(770, 771);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);

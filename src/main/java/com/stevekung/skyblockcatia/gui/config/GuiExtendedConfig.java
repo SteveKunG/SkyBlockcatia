@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.gui.config.widget.GuiConfigButton;
+import com.stevekung.skyblockcatia.gui.config.widget.GuiConfigSlider;
 import com.stevekung.skyblockcatia.utils.CommonUtils;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
@@ -18,20 +20,20 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class GuiExtendedConfig extends GuiScreen
 {
-    private static final List<ExtendedConfig.Options> OPTIONS = new ArrayList<>();
+    private static final List<SkyBlockcatiaSettings.Options> OPTIONS = new ArrayList<>();
     private GuiButton resetButton;
     private GuiButton doneButton;
 
     static
     {
-        OPTIONS.add(ExtendedConfig.Options.SWAP_INFO_POS);
-        OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_DIRECTION);
-        OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_STATUS);
-        OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_POSITION);
-        OPTIONS.add(ExtendedConfig.Options.POTION_HUD_STYLE);
-        OPTIONS.add(ExtendedConfig.Options.POTION_HUD_POSITION);
-        OPTIONS.add(ExtendedConfig.Options.PING_MODE);
-        OPTIONS.add(ExtendedConfig.Options.PLAYER_COUNT_MODE);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.SWAP_INFO_POS);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.EQUIPMENT_DIRECTION);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.EQUIPMENT_STATUS);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.EQUIPMENT_POSITION);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_HUD_STYLE);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_HUD_POSITION);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.PING_MODE);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.PLAYER_COUNT_MODE);
     }
 
     public void display()
@@ -51,7 +53,7 @@ public class GuiExtendedConfig extends GuiScreen
     {
         int i = 0;
 
-        for (ExtendedConfig.Options options : OPTIONS)
+        for (SkyBlockcatiaSettings.Options options : OPTIONS)
         {
             if (options.isFloat())
             {
@@ -59,7 +61,7 @@ public class GuiExtendedConfig extends GuiScreen
             }
             else
             {
-                GuiConfigButton button = new GuiConfigButton(options.getOrdinal(), this.width / 2 - 160 + i % 2 * 165, this.height / 6 - 17 + 24 * (i >> 1), 160, options, ExtendedConfig.instance.getKeyBinding(options));
+                GuiConfigButton button = new GuiConfigButton(options.getOrdinal(), this.width / 2 - 160 + i % 2 * 165, this.height / 6 - 17 + 24 * (i >> 1), 160, options, SkyBlockcatiaSettings.instance.getKeyBinding(options));
                 this.buttonList.add(button);
             }
             ++i;
@@ -80,7 +82,7 @@ public class GuiExtendedConfig extends GuiScreen
 
         if (result)
         {
-            ExtendedConfig.resetConfig();
+            SkyBlockcatiaSettings.resetConfig();
             this.mc.displayGuiScreen(this);
         }
         else
@@ -94,7 +96,7 @@ public class GuiExtendedConfig extends GuiScreen
     {
         if (keyCode == 1)
         {
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.save();
         }
         super.keyTyped(typedChar, keyCode);
     }
@@ -104,13 +106,13 @@ public class GuiExtendedConfig extends GuiScreen
     {
         if (button.enabled)
         {
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.save();
 
             if (button.id < 100 && button instanceof GuiConfigButton)
             {
-                ExtendedConfig.Options options = ((GuiConfigButton)button).getOption();
-                ExtendedConfig.instance.setOptionValue(options, 1);
-                button.displayString = ExtendedConfig.instance.getKeyBinding(ExtendedConfig.Options.byOrdinal(button.id));
+                SkyBlockcatiaSettings.Options options = ((GuiConfigButton)button).getOption();
+                SkyBlockcatiaSettings.instance.setOptionValue(options, 1);
+                button.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(button.id));
             }
             if (button.id == 100)
             {
@@ -126,7 +128,7 @@ public class GuiExtendedConfig extends GuiScreen
             }
             if (button.id == 103)
             {
-                this.mc.displayGuiScreen(new GuiSkyblockSettings(this));
+                this.mc.displayGuiScreen(new GuiSkyBlockSettings(this));
             }
             if (button.id == this.doneButton.id)
             {
@@ -143,7 +145,7 @@ public class GuiExtendedConfig extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, LangUtils.translate("extended_config.main.title") + " : " + LangUtils.translate("extended_config.current_profile.info", EnumChatFormatting.YELLOW + ExtendedConfig.currentProfile + EnumChatFormatting.RESET), this.width / 2, 10, 16777215);
+        this.drawCenteredString(this.fontRendererObj, LangUtils.translate("extended_config.main.title") + " : " + LangUtils.translate("extended_config.current_profile.info", EnumChatFormatting.YELLOW + SkyBlockcatiaSettings.currentProfile + EnumChatFormatting.RESET), this.width / 2, 10, 16777215);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.IEditSign;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 import com.stevekung.skyblockcatia.utils.NumberUtils;
@@ -170,11 +170,11 @@ public class SignSelectionList extends GuiListExtended
 
             if (Minecraft.getSystemTime() - this.lastClicked < 250L)
             {
-                if (ExtendedConfig.instance.auctionBidConfirm && NumberUtils.isNumeric(this.value))
+                if (SkyBlockcatiaSettings.instance.auctionBidConfirm && NumberUtils.isNumeric(this.value))
                 {
                     int price = Integer.valueOf(this.value);
 
-                    if (price >= ExtendedConfig.instance.auctionBidConfirmValue)
+                    if (price >= SkyBlockcatiaSettings.instance.auctionBidConfirmValue)
                     {
                         this.mc.displayGuiScreen(new GuiYesNo(this.mc.currentScreen, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
                     }

@@ -4,8 +4,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +21,7 @@ public class LayerHeldBlockMixin
     @Redirect(method = "doRenderLayer(Lnet/minecraft/entity/monster/EntityEnderman;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/BlockRendererDispatcher.renderBlockBrightness(Lnet/minecraft/block/state/IBlockState;F)V"))
     private void changeSpecialZealotBlock(BlockRendererDispatcher blockrendererdispatcher, IBlockState state, float brightness)
     {
-        if (ExtendedConfig.instance.makeSpecialZealotHeldGold && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION.isTheEnd() && state.getBlock() == Blocks.end_portal_frame)
+        if (SkyBlockcatiaSettings.instance.makeSpecialZealotHeldGold && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd() && state.getBlock() == Blocks.end_portal_frame)
         {
             state = Blocks.gold_block.getDefaultState();
         }
@@ -33,7 +33,7 @@ public class LayerHeldBlockMixin
     {
         IBlockState state = entitylivingbaseIn.getHeldBlockState();
 
-        if (ExtendedConfig.instance.makeSpecialZealotHeldGold && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION.isTheEnd() && state.getBlock().getMaterial() != Material.air && state.getBlock() == Blocks.end_portal_frame)
+        if (SkyBlockcatiaSettings.instance.makeSpecialZealotHeldGold && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd() && state.getBlock().getMaterial() != Material.air && state.getBlock() == Blocks.end_portal_frame)
         {
             p_77475_1_ = 240.0F;
             p_77475_2_ = 240.0F;

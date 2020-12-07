@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.gui.config.widget.GuiConfigButtonRowList;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
 import net.minecraft.client.gui.GuiButton;
@@ -14,29 +15,29 @@ public class GuiRenderInfoSettings extends GuiScreen
 {
     private final GuiScreen parent;
     private GuiConfigButtonRowList optionsRowList;
-    private static final List<ExtendedConfig.Options> OPTIONS = new ArrayList<>();
+    private static final List<SkyBlockcatiaSettings.Options> OPTIONS = new ArrayList<>();
 
     static
     {
-        OPTIONS.add(ExtendedConfig.Options.FPS);
-        OPTIONS.add(ExtendedConfig.Options.XYZ);
-        OPTIONS.add(ExtendedConfig.Options.DIRECTION);
-        OPTIONS.add(ExtendedConfig.Options.BIOME);
-        OPTIONS.add(ExtendedConfig.Options.PING);
-        OPTIONS.add(ExtendedConfig.Options.PING_TO_SECOND);
-        OPTIONS.add(ExtendedConfig.Options.SERVER_IP);
-        OPTIONS.add(ExtendedConfig.Options.SERVER_IP_MC);
-        OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_HUD);
-        OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_ARMOR_ITEMS);
-        OPTIONS.add(ExtendedConfig.Options.EQUIPMENT_HAND_ITEMS);
-        OPTIONS.add(ExtendedConfig.Options.POTION_HUD);
-        OPTIONS.add(ExtendedConfig.Options.REAL_TIME);
-        OPTIONS.add(ExtendedConfig.Options.TWENTY_FOUR_TIME);
-        OPTIONS.add(ExtendedConfig.Options.GAME_TIME);
-        OPTIONS.add(ExtendedConfig.Options.GAME_WEATHER);
-        OPTIONS.add(ExtendedConfig.Options.MOON_PHASE);
-        OPTIONS.add(ExtendedConfig.Options.POTION_ICON);
-        OPTIONS.add(ExtendedConfig.Options.ALTERNATE_POTION_COLOR);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.FPS);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.XYZ);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.DIRECTION);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.BIOME);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.PING);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.PING_TO_SECOND);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.SERVER_IP);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.SERVER_IP_MC);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.EQUIPMENT_HUD);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.EQUIPMENT_ARMOR_ITEMS);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.EQUIPMENT_HAND_ITEMS);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_HUD);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.REAL_TIME);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.TWENTY_FOUR_TIME);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.GAME_TIME);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.GAME_WEATHER);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.MOON_PHASE);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.POTION_ICON);
+        OPTIONS.add(SkyBlockcatiaSettings.Options.ALTERNATE_POTION_COLOR);
     }
 
     public GuiRenderInfoSettings(GuiScreen parent)
@@ -50,7 +51,7 @@ public class GuiRenderInfoSettings extends GuiScreen
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(200, this.width / 2 - 100, this.height - 27, LangUtils.translate("gui.done")));
 
-        ExtendedConfig.Options[] options = new ExtendedConfig.Options[OPTIONS.size()];
+        SkyBlockcatiaSettings.Options[] options = new SkyBlockcatiaSettings.Options[OPTIONS.size()];
         options = OPTIONS.toArray(options);
         this.optionsRowList = new GuiConfigButtonRowList(this.width, this.height, 32, this.height - 32, 25, options, false);
     }
@@ -67,7 +68,7 @@ public class GuiRenderInfoSettings extends GuiScreen
     {
         if (keyCode == 1)
         {
-            ExtendedConfig.instance.save();
+            SkyBlockcatiaSettings.instance.save();
             this.mc.displayGuiScreen(this.parent);
         }
     }
@@ -93,7 +94,7 @@ public class GuiRenderInfoSettings extends GuiScreen
         {
             if (button.id == 200)
             {
-                ExtendedConfig.instance.save();
+                SkyBlockcatiaSettings.instance.save();
                 this.mc.displayGuiScreen(this.parent);
             }
         }

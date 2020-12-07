@@ -2,11 +2,12 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.nio.FloatBuffer;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.ClientEventHandler;
-import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
+import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.ToastUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -38,7 +39,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
         this.rareDropOutput = new ToastUtils.ItemDrop(itemStack, type);
         this.hasMagicFind = magicFind != null;
         this.magicFind = this.hasMagicFind ? EnumChatFormatting.AQUA + " (" + magicFind + "% Magic Find!)" : "";
-        this.maxDrawTime = this.hasMagicFind ? ExtendedConfig.instance.specialDropToastTime * 1000L : type.getTime();
+        this.maxDrawTime = this.hasMagicFind ? SkyBlockcatiaSettings.instance.specialDropToastTime * 1000L : type.getTime();
     }
 
     @Override

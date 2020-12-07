@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
+import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 
 import net.minecraft.client.gui.GuiIngame;
 

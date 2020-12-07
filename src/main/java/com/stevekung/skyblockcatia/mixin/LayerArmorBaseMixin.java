@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -65,7 +65,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
         float f1 = 0.5F;
         GlStateManager.color(f1, f1, f1, 1.0F);
 
-        if (ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+        if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
         {
             float light = 240.0F;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, light, light);
@@ -76,7 +76,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
             GlStateManager.disableLighting();
             GlStateManager.blendFunc(768, 1);
 
-            if (ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+            if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
             {
                 GlStateManager.color(0.5608F, 0.3408F, 0.8608F, 1.0F);
             }
@@ -95,7 +95,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
             modelbaseIn.render(entitylivingbaseIn, p_177183_3_, p_177183_4_, p_177183_6_, p_177183_7_, p_177183_8_, p_177183_9_);
         }
 
-        if (ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+        if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
         {
             int i = entitylivingbaseIn.getBrightnessForRender(p_177183_5_);
             int j = i % 65536;
@@ -114,7 +114,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
 
     private void renderGlowingLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot)
     {
-        if (!HypixelEventHandler.foundSkyBlockPack || !ExtendedConfig.instance.glowingDragonArmor)
+        if (!SkyBlockEventHandler.foundSkyBlockPack || !SkyBlockcatiaSettings.instance.glowingDragonArmor)
         {
             return;
         }
@@ -166,7 +166,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
     @Override
     public boolean shouldCombineTextures()
     {
-        return ConfigManagerIN.enableOldArmorRender;
+        return SkyBlockcatiaConfig.enableOldArmorRender;
     }
 
     private ResourceLocation getArmorType(ItemStack itemStack, int armorSlot)
@@ -207,7 +207,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
             texture = "holy";
         }
 
-        String s1 = String.format("skyblockcatia:textures/model/armor/" + HypixelEventHandler.skyBlockPackResolution + "/%s_layer_%d.png", texture, armorSlot == 2 ? 2 : 1);
+        String s1 = String.format("skyblockcatia:textures/model/armor/" + SkyBlockEventHandler.skyBlockPackResolution + "/%s_layer_%d.png", texture, armorSlot == 2 ? 2 : 1);
         return texture.isEmpty() ? null : new ResourceLocation(s1);
     }
 }

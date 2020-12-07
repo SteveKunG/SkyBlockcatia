@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.stevekung.skyblockcatia.utils.EntityOtherFakePlayer;
+import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -24,7 +24,7 @@ public abstract class RendererLivingEntityMixin extends Render<EntityLivingBase>
     @Inject(method = "canRenderName(Lnet/minecraft/entity/EntityLivingBase;)Z", cancellable = true, at = @At("HEAD"))
     private void renderName(EntityLivingBase entity, CallbackInfoReturnable info)
     {
-        if (entity instanceof EntityOtherFakePlayer)
+        if (entity instanceof SBFakePlayerEntity)
         {
             info.setReturnValue(false);
         }

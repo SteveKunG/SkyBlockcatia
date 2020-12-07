@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.stevekung.skyblockcatia.config.EnumEquipment;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.renderer.HUDInfo;
-import com.stevekung.skyblockcatia.utils.InfoUtils;
+import com.stevekung.skyblockcatia.config.Equipments;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.hud.InfoOverlays;
+import com.stevekung.skyblockcatia.hud.InfoUtils;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -38,53 +38,53 @@ public class GuiRenderPreview extends GuiScreen
     {
         if (this.type.equals("offset"))
         {
-            HUDInfo.renderPotionHUD(this.mc);
+            InfoOverlays.renderPotionHUD(this.mc);
 
-            if (EnumEquipment.Direction.getById(ExtendedConfig.instance.equipmentDirection).equalsIgnoreCase("vertical"))
+            if (Equipments.Direction.byId(SkyBlockcatiaSettings.instance.equipmentDirection) == Equipments.Direction.VERTICAL)
             {
-                HUDInfo.renderVerticalEquippedItems(this.mc);
+                InfoOverlays.renderVerticalEquippedItems(this.mc);
             }
             else
             {
-                HUDInfo.renderHorizontalEquippedItems(this.mc);
+                InfoOverlays.renderHorizontalEquippedItems(this.mc);
             }
         }
         if (this.type.equals("render_info"))
         {
             List<String> leftInfo = new LinkedList<>();
             List<String> rightInfo = new LinkedList<>();
-            HUDInfo.renderVerticalEquippedItems(this.mc);
+            InfoOverlays.renderVerticalEquippedItems(this.mc);
 
             // left info
             if (!this.mc.isSingleplayer())
             {
-                leftInfo.add(HUDInfo.getPing());
-                leftInfo.add(HUDInfo.getPingToSecond());
+                leftInfo.add(InfoOverlays.getPing());
+                leftInfo.add(InfoOverlays.getPingToSecond());
 
                 if (this.mc.getCurrentServerData() != null)
                 {
-                    leftInfo.add(HUDInfo.getServerIP(this.mc));
+                    leftInfo.add(InfoOverlays.getServerIP(this.mc));
                 }
             }
 
-            leftInfo.add(HUDInfo.getFPS());
-            leftInfo.add(HUDInfo.getXYZ(this.mc));
+            leftInfo.add(InfoOverlays.getFPS());
+            leftInfo.add(InfoOverlays.getXYZ(this.mc));
 
             if (this.mc.thePlayer.dimension == -1)
             {
-                leftInfo.add(HUDInfo.getOverworldXYZFromNether(this.mc));
+                leftInfo.add(InfoOverlays.getOverworldXYZFromNether(this.mc));
             }
 
-            leftInfo.add(HUDInfo.renderDirection(this.mc));
-            leftInfo.add(HUDInfo.getBiome(this.mc));
+            leftInfo.add(InfoOverlays.renderDirection(this.mc));
+            leftInfo.add(InfoOverlays.getBiome(this.mc));
 
             // right info
-            rightInfo.add(HUDInfo.getCurrentTime());
-            rightInfo.add(HUDInfo.getCurrentGameTime(this.mc));
+            rightInfo.add(InfoOverlays.getCurrentTime());
+            rightInfo.add(InfoOverlays.getCurrentGameTime(this.mc));
 
             if (this.mc.theWorld.isRaining())
             {
-                rightInfo.add(HUDInfo.getGameWeather(this.mc));
+                rightInfo.add(InfoOverlays.getGameWeather(this.mc));
             }
 
             rightInfo.add(InfoUtils.INSTANCE.getMoonPhase(this.mc));
@@ -100,7 +100,7 @@ public class GuiRenderPreview extends GuiScreen
 
                 if (!StringUtils.isNullOrEmpty(string))
                 {
-                    this.fontRendererObj.drawString(string, ExtendedConfig.instance.swapRenderInfo ? xOffset : 3.0625F, yOffset, 16777215, true);
+                    this.fontRendererObj.drawString(string, SkyBlockcatiaSettings.instance.swapRenderInfo ? xOffset : 3.0625F, yOffset, 16777215, true);
                 }
             }
 
@@ -115,7 +115,7 @@ public class GuiRenderPreview extends GuiScreen
 
                 if (!StringUtils.isNullOrEmpty(string))
                 {
-                    this.fontRendererObj.drawString(string, ExtendedConfig.instance.swapRenderInfo ? 3.0625F : xOffset, yOffset, 16777215, true);
+                    this.fontRendererObj.drawString(string, SkyBlockcatiaSettings.instance.swapRenderInfo ? 3.0625F : xOffset, yOffset, 16777215, true);
                 }
             }
         }

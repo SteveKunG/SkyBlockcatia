@@ -6,11 +6,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.LoggerIN;
-import com.stevekung.skyblockcatia.utils.SkyBlockAPIUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -30,7 +30,7 @@ public class MinecraftMixin
     @Inject(method = "startGame()V", at = @At("HEAD"))
     private void startGame(CallbackInfo info)
     {
-        SkyBlockAPIUtils.getSupportedPackNames();
+        SBAPIUtils.getSupportedPackNames();
     }
 
     @Inject(method = "runGameLoop()V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/EntityRenderer.updateCameraAndRender(FJ)V", shift = At.Shift.AFTER))
@@ -42,7 +42,7 @@ public class MinecraftMixin
     @Inject(method = "refreshResources()V", at = @At("HEAD"))
     private void refreshResources(CallbackInfo info)
     {
-        if (SkyBlockAPIUtils.PACKS != null)
+        if (SBAPIUtils.PACKS != null)
         {
             boolean found = false;
 
@@ -51,29 +51,29 @@ public class MinecraftMixin
                 String packName = entry.getResourcePack().getPackName();
                 String packDesc = entry.getTexturePackDescription();
 
-                if (SkyBlockAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
                 {
-                    HypixelEventHandler.skyBlockPackResolution = "16";
+                    SkyBlockEventHandler.skyBlockPackResolution = "16";
                 }
-                if (SkyBlockAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
+                if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
                 {
-                    HypixelEventHandler.skyBlockPackResolution = "32";
+                    SkyBlockEventHandler.skyBlockPackResolution = "32";
                 }
 
                 if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
                 {
-                    HypixelEventHandler.foundSkyBlockPack = true;
+                    SkyBlockEventHandler.foundSkyBlockPack = true;
                     found = true;
                     break;
                 }
             }
             if (found)
             {
-                LoggerIN.info("Found SkyBlock Pack with x" + HypixelEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
+                LoggerIN.info("Found SkyBlock Pack with x" + SkyBlockEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
             }
             else
             {
-                HypixelEventHandler.foundSkyBlockPack = false;
+                SkyBlockEventHandler.foundSkyBlockPack = false;
                 LoggerIN.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
             }
         }
@@ -96,7 +96,7 @@ public class MinecraftMixin
                 break;
             }
         }
-        if (HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.sneakToOpenInventoryWhileFightDragon && foundDragon)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.sneakToOpenInventoryWhileFightDragon && foundDragon)
         {
             return key.isPressed() && this.that.thePlayer.isSneaking();
         }
@@ -106,7 +106,7 @@ public class MinecraftMixin
     @Redirect(method = "runTick()V", at = @At(value = "INVOKE", target = "net/minecraft/client/entity/EntityPlayerSP.sendHorseInventory()V"))
     private void openPlayerInventory(EntityPlayerSP player)
     {
-        if (HypixelEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock)
         {
             this.that.displayGuiScreen(new GuiInventory(player));
         }
@@ -125,7 +125,7 @@ public class MinecraftMixin
                 break;
             }
         }
-        if (!(HypixelEventHandler.isSkyBlock && ExtendedConfig.instance.preventScrollHotbarWhileFightDragon && foundDragon))
+        if (!(SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.preventScrollHotbarWhileFightDragon && foundDragon))
         {
             invPlayer.changeCurrentItem(slot);
         }

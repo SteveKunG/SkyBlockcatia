@@ -3,8 +3,9 @@ package com.stevekung.skyblockcatia.gui.toasts;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
-import com.stevekung.skyblockcatia.renderer.EquipmentOverlay;
+import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.ToastUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

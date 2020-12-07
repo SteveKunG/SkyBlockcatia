@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.event.ClientEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -109,7 +109,7 @@ public class TileEntityEnchantedSkullRenderer
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.enableAlpha();
 
-        if (meta == 3 && ConfigManagerIN.enableTransparentSkinRender)
+        if (meta == 3 && SkyBlockcatiaConfig.enableTransparentSkinRender)
         {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -117,7 +117,7 @@ public class TileEntityEnchantedSkullRenderer
 
         model.render(null, 0.0F, 0.0F, 0.0F, rotation, 0.0F, 0.0625F);
 
-        if (ConfigManagerIN.enableEnchantedGlintForSkull && enchanted)
+        if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && enchanted)
         {
             GlStateManager.pushMatrix();
             this.renderGlint(entity, mc, model, rotation, partialTicks);
@@ -144,7 +144,7 @@ public class TileEntityEnchantedSkullRenderer
         float f1 = 0.5F;
         GlStateManager.color(f1, f1, f1, 1.0F);
 
-        if (entity != null && ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+        if (entity != null && SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
         {
             float light = 240.0F;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, light, light);
@@ -155,7 +155,7 @@ public class TileEntityEnchantedSkullRenderer
             GlStateManager.disableLighting();
             GlStateManager.blendFunc(768, 1);
 
-            if (ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+            if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
             {
                 GlStateManager.color(0.5608F, 0.3408F, 0.8608F, 1.0F);
             }
@@ -174,7 +174,7 @@ public class TileEntityEnchantedSkullRenderer
             model.render(null, 0.0F, 0.0F, 0.0F, rotation, 0.0F, f);
         }
 
-        if (entity != null && ConfigManagerIN.enable1_15ArmorEnchantedGlint)
+        if (entity != null && SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
         {
             int i = entity.getBrightnessForRender(partialTicks);
             int j = i % 65536;

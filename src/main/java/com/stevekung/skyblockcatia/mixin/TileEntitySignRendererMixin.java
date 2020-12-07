@@ -15,8 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.Lists;
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.utils.CachedEnum;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.utils.IModifiedSign;
 
 import net.minecraft.block.Block;
@@ -51,7 +50,7 @@ public abstract class TileEntitySignRendererMixin extends TileEntitySpecialRende
     @Inject(method = "renderTileEntityAt(Lnet/minecraft/tileentity/TileEntitySign;DDDFI)V", cancellable = true, at = @At("HEAD"))
     private void renderTileEntityAt(TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage, CallbackInfo info)
     {
-        if (ConfigManagerIN.enableOverwriteSignEditing)
+        if (SkyBlockcatiaConfig.enableOverwriteSignEditing)
         {
             Block block = te.getBlockType();
             GlStateManager.pushMatrix();
@@ -306,7 +305,7 @@ public abstract class TileEntitySignRendererMixin extends TileEntitySpecialRende
     {
         char formatCode = Character.toString(code).toLowerCase(Locale.ROOT).charAt(0);
 
-        for (EnumChatFormatting format : CachedEnum.textFormatValues)
+        for (EnumChatFormatting format : EnumChatFormatting.values())
         {
             if (format.formattingCode == formatCode)
             {

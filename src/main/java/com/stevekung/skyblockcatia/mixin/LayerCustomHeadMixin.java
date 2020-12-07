@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.authlib.GameProfile;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.renderer.TileEntityEnchantedSkullRenderer;
 
 import net.minecraft.client.Minecraft;
@@ -57,7 +57,7 @@ public class LayerCustomHeadMixin
     {
         ItemStack itemStack = entity.getCurrentArmor(3);
 
-        if (ExtendedConfig.instance.glowingDragonArmor && itemStack != null && itemStack.getItem() == Items.skull && itemStack.hasTagCompound())
+        if (SkyBlockcatiaSettings.instance.glowingDragonArmor && itemStack != null && itemStack.getItem() == Items.skull && itemStack.hasTagCompound())
         {
             String texture = null;
             NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");

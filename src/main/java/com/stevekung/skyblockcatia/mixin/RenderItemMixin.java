@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.RenderUtils;
 
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -20,7 +20,7 @@ public class RenderItemMixin
     @Inject(method = "renderItemIntoGUI(Lnet/minecraft/item/ItemStack;II)V", at = @At("HEAD"))
     private void renderRarity(ItemStack itemStack, int xPosition, int yPosition, CallbackInfo info)
     {
-        if (ExtendedConfig.instance.showItemRarity)
+        if (SkyBlockcatiaSettings.instance.showItemRarity)
         {
             RenderUtils.renderRarity(itemStack, xPosition, yPosition);
         }
@@ -29,6 +29,6 @@ public class RenderItemMixin
     @ModifyConstant(method = "renderEffect(Lnet/minecraft/client/resources/model/IBakedModel;)V", constant = @Constant(intValue = -8372020))
     private int setGlintColor(int defaultValue)
     {
-        return ConfigManagerIN.enable1_15ArmorEnchantedGlint ? -7383333 : defaultValue;
+        return SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint ? -7383333 : defaultValue;
     }
 }

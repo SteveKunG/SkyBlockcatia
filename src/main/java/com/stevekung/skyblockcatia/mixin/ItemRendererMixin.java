@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -31,7 +31,7 @@ public class ItemRendererMixin
         })
     private void onItemUse(float partialTicks, CallbackInfo info)
     {
-        if (ConfigManagerIN.enableBlockhitAnimation)
+        if (SkyBlockcatiaConfig.enableBlockhitAnimation)
         {
             AbstractClientPlayer player = this.mc.thePlayer;
             float swingProgress = player.getSwingProgress(partialTicks);

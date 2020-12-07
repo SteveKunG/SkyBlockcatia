@@ -10,14 +10,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.event.MainEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
-import com.stevekung.skyblockcatia.gui.api.GuiSkyBlockAPIViewer;
+import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockProfileSelector;
 import com.stevekung.skyblockcatia.utils.ClientUtils;
 import com.stevekung.skyblockcatia.utils.IEditSign;
-import com.stevekung.skyblockcatia.utils.ITradeGUI;
+import com.stevekung.skyblockcatia.utils.IExtendedChatGui;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 
 import net.minecraft.client.gui.GuiButton;
@@ -72,7 +72,7 @@ public class GuiScreenMixin
         {
             GuiEditSign sign = (GuiEditSign)this.that;
 
-            if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
             {
                 if (((IEditSign)sign).getSignSelectionList() != null)
                 {
@@ -89,7 +89,7 @@ public class GuiScreenMixin
         {
             GuiEditSign sign = (GuiEditSign)this.that;
 
-            if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
             {
                 if (((IEditSign)sign).getSignSelectionList() != null)
                 {
@@ -106,7 +106,7 @@ public class GuiScreenMixin
         {
             GuiEditSign sign = (GuiEditSign)this.that;
 
-            if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
             {
                 if (((IEditSign)sign).getSignSelectionList() != null)
                 {
@@ -132,7 +132,7 @@ public class GuiScreenMixin
             else if (button.id == 156)
             {
                 String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-                this.that.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(GuiSkyBlockAPIViewer.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
+                this.that.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
             }
         }
     }
@@ -148,11 +148,11 @@ public class GuiScreenMixin
             {
                 if (shouldOverwrite)
                 {
-                    ((ITradeGUI)chest).getChatTextField().setText(newChatText);
+                    ((IExtendedChatGui)chest).getChatTextField().setText(newChatText);
                 }
                 else
                 {
-                    ((ITradeGUI)chest).getChatTextField().writeText(newChatText);
+                    ((IExtendedChatGui)chest).getChatTextField().writeText(newChatText);
                 }
             }
         }

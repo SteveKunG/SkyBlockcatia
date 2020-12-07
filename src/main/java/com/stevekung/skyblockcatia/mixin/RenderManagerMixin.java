@@ -6,9 +6,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
-import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -52,7 +52,7 @@ public class RenderManagerMixin
     @Inject(method = "renderDebugBoundingBox(Lnet/minecraft/entity/Entity;DDDFF)V", cancellable = true, at = @At("HEAD"))
     private void renderDebugBoundingBox(Entity entity, double x, double y, double z, float f1, float partialTicks, CallbackInfo info)
     {
-        if (ExtendedConfig.instance.showDragonHitboxOnly && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal) && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION == SkyBlockLocation.DRAGON_NEST)
+        if (SkyBlockcatiaSettings.instance.showDragonHitboxOnly && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
             info.cancel();
         }

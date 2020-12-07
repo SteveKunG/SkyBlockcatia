@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 
 import net.minecraft.client.renderer.ImageBufferDownload;
 
@@ -39,7 +39,7 @@ public abstract class ImageBufferDownloadMixin
         }
         else
         {
-            if (ConfigManagerIN.enableSkinRenderingFix)
+            if (SkyBlockcatiaConfig.enableSkinRenderingFix)
             {
                 this.imageWidth = 64;
                 this.imageHeight = 64;

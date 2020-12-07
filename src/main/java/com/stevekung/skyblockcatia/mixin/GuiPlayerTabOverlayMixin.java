@@ -15,15 +15,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
 import com.stevekung.skyblockcatia.config.PingMode;
 import com.stevekung.skyblockcatia.config.PlayerCountMode;
-import com.stevekung.skyblockcatia.event.HUDRenderEventHandler;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
-import com.stevekung.skyblockcatia.utils.SkyBlockLocation;
+import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -59,7 +59,7 @@ public class GuiPlayerTabOverlayMixin
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", ordinal = 0))
     private String getPingPlayerInfo(GuiPlayerTabOverlay overlay, NetworkPlayerInfo networkPlayerInfoIn)
     {
-        boolean pingDelay = PingMode.getById(ExtendedConfig.instance.pingMode).equalsIgnoreCase("ping_and_delay");
+        boolean pingDelay = PingMode.byId(SkyBlockcatiaSettings.instance.pingMode) == PingMode.PING_AND_DELAY;
         int ping = networkPlayerInfoIn.getResponseTime();
         String pingText = String.valueOf(ping);
 
@@ -69,7 +69,7 @@ public class GuiPlayerTabOverlayMixin
             this.mc.fontRendererObj.setUnicodeFlag(true);
         }
 
-        this.pingWidth = ConfigManagerIN.enableCustomPlayerList ? this.mc.fontRendererObj.getStringWidth(pingText) : 0;
+        this.pingWidth = SkyBlockcatiaConfig.enableCustomPlayerList ? this.mc.fontRendererObj.getStringWidth(pingText) : 0;
 
         if (pingDelay)
         {
@@ -106,11 +106,11 @@ public class GuiPlayerTabOverlayMixin
     @Inject(method = "drawPing(IIILnet/minecraft/client/network/NetworkPlayerInfo;)V", cancellable = true, at = @At("HEAD"))
     private void drawPing(int x1, int x2, int y, NetworkPlayerInfo playerInfo, CallbackInfo info)
     {
-        boolean pingDelay = PingMode.getById(ExtendedConfig.instance.pingMode).equalsIgnoreCase("ping_and_delay");
+        boolean pingDelay = PingMode.byId(SkyBlockcatiaSettings.instance.pingMode) == PingMode.PING_AND_DELAY;
         FontRenderer fontRenderer = this.mc.fontRendererObj;
         int ping = playerInfo.getResponseTime();
 
-        if (ConfigManagerIN.enableCustomPlayerList)
+        if (SkyBlockcatiaConfig.enableCustomPlayerList)
         {
             EnumChatFormatting color = EnumChatFormatting.GREEN;
             String pingText = String.valueOf(ping);
@@ -146,6 +146,6 @@ public class GuiPlayerTabOverlayMixin
 
     private boolean isPlayerCountEnabled()
     {
-        return ExtendedConfig.instance.lobbyPlayerCount && PlayerCountMode.getById(ExtendedConfig.instance.playerCountMode).equalsIgnoreCase("tab_list") && HypixelEventHandler.isSkyBlock && HypixelEventHandler.SKY_BLOCK_LOCATION != SkyBlockLocation.YOUR_ISLAND;
+        return SkyBlockcatiaSettings.instance.lobbyPlayerCount && PlayerCountMode.byId(SkyBlockcatiaSettings.instance.playerCountMode) == PlayerCountMode.TAB_LIST && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND;
     }
 }

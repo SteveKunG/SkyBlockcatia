@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.config.ConfigManagerIN;
-import com.stevekung.skyblockcatia.config.ExtendedConfig;
-import com.stevekung.skyblockcatia.event.HypixelEventHandler;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.utils.*;
 
@@ -46,7 +46,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     {
         this.textInputUtil = new TextInputUtil(this.fontRendererObj, () -> ((IModifiedSign)this.that.tileSign).getText(this.editLine).getUnformattedText(), text -> ((IModifiedSign)this.that.tileSign).setText(this.editLine, new ChatComponentText(text)), 90);
 
-        if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
         {
             List<SignSelectionList.Entry> list = null;
             String title = null;
@@ -96,17 +96,17 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "onGuiClosed()V", cancellable = true, at = @At("HEAD"))
     private void onGuiClosed(CallbackInfo info)
     {
-        if (ConfigManagerIN.enableSignSelectionList)
+        if (SkyBlockcatiaConfig.enableSignSelectionList)
         {
             Keyboard.enableRepeatEvents(false);
 
-            if (HypixelEventHandler.isSkyBlock)
+            if (SkyBlockEventHandler.isSkyBlock)
             {
                 String text = this.that.tileSign.signText[0].getUnformattedText();
 
                 if (!StringUtils.isNullOrEmpty(text))
                 {
-                    if (NumberUtils.isNumericWithKM(text) && (!ExtendedConfig.instance.auctionBidConfirm && this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
+                    if (NumberUtils.isNumericWithKM(text) && (!SkyBlockcatiaSettings.instance.auctionBidConfirm && this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                     {
                         this.globalSelector.add(text);
                     }
@@ -120,7 +120,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
                     }
                 }
             }
-            if (!(ExtendedConfig.instance.auctionBidConfirm && this.isAuctionPrice()))
+            if (!(SkyBlockcatiaSettings.instance.auctionBidConfirm && this.isAuctionPrice()))
             {
                 SignSelectionList.processSignData(this.that.tileSign);
             }
@@ -131,7 +131,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/tileentity/TileEntitySign.markDirty()V", shift = Shift.AFTER))
     private void actionPerformed(GuiButton button, CallbackInfo info) throws IOException
     {
-        if (ExtendedConfig.instance.auctionBidConfirm)
+        if (SkyBlockcatiaSettings.instance.auctionBidConfirm)
         {
             String text = this.that.tileSign.signText[0].getUnformattedText();
 
@@ -139,7 +139,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
             {
                 int price = Integer.parseInt(text);
 
-                if (price >= ExtendedConfig.instance.auctionBidConfirmValue)
+                if (price >= SkyBlockcatiaSettings.instance.auctionBidConfirmValue)
                 {
                     this.mc.displayGuiScreen(new GuiYesNo(this, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
                     info.cancel();
@@ -157,7 +157,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "keyTyped(CI)V", cancellable = true, at = @At("HEAD"))
     private void keyTyped(char typedChar, int keyCode, CallbackInfo info) throws IOException
     {
-        if (ConfigManagerIN.enableOverwriteSignEditing)
+        if (SkyBlockcatiaConfig.enableOverwriteSignEditing)
         {
             this.textInputUtil.insert(typedChar);
             this.keyPressed(keyCode);
@@ -168,7 +168,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("HEAD"))
     private void drawScreenPre(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (ConfigManagerIN.enableOverwriteSignEditing)
+        if (SkyBlockcatiaConfig.enableOverwriteSignEditing)
         {
             this.drawDefaultBackground();
             this.drawCenteredString(this.fontRendererObj, LangUtils.translate("sign.edit"), this.width / 2, 40, 16777215);
@@ -214,7 +214,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
             GlStateManager.popMatrix();
             super.drawScreen(mouseX, mouseY, partialTicks);
 
-            if (HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
             {
                 if (this.globalSelector != null)
                 {
@@ -228,7 +228,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("RETURN"))
     private void drawScreenPost(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (!ConfigManagerIN.enableOverwriteSignEditing && HypixelEventHandler.isSkyBlock && ConfigManagerIN.enableSignSelectionList)
+        if (!SkyBlockcatiaConfig.enableOverwriteSignEditing && SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
         {
             if (this.globalSelector != null)
             {
