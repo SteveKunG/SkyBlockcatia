@@ -2678,7 +2678,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                     itemStack.getSubCompound("ExtraAttributes", true).setString("id", "PET");
                     itemStack.getTagCompound().setBoolean("active", active);
-                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), level.getCurrentPetXp(), active, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), active, Arrays.asList(itemStack)));
 
                     switch (tier)
                     {
@@ -2710,10 +2710,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "UNKNOWN PET"));
                     itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
-                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, 0, false, Arrays.asList(itemStack)));
+                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, itemStack.getDisplayName(), false, Arrays.asList(itemStack)));
                     LoggerIN.warning("Found an unknown pet! type: {}", petType);
                 }
-                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getCurrentXp(), o1.getCurrentXp()).build());
+                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o1.getName(), o2.getName()).build());
             }
             for (SBPets.Data data : petData)
             {

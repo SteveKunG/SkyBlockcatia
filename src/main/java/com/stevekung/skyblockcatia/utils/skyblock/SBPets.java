@@ -315,15 +315,15 @@ public class SBPets
     {
         private final SBPets.Tier tier;
         private final int currentLevel;
-        private final double currentXp;
+        private final String name;
         private final boolean isActive;
         private final List<ItemStack> itemStack;
 
-        public Data(SBPets.Tier tier, int currentLevel, double currentXp, boolean isActive, List<ItemStack> itemStack)
+        public Data(SBPets.Tier tier, int currentLevel, String name, boolean isActive, List<ItemStack> itemStack)
         {
             this.tier = tier;
             this.currentLevel = currentLevel;
-            this.currentXp = currentXp;
+            this.name = name;
             this.isActive = isActive;
             this.itemStack = itemStack;
         }
@@ -343,9 +343,9 @@ public class SBPets
             return this.currentLevel;
         }
 
-        public double getCurrentXp()
+        public String getName()
         {
-            return this.currentXp;
+            return this.name;
         }
 
         public boolean isActive()
