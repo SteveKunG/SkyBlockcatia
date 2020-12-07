@@ -1,7 +1,8 @@
 [
     {
         "level": 1,
-        "intelligence": 1
+        "intelligence": 1,
+        "ability_damage": 0.5
     },
     {
         "level": 15,
