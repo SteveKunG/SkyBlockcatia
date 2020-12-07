@@ -6,6 +6,7 @@
     },
     {
         "level": 15,
-        "intelligence": 2
+        "intelligence": 2,
+        "ability_damage": 0.5
     }
 ]
