@@ -3507,7 +3507,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
                 else if (statName.contains("race") || statName.contains("dungeon_hub"))
                 {
-                    race.add(new SBStats(WordUtils.capitalize(statName.replaceAll("dungeon_hub_|_best_time", "").replace("_", " ")), value));
+                    race.add(new SBStats(WordUtils.capitalize(statName.replaceAll("dungeon_hub_|_best_time", "").replace("_", " ")), String.format("%1$TM:%1$TS.%1$TL", (long)value)));
                 }
                 else if (statName.startsWith("mythos_burrows_"))
                 {

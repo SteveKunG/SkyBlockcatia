@@ -3,17 +3,26 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
 
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StringUtils;
 
 public class SBStats
 {
     private String name;
     private final double value;
+    private String valueString;
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###.#");
 
     public SBStats(String name, double value)
     {
         this.name = name;
         this.value = value;
+    }
+
+    public SBStats(String name, String valueString)
+    {
+        this.name = name;
+        this.value = 0;
+        this.valueString = valueString;
     }
 
     public String getName()
@@ -32,9 +41,9 @@ public class SBStats
         {
             return "";
         }
-        else if (this.name.contains("Race") || this.name.contains("No Return") || this.name.contains("With Return"))
+        else if (!StringUtils.isNullOrEmpty(this.valueString))
         {
-            return String.format("%1$TM:%1$TS.%1$TL", (long)this.value);
+            return this.valueString;
         }
         return FORMAT.format(this.value);
     }
