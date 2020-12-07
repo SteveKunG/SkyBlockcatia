@@ -125,7 +125,7 @@ public class GuiSkyBlockData extends GuiScreen
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
-    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
+    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
     private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
     private static final ModDecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new ModDecimalFormat("+#;-#");
@@ -189,7 +189,7 @@ public class GuiSkyBlockData extends GuiScreen
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
-    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0);
+    private BonusStatTemplate allStat = new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0, 0);
 
     // GuiContainer fields
     private int xSize;
@@ -1816,7 +1816,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
 
                 this.data.setHasInventories(this.totalDisabledInv != 11);
-                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                this.allStat.add(new BonusStatTemplate(0, 0, 0, this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
                 this.getBasicInfo(currentUserProfile, banking, objStatus, userUUID, communityUpgrade);
                 break;
             }
@@ -2888,6 +2888,7 @@ public class GuiSkyBlockData extends GuiScreen
         double magicFindTemp = 0;
         double petLuckTemp = 0;
         double ferocityTemp = 0;
+        double abilityDamageTemp = 0;
 
         for (int i = 0; i < bonus.length; ++i)
         {
@@ -2923,6 +2924,7 @@ public class GuiSkyBlockData extends GuiScreen
                 double magicFind = bonus[i].getMagicFind();
                 double petLuck = bonus[i].getPetLuck();
                 double ferocity = bonus[i].getFerocity();
+                double abilityDamage = bonus[i].getAbilityDamage();
 
                 for (int level = levelToCheck; level <= skillLevel; level++)
                 {
@@ -2943,10 +2945,11 @@ public class GuiSkyBlockData extends GuiScreen
                     magicFindTemp += magicFind;
                     petLuckTemp += petLuck;
                     ferocityTemp += ferocity;
+                    abilityDamageTemp += abilityDamage;
                 }
             }
         }
-        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp);
+        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp);
     }
 
     private void getHealthFromCake(NBTTagCompound extraAttrib)
@@ -3005,6 +3008,7 @@ public class GuiSkyBlockData extends GuiScreen
         double magicFindTemp = 0;
         double petLuckTemp = 0;
         double ferocityTemp = 0;
+        double abilityDamageTemp = 0;
 
         for (ItemStack itemStack : inventory)
         {
@@ -3105,6 +3109,9 @@ public class GuiSkyBlockData extends GuiScreen
                                 case "Ferocity":
                                     ferocityTemp += valueD;
                                     break;
+                                case "Ability Damage":
+                                    abilityDamageTemp += valueD;
+                                    break;
                                 }
                             }
                         }
@@ -3112,7 +3119,7 @@ public class GuiSkyBlockData extends GuiScreen
                 }
             }
         }
-        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp));
+        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp));
     }
 
     private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid, CommunityUpgrades communityUpgrade)
@@ -3163,6 +3170,7 @@ public class GuiSkyBlockData extends GuiScreen
         String bank = ColorUtils.stringToRGB("255,215,0").toColoredFont();
         String purseColor = ColorUtils.stringToRGB("255,165,0").toColoredFont();
         String ferocity = ColorUtils.stringToRGB("224,120,0").toColoredFont();
+        String abilityDamage = ColorUtils.stringToRGB("214,36,0").toColoredFont();
         String location = this.getLocation(objStatus, uuid);
 
         this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Base Stats", ""));
@@ -3180,6 +3188,7 @@ public class GuiSkyBlockData extends GuiScreen
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
         this.infoList.add(new SkyBlockInfo(ferocity + "\u2AFD Ferocity", ferocity + SKILL_AVG.format(this.allStat.getFerocity())));
+        this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2AFD Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage())));
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "\u2618 Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SkyBlockAPIUtils.MAX_FAIRY_SOULS));
 
         this.infoList.add(new SkyBlockInfo("", ""));
@@ -3250,7 +3259,7 @@ public class GuiSkyBlockData extends GuiScreen
             defenseBase += (i + 1) % 5 == 0 ? 2 : 1;
             strengthBase += (i + 1) % 5 == 0 ? 2 : 1;
         }
-        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speed, 0, 0, 0, 0, 0, 0, 0, 0);
+        return new BonusStatTemplate(healthBase, defenseBase, 0, 0, strengthBase, speed, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     private BonusStatTemplate getMagicFindFromPets(int petsScore)
@@ -3267,7 +3276,7 @@ public class GuiSkyBlockData extends GuiScreen
                 magicFindBase = magicFind;
             }
         }
-        return new BonusStatTemplate(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, magicFindBase, 0, 0);
+        return new BonusStatTemplate(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, magicFindBase, 0, 0, 0);
     }
 
     private String replaceStatsString(String statName, String replace)
@@ -4820,8 +4829,9 @@ public class GuiSkyBlockData extends GuiScreen
         private double magicFind;
         private double petLuck;
         private double ferocity;
+        private double abilityDamage;
 
-        public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck, double ferocity)
+        public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck, double ferocity, double abilityDamage)
         {
             this.health = health;
             this.defense = defense;
@@ -4837,6 +4847,7 @@ public class GuiSkyBlockData extends GuiScreen
             this.magicFind = magicFind;
             this.petLuck = petLuck;
             this.ferocity = ferocity;
+            this.abilityDamage = abilityDamage;
         }
 
         public BonusStatTemplate add(BonusStatTemplate toAdd)
@@ -4855,7 +4866,8 @@ public class GuiSkyBlockData extends GuiScreen
             this.magicFind += toAdd.magicFind;
             this.petLuck += toAdd.petLuck;
             this.ferocity += toAdd.ferocity;
-            return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity);
+            this.abilityDamage += toAdd.abilityDamage;
+            return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity, this.abilityDamage);
         }
 
         public double getHealth()
@@ -4936,6 +4948,11 @@ public class GuiSkyBlockData extends GuiScreen
             return this.ferocity;
         }
 
+        public double getAbilityDamage()
+        {
+            return this.abilityDamage;
+        }
+
         public void setHealth(double health)
         {
             this.health = health;
@@ -5004,6 +5021,11 @@ public class GuiSkyBlockData extends GuiScreen
         public void setFerocity(double ferocity)
         {
             this.ferocity = ferocity;
+        }
+
+        public void setAbilityDamage(double abilityDamage)
+        {
+            this.abilityDamage = abilityDamage;
         }
 
         public BonusStatTemplate addHealth(double health)
@@ -5087,6 +5109,12 @@ public class GuiSkyBlockData extends GuiScreen
         public BonusStatTemplate addFerocity(double ferocity)
         {
             this.ferocity += ferocity;
+            return this;
+        }
+
+        public BonusStatTemplate addAbilityDamage(double abilityDamage)
+        {
+            this.abilityDamage += abilityDamage;
             return this;
         }
     }

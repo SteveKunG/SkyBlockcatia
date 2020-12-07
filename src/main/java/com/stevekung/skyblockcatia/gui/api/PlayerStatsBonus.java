@@ -199,11 +199,14 @@ public class PlayerStatsBonus
     {
         private final int level;
         private final double intelligence;
+        @SerializedName("ability_damage")
+        private final double abilityDamage;
 
-        public Enchanting(int level, double intelligence)
+        public Enchanting(int level, double intelligence, double abilityDamage)
         {
             this.level = level;
             this.intelligence = intelligence;
+            this.abilityDamage = abilityDamage;
         }
 
         @Override
@@ -216,6 +219,12 @@ public class PlayerStatsBonus
         public double getIntelligence()
         {
             return this.intelligence;
+        }
+
+        @Override
+        public double getAbilityDamage()
+        {
+            return this.abilityDamage;
         }
     }
 
@@ -530,6 +539,11 @@ public class PlayerStatsBonus
         }
 
         default double getFerocity()
+        {
+            return 0;
+        }
+
+        default double getAbilityDamage()
         {
             return 0;
         }
