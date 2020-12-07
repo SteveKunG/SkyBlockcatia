@@ -4,7 +4,6 @@ import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
 import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,20 +17,18 @@ public class GuiSmallArrowButton extends GuiButton
     private final int originalX;
     private final int potionX;
     private final Minecraft mc;
-    private final int type;
 
-    public GuiSmallArrowButton(int buttonID, int xPos, int yPos, int type)
+    public GuiSmallArrowButton(int buttonID, int xPos, int yPos)
     {
-        this(buttonID, xPos, yPos, xPos, type);
+        this(buttonID, xPos, yPos, xPos);
     }
 
-    public GuiSmallArrowButton(int buttonID, int xPos, int yPos, int potionX, int type)
+    public GuiSmallArrowButton(int buttonID, int xPos, int yPos, int potionX)
     {
         super(buttonID, xPos, yPos, 7, 11, "");
         this.mc = Minecraft.getMinecraft();
         this.originalX = xPos;
         this.potionX = potionX;
-        this.type = type;
     }
 
     @Override
@@ -68,10 +65,7 @@ public class GuiSmallArrowButton extends GuiButton
         {
             mc.getTextureManager().bindTexture(TEXTURE);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            Gui.drawModalRectWithCustomSizedTexture(this.xPosition, this.yPosition, flag ? 7 : 0, this.type == 0 ? 0 : 11, this.width, this.height, 14, 22);
+            Gui.drawModalRectWithCustomSizedTexture(this.xPosition, this.yPosition, flag ? 7 : 0, 0, this.width, this.height, 14, 11);
         }
     }
-
-    @Override
-    public void playPressSound(SoundHandler soundHandlerIn) {}
 }
