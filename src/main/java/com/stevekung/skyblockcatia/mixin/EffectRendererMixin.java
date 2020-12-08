@@ -18,7 +18,7 @@ public class EffectRendererMixin
     @Inject(method = "addBlockDestroyEffects(Lnet/minecraft/util/BlockPos;Lnet/minecraft/block/state/IBlockState;)V", cancellable = true, at = @At("HEAD"))
     private void addBlockDestroyEffects(BlockPos pos, IBlockState state, CallbackInfo info)
     {
-        if (SkyBlockcatiaSettings.instance.disableBlockParticles)
+        if (SkyBlockcatiaSettings.INSTANCE.disableBlockParticles)
         {
             info.cancel();
         }
@@ -27,7 +27,7 @@ public class EffectRendererMixin
     @Inject(method = "addBlockHitEffects(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)V", cancellable = true, at = @At("HEAD"))
     private void addBlockHitEffects(BlockPos pos, EnumFacing side, CallbackInfo info)
     {
-        if (SkyBlockcatiaSettings.instance.disableBlockParticles)
+        if (SkyBlockcatiaSettings.INSTANCE.disableBlockParticles)
         {
             info.cancel();
         }

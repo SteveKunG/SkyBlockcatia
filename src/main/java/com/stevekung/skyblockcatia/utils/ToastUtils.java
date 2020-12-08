@@ -143,7 +143,7 @@ public class ToastUtils
             case MYTHOS_COINS:
             case PET_DROP:
             case DRAGON_CRYSTAL_FRAGMENT:
-                return SkyBlockcatiaSettings.instance.rareDropToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.rareDropToastTime * 1000L;
             case BOSS_DROP:
             case SLAYER_RARE_DROP:
             case SLAYER_VERY_RARE_DROP_BLUE:
@@ -152,18 +152,18 @@ public class ToastUtils
             case SANTA_TIER:
             case DUNGEON_QUALITY_DROP:
             case DUNGEON_REWARD_DROP:
-                return SkyBlockcatiaSettings.instance.specialDropToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
             case GOOD_CATCH:
             case GREAT_CATCH:
             case GOOD_CATCH_COINS:
             case GREAT_CATCH_COINS:
-                return SkyBlockcatiaSettings.instance.specialDropToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
             case COMMON_GIFT:
             case SWEET_GIFT:
             case RARE_GIFT:
-                return SkyBlockcatiaSettings.instance.giftToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.giftToastTime * 1000L;
             case PET_LEVEL_UP:
-                return SkyBlockcatiaSettings.instance.petToastTime * 1000L;
+                return SkyBlockcatiaSettings.INSTANCE.petToastTime * 1000L;
             default:
                 return 5000L;
             }

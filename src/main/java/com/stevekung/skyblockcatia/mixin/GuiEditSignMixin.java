@@ -106,7 +106,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
 
                 if (!StringUtils.isNullOrEmpty(text))
                 {
-                    if (NumberUtils.isNumericWithKM(text) && (!SkyBlockcatiaSettings.instance.auctionBidConfirm && this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
+                    if (NumberUtils.isNumericWithKM(text) && (!SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                     {
                         this.globalSelector.add(text);
                     }
@@ -120,7 +120,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
                     }
                 }
             }
-            if (!(SkyBlockcatiaSettings.instance.auctionBidConfirm && this.isAuctionPrice()))
+            if (!(SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && this.isAuctionPrice()))
             {
                 SignSelectionList.processSignData(this.that.tileSign);
             }
@@ -131,7 +131,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/tileentity/TileEntitySign.markDirty()V", shift = Shift.AFTER))
     private void actionPerformed(GuiButton button, CallbackInfo info) throws IOException
     {
-        if (SkyBlockcatiaSettings.instance.auctionBidConfirm)
+        if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm)
         {
             String text = this.that.tileSign.signText[0].getUnformattedText();
 
@@ -139,7 +139,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
             {
                 int price = Integer.parseInt(text);
 
-                if (price >= SkyBlockcatiaSettings.instance.auctionBidConfirmValue)
+                if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
                 {
                     this.mc.displayGuiScreen(new GuiYesNo(this, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
                     info.cancel();

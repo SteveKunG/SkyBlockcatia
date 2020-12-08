@@ -31,7 +31,7 @@ public abstract class EntityArmorStandMixin extends EntityLivingBase
     @Inject(method = "interactAt(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/Vec3;)Z", cancellable = true, at = @At("HEAD"))
     private void interactAt(EntityPlayer player, Vec3 targetVec3, CallbackInfoReturnable info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.ignoreInteractInvisibleArmorStand)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.ignoreInteractInvisibleArmorStand)
         {
             for (ItemStack content : this.contents)
             {

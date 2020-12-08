@@ -57,7 +57,7 @@ public class LayerCustomHeadMixin
     {
         ItemStack itemStack = entity.getCurrentArmor(3);
 
-        if (SkyBlockcatiaSettings.instance.glowingDragonArmor && itemStack != null && itemStack.getItem() == Items.skull && itemStack.hasTagCompound())
+        if (SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor && itemStack != null && itemStack.getItem() == Items.skull && itemStack.hasTagCompound())
         {
             String texture = null;
             NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");

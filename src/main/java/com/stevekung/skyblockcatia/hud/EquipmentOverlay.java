@@ -31,7 +31,7 @@ public class EquipmentOverlay
 
     public String renderInfo()
     {
-        Equipments.Status status = Equipments.Status.byId(SkyBlockcatiaSettings.instance.equipmentStatus);
+        Equipments.Status status = Equipments.Status.byId(SkyBlockcatiaSettings.INSTANCE.equipmentStatus);
 
         if (status == Equipments.Status.NONE || this.itemStack.isItemStackDamageable() && (status == Equipments.Status.COUNT || status == Equipments.Status.COUNT_AND_STACK))
         {
@@ -73,7 +73,7 @@ public class EquipmentOverlay
 
     private static String getArmorDurabilityStatus(ItemStack itemStack)
     {
-        Equipments.Status status = Equipments.Status.byId(SkyBlockcatiaSettings.instance.equipmentStatus);
+        Equipments.Status status = Equipments.Status.byId(SkyBlockcatiaSettings.INSTANCE.equipmentStatus);
 
         switch (status)
         {
@@ -98,7 +98,7 @@ public class EquipmentOverlay
 
     private static String getItemStackCount(ItemStack itemStack, int count)
     {
-        Equipments.Status status = Equipments.Status.byId(SkyBlockcatiaSettings.instance.equipmentStatus);
+        Equipments.Status status = Equipments.Status.byId(SkyBlockcatiaSettings.INSTANCE.equipmentStatus);
         double stack = count / (double)itemStack.getMaxStackSize();
         return count == 1 || itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("Unbreakable") ? "" : String.valueOf(status == Equipments.Status.COUNT_AND_STACK ? count + "/" + EquipmentOverlay.STACK.format(stack) : count);
     }

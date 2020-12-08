@@ -26,15 +26,15 @@ public class HorizontalEquipmentOverlay extends EquipmentOverlay
 
     public void render(int x, int y)
     {
-        boolean right = Equipments.Position.byId(SkyBlockcatiaSettings.instance.equipmentPosition) == Equipments.Position.RIGHT;
+        boolean right = Equipments.Position.byId(SkyBlockcatiaSettings.INSTANCE.equipmentPosition) == Equipments.Position.RIGHT;
         String arrowInfo = this.renderArrowInfo();
         EquipmentOverlay.renderItem(this.itemStack, right ? x - 18 : x, y);
-        this.mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.equipmentStatusColor).toColoredFont() + this.renderInfo(), right ? x - 20 - this.itemDamageWidth : x + 18, y + 4, 16777215);
+        this.mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.equipmentStatusColor).toColoredFont() + this.renderInfo(), right ? x - 20 - this.itemDamageWidth : x + 18, y + 4, 16777215);
 
         if (this.itemStack.getItem() instanceof ItemBow)
         {
             GlStateManager.disableDepth();
-            ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.arrowCountColor).toColoredFont() + arrowInfo, right ? x - ColorUtils.unicodeFontRenderer.getStringWidth(arrowInfo) : x + 6, y + 8, 16777215);
+            ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.arrowCountColor).toColoredFont() + arrowInfo, right ? x - ColorUtils.unicodeFontRenderer.getStringWidth(arrowInfo) : x + 6, y + 8, 16777215);
             GlStateManager.enableDepth();
         }
     }

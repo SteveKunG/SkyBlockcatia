@@ -42,7 +42,7 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
         else
         {
             int i = options.getOrdinal();
-            return options.isBoolean() ? new GuiConfigButton(i, x, y, 160, options, SkyBlockcatiaSettings.instance.getKeyBinding(options)) : new GuiTextFieldExtended(i, x, y, 80, options);
+            return options.isBoolean() ? new GuiConfigButton(i, x, y, 160, options, SkyBlockcatiaSettings.INSTANCE.getKeyBinding(options)) : new GuiTextFieldExtended(i, x, y, 80, options);
         }
     }
 
@@ -101,7 +101,7 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
         if (keyCode == 28)
         {
             this.saveCurrentValue();
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
             this.mc.displayGuiScreen(this.parent);
         }
         this.options.forEach(row -> row.textboxKeyTyped(typedChar, keyCode));
@@ -121,7 +121,7 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
             if (this.gui instanceof GuiTextFieldExtended)
             {
                 GuiTextFieldExtended text = (GuiTextFieldExtended)this.gui;
-                text.setText(SkyBlockcatiaSettings.instance.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(text.getId())));
+                text.setText(SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(text.getId())));
             }
         }
 
@@ -158,8 +158,8 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
                 {
                     if (mouseEvent == 0)
                     {
-                        SkyBlockcatiaSettings.instance.setOptionValue(button.getOption(), 1);
-                        button.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(button.id));
+                        SkyBlockcatiaSettings.INSTANCE.setOptionValue(button.getOption(), 1);
+                        button.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(button.id));
                         button.playPressSound(this.mc.getSoundHandler());
                     }
                 }
@@ -186,7 +186,7 @@ public class GuiConfigTextFieldRowList extends GuiListExtended
             if (this.gui != null && this.gui instanceof GuiTextFieldExtended)
             {
                 GuiTextFieldExtended text = (GuiTextFieldExtended)this.gui;
-                SkyBlockcatiaSettings.instance.setOptionStringValue(text.getOption(), text.getText());
+                SkyBlockcatiaSettings.INSTANCE.setOptionStringValue(text.getOption(), text.getText());
                 ColorUtils.stringToRGB(text.getText(), true, text.getOption().getTranslation());
             }
         }

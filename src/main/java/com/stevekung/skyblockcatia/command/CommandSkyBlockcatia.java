@@ -46,15 +46,15 @@ public class CommandSkyBlockcatia extends ClientCommandBase
 
                 if ("enable".equalsIgnoreCase(args[1]))
                 {
-                    SkyBlockcatiaSettings.instance.toggleSprint = true;
+                    SkyBlockcatiaSettings.INSTANCE.toggleSprint = true;
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sprint_enabled")));
-                    SkyBlockcatiaSettings.instance.save();
+                    SkyBlockcatiaSettings.INSTANCE.save();
                 }
                 else if ("disable".equalsIgnoreCase(args[1]))
                 {
-                    SkyBlockcatiaSettings.instance.toggleSprint = false;
+                    SkyBlockcatiaSettings.INSTANCE.toggleSprint = false;
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sprint_disabled")));
-                    SkyBlockcatiaSettings.instance.save();
+                    SkyBlockcatiaSettings.INSTANCE.save();
                 }
                 else if ("mode".equalsIgnoreCase(args[1]))
                 {
@@ -65,15 +65,15 @@ public class CommandSkyBlockcatia extends ClientCommandBase
 
                     if ("key_binding".equalsIgnoreCase(args[2]))
                     {
-                        SkyBlockcatiaSettings.instance.toggleSprintUseMode = "key_binding";
+                        SkyBlockcatiaSettings.INSTANCE.toggleSprintUseMode = "key_binding";
                         sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sprint_set") + LangUtils.translate("message.key_binding")));
-                        SkyBlockcatiaSettings.instance.save();
+                        SkyBlockcatiaSettings.INSTANCE.save();
                     }
                     else if ("command".equalsIgnoreCase(args[2]))
                     {
-                        SkyBlockcatiaSettings.instance.toggleSprintUseMode = "command";
+                        SkyBlockcatiaSettings.INSTANCE.toggleSprintUseMode = "command";
                         sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sprint_set") + LangUtils.translate("message.command")));
-                        SkyBlockcatiaSettings.instance.save();
+                        SkyBlockcatiaSettings.INSTANCE.save();
                     }
                     else
                     {
@@ -94,15 +94,15 @@ public class CommandSkyBlockcatia extends ClientCommandBase
 
                 if ("enable".equalsIgnoreCase(args[1]))
                 {
-                    SkyBlockcatiaSettings.instance.toggleSneak = true;
+                    SkyBlockcatiaSettings.INSTANCE.toggleSneak = true;
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sneak_enabled")));
-                    SkyBlockcatiaSettings.instance.save();
+                    SkyBlockcatiaSettings.INSTANCE.save();
                 }
                 else if ("disable".equalsIgnoreCase(args[1]))
                 {
-                    SkyBlockcatiaSettings.instance.toggleSneak = false;
+                    SkyBlockcatiaSettings.INSTANCE.toggleSneak = false;
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sneak_disabled")));
-                    SkyBlockcatiaSettings.instance.save();
+                    SkyBlockcatiaSettings.INSTANCE.save();
                 }
                 else if ("mode".equalsIgnoreCase(args[1]))
                 {
@@ -112,15 +112,15 @@ public class CommandSkyBlockcatia extends ClientCommandBase
                     }
                     if ("key_binding".equalsIgnoreCase(args[2]))
                     {
-                        SkyBlockcatiaSettings.instance.toggleSneakUseMode = "key_binding";
+                        SkyBlockcatiaSettings.INSTANCE.toggleSneakUseMode = "key_binding";
                         sender.addChatMessage(JsonUtils.create("Set toggle sneak to use Key Binding"));
-                        SkyBlockcatiaSettings.instance.save();
+                        SkyBlockcatiaSettings.INSTANCE.save();
                     }
                     else if ("command".equalsIgnoreCase(args[2]))
                     {
-                        SkyBlockcatiaSettings.instance.toggleSneakUseMode = "command";
+                        SkyBlockcatiaSettings.INSTANCE.toggleSneakUseMode = "command";
                         sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.toggle_sneak_set") + LangUtils.translate("message.command")));
-                        SkyBlockcatiaSettings.instance.save();
+                        SkyBlockcatiaSettings.INSTANCE.save();
                     }
                     else
                     {

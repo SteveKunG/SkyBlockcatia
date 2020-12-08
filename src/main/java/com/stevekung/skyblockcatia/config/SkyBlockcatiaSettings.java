@@ -14,7 +14,7 @@ import net.minecraft.util.MathHelper;
 
 public class SkyBlockcatiaSettings
 {
-    public static SkyBlockcatiaSettings instance = new SkyBlockcatiaSettings();
+    public static SkyBlockcatiaSettings INSTANCE = new SkyBlockcatiaSettings();
     private static final String defaultWhite = "255,255,255";
     public static final File skyblockcatiaDir = new File(Minecraft.getMinecraft().mcDataDir, "skyblockcatia");
     public static final File userDir = new File(skyblockcatiaDir, GameProfileUtils.getUUID().toString());
@@ -482,8 +482,8 @@ public class SkyBlockcatiaSettings
 
     public static void resetConfig()
     {
-        SkyBlockcatiaSettings.instance = new SkyBlockcatiaSettings();
-        SkyBlockcatiaSettings.instance.save(SkyBlockcatiaSettings.currentProfile);
+        SkyBlockcatiaSettings.INSTANCE = new SkyBlockcatiaSettings();
+        SkyBlockcatiaSettings.INSTANCE.save(SkyBlockcatiaSettings.currentProfile);
         ClientUtils.printClientMessage(LangUtils.translate("message.reset_config", SkyBlockcatiaSettings.currentProfile));
     }
 

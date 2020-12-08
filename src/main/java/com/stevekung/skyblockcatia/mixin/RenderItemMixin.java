@@ -20,7 +20,7 @@ public class RenderItemMixin
     @Inject(method = "renderItemIntoGUI(Lnet/minecraft/item/ItemStack;II)V", at = @At("HEAD"))
     private void renderRarity(ItemStack itemStack, int xPosition, int yPosition, CallbackInfo info)
     {
-        if (SkyBlockcatiaSettings.instance.showItemRarity)
+        if (SkyBlockcatiaSettings.INSTANCE.showItemRarity)
         {
             RenderUtils.renderRarity(itemStack, xPosition, yPosition);
         }

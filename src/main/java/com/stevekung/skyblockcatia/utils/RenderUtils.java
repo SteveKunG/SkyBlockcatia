@@ -173,7 +173,7 @@ public class RenderUtils
     {
         if (rarity != null)
         {
-            float alpha = SkyBlockcatiaSettings.instance.itemRarityOpacity / 100.0F;
+            float alpha = SkyBlockcatiaSettings.INSTANCE.itemRarityOpacity / 100.0F;
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             GlStateManager.enableBlend();

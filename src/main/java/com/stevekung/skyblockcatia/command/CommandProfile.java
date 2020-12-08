@@ -63,7 +63,7 @@ public class CommandProfile extends ClientCommandBase
                 else
                 {
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.profile_added", name)));
-                    SkyBlockcatiaSettings.instance.save(name);
+                    SkyBlockcatiaSettings.INSTANCE.save(name);
                 }
             }
             else if ("load".equalsIgnoreCase(args[0]))
@@ -84,11 +84,11 @@ public class CommandProfile extends ClientCommandBase
                     }
                 }
 
-                SkyBlockcatiaSettings.instance.setCurrentProfile(name);
+                SkyBlockcatiaSettings.INSTANCE.setCurrentProfile(name);
                 SkyBlockcatiaSettings.saveProfileFile(name);
-                SkyBlockcatiaSettings.instance.load();
+                SkyBlockcatiaSettings.INSTANCE.load();
                 sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.load_profile", name)));
-                SkyBlockcatiaSettings.instance.save(name); // save current settings
+                SkyBlockcatiaSettings.INSTANCE.save(name); // save current settings
             }
             else if ("save".equalsIgnoreCase(args[0]))
             {
@@ -110,7 +110,7 @@ public class CommandProfile extends ClientCommandBase
 
                 if (exist)
                 {
-                    SkyBlockcatiaSettings.instance.save(name);
+                    SkyBlockcatiaSettings.INSTANCE.save(name);
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.save_profile", name)));
                 }
                 else
@@ -147,8 +147,8 @@ public class CommandProfile extends ClientCommandBase
                 {
                     File toDel = new File(SkyBlockcatiaSettings.userDir, name + ".dat");
                     toDel.delete();
-                    SkyBlockcatiaSettings.instance.setCurrentProfile("default");
-                    SkyBlockcatiaSettings.instance.load();
+                    SkyBlockcatiaSettings.INSTANCE.setCurrentProfile("default");
+                    SkyBlockcatiaSettings.INSTANCE.load();
                     sender.addChatMessage(JsonUtils.create(LangUtils.translate("message.remove_profile", name)));
                 }
                 else

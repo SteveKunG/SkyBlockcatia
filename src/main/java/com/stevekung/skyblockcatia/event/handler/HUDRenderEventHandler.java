@@ -123,15 +123,15 @@ public class HUDRenderEventHandler
         double grapplingHookDelay = 0;
         double zealotRespawnDelay = 0;
 
-        if (SkyBlockcatiaSettings.instance.jungleAxeCooldown)
+        if (SkyBlockcatiaSettings.INSTANCE.jungleAxeCooldown)
         {
             jungleAxeDelay = this.getItemDelay(PetStats.INSTANCE.getAxeCooldown(2000), this.lastBlockBreak);
         }
-        if (SkyBlockcatiaSettings.instance.grapplingHookCooldown)
+        if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown)
         {
             grapplingHookDelay = this.getItemDelay(2000, this.lastGrapplingHookUse);
         }
-        if (SkyBlockcatiaSettings.instance.zealotRespawnCooldown)
+        if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown)
         {
             zealotRespawnDelay = this.getItemDelay(11000, this.lastZealotRespawn);
         }
@@ -150,7 +150,7 @@ public class HUDRenderEventHandler
                 return;
             }
 
-            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.instance.displayItemAbilityMaxUsed && this.mc.thePlayer.getCurrentEquippedItem() != null)
+            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && this.mc.thePlayer.getCurrentEquippedItem() != null)
             {
                 ItemStack itemStack = this.mc.thePlayer.getCurrentEquippedItem();
 
@@ -191,17 +191,17 @@ public class HUDRenderEventHandler
             List<CrosshairOverlay> crosshairInfo = new LinkedList<>();
             int center = 0;
 
-            if (SkyBlockcatiaSettings.instance.jungleAxeCooldown && jungleAxeDelay >= 0.01D)
+            if (SkyBlockcatiaSettings.INSTANCE.jungleAxeCooldown && jungleAxeDelay >= 0.01D)
             {
-                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.instance.jungleAxeCooldownColor, jungleAxeDelay));
+                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.jungleAxeCooldownColor, jungleAxeDelay));
             }
-            if (SkyBlockcatiaSettings.instance.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
+            if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
             {
-                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.instance.grapplingHookCooldownColor, grapplingHookDelay));
+                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldownColor, grapplingHookDelay));
             }
-            if (SkyBlockcatiaSettings.instance.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
+            if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
             {
-                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.instance.zealotRespawnCooldownColor, zealotRespawnDelay));
+                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldownColor, zealotRespawnDelay));
             }
 
             for (CrosshairOverlay overlay : crosshairInfo)
@@ -219,27 +219,27 @@ public class HUDRenderEventHandler
                 List<String> rightInfo = new LinkedList<>();
 
                 // left info
-                if (SkyBlockcatiaSettings.instance.ping && !this.mc.isSingleplayer())
+                if (SkyBlockcatiaSettings.INSTANCE.ping && !this.mc.isSingleplayer())
                 {
                     leftInfo.add(InfoOverlays.getPing());
 
-                    if (SkyBlockcatiaSettings.instance.pingToSecond)
+                    if (SkyBlockcatiaSettings.INSTANCE.pingToSecond)
                     {
                         leftInfo.add(InfoOverlays.getPingToSecond());
                     }
                 }
-                if (SkyBlockcatiaSettings.instance.serverIP && !this.mc.isSingleplayer())
+                if (SkyBlockcatiaSettings.INSTANCE.serverIP && !this.mc.isSingleplayer())
                 {
                     if (this.mc.getCurrentServerData() != null)
                     {
                         leftInfo.add(InfoOverlays.getServerIP(this.mc));
                     }
                 }
-                if (SkyBlockcatiaSettings.instance.fps)
+                if (SkyBlockcatiaSettings.INSTANCE.fps)
                 {
                     leftInfo.add(InfoOverlays.getFPS());
                 }
-                if (SkyBlockcatiaSettings.instance.xyz)
+                if (SkyBlockcatiaSettings.INSTANCE.xyz)
                 {
                     leftInfo.add(InfoOverlays.getXYZ(this.mc));
 
@@ -248,34 +248,34 @@ public class HUDRenderEventHandler
                         leftInfo.add(InfoOverlays.getOverworldXYZFromNether(this.mc));
                     }
                 }
-                if (SkyBlockcatiaSettings.instance.direction)
+                if (SkyBlockcatiaSettings.INSTANCE.direction)
                 {
                     leftInfo.add(InfoOverlays.renderDirection(this.mc));
                 }
-                if (SkyBlockcatiaSettings.instance.biome)
+                if (SkyBlockcatiaSettings.INSTANCE.biome)
                 {
                     leftInfo.add(InfoOverlays.getBiome(this.mc));
                 }
 
                 // right info
-                if (SkyBlockcatiaSettings.instance.realTime)
+                if (SkyBlockcatiaSettings.INSTANCE.realTime)
                 {
                     rightInfo.add(InfoOverlays.getCurrentTime());
                 }
-                if (SkyBlockcatiaSettings.instance.gameTime)
+                if (SkyBlockcatiaSettings.INSTANCE.gameTime)
                 {
                     rightInfo.add(InfoOverlays.getCurrentGameTime(this.mc));
                 }
-                if (SkyBlockcatiaSettings.instance.gameWeather && this.mc.theWorld.isRaining())
+                if (SkyBlockcatiaSettings.INSTANCE.gameWeather && this.mc.theWorld.isRaining())
                 {
                     rightInfo.add(InfoOverlays.getGameWeather(this.mc));
                 }
-                if (SkyBlockcatiaSettings.instance.moonPhase)
+                if (SkyBlockcatiaSettings.INSTANCE.moonPhase)
                 {
                     rightInfo.add(InfoUtils.INSTANCE.getMoonPhase(this.mc));
                 }
 
-                if (SkyBlockcatiaSettings.instance.placedSummoningEyeTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
+                if (SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeTracker && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
                 {
                     int summoningEyeCount = 0;
 
@@ -286,26 +286,26 @@ public class HUDRenderEventHandler
                             ++summoningEyeCount;
                         }
                     }
-                    String color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.placedSummoningEyeValueColor).toColoredFont();
-                    rightInfo.add(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
+                    String color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeValueColor).toColoredFont();
+                    rightInfo.add(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeColor).toColoredFont() + "Placed Eye: " + color + summoningEyeCount + "/8");
                 }
 
-                if (SkyBlockcatiaSettings.instance.lobbyPlayerCount && SkyBlockEventHandler.isSkyBlock && !otherPlayerIsland && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND && PlayerCountMode.byId(SkyBlockcatiaSettings.instance.playerCountMode) == PlayerCountMode.HUD && !this.mc.isSingleplayer())
+                if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerCount && SkyBlockEventHandler.isSkyBlock && !otherPlayerIsland && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND && PlayerCountMode.byId(SkyBlockcatiaSettings.INSTANCE.playerCountMode) == PlayerCountMode.HUD && !this.mc.isSingleplayer())
                 {
                     List<NetworkPlayerInfo> list = GuiPlayerTabOverlay.field_175252_a.sortedCopy(CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue));
                     rightInfo.add(JsonUtils.create("Lobby Players Count: ").setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(String.valueOf(HUDRenderEventHandler.getPlayerCount(list))).setChatStyle(JsonUtils.green())).getFormattedText());
                 }
 
                 // equipments
-                if (!this.mc.thePlayer.isSpectator() && SkyBlockcatiaSettings.instance.equipmentHUD)
+                if (!this.mc.thePlayer.isSpectator() && SkyBlockcatiaSettings.INSTANCE.equipmentHUD)
                 {
-                    if (Equipments.Position.byId(SkyBlockcatiaSettings.instance.equipmentPosition) == Equipments.Position.HOTBAR)
+                    if (Equipments.Position.byId(SkyBlockcatiaSettings.INSTANCE.equipmentPosition) == Equipments.Position.HOTBAR)
                     {
                         InfoOverlays.renderHotbarEquippedItems(this.mc);
                     }
                     else
                     {
-                        if (Equipments.Direction.byId(SkyBlockcatiaSettings.instance.equipmentDirection) == Equipments.Direction.VERTICAL)
+                        if (Equipments.Direction.byId(SkyBlockcatiaSettings.INSTANCE.equipmentDirection) == Equipments.Direction.VERTICAL)
                         {
                             InfoOverlays.renderVerticalEquippedItems(this.mc);
                         }
@@ -316,7 +316,7 @@ public class HUDRenderEventHandler
                     }
                 }
 
-                if (SkyBlockcatiaSettings.instance.potionHUD)
+                if (SkyBlockcatiaSettings.INSTANCE.potionHUD)
                 {
                     InfoOverlays.renderPotionHUD(this.mc);
                 }
@@ -332,7 +332,7 @@ public class HUDRenderEventHandler
 
                     if (!StringUtils.isNullOrEmpty(string))
                     {
-                        this.mc.fontRendererObj.drawString(string, SkyBlockcatiaSettings.instance.swapRenderInfo ? xOffset : 3.0625F, yOffset, 16777215, true);
+                        this.mc.fontRendererObj.drawString(string, SkyBlockcatiaSettings.INSTANCE.swapRenderInfo ? xOffset : 3.0625F, yOffset, 16777215, true);
                     }
                 }
 
@@ -347,7 +347,7 @@ public class HUDRenderEventHandler
 
                     if (!StringUtils.isNullOrEmpty(string))
                     {
-                        this.mc.fontRendererObj.drawString(string, SkyBlockcatiaSettings.instance.swapRenderInfo ? 3.0625F : xOffset, yOffset, 16777215, true);
+                        this.mc.fontRendererObj.drawString(string, SkyBlockcatiaSettings.INSTANCE.swapRenderInfo ? 3.0625F : xOffset, yOffset, 16777215, true);
                     }
                 }
             }
@@ -408,7 +408,7 @@ public class HUDRenderEventHandler
             {
                 HUDRenderEventHandler.foundDragon = true;
 
-                if (SkyBlockcatiaSettings.instance.showHitboxWhenDragonSpawned)
+                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                 {
                     this.mc.getRenderManager().setDebugBoundingBox(true);
                 }
@@ -425,7 +425,7 @@ public class HUDRenderEventHandler
             {
                 HUDRenderEventHandler.foundDragon = false;
 
-                if (SkyBlockcatiaSettings.instance.showHitboxWhenDragonSpawned)
+                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                 {
                     this.mc.getRenderManager().setDebugBoundingBox(false);
                 }

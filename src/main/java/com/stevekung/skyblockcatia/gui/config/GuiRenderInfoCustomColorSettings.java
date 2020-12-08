@@ -102,7 +102,7 @@ public class GuiRenderInfoCustomColorSettings extends GuiScreen
     {
         if (keyCode == 1)
         {
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
             this.mc.displayGuiScreen(this.parent);
         }
         this.optionsRowList.textboxKeyTyped(typedChar, keyCode);
@@ -128,7 +128,7 @@ public class GuiRenderInfoCustomColorSettings extends GuiScreen
         if (button.enabled)
         {
             this.optionsRowList.saveCurrentValue();
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
 
             if (button.id == 200)
             {

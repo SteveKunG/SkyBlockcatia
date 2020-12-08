@@ -52,7 +52,7 @@ public class RenderManagerMixin
     @Inject(method = "renderDebugBoundingBox(Lnet/minecraft/entity/Entity;DDDFF)V", cancellable = true, at = @At("HEAD"))
     private void renderDebugBoundingBox(Entity entity, double x, double y, double z, float f1, float partialTicks, CallbackInfo info)
     {
-        if (SkyBlockcatiaSettings.instance.showDragonHitboxOnly && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
+        if (SkyBlockcatiaSettings.INSTANCE.showDragonHitboxOnly && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
             info.cancel();
         }

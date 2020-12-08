@@ -71,7 +71,7 @@ public class InfoUtils
         {
             sminutes = 0 + "" + minutes;
         }
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.gameTimeColor).toColoredFont() + "Game: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.gameTimeValueColor).toColoredFont() + shours + ":" + sminutes + " " + ampm;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.gameTimeColor).toColoredFont() + "Game: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.gameTimeValueColor).toColoredFont() + shours + ":" + sminutes + " " + ampm;
     }
 
     public String getMoonPhase(Minecraft mc)
@@ -108,7 +108,7 @@ public class InfoUtils
             status = "Waxing Gibbous";
             break;
         }
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.moonPhaseColor).toColoredFont() + "Moon Phase: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.moonPhaseValueColor).toColoredFont() + status;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.moonPhaseColor).toColoredFont() + "Moon Phase: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.moonPhaseValueColor).toColoredFont() + status;
     }
 
     public int parseInt(String input, String type)

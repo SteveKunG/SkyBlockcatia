@@ -63,7 +63,7 @@ public class EntityRendererMixin
     @Inject(method = "isDrawBlockOutline()Z", cancellable = true, at = @At("HEAD"))
     private void isDrawBlockOutline(CallbackInfoReturnable info)
     {
-        if (SkyBlockcatiaSettings.instance.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
+        if (SkyBlockcatiaSettings.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
         {
             if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
@@ -86,7 +86,7 @@ public class EntityRendererMixin
     @Inject(method = "getNightVisionBrightness(Lnet/minecraft/entity/EntityLivingBase;F)F", cancellable = true, at = @At("HEAD"))
     private void getNightVisionBrightness(EntityLivingBase living, float partialTicks, CallbackInfoReturnable info)
     {
-        if (SkyBlockcatiaSettings.instance.disableNightVision)
+        if (SkyBlockcatiaSettings.INSTANCE.disableNightVision)
         {
             info.setReturnValue(0.0F);
         }

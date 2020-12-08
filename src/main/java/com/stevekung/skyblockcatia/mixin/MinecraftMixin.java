@@ -96,7 +96,7 @@ public class MinecraftMixin
                 break;
             }
         }
-        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.sneakToOpenInventoryWhileFightDragon && foundDragon)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToOpenInventoryWhileFightDragon && foundDragon)
         {
             return key.isPressed() && this.that.thePlayer.isSneaking();
         }
@@ -125,7 +125,7 @@ public class MinecraftMixin
                 break;
             }
         }
-        if (!(SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.preventScrollHotbarWhileFightDragon && foundDragon))
+        if (!(SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.preventScrollHotbarWhileFightDragon && foundDragon))
         {
             invPlayer.changeCurrentItem(slot);
         }

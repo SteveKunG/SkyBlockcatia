@@ -144,16 +144,16 @@ public class MainEventHandler
             }
 
             // toggle sneak
-            movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || SkyBlockcatiaSettings.instance.toggleSneak && !event.getEntityPlayer().isSpectator();
+            movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || SkyBlockcatiaSettings.INSTANCE.toggleSneak && !event.getEntityPlayer().isSpectator();
 
-            if (SkyBlockcatiaSettings.instance.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
+            if (SkyBlockcatiaSettings.INSTANCE.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
             {
                 movement.moveStrafe = (float)(movement.moveStrafe * 0.3D);
                 movement.moveForward = (float)(movement.moveForward * 0.3D);
             }
 
             // toggle sprint
-            if (SkyBlockcatiaSettings.instance.toggleSprint && !player.isPotionActive(Potion.blindness) && !SkyBlockcatiaSettings.instance.toggleSneak)
+            if (SkyBlockcatiaSettings.INSTANCE.toggleSprint && !player.isPotionActive(Potion.blindness) && !SkyBlockcatiaSettings.INSTANCE.toggleSneak)
             {
                 player.setSprinting(true);
             }
@@ -189,7 +189,7 @@ public class MainEventHandler
             this.mc.displayGuiScreen(new GuiExtendedConfig());
         }
 
-        if (SkyBlockcatiaSettings.instance.toggleSprintUseMode.equals("key_binding"))
+        if (SkyBlockcatiaSettings.INSTANCE.toggleSprintUseMode.equals("key_binding"))
         {
             String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
             int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
@@ -197,12 +197,12 @@ public class MainEventHandler
 
             if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
             {
-                SkyBlockcatiaSettings.instance.toggleSprint = !SkyBlockcatiaSettings.instance.toggleSprint;
-                ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.instance.toggleSprint ? LangUtils.translate("message.toggle_sprint_enabled") : LangUtils.translate("message.toggle_sprint_disabled")).getFormattedText());
-                SkyBlockcatiaSettings.instance.save();
+                SkyBlockcatiaSettings.INSTANCE.toggleSprint = !SkyBlockcatiaSettings.INSTANCE.toggleSprint;
+                ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSprint ? LangUtils.translate("message.toggle_sprint_enabled") : LangUtils.translate("message.toggle_sprint_disabled")).getFormattedText());
+                SkyBlockcatiaSettings.INSTANCE.save();
             }
         }
-        if (SkyBlockcatiaSettings.instance.toggleSneakUseMode.equals("key_binding"))
+        if (SkyBlockcatiaSettings.INSTANCE.toggleSneakUseMode.equals("key_binding"))
         {
             String[] keyTS = SkyBlockcatiaConfig.keyToggleSneak.split(",");
             int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sneak");
@@ -210,9 +210,9 @@ public class MainEventHandler
 
             if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
             {
-                SkyBlockcatiaSettings.instance.toggleSneak = !SkyBlockcatiaSettings.instance.toggleSneak;
-                ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.instance.toggleSneak ? LangUtils.translate("message.toggle_sneak_enabled") : LangUtils.translate("message.toggle_sneak_disabled")).getFormattedText());
-                SkyBlockcatiaSettings.instance.save();
+                SkyBlockcatiaSettings.INSTANCE.toggleSneak = !SkyBlockcatiaSettings.INSTANCE.toggleSneak;
+                ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSneak ? LangUtils.translate("message.toggle_sneak_enabled") : LangUtils.translate("message.toggle_sneak_disabled")).getFormattedText());
+                SkyBlockcatiaSettings.INSTANCE.save();
             }
         }
     }
@@ -233,7 +233,7 @@ public class MainEventHandler
             ItemStack wardRobeItem = new ItemStack(Items.leather_chestplate);
             ((ItemArmor)wardRobeItem.getItem()).setColor(wardRobeItem, 8339378);
 
-            if (SkyBlockcatiaSettings.instance.shortcutButtonInInventory && event.gui instanceof GuiInventory)
+            if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory && event.gui instanceof GuiInventory)
             {
                 event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest)));
                 event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table)));
@@ -271,7 +271,7 @@ public class MainEventHandler
                     event.buttonList.add(new GuiButtonItem(500, 2, event.gui.height - 35, new ItemStack(Items.ender_eye), "Toggle Inventory Chat: " + chat));
                 }
 
-                if (SkyBlockcatiaSettings.instance.shortcutButtonInInventory)
+                if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory)
                 {
                     if (GuiScreenUtils.contains(GuiScreenUtils.INVENTORY, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Ender Chest"))
                     {
@@ -306,7 +306,7 @@ public class MainEventHandler
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
                 {
-                    String overlay = SkyBlockcatiaSettings.instance.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                     event.buttonList.add(new GuiButtonItem(1006, width + 89, height + 29, new ItemStack(Items.compass), "Lobby Player Overlay: " + overlay));
                 }
             }
@@ -423,10 +423,10 @@ public class MainEventHandler
             }
             else if (event.button.id == 1006)
             {
-                SkyBlockcatiaSettings.instance.lobbyPlayerViewer = !SkyBlockcatiaSettings.instance.lobbyPlayerViewer;
-                String overlay = SkyBlockcatiaSettings.instance.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
+                String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                 ((GuiButtonItem)event.button).setName("Lobby Player Overlay: " + overlay);
-                SkyBlockcatiaSettings.instance.save();
+                SkyBlockcatiaSettings.INSTANCE.save();
             }
         }
     }
@@ -472,7 +472,7 @@ public class MainEventHandler
 
     public static void getBazaarData()
     {
-        if (!SkyBlockcatiaSettings.instance.bazaarOnTooltips)
+        if (!SkyBlockcatiaSettings.INSTANCE.bazaarOnTooltips)
         {
             return;
         }

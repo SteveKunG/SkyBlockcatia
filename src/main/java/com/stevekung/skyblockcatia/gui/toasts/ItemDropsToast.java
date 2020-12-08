@@ -39,7 +39,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
         this.rareDropOutput = new ToastUtils.ItemDrop(itemStack, type);
         this.hasMagicFind = magicFind != null;
         this.magicFind = this.hasMagicFind ? EnumChatFormatting.AQUA + " (" + magicFind + "% Magic Find!)" : "";
-        this.maxDrawTime = this.hasMagicFind ? SkyBlockcatiaSettings.instance.specialDropToastTime * 1000L : type.getTime();
+        this.maxDrawTime = this.hasMagicFind ? SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L : type.getTime();
     }
 
     @Override

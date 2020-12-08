@@ -49,13 +49,13 @@ public class GuiDropdownMinigamesButton extends GuiButton
         if (this.selectedMinigame == -1)
         {
             int initSelect = this.parentClass.getInitialSelection(this);
-            int size = this.minigameLists.size() + SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos;
+            int size = this.minigameLists.size() + SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos;
 
-            if (initSelect > size || SkyBlockcatiaSettings.instance.selectedHypixelMinigame > size || size == 1)
+            if (initSelect > size || SkyBlockcatiaSettings.INSTANCE.selectedHypixelMinigame > size || size == 1)
             {
                 initSelect = 0;
-                SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos = 0;
-                SkyBlockcatiaSettings.instance.selectedHypixelMinigame = 0;
+                SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos = 0;
+                SkyBlockcatiaSettings.INSTANCE.selectedHypixelMinigame = 0;
             }
             this.selectedMinigame = initSelect;
         }
@@ -76,9 +76,9 @@ public class GuiDropdownMinigamesButton extends GuiButton
                 Gui.drawRect(this.xPosition + 1, this.yPosition + this.height * hoverPos + 1, this.xPosition + this.width - 16, this.yPosition + this.height * (hoverPos + 1) - 1, ColorUtils.to32BitColor(255, 180, 180, 180));
             }
 
-            for (int i = 0; i + SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos < this.minigameLists.size() && i < this.displayLength; ++i)
+            for (int i = 0; i + SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos < this.minigameLists.size() && i < this.displayLength; ++i)
             {
-                String minigames = this.minigameLists.get(i + SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos);
+                String minigames = this.minigameLists.get(i + SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos);
 
                 if (minigames != null)
                 {
@@ -117,7 +117,7 @@ public class GuiDropdownMinigamesButton extends GuiButton
         {
             if (this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width - 16 && mouseY < this.yPosition + this.height * this.displayLength)
             {
-                int optionClicked = (mouseY - this.yPosition) / this.height + SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos;
+                int optionClicked = (mouseY - this.yPosition) / this.height + SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos;
                 this.selectedMinigame = optionClicked % this.minigameLists.size();
                 this.dropdownClicked = false;
                 this.parentClass.onSelectionChanged(this, this.selectedMinigame);
@@ -134,12 +134,12 @@ public class GuiDropdownMinigamesButton extends GuiButton
 
     public void scroll(int amount)
     {
-        SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos += amount;
+        SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos += amount;
         int i = this.minigameLists.size();
 
-        if (SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos > i - this.displayLength || SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos <= 0)
+        if (SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos > i - this.displayLength || SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos <= 0)
         {
-            SkyBlockcatiaSettings.instance.hypixelMinigameScrollPos = 0;
+            SkyBlockcatiaSettings.INSTANCE.hypixelMinigameScrollPos = 0;
         }
     }
 

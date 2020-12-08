@@ -59,7 +59,7 @@ public class GuiPlayerTabOverlayMixin
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", ordinal = 0))
     private String getPingPlayerInfo(GuiPlayerTabOverlay overlay, NetworkPlayerInfo networkPlayerInfoIn)
     {
-        boolean pingDelay = PingMode.byId(SkyBlockcatiaSettings.instance.pingMode) == PingMode.PING_AND_DELAY;
+        boolean pingDelay = PingMode.byId(SkyBlockcatiaSettings.INSTANCE.pingMode) == PingMode.PING_AND_DELAY;
         int ping = networkPlayerInfoIn.getResponseTime();
         String pingText = String.valueOf(ping);
 
@@ -106,7 +106,7 @@ public class GuiPlayerTabOverlayMixin
     @Inject(method = "drawPing(IIILnet/minecraft/client/network/NetworkPlayerInfo;)V", cancellable = true, at = @At("HEAD"))
     private void drawPing(int x1, int x2, int y, NetworkPlayerInfo playerInfo, CallbackInfo info)
     {
-        boolean pingDelay = PingMode.byId(SkyBlockcatiaSettings.instance.pingMode) == PingMode.PING_AND_DELAY;
+        boolean pingDelay = PingMode.byId(SkyBlockcatiaSettings.INSTANCE.pingMode) == PingMode.PING_AND_DELAY;
         FontRenderer fontRenderer = this.mc.fontRendererObj;
         int ping = playerInfo.getResponseTime();
 
@@ -146,6 +146,6 @@ public class GuiPlayerTabOverlayMixin
 
     private boolean isPlayerCountEnabled()
     {
-        return SkyBlockcatiaSettings.instance.lobbyPlayerCount && PlayerCountMode.byId(SkyBlockcatiaSettings.instance.playerCountMode) == PlayerCountMode.TAB_LIST && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND;
+        return SkyBlockcatiaSettings.INSTANCE.lobbyPlayerCount && PlayerCountMode.byId(SkyBlockcatiaSettings.INSTANCE.playerCountMode) == PlayerCountMode.TAB_LIST && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND;
     }
 }

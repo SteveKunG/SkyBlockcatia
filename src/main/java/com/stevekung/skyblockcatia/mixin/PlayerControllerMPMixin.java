@@ -29,7 +29,7 @@ public class PlayerControllerMPMixin
     @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z", cancellable = true, at = @At("HEAD"))
     private void onPlayerDestroyBlock(BlockPos pos, EnumFacing facing, CallbackInfoReturnable info)
     {
-        if (SkyBlockcatiaSettings.instance.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
+        if (SkyBlockcatiaSettings.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
         {
             IBlockState state = this.mc.theWorld.getBlockState(pos);
 
@@ -43,7 +43,7 @@ public class PlayerControllerMPMixin
     @Inject(method = "clickBlock(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z", cancellable = true, at = @At("HEAD"))
     private void clickBlock(BlockPos pos, EnumFacing facing, CallbackInfoReturnable info)
     {
-        if (SkyBlockcatiaSettings.instance.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
+        if (SkyBlockcatiaSettings.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
         {
             IBlockState state = this.mc.theWorld.getBlockState(pos);
 

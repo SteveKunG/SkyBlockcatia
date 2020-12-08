@@ -29,7 +29,7 @@ public class GuiCustomColorSettings extends GuiScreen
     {
         if (keyCode == 1)
         {
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
             this.mc.displayGuiScreen(this.parent);
         }
     }

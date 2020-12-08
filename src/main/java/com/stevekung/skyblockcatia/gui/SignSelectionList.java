@@ -170,11 +170,11 @@ public class SignSelectionList extends GuiListExtended
 
             if (Minecraft.getSystemTime() - this.lastClicked < 250L)
             {
-                if (SkyBlockcatiaSettings.instance.auctionBidConfirm && NumberUtils.isNumeric(this.value))
+                if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
                 {
                     int price = Integer.valueOf(this.value);
 
-                    if (price >= SkyBlockcatiaSettings.instance.auctionBidConfirmValue)
+                    if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
                     {
                         this.mc.displayGuiScreen(new GuiYesNo(this.mc.currentScreen, LangUtils.translate("message.bid_confirm_title"), LangUtils.translate("message.bid_confirm"), 201));
                     }

@@ -31,17 +31,17 @@ public class InfoOverlays
     public static String getFPS()
     {
         int fps = Minecraft.getDebugFPS();
-        String color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.fpsValueColor).toColoredFont();
+        String color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.fpsValueColor).toColoredFont();
 
         if (fps >= 26 && fps <= 49)
         {
-            color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.fps26And49Color).toColoredFont();
+            color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.fps26And49Color).toColoredFont();
         }
         else if (fps <= 25)
         {
-            color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.fpsLow25Color).toColoredFont();
+            color = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.fpsLow25Color).toColoredFont();
         }
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.fpsColor).toColoredFont() + "FPS: " + color + fps;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.fpsColor).toColoredFont() + "FPS: " + color + fps;
     }
 
     public static String getXYZ(Minecraft mc)
@@ -51,7 +51,7 @@ public class InfoOverlays
         int y = pos.getY();
         int z = pos.getZ();
         String nether = mc.thePlayer.dimension == -1 ? "Nether " : "";
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.xyzColor).toColoredFont() + nether + "XYZ: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.xyzValueColor).toColoredFont() + x + " " + y + " " + z;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.xyzColor).toColoredFont() + nether + "XYZ: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.xyzValueColor).toColoredFont() + x + " " + y + " " + z;
     }
 
     public static String getOverworldXYZFromNether(Minecraft mc)
@@ -60,7 +60,7 @@ public class InfoOverlays
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.xyzColor).toColoredFont() + "Overworld XYZ: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.xyzValueColor).toColoredFont() + x * 8 + " " + y + " " + z * 8;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.xyzColor).toColoredFont() + "Overworld XYZ: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.xyzValueColor).toColoredFont() + x * 8 + " " + y + " " + z * 8;
     }
 
     public static String getBiome(Minecraft mc)
@@ -73,7 +73,7 @@ public class InfoOverlays
             if (!chunk.isEmpty())
             {
                 String biomeName = chunk.getBiome(pos, mc.theWorld.getWorldChunkManager()).biomeName.replaceAll("(\\p{Ll})(\\p{Lu})", "$1 $2");
-                return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.biomeColor).toColoredFont() + "Biome: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.biomeValueColor).toColoredFont() + biomeName;
+                return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.biomeColor).toColoredFont() + "Biome: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.biomeValueColor).toColoredFont() + biomeName;
             }
             else
             {
@@ -89,20 +89,20 @@ public class InfoOverlays
     public static String getPing()
     {
         int responseTime = InfoUtils.INSTANCE.getPing();
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.pingColor).toColoredFont() + "Ping: " + InfoOverlays.getResponseTimeColor(responseTime) + responseTime + "ms";
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.pingColor).toColoredFont() + "Ping: " + InfoOverlays.getResponseTimeColor(responseTime) + responseTime + "ms";
     }
 
     public static String getPingToSecond()
     {
         double responseTime = InfoUtils.INSTANCE.getPing() / 1000D;
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.pingToSecondColor).toColoredFont() + "Delay: " + InfoOverlays.getResponseTimeColor((int) (responseTime * 1000D)) + responseTime + "s";
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.pingToSecondColor).toColoredFont() + "Delay: " + InfoOverlays.getResponseTimeColor((int) (responseTime * 1000D)) + responseTime + "s";
     }
 
     public static String getServerIP(Minecraft mc)
     {
-        String ip = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.serverIPColor).toColoredFont() + "IP: " + "" + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.serverIPValueColor).toColoredFont() + mc.getCurrentServerData().serverIP;
+        String ip = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.serverIPColor).toColoredFont() + "IP: " + "" + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.serverIPValueColor).toColoredFont() + mc.getCurrentServerData().serverIP;
 
-        if (SkyBlockcatiaSettings.instance.serverIPMCVersion)
+        if (SkyBlockcatiaSettings.INSTANCE.serverIPMCVersion)
         {
             ip = ip + "/" + ForgeVersion.mcVersion;
         }
@@ -180,7 +180,7 @@ public class InfoOverlays
             break;
         }
         direction += " (" + coord + ")";
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.directionColor).toColoredFont() + "Direction: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.directionValueColor).toColoredFont() + direction;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.directionColor).toColoredFont() + "Direction: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.directionValueColor).toColoredFont() + direction;
     }
 
     public static String getCurrentTime()
@@ -188,9 +188,9 @@ public class InfoOverlays
         Date date = new Date();
         boolean isThai = Calendar.getInstance().getTimeZone().getID().equals("Asia/Bangkok");
         String dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
-        String timeFormat = SkyBlockcatiaSettings.instance.twentyFourTime ? new SimpleDateFormat("HH:mm:ss").format(date) : DateFormat.getTimeInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
-        String currentTime = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.realTimeDDMMYYValueColor).toColoredFont() + dateFormat + " " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.realTimeHHMMSSValueColor).toColoredFont() + timeFormat;
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.realTimeColor).toColoredFont() + "Time: " + currentTime;
+        String timeFormat = SkyBlockcatiaSettings.INSTANCE.twentyFourTime ? new SimpleDateFormat("HH:mm:ss").format(date) : DateFormat.getTimeInstance(DateFormat.MEDIUM, isThai ? new Locale("th", "TH") : Locale.ROOT).format(date);
+        String currentTime = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeDDMMYYValueColor).toColoredFont() + dateFormat + " " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeHHMMSSValueColor).toColoredFont() + timeFormat;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeColor).toColoredFont() + "Time: " + currentTime;
     }
 
     public static String getCurrentGameTime(Minecraft mc)
@@ -222,8 +222,8 @@ public class InfoOverlays
                     builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.ROOT));
                 }
                 catch (Exception e) {}
-                String currentTime = ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
-                return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.realTimeColor).toColoredFont() + "Skyblock Time: " + currentTime + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
+                String currentTime = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
+                return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeColor).toColoredFont() + "Skyblock Time: " + currentTime + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
             }
             else
             {
@@ -236,19 +236,19 @@ public class InfoOverlays
     public static String getGameWeather(Minecraft mc)
     {
         String weather = mc.theWorld.isRaining() && !mc.theWorld.isThundering() ? "Raining" : mc.theWorld.isRaining() && mc.theWorld.isThundering() ? "Thunder" : "";
-        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.gameWeatherColor).toColoredFont() + "Weather: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.gameWeatherValueColor).toColoredFont() + weather;
+        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.gameWeatherColor).toColoredFont() + "Weather: " + ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.gameWeatherValueColor).toColoredFont() + weather;
     }
 
     public static void renderHorizontalEquippedItems(Minecraft mc)
     {
         ScaledResolution res = new ScaledResolution(mc);
-        boolean right = Equipments.Position.byId(SkyBlockcatiaSettings.instance.equipmentPosition) == Equipments.Position.RIGHT;
-        int baseYOffset = SkyBlockcatiaSettings.instance.armorHUDYOffset;
+        boolean right = Equipments.Position.byId(SkyBlockcatiaSettings.INSTANCE.equipmentPosition) == Equipments.Position.RIGHT;
+        int baseYOffset = SkyBlockcatiaSettings.INSTANCE.armorHUDYOffset;
         ItemStack mainhandStack = mc.thePlayer.getHeldItem();
         List<HorizontalEquipmentOverlay> equippedLists = new ArrayList<>();
         int prevX = 0;
 
-        if (SkyBlockcatiaSettings.instance.equipmentArmorItems)
+        if (SkyBlockcatiaSettings.INSTANCE.equipmentArmorItems)
         {
             for (int i = 3; i >= 0; i--)
             {
@@ -261,7 +261,7 @@ public class InfoOverlays
             }
         }
 
-        if (SkyBlockcatiaSettings.instance.equipmentHandItems)
+        if (SkyBlockcatiaSettings.INSTANCE.equipmentHandItems)
         {
             if (mainhandStack != null)
             {
@@ -290,11 +290,11 @@ public class InfoOverlays
         ScaledResolution res = new ScaledResolution(mc);
         List<EquipmentOverlay> equippedLists = new ArrayList<>();
         ItemStack mainhandStack = mc.thePlayer.getHeldItem();
-        boolean right = Equipments.Position.byId(SkyBlockcatiaSettings.instance.equipmentPosition) == Equipments.Position.RIGHT;
+        boolean right = Equipments.Position.byId(SkyBlockcatiaSettings.INSTANCE.equipmentPosition) == Equipments.Position.RIGHT;
         int baseXOffset = right ? res.getScaledWidth() - 18 : 2;
-        int baseYOffset = SkyBlockcatiaSettings.instance.armorHUDYOffset;
+        int baseYOffset = SkyBlockcatiaSettings.INSTANCE.armorHUDYOffset;
 
-        if (SkyBlockcatiaSettings.instance.equipmentArmorItems)
+        if (SkyBlockcatiaSettings.INSTANCE.equipmentArmorItems)
         {
             for (int armorSlot = 3; armorSlot >= 0; armorSlot--)
             {
@@ -307,7 +307,7 @@ public class InfoOverlays
             }
         }
 
-        if (SkyBlockcatiaSettings.instance.equipmentHandItems)
+        if (SkyBlockcatiaSettings.INSTANCE.equipmentHandItems)
         {
             if (mainhandStack != null)
             {
@@ -336,12 +336,12 @@ public class InfoOverlays
 
             if (!StringUtils.isNullOrEmpty(info))
             {
-                mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.equipmentStatusColor).toColoredFont() + info, infoXOffset, infoYOffset, 16777215);
+                mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.equipmentStatusColor).toColoredFont() + info, infoXOffset, infoYOffset, 16777215);
             }
             else if (!StringUtils.isNullOrEmpty(arrowInfo))
             {
                 GlStateManager.disableDepth();
-                ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
+                ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
                 GlStateManager.enableDepth();
             }
             ++i;
@@ -356,7 +356,7 @@ public class InfoOverlays
         int iLeft = 0;
         int iRight = 0;
 
-        if (SkyBlockcatiaSettings.instance.equipmentArmorItems)
+        if (SkyBlockcatiaSettings.INSTANCE.equipmentArmorItems)
         {
             for (int i = 2; i <= 3; i++)
             {
@@ -378,7 +378,7 @@ public class InfoOverlays
             }
         }
 
-        if (SkyBlockcatiaSettings.instance.equipmentHandItems)
+        if (SkyBlockcatiaSettings.INSTANCE.equipmentHandItems)
         {
             if (mainhandStack != null)
             {
@@ -411,12 +411,12 @@ public class InfoOverlays
 
                 if (!StringUtils.isNullOrEmpty(info))
                 {
-                    mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.equipmentStatusColor).toColoredFont() + info, infoXOffset, infoYOffset, 16777215);
+                    mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.equipmentStatusColor).toColoredFont() + info, infoXOffset, infoYOffset, 16777215);
                 }
                 else if (!StringUtils.isNullOrEmpty(arrowInfo))
                 {
                     GlStateManager.disableDepth();
-                    ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
+                    ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
                     GlStateManager.enableDepth();
                 }
                 ++iLeft;
@@ -432,7 +432,7 @@ public class InfoOverlays
 
                 if (!StringUtils.isNullOrEmpty(info))
                 {
-                    mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.equipmentStatusColor).toColoredFont() + info, infoXOffset, infoYOffset, 16777215);
+                    mc.fontRendererObj.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.equipmentStatusColor).toColoredFont() + info, infoXOffset, infoYOffset, 16777215);
                 }
                 else if (!StringUtils.isNullOrEmpty(arrowInfo))
                 {
@@ -440,7 +440,7 @@ public class InfoOverlays
                     int arrowYOffset = res.getScaledHeight() - 16 * iRight - 32;
 
                     GlStateManager.disableDepth();
-                    ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
+                    ColorUtils.unicodeFontRenderer.drawStringWithShadow(ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.arrowCountColor).toColoredFont() + arrowInfo, arrowXOffset, arrowYOffset, 16777215);
                     GlStateManager.enableDepth();
                 }
                 ++iRight;
@@ -450,14 +450,14 @@ public class InfoOverlays
 
     public static void renderPotionHUD(Minecraft mc)
     {
-        boolean iconAndTime = StatusEffects.Style.byId(SkyBlockcatiaSettings.instance.potionHUDStyle) == StatusEffects.Style.ICON_AND_TIME;
-        boolean right = StatusEffects.Position.byId(SkyBlockcatiaSettings.instance.potionHUDPosition) == StatusEffects.Position.RIGHT;
-        boolean showIcon = SkyBlockcatiaSettings.instance.potionHUDIcon;
-        StatusEffects.Position potionPos = StatusEffects.Position.byId(SkyBlockcatiaSettings.instance.potionHUDPosition);
+        boolean iconAndTime = StatusEffects.Style.byId(SkyBlockcatiaSettings.INSTANCE.potionHUDStyle) == StatusEffects.Style.ICON_AND_TIME;
+        boolean right = StatusEffects.Position.byId(SkyBlockcatiaSettings.INSTANCE.potionHUDPosition) == StatusEffects.Position.RIGHT;
+        boolean showIcon = SkyBlockcatiaSettings.INSTANCE.potionHUDIcon;
+        StatusEffects.Position potionPos = StatusEffects.Position.byId(SkyBlockcatiaSettings.INSTANCE.potionHUDPosition);
         ScaledResolution scaledRes = new ScaledResolution(mc);
-        int size = SkyBlockcatiaSettings.instance.maximumPotionDisplay;
-        int length = SkyBlockcatiaSettings.instance.potionLengthYOffset;
-        int lengthOverlap = SkyBlockcatiaSettings.instance.potionLengthYOffsetOverlap;
+        int size = SkyBlockcatiaSettings.INSTANCE.maximumPotionDisplay;
+        int length = SkyBlockcatiaSettings.INSTANCE.potionLengthYOffset;
+        int lengthOverlap = SkyBlockcatiaSettings.INSTANCE.potionLengthYOffsetOverlap;
         Collection<PotionEffect> collection = mc.thePlayer.getActivePotionEffects();
         int xPotion = 0;
         int yPotion = 0;
@@ -475,7 +475,7 @@ public class InfoOverlays
         else
         {
             xPotion = right ? scaledRes.getScaledWidth() - 32 : -24;
-            yPotion = scaledRes.getScaledHeight() - 220 + SkyBlockcatiaSettings.instance.potionHUDYOffset + 90;
+            yPotion = scaledRes.getScaledHeight() - 220 + SkyBlockcatiaSettings.INSTANCE.potionHUDYOffset + 90;
         }
 
         if (!collection.isEmpty())
@@ -540,25 +540,25 @@ public class InfoOverlays
                 {
                     if (!iconAndTime)
                     {
-                        mc.fontRendererObj.drawString(s1, showIcon ? xPotion + 8 - stringwidth2 : xPotion + 28 - stringwidth2, yPotion + 6, SkyBlockcatiaSettings.instance.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
+                        mc.fontRendererObj.drawString(s1, showIcon ? xPotion + 8 - stringwidth2 : xPotion + 28 - stringwidth2, yPotion + 6, SkyBlockcatiaSettings.INSTANCE.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
                     }
-                    mc.fontRendererObj.drawString(s, showIcon ? xPotion + 8 - stringwidth1 : xPotion + 28 - stringwidth1, iconAndTime ? yPotion + 11 : yPotion + 16, SkyBlockcatiaSettings.instance.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
+                    mc.fontRendererObj.drawString(s, showIcon ? xPotion + 8 - stringwidth1 : xPotion + 28 - stringwidth1, iconAndTime ? yPotion + 11 : yPotion + 16, SkyBlockcatiaSettings.INSTANCE.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
                 }
                 else if (potionPos == StatusEffects.Position.HOTBAR_RIGHT)
                 {
                     if (!iconAndTime)
                     {
-                        mc.fontRendererObj.drawString(s1, showIcon ? xPotion + 46 : xPotion + 28, yPotion + 6, SkyBlockcatiaSettings.instance.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
+                        mc.fontRendererObj.drawString(s1, showIcon ? xPotion + 46 : xPotion + 28, yPotion + 6, SkyBlockcatiaSettings.INSTANCE.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
                     }
-                    mc.fontRendererObj.drawString(s, showIcon ? xPotion + 46 : xPotion + 28, iconAndTime ? yPotion + 11 : yPotion + 16, SkyBlockcatiaSettings.instance.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
+                    mc.fontRendererObj.drawString(s, showIcon ? xPotion + 46 : xPotion + 28, iconAndTime ? yPotion + 11 : yPotion + 16, SkyBlockcatiaSettings.INSTANCE.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
                 }
                 else
                 {
                     if (!iconAndTime)
                     {
-                        mc.fontRendererObj.drawString(s1, right ? showIcon ? xPotion + 8 - stringwidth2 : xPotion + 28 - stringwidth2 : showIcon ? xPotion + 50 : xPotion + 28, yPotion + 6, SkyBlockcatiaSettings.instance.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
+                        mc.fontRendererObj.drawString(s1, right ? showIcon ? xPotion + 8 - stringwidth2 : xPotion + 28 - stringwidth2 : showIcon ? xPotion + 50 : xPotion + 28, yPotion + 6, SkyBlockcatiaSettings.INSTANCE.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
                     }
-                    mc.fontRendererObj.drawString(s, right ? showIcon ? xPotion + 8 - stringwidth1 : xPotion + 28 - stringwidth1 : showIcon ? xPotion + 50 : xPotion + 28, iconAndTime ? yPotion + 11 : yPotion + 16, SkyBlockcatiaSettings.instance.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
+                    mc.fontRendererObj.drawString(s, right ? showIcon ? xPotion + 8 - stringwidth1 : xPotion + 28 - stringwidth1 : showIcon ? xPotion + 50 : xPotion + 28, iconAndTime ? yPotion + 11 : yPotion + 16, SkyBlockcatiaSettings.INSTANCE.alternatePotionHUDTextColor ? potion.getLiquidColor() : 16777215, true);
                 }
                 yPotion -= length;
             }
@@ -569,19 +569,19 @@ public class InfoOverlays
     {
         if (responseTime >= 200 && responseTime < 300)
         {
-            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.ping200And300Color).toColoredFont();
+            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.ping200And300Color).toColoredFont();
         }
         else if (responseTime >= 300 && responseTime < 500)
         {
-            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.ping300And500Color).toColoredFont();
+            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.ping300And500Color).toColoredFont();
         }
         else if (responseTime >= 500)
         {
-            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.pingMax500Color).toColoredFont();
+            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.pingMax500Color).toColoredFont();
         }
         else
         {
-            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.instance.pingValueColor).toColoredFont();
+            return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.pingValueColor).toColoredFont();
         }
     }
 

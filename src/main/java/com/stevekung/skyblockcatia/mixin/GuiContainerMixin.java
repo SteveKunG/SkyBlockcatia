@@ -310,7 +310,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             ItemStack itemStack = slot.getStack();
 
-            if (SkyBlockcatiaSettings.instance.preventClickingOnDummyItem && itemStack != null)
+            if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && itemStack != null)
             {
                 if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
                 {
@@ -332,7 +332,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
             {
                 GuiChest chest = (GuiChest)this.that;
 
-                if (SkyBlockcatiaSettings.instance.preventClickingOnDummyItem && itemStack != null)
+                if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && itemStack != null)
                 {
                     String name = itemStack.getDisplayName();
 
@@ -470,7 +470,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
 
             this.drawCurrentSelectedPet(slot);
 
-            if (SkyBlockcatiaSettings.instance.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
+            if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && chest.lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
             {
                 this.renderHubOverlay(slot);
             }
@@ -482,7 +482,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
     {
         boolean found = false;
 
-        if (SkyBlockcatiaSettings.instance.lobbyPlayerViewer && this.that instanceof GuiChest)
+        if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.that instanceof GuiChest)
         {
             GuiChest chest = (GuiChest)this.that;
 

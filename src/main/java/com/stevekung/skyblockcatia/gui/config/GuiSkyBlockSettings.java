@@ -36,7 +36,7 @@ public class GuiSkyBlockSettings extends GuiScreen
     {
         if (keyCode == 1)
         {
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
             this.mc.displayGuiScreen(this.parent);
         }
     }
@@ -67,7 +67,7 @@ public class GuiSkyBlockSettings extends GuiScreen
                 this.mc.displayGuiScreen(this.parent);
             }
         }
-        SkyBlockcatiaSettings.instance.save();
+        SkyBlockcatiaSettings.INSTANCE.save();
     }
 
     @Override

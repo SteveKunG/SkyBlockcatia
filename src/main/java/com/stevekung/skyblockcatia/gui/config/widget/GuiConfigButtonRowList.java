@@ -49,7 +49,7 @@ public class GuiConfigButtonRowList extends GuiListExtended
         else
         {
             int i = options.getOrdinal();
-            return options.isFloat() ? new GuiConfigSlider(i, x, y, width, options) : new GuiConfigButton(i, x, y, width, options, SkyBlockcatiaSettings.instance.getKeyBinding(options));
+            return options.isFloat() ? new GuiConfigSlider(i, x, y, width, options) : new GuiConfigButton(i, x, y, width, options, SkyBlockcatiaSettings.INSTANCE.getKeyBinding(options));
         }
     }
 
@@ -113,8 +113,8 @@ public class GuiConfigButtonRowList extends GuiListExtended
                 {
                     if (mouseEvent == 0)
                     {
-                        SkyBlockcatiaSettings.instance.setOptionValue(((GuiConfigButton)this.buttonA).getOption(), 1);
-                        this.buttonA.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonA.id));
+                        SkyBlockcatiaSettings.INSTANCE.setOptionValue(((GuiConfigButton)this.buttonA).getOption(), 1);
+                        this.buttonA.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonA.id));
                         this.buttonA.playPressSound(this.mc.getSoundHandler());
                     }
                 }
@@ -130,8 +130,8 @@ public class GuiConfigButtonRowList extends GuiListExtended
                 {
                     if (mouseEvent == 0)
                     {
-                        SkyBlockcatiaSettings.instance.setOptionValue(((GuiConfigButton)this.buttonB).getOption(), 1);
-                        this.buttonB.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonB.id));
+                        SkyBlockcatiaSettings.INSTANCE.setOptionValue(((GuiConfigButton)this.buttonB).getOption(), 1);
+                        this.buttonB.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonB.id));
                         this.buttonB.playPressSound(this.mc.getSoundHandler());
                     }
                 }

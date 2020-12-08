@@ -70,7 +70,7 @@ public abstract class FontRendererMixin
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            if (SkyBlockcatiaSettings.instance.supportersFancyColor)
+            if (SkyBlockcatiaSettings.INSTANCE.supportersFancyColor)
             {
                 for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
                 {

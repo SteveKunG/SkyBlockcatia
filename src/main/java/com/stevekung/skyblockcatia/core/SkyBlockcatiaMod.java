@@ -216,8 +216,8 @@ public class SkyBlockcatiaMod
         if (!SkyBlockcatiaSettings.defaultConfig.exists())
         {
             LoggerIN.info("Initializing default profile...");
-            SkyBlockcatiaSettings.instance.setCurrentProfile("default");
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.setCurrentProfile("default");
+            SkyBlockcatiaSettings.INSTANCE.save();
         }
 
         NBTTagCompound nbt = new NBTTagCompound();
@@ -246,8 +246,8 @@ public class SkyBlockcatiaMod
             if ("profile".equals(property))
             {
                 LoggerIN.info("Loaded current profile by name '{}'", key);
-                SkyBlockcatiaSettings.instance.setCurrentProfile(key);
-                SkyBlockcatiaSettings.instance.load();
+                SkyBlockcatiaSettings.INSTANCE.setCurrentProfile(key);
+                SkyBlockcatiaSettings.INSTANCE.load();
             }
         }
     }

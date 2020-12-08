@@ -263,7 +263,7 @@ public class SkyBlockEventHandler
                 {
                     EntityOtherPlayerMP player = (EntityOtherPlayerMP)this.mc.pointedEntity;
 
-                    if (!this.mc.thePlayer.isSneaking() && this.mc.thePlayer.getHeldItem() == null && SkyBlockcatiaSettings.instance.rightClickToAddParty)
+                    if (!this.mc.thePlayer.isSneaking() && this.mc.thePlayer.getHeldItem() == null && SkyBlockcatiaSettings.INSTANCE.rightClickToAddParty)
                     {
                         if (CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue).stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
                         {
@@ -271,7 +271,7 @@ public class SkyBlockEventHandler
                             event.setCanceled(true);
                         }
                     }
-                    if (this.mc.thePlayer.isSneaking() && SkyBlockcatiaSettings.instance.sneakToTradeOtherPlayerIsland)
+                    if (this.mc.thePlayer.isSneaking() && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland)
                     {
                         ScoreObjective scoreObj = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
                         Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
@@ -378,12 +378,12 @@ public class SkyBlockEventHandler
                 {
                     String name = visitIslandMatcher.group("name");
 
-                    if (ToastMode.byId(SkyBlockcatiaSettings.instance.visitIslandToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.instance.visitIslandToastMode) == ToastMode.CHAT_AND_TOAST)
+                    if (ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.visitIslandToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.visitIslandToastMode) == ToastMode.CHAT_AND_TOAST)
                     {
                         SkyBlockEventHandler.addVisitingToast(name);
                         LoggerIN.logToast(formattedMessage);
                     }
-                    cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.visitIslandToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.instance.visitIslandToastMode) == ToastMode.DISABLED;
+                    cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.visitIslandToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.visitIslandToastMode) == ToastMode.DISABLED;
                 }
                 else if (uuidMatcher.matches())
                 {
@@ -427,14 +427,14 @@ public class SkyBlockEventHandler
 
                 if (SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
                 {
-                    SkyBlockcatiaSettings.instance.chatMode = 0;
-                    SkyBlockcatiaSettings.instance.save();
+                    SkyBlockcatiaSettings.INSTANCE.chatMode = 0;
+                    SkyBlockcatiaSettings.INSTANCE.save();
                 }
-                if (SkyBlockcatiaSettings.instance.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
+                if (SkyBlockcatiaSettings.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
                     this.mc.thePlayer.sendChatMessage("/p leave");
                 }
-                if (SkyBlockcatiaSettings.instance.automaticOpenMaddox)
+                if (SkyBlockcatiaSettings.INSTANCE.automaticOpenMaddox)
                 {
                     for (IChatComponent component : event.message.getSiblings())
                     {
@@ -451,7 +451,7 @@ public class SkyBlockEventHandler
                     {
                         this.clearBossData();
 
-                        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.showHitboxWhenDragonSpawned)
+                        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                         {
                             this.mc.getRenderManager().setDebugBoundingBox(false);
                         }
@@ -465,7 +465,7 @@ public class SkyBlockEventHandler
                         HUDRenderEventHandler.foundDragon = true;
                         this.dragonType = type;
 
-                        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.instance.showHitboxWhenDragonSpawned)
+                        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
                         {
                             this.mc.getRenderManager().setDebugBoundingBox(true);
                         }
@@ -490,7 +490,7 @@ public class SkyBlockEventHandler
                         cancelMessage = true;
                     }
 
-                    if (ToastMode.byId(SkyBlockcatiaSettings.instance.fishCatchToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.instance.fishCatchToastMode) == ToastMode.CHAT_AND_TOAST)
+                    if (ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.fishCatchToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.fishCatchToastMode) == ToastMode.CHAT_AND_TOAST)
                     {
                         if (fishCatchPattern.matches())
                         {
@@ -498,7 +498,7 @@ public class SkyBlockEventHandler
                             String name = fishCatchPattern.group("item");
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, dropType.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH : ToastUtils.DropType.GREAT_CATCH, ToastType.DROP));
                             LoggerIN.logToast(formattedMessage);
-                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.fishCatchToastMode) == ToastMode.TOAST;
+                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.fishCatchToastMode) == ToastMode.TOAST;
                         }
                         else if (coinsCatchPattern.matches())
                         {
@@ -508,11 +508,11 @@ public class SkyBlockEventHandler
                             ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
                             NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), type.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH_COINS : ToastUtils.DropType.GREAT_CATCH_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             LoggerIN.logToast(formattedMessage);
-                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.fishCatchToastMode) == ToastMode.TOAST;
+                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.fishCatchToastMode) == ToastMode.TOAST;
                         }
                     }
 
-                    if (ToastMode.byId(SkyBlockcatiaSettings.instance.giftToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.instance.giftToastMode) == ToastMode.CHAT_AND_TOAST)
+                    if (ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.CHAT_AND_TOAST)
                     {
                         if (coinsGiftPattern.matches())
                         {
@@ -522,7 +522,7 @@ public class SkyBlockEventHandler
                             ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
                             NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
                             LoggerIN.logToast(formattedMessage);
-                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.giftToastMode) == ToastMode.TOAST;
+                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST;
                         }
                         else if (skillExpGiftPattern.matches())
                         {
@@ -532,7 +532,7 @@ public class SkyBlockEventHandler
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
                             NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.valueOf(exp.replace(",", "")), null, skill);
                             LoggerIN.logToast(formattedMessage);
-                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.giftToastMode) == ToastMode.TOAST;
+                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST;
                         }
                         else if (itemDropGiftPattern.matches())
                         {
@@ -541,20 +541,20 @@ public class SkyBlockEventHandler
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, rarity, ToastUtils.ToastType.GIFT));
                             LoggerIN.logToast(formattedMessage);
-                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.giftToastMode) == ToastMode.TOAST;
+                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST;
                         }
                         else if (santaTierPattern.matches())
                         {
                             String name = santaTierPattern.group("item");
                             SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.add(new ToastUtils.ItemDropCheck(name, ToastUtils.DropType.SANTA_TIER, ToastUtils.ToastType.GIFT));
                             LoggerIN.logToast(formattedMessage);
-                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.instance.giftToastMode) == ToastMode.TOAST;
+                            cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST;
                         }
                     }
 
-                    if (ToastMode.byId(SkyBlockcatiaSettings.instance.rareDropToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.instance.rareDropToastMode) == ToastMode.CHAT_AND_TOAST)
+                    if (ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.rareDropToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.rareDropToastMode) == ToastMode.CHAT_AND_TOAST)
                     {
-                        boolean isToast = ToastMode.byId(SkyBlockcatiaSettings.instance.rareDropToastMode) == ToastMode.TOAST;
+                        boolean isToast = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.rareDropToastMode) == ToastMode.TOAST;
 
                         if (message.contains("You destroyed an Ender Crystal!"))
                         {
@@ -626,9 +626,9 @@ public class SkyBlockEventHandler
                         }
                     }
 
-                    if (ToastMode.byId(SkyBlockcatiaSettings.instance.petToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.instance.petToastMode) == ToastMode.CHAT_AND_TOAST)
+                    if (ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.petToastMode) == ToastMode.TOAST || ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.petToastMode) == ToastMode.CHAT_AND_TOAST)
                     {
-                        boolean isToast = ToastMode.byId(SkyBlockcatiaSettings.instance.petToastMode) == ToastMode.TOAST;
+                        boolean isToast = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.petToastMode) == ToastMode.TOAST;
 
                         if (petLevelUpPattern.matches())
                         {
@@ -790,7 +790,7 @@ public class SkyBlockEventHandler
                     }
                 }
 
-                if (SkyBlockcatiaSettings.instance.showObtainedDate && extraAttrib.hasKey("timestamp"))
+                if (SkyBlockcatiaSettings.INSTANCE.showObtainedDate && extraAttrib.hasKey("timestamp"))
                 {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[MM/dd/yy h:mm a][M/dd/yy h:mm a][M/d/yy h:mm a]", Locale.ENGLISH);
                     LocalDateTime datetime = LocalDateTime.parse(extraAttrib.getString("timestamp"), formatter);
@@ -798,7 +798,7 @@ public class SkyBlockEventHandler
                     String formatted = new SimpleDateFormat("d MMMM yyyy h:mm aa", Locale.ROOT).format(convertedDatetime);
                     event.toolTip.add(insertAt++, EnumChatFormatting.GRAY + "Obtained: " + EnumChatFormatting.RESET + formatted);
                 }
-                if (SkyBlockcatiaSettings.instance.bazaarOnTooltips)
+                if (SkyBlockcatiaSettings.INSTANCE.bazaarOnTooltips)
                 {
                     for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                     {

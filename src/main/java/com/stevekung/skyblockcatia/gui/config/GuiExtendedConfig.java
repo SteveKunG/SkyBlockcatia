@@ -61,7 +61,7 @@ public class GuiExtendedConfig extends GuiScreen
             }
             else
             {
-                GuiConfigButton button = new GuiConfigButton(options.getOrdinal(), this.width / 2 - 160 + i % 2 * 165, this.height / 6 - 17 + 24 * (i >> 1), 160, options, SkyBlockcatiaSettings.instance.getKeyBinding(options));
+                GuiConfigButton button = new GuiConfigButton(options.getOrdinal(), this.width / 2 - 160 + i % 2 * 165, this.height / 6 - 17 + 24 * (i >> 1), 160, options, SkyBlockcatiaSettings.INSTANCE.getKeyBinding(options));
                 this.buttonList.add(button);
             }
             ++i;
@@ -96,7 +96,7 @@ public class GuiExtendedConfig extends GuiScreen
     {
         if (keyCode == 1)
         {
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
         }
         super.keyTyped(typedChar, keyCode);
     }
@@ -106,13 +106,13 @@ public class GuiExtendedConfig extends GuiScreen
     {
         if (button.enabled)
         {
-            SkyBlockcatiaSettings.instance.save();
+            SkyBlockcatiaSettings.INSTANCE.save();
 
             if (button.id < 100 && button instanceof GuiConfigButton)
             {
                 SkyBlockcatiaSettings.Options options = ((GuiConfigButton)button).getOption();
-                SkyBlockcatiaSettings.instance.setOptionValue(options, 1);
-                button.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(button.id));
+                SkyBlockcatiaSettings.INSTANCE.setOptionValue(options, 1);
+                button.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(button.id));
             }
             if (button.id == 100)
             {

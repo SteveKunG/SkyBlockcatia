@@ -40,7 +40,7 @@ public class GuiRenderPreview extends GuiScreen
         {
             InfoOverlays.renderPotionHUD(this.mc);
 
-            if (Equipments.Direction.byId(SkyBlockcatiaSettings.instance.equipmentDirection) == Equipments.Direction.VERTICAL)
+            if (Equipments.Direction.byId(SkyBlockcatiaSettings.INSTANCE.equipmentDirection) == Equipments.Direction.VERTICAL)
             {
                 InfoOverlays.renderVerticalEquippedItems(this.mc);
             }
@@ -100,7 +100,7 @@ public class GuiRenderPreview extends GuiScreen
 
                 if (!StringUtils.isNullOrEmpty(string))
                 {
-                    this.fontRendererObj.drawString(string, SkyBlockcatiaSettings.instance.swapRenderInfo ? xOffset : 3.0625F, yOffset, 16777215, true);
+                    this.fontRendererObj.drawString(string, SkyBlockcatiaSettings.INSTANCE.swapRenderInfo ? xOffset : 3.0625F, yOffset, 16777215, true);
                 }
             }
 
@@ -115,7 +115,7 @@ public class GuiRenderPreview extends GuiScreen
 
                 if (!StringUtils.isNullOrEmpty(string))
                 {
-                    this.fontRendererObj.drawString(string, SkyBlockcatiaSettings.instance.swapRenderInfo ? 3.0625F : xOffset, yOffset, 16777215, true);
+                    this.fontRendererObj.drawString(string, SkyBlockcatiaSettings.INSTANCE.swapRenderInfo ? 3.0625F : xOffset, yOffset, 16777215, true);
                 }
             }
         }

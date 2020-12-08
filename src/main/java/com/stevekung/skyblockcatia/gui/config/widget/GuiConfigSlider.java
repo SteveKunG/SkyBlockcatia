@@ -19,8 +19,8 @@ public class GuiConfigSlider extends GuiButton
         super(buttonId, x, y, width, 20, "");
         this.sliderValue = 1.0F;
         this.options = option;
-        this.sliderValue = option.normalizeValue(SkyBlockcatiaSettings.instance.getOptionFloatValue(option));
-        this.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(option);
+        this.sliderValue = option.normalizeValue(SkyBlockcatiaSettings.INSTANCE.getOptionFloatValue(option));
+        this.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(option);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class GuiConfigSlider extends GuiButton
                 this.sliderValue = (float)(mouseX - (this.xPosition + 4)) / (float)(this.width - 8);
                 this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F, 1.0F);
                 float f = this.options.denormalizeValue(this.sliderValue);
-                SkyBlockcatiaSettings.instance.setOptionFloatValue(this.options, f);
+                SkyBlockcatiaSettings.INSTANCE.setOptionFloatValue(this.options, f);
                 this.sliderValue = this.options.normalizeValue(f);
-                this.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(this.options);
+                this.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(this.options);
             }
             mc.getTextureManager().bindTexture(buttonTextures);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -57,8 +57,8 @@ public class GuiConfigSlider extends GuiButton
         {
             this.sliderValue = (float)(mouseX - (this.xPosition + 4)) / (float)(this.width - 8);
             this.sliderValue = MathHelper.clamp_float(this.sliderValue, 0.0F, 1.0F);
-            SkyBlockcatiaSettings.instance.setOptionFloatValue(this.options, this.options.denormalizeValue(this.sliderValue));
-            this.displayString = SkyBlockcatiaSettings.instance.getKeyBinding(this.options);
+            SkyBlockcatiaSettings.INSTANCE.setOptionFloatValue(this.options, this.options.denormalizeValue(this.sliderValue));
+            this.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(this.options);
             this.dragging = true;
             return true;
         }
