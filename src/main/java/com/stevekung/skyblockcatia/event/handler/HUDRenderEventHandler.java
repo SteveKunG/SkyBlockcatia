@@ -16,11 +16,8 @@ import com.stevekung.skyblockcatia.gui.toasts.GuiToast;
 import com.stevekung.skyblockcatia.hud.InfoOverlays;
 import com.stevekung.skyblockcatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.integration.sba.SBAMana;
-import com.stevekung.skyblockcatia.utils.ColorUtils;
-import com.stevekung.skyblockcatia.utils.CommonUtils;
-import com.stevekung.skyblockcatia.utils.CoordsPair;
+import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
-import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
 import com.stevekung.skyblockcatia.utils.skyblock.SBBossBar;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
@@ -91,8 +88,7 @@ public class HUDRenderEventHandler
     @SubscribeEvent
     public void onClientBlockBreak(ClientBlockBreakEvent event)
     {
-        if (!SkyBlockEventHandler.isSkyBlock || this.mc.thePlayer.getCurrentEquippedItem() == null ||
-                this.mc.thePlayer.getCurrentEquippedItem() != null && this.mc.thePlayer.getCurrentEquippedItem().hasTagCompound() && !(this.mc.thePlayer.getCurrentEquippedItem().getTagCompound().getCompoundTag("ExtraAttributes").getString("id").equals("JUNGLE_AXE") || this.mc.thePlayer.getCurrentEquippedItem().getTagCompound().getCompoundTag("ExtraAttributes").getString("id").equals("TREECAPITATOR_AXE")))
+        if (!SkyBlockEventHandler.isSkyBlock || this.mc.thePlayer.getCurrentEquippedItem() == null || this.mc.thePlayer.getCurrentEquippedItem() != null && this.mc.thePlayer.getCurrentEquippedItem().hasTagCompound() && !(this.mc.thePlayer.getCurrentEquippedItem().getTagCompound().getCompoundTag("ExtraAttributes").getString("id").equals("JUNGLE_AXE") || this.mc.thePlayer.getCurrentEquippedItem().getTagCompound().getCompoundTag("ExtraAttributes").getString("id").equals("TREECAPITATOR_AXE")))
         {
             return;
         }
@@ -113,7 +109,7 @@ public class HUDRenderEventHandler
         {
             GuiChest chest = (GuiChest)this.mc.currentScreen;
 
-            if (MainEventHandler.showChat && MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> chest.lowerChestInventory.getDisplayName().getUnformattedText().contains(invName)))
+            if (MainEventHandler.showChat && GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 event.setCanceled(true);
             }

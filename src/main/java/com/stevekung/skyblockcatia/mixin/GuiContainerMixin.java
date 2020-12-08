@@ -26,10 +26,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.gui.widget.GuiNumberField;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
-import com.stevekung.skyblockcatia.utils.ColorUtils;
-import com.stevekung.skyblockcatia.utils.CommonUtils;
-import com.stevekung.skyblockcatia.utils.IExtendedChatGui;
-import com.stevekung.skyblockcatia.utils.SearchMode;
+import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRecipeViewer;
 
 import net.minecraft.client.gui.*;
@@ -38,7 +35,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,7 +48,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
 {
     private final GuiContainer that = (GuiContainer) (Object) this;
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
-    private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
     private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(EnumChatFormatting.GREEN + "Go Back", EnumChatFormatting.RED + "Close");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
@@ -91,14 +86,14 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isAuctionBrowser(chest.lowerChestInventory))
+            if (GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 Keyboard.enableRepeatEvents(true);
                 this.priceSearch = new GuiNumberField(2, this.fontRendererObj, this.guiLeft + 180, this.guiTop + 40, 100, 20);
                 this.priceSearch.setText(MainEventHandler.auctionPrice);
                 this.priceSearch.setCanLoseFocus(true);
             }
-            if (this.isChatableGui(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 Keyboard.enableRepeatEvents(true);
                 this.sentHistoryCursor = this.mc.ingameGUI.getChatGUI().getSentMessages().size();
@@ -108,12 +103,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                 this.inputField.setFocused(false);
                 this.inputField.setCanLoseFocus(true);
             }
-            if (this.isPeopleAuction(chest.lowerChestInventory))
+            if (GuiScreenUtils.isOtherAuction(chest.lowerChestInventory))
             {
                 this.buttonList.add(new GuiButton(155, this.guiLeft + 180, this.guiTop + 70, 70, 20, "Copy Seller"));
                 this.buttonList.add(new GuiButton(156, this.guiLeft + 180, this.guiTop + 92, 70, 20, "View API"));
             }
-            if (this.isPeopleProfile(chest.lowerChestInventory))
+            if (GuiScreenUtils.isOtherProfile(chest.lowerChestInventory))
             {
                 this.buttonList.add(new GuiButton(156, this.guiLeft + 180, this.guiTop + 40, 70, 20, "View API"));
             }
@@ -127,11 +122,11 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isChatableGui(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
             }
-            if (this.isAuctionBrowser(chest.lowerChestInventory))
+            if (GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 this.priceSearch.mouseClicked(mouseX, mouseY, mouseButton);
             }
@@ -145,11 +140,11 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isChatableGui(chest.lowerChestInventory) || this.isAuctionBrowser(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory) || GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 Keyboard.enableRepeatEvents(false);
             }
-            if (this.isAuctionBrowser(chest.lowerChestInventory))
+            if (GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 MainEventHandler.auctionPrice = this.priceSearch.getText();
             }
@@ -163,11 +158,11 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isChatableGui(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 this.inputField.updateCursorCounter();
             }
-            if (this.priceSearch != null && this.isAuctionBrowser(chest.lowerChestInventory))
+            if (this.priceSearch != null && GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 MainEventHandler.auctionPrice = this.priceSearch.getText();
                 this.priceSearch.updateCursorCounter();
@@ -182,7 +177,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isChatableGui(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 if (MainEventHandler.showChat)
                 {
@@ -199,7 +194,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                 Gui.drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
                 this.inputField.drawTextBox();
             }
-            if (this.priceSearch != null && this.isAuctionBrowser(chest.lowerChestInventory))
+            if (this.priceSearch != null && GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 this.drawString(this.fontRendererObj, "Search for price:", this.guiLeft + 180, this.guiTop + 26, 10526880);
                 this.priceSearch.drawTextBox();
@@ -235,7 +230,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isChatableGui(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 if (this.inputField.isFocused())
                 {
@@ -289,7 +284,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                     this.playerNamesFound = false;
                 }
             }
-            else if (this.isAuctionBrowser(chest.lowerChestInventory))
+            else if (GuiScreenUtils.isAuctionBrowser(chest.lowerChestInventory))
             {
                 if (this.priceSearch.isFocused())
                 {
@@ -341,12 +336,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                 {
                     String name = itemStack.getDisplayName();
 
-                    if (clickedButton == 0 && clickType == 0 && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, chest.lowerChestInventory) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
+                    if (clickedButton == 0 && clickType == 0 && (GuiScreenUtils.contains(GuiScreenUtils.IGNORE_DUMMY, chest.lowerChestInventory) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
                     {
                         this.mc.playerController.windowClick(this.that.inventorySlots.windowId, slotId, 2, 3, this.mc.thePlayer);
                         info.cancel();
                     }
-                    if (clickedButton == 2 && clickType == 3 && this.canViewSeller(chest.lowerChestInventory))
+                    if (clickedButton == 2 && clickType == 3 && GuiScreenUtils.canViewSeller(chest.lowerChestInventory))
                     {
                         if (itemStack.hasTagCompound())
                         {
@@ -468,7 +463,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (MainEventHandler.bidHighlight && this.isRenderBids(chest.lowerChestInventory))
+            if (MainEventHandler.bidHighlight && GuiScreenUtils.canRenderBids(chest.lowerChestInventory))
             {
                 this.drawBids(slot);
             }
@@ -824,36 +819,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         }
     }
 
-    private boolean canViewSeller(IInventory lowerChestInventory)
-    {
-        String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.equals("Auctions Browser") || name.equals("Your Bids") || name.equals("Auction View");
-    }
-
-    private boolean isAuctionBrowser(IInventory lowerChestInventory)
-    {
-        String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.equals("Auctions Browser") || name.startsWith("Auctions:") || name.endsWith("'s Auctions");
-    }
-
-    private boolean isRenderBids(IInventory lowerChestInventory)
-    {
-        String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.equals("Auctions Browser") || name.startsWith("Auctions:") || name.equals("Manage Auctions") || name.equals("Your Bids") || name.endsWith("'s Auctions");
-    }
-
-    private boolean isPeopleAuction(IInventory lowerChestInventory)
-    {
-        String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.endsWith("'s Auctions");
-    }
-
-    private boolean isPeopleProfile(IInventory lowerChestInventory)
-    {
-        String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.endsWith("'s Profile") || name.endsWith("' Profile");
-    }
-
     // GuiChat stuff
     private void drawChat()
     {
@@ -990,10 +955,5 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
             this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new ChatComponentText(stringbuilder.toString()), 1);
         }
         this.inputField.writeText(EnumChatFormatting.getTextWithoutFormattingCodes(this.foundPlayerNames.get(this.autocompleteIndex++)));
-    }
-
-    private boolean isChatableGui(IInventory lowerChestInventory)
-    {
-        return MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> lowerChestInventory.getDisplayName().getUnformattedText().contains(invName));
     }
 }

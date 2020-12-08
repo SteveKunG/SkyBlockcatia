@@ -11,20 +11,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
-import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockProfileSelector;
-import com.stevekung.skyblockcatia.utils.ClientUtils;
-import com.stevekung.skyblockcatia.utils.IEditSign;
-import com.stevekung.skyblockcatia.utils.IExtendedChatGui;
-import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiEditSign;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -144,7 +139,7 @@ public class GuiScreenMixin
         {
             GuiChest chest = (GuiChest)this.that;
 
-            if (this.isChatableGui(chest.lowerChestInventory))
+            if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {
                 if (shouldOverwrite)
                 {
@@ -162,10 +157,5 @@ public class GuiScreenMixin
     {
         String displayName = EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName());
         return ignores.stream().anyMatch(name -> displayName.equals(name));
-    }
-
-    private boolean isChatableGui(IInventory lowerChestInventory)
-    {
-        return MainEventHandler.CHATABLE_LIST.stream().anyMatch(invName -> lowerChestInventory.getDisplayName().getUnformattedText().contains(invName));
     }
 }

@@ -54,6 +54,7 @@
         "TileEntitySignMixin",
         "TileEntitySignRendererMixin",
         "TileEntitySkullRendererMixin",
+        "accessor.GuiContainerMixin",
         "debug.ChatAllowedCharactersMixin",
         "patcher.FontRendererHookMixin"
     ],

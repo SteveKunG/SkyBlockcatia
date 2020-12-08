@@ -3,7 +3,9 @@ package com.stevekung.skyblockcatia.event.handler;
 import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonMojangStatus;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiSmallArrowButton;
 import com.stevekung.skyblockcatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
+import com.stevekung.skyblockcatia.mixin.accessor.GuiContainerMixin;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
@@ -77,9 +80,7 @@ public class MainEventHandler
     private static final ThreadPoolExecutor REALTIME_PINGER = new ScheduledThreadPoolExecutor(5, new ThreadFactoryBuilder().setNameFormat("Real Time Server Pinger #%d").setDaemon(true).build());
     private long lastPinger = -1L;
     private long lastButtonClick = -1;
-    private static final List<String> INVENTORY_LIST = new ArrayList<>(Arrays.asList("Trades", "Shop Trading Options", "Backpack", "Chest"));
     public static String auctionPrice = "";
-    public static final List<String> CHATABLE_LIST = new ArrayList<>(Arrays.asList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal", "Reforge Accessory Bag", "Catacombs Gate"));
     public static boolean showChat;
     private static long sneakTimeOld;
     private static boolean sneakingOld;
@@ -264,7 +265,7 @@ public class MainEventHandler
                 list.appendTag(new NBTTagString(EnumChatFormatting.GRAY + "View all of your SkyBlock"));
                 skyBlockMenu.getTagCompound().getCompoundTag("display").setTag("Lore", list);
 
-                if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, lowerChestInventory))
+                if (GuiScreenUtils.isChatable(lowerChestInventory))
                 {
                     String chat = MainEventHandler.showChat ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
                     event.buttonList.add(new GuiButtonItem(500, 2, event.gui.height - 35, new ItemStack(Items.ender_eye), "Toggle Inventory Chat: " + chat));
@@ -272,7 +273,7 @@ public class MainEventHandler
 
                 if (SkyBlockcatiaSettings.instance.shortcutButtonInInventory)
                 {
-                    if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
+                    if (GuiScreenUtils.contains(GuiScreenUtils.INVENTORY, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Ender Chest"))
                     {
                         event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
                         event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, new ItemStack(Blocks.ender_chest)));
@@ -283,7 +284,7 @@ public class MainEventHandler
                         event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, new ItemStack(Blocks.ender_chest)));
                         event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
                     }
-                    else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Ender Chest"))
+                    else if (lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Ender Chest"))
                     {
                         event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
                         event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
@@ -298,10 +299,10 @@ public class MainEventHandler
                     }
                 }
 
-                if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Auctions Browser") || lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Auctions:"))
+                if (GuiScreenUtils.isAuctionBrowser(lowerChestInventory))
                 {
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
-                    event.buttonList.add(new GuiButtonItem(1005, width + 89, height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
+                    event.buttonList.add(new GuiButtonItem(1005, width + 89, GuiScreenUtils.isOtherAuction(lowerChestInventory) ? ((GuiContainerMixin)chest).getGuiTop() + 4 : height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
                 {
@@ -598,10 +599,5 @@ public class MainEventHandler
             }
         }
         return defaultEyeHeight;
-    }
-
-    public static boolean isSuitableForGUI(List<String> invList, IInventory lowerChestInventory)
-    {
-        return invList.stream().anyMatch(invName -> lowerChestInventory.getDisplayName().getUnformattedText().contains(invName));
     }
 }
