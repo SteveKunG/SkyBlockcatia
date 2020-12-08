@@ -17,6 +17,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     static final Logger LOGGER = LogManager.getLogger("SkyBlockcatia MixinConfig");
     static boolean foundPatcher;
     static boolean foundPlayerApi;
+    static boolean foundRenderPlayerApi;
 
     static
     {
@@ -38,8 +39,18 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
             e.printStackTrace();
         }
 
+        try
+        {
+            foundRenderPlayerApi = Launch.classLoader.getClassBytes("api.player.render.RenderPlayerAPI") != null;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
         printModInfo(foundPatcher, "Patcher");
         printModInfo(foundPlayerApi, "PlayerAPI");
+        printModInfo(foundRenderPlayerApi, "RenderPlayerAPI");
     }
 
     @Override
@@ -58,13 +69,21 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         {
             return foundPatcher;
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.playerapi.EntityPlayerSPMixin"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.player_api.EntityPlayerSPMixin"))
         {
             return foundPlayerApi;
         }
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.EntityPlayerSPMixin"))
         {
             return !foundPlayerApi;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.render_player_api.RenderPlayerMixin"))
+        {
+            return foundRenderPlayerApi;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.RenderPlayerMixin"))
+        {
+            return !foundRenderPlayerApi;
         }
         return true;
     }

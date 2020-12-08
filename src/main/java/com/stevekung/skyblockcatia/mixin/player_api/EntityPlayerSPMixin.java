@@ -1,4 +1,4 @@
-package com.stevekung.skyblockcatia.mixin.playerapi;
+package com.stevekung.skyblockcatia.mixin.player_api;
 
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;

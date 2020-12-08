@@ -56,7 +56,8 @@
         "TileEntitySkullRendererMixin",
         "accessor.GuiContainerMixin",
         "debug.ChatAllowedCharactersMixin",
-        "playerapi.EntityPlayerSPMixin",
+        "player_api.EntityPlayerSPMixin",
+        "render_player_api.RenderPlayerMixin",
         "patcher.FontRendererHookMixin"
     ],
     "injectors": {
