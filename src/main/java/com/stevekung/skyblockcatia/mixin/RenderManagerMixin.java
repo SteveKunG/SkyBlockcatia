@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.stevekung.skyblockcatia.config.HitboxRenderMode;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
@@ -52,9 +53,14 @@ public class RenderManagerMixin
     @Inject(method = "renderDebugBoundingBox(Lnet/minecraft/entity/Entity;DDDFF)V", cancellable = true, at = @At("HEAD"))
     private void renderDebugBoundingBox(Entity entity, double x, double y, double z, float f1, float partialTicks, CallbackInfo info)
     {
-        if (SkyBlockcatiaSettings.INSTANCE.showDragonHitboxOnly && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
+        HitboxRenderMode mode = HitboxRenderMode.byId(SkyBlockcatiaSettings.INSTANCE.hitboxRenderMode);
+
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
-            info.cancel();
+            if (mode == HitboxRenderMode.DRAGON && !(entity instanceof EntityDragon) || mode == HitboxRenderMode.CRYSTAL && !(entity instanceof EntityEnderCrystal) || mode == HitboxRenderMode.DRAGON_AND_CRYSTAL && !(entity instanceof EntityDragon || entity instanceof EntityEnderCrystal))
+            {
+                info.cancel();
+            }
         }
     }
 

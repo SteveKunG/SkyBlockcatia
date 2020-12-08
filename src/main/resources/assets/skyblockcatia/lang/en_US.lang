@@ -68,6 +68,9 @@ equipment.count_and_stack=Amount & Stack
 potion_hud.icon_and_time=Icon/Time
 skyblockcatia.only_ping=Ping
 skyblockcatia.ping_and_delay=Ping & Delay
+skyblockcatia.dragon=Dragon
+skyblockcatia.crystal=Crystal
+skyblockcatia.dragon_and_crystal=Dragon & Crystal
 
 # EXTENDED CONFIG INFO
 extended_config.render_info.rclick.info=Right click on the button to see more info.
@@ -176,7 +179,6 @@ placed_summoning_eye_tracker.extended_config=Placed Summoning Eye Tracker
 show_item_rarity.extended_config=Show Item Rarity
 item_rarity_opacity.extended_config=Item Rarity Opacity
 show_hitbox_when_dragon_spawned.extended_config=Show Hitbox when Dragon Spawned
-show_dragon_hitbox_only.extended_config=Show Only Dragon Hitbox
 sneak_to_open_inventory_while_fight_dragon.extended_config=Sneak to Open Inventory while Fighting Dragon
 leave_party_when_last_eye_placed.extended_config=Leave Party when Last Eye placed
 lobby_player_viewer.extended_config=Lobby Player Viewer
@@ -198,6 +200,7 @@ prevent_clicking_on_dummy_item.extended_config=Prevent Clicking on Dummy Item
 shortcut_button_in_inventory.extended_config=Shortcut Button in Inventory
 show_obtained_date.extended_config=Show Obtained Date
 fix_skyblock_enchant_tag.extended_config=Fix Skyblock Enchant Tag
+hitbox_render_mode.extended_config=Hitbox Render Mode
 
 # MESSAGE
 message.toggle_sprint_enabled=Enabled Toggle Sprint

@@ -29,6 +29,7 @@ public class SkyBlockcatiaSettings
     private static final String[] PLAYER_COUNT_MODE = new String[] {"skyblockcatia.tab_list", "skyblockcatia.hud"};
     private static final String[] TOAST_MODE_DISABLED = new String[] {"skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast", "skyblockcatia.disabled"};
     private static final String[] TOAST_MODE = new String[] {"skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast"};
+    private static final String[] HITBOX_RENDER_MODE = new String[] {"skyblockcatia.default", "skyblockcatia.dragon", "skyblockcatia.crystal", "skyblockcatia.dragon_and_crystal"};
     private static File file;
 
     // Render Info
@@ -63,6 +64,7 @@ public class SkyBlockcatiaSettings
     public int potionHUDPosition = 0;
     public int pingMode = 0;
     public int playerCountMode = 0;
+    public int hitboxRenderMode = 0;
 
     // Offset
     public int armorHUDYOffset = 0;
@@ -135,7 +137,6 @@ public class SkyBlockcatiaSettings
     public int chatMode = 0;
     public boolean placedSummoningEyeTracker = false;
     public boolean showItemRarity = true;
-    public boolean showDragonHitboxOnly = false;
     public boolean showHitboxWhenDragonSpawned = false;
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
@@ -210,6 +211,7 @@ public class SkyBlockcatiaSettings
             this.potionHUDPosition = SkyBlockcatiaSettings.getInteger(nbt, "PotionHUDPosition", this.potionHUDPosition);
             this.pingMode = SkyBlockcatiaSettings.getInteger(nbt, "PingMode", this.pingMode);
             this.playerCountMode = SkyBlockcatiaSettings.getInteger(nbt, "PlayerCountMode", this.playerCountMode);
+            this.hitboxRenderMode = SkyBlockcatiaSettings.getInteger(nbt, "HitboxRenderMode", this.hitboxRenderMode);
             this.visitIslandToastMode = SkyBlockcatiaSettings.getInteger(nbt, "VisitIslandToastMode", this.visitIslandToastMode);
             this.visitIslandToastTime = SkyBlockcatiaSettings.getInteger(nbt, "VisitIslandToastTime", this.visitIslandToastTime);
             this.rareDropToastMode = SkyBlockcatiaSettings.getInteger(nbt, "RareDropToastMode", this.rareDropToastMode);
@@ -288,7 +290,6 @@ public class SkyBlockcatiaSettings
             this.glowingDragonArmor = SkyBlockcatiaSettings.getBoolean(nbt, "GlowingDragonArmor", this.glowingDragonArmor);
             this.placedSummoningEyeTracker = SkyBlockcatiaSettings.getBoolean(nbt, "PlacedSummoningEyeTracker", this.placedSummoningEyeTracker);
             this.showItemRarity = SkyBlockcatiaSettings.getBoolean(nbt, "ShowItemRarity", this.showItemRarity);
-            this.showDragonHitboxOnly = SkyBlockcatiaSettings.getBoolean(nbt, "ShowDragonHitboxOnly", this.showDragonHitboxOnly);
             this.showHitboxWhenDragonSpawned = SkyBlockcatiaSettings.getBoolean(nbt, "ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             this.sneakToOpenInventoryWhileFightDragon = SkyBlockcatiaSettings.getBoolean(nbt, "SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             this.leavePartyWhenLastEyePlaced = SkyBlockcatiaSettings.getBoolean(nbt, "LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
@@ -358,6 +359,7 @@ public class SkyBlockcatiaSettings
             nbt.setInteger("PotionHUDPosition", this.potionHUDPosition);
             nbt.setInteger("PingMode", this.pingMode);
             nbt.setInteger("PlayerCountMode", this.playerCountMode);
+            nbt.setInteger("HitboxRenderMode", this.hitboxRenderMode);
             nbt.setInteger("VisitIslandToastMode", this.visitIslandToastMode);
             nbt.setInteger("VisitIslandToastTime", this.visitIslandToastTime);
             nbt.setInteger("RareDropToastMode", this.rareDropToastMode);
@@ -432,7 +434,6 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("GlowingDragonArmor", this.glowingDragonArmor);
             nbt.setBoolean("PlacedSummoningEyeTracker", this.placedSummoningEyeTracker);
             nbt.setBoolean("ShowItemRarity", this.showItemRarity);
-            nbt.setBoolean("ShowDragonHitboxOnly", this.showDragonHitboxOnly);
             nbt.setBoolean("ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             nbt.setBoolean("SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             nbt.setBoolean("LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
@@ -578,6 +579,10 @@ public class SkyBlockcatiaSettings
         {
             return name + this.getTranslation(PLAYER_COUNT_MODE, this.playerCountMode);
         }
+        else if (options == SkyBlockcatiaSettings.Options.HITBOX_RENDER_MODE)
+        {
+            return name + this.getTranslation(HITBOX_RENDER_MODE, this.hitboxRenderMode);
+        }
         else if (options == SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_MODE)
         {
             return name + this.getTranslation(TOAST_MODE_DISABLED, this.visitIslandToastMode);
@@ -637,6 +642,10 @@ public class SkyBlockcatiaSettings
         else if (options == SkyBlockcatiaSettings.Options.PLAYER_COUNT_MODE)
         {
             this.playerCountMode = (this.playerCountMode + value) % 2;
+        }
+        else if (options == SkyBlockcatiaSettings.Options.HITBOX_RENDER_MODE)
+        {
+            this.hitboxRenderMode = (this.hitboxRenderMode + value) % 4;
         }
         else if (options == SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_MODE)
         {
@@ -763,10 +772,6 @@ public class SkyBlockcatiaSettings
         else if (options == SkyBlockcatiaSettings.Options.SHOW_ITEM_RARITY)
         {
             this.showItemRarity = !this.showItemRarity;
-        }
-        else if (options == SkyBlockcatiaSettings.Options.SHOW_DRAGON_HITBOX_ONLY)
-        {
-            this.showDragonHitboxOnly = !this.showDragonHitboxOnly;
         }
         else if (options == SkyBlockcatiaSettings.Options.SHOW_HITBOX_WHEN_DRAGON_SPAWNED)
         {
@@ -1173,8 +1178,6 @@ public class SkyBlockcatiaSettings
             return this.placedSummoningEyeTracker;
         case SHOW_ITEM_RARITY:
             return this.showItemRarity;
-        case SHOW_DRAGON_HITBOX_ONLY:
-            return this.showDragonHitboxOnly;
         case SHOW_HITBOX_WHEN_DRAGON_SPAWNED:
             return this.showHitboxWhenDragonSpawned;
         case SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON:
@@ -1321,6 +1324,7 @@ public class SkyBlockcatiaSettings
         POTION_HUD_POSITION(false, false),
         PING_MODE(false, false),
         PLAYER_COUNT_MODE(false, false),
+        HITBOX_RENDER_MODE(false, false),
         VISIT_ISLAND_TOAST_MODE(false, false),
         RARE_DROP_TOAST_MODE(false, false),
         FISH_CATCH_TOAST_MODE(false, false),
@@ -1396,7 +1400,6 @@ public class SkyBlockcatiaSettings
         GLOWING_DRAGON_ARMOR(false, true),
         PLACED_SUMMONING_EYE_TRACKER(false, true),
         SHOW_ITEM_RARITY(false, true),
-        SHOW_DRAGON_HITBOX_ONLY(false, true),
         SHOW_HITBOX_WHEN_DRAGON_SPAWNED(false, true),
         SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON(false, true),
         LEAVE_PARTY_WHEN_LAST_EYE_PLACED(false, true),
