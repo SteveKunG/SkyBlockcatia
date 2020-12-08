@@ -686,7 +686,7 @@ public class SkyBlockEventHandler
         {
             if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.hypixelApiKey))
             {
-                ClientUtils.printClientMessage("Couldn't open API Viewer, Empty text in the Config!", JsonUtils.red());
+                ClientUtils.printClientMessage("Couldn't open API Viewer, Empty API Key in the Config!", JsonUtils.red());
                 ClientUtils.printClientMessage(JsonUtils.create("Make sure you're in the Hypixel!").setChatStyle(JsonUtils.yellow()).appendSibling(JsonUtils.create(" Click Here to create an API key").setChatStyle(JsonUtils.gold().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
                 return;
             }
@@ -810,7 +810,7 @@ public class SkyBlockEventHandler
                             {
                                 if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.hypixelApiKey))
                                 {
-                                    event.toolTip.add(insertAt++, EnumChatFormatting.RED + "Couldn't get bazaar data, Empty text in the Config!");
+                                    event.toolTip.add(insertAt++, EnumChatFormatting.RED + "Couldn't get bazaar data, Empty API Key in the Config!");
                                 }
                                 else if (!SkyBlockcatiaConfig.hypixelApiKey.matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
                                 {
