@@ -245,6 +245,12 @@ public class MainEventHandler
                 item = new GuiButtonItem(1011, width + 88, height + 105, width + 148, new ItemStack(Blocks.gold_ore), "Bazaar");
                 item.visible = showAdditionalButtons;
                 event.buttonList.add(item);
+                item = new GuiButtonItem(1012, width + 107, height + 86, width + 167, new ItemStack(Blocks.enchanting_table), "Enchanting");
+                item.visible = showAdditionalButtons;
+                event.buttonList.add(item);
+                item = new GuiButtonItem(1013, width + 107, height + 105, width + 167, new ItemStack(Blocks.anvil), "Anvil");
+                item.visible = showAdditionalButtons;
+                event.buttonList.add(item);
 
                 event.buttonList.add(new GuiSmallArrowButton(1100, width + 72, height + 90, width + 132));
             }
@@ -380,13 +386,21 @@ public class MainEventHandler
                 {
                     this.mc.thePlayer.sendChatMessage("/bz");
                 }
-                else if (event.button.id == 1100 || event.button.id == 1101)
+                else if (event.button.id == 1012)
+                {
+                    this.mc.thePlayer.sendChatMessage("/et");
+                }
+                else if (event.button.id == 1013)
+                {
+                    this.mc.thePlayer.sendChatMessage("/anvil");
+                }
+                else if (event.button.id == 1100)
                 {
                     showAdditionalButtons = !showAdditionalButtons;
 
                     for (GuiButton button : event.buttonList)
                     {
-                        if (button.id == 1010 || button.id == 1011)
+                        if (button.id == 1010 || button.id == 1011 || button.id == 1012 || button.id == 1013)
                         {
                             button.visible = showAdditionalButtons;
                         }

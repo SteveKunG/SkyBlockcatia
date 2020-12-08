@@ -3188,7 +3188,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
         this.infoList.add(new SkyBlockInfo(ferocity + "\u2AFD Ferocity", ferocity + SKILL_AVG.format(this.allStat.getFerocity())));
-        this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2739 Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage())));
+        this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2739 Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage()) + "%"));
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "\u2618 Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
 
         this.infoList.add(new SkyBlockInfo("", ""));
