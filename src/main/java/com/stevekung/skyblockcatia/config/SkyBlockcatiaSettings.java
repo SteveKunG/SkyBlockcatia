@@ -156,7 +156,7 @@ public class SkyBlockcatiaSettings
     public boolean lobbyPlayerCount = true;
     public boolean displayItemAbilityMaxUsed = false;
     public boolean preventScrollHotbarWhileFightDragon = false;
-    public boolean preventClickingOnDummyItem = true;
+    public boolean preventClickingOnDummyItem = false;
     public boolean shortcutButtonInInventory = true;
     public boolean showObtainedDate = true;
     public boolean fixSkyblockEnchantTag = true;
