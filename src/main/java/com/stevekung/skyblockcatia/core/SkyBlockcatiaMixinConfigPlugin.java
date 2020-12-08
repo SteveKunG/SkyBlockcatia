@@ -16,6 +16,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
 {
     static final Logger LOGGER = LogManager.getLogger("SkyBlockcatia MixinConfig");
     static boolean foundPatcher;
+    static boolean foundPlayerApi;
 
     static
     {
@@ -28,14 +29,17 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
             e.printStackTrace();
         }
 
-        if (foundPatcher)
+        try
         {
-            LOGGER.info("Patcher detected!");
+            foundPlayerApi = Launch.classLoader.getClassBytes("api.player.client.ClientPlayerAPI") != null;
         }
-        else
+        catch (IOException e)
         {
-            LOGGER.info("Patcher not detected!");
+            e.printStackTrace();
         }
+
+        printModInfo(foundPatcher, "Patcher");
+        printModInfo(foundPlayerApi, "PlayerAPI");
     }
 
     @Override
@@ -54,6 +58,14 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         {
             return foundPatcher;
         }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.playerapi.EntityPlayerSPMixin"))
+        {
+            return foundPlayerApi;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.EntityPlayerSPMixin"))
+        {
+            return !foundPlayerApi;
+        }
         return true;
     }
 
@@ -71,4 +83,16 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+
+    private static void printModInfo(boolean check, String modName)
+    {
+        if (check)
+        {
+            LOGGER.info(modName + " detected!");
+        }
+        else
+        {
+            LOGGER.info(modName + " not detected!");
+        }
+    }
 }
