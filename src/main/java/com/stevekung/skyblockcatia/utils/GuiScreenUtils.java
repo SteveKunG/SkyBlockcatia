@@ -3,6 +3,7 @@ package com.stevekung.skyblockcatia.utils;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 
 import net.minecraft.inventory.IInventory;
 
@@ -24,7 +25,7 @@ public class GuiScreenUtils
 
     public static boolean isChatable(IInventory lowerChestInventory)
     {
-        return contains(CHATABLE, lowerChestInventory);
+        return SkyBlockcatiaConfig.enableChatInContainerScreen && contains(CHATABLE, lowerChestInventory);
     }
 
     public static boolean canViewSeller(IInventory lowerChestInventory)

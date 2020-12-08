@@ -39,6 +39,7 @@ public class SkyBlockcatiaConfig
     public static boolean enableEnchantedGlintForSkull;
     public static boolean enableOverwriteSignEditing;
     public static boolean enableSignSelectionList;
+    public static boolean enableChatInContainerScreen;
 
     // Key Binding Settings
     public static String keyToggleSprint;
@@ -158,6 +159,10 @@ public class SkyBlockcatiaConfig
 
         prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Enable Sign Selection List", true);
         SkyBlockcatiaConfig.enableSignSelectionList = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Enable Chat in Container Screen", true);
+        SkyBlockcatiaConfig.enableChatInContainerScreen = prop.getBoolean();
         propOrder.add(prop.getName());
 
         return propOrder;
