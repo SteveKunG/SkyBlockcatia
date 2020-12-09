@@ -25,7 +25,7 @@ public class CommandSkyBlockcatia extends ClientCommandBase
     @Override
     public List<String> getCommandAliases()
     {
-        return Arrays.asList("sc");
+        return Arrays.asList("sbc", "sbcatia");
     }
 
     @Override
