@@ -1,10 +1,9 @@
 package com.stevekung.skyblockcatia.mixin.forge;
 
+import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,40 +15,48 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent.PostConfigChangedE
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-@Mixin(value = GuiConfig.class, remap = false)
-public class GuiConfigMixin
+@Mixin(GuiConfig.class)
+public class GuiConfigMixin extends GuiScreen
 {
     private final GuiConfig that = (GuiConfig) (Object) this;
 
-    @Inject(method = "keyTyped(CI)V", at = @At(value = "INVOKE", target = "net/minecraft/client/Minecraft.displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"))
-    private void keyTyped(char eventChar, int eventKey, CallbackInfo info)
+    @Override
+    protected void keyTyped(char eventChar, int eventKey)
     {
-        try
+        if (eventKey == Keyboard.KEY_ESCAPE)
         {
-            if ((this.that.configID != null || this.that.parentScreen == null || !(this.that.parentScreen instanceof GuiConfig)) && this.that.entryList.hasChangedEntry(true))
+            try
             {
-                boolean requiresMcRestart = this.that.entryList.saveConfigElements();
-
-                if (Loader.isModLoaded(this.that.modID))
+                if ((this.that.configID != null || this.that.parentScreen == null || !(this.that.parentScreen instanceof GuiConfig)) && this.that.entryList.hasChangedEntry(true))
                 {
-                    ConfigChangedEvent event = new OnConfigChangedEvent(this.that.modID, this.that.configID, this.that.isWorldRunning, requiresMcRestart);
-                    MinecraftForge.EVENT_BUS.post(event);
+                    boolean requiresMcRestart = this.that.entryList.saveConfigElements();
 
-                    if (!event.getResult().equals(Result.DENY))
+                    if (Loader.isModLoaded(this.that.modID))
                     {
-                        MinecraftForge.EVENT_BUS.post(new PostConfigChangedEvent(this.that.modID, this.that.configID, this.that.isWorldRunning, requiresMcRestart));
-                    }
+                        ConfigChangedEvent event = new OnConfigChangedEvent(this.that.modID, this.that.configID, this.that.isWorldRunning, requiresMcRestart);
+                        MinecraftForge.EVENT_BUS.post(event);
 
-                    if (requiresMcRestart)
-                    {
-                        this.that.mc.displayGuiScreen(new GuiMessageDialog(this.that.parentScreen, "fml.configgui.gameRestartTitle", new ChatComponentText(I18n.format("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
+                        if (!event.getResult().equals(Result.DENY))
+                        {
+                            MinecraftForge.EVENT_BUS.post(new PostConfigChangedEvent(this.that.modID, this.that.configID, this.that.isWorldRunning, requiresMcRestart));
+                        }
+
+                        if (requiresMcRestart)
+                        {
+                            this.that.mc.displayGuiScreen(new GuiMessageDialog(this.that.parentScreen, "fml.configgui.gameRestartTitle", new ChatComponentText(I18n.format("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
+                        }
                     }
                 }
             }
+            catch (Throwable e)
+            {
+                e.printStackTrace();
+            }
+            this.mc.displayGuiScreen(this.that.parentScreen);
         }
-        catch (Throwable e)
+        else
         {
-            e.printStackTrace();
+            this.that.entryList.keyTyped(eventChar, eventKey);
         }
     }
 }
