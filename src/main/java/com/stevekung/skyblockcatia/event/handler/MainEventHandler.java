@@ -134,28 +134,31 @@ public class MainEventHandler
 
         try
         {
-            String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
-            int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
-            int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
-
-            if (this.mc.currentScreen == null && this.mc.gameSettings.keyBindSneak.getKeyCode() != Keyboard.KEY_LCONTROL && keyTGCtrl == Keyboard.KEY_LCONTROL && keyTGOther == Keyboard.KEY_S && Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+            if (this.mc.currentScreen == null)
             {
-                ++movement.moveForward;
-            }
+                String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
+                int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
+                int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
 
-            // toggle sneak
-            movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || SkyBlockcatiaSettings.INSTANCE.toggleSneak && !event.getEntityPlayer().isSpectator();
+                if (this.mc.currentScreen == null && this.mc.gameSettings.keyBindSneak.getKeyCode() != Keyboard.KEY_LCONTROL && keyTGCtrl == Keyboard.KEY_LCONTROL && keyTGOther == Keyboard.KEY_S && Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+                {
+                    ++movement.moveForward;
+                }
 
-            if (SkyBlockcatiaSettings.INSTANCE.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
-            {
-                movement.moveStrafe = (float)(movement.moveStrafe * 0.3D);
-                movement.moveForward = (float)(movement.moveForward * 0.3D);
-            }
+                // toggle sneak
+                movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || SkyBlockcatiaSettings.INSTANCE.toggleSneak && !event.getEntityPlayer().isSpectator();
 
-            // toggle sprint
-            if (SkyBlockcatiaSettings.INSTANCE.toggleSprint && !player.isPotionActive(Potion.blindness) && !SkyBlockcatiaSettings.INSTANCE.toggleSneak)
-            {
-                player.setSprinting(true);
+                if (SkyBlockcatiaSettings.INSTANCE.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
+                {
+                    movement.moveStrafe = (float)(movement.moveStrafe * 0.3D);
+                    movement.moveForward = (float)(movement.moveForward * 0.3D);
+                }
+
+                // toggle sprint
+                if (SkyBlockcatiaSettings.INSTANCE.toggleSprint && !player.isPotionActive(Potion.blindness) && !SkyBlockcatiaSettings.INSTANCE.toggleSneak)
+                {
+                    player.setSprinting(true);
+                }
             }
         }
         catch (Exception e) {}
@@ -393,7 +396,7 @@ public class MainEventHandler
                 }
                 else if (event.button.id == 1013)
                 {
-                    this.mc.thePlayer.sendChatMessage("/anvil");
+                    this.mc.thePlayer.sendChatMessage("/av");
                 }
                 else if (event.button.id == 1100)
                 {
