@@ -30,6 +30,7 @@ version = project.version
 group = "com.stevekung.skyblockcatia"
 archivesBaseName = "SkyBlockcatia"
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = 1.8
+compileJava.options.encoding = "UTF-8"
 
 minecraft {
     version = "${forge_version}"

@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 
 public class SupporterUtils
 {
@@ -14,21 +16,31 @@ public class SupporterUtils
         Color rainbowColor = new Color(Color.HSBtoRGB(ClientEventHandler.rainbowTicks % 360 / 360F, 0.9F, 1F));
         String rainbowRGB = rainbowColor.getRed() + "," + rainbowColor.getGreen() + "," + rainbowColor.getBlue();
 
-        // well, im not pleased to do this, but as they requested and they really want it. so tysm for $50!
-        if (text.contains("§6[MVP§d++§6] iEliteNerdy"))
+        if (SkyBlockEventHandler.isSkyBlock)
         {
-            return text.replace("§6[MVP§d++§6] iEliteNerdy", "§6[" + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "NERD§d++§6] " + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "iEliteNerdy");
-        }
-        else if (text.contains("iEliteNerdy"))
-        {
-            return replaceSupportersName(text, "iEliteNerdy", rainbowRGB);
-        }
-
-        for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
-        {
-            if (text.contains(name))
+            // well, im not pleased to do this, but as they requested and they really want it. so tysm for $50!
+            if (text.contains("§6[MVP§d++§6] iEliteNerdy"))
             {
-                return replaceSupportersName(text, name, "36,224,186");
+                return text.replace("§6[MVP§d++§6] iEliteNerdy", "§6[" + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "NERD§d++§6] " + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "iEliteNerdy");
+            }
+            else if (text.contains("iEliteNerdy"))
+            {
+                return replaceSupportersName(text, "iEliteNerdy", rainbowRGB);
+            }
+
+            if (SkyBlockcatiaSettings.INSTANCE.supportersFancyColor)
+            {
+                for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
+                {
+                    if (text.contains(name))
+                    {
+                        return replaceSupportersName(text, name, "36,224,186");
+                    }
+                }
+            }
+            if (text.contains("SteveKunG"))
+            {
+                return SupporterUtils.replaceSupportersName(text, "SteveKunG", ColorUtils.RANDOM_COLOR[ColorUtils.randomColorIndex]);
             }
         }
         return text;
