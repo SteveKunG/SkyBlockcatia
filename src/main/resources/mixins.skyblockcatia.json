@@ -55,6 +55,7 @@
         "TileEntitySignRendererMixin",
         "TileEntitySkullRendererMixin",
         "accessor.GuiContainerMixin",
+        "forge.GuiConfigMixin",
         "debug.ChatAllowedCharactersMixin",
         "player_api.EntityPlayerSPMixin",
         "render_player_api.RenderPlayerMixin",
