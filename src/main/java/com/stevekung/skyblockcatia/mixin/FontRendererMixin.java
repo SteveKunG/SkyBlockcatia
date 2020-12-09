@@ -246,6 +246,6 @@ public abstract class FontRendererMixin
         {
             return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + prevColorMat.group("color"));
         }
-        return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + ColorUtils.stringToRGB("0,0,0").toColoredFont());
+        return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
     }
 }
