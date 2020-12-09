@@ -21,6 +21,7 @@ public class ClientEventHandler
 {
     private final Minecraft mc;
     public static int ticks;
+    public static int rainbowTicks;
     public static int ticksPaused;
     public static float renderPartialTicks;
 
@@ -34,11 +35,11 @@ public class ClientEventHandler
     {
         if (this.mc.currentScreen instanceof GuiMainMenu)
         {
-            ClientEventHandler.ticks = 0;
-            ClientEventHandler.ticksPaused = 0;
+            ClientEventHandler.ticks = ClientEventHandler.rainbowTicks = ClientEventHandler.ticksPaused = 0;
         }
         if (event.phase == Phase.START)
         {
+            ClientEventHandler.rainbowTicks += 5;
             ClientEventHandler.ticks++;
             ClientEventHandler.renderPartialTicks = ClientEventHandler.ticks + this.mc.timer.renderPartialTicks;
 

@@ -1,8 +1,5 @@
 package com.stevekung.skyblockcatia.mixin;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -13,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
+import com.stevekung.skyblockcatia.utils.SupporterUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 
@@ -72,17 +69,11 @@ public abstract class FontRendererMixin
         {
             if (SkyBlockcatiaSettings.INSTANCE.supportersFancyColor)
             {
-                for (String name : SkyBlockcatiaMod.SUPPORTERS_NAME)
-                {
-                    if (text.contains(name))
-                    {
-                        return this.replaceSupportersName(text, name, "36,224,186");
-                    }
-                }
+                return SupporterUtils.getSpecialColor(text);
             }
             if (text.contains("SteveKunG"))
             {
-                return this.replaceSupportersName(text, "SteveKunG", ColorUtils.RANDOM_COLOR[ColorUtils.randomColorIndex]);
+                return SupporterUtils.replaceSupportersName(text, "SteveKunG", ColorUtils.RANDOM_COLOR[ColorUtils.randomColorIndex]);
             }
         }
         return text;
@@ -234,18 +225,5 @@ public abstract class FontRendererMixin
             }
         }
         return s;
-    }
-
-    private String replaceSupportersName(String text, String name, String color)
-    {
-        String namePatt = "(?:(?:\\u00a7[0-9a-fbr])\\B(?:" + name + ")\\b)|(?:\\u00a7[rb]" + name + "\\u00a7r)|\\b" + name + "\\b";
-        Pattern prevColor = Pattern.compile("(?:.*\\B(?:(?<color>\\u00a7[0-9a-fbr])" + name + ")\\b.*)");
-        Matcher prevColorMat = prevColor.matcher(text);
-
-        if (prevColorMat.matches())
-        {
-            return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + prevColorMat.group("color"));
-        }
-        return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
     }
 }
