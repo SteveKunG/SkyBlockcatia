@@ -23,6 +23,14 @@ public class SupporterUtils
             {
                 return text.replace("§6[MVP§d++§6] iEliteNerdy", "§6[" + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "NERD§d++§6] " + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "iEliteNerdy");
             }
+            else if (text.contains("§r§6[MVP§r§d++§r§6] iEliteNerdy"))
+            {
+                return text.replace("§r§6[MVP§r§d++§r§6] iEliteNerdy", "§6[" + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "NERD§d++§6] " + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "iEliteNerdy");
+            }
+            else if (text.contains("§r§6§6[MVP§r§d§d++§r§6§6] iEliteNerdy"))
+            {
+                return text.replace("§r§6§6[MVP§r§d§d++§r§6§6] iEliteNerdy", "§6[" + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "NERD§d++§6] " + ColorUtils.stringToRGB(rainbowRGB).toColoredFont() + "iEliteNerdy");
+            }
             else if (text.contains("iEliteNerdy"))
             {
                 return replaceSupportersName(text, "iEliteNerdy", rainbowRGB);

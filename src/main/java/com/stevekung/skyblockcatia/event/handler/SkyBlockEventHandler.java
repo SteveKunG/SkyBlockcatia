@@ -137,26 +137,26 @@ public class SkyBlockEventHandler
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
-        if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F7))
-        {
-            if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer)
-            {
-                GuiContainer container = (GuiContainer)this.mc.currentScreen;
-                Slot slot = container.getSlotUnderMouse();
-
-                if (slot != null && slot.getHasStack())
-                {
-                    ItemStack itemStack = slot.getStack();
-                    GuiScreen.setClipboardString("/give @p " + itemStack.getItem().getRegistryName() + " " + 1 + " " + itemStack.getItemDamage() + " " + itemStack.getTagCompound());
-                    ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied item data!");
-                }
-            }
-        }
-
         if (this.mc.thePlayer != null)
         {
             if (event.phase == TickEvent.Phase.START)
             {
+                if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F7))
+                {
+                    if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer)
+                    {
+                        GuiContainer container = (GuiContainer)this.mc.currentScreen;
+                        Slot slot = container.getSlotUnderMouse();
+
+                        if (slot != null && slot.getHasStack())
+                        {
+                            ItemStack itemStack = slot.getStack();
+                            GuiScreen.setClipboardString("/give @p " + itemStack.getItem().getRegistryName() + " " + 1 + " " + itemStack.getItemDamage() + " " + itemStack.getTagCompound());
+                            ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied item data!");
+                        }
+                    }
+                }
+
                 if (this.mc.thePlayer.ticksExisted % 5 == 0)
                 {
                     this.getInventoryDifference(this.mc.thePlayer.inventory.mainInventory);
