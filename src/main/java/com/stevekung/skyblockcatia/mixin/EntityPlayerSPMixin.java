@@ -18,7 +18,7 @@ public class EntityPlayerSPMixin
 {
     private final EntityPlayerSP that = (EntityPlayerSP) (Object) this;
 
-    @Inject(method = "onLivingUpdate()V", at = @At("HEAD"))
+    @Inject(method = "onLivingUpdate()V", at = @At(value = "INVOKE", target = "net/minecraft/client/entity/EntityPlayerSP.isUsingItem()Z", shift = At.Shift.BEFORE))
     private void updateMovementInput(CallbackInfo info)
     {
         if (SkyBlockcatiaConfig.enableMovementHandler)
