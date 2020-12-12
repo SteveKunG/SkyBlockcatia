@@ -2,6 +2,7 @@ package com.stevekung.skyblockcatia.utils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -9,6 +10,8 @@ import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
 
 public class ToastUtils
 {
@@ -31,6 +34,33 @@ public class ToastUtils
         public DropType getType()
         {
             return this.type;
+        }
+
+        public String getDisplayName(String value)
+        {
+            if (this.type.matches(ToastUtils.DropCondition.COINS))
+            {
+                return ColorUtils.stringToRGB("255,223,0").toColoredFont() + value + " Coins";
+            }
+            else if (this.type == ToastUtils.DropType.PET_LEVEL_UP)
+            {
+                return EnumChatFormatting.GREEN + this.itemStack.getDisplayName() + EnumChatFormatting.GREEN + " is now level " + EnumChatFormatting.BLUE + value + EnumChatFormatting.GREEN + "!";
+            }
+            else if (this.type.matches(ToastUtils.DropCondition.GIFT))
+            {
+                if (ItemStack.areItemStackTagsEqual(this.itemStack, RenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue())))
+                {
+                    return ColorUtils.stringToRGB("255,255,85").toColoredFont() + value + " Coins";
+                }
+                else
+                {
+                    return ColorUtils.stringToRGB("255,255,85").toColoredFont() + value + " " + this.itemStack.getDisplayName() + " XP";
+                }
+            }
+            else
+            {
+                return this.itemStack.getDisplayName();
+            }
         }
     }
 
@@ -100,9 +130,9 @@ public class ToastUtils
         SLAYER_VERY_RARE_DROP_BLUE("VERY RARE DROP!", "85,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         SLAYER_VERY_RARE_DROP_PURPLE("VERY RARE DROP!", "170,0,170", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         SLAYER_CRAZY_RARE_DROP("CRAZY RARE DROP!", "255,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
-        COMMON_GIFT("COMMON GIFT!", "255,255,255"),
-        SWEET_GIFT("SWEET GIFT!", "255,255,85"),
-        RARE_GIFT("RARE GIFT!", "85,85,255"),
+        COMMON_GIFT("COMMON GIFT!", "255,255,255", ImmutableList.of(DropCondition.GIFT)),
+        SWEET_GIFT("SWEET GIFT!", "255,255,85", ImmutableList.of(DropCondition.GIFT)),
+        RARE_GIFT("RARE GIFT!", "85,85,255", ImmutableList.of(DropCondition.GIFT)),
         SANTA_TIER("SANTA GIFT!", "255,85,85", ImmutableList.of(DropCondition.SPECIAL_DROP)),
         PET_LEVEL_UP("PET LEVEL UP!", "85,85,255"),
         DUNGEON_QUALITY_DROP("DUNGEON DROP!", "255,69,0", ImmutableList.of(DropCondition.SPECIAL_DROP, DropCondition.CONTAINS)),
@@ -133,6 +163,11 @@ public class ToastUtils
         public String getColor()
         {
             return ColorUtils.stringToRGB(this.color).toColoredFont();
+        }
+
+        public ResourceLocation getTexture()
+        {
+            return new ResourceLocation(this.matches(ToastUtils.DropCondition.COINS) || this == PET_LEVEL_UP ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + new Random().nextInt(2)) + ".png");
         }
 
         public long getTime()
@@ -185,6 +220,7 @@ public class ToastUtils
         COINS,
         SPECIAL_DROP,
         CONTAINS,
+        GIFT,
         FORMAT;
     }
 }

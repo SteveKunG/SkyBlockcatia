@@ -72,9 +72,67 @@ public class ClientEventHandler
         String magic = rand.nextBoolean() ? " §r§b(+" + rand.nextInt(100) + "% Magic Find!)§r" : "";
         char formatter = EnumChatFormatting.values()[new Random().nextInt(EnumChatFormatting.values().length)].formattingCode;
 
+        // ****************** Toast Update or Add Section ******************
         // Pet Level Up
         //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse","Flying Fish","Magma Cube"};
         //player.addChatComponentMessage(JsonUtils.create("§r§aYour §r§" + formatter + pet[rand.nextInt(pet.length)] + " §r§alevelled up to level §r§9" + rand.nextInt(100) + "§r§a!§r"));
+
+        // Skill XP Gift
+        /*String[] skill = new String[] {"Farming","Mining","Combat","Foraging","Fishing","Enchanting","Alchemy"};
+        String exp = "+" + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " " + skill[rand.nextInt(skill.length)] + " XP gift with TEST!";
+
+        switch (rand.nextInt(3))
+        {
+        case 0:
+            player.addChatComponentMessage(JsonUtils.create("COMMON! " + exp));
+            break;
+        case 1:
+            player.addChatComponentMessage(JsonUtils.create("SWEET! " + exp));
+            break;
+        case 2:
+            player.addChatComponentMessage(JsonUtils.create("RARE! " + exp));
+            break;
+        }*/
+
+        // Gift Coins
+        /*String coins = "+" + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins gift with TEST!";
+
+        switch (rand.nextInt(3))
+        {
+        case 0:
+            player.addChatComponentMessage(JsonUtils.create("COMMON! " + coins));
+            break;
+        case 1:
+            player.addChatComponentMessage(JsonUtils.create("SWEET! " + coins));
+            break;
+        case 2:
+            player.addChatComponentMessage(JsonUtils.create("RARE! " + coins));
+            break;
+        }*/
+
+        // Fishing Coins
+        /*int coin = rand.nextInt(20000);
+
+        if (rand.nextBoolean())
+        {
+            player.addChatComponentMessage(JsonUtils.create("GOOD CATCH! You found " + coin + " Coins."));
+        }
+        else
+        {
+            player.addChatComponentMessage(JsonUtils.create("GREAT CATCH! You found " + coin + " Coins."));
+        }*/
+
+        // Bank Interest/Allowance
+        //String coins = "Since you've been away you earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins as interest in your personal bank account!";
+        //String coins = "ALLOWANCE! You earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
+        //player.addChatComponentMessage(JsonUtils.create(coins));
+
+        // Mythos Drop
+        //String coins = "Wow! You dug out " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
+        //player.addChatComponentMessage(JsonUtils.create(coins));
+
+
+        // ****************** Item Drop Section ******************
 
         // Pet Drop
         //player.addChatComponentMessage(JsonUtils.create("PET DROP! " + EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName().replace("[Lvl 1] ", "")) + EnumChatFormatting.getTextWithoutFormattingCodes(magic)));
@@ -123,51 +181,6 @@ public class ClientEventHandler
             break;
         }*/
 
-        /*String[] skill = new String[] {"Farming","Mining","Combat","Foraging","Fishing","Enchanting","Alchemy"};
-        String exp = "+" + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " " + skill[rand.nextInt(skill.length)] + " XP gift with TEST!";
-
-        // Skill XP Gift
-        switch (rand.nextInt(3))
-        {
-        case 0:
-            player.addChatComponentMessage(JsonUtils.create("COMMON! " + exp));
-            break;
-        case 1:
-            player.addChatComponentMessage(JsonUtils.create("SWEET! " + exp));
-            break;
-        case 2:
-            player.addChatComponentMessage(JsonUtils.create("RARE! " + exp));
-            break;
-        }*/
-
-        // Gift Coins
-        /*String coins = "+" + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins gift with TEST!";
-
-        switch (rand.nextInt(3))
-        {
-        case 0:
-            player.addChatComponentMessage(JsonUtils.create("COMMON! " + coins));
-            break;
-        case 1:
-            player.addChatComponentMessage(JsonUtils.create("SWEET! " + coins));
-            break;
-        case 2:
-            player.addChatComponentMessage(JsonUtils.create("RARE! " + coins));
-            break;
-        }*/
-
-        // Fishing Coins
-        /*int coin = rand.nextInt(20000);
-
-        if (rand.nextBoolean())
-        {
-            player.addChatComponentMessage(JsonUtils.create("GOOD CATCH! You found " + coin + " Coins."));
-        }
-        else
-        {
-            player.addChatComponentMessage(JsonUtils.create("GREAT CATCH! You found " + coin + " Coins."));
-        }*/
-
         // Fishing Drop
         /*switch (rand.nextInt(2))
         {
@@ -190,12 +203,5 @@ public class ClientEventHandler
         // Mythos Drop
         //String test = "RARE DROP! You dug out a " + itemStack.getDisplayName() + "!";
         //player.addChatComponentMessage(JsonUtils.create(test));
-        //String coins = "Wow! You dug out " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
-        //player.addChatComponentMessage(JsonUtils.create(coins));
-
-        // Bank Interest/Allowance
-        //String coins = "Since you've been away you earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins as interest in your personal bank account!";
-        //String coins = "ALLOWANCE! You earned " + new java.text.DecimalFormat("#,###,###").format(rand.nextInt(10000)) + " coins!";
-        //player.addChatComponentMessage(JsonUtils.create(coins));
     }
 }

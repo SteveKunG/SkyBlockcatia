@@ -31,10 +31,7 @@ import com.stevekung.skyblockcatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.ToastUtils.ToastType;
-import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.SBBossBar;
-import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
-import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
+import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 
@@ -474,18 +471,16 @@ public class SkyBlockEventHandler
                     if (bankInterestPattern.matches())
                     {
                         String coin = bankInterestPattern.group("coin");
-                        CoinType coinType = CoinType.TYPE_3;
-                        ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
-                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.BANK_INTEREST, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                        ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_3.getId(), CoinType.TYPE_3.getValue());
+                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.BANK_INTEREST, Integer.valueOf(coin.replace(",", "")), coinSkull, ToastUtils.DropType.BANK_INTEREST);
                         LoggerIN.logToast(formattedMessage);
                         cancelMessage = true;
                     }
                     else if (allowancePattern.matches())
                     {
                         String coin = allowancePattern.group("coin");
-                        CoinType coinType = CoinType.TYPE_3;
-                        ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
-                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.ALLOWANCE, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                        ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_3.getId(), CoinType.TYPE_3.getValue());
+                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.ALLOWANCE, Integer.valueOf(coin.replace(",", "")), coinSkull, ToastUtils.DropType.ALLOWANCE);
                         LoggerIN.logToast(formattedMessage);
                         cancelMessage = true;
                     }
@@ -506,7 +501,7 @@ public class SkyBlockEventHandler
                             String coin = coinsCatchPattern.group("coin");
                             CoinType coinType = type.equals("GOOD") ? CoinType.TYPE_1 : CoinType.TYPE_2;
                             ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), type.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH_COINS : ToastUtils.DropType.GREAT_CATCH_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), type.equals("GOOD") ? ToastUtils.DropType.GOOD_CATCH_COINS : ToastUtils.DropType.GREAT_CATCH_COINS, Integer.parseInt(coin.replace(",", "")), coinSkull, type + "$" + coinType);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.fishCatchToastMode) == ToastMode.TOAST;
                         }
@@ -519,8 +514,7 @@ public class SkyBlockEventHandler
                             String type = coinsGiftPattern.group("type");
                             String coin = coinsGiftPattern.group("coin");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
-                            ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.parseInt(coin.replace(",", "")), RenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue()), rarity);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST;
                         }
@@ -530,7 +524,8 @@ public class SkyBlockEventHandler
                             String exp = skillExpGiftPattern.group("exp");
                             String skill = skillExpGiftPattern.group("skill");
                             ToastUtils.DropType rarity = type.equals("RARE") ? ToastUtils.DropType.RARE_GIFT : type.equals("SWEET") ? ToastUtils.DropType.SWEET_GIFT : ToastUtils.DropType.COMMON_GIFT;
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.valueOf(exp.replace(",", "")), null, skill);
+                            SBSkills.Type skillType = SBSkills.Type.byName(skill);
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), rarity, Integer.parseInt(exp.replace(",", "")), skillType.getItemStack().setStackDisplayName(skillType.getName()), type + "$" + skillType);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = ToastMode.byId(SkyBlockcatiaSettings.INSTANCE.giftToastMode) == ToastMode.TOAST;
                         }
@@ -581,9 +576,8 @@ public class SkyBlockEventHandler
                         else if (coinsMythosPattern.matches())
                         {
                             String coin = coinsMythosPattern.group("coin");
-                            CoinType coinType = CoinType.TYPE_1;
-                            ItemStack coinSkull = RenderUtils.getSkullItemStack(coinType.getId(), coinType.getValue());
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.MYTHOS_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, "Coins");
+                            ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.MYTHOS_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, ToastUtils.DropType.MYTHOS_COINS);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -634,9 +628,10 @@ public class SkyBlockEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            ItemStack itemStack = SBPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ROOT)).getPetItem();
+                            SBPets.Type type = SBPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ROOT));
+                            ItemStack itemStack = type.getPetItem();
                             itemStack.setStackDisplayName(name);
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.valueOf(level), itemStack, "Pet", true);
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.parseInt(level), itemStack, type);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -1308,32 +1303,6 @@ public class SkyBlockEventHandler
                     tooltip.add(i++, text);
                 }
             }
-        }
-    }
-
-    private enum CoinType
-    {
-        TYPE_1("2070f6cb-f5db-367a-acd0-64d39a7e5d1b", "538071721cc5b4cd406ce431a13f86083a8973e1064d2f8897869930ee6e5237"),
-        TYPE_2("8ce61ae1-7cb4-3bdd-b1be-448c6fabb355", "dfa087eb76e7687a81e4ef81a7e6772649990f6167ceb0f750a4c5deb6c4fbad"),
-        TYPE_3("9dd5008a-08a1-3f4a-b8af-2499bdb8ff3b", "e36e94f6c34a35465fce4a90f2e25976389eb9709a12273574ff70fd4daa6852");
-
-        private final String id;
-        private final String value;
-
-        private CoinType(String id, String value)
-        {
-            this.id = id;
-            this.value = value;
-        }
-
-        public String getId()
-        {
-            return this.id;
-        }
-
-        public String getValue()
-        {
-            return this.value;
         }
     }
 

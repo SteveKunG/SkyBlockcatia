@@ -1,7 +1,5 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import com.stevekung.skyblockcatia.utils.ColorUtils;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -10,13 +8,6 @@ import net.minecraft.item.ItemStack;
 
 public class SBSkills
 {
-    public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
-    {
-        ItemStack itemStack = skill.getItemStack();
-        itemStack.setStackDisplayName(ColorUtils.stringToRGB("255,255,85").toColoredFont() + exp + " " + skill + " XP");
-        return itemStack;
-    }
-
     public enum Type
     {
         FARMING("Farming", Items.diamond_hoe),
