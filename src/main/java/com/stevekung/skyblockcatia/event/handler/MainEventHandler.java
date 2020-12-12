@@ -192,32 +192,36 @@ public class MainEventHandler
             this.mc.displayGuiScreen(new GuiExtendedConfig());
         }
 
-        if (SkyBlockcatiaSettings.INSTANCE.toggleSprintUseMode.equals("key_binding"))
+        try
         {
-            String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
-            int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
-            int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
-
-            if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+            if (SkyBlockcatiaSettings.INSTANCE.toggleSprintUseMode.equals("key_binding"))
             {
-                SkyBlockcatiaSettings.INSTANCE.toggleSprint = !SkyBlockcatiaSettings.INSTANCE.toggleSprint;
-                ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSprint ? LangUtils.translate("message.toggle_sprint_enabled") : LangUtils.translate("message.toggle_sprint_disabled")).getFormattedText());
-                SkyBlockcatiaSettings.INSTANCE.save();
+                String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
+                int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
+                int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
+
+                if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+                {
+                    SkyBlockcatiaSettings.INSTANCE.toggleSprint = !SkyBlockcatiaSettings.INSTANCE.toggleSprint;
+                    ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSprint ? LangUtils.translate("message.toggle_sprint_enabled") : LangUtils.translate("message.toggle_sprint_disabled")).getFormattedText());
+                    SkyBlockcatiaSettings.INSTANCE.save();
+                }
+            }
+            if (SkyBlockcatiaSettings.INSTANCE.toggleSneakUseMode.equals("key_binding"))
+            {
+                String[] keyTS = SkyBlockcatiaConfig.keyToggleSneak.split(",");
+                int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sneak");
+                int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sneak");
+
+                if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
+                {
+                    SkyBlockcatiaSettings.INSTANCE.toggleSneak = !SkyBlockcatiaSettings.INSTANCE.toggleSneak;
+                    ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSneak ? LangUtils.translate("message.toggle_sneak_enabled") : LangUtils.translate("message.toggle_sneak_disabled")).getFormattedText());
+                    SkyBlockcatiaSettings.INSTANCE.save();
+                }
             }
         }
-        if (SkyBlockcatiaSettings.INSTANCE.toggleSneakUseMode.equals("key_binding"))
-        {
-            String[] keyTS = SkyBlockcatiaConfig.keyToggleSneak.split(",");
-            int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sneak");
-            int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sneak");
-
-            if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
-            {
-                SkyBlockcatiaSettings.INSTANCE.toggleSneak = !SkyBlockcatiaSettings.INSTANCE.toggleSneak;
-                ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSneak ? LangUtils.translate("message.toggle_sneak_enabled") : LangUtils.translate("message.toggle_sneak_disabled")).getFormattedText());
-                SkyBlockcatiaSettings.INSTANCE.save();
-            }
-        }
+        catch (Exception e) {}
     }
 
     @SubscribeEvent
