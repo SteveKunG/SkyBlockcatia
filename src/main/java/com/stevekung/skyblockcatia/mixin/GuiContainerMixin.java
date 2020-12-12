@@ -48,7 +48,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
 {
     private final GuiContainer that = (GuiContainer) (Object) this;
     private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
-    private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(EnumChatFormatting.GREEN + "Go Back", EnumChatFormatting.RED + "Close");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -312,10 +311,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
 
             if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && itemStack != null)
             {
-                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
-                {
-                    info.cancel();
-                }
                 if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("ExtraAttributes"))
                 {
                     String id = itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id");
@@ -336,7 +331,11 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                 {
                     String name = itemStack.getDisplayName();
 
-                    if (clickedButton == 0 && clickType == 0 && (GuiScreenUtils.contains(GuiScreenUtils.IGNORE_DUMMY, chest.lowerChestInventory) || ITEM_LIST.stream().anyMatch(itemName -> name.equals(itemName))))
+                    if (this.ignoreNullItem(itemStack, IGNORE_ITEMS) && !GuiScreenUtils.contains(GuiScreenUtils.WHITELIST, chest.lowerChestInventory))
+                    {
+                        info.cancel();
+                    }
+                    if (clickedButton == 0 && clickType == 0 && GuiScreenUtils.isIgnoreDummy(chest.lowerChestInventory, name))
                     {
                         this.mc.playerController.windowClick(this.that.inventorySlots.windowId, slotId, 2, 3, this.mc.thePlayer);
                         info.cancel();
