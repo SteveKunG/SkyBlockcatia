@@ -145,5 +145,12 @@
         "color": "blue",
         "uuid": "69a9731d-621a-36db-bb64-e63dd541f7ea",
         "texture": "554a34a80c474206d3700b8fced6b44fab0b0ed0b05c1293ff0c5d86eda251d1"
+    },
+    {
+        "skin": "YETI_GROWN_UP",
+        "displayName": "§5Grown-up Baby Yeti",
+        "color": "dark_purple",
+        "uuid": "3a80504c-0993-3be5-92cd-2200f94a72b6",
+        "texture": "f5f29a975529276d916fc67998833c11ee178ff21e5941afdfb0fa7010f8374e"
     }
 ]
