@@ -55,11 +55,12 @@
         "TileEntitySignRendererMixin",
         "TileEntitySkullRendererMixin",
         "accessor.GuiContainerMixin",
-        "forge.GuiConfigMixin",
+        "better_sprinting.EntityPlayerSPMixin",
         "debug.ChatAllowedCharactersMixin",
+        "forge.GuiConfigMixin",
+        "patcher.FontRendererHookMixin",
         "player_api.EntityPlayerSPMixin",
-        "render_player_api.RenderPlayerMixin",
-        "patcher.FontRendererHookMixin"
+        "render_player_api.RenderPlayerMixin"
     ],
     "injectors": {
         "defaultRequire": 1

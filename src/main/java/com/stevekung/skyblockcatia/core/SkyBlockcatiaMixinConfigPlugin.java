@@ -18,6 +18,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     static boolean foundPatcher;
     static boolean foundPlayerApi;
     static boolean foundRenderPlayerApi;
+    static boolean foundBetterSprinting;
 
     static
     {
@@ -48,9 +49,19 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
             e.printStackTrace();
         }
 
+        try
+        {
+            foundBetterSprinting = Launch.classLoader.getClassBytes("chylex.bettersprinting.client.player.LivingUpdate") != null;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
         printModInfo(foundPatcher, "Patcher");
         printModInfo(foundPlayerApi, "PlayerAPI");
         printModInfo(foundRenderPlayerApi, "RenderPlayerAPI");
+        printModInfo(foundBetterSprinting, "BetterSprinting");
     }
 
     @Override
@@ -75,7 +86,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         }
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.EntityPlayerSPMixin"))
         {
-            return !foundPlayerApi;
+            return !(foundPlayerApi || foundBetterSprinting);
         }
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.render_player_api.RenderPlayerMixin"))
         {
@@ -84,6 +95,10 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.RenderPlayerMixin"))
         {
             return !foundRenderPlayerApi;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.better_sprinting.EntityPlayerSPMixin"))
+        {
+            return foundBetterSprinting;
         }
         return true;
     }
