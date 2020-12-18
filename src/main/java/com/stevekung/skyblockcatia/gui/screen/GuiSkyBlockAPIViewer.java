@@ -1563,7 +1563,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             if (itemStack.stackSize != 1)
             {
                 FontRenderer fontRenderer = this.fontRendererObj;
-                String stackSize = String.valueOf(NumberUtils.formatCompact(itemStack.stackSize));
+                String stackSize = NumberUtils.formatCompact(itemStack.stackSize);
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
                 GlStateManager.disableBlend();
@@ -2476,28 +2476,28 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                     if (count > 1)
                     {
-                        if (item != null)
+                        if (this.matchSackId(itemId, SBSlayers.Drops.values()))
                         {
-                            ItemStack itemStack = new ItemStack(item, count, meta);
-                            this.addSackItemStackCount(itemStack, count, null, false);
-                            sacks.add(itemStack);
+                            this.checkSlayerSack(itemId, count, sacks);
+                        }
+                        else if (this.matchSackId(itemId, SBDungeons.Drops.values()))
+                        {
+                            this.checkDungeonSack(itemId, count, sacks);
+                        }
+                        else if (this.matchSackId(itemId, CandySacks.values()))
+                        {
+                            this.checkCandySack(itemId, count, sacks);
                         }
                         else
                         {
-                            try
+                            if (item == null)
                             {
-                                SBSlayers.Drops slayerDrops = SBSlayers.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
-                                ItemStack itemStack = new ItemStack(slayerDrops.getBaseItem(), count);
-                                this.addSackItemStackCount(itemStack, count, slayerDrops.getDisplayName(), true);
-                                sacks.add(itemStack);
+                                this.addSackItemStackCount(new ItemStack(Blocks.barrier, count), EnumChatFormatting.RED + itemId, false, sacks);
                             }
-                            catch (Exception e)
+                            else
                             {
-                                SBDungeons.Drops dungeonDrops = SBDungeons.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
-                                ItemStack itemStack = dungeonDrops.getBaseItem();
-                                itemStack.stackSize = count;
-                                this.addSackItemStackCount(itemStack, count, dungeonDrops.getDisplayName(), false);
-                                sacks.add(itemStack);
+                                ItemStack itemStack = new ItemStack(item, count, meta);
+                                this.addSackItemStackCount(itemStack, null, false, sacks);
                             }
                         }
                     }
@@ -2522,17 +2522,65 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(sacks, SBInventoryTabs.SACKS));
     }
 
-    private void addSackItemStackCount(ItemStack itemStack, int count, @Nullable String altName, boolean ench)
+    private <T extends Enum> boolean matchSackId(String itemId, T[] enums)
     {
-        if (count >= 1000)
+        return Arrays.stream(enums).anyMatch(drop -> itemId.contains(drop.name().toLowerCase(Locale.ROOT)));
+    }
+
+    private void checkSlayerSack(String itemId, int count, List<ItemStack> sacks)
+    {
+        try
+        {
+            SBSlayers.Drops slayerDrops = SBSlayers.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
+            this.addSackItemStackCount(new ItemStack(slayerDrops.getBaseItem(), count), slayerDrops.getDisplayName(), true, sacks);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkDungeonSack(String itemId, int count, List<ItemStack> sacks)
+    {
+        try
+        {
+            SBDungeons.Drops dungeonDrops = SBDungeons.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
+            ItemStack itemStack = dungeonDrops.getBaseItem();
+            itemStack.stackSize = count;
+            this.addSackItemStackCount(itemStack, dungeonDrops.getDisplayName(), dungeonDrops.isEnchanted(), sacks);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkCandySack(String itemId, int count, List<ItemStack> sacks)
+    {
+        try
+        {
+            CandySacks candySacks = CandySacks.valueOf(itemId.toUpperCase(Locale.ROOT));
+            ItemStack itemStack = candySacks.getBaseItem();
+            itemStack.stackSize = count;
+            this.addSackItemStackCount(itemStack, candySacks.getDisplayName(), false, sacks);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void addSackItemStackCount(ItemStack itemStack, @Nullable String altName, boolean ench, List<ItemStack> sacks)
+    {
+        if (itemStack.stackSize >= 1000)
         {
             if (!StringUtils.isNullOrEmpty(altName))
             {
-                itemStack.setStackDisplayName(altName + EnumChatFormatting.GRAY + " x" + FORMAT.format(count));
+                itemStack.setStackDisplayName(altName + EnumChatFormatting.GRAY + " x" + FORMAT.format(itemStack.stackSize));
             }
             else
             {
-                itemStack.setStackDisplayName(EnumChatFormatting.RESET + itemStack.getDisplayName() + EnumChatFormatting.GRAY + " x" + FORMAT.format(count));
+                itemStack.setStackDisplayName(EnumChatFormatting.RESET + itemStack.getDisplayName() + EnumChatFormatting.GRAY + " x" + FORMAT.format(itemStack.stackSize));
             }
         }
         else
@@ -2547,6 +2595,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         {
             itemStack.getTagCompound().setTag("ench", new NBTTagList());
         }
+        sacks.add(itemStack);
     }
 
     private void getPets(JsonObject currentUserProfile)
