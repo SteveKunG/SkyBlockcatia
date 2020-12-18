@@ -1,12 +1,9 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.lang.reflect.Field;
-
 import net.minecraftforge.fml.common.Loader;
 
 public class CompatibilityUtils
 {
-    public static final CompatibilityUtils INSTANCE = new CompatibilityUtils();
     public static boolean isSkyblockAddonsLoaded = Loader.isModLoaded("skyblockaddons");
     public static boolean isIngameAccountSwitcherLoaded = Loader.isModLoaded("IngameAccountSwitcher");
     public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
@@ -16,18 +13,14 @@ public class CompatibilityUtils
 
     // Patcher Compatibility
     private static Class<?> patcherConfig;
-    private boolean patcherInventoryPosition;
-    private boolean disableEnchantmentGlint;
 
     // Vanilla Enhancements Compatibility
     private static Class<?> vanillaEnConfig;
-    private boolean vanillaEnFixInventory;
 
     // Not Enough Updates Compatibility
     private static Class<?> neuConfig;
-    private boolean neuhidePotionEffect;
 
-    public CompatibilityUtils()
+    public static void init()
     {
         if (isPatcherLoaded)
         {
@@ -64,27 +57,22 @@ public class CompatibilityUtils
         }
     }
 
-    public boolean hasInventoryFix()
+    public static boolean hasInventoryFix()
     {
         if (isPatcherLoaded)
         {
             try
             {
-                Field inventoryPosition = patcherConfig.getDeclaredField("inventoryPosition");
-                this.patcherInventoryPosition = inventoryPosition.getBoolean(patcherConfig);
+                return patcherConfig.getDeclaredField("inventoryPosition").getBoolean(patcherConfig);
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            catch (Exception e) {}
         }
         if (isVanillaEnhancementsLoaded)
         {
             try
             {
                 Object instance = vanillaEnConfig.getDeclaredMethod("instance").invoke(vanillaEnConfig);
-                Field fixInventory = instance.getClass().getDeclaredField("fixInventory");
-                this.vanillaEnFixInventory = fixInventory.getBoolean(instance);
+                return instance.getClass().getDeclaredField("fixInventory").getBoolean(instance);
             }
             catch (Exception e)
             {
@@ -99,30 +87,26 @@ public class CompatibilityUtils
                 Object manager = instance.getClass().getDeclaredField("manager").get(instance);
                 Object config = manager.getClass().getDeclaredField("config").get(manager);
                 Object hidePotionEffect = config.getClass().getDeclaredField("hidePotionEffect").get(config);
-                this.neuhidePotionEffect = (boolean)hidePotionEffect.getClass().getDeclaredField("value").get(hidePotionEffect);
+                return (boolean)hidePotionEffect.getClass().getDeclaredField("value").get(hidePotionEffect);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
-        return this.vanillaEnFixInventory || this.patcherInventoryPosition || this.neuhidePotionEffect;
+        return false;
     }
 
-    public boolean hasDisableEnchantmentGlint()
+    public static boolean hasDisableEnchantmentGlint()
     {
         if (isPatcherLoaded)
         {
             try
             {
-                Field disableEnchantmentGlint = patcherConfig.getDeclaredField("disableEnchantmentGlint");
-                this.disableEnchantmentGlint = disableEnchantmentGlint.getBoolean(patcherConfig);
+                return patcherConfig.getDeclaredField("disableEnchantmentGlint").getBoolean(patcherConfig);
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            catch (Exception e) {}
         }
-        return this.disableEnchantmentGlint;
+        return false;
     }
 }

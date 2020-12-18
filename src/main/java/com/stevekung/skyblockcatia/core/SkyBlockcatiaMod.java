@@ -128,6 +128,7 @@ public class SkyBlockcatiaMod
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
         ColorUtils.init();
         CHECKER.startCheck();
+        CompatibilityUtils.init();
     }
 
     @SubscribeEvent

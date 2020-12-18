@@ -34,7 +34,7 @@ public class GuiSmallArrowButton extends GuiButton
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
-        if (!(CompatibilityUtils.INSTANCE.hasInventoryFix() || this.mc.currentScreen instanceof GuiSkyBlockAPIViewer))
+        if (!(CompatibilityUtils.hasInventoryFix() || this.mc.currentScreen instanceof GuiSkyBlockAPIViewer))
         {
             boolean hasVisibleEffect = false;
 

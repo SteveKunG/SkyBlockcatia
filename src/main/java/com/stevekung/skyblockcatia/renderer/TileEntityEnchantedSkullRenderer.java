@@ -118,7 +118,7 @@ public class TileEntityEnchantedSkullRenderer
 
         model.render(null, 0.0F, 0.0F, 0.0F, rotation, 0.0F, 0.0625F);
 
-        if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && enchanted && !CompatibilityUtils.INSTANCE.hasDisableEnchantmentGlint())
+        if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && enchanted && !CompatibilityUtils.hasDisableEnchantmentGlint())
         {
             GlStateManager.pushMatrix();
             this.renderGlint(entity, mc, model, rotation, partialTicks);
