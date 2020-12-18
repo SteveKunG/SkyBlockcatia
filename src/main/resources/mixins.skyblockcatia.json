@@ -1,10 +1,10 @@
 {
     "required": true,
-    "minVersion": "0.7.11",
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
     "target": "@env(DEFAULT)",
+    "verbose": "true",
     "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
     "mixins": [
         "BlockMixin",
