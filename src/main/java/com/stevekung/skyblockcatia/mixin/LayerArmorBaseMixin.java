@@ -2,10 +2,10 @@ package com.stevekung.skyblockcatia.mixin;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
@@ -25,7 +25,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(LayerArmorBase.class)
-public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingBase>
+public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerRenderer<EntityLivingBase>
 {
     private final LayerArmorBase that = (LayerArmorBase) (Object) this;
 
@@ -38,10 +38,13 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
     private RendererLivingEntity<?> renderer;
 
     @Shadow
-    protected abstract void func_177179_a(ModelBase p_177179_1_, int p_177179_2_);
+    protected abstract void func_177179_a(T p_177179_1_, int p_177179_2_);
 
     @Shadow
-    protected abstract ModelBase getArmorModelHook(EntityLivingBase entity, ItemStack itemStack, int slot, ModelBase model);
+    public abstract T func_177175_a(int p_177175_1_);
+
+    @Shadow
+    protected abstract T getArmorModelHook(EntityLivingBase entity, ItemStack itemStack, int slot, T model);
 
     @Shadow
     protected abstract void renderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot);
@@ -54,47 +57,19 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
         this.renderGlowingLayer(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, 1);
     }
 
-    @Overwrite
-    private void func_177183_a(EntityLivingBase entitylivingbaseIn, ModelBase modelbaseIn, float p_177183_3_, float p_177183_4_, float p_177183_5_, float p_177183_6_, float p_177183_7_, float p_177183_8_, float p_177183_9_)
+    @Inject(method = "func_177183_a(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.color(FFFF)V", ordinal = 0))
+    private void renderNewArmorGlintPre(EntityLivingBase entitylivingbaseIn, T modelbaseIn, float p_177183_3_, float p_177183_4_, float p_177183_5_, float p_177183_6_, float p_177183_7_, float p_177183_8_, float p_177183_9_, CallbackInfo info)
     {
-        float f = entitylivingbaseIn.ticksExisted + p_177183_5_;
-        this.renderer.bindTexture(ENCHANTED_ITEM_GLINT_RES);
-        GlStateManager.enableBlend();
-        GlStateManager.depthFunc(514);
-        GlStateManager.depthMask(false);
-        float f1 = 0.5F;
-        GlStateManager.color(f1, f1, f1, 1.0F);
-
         if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
         {
             float light = 240.0F;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, light, light);
         }
+    }
 
-        for (int i = 0; i < 2; ++i)
-        {
-            GlStateManager.disableLighting();
-            GlStateManager.blendFunc(768, 1);
-
-            if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
-            {
-                GlStateManager.color(0.5608F, 0.3408F, 0.8608F, 1.0F);
-            }
-            else
-            {
-                GlStateManager.color(0.38F, 0.19F, 0.608F, 1.0F);
-            }
-
-            GlStateManager.matrixMode(5890);
-            GlStateManager.loadIdentity();
-            float f3 = 0.33333334F;
-            GlStateManager.scale(f3, f3, f3);
-            GlStateManager.rotate(30.0F - i * 60.0F, 0.0F, 0.0F, 1.0F);
-            GlStateManager.translate(0.0F, f * (0.001F + i * 0.003F) * 20.0F, 0.0F);
-            GlStateManager.matrixMode(5888);
-            modelbaseIn.render(entitylivingbaseIn, p_177183_3_, p_177183_4_, p_177183_6_, p_177183_7_, p_177183_8_, p_177183_9_);
-        }
-
+    @Inject(method = "func_177183_a(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/model/ModelBase.render(Lnet/minecraft/entity/Entity;FFFFFF)V"))
+    private void renderNewArmorGlintPost(EntityLivingBase entitylivingbaseIn, T modelbaseIn, float p_177183_3_, float p_177183_4_, float p_177183_5_, float p_177183_6_, float p_177183_7_, float p_177183_8_, float p_177183_9_, CallbackInfo info)
+    {
         if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
         {
             int i = entitylivingbaseIn.getBrightnessForRender(p_177183_5_);
@@ -102,14 +77,25 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
             int k = i / 65536;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
         }
+    }
 
-        GlStateManager.matrixMode(5890);
-        GlStateManager.loadIdentity();
-        GlStateManager.matrixMode(5888);
-        GlStateManager.enableLighting();
-        GlStateManager.depthMask(true);
-        GlStateManager.depthFunc(515);
-        GlStateManager.disableBlend();
+    @Redirect(method = "func_177183_a(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.color(FFFF)V", ordinal = 1))
+    private void newArmorGlintColor(float colorRed, float colorGreen, float colorBlue, float colorAlpha)
+    {
+        if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
+        {
+            GlStateManager.color(0.5608F, 0.3408F, 0.8608F, 1.0F);
+        }
+        else
+        {
+            GlStateManager.color(colorRed, colorGreen, colorBlue, colorAlpha);
+        }
+    }
+
+    @Override
+    public boolean shouldCombineTextures()
+    {
+        return SkyBlockcatiaConfig.enableOldArmorRender;
     }
 
     private void renderGlowingLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot)
@@ -128,7 +114,7 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
                 return;
             }
 
-            ModelBase t = this.that.func_177175_a(armorSlot);
+            T t = this.func_177175_a(armorSlot);
             t.setModelAttributes(this.renderer.getMainModel());
             t.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
             t = this.getArmorModelHook(entity, itemstack, armorSlot, t);
@@ -161,12 +147,6 @@ public abstract class LayerArmorBaseMixin implements LayerRenderer<EntityLivingB
             GlStateManager.depthMask(true);
             GlStateManager.disableBlend();
         }
-    }
-
-    @Override
-    public boolean shouldCombineTextures()
-    {
-        return SkyBlockcatiaConfig.enableOldArmorRender;
     }
 
     private ResourceLocation getArmorType(ItemStack itemStack, int armorSlot)
