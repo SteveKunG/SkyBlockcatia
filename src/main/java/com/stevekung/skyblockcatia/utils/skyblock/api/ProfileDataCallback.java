@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.utils.skyblock.api;
 
+import java.util.List;
+
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
@@ -15,6 +17,7 @@ public class ProfileDataCallback
     private String guild;
     private GameProfile profile;
     private long lastSave;
+    private List<String> islandMembers;
 
     public ProfileDataCallback(String sbProfileId, String profileName, String username, String displayName, String gameMode, String guild, String uuid, GameProfile profile, long lastSave)
     {
@@ -29,7 +32,7 @@ public class ProfileDataCallback
         this.lastSave = lastSave;
     }
 
-    public ProfileDataCallback(JsonObject sbProfile, String username, String displayName, String gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave)
+    public ProfileDataCallback(JsonObject sbProfile, String username, String displayName, String gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave, List<String> islandMembers)
     {
         this.sbProfile = sbProfile;
         this.username = username;
@@ -39,6 +42,7 @@ public class ProfileDataCallback
         this.uuid = uuid;
         this.profile = gameProfile;
         this.lastSave = lastSave;
+        this.islandMembers = islandMembers;
     }
 
     public JsonObject getSkyblockProfile()
@@ -89,5 +93,10 @@ public class ProfileDataCallback
     public long getLastSave()
     {
         return this.lastSave;
+    }
+
+    public List<String> getIslandMembers()
+    {
+        return this.islandMembers;
     }
 }

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Keyboard;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -363,6 +364,7 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
                 }
 
                 super.drawScreen(mouseX, mouseY, partialTicks);
+                List<String> displayStrings = Lists.newArrayList();
 
                 for (GuiSkyBlockProfileButton button : this.profileButtonList)
                 {
@@ -370,7 +372,15 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
 
                     if (isHover)
                     {
-                        GuiUtils.drawHoveringText(Arrays.asList(button.getLastActive(), button.getGameMode()), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.fontRendererObj);
+                        if (button.getIslandMembers().size() > 0)
+                        {
+                            displayStrings.add(EnumChatFormatting.YELLOW + "Members:");
+                            displayStrings.addAll(button.getIslandMembers());
+                            displayStrings.add("");
+                        }
+
+                        displayStrings.addAll(Lists.newArrayList(button.getLastActive(), button.getGameMode()));
+                        GuiUtils.drawHoveringText(displayStrings, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.fontRendererObj);
                         GlStateManager.disableLighting();
                     }
                 }
@@ -630,13 +640,19 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
 
             if (gameModeType != null)
             {
-                gameMode = gameModeType.getAsString().equals("ironman") ? EnumChatFormatting.GRAY + "\u2672 Iron Man" : EnumChatFormatting.RED + gameModeType.getAsString();
+                gameMode = gameModeType.getAsString().equals("ironman") ? EnumChatFormatting.GRAY + "♲ Iron Man" : EnumChatFormatting.RED + gameModeType.getAsString();
             }
+
+            List<String> islandMembers = Lists.newLinkedList();
 
             for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
             {
                 if (!entry.getKey().equals(uuid))
                 {
+                    if (!hasOneProfile)
+                    {
+                        islandMembers.add(this.getName(entry.getKey()));
+                    }
                     continue;
                 }
                 JsonElement lastSaveEle = entry.getValue().getAsJsonObject().get("last_save");
@@ -644,7 +660,7 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
             }
 
             availableProfile = profile.getAsJsonObject();
-            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
+            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
             GuiSkyBlockProfileButton button = new GuiSkyBlockProfileButton(i + 1000, this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)
@@ -754,6 +770,20 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
             this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(leftOfCursor, blockpos));
             this.waitingOnAutocomplete = true;
         }
+    }
+
+    private String getName(String uuid)
+    {
+        try
+        {
+            JsonArray array = new JsonParser().parse(IOUtils.toString(new URL("https://api.mojang.com/user/profiles/" + uuid + "/names"))).getAsJsonArray();
+            return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return EnumChatFormatting.RED + uuid;
     }
 
     public enum GuiState

@@ -58,4 +58,9 @@ public class GuiSkyBlockProfileButton extends GuiButton
     {
         return "Game Mode: " + this.callback.getGameMode();
     }
+
+    public List<String> getIslandMembers()
+    {
+        return this.callback.getIslandMembers();
+    }
 }
