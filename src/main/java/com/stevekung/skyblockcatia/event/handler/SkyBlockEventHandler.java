@@ -180,7 +180,7 @@ public class SkyBlockEventHandler
                     for (Score score1 : collection)
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = this.keepLettersAndNumbersOnly(EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName())));
+                        String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
 
                         if (scoreText.startsWith("Dragon HP: "))
                         {
@@ -202,7 +202,7 @@ public class SkyBlockEventHandler
                     for (Score score1 : collection)
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = this.keepLettersAndNumbersOnly(EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName())));
+                        String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
 
                         if (scoreText.endsWith("am"))
                         {
@@ -288,7 +288,7 @@ public class SkyBlockEventHandler
                         for (Score score1 : collection)
                         {
                             ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                            String scoreText = this.keepLettersAndNumbersOnly(EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName())));
+                            String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
 
                             if (scoreText.endsWith("'s Island"))
                             {
@@ -894,7 +894,7 @@ public class SkyBlockEventHandler
 
     private String keepLettersAndNumbersOnly(String text)
     {
-        return LETTERS_NUMBERS.matcher(text).replaceAll("");
+        return LETTERS_NUMBERS.matcher(EnumChatFormatting.getTextWithoutFormattingCodes(text)).replaceAll("");
     }
 
     /**
@@ -916,13 +916,46 @@ public class SkyBlockEventHandler
 
                 if (previousItem != null)
                 {
-                    int amount = previousInventoryMap.getOrDefault(previousItem.getDisplayName(), new ItemDropDiff(previousItem, 0)).count + previousItem.stackSize;
-                    previousInventoryMap.put(previousItem.getDisplayName(), new ItemDropDiff(previousItem, amount));
+                    int amount;
+
+                    if (previousInventoryMap.containsKey(previousItem.getDisplayName()))
+                    {
+                        amount = previousInventoryMap.get(previousItem.getDisplayName()).count + previousItem.stackSize;
+                    }
+                    else
+                    {
+                        amount = previousItem.stackSize;
+                    }
+
+                    NBTTagCompound extraAttributes = previousItem.getSubCompound("ExtraAttributes", false);
+
+                    if (extraAttributes != null)
+                    {
+                        extraAttributes = (NBTTagCompound) extraAttributes.copy();
+                    }
+                    previousInventoryMap.put(previousItem.getDisplayName(), new ItemDropDiff(previousItem, amount, extraAttributes));
                 }
+
                 if (newItem != null)
                 {
-                    int amount = newInventoryMap.getOrDefault(newItem.getDisplayName(), new ItemDropDiff(newItem, 0)).count + newItem.stackSize;
-                    newInventoryMap.put(newItem.getDisplayName(), new ItemDropDiff(newItem, amount));
+                    int amount;
+
+                    if (newInventoryMap.containsKey(newItem.getDisplayName()))
+                    {
+                        amount = newInventoryMap.get(newItem.getDisplayName()).count + newItem.stackSize;
+                    }
+                    else
+                    {
+                        amount = newItem.stackSize;
+                    }
+
+                    NBTTagCompound extraAttributes = newItem.getSubCompound("ExtraAttributes", false);
+
+                    if (extraAttributes != null)
+                    {
+                        extraAttributes = (NBTTagCompound) extraAttributes.copy();
+                    }
+                    newInventoryMap.put(newItem.getDisplayName(), new ItemDropDiff(newItem, amount, extraAttributes));
                 }
             }
 
@@ -931,9 +964,22 @@ public class SkyBlockEventHandler
 
             keySet.forEach(key ->
             {
-                ItemDropDiff previousDiff = previousInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
-                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, new ItemDropDiff(null, 0));
-                int diff = newDiff.count - previousDiff.count;
+                int previousAmount = 0;
+
+                if (previousInventoryMap.containsKey(key))
+                {
+                    previousAmount = previousInventoryMap.get(key).count;
+                }
+
+                int newAmount = 0;
+
+                if (newInventoryMap.containsKey(key))
+                {
+                    newAmount = newInventoryMap.get(key).count;
+                }
+
+                ItemDropDiff newDiff = newInventoryMap.getOrDefault(key, previousInventoryMap.get(key));
+                int diff = newAmount - previousAmount;
 
                 if (diff != 0)
                 {
@@ -1311,11 +1357,13 @@ public class SkyBlockEventHandler
     {
         final ItemStack itemStack;
         final int count;
+        final NBTTagCompound extraAttributes;
 
-        public ItemDropDiff(ItemStack itemStack, int count)
+        public ItemDropDiff(ItemStack itemStack, int count, NBTTagCompound extraAttributes)
         {
             this.itemStack = itemStack;
             this.count = count;
+            this.extraAttributes = extraAttributes;
         }
     }
 }
