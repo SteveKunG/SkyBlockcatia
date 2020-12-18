@@ -197,7 +197,6 @@ make_special_zealot_held_gold.extended_config=Make Special Zealot held Gold Bloc
 lobby_player_count.extended_config=Lobby Player Count
 display_item_ability_max_used.extended_config=Display Max Used of Item Ability
 prevent_scroll_hotbar_while_fight_dragon.extended_config=Prevent Scroll Hotbar while Fighting Dragon
-prevent_clicking_on_dummy_item.extended_config=Prevent Clicking on Dummy Item
 shortcut_button_in_inventory.extended_config=Shortcut Button in Inventory
 show_obtained_date.extended_config=Show Obtained Date
 fix_skyblock_enchant_tag.extended_config=Fix Skyblock Enchant Tag

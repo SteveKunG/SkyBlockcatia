@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
@@ -47,7 +46,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 public abstract class GuiContainerMixin extends GuiScreen implements IExtendedChatGui
 {
     private final GuiContainer that = (GuiContainer) (Object) this;
-    private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -309,37 +307,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         {
             ItemStack itemStack = slot.getStack();
 
-            if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && itemStack != null)
-            {
-                if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("ExtraAttributes"))
-                {
-                    String id = itemStack.getTagCompound().getCompoundTag("ExtraAttributes").getString("id");
-
-                    if (id.equals("SKYBLOCK_MENU"))
-                    {
-                        this.mc.playerController.windowClick(this.that.inventorySlots.windowId, slotId, 2, 3, this.mc.thePlayer);
-                        info.cancel();
-                    }
-                }
-            }
-
             if (this.that instanceof GuiChest)
             {
                 GuiChest chest = (GuiChest)this.that;
 
-                if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && itemStack != null)
+                if (itemStack != null)
                 {
-                    String name = itemStack.getDisplayName();
-
-                    if (this.ignoreNullItem(itemStack, IGNORE_ITEMS) && !GuiScreenUtils.contains(GuiScreenUtils.WHITELIST, chest.lowerChestInventory))
-                    {
-                        info.cancel();
-                    }
-                    if (clickedButton == 0 && clickType == 0 && GuiScreenUtils.isIgnoreDummy(chest.lowerChestInventory, name))
-                    {
-                        this.mc.playerController.windowClick(this.that.inventorySlots.windowId, slotId, 2, 3, this.mc.thePlayer);
-                        info.cancel();
-                    }
                     if (clickedButton == 2 && clickType == 3 && GuiScreenUtils.canViewSeller(chest.lowerChestInventory))
                     {
                         if (itemStack.hasTagCompound())
@@ -584,12 +557,6 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
             this.fandomUrl = null;
             this.mc.displayGuiScreen(this);
         }
-    }
-
-    private boolean ignoreNullItem(ItemStack itemStack, List<String> ignores)
-    {
-        String displayName = EnumChatFormatting.getTextWithoutFormattingCodes(itemStack.getDisplayName());
-        return ignores.stream().anyMatch(name -> displayName.equals(name));
     }
 
     private void drawBids(Slot slot)
