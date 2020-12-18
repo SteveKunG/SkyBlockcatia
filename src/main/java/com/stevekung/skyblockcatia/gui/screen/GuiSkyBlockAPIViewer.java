@@ -2299,7 +2299,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         SBCollections dummyCollection = new SBCollections(null, null, -1, -1);
 
-        if (collections != null)
+        if (collections != null && collections.getAsJsonObject().entrySet().size() > 0)
         {
             List<SBCollections> farming = new ArrayList<>();
             List<SBCollections> mining = new ArrayList<>();
