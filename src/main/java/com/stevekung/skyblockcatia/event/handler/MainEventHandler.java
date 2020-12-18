@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.GuiDisconnectConfirmation;
 import com.stevekung.skyblockcatia.gui.GuiMojangStatusChecker;
 import com.stevekung.skyblockcatia.gui.config.GuiExtendedConfig;
@@ -233,7 +232,7 @@ public class MainEventHandler
         if (event.gui instanceof GuiMainMenu)
         {
             height = event.gui.height / 4 + 48;
-            event.buttonList.add(new GuiButtonMojangStatus(200, width + 104, height + (SkyBlockcatiaMod.isIngameAccountSwitcherLoaded ? 63 : 84)));
+            event.buttonList.add(new GuiButtonMojangStatus(200, width + 104, height + (CompatibilityUtils.isIngameAccountSwitcherLoaded ? 63 : 84)));
         }
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -328,7 +327,7 @@ public class MainEventHandler
         {
             event.buttonList.removeIf(button -> button.id == 107);
         }
-        if (!SkyBlockcatiaMod.isPatcherLoaded && event.gui instanceof GuiMainMenu)
+        if (!CompatibilityUtils.isPatcherLoaded && event.gui instanceof GuiMainMenu)
         {
             int j = event.gui.height / 4 + 48;
             event.buttonList.removeIf(button -> button.id == 14 || button.id == 6);

@@ -8,9 +8,9 @@ import java.util.*;
 import com.stevekung.skyblockcatia.config.Equipments;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.config.StatusEffects;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
 import net.minecraft.client.Minecraft;
@@ -197,7 +197,7 @@ public class InfoOverlays
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
+            if (CompatibilityUtils.isSkyblockAddonsLoaded)
             {
                 StringBuilder builder = new StringBuilder();
 

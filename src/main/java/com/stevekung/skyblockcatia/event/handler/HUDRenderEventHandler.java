@@ -8,7 +8,6 @@ import com.stevekung.skyblockcatia.config.Equipments;
 import com.stevekung.skyblockcatia.config.PlayerCountMode;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.event.GrapplingHookEvent;
 import com.stevekung.skyblockcatia.gui.config.GuiRenderPreview;
@@ -150,7 +149,7 @@ public class HUDRenderEventHandler
                 return;
             }
 
-            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && this.mc.thePlayer.getCurrentEquippedItem() != null)
+            if (CompatibilityUtils.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && this.mc.thePlayer.getCurrentEquippedItem() != null)
             {
                 ItemStack itemStack = this.mc.thePlayer.getCurrentEquippedItem();
 

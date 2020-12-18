@@ -28,7 +28,6 @@ import com.google.common.primitives.Ints;
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 import com.stevekung.skyblockcatia.gui.widget.GuiErrorInfoScrollingList;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonItem;
@@ -623,7 +622,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     String itemId = extraAttrib.getString("id");
 
-                    if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
+                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
                     {
                         return;
                     }
@@ -631,7 +630,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
             }
         }
-        if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
+        if (CompatibilityUtils.isSkyblockAddonsLoaded)
         {
             SBABackpack.INSTANCE.keyTyped(keyCode);
         }
@@ -817,7 +816,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         {
                             this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
                         }
-                        if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
+                        if (CompatibilityUtils.isSkyblockAddonsLoaded)
                         {
                             SBABackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
                         }
@@ -902,7 +901,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         int i = Mouse.getEventDWheel();
         boolean scroll = true;
 
-        if (SkyBlockcatiaMod.isTextOverflowScrollLoaded)
+        if (CompatibilityUtils.isTextOverflowScrollLoaded)
         {
             scroll = !TooltipOverflow.INSTANCE.checkCanScroll();
         }
@@ -1379,7 +1378,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         {
             return;
         }
-        if (SkyBlockcatiaMod.isSkyblockAddonsLoaded)
+        if (CompatibilityUtils.isSkyblockAddonsLoaded)
         {
             SBABackpack.INSTANCE.clearRenderBackpack();
         }
@@ -1487,7 +1486,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     this.theSlot = slot;
 
-                    if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
+                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
                     {
                         continue;
                     }

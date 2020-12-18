@@ -10,6 +10,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -117,7 +118,7 @@ public class TileEntityEnchantedSkullRenderer
 
         model.render(null, 0.0F, 0.0F, 0.0F, rotation, 0.0F, 0.0625F);
 
-        if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && enchanted)
+        if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && enchanted && !CompatibilityUtils.INSTANCE.hasDisableEnchantmentGlint())
         {
             GlStateManager.pushMatrix();
             this.renderGlint(entity, mc, model, rotation, partialTicks);

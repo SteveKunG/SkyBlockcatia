@@ -26,7 +26,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -59,13 +58,6 @@ public class SkyBlockcatiaMod
 
     public static final File profile = new File(SkyBlockcatiaSettings.userDir, "profile.txt");
     private static final Splitter COLON_SPLITTER = Splitter.on(':');
-    public static boolean isSkyblockAddonsLoaded = Loader.isModLoaded("skyblockaddons");
-    public static boolean isIngameAccountSwitcherLoaded = Loader.isModLoaded("IngameAccountSwitcher");
-    public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
-    public static boolean isPatcherLoaded = Loader.isModLoaded("patcher");
-    public static boolean isTextOverflowScrollLoaded = Loader.isModLoaded("text_overflow_scroll");
-    public static boolean isNotEnoughUpdatesLoaded = Loader.isModLoaded("notenoughupdates");
-
     public static final List<String> SUPPORTERS_NAME = new CopyOnWriteArrayList<>();
     public static boolean isDevelopment;
 
