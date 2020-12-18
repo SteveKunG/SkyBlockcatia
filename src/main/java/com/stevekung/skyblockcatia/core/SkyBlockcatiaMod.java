@@ -13,10 +13,7 @@ import com.google.common.io.Files;
 import com.stevekung.skyblockcatia.command.*;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
-import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
-import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.event.handler.*;
 import com.stevekung.skyblockcatia.gui.GuiChatExtended;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
@@ -114,6 +111,7 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
         CommonUtils.registerEventHandler(new SkyBlockEventHandler());
         CommonUtils.registerEventHandler(new ClientEventHandler());
+        CommonUtils.registerEventHandler(new ToastTestEventHandler());
 
         ClientUtils.registerCommand(new CommandMojangStatusCheck());
         ClientUtils.registerCommand(new CommandSkyBlockcatia());

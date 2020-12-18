@@ -17,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.config.ToastMode;
@@ -90,7 +91,7 @@ public class SkyBlockEventHandler
     private static final Pattern COINS_MYTHOS_PATTERN = Pattern.compile("Wow! You dug out (?<coin>[0-9,]+) coins!");
 
     // Bank Interest/Allowance
-    private static final Pattern BANK_INTEREST_PATTERN = Pattern.compile("Since you've been away you earned (?<coin>[0-9,]+) coins as interest in your personal bank account!");
+    private static final Pattern BANK_INTEREST_PATTERN = Pattern.compile("Since you've been away you earned (?<coin>[0-9,]+) coins");
     private static final Pattern ALLOWANCE_PATTERN = Pattern.compile("ALLOWANCE! You earned (?<coin>[0-9,]+) coins!");
 
     // Dungeons
@@ -468,11 +469,11 @@ public class SkyBlockEventHandler
                         }
                     }
 
-                    if (bankInterestPattern.matches())
+                    if (bankInterestPattern.find())
                     {
                         String coin = bankInterestPattern.group("coin");
                         ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_3.getId(), CoinType.TYPE_3.getValue());
-                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.BANK_INTEREST, Integer.valueOf(coin.replace(",", "")), coinSkull, ToastUtils.DropType.BANK_INTEREST);
+                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.BANK_INTEREST, Integer.parseInt(coin.replace(",", "")), coinSkull, ToastUtils.DropType.BANK_INTEREST);
                         LoggerIN.logToast(formattedMessage);
                         cancelMessage = true;
                     }
@@ -480,7 +481,7 @@ public class SkyBlockEventHandler
                     {
                         String coin = allowancePattern.group("coin");
                         ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_3.getId(), CoinType.TYPE_3.getValue());
-                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.ALLOWANCE, Integer.valueOf(coin.replace(",", "")), coinSkull, ToastUtils.DropType.ALLOWANCE);
+                        NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.ALLOWANCE, Integer.parseInt(coin.replace(",", "")), coinSkull, ToastUtils.DropType.ALLOWANCE);
                         LoggerIN.logToast(formattedMessage);
                         cancelMessage = true;
                     }
@@ -577,7 +578,7 @@ public class SkyBlockEventHandler
                         {
                             String coin = coinsMythosPattern.group("coin");
                             ItemStack coinSkull = RenderUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue());
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.MYTHOS_COINS, Integer.valueOf(coin.replace(",", "")), coinSkull, ToastUtils.DropType.MYTHOS_COINS);
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.MYTHOS_COINS, Integer.parseInt(coin.replace(",", "")), coinSkull, ToastUtils.DropType.MYTHOS_COINS);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
@@ -902,8 +903,8 @@ public class SkyBlockEventHandler
     private void getInventoryDifference(ItemStack[] currentInventory)
     {
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
-        Map<String, ItemDropDiff> previousInventoryMap = new HashMap<>();
-        Map<String, ItemDropDiff> newInventoryMap = new HashMap<>();
+        Map<String, ItemDropDiff> previousInventoryMap = Maps.newHashMap();
+        Map<String, ItemDropDiff> newInventoryMap = Maps.newHashMap();
         SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.removeIf(this::removeUndisplayedToast);
 
         if (this.previousInventory != null)
