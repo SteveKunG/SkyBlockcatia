@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -644,14 +645,24 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
             }
 
             List<String> islandMembers = Lists.newLinkedList();
+            Set<Entry<String, JsonElement>> membersEntry = profile.getAsJsonObject().get("members").getAsJsonObject().entrySet();
+            int memberSize = 1;
 
-            for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
+            for (Map.Entry<String, JsonElement> entry : membersEntry)
             {
                 if (!entry.getKey().equals(uuid))
                 {
+                    memberSize++;
+
                     if (!hasOneProfile)
                     {
                         islandMembers.add(this.getName(entry.getKey()));
+
+                        if (memberSize > 5)
+                        {
+                            islandMembers.add("and " + (membersEntry.size() - memberSize) + " more...");
+                            break;
+                        }
                     }
                     continue;
                 }
