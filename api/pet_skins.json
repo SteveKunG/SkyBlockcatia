@@ -1,154 +1,154 @@
 [
     {
         "skin": "ENDERMAN",
-        "displayName": "§5Spooky Enderman",
+        "displayName": "Spooky Enderman",
         "color": "dark_purple",
         "uuid": "62d9011f-9a1c-3673-b60e-d38c5ce1e4af",
         "texture": "ea84cc8818c293484fdaafc8fa2f0bf39e55733a247d68023df2c6c6b9b671d0"
     },
     {
         "skin": "RABBIT",
-        "displayName": "§5Pretty Rabbit",
+        "displayName": "Pretty Rabbit",
         "color": "dark_purple",
         "uuid": "6e4a93dc-c051-33f0-ae3d-17c29da03219",
         "texture": "a34631d940fddb689ddef6a3b352c50220c460dba05cd18dc83192b59dc647f8"
     },
     {
         "skin": "ROCK_COOL",
-        "displayName": "§9Cool Rock",
+        "displayName": "Cool Rock",
         "color": "blue",
         "uuid": "0cee5ea7-7af9-30bc-8c91-222ccfc4bae0",
         "texture": "fefcdbb7d95502acc1ae35a32a40ce4dec8f4c9f0da26c9d9fe7c2c3eb748f6"
     },
     {
         "skin": "ROCK_SMILE",
-        "displayName": "§9Smiling Rock",
+        "displayName": "Smiling Rock",
         "color": "blue",
         "uuid": "67981030-6f1c-3348-81c5-a3d572617693",
         "texture": "713c8b2916a275db4c1762cf5f13d7b95b91d60baf5164a447d6efa7704cf11b"
     },
     {
         "skin": "ROCK_THINKING",
-        "displayName": "§9Thinking Rock",
+        "displayName": "Thinking Rock",
         "color": "blue",
         "uuid": "9562f758-0d5d-393c-abc1-482a2067b664",
         "texture": "dd2f781f03c365bbc5dd1e7186ab38dc69465e836c9fe066a9a844f34a4da92"
     },
     {
         "skin": "ROCK_EMBARRASSED",
-        "displayName": "§9Embarrassed Rock",
+        "displayName": "Embarrassed Rock",
         "color": "blue",
         "uuid": "45ff4431-e837-38be-ac08-8cfc9ad09753",
         "texture": "27ff34992e66599e8529008be3fb577cb0ab545294253e25a0cc988e416c849"
     },
     {
         "skin": "ROCK_LAUGH",
-        "displayName": "§9Laughing Rock",
+        "displayName": "Laughing Rock",
         "color": "blue",
         "uuid": "bec85db9-fd91-396d-861e-8ec67ac1eda9",
         "texture": "8cc1ef513d5f616675242174acde7b9d6259a47c4fe8f6e4b6e20920319d7073"
     },
     {
         "skin": "ROCK_DERP",
-        "displayName": "§9Derpy Rock",
+        "displayName": "Derpy Rock",
         "color": "blue",
         "uuid": "7882fc9d-c633-3e5a-8105-8ea45cb6d9ce",
         "texture": "c4f89fbd12c209f7f26c1f34a1bd7f47635814759c09688dd212b205c73a8c02"
     },
     {
         "skin": "GUARDIAN",
-        "displayName": "§5Watcher Guardian",
+        "displayName": "Watcher Guardian",
         "color": "dark_purple",
         "uuid": "36e3a30b-fa57-3aa6-ab40-76565a7ec96f",
         "texture": "37cc76e7af29f5f3fbfd6ece794160811eff96f753459fa61d7ad176a064e3c5"
     },
     {
         "skin": "TIGER_TWILIGHT",
-        "displayName": "§dTwilight Tiger",
+        "displayName": "Twilight Tiger",
         "color": "light_purple",
         "uuid": "76dba2c8-4555-317e-b3f5-550d29427354",
         "texture": "896211dc599368dbd9056c0116ab61063991db793be93066a858eb4e9ce56438"
     },
     {
         "skin": "SHEEP_PINK",
-        "displayName": "§aPink Sheep",
+        "displayName": "Pink Sheep",
         "color": "green",
         "uuid": "8899dc3a-c587-3d3e-8c1a-aa0fba9c38d5",
         "texture": "afa7747684dcb96192d90342cea62742ec363da07cb5e6e25eecec888cd2076"
     },
     {
         "skin": "SHEEP_PURPLE",
-        "displayName": "§aPurple Sheep",
+        "displayName": "Purple Sheep",
         "color": "green",
         "uuid": "98d9a319-e671-34a0-b1da-a912ef421fc9",
         "texture": "99a88cf7dd33063587c6b540e6130abc5d07f1a65c47573ab3c1ad3ccec8857f"
     },
     {
         "skin": "SHEEP_WHITE",
-        "displayName": "§aWhite Sheep",
+        "displayName": "White Sheep",
         "color": "green",
         "uuid": "354676d5-1529-327c-b06e-899b92132403",
         "texture": "b92a1a5c325f25f7438a0abb4f86ba6cf75552d02c7349a7292981459b31d2f7"
     },
     {
         "skin": "SHEEP_LIGHT_BLUE",
-        "displayName": "§aLight Blue Sheep",
+        "displayName": "Light Blue Sheep",
         "color": "green",
         "uuid": "5ee3925d-b768-331c-af39-d00e1363aa1f",
         "texture": "722220de1a863bc5d9b9e7a6a3b03214c9f3d698ed3fe0d28220f3b93b7685c5"
     },
     {
         "skin": "SHEEP_LIGHT_GREEN",
-        "displayName": "§aLime Sheep",
+        "displayName": "Lime Sheep",
         "color": "green",
         "uuid": "235159c0-4c38-356f-8a2b-519b15d03730",
         "texture": "cf183ec2fe58faa43e568419b7a0dc446ece4ea0be52ec784c94e1d74b75939d"
     },
     {
         "skin": "SHEEP_BLACK",
-        "displayName": "§aBlack Sheep",
+        "displayName": "Black Sheep",
         "color": "green",
         "uuid": "a44786f8-b0f4-3e43-ad1b-64956113adec",
         "texture": "aa9dcda642a807cd2daa4aa6be87cef96e08a8c8f5cec2657dda4266c6a884c2"
     },
     {
         "skin": "WITHER",
-        "displayName": "§5Dark Wither Skeleton",
+        "displayName": "Dark Wither Skeleton",
         "color": "dark_purple",
         "uuid": "f336e789-b720-36ff-9326-71c8bf135db4",
         "texture": "224c2d14a0219af5ccfcaa36e8a333e271724ed61276611f9529e16c10273a0d"
     },
     {
         "skin": "SILVERFISH",
-        "displayName": "§5Fortified Silverfish",
+        "displayName": "Fortified Silverfish",
         "color": "dark_purple",
         "uuid": "ee81d609-06c4-38e7-97e5-dd3ef196a4ba",
         "texture": "d8552ff591042c4a38f8ba0626784ae28c4545a97d423fd9037c341035593273"
     },
     {
         "skin": "ELEPHANT_PINK",
-        "displayName": "§9Pink Elephant",
+        "displayName": "Pink Elephant",
         "color": "blue",
         "uuid": "800b4068-e32d-3528-b3d1-a7b8157eb790",
         "texture": "570eef474ec0e56cc34c2307eaa39f024612f8cd7248e7d5b14169ebd307c742"
     },
     {
         "skin": "ELEPHANT_BLUE",
-        "displayName": "§9Blue Elephant",
+        "displayName": "Blue Elephant",
         "color": "blue",
         "uuid": "2d6175b3-b23f-3a26-bbb5-a5149b63d0df",
         "texture": "4b62969c005815d0409136380febc5ac468aaba9bda4db80954fa5426ee0a323"
     },
     {
         "skin": "ELEPHANT_ORANGE",
-        "displayName": "§9Orange Elephant",
+        "displayName": "Orange Elephant",
         "color": "blue",
         "uuid": "69a9731d-621a-36db-bb64-e63dd541f7ea",
         "texture": "554a34a80c474206d3700b8fced6b44fab0b0ed0b05c1293ff0c5d86eda251d1"
     },
     {
         "skin": "YETI_GROWN_UP",
-        "displayName": "§5Grown-up Baby Yeti",
+        "displayName": "Grown-up Baby Yeti",
         "color": "dark_purple",
         "uuid": "3a80504c-0993-3be5-92cd-2200f94a72b6",
         "texture": "f5f29a975529276d916fc67998833c11ee178ff21e5941afdfb0fa7010f8374e"
