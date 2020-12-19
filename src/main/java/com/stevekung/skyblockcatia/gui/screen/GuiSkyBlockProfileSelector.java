@@ -657,10 +657,11 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
                     if (!hasOneProfile)
                     {
                         islandMembers.add(this.getName(entry.getKey()));
+                        int allMembers = membersEntry.size() - memberSize;
 
-                        if (memberSize > 5)
+                        if (memberSize > 5 && allMembers > 0)
                         {
-                            islandMembers.add("and " + (membersEntry.size() - memberSize) + " more...");
+                            islandMembers.add(EnumChatFormatting.ITALIC + "and " + allMembers + " more...");
                             break;
                         }
                     }
