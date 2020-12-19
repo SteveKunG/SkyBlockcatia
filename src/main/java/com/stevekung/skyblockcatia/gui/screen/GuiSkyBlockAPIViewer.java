@@ -2741,7 +2741,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                             if (skin.equals(petSkin.getSkin()))
                             {
                                 itemStack = RenderUtils.setSkullSkin(itemStack.copy(), petSkin.getUUID(), petSkin.getTexture());
-                                skinName = petSkin.getName();
+                                skinName = petSkin.getColor() + petSkin.getName();
                                 break;
                             }
                         }

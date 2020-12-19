@@ -31,13 +31,15 @@ public class SBPets
         private final String skin;
         @SerializedName("displayName")
         private final String name;
+        private final String color;
         private final String uuid;
         private final String texture;
 
-        public PetSkin(String skin, String name, String uuid, String texture)
+        public PetSkin(String skin, String name, String color, String uuid, String texture)
         {
             this.skin = skin;
             this.name = name;
+            this.color = color;
             this.uuid = uuid;
             this.texture = texture;
         }
@@ -50,6 +52,11 @@ public class SBPets
         public String getName()
         {
             return this.name;
+        }
+
+        public EnumChatFormatting getColor()
+        {
+            return EnumChatFormatting.getValueByName(this.color);
         }
 
         public String getUUID()
