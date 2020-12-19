@@ -20,10 +20,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Mouse;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
@@ -161,6 +158,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private int petScore;
     private int activeSlayerTier;
     private SBSlayers.Type activeSlayerType;
+    private int farmingLevelCap;
 
     // Info & Inventory
     private static final int SIZE = 36;
@@ -845,7 +843,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                             int y = height + 12;
                             int barY = y + 20 + height * i;
                             int textY = y + height * i;
-                            this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
+                            String extraCap = "";
+
+                            if (info.getName().equals("Farming") && this.farmingLevelCap > 0)
+                            {
+                                extraCap = EnumChatFormatting.GOLD + " (+" + this.farmingLevelCap + ")";
+                            }
+
+                            this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit(), extraCap);
                             ++i;
                         }
 
@@ -857,7 +862,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                             int y = height + 12;
                             int barY = y + 20 + height * i;
                             int textY = y + height * i;
-                            this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit());
+                            this.renderSkillBar(info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit(), "");
                             ++i;
                         }
 
@@ -1422,7 +1427,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     }
 
     // Render
-    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit)
+    private void renderSkillBar(String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit, String extra)
     {
         ColorUtils.RGB color = ColorUtils.stringToRGB("128,255,0");
 
@@ -1444,7 +1449,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 Gui.drawModalRectWithCustomSizedTexture(xBar, yBar, 0, 5, filled, 5, 91, 10);
             }
 
-            this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.GRAY + name + (reachLimit ? EnumChatFormatting.GOLD : EnumChatFormatting.YELLOW) + " " + currentLvl, xText, yText, 16777215);
+            this.drawCenteredString(this.fontRendererObj, EnumChatFormatting.GRAY + name + (reachLimit ? EnumChatFormatting.GOLD : EnumChatFormatting.YELLOW) + " " + currentLvl + extra, xText, yText, 16777215);
 
             if (reachLimit)
             {
@@ -1901,6 +1906,46 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
         this.loadingApi = false;
         this.showArmorButton.visible = true;
+    }
+
+    private List<SkyBlockInfo> getJacobData(JsonElement jacob)
+    {
+        List<SkyBlockInfo> info = Lists.newArrayList();
+        JsonElement medals = jacob.getAsJsonObject().get("medals_inv");
+        JsonElement perks = jacob.getAsJsonObject().get("perks");
+
+        if (medals.getAsJsonObject().entrySet().size() > 0)
+        {
+            String gold = ColorUtils.stringToRGB("255,215,0").toColoredFont();
+            String silver = ColorUtils.stringToRGB("192,192,192").toColoredFont();
+            String bronze = ColorUtils.stringToRGB("205,127,50").toColoredFont();
+
+            if (medals.getAsJsonObject().get("gold") != null)
+            {
+                info.add(new SkyBlockInfo(gold + "Gold Medal", gold + medals.getAsJsonObject().get("gold").getAsString()));
+            }
+            if (medals.getAsJsonObject().get("silver") != null)
+            {
+                info.add(new SkyBlockInfo(silver + "Silver Medal", silver + medals.getAsJsonObject().get("silver").getAsString()));
+            }
+            if (medals.getAsJsonObject().get("bronze") != null)
+            {
+                info.add(new SkyBlockInfo(bronze + "Bronze Medal", bronze + medals.getAsJsonObject().get("bronze").getAsString()));
+            }
+        }
+        if (perks.getAsJsonObject().entrySet().size() > 0)
+        {
+            if (perks.getAsJsonObject().get("double_drops") != null)
+            {
+                info.add(new SkyBlockInfo("Double Drops Perk", perks.getAsJsonObject().get("double_drops").getAsInt() * 2 + "%"));
+            }
+            if (perks.getAsJsonObject().get("farming_level_cap") != null)
+            {
+                this.farmingLevelCap = perks.getAsJsonObject().get("farming_level_cap").getAsInt();
+                info.add(new SkyBlockInfo("Farming Level Cap", perks.getAsJsonObject().get("farming_level_cap").getAsString()));
+            }
+        }
+        return info;
     }
 
     private List<SkyBlockInfo> getCommunityUpgrades(CommunityUpgrades communityUpgrades)
@@ -3176,6 +3221,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         JsonElement purse = currentProfile.get("coin_purse");
         JsonElement lastSave = currentProfile.get("last_save");
         JsonElement firstJoin = currentProfile.get("first_join");
+        JsonElement jacob = currentProfile.get("jacob2");
         int deathCounts = 0;
         double coins = 0.0D;
         long lastSaveMillis = -1;
@@ -3272,6 +3318,18 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 this.infoList.add(new SkyBlockInfo("", ""));
                 this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Community Upgrades", ""));
                 this.infoList.addAll(comm);
+            }
+        }
+
+        if (jacob != null)
+        {
+            List<SkyBlockInfo> jacobInfo = this.getJacobData(jacob);
+
+            if (jacobInfo.size() > 0)
+            {
+                this.infoList.add(new SkyBlockInfo("", ""));
+                this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Farming Contest", ""));
+                this.infoList.addAll(jacobInfo);
             }
         }
 
