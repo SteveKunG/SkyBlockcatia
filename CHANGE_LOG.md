@@ -1,10 +1,13 @@
 # Change Log
 
-* + Added screen check for toggle sprint/sneak, Closed #42
-* + Added save function to Forge Config on press ESC
-* + Added more short commands ('sbc' and 'sbcatia')
-* * Add more details for missing API Key
-* * Revert default custom color to white
-* * Fixed incompatible with PlayerAPI/RenderPlayerAPI/OldAnimation Closed #41
-* * Fixed incompatible with glint colorizer
-* - Removed 1.15 glint color
+* + Added Candy Sacks support
+* + Added Jacob Farming stats to API Viewer
+* + Skyblock Profile Selectors now display island members
+* * Rewrite Numeric Toast
+* * Prevent exception from InputEvent
+* * Enabled mixin 'verbose' for debugging
+* * Fixed Patcher incompatibility with disable enchanted armor glint
+* * Fixed incompatible with Better Sprinting, Closed #48
+* * Fixed empty collections in API Viewer
+* - Removed Prevent Clicking on Dummy Item config
+* - Removed 'minVersion' in mixin
