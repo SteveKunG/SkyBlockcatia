@@ -1,12 +1,24 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
+import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.Style;
 
 public class SBSkills
 {
+    public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
+    {
+        ItemStack itemStack = skill.getItemStack();
+        itemStack.setDisplayName(TextComponentUtils.component(exp + " " + skill.getName() + " XP").setStyle(Style.EMPTY.setColor(Color.fromHex(ColorUtils.toHex(255, 255, 85)))));
+        return itemStack;
+    }
+
     public enum Type
     {
         FARMING("Farming", Items.DIAMOND_HOE),

@@ -183,7 +183,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private String skillAvg;
     private int petScore;
     private int activeSlayerTier;
-    private SlayerType activeSlayerType;
+    private SBSlayers.Type activeSlayerType;
 
     // Info & Inventory
     private static final int SIZE = 36;
@@ -718,7 +718,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                         if (this.activeSlayerType != null)
                         {
                             AbstractGui.drawString(matrixStack, this.font, TextFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
-                            AbstractGui.drawString(matrixStack, this.font, TextFormatting.YELLOW + this.activeSlayerType.name + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
+                            AbstractGui.drawString(matrixStack, this.font, TextFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
                         }
                     }
                     else if (this.currentSlot instanceof CraftedMinionsList)
@@ -1564,7 +1564,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (catacombsExp != null)
             {
-                SBSkills.Info info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), DungeonSkillType.THE_CATACOMBS);
+                SBSkills.Info info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), SBDungeons.Type.THE_CATACOMBS);
                 this.catacombsLevel = info.getCurrentLvl();
                 this.dungeonData.add(TextFormatting.RED + info.getName() + TextFormatting.RESET + ", Level: " + info.getCurrentLvl() + " " + (int)Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
                 i++;
@@ -1588,7 +1588,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 if (classExp != null)
                 {
-                    SBSkills.Info info2 = this.calculateDungeonSkill(classExp.getAsDouble(), DungeonSkillType.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
+                    SBSkills.Info info2 = this.calculateDungeonSkill(classExp.getAsDouble(), SBDungeons.Type.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
                     this.dungeonData.add(TextFormatting.RED + info2.getName() + TextFormatting.RESET + ", Level: " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
                     i++;
                 }
@@ -1611,7 +1611,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.data.setHasDungeons(dungeon != null && i > 0);
     }
 
-    private SBSkills.Info calculateDungeonSkill(double playerXp, DungeonSkillType type)
+    private SBSkills.Info calculateDungeonSkill(double playerXp, SBDungeons.Type type)
     {
         ExpProgress[] progress = ExpProgress.DUNGEON;
         int xpRequired = 0;
@@ -1653,7 +1653,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             currentXp = xpRequired - xpToNextLvl;
             currentLvl = progress.length - 1;
         }
-        return new SBSkills.Info(type.name, currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
+        return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
     }
 
     private void getBankHistories(JsonObject banking)
@@ -2106,11 +2106,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 if (count > 1)
                 {
-                    if (this.matchSackId(itemId, SlayerDrops.values()))
+                    if (this.matchSackId(itemId, SBSlayers.Drops.values()))
                     {
                         this.checkSlayerSack(itemId, count, sacks);
                     }
-                    else if (this.matchSackId(itemId, DungeonDrops.values()))
+                    else if (this.matchSackId(itemId, SBDungeons.Drops.values()))
                     {
                         this.checkDungeonSack(itemId, count, sacks);
                     }
@@ -2140,8 +2140,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         try
         {
-            SlayerDrops slayerDrops = SlayerDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
-            this.addSackItemStackCount(slayerDrops.baseItem, count, slayerDrops.displayName, true, sacks);
+            SBSlayers.Drops slayerDrops = SBSlayers.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
+            this.addSackItemStackCount(slayerDrops.getBaseItem(), count, slayerDrops.getDisplayName(), true, sacks);
         }
         catch (Exception e)
         {
@@ -2153,8 +2153,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         try
         {
-            DungeonDrops dungeonDrops = DungeonDrops.valueOf(itemId.toUpperCase(Locale.ROOT));
-            this.addSackItemStackCount(dungeonDrops.baseItem, count, dungeonDrops.displayName, dungeonDrops.enchanted, sacks);
+            SBDungeons.Drops dungeonDrops = SBDungeons.Drops.valueOf(itemId.toUpperCase(Locale.ROOT));
+            this.addSackItemStackCount(dungeonDrops.getBaseItem(), count, dungeonDrops.getDisplayName(), dungeonDrops.isEnchanted(), sacks);
         }
         catch (Exception e)
         {
@@ -3277,7 +3277,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             try
             {
-                this.activeSlayerType = SlayerType.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ROOT));
+                this.activeSlayerType = SBSlayers.Type.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ROOT));
                 this.activeSlayerTier = 1 + slayerQuest.getAsJsonObject().get("tier").getAsInt();
             }
             catch (Exception e)
@@ -3288,9 +3288,9 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (slayerBosses != null)
         {
-            List<SkyBlockSlayerInfo> zombie = this.getSlayer(slayerBosses, SlayerType.ZOMBIE);
-            List<SkyBlockSlayerInfo> spider = this.getSlayer(slayerBosses, SlayerType.SPIDER);
-            List<SkyBlockSlayerInfo> wolf = this.getSlayer(slayerBosses, SlayerType.WOLF);
+            List<SkyBlockSlayerInfo> zombie = this.getSlayer(slayerBosses, SBSlayers.Type.ZOMBIE);
+            List<SkyBlockSlayerInfo> spider = this.getSlayer(slayerBosses, SBSlayers.Type.SPIDER);
+            List<SkyBlockSlayerInfo> wolf = this.getSlayer(slayerBosses, SBSlayers.Type.WOLF);
 
             if (!zombie.isEmpty())
             {
@@ -3348,10 +3348,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SlayerType type)
+    private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SBSlayers.Type type)
     {
         List<SkyBlockSlayerInfo> list = Lists.newArrayList();
-        ExpProgress[] progress = type.progress;
+        ExpProgress[] progress = type.getProgress();
         JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase(Locale.ROOT));
 
         if (slayer != null)
@@ -3396,7 +3396,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 this.setSlayerSkillLevel(type, slayerLvl);
 
-                list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + type.name + " Slayer: " + (reachLimit ? TextFormatting.GOLD : TextFormatting.YELLOW) + "LVL " + slayerLvl));
+                list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + type.getName() + " Slayer: " + (reachLimit ? TextFormatting.GOLD : TextFormatting.YELLOW) + "LVL " + slayerLvl));
                 list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "EXP: " + TextFormatting.LIGHT_PURPLE + (xpToNextLvl == 0 ? NumberUtils.NUMBER_FORMAT.format(playerSlayerXp) : NumberUtils.NUMBER_FORMAT.format(playerSlayerXp) + TextFormatting.DARK_PURPLE + "/" + TextFormatting.LIGHT_PURPLE + NumberUtils.NUMBER_FORMAT.format(xpRequired))));
 
                 if (xpToNextLvl != 0)
@@ -3404,7 +3404,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     list.add(new SkyBlockSlayerInfo(TextFormatting.GRAY + "XP to " + TextFormatting.YELLOW + "LVL " + levelToCheck + ": " + TextFormatting.LIGHT_PURPLE + NumberUtils.NUMBER_FORMAT.format(xpToNextLvl)));
                 }
 
-                list.add(SkyBlockSlayerInfo.createMobAndXp(type.name, playerSlayerXp + "," + xpRequired + "," + xpToNextLvl, reachLimit));
+                list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl, reachLimit));
                 int amount = 0;
 
                 for (int i = 1; i <= 4; i++)
@@ -3424,7 +3424,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         return Collections.emptyList();
     }
 
-    private void setSlayerSkillLevel(SlayerType type, int currentLevel)
+    private void setSlayerSkillLevel(SBSlayers.Type type, int currentLevel)
     {
         switch (type)
         {
@@ -4082,74 +4082,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.font.func_243246_a(matrixStack, craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
-        }
-    }
-
-    enum DungeonSkillType
-    {
-        HEALER("Healer"),
-        MAGE("Mage"),
-        BERSERK("Berserk"),
-        ARCHER("Archer"),
-        TANK("Tank"),
-        THE_CATACOMBS("The Catacombs");
-
-        final String name;
-
-        DungeonSkillType(String name)
-        {
-            this.name = name;
-        }
-    }
-
-    enum SlayerType
-    {
-        ZOMBIE("Zombie", ExpProgress.ZOMBIE_SLAYER),
-        SPIDER("Spider", ExpProgress.SPIDER_SLAYER),
-        WOLF("Wolf", ExpProgress.WOLF_SLAYER);
-
-        final String name;
-        final ExpProgress[] progress;
-
-        SlayerType(String name, ExpProgress[] progress)
-        {
-            this.name = name;
-            this.progress = progress;
-        }
-    }
-
-    enum SlayerDrops
-    {
-        TARANTULA_WEB(TextComponentUtils.formatted("Tarantula Web", TextFormatting.GREEN), Items.STRING),
-        REVENANT_FLESH(TextComponentUtils.formatted("Revenant Flesh", TextFormatting.GREEN), Items.ROTTEN_FLESH),
-        WOLF_TOOTH(TextComponentUtils.formatted("Wolf Tooth", TextFormatting.GREEN), Items.GHAST_TEAR);
-
-        final ITextComponent displayName;
-        final IItemProvider baseItem;
-
-        SlayerDrops(ITextComponent displayName, IItemProvider baseItem)
-        {
-            this.displayName = displayName;
-            this.baseItem = baseItem;
-        }
-    }
-
-    enum DungeonDrops
-    {
-        SPIRIT_LEAP(TextComponentUtils.formatted("Spirit Leap", TextFormatting.BLUE), Items.ENDER_PEARL, true),
-        DUNGEON_DECOY(TextComponentUtils.formatted("Decoy", TextFormatting.GREEN), Items.POLAR_BEAR_SPAWN_EGG, false),
-        INFLATABLE_JERRY(TextComponentUtils.formatted("Inflatable Jerry", TextFormatting.WHITE), Items.VILLAGER_SPAWN_EGG, false),
-        DUNGEON_TRAP(TextComponentUtils.formatted("Dungeon Trap", TextFormatting.GREEN), Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, false);
-
-        final ITextComponent displayName;
-        final IItemProvider baseItem;
-        final boolean enchanted;
-
-        DungeonDrops(ITextComponent displayName, IItemProvider baseItem, boolean enchanted)
-        {
-            this.displayName = displayName;
-            this.baseItem = baseItem;
-            this.enchanted = enchanted;
         }
     }
 

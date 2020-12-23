@@ -34,11 +34,13 @@ import com.stevekung.skyblockcatia.utils.Utils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
-import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
-import com.stevekung.stevekungslib.utils.*;
+import com.stevekung.stevekungslib.utils.CommonUtils;
+import com.stevekung.stevekungslib.utils.GameProfileUtils;
+import com.stevekung.stevekungslib.utils.ItemUtils;
+import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
@@ -962,13 +964,6 @@ public class SkyBlockEventHandler
             return true;
         }
         return false;
-    }
-
-    public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
-    {
-        ItemStack itemStack = skill.getItemStack();
-        itemStack.setDisplayName(TextComponentUtils.component(exp + " " + skill.getName() + " XP").setStyle(Style.EMPTY.setColor(Color.fromHex(ColorUtils.toHex(255, 255, 85)))));
-        return itemStack;
     }
 
     private List<ItemStack> copyInventory(NonNullList<ItemStack> inventory)

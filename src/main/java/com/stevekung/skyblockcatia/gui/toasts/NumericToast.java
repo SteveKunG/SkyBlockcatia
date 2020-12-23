@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.stevekungslib.utils.ColorUtils;
@@ -54,7 +53,7 @@ public class NumericToast implements IToast
 
         ToastUtils.ItemDrop drop = this.output;
         String value = NumberUtils.NUMBER_FORMAT.format(this.value);
-        ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : SkyBlockEventHandler.getSkillItemStack(value, SBSkills.Type.byName(this.object));
+        ItemStack itemStack = this.isCoins || this.isPet ? drop.getItemStack() : SBSkills.getSkillItemStack(value, SBSkills.Type.byName(this.object));
         String itemName = this.isCoins ? TextComponentUtils.formattedString(value + " Coins", ColorUtils.toHex(255, 223, 0)) : this.isPet ? TextFormatting.GREEN + itemStack.getDisplayName().getString() + TextFormatting.GREEN + " is now level " + TextFormatting.BLUE + value + TextFormatting.GREEN + "!" : itemStack.getDisplayName().getString();
         toastGui.getMinecraft().getTextureManager().bindTexture(this.texture);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
