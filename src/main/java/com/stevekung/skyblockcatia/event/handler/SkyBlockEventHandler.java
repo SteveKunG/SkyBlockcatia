@@ -632,7 +632,7 @@ public class SkyBlockEventHandler
                             SBPets.Type type = SBPets.Type.valueOf(EnumChatFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ROOT));
                             ItemStack itemStack = type.getPetItem();
                             itemStack.setStackDisplayName(name);
-                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.parseInt(level), itemStack, type);
+                            NumericToast.addValueOrUpdate(HUDRenderEventHandler.INSTANCE.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.parseInt(level), itemStack, true, type);
                             LoggerIN.logToast(formattedMessage);
                             cancelMessage = isToast;
                         }
