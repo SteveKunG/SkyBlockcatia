@@ -1,6 +1,8 @@
 package com.stevekung.skyblockcatia.command;
 
 import java.io.BufferedReader;
+import java.util.Arrays;
+import java.util.List;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.ClientUtils;
@@ -17,6 +19,12 @@ public class CommandRefreshApiData extends ClientCommandBase
     public String getCommandName()
     {
         return "sbapirefresh";
+    }
+
+    @Override
+    public List<String> getCommandAliases()
+    {
+        return Arrays.asList("sbcapirefresh");
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.stevekung.skyblockcatia.command;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
@@ -22,6 +23,12 @@ public class CommandBazaarViewer extends ClientCommandBase
     public String getCommandName()
     {
         return "sbbazaar";
+    }
+
+    @Override
+    public List<String> getCommandAliases()
+    {
+        return Arrays.asList("sbcbazaar");
     }
 
     @Override
