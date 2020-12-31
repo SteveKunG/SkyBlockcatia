@@ -38,8 +38,10 @@ minecraft {
     mappings = "${mcp_mapping}"
     makeObfSourceJar = false
 
-    replace "@FINGERPRINT@", project.sha1
-    replaceIn "SkyBlockcatiaMod.java"
+    if (project.hasProperty("sha1")) {
+        replace "@FINGERPRINT@", project.sha1
+        replaceIn "SkyBlockcatiaMod.java"
+    }
 }
 
 configurations {
