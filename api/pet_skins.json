@@ -166,5 +166,33 @@
         "color": "green",
         "uuid": "71523c97-40b1-3c07-8e82-a249ebe9339c",
         "texture": "4ec5455f43426ca1874b5c7b4a492ec3722a502f8b9599e758e133fed8b3c1e4"
+    },
+    {
+        "skin": "SHEEP_NEON_YELLOW",
+        "displayName": "Neon Yellow Sheep",
+        "color": "blue",
+        "uuid": "f6751ef8-70a9-3e15-9581-ad4a0ca99327",
+        "texture": "94263428c23da9165b2639a8f2428ff4835227945c9e1038461cf644d67cc82a"
+    },
+    {
+        "skin": "SHEEP_NEON_RED",
+        "displayName": "Neon Red Sheep",
+        "color": "blue",
+        "uuid": "7714c9a8-c3c0-3a7d-b759-cebb4042136b",
+        "texture": "4918be142a20b2b39bc582f421f6ae87b3184b5c9523d16fbe6d69530107886a"
+    },
+    {
+        "skin": "SHEEP_NEON_BLUE",
+        "displayName": "Neon Blue Sheep",
+        "color": "blue",
+        "uuid": "c7ad0ae4-f4bb-3f44-ae71-03dc976ba1f3",
+        "texture": "e55b3fe9311c99342ea565483cbf9e969a258faf7afa30270fb9a0929377acfd"
+    },
+    {
+        "skin": "SHEEP_NEON_GREEN",
+        "displayName": "Neon Green Sheep",
+        "color": "blue",
+        "uuid": "1144114b-5624-323e-bb06-66448d2f0f96",
+        "texture": "2c14d66911554bd0882339074bf6b8110c2d3509b69e7a6144e4d5a7164bacc8"
     }
 ]
