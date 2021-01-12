@@ -194,5 +194,12 @@
         "color": "blue",
         "uuid": "1144114b-5624-323e-bb06-66448d2f0f96",
         "texture": "2c14d66911554bd0882339074bf6b8110c2d3509b69e7a6144e4d5a7164bacc8"
+    },
+    {
+        "skin": "MONKEY_GOLDEN",
+        "displayName": "Golden Monkey",
+        "color": "gold",
+        "uuid": "b78e9901-460c-3b18-af8c-8cb9c9739e23",
+        "texture": "e9281c4d87d68526b0749d4361e6ef786c8a35717aa053da704b1d53410d37a6"
     }
 ]
