@@ -258,6 +258,11 @@ public class SBPets
             return this.color;
         }
 
+        public boolean isUpgradeToNextRarity()
+        {
+            return this == PET_ITEM_TIER_BOOST || this == PET_ITEM_VAMPIRE_FANG || this == PET_ITEM_TOY_JERRY;
+        }
+
         private static String formatName(String name)
         {
             return WordUtils.capitalize(name.replace("_", " "));

@@ -2704,7 +2704,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 NBTTagList list = new NBTTagList();
 
-                if (heldItem != null && (heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST || heldItem == SBPets.HeldItem.PET_ITEM_VAMPIRE_FANG))
+                if (heldItem != null && heldItem.isUpgradeToNextRarity())
                 {
                     tier = tier.getNextRarity();
                 }
