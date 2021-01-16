@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataGetter;
@@ -187,48 +189,49 @@ public class SBPets
 
     public enum HeldItem
     {
-        PET_ITEM_ALL_SKILLS_BOOST_COMMON("PET_ITEM_ALL_SKILLS_BOOST", EnumChatFormatting.WHITE),
-        PET_ITEM_BIG_TEETH_COMMON("PET_ITEM_BIG_TEETH", EnumChatFormatting.WHITE),
-        PET_ITEM_IRON_CLAWS_COMMON("PET_ITEM_IRON_CLAWS", EnumChatFormatting.WHITE),
-        PET_ITEM_SHARPENED_CLAWS_UNCOMMON("PET_ITEM_SHARPENED_CLAWS", EnumChatFormatting.GREEN),
-        PET_ITEM_HARDENED_SCALES_UNCOMMON("PET_ITEM_HARDENED_SCALES", EnumChatFormatting.GREEN),
+        PET_ITEM_ALL_SKILLS_BOOST_COMMON(formatName("ALL_SKILLS_BOOST"), EnumChatFormatting.WHITE),
+        PET_ITEM_BIG_TEETH_COMMON(formatName("BIG_TEETH"), EnumChatFormatting.WHITE),
+        PET_ITEM_IRON_CLAWS_COMMON(formatName("IRON_CLAWS"), EnumChatFormatting.WHITE),
+        PET_ITEM_SHARPENED_CLAWS_UNCOMMON(formatName("SHARPENED_CLAWS"), EnumChatFormatting.GREEN),
+        PET_ITEM_HARDENED_SCALES_UNCOMMON(formatName("HARDENED_SCALES"), EnumChatFormatting.GREEN),
         PET_ITEM_BUBBLEGUM(EnumChatFormatting.BLUE),
         PET_ITEM_LUCKY_CLOVER(EnumChatFormatting.DARK_PURPLE),
         PET_ITEM_TEXTBOOK(EnumChatFormatting.GOLD),
         PET_ITEM_SADDLE(EnumChatFormatting.GREEN),
         PET_ITEM_EXP_SHARE(EnumChatFormatting.DARK_PURPLE),
         PET_ITEM_TIER_BOOST(EnumChatFormatting.GOLD),
-        PET_ITEM_COMBAT_SKILL_BOOST_COMMON("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.WHITE),
-        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.GREEN),
-        PET_ITEM_COMBAT_SKILL_BOOST_RARE("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.BLUE),
-        PET_ITEM_COMBAT_SKILL_BOOST_EPIC("PET_ITEM_COMBAT_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_FISHING_SKILL_BOOST_COMMON("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.WHITE),
-        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.GREEN),
-        PET_ITEM_FISHING_SKILL_BOOST_RARE("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.BLUE),
-        PET_ITEM_FISHING_SKILL_BOOST_EPIC("PET_ITEM_FISHING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_FORAGING_SKILL_BOOST_COMMON("PET_ITEM_FORAGING_SKILL_BOOST", EnumChatFormatting.WHITE),
-        PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON("PET_ITEM_FORAGING_SKILL_BOOST", EnumChatFormatting.GREEN),
-        PET_ITEM_FORAGING_SKILL_BOOST_RARE("PET_ITEM_FORAGING_SKILL_BOOST", EnumChatFormatting.BLUE),
-        PET_ITEM_FORAGING_SKILL_BOOST_EPIC("PET_ITEM_FORAGING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_MINING_SKILL_BOOST_COMMON("PET_ITEM_MINING_SKILL_BOOST", EnumChatFormatting.WHITE),
-        PET_ITEM_MINING_SKILL_BOOST_UNCOMMON("PET_ITEM_MINING_SKILL_BOOST", EnumChatFormatting.GREEN),
-        PET_ITEM_MINING_SKILL_BOOST_RARE("PET_ITEM_MINING_SKILL_BOOST", EnumChatFormatting.BLUE),
-        PET_ITEM_MINING_SKILL_BOOST_EPIC("PET_ITEM_MINING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_FARMING_SKILL_BOOST_COMMON("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.WHITE),
-        PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.GREEN),
-        PET_ITEM_FARMING_SKILL_BOOST_RARE("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.BLUE),
-        PET_ITEM_FARMING_SKILL_BOOST_EPIC("PET_ITEM_FARMING_SKILL_BOOST", EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_COMBAT_SKILL_BOOST_COMMON(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.WHITE),
+        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.GREEN),
+        PET_ITEM_COMBAT_SKILL_BOOST_RARE(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.BLUE),
+        PET_ITEM_COMBAT_SKILL_BOOST_EPIC(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_FISHING_SKILL_BOOST_COMMON(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.WHITE),
+        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.GREEN),
+        PET_ITEM_FISHING_SKILL_BOOST_RARE(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.BLUE),
+        PET_ITEM_FISHING_SKILL_BOOST_EPIC(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_FORAGING_SKILL_BOOST_COMMON(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.WHITE),
+        PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.GREEN),
+        PET_ITEM_FORAGING_SKILL_BOOST_RARE(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.BLUE),
+        PET_ITEM_FORAGING_SKILL_BOOST_EPIC(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_MINING_SKILL_BOOST_COMMON(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.WHITE),
+        PET_ITEM_MINING_SKILL_BOOST_UNCOMMON(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.GREEN),
+        PET_ITEM_MINING_SKILL_BOOST_RARE(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.BLUE),
+        PET_ITEM_MINING_SKILL_BOOST_EPIC(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
+        PET_ITEM_FARMING_SKILL_BOOST_COMMON(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.WHITE),
+        PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.GREEN),
+        PET_ITEM_FARMING_SKILL_BOOST_RARE(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.BLUE),
+        PET_ITEM_FARMING_SKILL_BOOST_EPIC(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
         REINFORCED_SCALES(EnumChatFormatting.BLUE),
         GOLD_CLAWS(EnumChatFormatting.GREEN),
         ALL_SKILLS_SUPER_BOOST(EnumChatFormatting.WHITE),
         BIGGER_TEETH(EnumChatFormatting.GREEN),
         SERRATED_CLAWS(EnumChatFormatting.BLUE),
-        WASHED_UP_SOUVENIR("WASHED-UP_SOUVENIR", EnumChatFormatting.GOLD),
+        WASHED_UP_SOUVENIR("Washed-up Souvenir", EnumChatFormatting.GOLD),
         ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
         DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE),
         PET_ITEM_SPOOKY_CUPCAKE(EnumChatFormatting.GREEN),
-        PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD);
+        PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD),
+        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", EnumChatFormatting.GOLD);
 
         private final String altName;
         private final EnumChatFormatting color;
@@ -252,6 +255,11 @@ public class SBPets
         public EnumChatFormatting getColor()
         {
             return this.color;
+        }
+
+        private static String formatName(String name)
+        {
+            return WordUtils.capitalize(name.replace("_", " "));
         }
     }
 

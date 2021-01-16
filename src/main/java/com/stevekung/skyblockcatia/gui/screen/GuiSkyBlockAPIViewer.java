@@ -2753,7 +2753,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                         if (heldItem.getAltName() != null)
                         {
-                            heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.getAltName().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
+                            heldItemName = heldItem.getColor() + heldItem.getAltName();
                         }
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + heldItemName));
                     }
