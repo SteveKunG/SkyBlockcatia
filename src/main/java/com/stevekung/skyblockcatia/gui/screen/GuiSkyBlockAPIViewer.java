@@ -2415,8 +2415,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                 if (item == Item.getItemFromBlock(Blocks.cobblestone) || item == Items.coal || item == Items.iron_ingot || item == Items.gold_ingot || item == Items.diamond || item == Items.emerald || item == Items.redstone
                         || item == Items.quartz || item == Item.getItemFromBlock(Blocks.obsidian) || item == Items.glowstone_dust || item == Item.getItemFromBlock(Blocks.gravel) || item == Item.getItemFromBlock(Blocks.ice) || item == Item.getItemFromBlock(Blocks.netherrack)
-                        || item == Item.getItemFromBlock(Blocks.sand) || item == Item.getItemFromBlock(Blocks.end_stone) || item == Items.dye && meta == 4)
+                        || item == Item.getItemFromBlock(Blocks.sand) || item == Item.getItemFromBlock(Blocks.end_stone) || item == Items.dye && meta == 4 || itemId.equals("mithril_ore"))
                 {
+                    if (itemId.equals("mithril_ore"))
+                    {
+                        itemStack = new ItemStack(Items.prismarine_crystals);
+                        itemStack.setStackDisplayName(EnumChatFormatting.RESET + "Mithril Ore");
+                    }
                     mining.add(new SBCollections(itemStack, SBCollections.Type.MINING, collectionCount, level));
                 }
                 else if (item == Items.rotten_flesh || item == Items.bone || item == Items.string || item == Items.spider_eye || item == Items.gunpowder || item == Items.ender_pearl || item == Items.ghast_tear || item == Items.slime_ball || item == Items.blaze_rod || item == Items.magma_cream)
@@ -2533,6 +2538,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         {
                             this.checkCandySack(itemId, count, sacks);
                         }
+                        else if (this.matchSackId(itemId, DwarvenSacks.values()))
+                        {
+                            this.checkDwarvenSacks(itemId, count, sacks);
+                        }
                         else
                         {
                             if (item == null)
@@ -2608,6 +2617,21 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             ItemStack itemStack = candySacks.getBaseItem();
             itemStack.stackSize = count;
             this.addSackItemStackCount(itemStack, candySacks.getDisplayName(), false, sacks);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkDwarvenSacks(String itemId, int count, List<ItemStack> sacks)
+    {
+        try
+        {
+            DwarvenSacks dwarvenSacks = DwarvenSacks.valueOf(itemId.toUpperCase(Locale.ROOT));
+            ItemStack itemStack = dwarvenSacks.getBaseItem();
+            itemStack.stackSize = count;
+            this.addSackItemStackCount(itemStack, dwarvenSacks.getDisplayName(), false, sacks);
         }
         catch (Exception e)
         {
