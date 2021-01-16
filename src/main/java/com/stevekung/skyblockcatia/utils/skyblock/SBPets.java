@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -265,7 +266,7 @@ public class SBPets
 
         private static String formatName(String name)
         {
-            return WordUtils.capitalize(name.replace("_", " "));
+            return WordUtils.capitalize(name.toLowerCase(Locale.ROOT).replace("_", " "));
         }
     }
 
