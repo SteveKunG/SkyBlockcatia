@@ -120,7 +120,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private static final WorldClient FAKE_WORLD = new WorldClient(Minecraft.getMinecraft().getNetHandler(), new WorldSettings(0L, WorldSettings.GameType.SURVIVAL, false, false, WorldType.DEFAULT), 0, EnumDifficulty.NORMAL, Minecraft.getMinecraft().mcProfiler);
 
     // API
-    private static final int MAXED_UNIQUE_MINIONS = 572;
+    private static final int MAXED_UNIQUE_MINIONS = 583;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
     private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
