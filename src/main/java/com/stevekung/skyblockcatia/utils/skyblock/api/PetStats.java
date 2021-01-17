@@ -152,7 +152,7 @@ public class PetStats
                         SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
                         String petType = element.getAsJsonObject().get("type").getAsString();
 
-                        if (heldItem != null && heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST)
+                        if (heldItem != null && heldItem.isUpgradeToNextRarity())
                         {
                             tier = SBPets.Tier.values()[Math.min(SBPets.Tier.values().length - 1, tier.ordinal() + 1)];
                         }
