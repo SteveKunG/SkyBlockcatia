@@ -1,10 +1,12 @@
 [
     {
         "level": 1,
-        "defense": 1
+        "defense": 1,
+        "mining_fortune": 4
     },
     {
         "level": 15,
-        "defense": 2
+        "defense": 2,
+        "mining_fortune": 4
     }
 ]

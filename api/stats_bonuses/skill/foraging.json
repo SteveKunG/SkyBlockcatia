@@ -1,10 +1,12 @@
 [
     {
         "level": 1,
-        "strength": 1
+        "strength": 1,
+        "foraging_fortune": 4
     },
     {
         "level": 15,
-        "strength": 2
+        "strength": 2,
+        "foraging_fortune": 4
     }
 ]
