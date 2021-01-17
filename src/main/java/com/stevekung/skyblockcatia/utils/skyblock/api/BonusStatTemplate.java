@@ -17,8 +17,12 @@ public class BonusStatTemplate
     private double petLuck;
     private double ferocity;
     private double abilityDamage;
+    private double miningSpeed;
+    private double miningFortune;
+    private double farmingFortune;
+    private double foragingFortune;
 
-    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck, double ferocity, double abilityDamage)
+    public BonusStatTemplate(double health, double defense, double trueDefense, double effectiveHealth, double strength, double speed, double critChance, double critDamage, double attackSpeed, double intelligence, double seaCreatureChance, double magicFind, double petLuck, double ferocity, double abilityDamage, double miningSpeed, double miningFortune, double farmingFortune, double foragingFortune)
     {
         this.health = health;
         this.defense = defense;
@@ -35,6 +39,10 @@ public class BonusStatTemplate
         this.petLuck = petLuck;
         this.ferocity = ferocity;
         this.abilityDamage = abilityDamage;
+        this.miningSpeed = miningSpeed;
+        this.miningFortune = miningFortune;
+        this.farmingFortune = farmingFortune;
+        this.foragingFortune = foragingFortune;
     }
 
     public BonusStatTemplate add(BonusStatTemplate toAdd)
@@ -54,12 +62,16 @@ public class BonusStatTemplate
         this.petLuck += toAdd.petLuck;
         this.ferocity += toAdd.ferocity;
         this.abilityDamage += toAdd.abilityDamage;
-        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity, this.abilityDamage);
+        this.miningSpeed += toAdd.miningSpeed;
+        this.miningFortune += toAdd.miningFortune;
+        this.farmingFortune += toAdd.farmingFortune;
+        this.foragingFortune += toAdd.foragingFortune;
+        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity, this.abilityDamage, miningSpeed, miningFortune, farmingFortune, foragingFortune);
     }
 
     public static BonusStatTemplate getDefault()
     {
-        return new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0, 0);
+        return new BonusStatTemplate(100, 0, 0, 0, 0, 100, 30, 50, 0, 100, 20, 10, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public double getHealth()
@@ -145,6 +157,26 @@ public class BonusStatTemplate
         return this.abilityDamage;
     }
 
+    public double getMiningSpeed()
+    {
+        return miningSpeed;
+    }
+
+    public double getMiningFortune()
+    {
+        return miningFortune;
+    }
+
+    public double getFarmingFortune()
+    {
+        return farmingFortune;
+    }
+
+    public double getForagingFortune()
+    {
+        return foragingFortune;
+    }
+
     public void setHealth(double health)
     {
         this.health = health;
@@ -218,6 +250,26 @@ public class BonusStatTemplate
     public void setAbilityDamage(double abilityDamage)
     {
         this.abilityDamage = abilityDamage;
+    }
+
+    public void setMiningSpeed(double miningSpeed)
+    {
+        this.miningSpeed = miningSpeed;
+    }
+
+    public void setMiningFortune(double miningFortune)
+    {
+        this.miningFortune = miningFortune;
+    }
+
+    public void setFarmingFortune(double farmingFortune)
+    {
+        this.farmingFortune = farmingFortune;
+    }
+
+    public void setForagingFortune(double foragingFortune)
+    {
+        this.foragingFortune = foragingFortune;
     }
 
     public BonusStatTemplate addHealth(double health)
@@ -307,6 +359,30 @@ public class BonusStatTemplate
     public BonusStatTemplate addAbilityDamage(double abilityDamage)
     {
         this.abilityDamage += abilityDamage;
+        return this;
+    }
+
+    public BonusStatTemplate addMiningSpeed(double miningSpeed)
+    {
+        this.miningSpeed += miningSpeed;
+        return this;
+    }
+
+    public BonusStatTemplate addMiningFortune(double miningFortune)
+    {
+        this.miningFortune += miningFortune;
+        return this;
+    }
+
+    public BonusStatTemplate addFarmingFortune(double farmingFortune)
+    {
+        this.farmingFortune += farmingFortune;
+        return this;
+    }
+
+    public BonusStatTemplate addForagingFortune(double foragingFortune)
+    {
+        this.foragingFortune += foragingFortune;
         return this;
     }
 }

@@ -121,7 +121,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     // API
     private static final int MAXED_UNIQUE_MINIONS = 572;
-    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
+    private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
     private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
     private static final ModDecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new ModDecimalFormat("+#;-#");
@@ -3006,6 +3006,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         double petLuckTemp = 0;
         double ferocityTemp = 0;
         double abilityDamageTemp = 0;
+        double miningSpeedTemp = 0;
+        double miningFortuneTemp = 0;
+        double farmingFortuneTemp = 0;
+        double foragingFortuneTemp = 0;
 
         for (int i = 0; i < bonus.length; ++i)
         {
@@ -3042,6 +3046,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 double petLuck = bonus[i].getPetLuck();
                 double ferocity = bonus[i].getFerocity();
                 double abilityDamage = bonus[i].getAbilityDamage();
+                double miningSpeed = bonus[i].getMiningSpeed();
+                double miningFortune = bonus[i].getMiningFortune();
+                double farmingFortune = bonus[i].getFarmingFortune();
+                double foragingFortune = bonus[i].getForagingFortune();
 
                 for (int level = levelToCheck; level <= skillLevel; level++)
                 {
@@ -3063,10 +3071,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     petLuckTemp += petLuck;
                     ferocityTemp += ferocity;
                     abilityDamageTemp += abilityDamage;
+                    miningSpeedTemp += miningSpeed;
+                    miningFortuneTemp += miningFortune;
+                    farmingFortuneTemp += farmingFortune;
+                    foragingFortuneTemp += foragingFortune;
                 }
             }
         }
-        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp);
+        return new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp, miningSpeedTemp, miningFortuneTemp, farmingFortuneTemp, foragingFortuneTemp);
     }
 
     private void getHealthFromCake(NBTTagCompound extraAttrib)
@@ -3126,6 +3138,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         double petLuckTemp = 0;
         double ferocityTemp = 0;
         double abilityDamageTemp = 0;
+        double miningSpeedTemp = 0;
+        double miningFortuneTemp = 0;
+        double farmingFortuneTemp = 0;
+        double foragingFortuneTemp = 0;
 
         for (ItemStack itemStack : inventory)
         {
@@ -3229,6 +3245,18 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                                 case "Ability Damage":
                                     abilityDamageTemp += valueD;
                                     break;
+                                case "Mining Speed":
+                                    miningSpeedTemp += valueD;
+                                    break;
+                                case "Mining Fortune":
+                                    miningFortuneTemp += valueD;
+                                    break;
+                                case "Farming Fortune":
+                                    farmingFortuneTemp += valueD;
+                                    break;
+                                case "Foraging Fortune":
+                                    foragingFortuneTemp += valueD;
+                                    break;
                                 }
                             }
                         }
@@ -3236,7 +3264,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
             }
         }
-        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp));
+        this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp, miningSpeedTemp, miningFortuneTemp, farmingFortuneTemp, foragingFortuneTemp));
     }
 
     private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, String uuid, CommunityUpgrades communityUpgrade)
@@ -3280,6 +3308,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         String critChance = ColorUtils.stringToRGB("121,134,203").toColoredFont();
         String critDamage = ColorUtils.stringToRGB("70,90,201").toColoredFont();
         String attackSpeed = ColorUtils.stringToRGB("255,255,85").toColoredFont();
+        String miningSpeed = ColorUtils.stringToRGB("255,170,0").toColoredFont();
         String intelligence = ColorUtils.stringToRGB("129,212,250").toColoredFont();
         String seaCreatureChance = ColorUtils.stringToRGB("0,170,170").toColoredFont();
         String magicFind = ColorUtils.stringToRGB("85,255,255").toColoredFont();
@@ -3301,12 +3330,16 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.infoList.add(new SkyBlockInfo(critChance + "\u2623 Crit Chance", critChance + SKILL_AVG.format(this.allStat.getCritChance()) + "%"));
         this.infoList.add(new SkyBlockInfo(critDamage + "\u2620 Crit Damage", critDamage + SKILL_AVG.format(this.allStat.getCritDamage()) + "%"));
         this.infoList.add(new SkyBlockInfo(attackSpeed + "\u2694 Attack Speed", attackSpeed + SKILL_AVG.format(this.allStat.getAttackSpeed()) + "%"));
+        this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2191 Mining Speed", miningSpeed + SKILL_AVG.format(this.allStat.getMiningSpeed())));
         this.infoList.add(new SkyBlockInfo(intelligence + "\u270E Intelligence", intelligence + SKILL_AVG.format(this.allStat.getIntelligence())));
         this.infoList.add(new SkyBlockInfo(seaCreatureChance + "\u03B1 Sea Creature Chance", seaCreatureChance + SKILL_AVG.format(this.allStat.getSeaCreatureChance()) + "%"));
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
         this.infoList.add(new SkyBlockInfo(ferocity + "\u2AFD Ferocity", ferocity + SKILL_AVG.format(this.allStat.getFerocity())));
         this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2739 Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage()) + "%"));
+        this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2646 Mining Fortune", miningSpeed + SKILL_AVG.format(this.allStat.getMiningFortune())));
+        this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2646 Farming Fortune", miningSpeed + SKILL_AVG.format(this.allStat.getFarmingFortune())));
+        this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2646 Foraging Fortune", miningSpeed + SKILL_AVG.format(this.allStat.getForagingFortune())));
         this.infoList.add(new SkyBlockInfo(fairySoulsColor + "\u2618 Fairy Souls Collected", fairySoulsColor + this.totalFairySouls + "/" + SBAPIUtils.MAX_FAIRY_SOULS));
 
         this.infoList.add(new SkyBlockInfo("", ""));
