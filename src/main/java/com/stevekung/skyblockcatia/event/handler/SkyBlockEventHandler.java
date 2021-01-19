@@ -868,6 +868,7 @@ public class SkyBlockEventHandler
                     }
                 }
 
+                SkyBlockEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time Remaining:", "Finished on:");
                 SkyBlockEventHandler.replaceText(lore, calendar, event.toolTip, i, "Time left:", "Finished on:");
                 SkyBlockEventHandler.replaceText(lore, calendar, event.toolTip, i, "Available:", "Available on:");
                 SkyBlockEventHandler.replaceBankInterestTime(lore, calendar, event.toolTip, i, "Interest in: ");
