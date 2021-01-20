@@ -42,11 +42,10 @@ import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
-import com.stevekung.stevekungslib.client.event.ClientEventHandler;
+import com.stevekung.stevekungslib.client.event.handler.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
-import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -3607,7 +3606,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void drawSprite(MatrixStack matrixStack, int left, int top)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderUtils.bindTexture(AbstractGui.STATS_ICON_LOCATION);
+        Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.STATS_ICON_LOCATION);
         AbstractGui.blit(matrixStack, left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
     }
 

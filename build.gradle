@@ -60,15 +60,6 @@ shadowJar {
     relocate "org.apache.commons.text", "com.stevekung.skyblockcatia.relocate.org.apache.commons.text"
 }
 
-dependencies {
-    minecraft "net.minecraftforge:forge:${forge_version}"
-    compile files("libs/SteveKunG's-Lib-${mc_version}-${stevekung_lib_version}-deobf.jar")
-    compile files("libs/Indicatia-${mc_version}-${indicatia_version}-deobf.jar")
-    embed("org.apache.commons:commons-text:1.8") {
-        exclude group: "org.apache.commons", module: "commons-lang3"
-    }
-}
-
 repositories {
     maven {
         name "CurseGradle"
@@ -77,6 +68,18 @@ repositories {
     maven {
         name "Shadow"
         url "https://jitpack.io"
+    }
+    maven {
+        url "https://www.cursemaven.com"
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${forge_version}"
+    compile fg.deobf("curse.maven:indicatia-${indicatia_project}:${indicatia_deobf}")
+    compile fg.deobf("curse.maven:SteveKunGs-Lib-${stevekunglib_project}:${stevekunglib_deobf}")
+    embed("org.apache.commons:commons-text:1.8") {
+        exclude group: "org.apache.commons", module: "commons-lang3"
     }
 }
 

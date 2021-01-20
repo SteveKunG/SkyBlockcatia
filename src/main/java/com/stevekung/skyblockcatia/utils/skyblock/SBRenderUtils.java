@@ -3,6 +3,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -11,7 +12,6 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
-import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.ToastGui;
@@ -185,7 +185,7 @@ public class SBRenderUtils
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.enableAlphaTest();
-            RenderUtils.bindTexture(RARITY);
+            Minecraft.getInstance().getTextureManager().bindTexture(RARITY);
             RenderSystem.color4f(rarity.getColorToRender()[0], rarity.getColorToRender()[1], rarity.getColorToRender()[2], alpha);
             RenderSystem.blendFunc(770, 771);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);

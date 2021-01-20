@@ -2,11 +2,13 @@
 .gradle
 .settings
 .sba
+.idea
 bin
 build
 libs
 eclipse
 run
+logs
 
 # file
 !gradlew.bat
@@ -14,3 +16,4 @@ run
 *.launch
 .classpath
 .project
+*.hprof

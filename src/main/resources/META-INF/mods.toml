@@ -6,7 +6,7 @@ license="MIT License"
 
 [[mods]]
 modId="skyblockcatia"
-version="2.0.1"
+version="2.0.2"
 displayName="SkyBlockcatia"
 description="Useful Hypixel Skyblock features, QOL and In-game API Viewer!"
 credits="Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible"
@@ -31,13 +31,13 @@ logoFile="logo.png"
 [[dependencies.skyblockcatia]]
     modId="stevekungs_lib"
     mandatory=true
-    versionRange="[4.0.0,)"
+    versionRange="[4.0.2,)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.skyblockcatia]]
     modId="indicatia"
     mandatory=false
-    versionRange="[4.0.0,)"
+    versionRange="[4.0.2,)"
     ordering="NONE"
     side="CLIENT"
