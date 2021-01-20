@@ -672,9 +672,13 @@ public class SkyBlockEventHandler
             {
                 this.mc.thePlayer.sendChatMessage("/sbmenu");
             }
-            else if (KeyBindingsSB.KEY_SB_VIEW_RECIPE.isKeyDown() && this.mc.currentScreen == null)
+            else if (KeyBindingsSB.KEY_SB_VIEW_RECIPE.isKeyDown() && this.mc.currentScreen == null && !Keyboard.isKeyDown(Keyboard.KEY_F3))
             {
                 this.mc.thePlayer.sendChatMessage("/recipes");
+            }
+            else if (KeyBindingsSB.KEY_SB_PETS.isKeyDown())
+            {
+                this.mc.thePlayer.sendChatMessage("/pets");
             }
         }
 

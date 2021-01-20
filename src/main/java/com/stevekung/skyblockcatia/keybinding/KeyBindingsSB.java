@@ -15,6 +15,7 @@ public class KeyBindingsSB
     public static KeyBinding KEY_SB_VIEW_RECIPE;
     public static KeyBinding KEY_SB_MENU;
     public static KeyBinding KEY_SB_OPEN_WIKI;
+    public static KeyBinding KEY_SB_PETS;
 
     public static void init()
     {
@@ -26,6 +27,7 @@ public class KeyBindingsSB
         KeyBindingsSB.KEY_SB_VIEW_RECIPE = new KeyBindingBase("key.sb_view_recipe.desc", Keyboard.KEY_B);
         KeyBindingsSB.KEY_SB_MENU = new KeyBindingBase("key.sb_menu.desc", Keyboard.KEY_M);
         KeyBindingsSB.KEY_SB_OPEN_WIKI = new KeyBindingBase("key.sb_open_wiki.desc", Keyboard.KEY_APOSTROPHE);
+        KeyBindingsSB.KEY_SB_PETS = new KeyBindingBase("key.sb_pets.desc", Keyboard.KEY_P);
         ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_QUICK_CONFIG);
         ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_SB_API_VIEWER);
         ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_SB_ENDER_CHEST);
@@ -34,5 +36,6 @@ public class KeyBindingsSB
         ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_SB_VIEW_RECIPE);
         ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_SB_MENU);
         ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_SB_OPEN_WIKI);
+        ClientRegistry.registerKeyBinding(KeyBindingsSB.KEY_SB_PETS);
     }
 }

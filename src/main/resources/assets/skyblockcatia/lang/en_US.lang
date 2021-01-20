@@ -27,6 +27,7 @@ key.sb_view_recipe.desc=SkyBlock View Recipe
 key.sb_api_viewer.desc=SkyBlock API Viewer
 key.sb_menu.desc=SkyBlock Menu
 key.sb_open_wiki.desc=SkyBlock Open Wiki
+key.sb_pets.desc=SkyBlock Pets
 
 # COMMAND
 commands.inprofile.usage=/inprofile <add|load|save|remove|list>
