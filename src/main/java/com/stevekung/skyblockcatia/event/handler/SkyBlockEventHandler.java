@@ -221,7 +221,7 @@ public class SkyBlockEventHandler
                                 found = true;
                                 break;
                             }
-                            if (scoreText.endsWith(location.getLocation()))
+                            if (scoreText.substring(2).equals(location.getLocation()))
                             {
                                 SkyBlockEventHandler.SKY_BLOCK_LOCATION = location;
                                 found = true;
