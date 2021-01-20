@@ -202,7 +202,7 @@ public class SkyBlockEventHandler
                     for (Score score1 : collection)
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
+                        String scoreText = EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
 
                         if (scoreText.endsWith("am"))
                         {
@@ -215,13 +215,7 @@ public class SkyBlockEventHandler
 
                         for (SBLocation location : SBLocation.values())
                         {
-                            if (scoreText.endsWith("'s Island"))
-                            {
-                                HUDRenderEventHandler.otherPlayerIsland = true;
-                                found = true;
-                                break;
-                            }
-                            if (scoreText.substring(2).equals(location.getLocation()))
+                            if (scoreText.contains("⏣") && this.keepLettersAndNumbersOnly(scoreText).substring(2).equals(location.getLocation()))
                             {
                                 SkyBlockEventHandler.SKY_BLOCK_LOCATION = location;
                                 found = true;
@@ -233,6 +227,7 @@ public class SkyBlockEventHandler
                     if (scoreObj != null)
                     {
                         SkyBlockEventHandler.isSkyBlock = EnumChatFormatting.getTextWithoutFormattingCodes(scoreObj.getDisplayName()).contains("SKYBLOCK");
+                        HUDRenderEventHandler.otherPlayerIsland = EnumChatFormatting.getTextWithoutFormattingCodes(scoreObj.getDisplayName()).contains("SKYBLOCK GUEST");
                     }
                     else
                     {
@@ -242,7 +237,6 @@ public class SkyBlockEventHandler
                     if (!found)
                     {
                         SkyBlockEventHandler.SKY_BLOCK_LOCATION = SBLocation.NONE;
-                        HUDRenderEventHandler.otherPlayerIsland = false;
                     }
                     SBBossBar.renderBossBar = foundDrag;
                 }
@@ -269,32 +263,9 @@ public class SkyBlockEventHandler
                             event.setCanceled(true);
                         }
                     }
-                    if (this.mc.thePlayer.isSneaking() && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland)
+                    if (this.mc.thePlayer.isSneaking() && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland && HUDRenderEventHandler.otherPlayerIsland)
                     {
-                        ScoreObjective scoreObj = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
-                        Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
-                        Collection<Score> collection = scoreboard.getSortedScores(scoreObj);
-                        List<Score> list = Lists.newArrayList(collection.stream().filter(score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")).collect(Collectors.toList()));
-
-                        if (list.size() > 15)
-                        {
-                            collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
-                        }
-                        else
-                        {
-                            collection = list;
-                        }
-
-                        for (Score score1 : collection)
-                        {
-                            ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                            String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
-
-                            if (scoreText.endsWith("'s Island"))
-                            {
-                                this.mc.thePlayer.sendChatMessage("/trade " + player.getName());
-                            }
-                        }
+                        this.mc.thePlayer.sendChatMessage("/trade " + player.getName());
                     }
                 }
             }
