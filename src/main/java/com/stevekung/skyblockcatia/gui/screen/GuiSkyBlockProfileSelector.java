@@ -12,6 +12,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.ObjectArrays;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -68,6 +69,7 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
     private String guild = "";
     private GuiScrollingList errorInfo;
     private List<String> errorList = new ArrayList<>();
+    private static final Map<String, String> USERNAME_CACHE = Maps.newHashMap();
 
     public GuiSkyBlockProfileSelector(GuiState state)
     {
@@ -650,13 +652,19 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
 
             for (Map.Entry<String, JsonElement> entry : membersEntry)
             {
-                if (!entry.getKey().equals(uuid))
+                String memberUuid = entry.getKey();
+
+                if (!memberUuid.equals(uuid))
                 {
                     memberSize++;
 
                     if (!hasOneProfile)
                     {
-                        islandMembers.add(this.getName(entry.getKey()));
+                        if (!USERNAME_CACHE.containsKey(memberUuid))
+                        {
+                            USERNAME_CACHE.put(memberUuid, this.getName(memberUuid));
+                        }
+                        islandMembers.add(USERNAME_CACHE.get(memberUuid));
                         int allMembers = membersEntry.size() - memberSize;
 
                         if (memberSize > 5 && allMembers > 0)
