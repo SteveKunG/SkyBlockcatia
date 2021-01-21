@@ -2179,17 +2179,22 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             minionLevels.add(new SBMinions.Info(minion.name(), minion.getAltName(), minion.getMinionItem(), level, minion.getMinionCategory()));
         }
 
-        int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-
         for (Map.Entry<String, Collection<Integer>> entry : this.craftedMinions.asMap().entrySet())
         {
             String minionType = entry.getKey();
+            int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
             Collection<Integer> craftedList = entry.getValue();
             StringBuilder builder = new StringBuilder();
             int[] craftedTiers = Ints.toArray(craftedList);
             List<String> minionList = new ArrayList<>();
             Set<Integer> dummySet = new HashSet<>();
             Set<Integer> skippedList = new HashSet<>();
+            boolean hasTier12 = SBMinions.Type.getTypeByName(minionType).isHasTier12();
+
+            if (hasTier12)
+            {
+                dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+            }
 
             for (int craftedTier : craftedTiers)
             {
@@ -4662,13 +4667,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase(Locale.ROOT).replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase(Locale.ROOT).replace("_", " "));
                 this.parent.drawItemStackSlot(this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
                 this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
-                this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) + 192, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) + 202, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (craftedMinion.getMinionName() != null)
                 {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
+                    this.parent.drawString(this.parent.mc.fontRendererObj, EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
         }
