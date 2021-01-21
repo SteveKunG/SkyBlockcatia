@@ -438,7 +438,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             }
             else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
-                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 99, this.height, 40, this.height - 70, 49, 20, this.width, this.height, this.sbCraftedMinions);
                 this.showArmorButton.visible = false;
             }
         }
@@ -1008,7 +1008,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
                 else if (this.currentBasicSlotId == BasicInfoViewButton.CRAFTED_MINIONS.id)
                 {
-                    this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                    this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 99, this.height, 40, this.height - 70, 49, 20, this.width, this.height, this.sbCraftedMinions);
                     this.showArmorButton.visible = false;
                 }
 
@@ -1301,7 +1301,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             }
             else if (type.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
             {
-                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 119, this.height, 40, this.height - 70, 59, 20, this.width, this.height, this.sbCraftedMinions);
+                this.currentSlot = new SkyBlockCraftedMinions(this, this.width - 99, this.height, 40, this.height - 70, 49, 20, this.width, this.height, this.sbCraftedMinions);
                 this.currentBasicSlotId = BasicInfoViewButton.CRAFTED_MINIONS.id;
                 this.showArmorButton.visible = false;
             }
