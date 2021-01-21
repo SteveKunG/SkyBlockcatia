@@ -66,7 +66,7 @@ public class BonusStatTemplate
         this.miningFortune += toAdd.miningFortune;
         this.farmingFortune += toAdd.farmingFortune;
         this.foragingFortune += toAdd.foragingFortune;
-        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity, this.abilityDamage, miningSpeed, miningFortune, farmingFortune, foragingFortune);
+        return new BonusStatTemplate(this.health, this.defense, this.trueDefense, this.effectiveHealth, this.strength, this.speed, this.critChance, this.critDamage, this.attackSpeed, this.intelligence, this.seaCreatureChance, this.magicFind, this.petLuck, this.ferocity, this.abilityDamage, this.miningSpeed, this.miningFortune, this.farmingFortune, this.foragingFortune);
     }
 
     public static BonusStatTemplate getDefault()
@@ -159,22 +159,22 @@ public class BonusStatTemplate
 
     public double getMiningSpeed()
     {
-        return miningSpeed;
+        return this.miningSpeed;
     }
 
     public double getMiningFortune()
     {
-        return miningFortune;
+        return this.miningFortune;
     }
 
     public double getFarmingFortune()
     {
-        return farmingFortune;
+        return this.farmingFortune;
     }
 
     public double getForagingFortune()
     {
-        return foragingFortune;
+        return this.foragingFortune;
     }
 
     public void setHealth(double health)

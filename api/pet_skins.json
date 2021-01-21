@@ -201,5 +201,12 @@
         "color": "gold",
         "uuid": "b78e9901-460c-3b18-af8c-8cb9c9739e23",
         "texture": "e9281c4d87d68526b0749d4361e6ef786c8a35717aa053da704b1d53410d37a6"
+    },
+    {
+        "skin": "SILVERFISH_FOSSILIZED",
+        "displayName": "Fossilized Silverfish",
+        "color": "dark_purple",
+        "uuid": "9383ffbc-3aa1-3c38-a957-97d4968ee2b7",
+        "texture": "ca3a363368ed1e06cee3900717f062e02ec39aee1747675392255b48f7f83600"
     }
 ]
