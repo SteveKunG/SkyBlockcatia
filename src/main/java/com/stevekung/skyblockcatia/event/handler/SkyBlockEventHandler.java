@@ -651,6 +651,10 @@ public class SkyBlockEventHandler
             {
                 this.mc.thePlayer.sendChatMessage("/pets");
             }
+            else if (KeyBindingsSB.KEY_SB_HOTM.isKeyDown())
+            {
+                this.mc.thePlayer.sendChatMessage("/hotm");
+            }
         }
 
         if (KeyBindingsSB.KEY_SB_API_VIEWER.isKeyDown())
