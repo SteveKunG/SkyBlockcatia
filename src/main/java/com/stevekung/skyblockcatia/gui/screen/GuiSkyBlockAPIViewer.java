@@ -146,6 +146,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private final List<ItemStack> armorItems = new ArrayList<>();
     private final List<ItemStack> inventoryToStats = new ArrayList<>();
     private final List<SBCollections> collections = new ArrayList<>();
+    private List<SkyBlockInfo> jacobInfo = new ArrayList<>();
     private final Multimap<String, Integer> craftedMinions = HashMultimap.create();
     private int additionalMinionSlot;
     private int craftedMinionCount;
@@ -1797,6 +1798,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 URL urlStatus = new URL("https://api.hypixel.net/status?key=" + SkyBlockcatiaConfig.hypixelApiKey + "&uuid=" + this.uuid);
                 JsonObject objStatus = new JsonParser().parse(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
 
+                if (currentUserProfile.get("jacob2") != null)
+                {
+                    this.jacobInfo = this.getJacobData(currentUserProfile.get("jacob2"));
+                }
+
                 this.getSkills(currentUserProfile);
                 this.getStats(currentUserProfile);
                 this.getSlayerInfo(currentUserProfile);
@@ -3278,7 +3284,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         JsonElement purse = currentProfile.get("coin_purse");
         JsonElement lastSave = currentProfile.get("last_save");
         JsonElement firstJoin = currentProfile.get("first_join");
-        JsonElement jacob = currentProfile.get("jacob2");
         int deathCounts = 0;
         double coins = 0.0D;
         long lastSaveMillis = -1;
@@ -3383,16 +3388,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             }
         }
 
-        if (jacob != null)
+        if (this.jacobInfo.size() > 0)
         {
-            List<SkyBlockInfo> jacobInfo = this.getJacobData(jacob);
-
-            if (jacobInfo.size() > 0)
-            {
-                this.infoList.add(new SkyBlockInfo("", ""));
-                this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Farming Contest", ""));
-                this.infoList.addAll(jacobInfo);
-            }
+            this.infoList.add(new SkyBlockInfo("", ""));
+            this.infoList.add(new SkyBlockInfo(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.BOLD + EnumChatFormatting.UNDERLINE + "Farming Contest", ""));
+            this.infoList.addAll(this.jacobInfo);
         }
 
         this.infoList.add(new SkyBlockInfo("", ""));
@@ -3494,7 +3494,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         if (avg > 0)
         {
             double realAvg = avg / count + allProgress;
-            this.skillAvg = realAvg > 50 ? String.valueOf(50) : new BigDecimal(realAvg).setScale(2, RoundingMode.HALF_UP).toString();
+            this.skillAvg = new BigDecimal(realAvg).setScale(2, RoundingMode.HALF_UP).toString();
         }
         if (this.skillCount == 0)
         {
@@ -3519,8 +3519,14 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             double xpToNextLvl = 0;
             double currentXp = 0;
             double skillProgress = 0;
+            int cap = SBSkills.SKILL_CAP.getCapBySkill(type);
 
-            for (int x = 0; x < progress.length; ++x)
+            if (type == SBSkills.Type.FARMING)
+            {
+                cap += this.farmingLevelCap;
+            }
+
+            for (int x = 0; x < cap; ++x)
             {
                 if (playerXp >= xpTotal)
                 {
@@ -3528,33 +3534,33 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     currentLvl = x;
                     levelToCheck = progress[x].getLevel();
 
-                    if (levelToCheck <= progress.length)
+                    if (levelToCheck <= cap)
                     {
                         xpRequired = (int)progress[x].getXp();
                     }
                 }
             }
 
-            if (levelToCheck < progress.length)
+            if (levelToCheck < cap)
             {
                 xpToNextLvl = xpTotal - playerXp;
                 currentXp = (int)(xpRequired - xpToNextLvl);
             }
             else
             {
-                currentLvl = progress.length;
+                currentLvl = cap;
                 currentXp = playerXp - xpTotal;
             }
 
-            if (currentXp < 0 && levelToCheck <= progress.length) // fix for skill level almost reach to limit
+            if (currentXp < 0 && levelToCheck <= cap) // fix for skill level almost reach to limit
             {
                 xpToNextLvl = xpTotal - playerXp;
                 currentXp = (int)(xpRequired - xpToNextLvl);
-                currentLvl = progress.length - 1;
+                currentLvl = cap - 1;
             }
             if (type != SBSkills.Type.RUNECRAFTING && type != SBSkills.Type.CARPENTRY)
             {
-                skillProgress = currentLvl < 50 ? currentXp / xpRequired : 0.0D;
+                skillProgress = currentLvl < cap ? currentXp / xpRequired : 0.0D;
             }
 
             this.setSkillLevel(type, currentLvl);

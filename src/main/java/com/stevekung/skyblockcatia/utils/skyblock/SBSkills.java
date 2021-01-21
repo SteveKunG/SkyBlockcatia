@@ -1,5 +1,10 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
+import java.io.BufferedReader;
+
+import com.google.gson.Gson;
+import com.stevekung.skyblockcatia.utils.DataGetter;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -8,6 +13,15 @@ import net.minecraft.item.ItemStack;
 
 public class SBSkills
 {
+    private static final Gson GSON = new Gson();
+    public static SkillCap SKILL_CAP;
+
+    public static void getSkillsCap() throws Exception
+    {
+        BufferedReader in = DataGetter.get("api/default_skills_cap.json");
+        SKILL_CAP = GSON.fromJson(in, SkillCap.class);
+    }
+
     public enum Type
     {
         FARMING("Farming", Items.diamond_hoe),
@@ -120,6 +134,63 @@ public class SBSkills
         public boolean isReachLimit()
         {
             return this.reachLimit;
+        }
+    }
+
+    public static class SkillCap
+    {
+        private final int alchemy;
+        private final int carpentry;
+        private final int combat;
+        private final int enchanting;
+        private final int farming;
+        private final int fishing;
+        private final int foraging;
+        private final int mining;
+        private final int runecrafting;
+        private final int taming;
+
+        public SkillCap(int alchemy, int carpentry, int combat, int enchanting, int farming, int fishing, int foraging, int mining, int runecrafting, int taming)
+        {
+            this.alchemy = alchemy;
+            this.carpentry = carpentry;
+            this.combat = combat;
+            this.enchanting = enchanting;
+            this.farming = farming;
+            this.fishing = fishing;
+            this.foraging = foraging;
+            this.mining = mining;
+            this.runecrafting = runecrafting;
+            this.taming = taming;
+        }
+
+        public int getCapBySkill(SBSkills.Type type)
+        {
+            switch (type)
+            {
+            case ALCHEMY:
+                return this.alchemy;
+            case CARPENTRY:
+                return this.carpentry;
+            case COMBAT:
+                return this.combat;
+            case ENCHANTING:
+                return this.enchanting;
+            case FARMING:
+                return this.farming;
+            case FISHING:
+                return this.fishing;
+            case FORAGING:
+                return this.foraging;
+            case MINING:
+                return this.mining;
+            case RUNECRAFTING:
+                return this.runecrafting;
+            case TAMING:
+                return this.taming;
+            default:
+                return 50;
+            }
         }
     }
 }
