@@ -1,10 +1,12 @@
 {
     "alchemy": 50,
+    "carpentry": 50,
     "combat": 50,
     "enchanting": 60,
     "farming": 50,
     "fishing": 50,
     "foraging": 50,
     "mining": 60,
+    "runecrafting": 25,
     "taming": 50
 }
