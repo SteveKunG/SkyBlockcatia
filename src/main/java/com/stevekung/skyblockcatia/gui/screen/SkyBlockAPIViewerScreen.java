@@ -134,7 +134,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final ViewerData data = new ViewerData();
     private int skillCount;
     private ScrollingListScreen errorInfo;
-    private List<String> errorList = Lists.newArrayList();
+    private List<ITextComponent> errorList = Lists.newArrayList();
     private boolean showArmor = true;
     private float oldMouseX;
     private float oldMouseY;
@@ -290,11 +290,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
                 catch (Throwable e)
                 {
-                    this.errorList.add(TextFormatting.RED.toString() + TextFormatting.UNDERLINE + TextFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
+                    this.errorList.add(TextComponentUtils.formatted(e.getClass().getName() + ": " + e.getMessage(), TextFormatting.RED, TextFormatting.UNDERLINE, TextFormatting.BOLD));
 
                     for (StackTraceElement stack : e.getStackTrace())
                     {
-                        this.errorList.add(TextFormatting.RED + "at " + stack.toString());
+                        this.errorList.add(TextComponentUtils.formatted("at " + stack.toString(), TextFormatting.RED));
                     }
                     this.setErrorMessage("", true);
                     e.printStackTrace();

@@ -75,7 +75,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
     private PlayerNameSuggestionHelper suggestionHelper;
     private String guild = "";
     private ScrollingListScreen errorInfo;
-    private List<String> errorList = Lists.newArrayList();
+    private List<ITextComponent> errorList = Lists.newArrayList();
     private static final Map<String, ITextComponent> USERNAME_CACHE = Maps.newHashMap();
 
     public SkyBlockProfileSelectorScreen(Mode mode)
@@ -135,11 +135,11 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
                 catch (Throwable e)
                 {
-                    this.errorList.add(TextFormatting.UNDERLINE.toString() + TextFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
+                    this.errorList.add(TextComponentUtils.formatted(e.getClass().getName() + ": " + e.getMessage(), TextFormatting.RED, TextFormatting.UNDERLINE, TextFormatting.BOLD));
 
                     for (StackTraceElement stack : e.getStackTrace())
                     {
-                        this.errorList.add("at " + stack.toString());
+                        this.errorList.add(TextComponentUtils.formatted("at " + stack.toString(), TextFormatting.RED));
                     }
                     this.setErrorMessage("", true);
                     e.printStackTrace();
@@ -185,15 +185,16 @@ public class SkyBlockProfileSelectorScreen extends Screen
                     {
                         SkyBlockcatiaMod.LOGGER.info("API Download finished in: {}ms", this.watch.getTime());
                     }
+
                     this.watch.reset();
                 }
                 catch (Throwable e)
                 {
-                    this.errorList.add(TextFormatting.UNDERLINE.toString() + TextFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
+                    this.errorList.add(TextComponentUtils.formatted(e.getClass().getName() + ": " + e.getMessage(), TextFormatting.RED, TextFormatting.UNDERLINE, TextFormatting.BOLD));
 
                     for (StackTraceElement stack : e.getStackTrace())
                     {
-                        this.errorList.add("at " + stack.toString());
+                        this.errorList.add(TextComponentUtils.formatted("at " + stack.toString(), TextFormatting.RED));
                     }
                     this.setErrorMessage("", true);
                     e.printStackTrace();
