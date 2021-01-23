@@ -111,7 +111,6 @@ public class SkyBlockcatiaMod
         ClientUtils.registerCommand(new CommandProfile());
         ClientUtils.registerCommand(new CommandApiViewer());
         ClientUtils.registerCommand(new CommandBazaarViewer());
-        ClientUtils.registerCommand(new CommandRefreshApiData());
     }
 
     @EventHandler
@@ -155,7 +154,7 @@ public class SkyBlockcatiaMod
         }
     }
 
-    public static void downloadAPIData()
+    private static void downloadAPIData()
     {
         try
         {
