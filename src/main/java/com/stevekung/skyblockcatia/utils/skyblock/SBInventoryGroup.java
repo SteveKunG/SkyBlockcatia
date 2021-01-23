@@ -183,7 +183,7 @@ public class SBInventoryGroup
         @Override
         public int getInventoryStackLimit()
         {
-            return 20160;
+            return Integer.MAX_VALUE;
         }
     }
 }

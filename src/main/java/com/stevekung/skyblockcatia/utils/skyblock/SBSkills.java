@@ -1,22 +1,23 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import com.stevekung.stevekungslib.utils.ColorUtils;
+import java.io.BufferedReader;
+
+import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.Style;
 
 public class SBSkills
 {
-    public static ItemStack getSkillItemStack(String exp, SBSkills.Type skill)
+    public static SkillCap SKILL_CAP;
+
+    public static void getSkillsCap() throws Exception
     {
-        ItemStack itemStack = skill.getItemStack();
-        itemStack.setDisplayName(TextComponentUtils.component(exp + " " + skill.getName() + " XP").setStyle(Style.EMPTY.setColor(Color.fromHex(ColorUtils.toHex(255, 255, 85)))));
-        return itemStack;
+        BufferedReader in = DataGetter.get("api/default_skills_cap.json");
+        SKILL_CAP = TextComponentUtils.GSON.fromJson(in, SkillCap.class);
     }
 
     public enum Type
@@ -126,6 +127,63 @@ public class SBSkills
         public boolean isReachLimit()
         {
             return this.reachLimit;
+        }
+    }
+
+    public static class SkillCap
+    {
+        private final int alchemy;
+        private final int carpentry;
+        private final int combat;
+        private final int enchanting;
+        private final int farming;
+        private final int fishing;
+        private final int foraging;
+        private final int mining;
+        private final int runecrafting;
+        private final int taming;
+
+        public SkillCap(int alchemy, int carpentry, int combat, int enchanting, int farming, int fishing, int foraging, int mining, int runecrafting, int taming)
+        {
+            this.alchemy = alchemy;
+            this.carpentry = carpentry;
+            this.combat = combat;
+            this.enchanting = enchanting;
+            this.farming = farming;
+            this.fishing = fishing;
+            this.foraging = foraging;
+            this.mining = mining;
+            this.runecrafting = runecrafting;
+            this.taming = taming;
+        }
+
+        public int getCapBySkill(SBSkills.Type type)
+        {
+            switch (type)
+            {
+            case ALCHEMY:
+                return this.alchemy;
+            case CARPENTRY:
+                return this.carpentry;
+            case COMBAT:
+                return this.combat;
+            case ENCHANTING:
+                return this.enchanting;
+            case FARMING:
+                return this.farming;
+            case FISHING:
+                return this.fishing;
+            case FORAGING:
+                return this.foraging;
+            case MINING:
+                return this.mining;
+            case RUNECRAFTING:
+                return this.runecrafting;
+            case TAMING:
+                return this.taming;
+            default:
+                return 50;
+            }
         }
     }
 }

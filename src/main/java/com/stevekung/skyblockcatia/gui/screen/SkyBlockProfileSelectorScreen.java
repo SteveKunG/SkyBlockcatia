@@ -5,6 +5,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -41,7 +43,6 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -75,6 +76,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
     private String guild = "";
     private ScrollingListScreen errorInfo;
     private List<String> errorList = Lists.newArrayList();
+    private static final Map<String, ITextComponent> USERNAME_CACHE = Maps.newHashMap();
 
     public SkyBlockProfileSelectorScreen(Mode mode)
     {
@@ -378,15 +380,24 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
 
                 super.render(matrixStack, mouseX, mouseY, partialTicks);
+                List<ITextComponent> displayStrings = Lists.newArrayList();
 
-                for (Widget button : this.buttons.stream().filter(button -> button instanceof SkyBlockProfileButton).collect(Collectors.toList()))
+                for (SkyBlockProfileButton button : this.buttons.stream().filter(button -> button instanceof SkyBlockProfileButton).map(button -> (SkyBlockProfileButton)button).collect(Collectors.toList()))
                 {
                     boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeightRealms();
                     button.visible = button.active = this.suggestionHelper.suggestions == null;
 
                     if (hover)
                     {
-                        GuiUtils.drawHoveringText(matrixStack, Lists.newArrayList(TextComponentUtils.component(((SkyBlockProfileButton)button).getLastActive()), ((SkyBlockProfileButton)button).getGameMode()), mouseX, mouseY, this.width, this.height, -1, this.font);
+                        if (button.getIslandMembers().size() > 0)
+                        {
+                            displayStrings.add(TextComponentUtils.formatted("Members:", TextFormatting.YELLOW));
+                            displayStrings.addAll(button.getIslandMembers());
+                            displayStrings.add(TextComponentUtils.component(""));
+                        }
+
+                        displayStrings.addAll(Lists.newArrayList(TextComponentUtils.component(button.getLastActive()), button.getGameMode()));
+                        GuiUtils.drawHoveringText(matrixStack, displayStrings, mouseX, mouseY, this.width, this.height, -1, this.font);
                         RenderSystem.disableLighting();
                         break;
                     }
@@ -594,13 +605,38 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
             if (gameModeType != null)
             {
-                gameMode = gameModeType.getAsString().equals("ironman") ? TextComponentUtils.formatted("\u2672 Iron Man", TextFormatting.GRAY) : TextComponentUtils.formatted(gameModeType.getAsString(), TextFormatting.RED);
+                gameMode = gameModeType.getAsString().equals("ironman") ? TextComponentUtils.formatted("♲ Iron Man", TextFormatting.GRAY) : TextComponentUtils.formatted(gameModeType.getAsString(), TextFormatting.RED);
             }
 
-            for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
+            List<ITextComponent> islandMembers = Lists.newLinkedList();
+            Set<Map.Entry<String, JsonElement>> membersEntry = profile.getAsJsonObject().get("members").getAsJsonObject().entrySet();
+            int memberSize = 1;
+
+            for (Map.Entry<String, JsonElement> entry : membersEntry)
             {
-                if (!entry.getKey().equals(uuid))
+                String memberUuid = entry.getKey();
+
+                if (!memberUuid.equals(uuid))
                 {
+                    memberSize++;
+
+                    if (!hasOneProfile)
+                    {
+                        if (!USERNAME_CACHE.containsKey(memberUuid))
+                        {
+                            USERNAME_CACHE.put(memberUuid, TextComponentUtils.component(this.getName(memberUuid)));
+                        }
+
+                        islandMembers.add(USERNAME_CACHE.get(memberUuid));
+
+                        int allMembers = membersEntry.size() - memberSize;
+
+                        if (memberSize > 5 && allMembers > 0)
+                        {
+                            islandMembers.add(TextComponentUtils.formatted("and " + allMembers + " more...", TextFormatting.ITALIC));
+                            break;
+                        }
+                    }
                     continue;
                 }
                 JsonElement lastSaveEle = entry.getValue().getAsJsonObject().get("last_save");
@@ -608,7 +644,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             }
 
             availableProfile = profile.getAsJsonObject();
-            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave);
+            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
             SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
 
             if (hasOneProfile)
@@ -670,6 +706,20 @@ public class SkyBlockProfileSelectorScreen extends Screen
     {
         selfItemCache = ItemUtils.getPlayerHead(GameProfileUtils.getUsername());
         this.selfButton.setItemStack(selfItemCache);
+    }
+
+    private String getName(String uuid)
+    {
+        try
+        {
+            JsonArray array = new JsonParser().parse(IOUtils.toString(new URL("https://api.mojang.com/user/profiles/" + uuid + "/names"), StandardCharsets.UTF_8)).getAsJsonArray();
+            return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return TextFormatting.RED + uuid;
     }
 
     public enum Mode

@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.utils.HitboxRenderMode;
 import com.stevekung.skyblockcatia.utils.PlayerCountMode;
 import com.stevekung.skyblockcatia.utils.ToastMode;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
@@ -42,7 +43,6 @@ public class SkyBlockcatiaSettings extends Settings
     public boolean glowingDragonArmor = true;
     public boolean placedSummoningEyeTracker = false;
     public boolean showItemRarity = true;
-    public boolean showDragonHitboxOnly = false;
     public boolean showHitboxWhenDragonSpawned = false;
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
@@ -60,10 +60,10 @@ public class SkyBlockcatiaSettings extends Settings
     public boolean lobbyPlayerCount = true;
     public boolean displayItemAbilityMaxUsed = false;
     public boolean preventScrollHotbarWhileFightDragon = false;
-    public boolean preventClickingOnDummyItem = true;
     public boolean shortcutButtonInInventory = true;
     public boolean showObtainedDate = true;
     public boolean fixSkyblockEnchantTag = true;
+    public boolean disableNightVision = false;
 
     public ToastMode visitIslandDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode itemLogDisplayMode = ToastMode.CHAT_AND_TOAST;
@@ -71,6 +71,7 @@ public class SkyBlockcatiaSettings extends Settings
     public ToastMode giftDisplayMode = ToastMode.CHAT_AND_TOAST;
     public ToastMode petDisplayMode = ToastMode.CHAT_AND_TOAST;
     public PlayerCountMode playerCountMode = PlayerCountMode.TAB_LIST;
+    public HitboxRenderMode hitboxRenderMode = HitboxRenderMode.DEFAULT;
 
     public int itemRarityOpacity = 75;
     public int auctionBidConfirmValue = 500000;
@@ -98,7 +99,6 @@ public class SkyBlockcatiaSettings extends Settings
     public static final BooleanSettings<SkyBlockcatiaSettings> GLOWING_DRAGON_ARMOR = new BooleanSettings<>("skyblockcatia_setting.glowing_dragon_armor", config -> config.glowingDragonArmor, (config, value) -> config.glowingDragonArmor = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> PLACED_SUMMONING_EYE_TRACKER = new BooleanSettings<>("skyblockcatia_setting.placed_summoning_eye_tracker", config -> config.placedSummoningEyeTracker, (config, value) -> config.placedSummoningEyeTracker = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> ITEM_RARITY = new BooleanSettings<>("skyblockcatia_setting.item_rarity", config -> config.showItemRarity, (config, value) -> config.showItemRarity = value);
-    public static final BooleanSettings<SkyBlockcatiaSettings> DRAGON_HITBOX_ONLY = new BooleanSettings<>("skyblockcatia_setting.dragon_hitbox_only", config -> config.showDragonHitboxOnly, (config, value) -> config.showDragonHitboxOnly = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SHOW_HITBOX_WHEN_DRAGON_SPAWNED = new BooleanSettings<>("skyblockcatia_setting.show_hitbox_when_dragon_spawned", config -> config.showHitboxWhenDragonSpawned, (config, value) -> config.showHitboxWhenDragonSpawned = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SNEAK_TO_OPEN_INVENTORY = new BooleanSettings<>("skyblockcatia_setting.sneak_to_open_inventory", config -> config.sneakToOpenInventoryWhileFightDragon, (config, value) -> config.sneakToOpenInventoryWhileFightDragon = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> LEAVE_PARTY_WHEN_LAST_EYE_PLACED = new BooleanSettings<>("skyblockcatia_setting.leave_party_when_last_eye_placed", config -> config.leavePartyWhenLastEyePlaced, (config, value) -> config.leavePartyWhenLastEyePlaced = value);
@@ -116,10 +116,10 @@ public class SkyBlockcatiaSettings extends Settings
     public static final BooleanSettings<SkyBlockcatiaSettings> LOBBY_PLAYER_COUNT  = new BooleanSettings<>("skyblockcatia_setting.lobby_player_count", config -> config.lobbyPlayerCount, (config, value) -> config.lobbyPlayerCount = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> DISPLAY_ITEM_ABILITY_MAX_USED  = new BooleanSettings<>("skyblockcatia_setting.display_item_ability_max_used", config -> config.displayItemAbilityMaxUsed, (config, value) -> config.displayItemAbilityMaxUsed = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON  = new BooleanSettings<>("skyblockcatia_setting.prevent_scroll_hotbar_while_fight_dragon", config -> config.preventScrollHotbarWhileFightDragon, (config, value) -> config.preventScrollHotbarWhileFightDragon = value);
-    public static final BooleanSettings<SkyBlockcatiaSettings> PREVENT_CLICKING_ON_DUMMY_ITEM  = new BooleanSettings<>("skyblockcatia_setting.prevent_clicking_on_dummy_item", config -> config.preventClickingOnDummyItem, (config, value) -> config.preventClickingOnDummyItem = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SHORTCUT_BUTTON_IN_INVENTORY  = new BooleanSettings<>("skyblockcatia_setting.shortcut_button_in_inventory", config -> config.shortcutButtonInInventory, (config, value) -> config.shortcutButtonInInventory = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SHOW_OBTAINED_DATE  = new BooleanSettings<>("skyblockcatia_setting.show_obtained_date", config -> config.showObtainedDate, (config, value) -> config.showObtainedDate = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> FIX_SKYBLOCK_ENCHANT_TAG  = new BooleanSettings<>("skyblockcatia_setting.fix_skyblock_enchant_tag", config -> config.fixSkyblockEnchantTag, (config, value) -> config.fixSkyblockEnchantTag = value);
+    public static final BooleanSettings<SkyBlockcatiaSettings> DISABLE_NIGHT_VISION  = new BooleanSettings<>("skyblockcatia_setting.disable_night_vision", config -> config.disableNightVision, (config, value) -> config.disableNightVision = value);
 
 
     public static final IteratableSettings<SkyBlockcatiaSettings> VISIT_ISLAND_DISPLAY_MODE = new IteratableSettings<>("skyblockcatia_setting.visit_island_display_mode", (config, value) -> config.visitIslandDisplayMode = ToastMode.byId(config.visitIslandDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getGenericValueComponent(LangUtils.translate(config.visitIslandDisplayMode.getTranslationKey())));
@@ -128,6 +128,7 @@ public class SkyBlockcatiaSettings extends Settings
     public static final IteratableSettings<SkyBlockcatiaSettings> GIFT_DISPLAY_MODE = new IteratableSettings<>("skyblockcatia_setting.gift_display_mode", (config, value) -> config.giftDisplayMode = ToastMode.byId(config.giftDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getGenericValueComponent(LangUtils.translate(config.giftDisplayMode.getTranslationKey())));
     public static final IteratableSettings<SkyBlockcatiaSettings> PET_DISPLAY_MODE = new IteratableSettings<>("skyblockcatia_setting.pet_display_mode", (config, value) -> config.petDisplayMode = ToastMode.byId(config.petDisplayMode.getId() + value), (config, stringOpt) -> stringOpt.getGenericValueComponent(LangUtils.translate(config.petDisplayMode.getTranslationKey())));
     public static final IteratableSettings<SkyBlockcatiaSettings> PLAYER_COUNT_MODE = new IteratableSettings<>("skyblockcatia_setting.player_count_mode", (config, value) -> config.playerCountMode = PlayerCountMode.byId(config.playerCountMode.getId() + value), (config, stringOpt) -> stringOpt.getGenericValueComponent(LangUtils.translate(config.playerCountMode.getTranslationKey())));
+    public static final IteratableSettings<SkyBlockcatiaSettings> HITBOX_RENDER_MODE = new IteratableSettings<>("skyblockcatia_setting.player_count_mode", (config, value) -> config.hitboxRenderMode = HitboxRenderMode.byId(config.hitboxRenderMode.getId() + value), (config, stringOpt) -> stringOpt.getGenericValueComponent(LangUtils.translate(config.hitboxRenderMode.getTranslationKey())));
 
 
     public static final TextFieldSettings<SkyBlockcatiaSettings> AXE_COOLDOWN_COLOR = new TextFieldSettings<>("skyblockcatia_setting.axe_cooldown_color", config -> config.axeCooldownColor, (config, value) -> config.axeCooldownColor = value);
@@ -162,7 +163,6 @@ public class SkyBlockcatiaSettings extends Settings
             this.glowingDragonArmor = this.getBoolean(nbt, "GlowingDragonArmor", this.glowingDragonArmor);
             this.placedSummoningEyeTracker = this.getBoolean(nbt, "PlacedSummoningEyeTracker", this.placedSummoningEyeTracker);
             this.showItemRarity = this.getBoolean(nbt, "ShowItemRarity", this.showItemRarity);
-            this.showDragonHitboxOnly = this.getBoolean(nbt, "ShowDragonHitboxOnly", this.showDragonHitboxOnly);
             this.showHitboxWhenDragonSpawned = this.getBoolean(nbt, "ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             this.sneakToOpenInventoryWhileFightDragon = this.getBoolean(nbt, "SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             this.leavePartyWhenLastEyePlaced = this.getBoolean(nbt, "LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
@@ -180,10 +180,10 @@ public class SkyBlockcatiaSettings extends Settings
             this.lobbyPlayerCount = this.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
             this.displayItemAbilityMaxUsed = this.getBoolean(nbt, "DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
             this.preventScrollHotbarWhileFightDragon = this.getBoolean(nbt, "PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
-            this.preventClickingOnDummyItem = this.getBoolean(nbt, "PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
             this.shortcutButtonInInventory = this.getBoolean(nbt, "ShortcutButtonInInventory", this.shortcutButtonInInventory);
             this.showObtainedDate = this.getBoolean(nbt, "ShowObtainedDate", this.showObtainedDate);
             this.fixSkyblockEnchantTag = this.getBoolean(nbt, "FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
+            this.disableNightVision = this.getBoolean(nbt, "DisableNightVision", this.disableNightVision);
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
@@ -194,6 +194,7 @@ public class SkyBlockcatiaSettings extends Settings
             this.giftDisplayMode = ToastMode.byId(this.getInteger(nbt, "GiftDisplayMode", this.giftDisplayMode.getId()));
             this.petDisplayMode = ToastMode.byId(this.getInteger(nbt, "PetDisplayMode", this.petDisplayMode.getId()));
             this.playerCountMode = PlayerCountMode.byId(this.getInteger(nbt, "PlayerCountMode", this.playerCountMode.getId()));
+            this.hitboxRenderMode = HitboxRenderMode.byId(this.getInteger(nbt, "HitboxRenderMode", this.hitboxRenderMode.getId()));
 
             // Custom Color
             this.axeCooldownColor = this.getString(nbt, "AxeCooldownColor", this.axeCooldownColor);
@@ -228,7 +229,6 @@ public class SkyBlockcatiaSettings extends Settings
             nbt.putBoolean("GlowingDragonArmor", this.glowingDragonArmor);
             nbt.putBoolean("PlacedSummoningEyeTracker", this.placedSummoningEyeTracker);
             nbt.putBoolean("ShowItemRarity", this.showItemRarity);
-            nbt.putBoolean("ShowDragonHitboxOnly", this.showDragonHitboxOnly);
             nbt.putBoolean("ShowHitboxWhenDragonSpawned", this.showHitboxWhenDragonSpawned);
             nbt.putBoolean("SneakToOpenInventoryWhileFightDragon", this.sneakToOpenInventoryWhileFightDragon);
             nbt.putBoolean("LeavePartyWhenLastEyePlaced", this.leavePartyWhenLastEyePlaced);
@@ -246,10 +246,10 @@ public class SkyBlockcatiaSettings extends Settings
             nbt.putBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
             nbt.putBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
             nbt.putBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
-            nbt.putBoolean("PreventClickingOnDummyItem", this.preventClickingOnDummyItem);
             nbt.putBoolean("ShortcutButtonInInventory", this.shortcutButtonInInventory);
             nbt.putBoolean("ShowObtainedDate", this.showObtainedDate);
             nbt.putBoolean("FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
+            nbt.putBoolean("DisableNightVision", this.disableNightVision);
 
             nbt.putInt("VisitIslandDisplayMode", this.visitIslandDisplayMode.getId());
             nbt.putInt("ItemLogDisplayMode", this.itemLogDisplayMode.getId());
@@ -257,6 +257,7 @@ public class SkyBlockcatiaSettings extends Settings
             nbt.putInt("GiftDisplayMode", this.giftDisplayMode.getId());
             nbt.putInt("PetDisplayMode", this.petDisplayMode.getId());
             nbt.putInt("PlayerCountMode", this.playerCountMode.getId());
+            nbt.putInt("HitboxRenderMode", this.hitboxRenderMode.getId());
 
             nbt.putInt("ItemRarityOpacity", this.itemRarityOpacity);
             nbt.putInt("AuctionBidConfirmValue", this.auctionBidConfirmValue);

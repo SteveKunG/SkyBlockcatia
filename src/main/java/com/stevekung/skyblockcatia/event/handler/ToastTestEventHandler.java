@@ -13,15 +13,16 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-public class ClientEventHandler
+public class ToastTestEventHandler
 {
     private final Minecraft mc;
 
-    public ClientEventHandler()
+    public ToastTestEventHandler()
     {
         this.mc = Minecraft.getInstance();
     }
 
+    //TODO Test all toasts
     @SubscribeEvent
     public void onItemPickedUpTest(PlayerEvent.ItemPickupEvent event)
     {

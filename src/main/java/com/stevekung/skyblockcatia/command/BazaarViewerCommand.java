@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.stevekung.skyblockcatia.command.arguments.SkyblockBazaarItemIdArgumentType;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
@@ -19,7 +20,8 @@ public class BazaarViewerCommand implements IClientCommand
     @Override
     public void register(CommandDispatcher<IClientSuggestionProvider> dispatcher)
     {
-        dispatcher.register(ClientCommands.literal("sbbazaar").then(ClientCommands.argument("skyblock_item_id", SkyblockBazaarItemIdArgumentType.create()).executes(requirement -> BazaarViewerCommand.getBazaarData(SkyblockBazaarItemIdArgumentType.getItemId(requirement, "skyblock_item_id")))));
+        LiteralCommandNode<IClientSuggestionProvider> node = dispatcher.register(ClientCommands.literal("sbbazaar").then(ClientCommands.argument("skyblock_item_id", SkyblockBazaarItemIdArgumentType.create()).executes(requirement -> BazaarViewerCommand.getBazaarData(SkyblockBazaarItemIdArgumentType.getItemId(requirement, "skyblock_item_id")))));
+        dispatcher.register(ClientCommands.literal("sbcbazaar").redirect(node));
     }
 
     private static int getBazaarData(String itemId)

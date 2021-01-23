@@ -11,8 +11,8 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
-import com.stevekung.stevekungslib.utils.client.RenderUtils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.item.ItemStack;
@@ -185,7 +185,7 @@ public class SBRenderUtils
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.enableAlphaTest();
-            RenderUtils.bindTexture(RARITY);
+            Minecraft.getInstance().getTextureManager().bindTexture(RARITY);
             RenderSystem.color4f(rarity.getColorToRender()[0], rarity.getColorToRender()[1], rarity.getColorToRender()[2], alpha);
             RenderSystem.blendFunc(770, 771);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
@@ -198,14 +198,14 @@ public class SBRenderUtils
     }
 
     // Credit to https://gist.github.com/killjoy1221/71b4cd975b92afe8dbd2e5f6222b1140
-    public static void drawLongItemName(ToastGui toastGui, MatrixStack matrixStack, long delta, long firstDrawTime, long maxDrawTime, String itemName, boolean shadow)
+    public static void drawLongItemName(ToastGui toastGui, MatrixStack matrixStack, long delta, long firstDrawTime, long maxDrawTime, ITextComponent itemName, boolean shadow)
     {
         long minDraw = (long)(maxDrawTime * 0.1D);
         long maxDraw = maxDrawTime + 500L;
         long backwardDraw = (long)(maxDrawTime * 0.5D);
         long textSpeed = 1500L + (long)(maxDrawTime * 0.1D);
         int x = 30;
-        int textWidth = toastGui.getMinecraft().fontRenderer.getStringWidth(itemName);
+        int textWidth = toastGui.getMinecraft().fontRenderer.getStringPropertyWidth(itemName);
         int maxSize = textWidth - 135;
         long timeElapsed = delta - firstDrawTime - minDraw;
         long timeElapsed2 = maxDraw - delta - backwardDraw;
@@ -236,11 +236,11 @@ public class SBRenderUtils
 
         if (shadow)
         {
-            toastGui.getMinecraft().fontRenderer.drawStringWithShadow(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
+            toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
         else
         {
-            toastGui.getMinecraft().fontRenderer.drawString(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
+            toastGui.getMinecraft().fontRenderer.func_243248_b(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
 
         RenderSystem.disableScissor();

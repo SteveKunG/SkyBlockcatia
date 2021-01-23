@@ -11,7 +11,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBItemUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -36,15 +35,5 @@ public abstract class MixinItem implements IForgeItem
                 info.setReturnValue(ActionResult.resultPass(player.getHeldItem(hand)));
             }
         }
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
-    {
-        if (SkyBlockEventHandler.isSkyBlock && !newStack.isEmpty() && !oldStack.isEmpty() && (oldStack.getItem() == Items.BOW || oldStack.getItem() == Items.IRON_AXE) && oldStack.getItem() == newStack.getItem())
-        {
-            return false;
-        }
-        return !oldStack.equals(newStack);
     }
 }

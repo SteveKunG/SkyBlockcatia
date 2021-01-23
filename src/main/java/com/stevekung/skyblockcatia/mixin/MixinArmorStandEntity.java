@@ -27,11 +27,14 @@ public abstract class MixinArmorStandEntity extends LivingEntity
     @Inject(method = "applyPlayerInteraction(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/vector/Vector3d;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResultType;", cancellable = true, at = @At("HEAD"))
     private void applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand, CallbackInfoReturnable<ActionResultType> info)
     {
-        for (ItemStack content : this.getEquipmentAndArmor())
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.ignoreInteractInvisibleArmorStand)
         {
-            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.ignoreInteractInvisibleArmorStand && (content.isEmpty() || !content.isEmpty() && content.getCount() == 0) && this.isInvisible())
+            for (ItemStack content : this.getEquipmentAndArmor())
             {
-                info.setReturnValue(ActionResultType.PASS);
+                if ((content.isEmpty() || !content.isEmpty() && content.getCount() == 0) && this.isInvisible())
+                {
+                    info.setReturnValue(ActionResultType.PASS);
+                }
             }
         }
     }

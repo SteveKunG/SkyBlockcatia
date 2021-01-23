@@ -8,11 +8,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.event.GrapplingHookEvent;
 import com.stevekung.skyblockcatia.integration.sba.SBAMana;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.CoordsPair;
+import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
@@ -96,7 +97,7 @@ public class HUDRenderEventHandler
         {
             ChestScreen chest = (ChestScreen)this.mc.currentScreen;
 
-            if (MainEventHandler.showChat && MainEventHandler.CHATABLE_LIST.stream().anyMatch(chest.getTitle().getString()::contains))
+            if (MainEventHandler.showChat && GuiScreenUtils.isChatable(chest.getTitle()))
             {
                 event.setCanceled(true);
             }
@@ -131,7 +132,7 @@ public class HUDRenderEventHandler
                 return;
             }
 
-            if (SkyBlockcatiaMod.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getHeldItemMainhand().isEmpty())
+            if (CompatibilityUtils.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getHeldItemMainhand().isEmpty())
             {
                 ItemStack itemStack = this.mc.player.getHeldItemMainhand();
 

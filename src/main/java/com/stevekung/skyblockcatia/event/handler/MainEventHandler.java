@@ -3,13 +3,11 @@ package com.stevekung.skyblockcatia.event.handler;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,6 +18,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SmallArrowButton;
+import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
@@ -32,7 +31,6 @@ import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -45,6 +43,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
@@ -52,14 +51,13 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class MainEventHandler
 {
     private final Minecraft mc;
-    private static final List<String> INVENTORY_LIST = Lists.newArrayList("Trades", "Shop Trading Options", "Backpack", "Chest");
     public static String auctionPrice = "";
-    public static final List<String> CHATABLE_LIST = Lists.newArrayList("You                  ", "Ender Chest", "Craft Item", "Anvil", "Trades", "Shop Trading Options", "Runic Pedestal", "Your Bids", "Bank", "Bank Deposit", "Bank Withdrawal", "Reforge Accessory Bag", "Catacombs Gate");
     public static boolean showChat;
     public static String playerToView;
     public static final Map<String, BazaarData> BAZAAR_DATA = Maps.newHashMap();
     public static boolean bidHighlight = true;
-    private static int inventoryPage;
+    private static boolean showAdditionalButtons;
+    public static int rainbowTicks;
 
     public MainEventHandler()
     {
@@ -81,6 +79,19 @@ public class MainEventHandler
         if (SkyBlockEventHandler.isSkyBlock && TextFormatting.getTextWithoutFormattingCodes(event.getLines().get(0).getString()).equals(" "))
         {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event)
+    {
+        if (this.mc.currentScreen instanceof MainMenuScreen)
+        {
+            rainbowTicks = 0;
+        }
+        if (event.phase == Phase.START)
+        {
+            rainbowTicks += 5;
         }
     }
 
@@ -127,7 +138,7 @@ public class MainEventHandler
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.GRAY + "View all of your SkyBlock")));
                     skyBlockMenu.getTag().getCompound("display").put("Lore", list);
 
-                    if (MainEventHandler.isSuitableForGUI(MainEventHandler.CHATABLE_LIST, title))
+                    if (GuiScreenUtils.isChatable(title))
                     {
                         String chat = MainEventHandler.showChat ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
 
@@ -138,7 +149,7 @@ public class MainEventHandler
                         }));
                     }
 
-                    if (MainEventHandler.isSuitableForGUI(MainEventHandler.INVENTORY_LIST, title) && !title.getString().equals("Ender Chest"))
+                    if (GuiScreenUtils.contains(GuiScreenUtils.INVENTORY, title) && !title.getString().startsWith("Ender Chest"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
                         event.addWidget(new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
@@ -149,7 +160,7 @@ public class MainEventHandler
                         event.addWidget(new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
                         event.addWidget(new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.sendChatMessage("/sbmenu")));
                     }
-                    else if (title.getString().equals("Ender Chest"))
+                    else if (title.getString().startsWith("Ender Chest"))
                     {
                         event.addWidget(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
                         event.addWidget(new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.sendChatMessage("/sbmenu")));
@@ -164,10 +175,10 @@ public class MainEventHandler
                     }
                 }
 
-                if (title.getString().equals("Auctions Browser") || title.getString().startsWith("Auctions:"))
+                if (GuiScreenUtils.isAuctionBrowser(title.getString()))
                 {
                     String bid = MainEventHandler.bidHighlight ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF";
-                    event.addWidget(new ItemButton(width + 89, height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
+                    event.addWidget(new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? chest.getGuiTop() + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
                     {
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
                         ((ItemButton)button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? TextFormatting.GREEN + "ON" : TextFormatting.RED + "OFF")));
@@ -259,33 +270,39 @@ public class MainEventHandler
         }
     }
 
-    public static <T extends Container> boolean isSuitableForGUI(List<String> invList, ITextComponent title)
-    {
-        return invList.stream().anyMatch(title.getString()::contains);
-    }
-
     private void addButtonsToInventory(GuiScreenEvent.InitGuiEvent.Post event, ItemStack wardRobeItem, int width, int height)
     {
-        if (inventoryPage == 0)
+        //        if (inventoryPage == 0)TODO
         {
             event.addWidget(new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
             event.addWidget(new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
             event.addWidget(new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
             event.addWidget(new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
-            event.addWidget(new SmallArrowButton(width + 72, height + 90, 0, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
+            event.addWidget(new SmallArrowButton(width + 72, height + 90, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
         }
-        else
-        {
-            event.addWidget(new ItemButton(width - 9, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.sendChatMessage("/ah")));
-            event.addWidget(new ItemButton(width + 10, height + 86, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.sendChatMessage("/bz")));
-            event.addWidget(new SmallArrowButton(width + 72, height + 90, 1, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
-        }
+        //        else
+        //        {
+        //            event.addWidget(new ItemButton(width - 9, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.sendChatMessage("/ah")));
+        //            event.addWidget(new ItemButton(width + 10, height + 86, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.sendChatMessage("/bz")));
+        //        }
+
+        ItemButton item = new ItemButton(width + 88, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.sendChatMessage("/ah"));
+        item.visible = showAdditionalButtons;
+        event.addWidget(item);
+        item = new ItemButton(width + 88, height + 105, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.sendChatMessage("/bz"));
+        item.visible = showAdditionalButtons;
+        event.addWidget(item);
+        item = new ItemButton(width + 107, height + 86, new ItemStack(Blocks.ENCHANTING_TABLE), TextComponentUtils.component("Enchanting"), button -> this.mc.player.sendChatMessage("/et"));
+        item.visible = showAdditionalButtons;
+        event.addWidget(item);
+        item = new ItemButton(width + 107, height + 105, new ItemStack(Blocks.ANVIL), TextComponentUtils.component("Anvil"), button -> this.mc.player.sendChatMessage("/av"));
+        item.visible = showAdditionalButtons;
+        event.addWidget(item);
     }
 
     private void changeButtonPage(GuiScreenEvent.InitGuiEvent.Post event, ItemStack wardRobeItem, int width, int height)
     {
-        inventoryPage++;
-        inventoryPage %= 2;
+        showAdditionalButtons = !showAdditionalButtons;
         event.getGui().buttons.removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
         event.getGui().getEventListeners().removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
         this.addButtonsToInventory(event, wardRobeItem, width, height);

@@ -9,6 +9,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.HitboxRenderMode;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -22,9 +23,14 @@ public class MixinEntityRendererManager
     @Inject(method = "renderDebugBoundingBox(Lcom/mojang/blaze3d/matrix/MatrixStack;Lcom/mojang/blaze3d/vertex/IVertexBuilder;Lnet/minecraft/entity/Entity;F)V", cancellable = true, at = @At("HEAD"))
     private void renderDebugBoundingBox(MatrixStack matrixStack, IVertexBuilder buffer, Entity entity, float partialTicks, CallbackInfo info)
     {
-        if (SkyBlockcatiaSettings.INSTANCE.showDragonHitboxOnly && !(entity instanceof EnderDragonEntity || entity instanceof EnderCrystalEntity) && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
+        HitboxRenderMode mode = SkyBlockcatiaSettings.INSTANCE.hitboxRenderMode;
+
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
-            info.cancel();
+            if (mode == HitboxRenderMode.DRAGON && !(entity instanceof EnderDragonEntity) || mode == HitboxRenderMode.CRYSTAL && !(entity instanceof EnderCrystalEntity) || mode == HitboxRenderMode.DRAGON_AND_CRYSTAL && !(entity instanceof EnderDragonEntity || entity instanceof EnderCrystalEntity))
+            {
+                info.cancel();
+            }
         }
     }
 }

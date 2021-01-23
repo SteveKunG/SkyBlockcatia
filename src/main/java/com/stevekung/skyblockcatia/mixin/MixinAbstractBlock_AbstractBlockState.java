@@ -23,7 +23,7 @@ public class MixinAbstractBlock_AbstractBlockState
     @Inject(method = "getShape(Lnet/minecraft/world/IBlockReader;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/shapes/ISelectionContext;)Lnet/minecraft/util/math/shapes/VoxelShape;", cancellable = true, at = @At("HEAD"))
     private void getShape(IBlockReader world, BlockPos pos, ISelectionContext context, CallbackInfoReturnable<VoxelShape> info)
     {
-        if (SkyBlockcatiaSettings.INSTANCE.ignoreBushHitbox && SkyBlockEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.ignoreBushHitbox)
         {
             if (this.that.getBlock() instanceof FlowerBlock || this.that.getBlock() instanceof TallGrassBlock || this.that.getBlock() instanceof TallFlowerBlock || this.that.getBlock() instanceof MushroomBlock)
             {

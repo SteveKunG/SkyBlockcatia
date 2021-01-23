@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
-import com.stevekung.stevekungslib.client.event.ClientEventHandler;
+import com.stevekung.stevekungslib.client.event.handler.ClientEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -16,6 +16,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class ItemDropsToast implements IToast
@@ -46,11 +47,11 @@ public class ItemDropsToast implements IToast
     {
         ToastUtils.ItemDrop drop = this.rareDropOutput;
         ItemStack itemStack = drop.getItemStack();
-        String itemName = itemStack.getDisplayName().getString() + this.magicFind;
+        ITextComponent itemName = itemStack.getDisplayName().deepCopy().appendString(this.magicFind);
 
         if (itemStack.getItem() == Items.ENCHANTED_BOOK)
         {
-            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1).getString();
+            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1);
         }
 
         if (this.hasMagicFind)

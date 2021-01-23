@@ -1,5 +1,6 @@
 {
     "required": true,
+    "verbose": true,
     "minVersion": "0.8.2",
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin",
@@ -40,6 +41,7 @@
         "MixinPlayerTabOverlayGui",
         "MixinSimpleReloadableResourceManager",
         "MixinWallOrFloorItem",
+        "debug.MixinSharedConstants",
         "fixes.MixinCommandSuggestionHelper",
         "fixes.MixinEntityDataManager",
         "fixes.MixinFilterList",

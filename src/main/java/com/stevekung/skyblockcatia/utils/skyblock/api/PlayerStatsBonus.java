@@ -76,11 +76,14 @@ public class PlayerStatsBonus
     {
         private final int level;
         private final double health;
+        @SerializedName("farming_fortune")
+        private final double farmingFortune;
 
-        public Farming(int level, double health)
+        public Farming(int level, double health, double farmingFortune)
         {
             this.level = level;
             this.health = health;
+            this.farmingFortune = farmingFortune;
         }
 
         @Override
@@ -94,17 +97,26 @@ public class PlayerStatsBonus
         {
             return this.health;
         }
+
+        @Override
+        public double getFarmingFortune()
+        {
+            return this.farmingFortune;
+        }
     }
 
     public class Foraging implements IBonusTemplate
     {
         private final int level;
         private final double strength;
+        @SerializedName("foraging_fortune")
+        private final double foragingFortune;
 
-        public Foraging(int level, double strength)
+        public Foraging(int level, double strength, double foragingFortune)
         {
             this.level = level;
             this.strength = strength;
+            this.foragingFortune = foragingFortune;
         }
 
         @Override
@@ -118,17 +130,26 @@ public class PlayerStatsBonus
         {
             return this.strength;
         }
+
+        @Override
+        public double getForagingFortune()
+        {
+            return this.foragingFortune;
+        }
     }
 
     public class Mining implements IBonusTemplate
     {
         private final int level;
         private final double defense;
+        @SerializedName("mining_fortune")
+        private final double miningFortune;
 
-        public Mining(int level, double defense)
+        public Mining(int level, double defense, double miningFortune)
         {
             this.level = level;
             this.defense = defense;
+            this.miningFortune = miningFortune;
         }
 
         @Override
@@ -141,6 +162,12 @@ public class PlayerStatsBonus
         public double getDefense()
         {
             return this.defense;
+        }
+
+        @Override
+        public double getMiningFortune()
+        {
+            return this.miningFortune;
         }
     }
 
@@ -197,11 +224,14 @@ public class PlayerStatsBonus
     {
         private final int level;
         private final double intelligence;
+        @SerializedName("ability_damage")
+        private final double abilityDamage;
 
-        public Enchanting(int level, double intelligence)
+        public Enchanting(int level, double intelligence, double abilityDamage)
         {
             this.level = level;
             this.intelligence = intelligence;
+            this.abilityDamage = abilityDamage;
         }
 
         @Override
@@ -214,6 +244,12 @@ public class PlayerStatsBonus
         public double getIntelligence()
         {
             return this.intelligence;
+        }
+
+        @Override
+        public double getAbilityDamage()
+        {
+            return this.abilityDamage;
         }
     }
 

@@ -4,9 +4,9 @@ import org.lwjgl.glfw.GLFW;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.stevekungslib.keybinding.KeyBindingBase;
+import com.stevekung.stevekungslib.utils.client.ClientRegistryUtils;
 
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class KeyBindingHandler
 {
@@ -17,6 +17,9 @@ public class KeyBindingHandler
     public static KeyBinding KEY_SB_VIEW_RECIPE;
     public static KeyBinding KEY_SB_MENU;
     public static KeyBinding KEY_SB_OPEN_WIKI;
+    public static KeyBinding KEY_SB_PETS;
+    public static KeyBinding KEY_SB_WARDROBE;
+    public static KeyBinding KEY_SB_HOTM;
 
     public static void init()
     {
@@ -27,12 +30,18 @@ public class KeyBindingHandler
         KeyBindingHandler.KEY_SB_VIEW_RECIPE = new KeyBindingBase("key.sb_view_recipe.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_B);
         KeyBindingHandler.KEY_SB_MENU = new KeyBindingBase("key.sb_menu.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_M);
         KeyBindingHandler.KEY_SB_OPEN_WIKI = new KeyBindingBase("key.sb_open_wiki.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_APOSTROPHE);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_API_VIEWER);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_ENDER_CHEST);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_CRAFTED_MINIONS);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_CRAFTING_TABLE);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_VIEW_RECIPE);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_MENU);
-        ClientRegistry.registerKeyBinding(KeyBindingHandler.KEY_SB_OPEN_WIKI);
+        KeyBindingHandler.KEY_SB_PETS = new KeyBindingBase("key.sb_pets.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_P);
+        KeyBindingHandler.KEY_SB_WARDROBE = new KeyBindingBase("key.sb_wardrobe.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_R);
+        KeyBindingHandler.KEY_SB_HOTM = new KeyBindingBase("key.sb_hotm.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_M);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_API_VIEWER);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_ENDER_CHEST);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_CRAFTED_MINIONS);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_CRAFTING_TABLE);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_VIEW_RECIPE);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_MENU);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_OPEN_WIKI);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_PETS);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_WARDROBE);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_HOTM);
     }
 }

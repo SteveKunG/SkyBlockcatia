@@ -2,13 +2,21 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.utils.CoinType;
+import com.stevekung.stevekungslib.utils.ColorUtils;
+import com.stevekung.stevekungslib.utils.ItemUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 public class ToastUtils
 {
@@ -31,6 +39,33 @@ public class ToastUtils
         public DropType getType()
         {
             return this.type;
+        }
+
+        public ITextComponent getDisplayName(String value)
+        {
+            if (this.type.matches(ToastUtils.DropCondition.COINS))
+            {
+                return TextComponentUtils.formatted(value + " Coins", ColorUtils.rgbToDecimal("255,223,0"));
+            }
+            else if (this.type == ToastUtils.DropType.PET_LEVEL_UP)
+            {
+                return this.itemStack.getDisplayName().deepCopy().append(TextComponentUtils.formatted(" is now level ", TextFormatting.GREEN)).append(TextComponentUtils.formatted(value, TextFormatting.BLUE)).append(TextComponentUtils.formatted("!", TextFormatting.GREEN));
+            }
+            else if (this.type.matches(ToastUtils.DropCondition.GIFT))
+            {
+                if (ItemStack.areItemStackTagsEqual(this.itemStack, ItemUtils.getSkullItemStack(CoinType.TYPE_1.getId(), CoinType.TYPE_1.getValue())))
+                {
+                    return TextComponentUtils.formatted(value + " Coins", ColorUtils.rgbToDecimal("255,255,85"));
+                }
+                else
+                {
+                    return TextComponentUtils.formatted(value + " ", ColorUtils.rgbToDecimal("255,255,85")).append(this.itemStack.getDisplayName()).append(TextComponentUtils.formatted(" XP", ColorUtils.rgbToDecimal("255,255,85")));
+                }
+            }
+            else
+            {
+                return this.itemStack.getDisplayName();
+            }
         }
     }
 
@@ -100,9 +135,9 @@ public class ToastUtils
         SLAYER_VERY_RARE_DROP_BLUE("VERY RARE DROP!", "85,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         SLAYER_VERY_RARE_DROP_PURPLE("VERY RARE DROP!", "170,0,170", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
         SLAYER_CRAZY_RARE_DROP("CRAZY RARE DROP!", "255,85,255", ImmutableList.of(DropCondition.FORMAT, DropCondition.SPECIAL_DROP)),
-        COMMON_GIFT("COMMON GIFT!", "255,255,255"),
-        SWEET_GIFT("SWEET GIFT!", "255,255,85"),
-        RARE_GIFT("RARE GIFT!", "85,85,255"),
+        COMMON_GIFT("COMMON GIFT!", "255,255,255", ImmutableList.of(DropCondition.GIFT)),
+        SWEET_GIFT("SWEET GIFT!", "255,255,85", ImmutableList.of(DropCondition.GIFT)),
+        RARE_GIFT("RARE GIFT!", "85,85,255", ImmutableList.of(DropCondition.GIFT)),
         SANTA_TIER("SANTA GIFT!", "255,85,85", ImmutableList.of(DropCondition.SPECIAL_DROP)),
         PET_LEVEL_UP("PET LEVEL UP!", "85,85,255"),
         DUNGEON_QUALITY_DROP("DUNGEON DROP!", "255,69,0", ImmutableList.of(DropCondition.SPECIAL_DROP, DropCondition.CONTAINS)),
@@ -133,6 +168,11 @@ public class ToastUtils
         public String getColor()
         {
             return this.color;
+        }
+
+        public ResourceLocation getTexture()
+        {
+            return new ResourceLocation(this.matches(ToastUtils.DropCondition.COINS) || this == PET_LEVEL_UP ? "skyblockcatia:textures/gui/drop_toasts.png" : "skyblockcatia:textures/gui/gift_toasts_" + Integer.valueOf(1 + new Random().nextInt(2)) + ".png");
         }
 
         public long getTime()
@@ -185,6 +225,7 @@ public class ToastUtils
         COINS,
         SPECIAL_DROP,
         CONTAINS,
+        GIFT,
         FORMAT;
     }
 }

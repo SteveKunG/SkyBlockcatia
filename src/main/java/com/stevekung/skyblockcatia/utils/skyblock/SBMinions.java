@@ -46,23 +46,24 @@ public class SBMinions
 
     public enum Type
     {
-        COBBLESTONE(SBSkills.Type.MINING, "44f3d931-5b9a-35a1-a84b-669755c7c7ee", "2f93289a82bd2a06cbbe61b733cfdc1f1bd93c4340f7a90abd9bdda774109071"),
-        OBSIDIAN(SBSkills.Type.MINING, "58c0f4df-db55-3492-be5d-2e72f289aaa9", "320c29ab966637cb9aecc34ee76d5a0130461e0c4fdb08cdaf80939fa1209102"),
+        COBBLESTONE(SBSkills.Type.MINING, "44f3d931-5b9a-35a1-a84b-669755c7c7ee", "2f93289a82bd2a06cbbe61b733cfdc1f1bd93c4340f7a90abd9bdda774109071", true),
+        OBSIDIAN(SBSkills.Type.MINING, "58c0f4df-db55-3492-be5d-2e72f289aaa9", "320c29ab966637cb9aecc34ee76d5a0130461e0c4fdb08cdaf80939fa1209102", true),
         GLOWSTONE(SBSkills.Type.MINING, "985fcfc1-6922-3fdf-8247-13ffd7def691", "20f4d7c26b0310990a7d3a3b45948b95dd4ab407a16a4b6d3b7cb4fba031aeed"),
         GRAVEL(SBSkills.Type.MINING, "b499f2a6-291f-3626-a36d-a888e4a2e424", "7458507ed31cf9a38986ac8795173c609637f03da653f30483a721d3fbe602d"),
         SAND(SBSkills.Type.MINING, "49a80bce-61b1-3f83-b2b4-5122c16a23fe", "81f8e2ad021eefd1217e650e848b57622144d2bf8a39fbd50dab937a7eac10de"),
         CLAY(SBSkills.Type.FISHING, "1f9105c0-7873-3e6d-ae1a-a9a5ca044733", "af9b312c8f53da289060e6452855072e07971458abbf338ddec351e16c171ff8"),
         ICE(SBSkills.Type.MINING, "017c5692-85da-306e-8013-a11fd5f74b59", "e500064321b12972f8e5750793ec1c823da4627535e9d12feaee78394b86dabe"),
         SNOW(SBSkills.Type.MINING, "fde00899-094f-3ff8-81b8-253830a8d3e9", "f6d180684c3521c9fc89478ba4405ae9ce497da8124fa0da5a0126431c4b78c3"),
-        COAL(SBSkills.Type.MINING, "304f13a1-ca59-3db9-8194-68d1c07352d1", "425b8d2ea965c780652d29c26b1572686fd74f6fe6403b5a3800959feb2ad935"),
-        IRON(SBSkills.Type.MINING, "785de520-c4f3-371c-88c8-c8f560bc4977", "af435022cb3809a68db0fccfa8993fc1954dc697a7181494905b03fdda035e4a"),
-        GOLD(SBSkills.Type.MINING, "ef5b80f5-2ddc-3005-b441-784230573c60", "f6da04ed8c810be29bba53c62e712d65cfb25238117b94d7e85a4615775bf14f"),
-        DIAMOND(SBSkills.Type.MINING, "50cb7221-fcc7-3450-a8ee-6d7593ebec22", "2354bbe604dfe58bf92e7729730d0c8e37844e831ee3816d7e8427c27a1824a2"),
-        LAPIS(SBSkills.Type.MINING, "7ef29dbe-89c9-3372-80c8-edf8955b285a", "64fd97b9346c1208c1db3957530cdfc5789e3e65943786b0071cf2b2904a6b5c"),
-        REDSTONE(SBSkills.Type.MINING, "a4fff41c-bae4-393c-8d97-e98075ccb590", "1edefcf1a89d687a0a4ecf1589977af1e520fc673c48a0434be426612e8faa67"),
-        EMERALD(SBSkills.Type.MINING, "8383fe2e-6c76-32cf-8e5f-264b13de62ae", "9bf57f3401b130c6b53808f2b1e119cc7b984622dac7077bbd53454e1f65bbf0"),
+        COAL(SBSkills.Type.MINING, "304f13a1-ca59-3db9-8194-68d1c07352d1", "425b8d2ea965c780652d29c26b1572686fd74f6fe6403b5a3800959feb2ad935", true),
+        IRON(SBSkills.Type.MINING, "785de520-c4f3-371c-88c8-c8f560bc4977", "af435022cb3809a68db0fccfa8993fc1954dc697a7181494905b03fdda035e4a", true),
+        GOLD(SBSkills.Type.MINING, "ef5b80f5-2ddc-3005-b441-784230573c60", "f6da04ed8c810be29bba53c62e712d65cfb25238117b94d7e85a4615775bf14f", true),
+        DIAMOND(SBSkills.Type.MINING, "50cb7221-fcc7-3450-a8ee-6d7593ebec22", "2354bbe604dfe58bf92e7729730d0c8e37844e831ee3816d7e8427c27a1824a2", true),
+        LAPIS(SBSkills.Type.MINING, "7ef29dbe-89c9-3372-80c8-edf8955b285a", "64fd97b9346c1208c1db3957530cdfc5789e3e65943786b0071cf2b2904a6b5c", true),
+        REDSTONE(SBSkills.Type.MINING, "a4fff41c-bae4-393c-8d97-e98075ccb590", "1edefcf1a89d687a0a4ecf1589977af1e520fc673c48a0434be426612e8faa67", true),
+        EMERALD(SBSkills.Type.MINING, "8383fe2e-6c76-32cf-8e5f-264b13de62ae", "9bf57f3401b130c6b53808f2b1e119cc7b984622dac7077bbd53454e1f65bbf0", true),
         QUARTZ(SBSkills.Type.MINING, "26774528-cfaf-398d-9e9c-e68e8761d1ed", "d270093be62dfd3019f908043db570b5dfd366fd5345fccf9da340e75c701a60"),
         ENDER_STONE(SBSkills.Type.MINING, "END_STONE", "13276fea-088f-32f2-bf79-a3201607ec56", "7994be3dcfbb4ed0a5a7495b7335af1a3ced0b5888b5007286a790767c3b57e6"),
+        MITHRIL(SBSkills.Type.MINING, "671ce3e7-e3d7-3add-86fb-2c7854f651ad", "c62fa670ff8599b32ab344195ba15f3ef64c3a8aa8a37821c08375950cb74cd0", true),
         WHEAT(SBSkills.Type.FARMING, "81b06ed8-e9ec-34e2-b11f-234eb6e20318", "bbc571c5527336352e2fee2b40a9edfa2e809f64230779aa01253c6aa535881b"),
         MELON(SBSkills.Type.FARMING, "845dc766-7f65-3750-9807-461185f480ab", "95d54539ac8d3fba9696c91f4dcc7f15c320ab86029d5c92f12359abd4df811e"),
         PUMPKIN(SBSkills.Type.FARMING, "a25aead0-758a-3ced-8153-84362a361c47", "f3fb663e843a7da787e290f23c8af2f97f7b6f572fa59a0d4d02186db6eaabb7"),
@@ -103,19 +104,31 @@ public class SBMinions
         private final String altName;
         private final String uuid;
         private final String value;
+        private final boolean hasTier12;
         public static final SBMinions.Type[] VALUES = SBMinions.Type.values();
 
-        private Type(SBSkills.Type category, String altName, String uuid, String value)
+        private Type(SBSkills.Type category, String altName, String uuid, String value, boolean hasTier12)
         {
             this.category = category;
             this.altName = altName;
             this.uuid = uuid;
             this.value = value;
+            this.hasTier12 = hasTier12;
+        }
+
+        private Type(SBSkills.Type category, String altName, String uuid, String value)
+        {
+            this(category, altName, uuid, value, false);
+        }
+
+        private Type(SBSkills.Type category, String uuid, String value, boolean hasTier12)
+        {
+            this(category, null, uuid, value, hasTier12);
         }
 
         private Type(SBSkills.Type category, String uuid, String value)
         {
-            this(category, null, uuid, value);
+            this(category, null, uuid, value, false);
         }
 
         public String getAltName()
@@ -131,6 +144,23 @@ public class SBMinions
         public ItemStack getMinionItem()
         {
             return ItemUtils.getSkullItemStack(this.uuid, this.value);
+        }
+
+        public boolean isHasTier12()
+        {
+            return this.hasTier12;
+        }
+
+        public static SBMinions.Type getTypeByName(String name)
+        {
+            for (SBMinions.Type type : values())
+            {
+                if (type.name().equals(name))
+                {
+                    return type;
+                }
+            }
+            return null;
         }
     }
 

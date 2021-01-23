@@ -15,6 +15,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class GiftToast implements IToast
@@ -37,11 +38,11 @@ public class GiftToast implements IToast
     {
         ToastUtils.ItemDrop drop = this.itemDrop;
         ItemStack itemStack = drop.getItemStack();
-        String itemName = itemStack.getDisplayName().getString();
+        ITextComponent itemName = itemStack.getDisplayName();
 
         if (itemStack.getItem() == Items.ENCHANTED_BOOK)
         {
-            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1).getString();
+            itemName = itemStack.getTooltip(null, ITooltipFlag.TooltipFlags.NORMAL).get(1);
         }
 
         toastGui.getMinecraft().getTextureManager().bindTexture(this.texture);

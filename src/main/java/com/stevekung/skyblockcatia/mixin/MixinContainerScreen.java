@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.mixin;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
@@ -26,6 +24,7 @@ import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
+import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
 import com.stevekung.skyblockcatia.utils.SearchMode;
 import com.stevekung.stevekungslib.client.gui.NumberWidget;
@@ -59,9 +58,6 @@ import net.minecraftforge.common.util.Constants;
 public class MixinContainerScreen<T extends Container> extends Screen implements ITradeScreen
 {
     private final ContainerScreen that = (ContainerScreen) (Object) this;
-    private static final ImmutableList<String> IGNORE_ITEMS = ImmutableList.of(" ", "Recipe Required", "Item To Upgrade", "Rune to Sacrifice", "Runic Pedestal", "Final confirmation", "Quick Crafting Slot", "Enchant Item", "Item to Sacrifice");
-    private static final ImmutableList<String> INVENTORY_LIST = ImmutableList.of("SkyBlock Menu", "Skill", "Collection", "Crafted Minions", "Recipe", "Quest Log", "Fairy Souls Guide", "Calendar and Events", "Settings", "Profiles Management", "Fast Travel", "SkyBlock Profile", "'s Profile", "' Profile", "Bank", "Harp");
-    private static final ImmutableList<String> ITEM_LIST = ImmutableList.of(TextFormatting.GREEN + "Go Back", TextFormatting.RED + "Close");
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -84,14 +80,14 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isAuctionBrowser())
+            if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 this.minecraft.keyboardListener.enableRepeatEvents(true);
                 this.priceSearch = new NumberWidget(this.font, this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 100, 20);
                 this.priceSearch.setText(MainEventHandler.auctionPrice);
                 this.priceSearch.setCanLoseFocus(true);
             }
-            if (this.isChatableGui())
+            if (GuiScreenUtils.isChatable(this.getTitle()))
             {
                 this.minecraft.keyboardListener.enableRepeatEvents(true);
                 this.sentHistoryCursor = this.minecraft.ingameGUI.getChatGUI().getSentMessages().size();
@@ -104,7 +100,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                 this.commandSuggestionHelper = new CommandSuggestionHelper(this.minecraft, this, this.inputField, this.font, false, false, 1, 10, true, -805306368);
                 this.commandSuggestionHelper.init();
             }
-            if (this.isPeopleAuction())
+            if (GuiScreenUtils.isOtherAuction(this.getTitle().getString()))
             {
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 70, 70, 20, TextComponentUtils.component("Copy Seller"), button ->
                 {
@@ -118,7 +114,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                     this.minecraft.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
-            if (this.isPeopleProfile())
+            if (GuiScreenUtils.isOtherProfile(this.getTitle().getString()))
             {
                 this.addButton(new Button(this.that.getGuiLeft() + 180, this.that.getGuiTop() + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
@@ -134,7 +130,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isChatableGui())
+            if (GuiScreenUtils.isChatable(this.getTitle()))
             {
                 if (this.commandSuggestionHelper.onClick((int)mouseX, (int)mouseY, mouseButton))
                 {
@@ -149,7 +145,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                     }
                 }
             }
-            else if (this.isAuctionBrowser() && this.priceSearch.mouseClicked(mouseX, mouseY, mouseButton))
+            else if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()) && this.priceSearch.mouseClicked(mouseX, mouseY, mouseButton))
             {
                 info.setReturnValue(true);
             }
@@ -161,11 +157,11 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isChatableGui() || this.isAuctionBrowser())
+            if (GuiScreenUtils.isChatable(this.getTitle()) || GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 this.minecraft.keyboardListener.enableRepeatEvents(false);
             }
-            if (this.isAuctionBrowser())
+            if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 MainEventHandler.auctionPrice = this.priceSearch.getText();
             }
@@ -177,11 +173,11 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isChatableGui())
+            if (GuiScreenUtils.isChatable(this.getTitle()))
             {
                 this.inputField.tick();
             }
-            if (this.isAuctionBrowser())
+            if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 MainEventHandler.auctionPrice = this.priceSearch.getText();
                 this.priceSearch.tick();
@@ -195,7 +191,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isChatableGui())
+            if (GuiScreenUtils.isChatable(this.getTitle()))
             {
                 if (MainEventHandler.showChat)
                 {
@@ -211,7 +207,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                 this.commandSuggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
                 this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
             }
-            if (this.priceSearch != null && this.isAuctionBrowser())
+            if (this.priceSearch != null && GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 AbstractGui.drawString(matrixStack, this.font, "Search for price:", this.that.getGuiLeft() + 180, this.that.getGuiTop() + 26, 10526880);
                 this.priceSearch.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -222,7 +218,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     @Inject(method = "keyPressed(III)Z", cancellable = true, at = @At("HEAD"))
     private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info)
     {
-        if (!this.isChatableGui() && !this.isAuctionBrowser() && this.that.getSlotUnderMouse() != null && this.that.getSlotUnderMouse().getHasStack())
+        if (!GuiScreenUtils.isChatable(this.getTitle()) && !GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()) && this.that.getSlotUnderMouse() != null && this.that.getSlotUnderMouse().getHasStack())
         {
             if (keyCode == KeyBindingHandler.KEY_SB_VIEW_RECIPE.getKey().getKeyCode())
             {
@@ -246,7 +242,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
 
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isChatableGui())
+            if (GuiScreenUtils.isChatable(this.getTitle()))
             {
                 if (this.commandSuggestionHelper.onKeyPressed(keyCode, scanCode, modifiers))
                 {
@@ -318,7 +314,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                     }
                 }
             }
-            else if (this.isAuctionBrowser())
+            else if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 if (super.keyPressed(keyCode, scanCode, modifiers))
                 {
@@ -366,36 +362,9 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (slot != null && SkyBlockEventHandler.isSkyBlock)
         {
-            ItemStack itemStack = slot.getStack();
-
-            if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && !itemStack.isEmpty())
-            {
-                if (this.ignoreNullItem(itemStack, IGNORE_ITEMS))
-                {
-                    info.cancel();
-                }
-                if (itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
-                {
-                    String id = itemStack.getTag().getCompound("ExtraAttributes").getString("id");
-
-                    if (id.equals("SKYBLOCK_MENU"))
-                    {
-                        this.minecraft.playerController.windowClick(this.that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
-                        info.cancel();
-                    }
-                }
-            }
-
             if (this.that instanceof ChestScreen)
             {
-                String name = itemStack.getDisplayName().getString();
-
-                if (SkyBlockcatiaSettings.INSTANCE.preventClickingOnDummyItem && mouseButton == 0 && type == ClickType.PICKUP && (MainEventHandler.isSuitableForGUI(INVENTORY_LIST, this.getTitle()) || ITEM_LIST.stream().anyMatch(name::equals)))
-                {
-                    this.minecraft.playerController.windowClick(this.that.getContainer().windowId, slotId, 2, ClickType.CLONE, this.minecraft.player);
-                    info.cancel();
-                }
-                if (mouseButton == 2 && type == ClickType.CLONE && this.canViewSeller())
+                if (mouseButton == 2 && type == ClickType.CLONE && GuiScreenUtils.canViewSeller(this.getTitle().getString()))
                 {
                     if (!slot.getStack().isEmpty() && slot.getStack().hasTag())
                     {
@@ -507,7 +476,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (MainEventHandler.bidHighlight && this.isRenderBids())
+            if (MainEventHandler.bidHighlight && GuiScreenUtils.canRenderBids(this.getTitle().getString()))
             {
                 this.renderBids(matrixStack, slot);
             }
@@ -578,7 +547,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     {
         if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen)
         {
-            if (this.isChatableGui())
+            if (GuiScreenUtils.isChatable(this.getTitle()))
             {
                 String text = this.inputField.getText();
                 boolean focus = this.inputField.isFocused();
@@ -587,7 +556,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                 this.inputField.setFocused2(focus);
                 this.commandSuggestionHelper.init();
             }
-            else if (this.isAuctionBrowser())
+            else if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
                 boolean focus = this.priceSearch.isFocused();
                 super.resize(mc, width, height);
@@ -607,7 +576,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen && this.isChatableGui())
+        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ChestScreen && GuiScreenUtils.isChatable(this.getTitle()))
         {
             if (scrollDelta > 1.0D)
             {
@@ -639,51 +608,10 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
         return this.priceSearch;
     }
 
-    private boolean isAuctionBrowser()
-    {
-        String title = this.title.getString();
-        return title.equals("Auctions Browser") || title.startsWith("Auctions:") || title.endsWith("'s Auctions");
-    }
-
-    private boolean isRenderBids()
-    {
-        String title = this.title.getString();
-        return title.equals("Auctions Browser") || title.startsWith("Auctions:") || title.equals("Manage Auctions") || title.equals("Your Bids") || title.endsWith("'s Auctions");
-    }
-
-    private boolean isPeopleAuction()
-    {
-        String title = this.title.getString();
-        return title.endsWith("'s Auctions");
-    }
-
-    private boolean isPeopleProfile()
-    {
-        String title = this.title.getString();
-        return title.endsWith("'s Profile") || title.endsWith("' Profile");
-    }
-
-    private boolean isChatableGui()
-    {
-        String title = this.title.getString();
-        return MainEventHandler.CHATABLE_LIST.stream().anyMatch(title::contains);
-    }
-
-    private boolean canViewSeller()
-    {
-        String title = this.title.getString();
-        return title.equals("Auctions Browser") || title.equals("Your Bids") || title.equals("Auction View");
-    }
-
     private void setCommandResponder()
     {
         this.commandSuggestionHelper.shouldAutoSuggest(false);
         this.commandSuggestionHelper.init();
-    }
-
-    private boolean ignoreNullItem(ItemStack itemStack, List<String> ignores)
-    {
-        return ignores.stream().anyMatch(itemStack.getDisplayName().getString()::equals);
     }
 
     private void getSentHistory(int msgPos)

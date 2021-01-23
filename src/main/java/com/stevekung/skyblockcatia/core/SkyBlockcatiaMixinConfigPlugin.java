@@ -16,16 +16,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
 
     static
     {
-        foundOptifine = Thread.currentThread().getContextClassLoader().getResourceAsStream("net/optifine/Config.class") != null;
-
-        if (foundOptifine)
-        {
-            LOGGER.info("OptiFine detected!");
-        }
-        else
-        {
-            LOGGER.info("OptiFine not found!");
-        }
+        foundOptifine = findAndDetectModClass("net/optifine/Config.class", "OptiFine");
     }
 
     @Override
@@ -65,4 +56,11 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
+
+    private static boolean findAndDetectModClass(String classPath, String modName)
+    {
+        boolean found = Thread.currentThread().getContextClassLoader().getResourceAsStream(classPath) != null;
+        LOGGER.info(found ? modName + " detected!" : modName + " not detected!");
+        return found;
+    }
 }

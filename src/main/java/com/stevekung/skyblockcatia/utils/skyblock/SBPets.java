@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.text.WordUtils;
 
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataGetter;
@@ -13,6 +16,7 @@ import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class SBPets
@@ -95,6 +99,7 @@ public class SBPets
         LION(SBSkills.Type.FORAGING, "7e3ed445-3545-3c76-993b-8f292ea576c6", "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1"),
         MAGMA_CUBE(SBSkills.Type.COMBAT, "35f02923-7bec-3869-9ef5-b42a4794cac8", "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429"),
         MEGALODON(SBSkills.Type.FISHING, "82fc79b9-fded-3c05-b8dc-00e562803862", "a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9"),
+        MITHRIL_GOLEM(SBSkills.Type.MINING, "39fb84b5-72d3-3221-b373-aa315e956e83", "c1b2dfe8ed5dffc5b1687bc1c249c39de2d8a6c3d90305c95f6d1a1a330a0b1"),
         MONKEY(SBSkills.Type.FORAGING, "e410c089-bb3a-40a3-add6-188d6187ac87", "13cf8db84807c471d7c6922302261ac1b5a179f96d1191156ecf3e1b1d3ca"),
         OCELOT(SBSkills.Type.FORAGING, "664dd492-3fcd-443b-9e61-4c7ebd9e4e10", "5657cd5c2989ff97570fec4ddcdc6926a68a3393250c1be1f0b114a1db1"),
         PARROT(SBSkills.Type.ALCHEMY, "db4d678a-731a-49cc-8dae-2cee4a5b80c9", "5df4b3401a4d06ad66ac8b5c4d189618ae617f9c143071c8ac39a563cf4e4208"),
@@ -142,48 +147,50 @@ public class SBPets
 
     public enum HeldItem
     {
-        PET_ITEM_ALL_SKILLS_BOOST_COMMON("PET_ITEM_ALL_SKILLS_BOOST", TextFormatting.WHITE),
-        PET_ITEM_BIG_TEETH_COMMON("PET_ITEM_BIG_TEETH", TextFormatting.WHITE),
-        PET_ITEM_IRON_CLAWS_COMMON("PET_ITEM_IRON_CLAWS", TextFormatting.WHITE),
-        PET_ITEM_SHARPENED_CLAWS_UNCOMMON("PET_ITEM_SHARPENED_CLAWS", TextFormatting.GREEN),
-        PET_ITEM_HARDENED_SCALES_UNCOMMON("PET_ITEM_HARDENED_SCALES", TextFormatting.GREEN),
+        PET_ITEM_ALL_SKILLS_BOOST_COMMON(formatName("ALL_SKILLS_BOOST"), TextFormatting.WHITE),
+        PET_ITEM_BIG_TEETH_COMMON(formatName("BIG_TEETH"), TextFormatting.WHITE),
+        PET_ITEM_IRON_CLAWS_COMMON(formatName("IRON_CLAWS"), TextFormatting.WHITE),
+        PET_ITEM_SHARPENED_CLAWS_UNCOMMON(formatName("SHARPENED_CLAWS"), TextFormatting.GREEN),
+        PET_ITEM_HARDENED_SCALES_UNCOMMON(formatName("HARDENED_SCALES"), TextFormatting.GREEN),
         PET_ITEM_BUBBLEGUM(TextFormatting.BLUE),
         PET_ITEM_LUCKY_CLOVER(TextFormatting.DARK_PURPLE),
         PET_ITEM_TEXTBOOK(TextFormatting.GOLD),
         PET_ITEM_SADDLE(TextFormatting.GREEN),
         PET_ITEM_EXP_SHARE(TextFormatting.DARK_PURPLE),
         PET_ITEM_TIER_BOOST(TextFormatting.GOLD),
-        PET_ITEM_COMBAT_SKILL_BOOST_COMMON("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.WHITE),
-        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.GREEN),
-        PET_ITEM_COMBAT_SKILL_BOOST_RARE("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.BLUE),
-        PET_ITEM_COMBAT_SKILL_BOOST_EPIC("PET_ITEM_COMBAT_SKILL_BOOST", TextFormatting.DARK_PURPLE),
-        PET_ITEM_FISHING_SKILL_BOOST_COMMON("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.WHITE),
-        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.GREEN),
-        PET_ITEM_FISHING_SKILL_BOOST_RARE("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.BLUE),
-        PET_ITEM_FISHING_SKILL_BOOST_EPIC("PET_ITEM_FISHING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
-        PET_ITEM_FORAGING_SKILL_BOOST_COMMON("PET_ITEM_FORAGING_SKILL_BOOST", TextFormatting.WHITE),
-        PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON("PET_ITEM_FORAGING_SKILL_BOOST", TextFormatting.GREEN),
-        PET_ITEM_FORAGING_SKILL_BOOST_RARE("PET_ITEM_FORAGING_SKILL_BOOST", TextFormatting.BLUE),
-        PET_ITEM_FORAGING_SKILL_BOOST_EPIC("PET_ITEM_FORAGING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
-        PET_ITEM_MINING_SKILL_BOOST_COMMON("PET_ITEM_MINING_SKILL_BOOST", TextFormatting.WHITE),
-        PET_ITEM_MINING_SKILL_BOOST_UNCOMMON("PET_ITEM_MINING_SKILL_BOOST", TextFormatting.GREEN),
-        PET_ITEM_MINING_SKILL_BOOST_RARE("PET_ITEM_MINING_SKILL_BOOST", TextFormatting.BLUE),
-        PET_ITEM_MINING_SKILL_BOOST_EPIC("PET_ITEM_MINING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
-        PET_ITEM_FARMING_SKILL_BOOST_COMMON("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.WHITE),
-        PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.GREEN),
-        PET_ITEM_FARMING_SKILL_BOOST_RARE("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.BLUE),
-        PET_ITEM_FARMING_SKILL_BOOST_EPIC("PET_ITEM_FARMING_SKILL_BOOST", TextFormatting.DARK_PURPLE),
+        PET_ITEM_COMBAT_SKILL_BOOST_COMMON(formatName("COMBAT_SKILL_BOOST"), TextFormatting.WHITE),
+        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON(formatName("COMBAT_SKILL_BOOST"), TextFormatting.GREEN),
+        PET_ITEM_COMBAT_SKILL_BOOST_RARE(formatName("COMBAT_SKILL_BOOST"), TextFormatting.BLUE),
+        PET_ITEM_COMBAT_SKILL_BOOST_EPIC(formatName("COMBAT_SKILL_BOOST"), TextFormatting.DARK_PURPLE),
+        PET_ITEM_FISHING_SKILL_BOOST_COMMON(formatName("FISHING_SKILL_BOOST"), TextFormatting.WHITE),
+        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON(formatName("FISHING_SKILL_BOOST"), TextFormatting.GREEN),
+        PET_ITEM_FISHING_SKILL_BOOST_RARE(formatName("FISHING_SKILL_BOOST"), TextFormatting.BLUE),
+        PET_ITEM_FISHING_SKILL_BOOST_EPIC(formatName("FISHING_SKILL_BOOST"), TextFormatting.DARK_PURPLE),
+        PET_ITEM_FORAGING_SKILL_BOOST_COMMON(formatName("FORAGING_SKILL_BOOST"), TextFormatting.WHITE),
+        PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON(formatName("FORAGING_SKILL_BOOST"), TextFormatting.GREEN),
+        PET_ITEM_FORAGING_SKILL_BOOST_RARE(formatName("FORAGING_SKILL_BOOST"), TextFormatting.BLUE),
+        PET_ITEM_FORAGING_SKILL_BOOST_EPIC(formatName("FORAGING_SKILL_BOOST"), TextFormatting.DARK_PURPLE),
+        PET_ITEM_MINING_SKILL_BOOST_COMMON(formatName("MINING_SKILL_BOOST"), TextFormatting.WHITE),
+        PET_ITEM_MINING_SKILL_BOOST_UNCOMMON(formatName("MINING_SKILL_BOOST"), TextFormatting.GREEN),
+        PET_ITEM_MINING_SKILL_BOOST_RARE(formatName("MINING_SKILL_BOOST"), TextFormatting.BLUE),
+        PET_ITEM_MINING_SKILL_BOOST_EPIC(formatName("MINING_SKILL_BOOST"), TextFormatting.DARK_PURPLE),
+        PET_ITEM_FARMING_SKILL_BOOST_COMMON(formatName("FARMING_SKILL_BOOST"), TextFormatting.WHITE),
+        PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON(formatName("FARMING_SKILL_BOOST"), TextFormatting.GREEN),
+        PET_ITEM_FARMING_SKILL_BOOST_RARE(formatName("FARMING_SKILL_BOOST"), TextFormatting.BLUE),
+        PET_ITEM_FARMING_SKILL_BOOST_EPIC(formatName("FARMING_SKILL_BOOST"), TextFormatting.DARK_PURPLE),
         REINFORCED_SCALES(TextFormatting.BLUE),
         GOLD_CLAWS(TextFormatting.GREEN),
         ALL_SKILLS_SUPER_BOOST(TextFormatting.WHITE),
         BIGGER_TEETH(TextFormatting.GREEN),
         SERRATED_CLAWS(TextFormatting.BLUE),
-        WASHED_UP_SOUVENIR("WASHED-UP_SOUVENIR", TextFormatting.GOLD),
+        WASHED_UP_SOUVENIR("Washed-up Souvenir", TextFormatting.GOLD),
         ANTIQUE_REMEDIES(TextFormatting.DARK_PURPLE),
         CROCHET_TIGER_PLUSHIE(TextFormatting.DARK_PURPLE),
         DWARF_TURTLE_SHELMET(TextFormatting.BLUE),
+        MINOS_RELIC(TextFormatting.DARK_PURPLE),
         PET_ITEM_SPOOKY_CUPCAKE(TextFormatting.GREEN),
-        PET_ITEM_VAMPIRE_FANG(TextFormatting.GOLD);
+        PET_ITEM_VAMPIRE_FANG(TextFormatting.GOLD),
+        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", TextFormatting.GOLD);
 
         private final String altName;
         private final TextFormatting color;
@@ -208,6 +215,16 @@ public class SBPets
         {
             return this.color;
         }
+
+        public boolean isUpgradeToNextRarity()
+        {
+            return this == PET_ITEM_TIER_BOOST || this == PET_ITEM_VAMPIRE_FANG || this == PET_ITEM_TOY_JERRY;
+        }
+
+        private static String formatName(String name)
+        {
+            return WordUtils.capitalize(name.toLowerCase(Locale.ROOT).replace("_", " "));
+        }
     }
 
     public static class Skin
@@ -215,13 +232,15 @@ public class SBPets
         private final String skin;
         @SerializedName("displayName")
         private final String name;
+        private final String color;
         private final String uuid;
         private final String texture;
 
-        public Skin(String skin, String name, String uuid, String texture)
+        public Skin(String skin, String name, String color, String uuid, String texture)
         {
             this.skin = skin;
             this.name = name;
+            this.color = color;
             this.uuid = uuid;
             this.texture = texture;
         }
@@ -234,6 +253,11 @@ public class SBPets
         public String getName()
         {
             return this.name;
+        }
+
+        public TextFormatting getColor()
+        {
+            return TextFormatting.getValueByName(this.color);
         }
 
         public String getUUID()
@@ -314,15 +338,15 @@ public class SBPets
     {
         private final SBPets.Tier tier;
         private final int currentLevel;
-        private final double currentXp;
+        private final ITextComponent name;
         private final boolean isActive;
         private final List<ItemStack> itemStack;
 
-        public Data(SBPets.Tier tier, int currentLevel, double currentXp, boolean isActive, List<ItemStack> itemStack)
+        public Data(SBPets.Tier tier, int currentLevel, ITextComponent name, boolean isActive, List<ItemStack> itemStack)
         {
             this.tier = tier;
             this.currentLevel = currentLevel;
-            this.currentXp = currentXp;
+            this.name = name;
             this.isActive = isActive;
             this.itemStack = itemStack;
         }
@@ -342,9 +366,9 @@ public class SBPets
             return this.currentLevel;
         }
 
-        public double getCurrentXp()
+        public ITextComponent getName()
         {
-            return this.currentXp;
+            return this.name;
         }
 
         public boolean isActive()

@@ -130,6 +130,7 @@ public class PetStats
                         double exp = 0.0D;
                         String petRarity = SBPets.Tier.COMMON.name();
                         JsonElement heldItemObj = element.getAsJsonObject().get("heldItem");
+                        boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                         SBPets.HeldItem heldItem = null;
 
                         if (element.getAsJsonObject().get("exp") != null)
@@ -150,10 +151,9 @@ public class PetStats
                         }
 
                         SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
-                        boolean active = element.getAsJsonObject().get("active").getAsBoolean();
                         String petType = element.getAsJsonObject().get("type").getAsString();
 
-                        if (heldItem != null && heldItem == SBPets.HeldItem.PET_ITEM_TIER_BOOST)
+                        if (heldItem != null && heldItem.isUpgradeToNextRarity())
                         {
                             tier = SBPets.Tier.values()[Math.min(SBPets.Tier.values().length - 1, tier.ordinal() + 1)];
                         }

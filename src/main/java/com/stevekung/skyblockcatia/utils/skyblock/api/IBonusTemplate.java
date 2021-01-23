@@ -71,4 +71,29 @@ public interface IBonusTemplate
     {
         return 0;
     }
+
+    default double getAbilityDamage()
+    {
+        return 0;
+    }
+
+    default double getMiningSpeed()
+    {
+        return 0;
+    }
+
+    default double getMiningFortune()
+    {
+        return 0;
+    }
+
+    default double getFarmingFortune()
+    {
+        return 0;
+    }
+
+    default double getForagingFortune()
+    {
+        return 0;
+    }
 }

@@ -12,6 +12,7 @@ public class SBStats
     private ITextComponent component;
     private String name;
     private double value;
+    private String valueString;
 
     public SBStats(ITextComponent component, double value)
     {
@@ -23,6 +24,13 @@ public class SBStats
     {
         this.name = name;
         this.value = value;
+    }
+
+    public SBStats(String name, String valueString)
+    {
+        this.name = name;
+        this.value = 0;
+        this.valueString = valueString;
     }
 
     public ITextComponent getName()
@@ -45,9 +53,9 @@ public class SBStats
         {
             return "";
         }
-        else if (this.name.contains("Race") || this.name.contains("No Return") || this.name.contains("With Return"))
+        else if (!StringUtils.isNullOrEmpty(this.valueString))
         {
-            return String.format("%1$TM:%1$TS.%1$TL", (long)this.value);
+            return this.valueString;
         }
         return NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.value);
     }

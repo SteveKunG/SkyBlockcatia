@@ -48,7 +48,7 @@ public class RenderSkyBlockInfo
                 }
                 event.getInfos().add(new InfoOverlay("Placed Eye", summoningEyeCount + "/8", SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeColor, SkyBlockcatiaSettings.INSTANCE.placedSummoningEyeValueColor, InfoOverlay.Position.RIGHT));
             }
-            if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerCount && !IndicatiaIntegration.otherPlayerIsland && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND && !this.mc.isSingleplayer())
+            if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerCount && !SkyBlockEventHandler.otherPlayerIsland && SkyBlockEventHandler.SKY_BLOCK_LOCATION != SBLocation.YOUR_ISLAND && !this.mc.isSingleplayer())
             {
                 List<NetworkPlayerInfo> list = PlayerTabOverlayGui.ENTRY_ORDERING.sortedCopy(this.mc.player.connection.getPlayerInfoMap());
                 event.getInfos().add(new InfoOverlay("Lobby Players Count", String.valueOf(HUDRenderEventHandler.getPlayerCount(list)), ColorUtils.decimalToRgb(TextFormatting.GOLD.getColor()), ColorUtils.decimalToRgb(TextFormatting.GREEN.getColor()), InfoOverlay.Position.RIGHT));

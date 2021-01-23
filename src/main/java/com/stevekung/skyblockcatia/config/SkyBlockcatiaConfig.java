@@ -17,6 +17,7 @@ public class SkyBlockcatiaConfig
         // General
         public final ForgeConfigSpec.BooleanValue enableSkinRenderingFix;
         public final ForgeConfigSpec.BooleanValue disableHurtCameraEffect;
+        public final ForgeConfigSpec.BooleanValue enableChatInContainerScreen;
         public final ForgeConfigSpec.ConfigValue<String> hypixelApiKey;
 
         General(ForgeConfigSpec.Builder builder)
@@ -35,6 +36,10 @@ public class SkyBlockcatiaConfig
             this.disableHurtCameraEffect = builder
                     .translation("skyblockcatia.configgui.disable_hurt_camera_effect")
                     .define("disableHurtCameraEffect", false);
+
+            this.enableChatInContainerScreen = builder
+                    .translation("skyblockcatia.configgui.enable_chat_in_container_screen")
+                    .define("enableChatInContainerScreen", true);
 
             builder.pop();
         }

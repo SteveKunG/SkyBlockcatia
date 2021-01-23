@@ -5,20 +5,21 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
-import com.stevekung.skyblockcatia.command.RefreshApiDataCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
-import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.event.handler.ToastTestEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
+import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.stevekungslib.utils.CommonUtils;
@@ -26,7 +27,6 @@ import com.stevekung.stevekungslib.utils.LoggerBase;
 import com.stevekung.stevekungslib.utils.VersionChecker;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -37,8 +37,6 @@ public class SkyBlockcatiaMod
 {
     public static final String MOD_ID = "skyblockcatia";
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
-    public static boolean isSkyblockAddonsLoaded;
-    public static boolean isIndicatiaLoaded;
     public static final List<String> SUPPORTERS_NAME = Lists.newCopyOnWriteArrayList();
     public static VersionChecker CHECKER;
     private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
@@ -72,9 +70,7 @@ public class SkyBlockcatiaMod
         CommonUtils.registerModEventBus(SkyBlockcatiaConfig.class);
         CommonUtils.addModListener(this::phaseOne);
         CommonUtils.addModListener(this::loadComplete);
-
-        SkyBlockcatiaMod.isSkyblockAddonsLoaded = ModList.get().isLoaded("skyblockaddons");
-        SkyBlockcatiaMod.isIndicatiaLoaded = ModList.get().isLoaded("indicatia");
+        CompatibilityUtils.init();
         SkyBlockcatiaMod.CHECKER = new VersionChecker(this, "SkyBlockcatia", URL);
     }
 
@@ -87,16 +83,15 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new MainEventHandler());
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
         CommonUtils.registerEventHandler(new SkyBlockEventHandler());
-        CommonUtils.registerEventHandler(new ClientEventHandler());
+        CommonUtils.registerEventHandler(new ToastTestEventHandler());
 
-        if (SkyBlockcatiaMod.isIndicatiaLoaded)
+        if (CompatibilityUtils.isIndicatiaLoaded)
         {
             IndicatiaIntegration.registerHandler();
         }
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
         ClientCommands.register(new BazaarViewerCommand());
-        ClientCommands.register(new RefreshApiDataCommand());
     }
 
     private void loadComplete(FMLLoadCompleteEvent event)
@@ -105,7 +100,7 @@ public class SkyBlockcatiaMod
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
     }
 
-    public static void downloadAPIData()
+    private static void downloadAPIData()
     {
         try
         {
@@ -128,6 +123,7 @@ public class SkyBlockcatiaMod
             SBAPIUtils.getFairySouls();
             SBMinions.getMinionSlotFromRemote();
             SBPets.getPetSkins();
+            SBSkills.getSkillsCap();
         }
         catch (Throwable e)
         {

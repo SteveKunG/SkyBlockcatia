@@ -17,6 +17,7 @@ import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -54,6 +55,15 @@ public class MixinGameRenderer
                     info.setReturnValue(false);
                 }
             }
+        }
+    }
+
+    @Inject(method = "getNightVisionBrightness(Lnet/minecraft/entity/LivingEntity;F)F", cancellable = true, at = @At("HEAD"))
+    private static void getNightVisionBrightness(LivingEntity entity, float partialTicks, CallbackInfoReturnable info)
+    {
+        if (SkyBlockcatiaSettings.INSTANCE.disableNightVision)
+        {
+            info.setReturnValue(0.0F);
         }
     }
 }

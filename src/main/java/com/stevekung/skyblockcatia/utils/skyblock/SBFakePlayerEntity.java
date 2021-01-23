@@ -1,7 +1,7 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
 import com.mojang.authlib.GameProfile;
-import com.stevekung.stevekungslib.client.event.ClientEventHandler;
+import com.stevekung.stevekungslib.client.event.handler.ClientEventHandler;
 
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
