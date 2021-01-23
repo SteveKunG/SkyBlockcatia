@@ -821,6 +821,10 @@ public class SkyBlockEventHandler
     @SubscribeEvent // TODO Remove later
     public void onRenderNameplate(RenderNameplateEvent event)
     {
+        if (isSkyBlock && event.getEntity() instanceof RemoteClientPlayerEntity && event.getEntity().isInvisible())
+        {
+            event.setResult(Result.ALLOW);
+        }
         if (event.getEntity() instanceof ArmorStandEntity && event.getEntity().hasCustomName())
         {
             String name = event.getEntity().getCustomName().getString();
