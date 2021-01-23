@@ -30,7 +30,6 @@ import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonMojangStatus;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiSmallArrowButton;
 import com.stevekung.skyblockcatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
-import com.stevekung.skyblockcatia.mixin.accessor.GuiContainerMixin;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
@@ -308,7 +307,7 @@ public class MainEventHandler
                 if (GuiScreenUtils.isAuctionBrowser(lowerChestInventory))
                 {
                     String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
-                    event.buttonList.add(new GuiButtonItem(1005, width + 89, GuiScreenUtils.isOtherAuction(lowerChestInventory) ? ((GuiContainerMixin)chest).getGuiTop() + 4 : height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
+                    event.buttonList.add(new GuiButtonItem(1005, width + 89, GuiScreenUtils.isOtherAuction(lowerChestInventory) ? chest.guiTop + 4 : height + 60, new ItemStack(Blocks.redstone_block), "Toggle Bid Highlight: " + bid));
                 }
                 else if (lowerChestInventory.getDisplayName().getUnformattedText().contains("Hub Selector"))
                 {

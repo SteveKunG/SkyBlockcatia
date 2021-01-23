@@ -22,46 +22,10 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
 
     static
     {
-        try
-        {
-            foundPatcher = Launch.classLoader.getClassBytes("club.sk1er.patcher.Patcher") != null;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            foundPlayerApi = Launch.classLoader.getClassBytes("api.player.client.ClientPlayerAPI") != null;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            foundRenderPlayerApi = Launch.classLoader.getClassBytes("api.player.render.RenderPlayerAPI") != null;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            foundBetterSprinting = Launch.classLoader.getClassBytes("chylex.bettersprinting.client.player.LivingUpdate") != null;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        printModInfo(foundPatcher, "Patcher");
-        printModInfo(foundPlayerApi, "PlayerAPI");
-        printModInfo(foundRenderPlayerApi, "RenderPlayerAPI");
-        printModInfo(foundBetterSprinting, "BetterSprinting");
+        foundPatcher = findAndDetectModClass("club.sk1er.patcher.Patcher", "Patcher");
+        foundPlayerApi = findAndDetectModClass("api.player.client.ClientPlayerAPI", "PlayerAPI");
+        foundRenderPlayerApi = findAndDetectModClass("api.player.render.RenderPlayerAPI", "RenderPlayerAPI");
+        foundBetterSprinting = findAndDetectModClass("chylex.bettersprinting.client.player.LivingUpdate", "BetterSprinting");
     }
 
     @Override
@@ -76,27 +40,27 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName)
     {
-        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.FontRendererHookMixin"))
+        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.patcher.FontRendererHookMixin"))
         {
             return foundPatcher;
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.player_api.EntityPlayerSPMixin"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.player_api.entity.EntityPlayerSPMixin"))
         {
             return foundPlayerApi;
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.EntityPlayerSPMixin"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.entity.EntityPlayerSPMixin"))
         {
             return !(foundPlayerApi || foundBetterSprinting);
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.render_player_api.RenderPlayerMixin"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.render_player_api.renderer.entity.RenderPlayerMixin"))
         {
             return foundRenderPlayerApi;
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.RenderPlayerMixin"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.renderer.entity.RenderPlayerMixin"))
         {
             return !foundRenderPlayerApi;
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.better_sprinting.EntityPlayerSPMixin"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.better_sprinting.entity.EntityPlayerSPMixin"))
         {
             return foundBetterSprinting;
         }
@@ -118,15 +82,20 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 
-    private static void printModInfo(boolean check, String modName)
+    private static boolean findAndDetectModClass(String classPath, String modName)
     {
-        if (check)
+        boolean found = false;
+
+        try
         {
-            LOGGER.info(modName + " detected!");
+            found = Launch.classLoader.getClassBytes(classPath) != null;
         }
-        else
+        catch (IOException e)
         {
-            LOGGER.info(modName + " not detected!");
+            e.printStackTrace();
         }
+
+        LOGGER.info(found ? modName + " detected!" : modName + " not detected!");
+        return found;
     }
 }
