@@ -31,11 +31,11 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName)
     {
-        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.MixinItemStackTileEntityRendererOptifine"))
+        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.optifine.renderer.tileentity.MixinItemStackTileEntityRendererOptifine"))
         {
             return foundOptifine;
         }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.MixinItemStackTileEntityRenderer"))
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.renderer.tileentity.MixinItemStackTileEntityRenderer"))
         {
             return !foundOptifine;
         }
