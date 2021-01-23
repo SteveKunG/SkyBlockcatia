@@ -20,14 +20,16 @@ gui.config.skyblockcatia.overwrite_sign_editing=Enable this will overwrite curre
 # KEY BINDING
 key.skyblockcatia.category=SkyBlockcatia
 key.quick_config.desc=Quick Config GUI
-key.sb_ender_chest.desc=SkyBlock Ender Chest
-key.sb_crafted_minions.desc=SkyBlock Crafted Minions
-key.sb_crafting_table.desc=SkyBlock Crafting Table
-key.sb_view_recipe.desc=SkyBlock View Recipe
-key.sb_api_viewer.desc=SkyBlock API Viewer
-key.sb_menu.desc=SkyBlock Menu
-key.sb_open_wiki.desc=SkyBlock Open Wiki
-key.sb_pets.desc=SkyBlock Pets
+key.sb_ender_chest.desc=Skyblock Ender Chest
+key.sb_crafted_minions.desc=Skyblock Crafted Minions
+key.sb_crafting_table.desc=Skyblock Crafting Table
+key.sb_view_recipe.desc=Skyblock View Recipe
+key.sb_api_viewer.desc=Skyblock API Viewer
+key.sb_menu.desc=Skyblock Menu
+key.sb_open_wiki.desc=Skyblock Open Wiki
+key.sb_pets.desc=Skyblock Pets
+key.sb_wardrobe.desc=Skyblock Wardrobe
+key.sb_hotm.desc=Skyblock HotM
 
 # COMMAND
 commands.inprofile.usage=/inprofile <add|load|save|remove|list>
