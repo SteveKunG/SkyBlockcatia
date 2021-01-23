@@ -196,19 +196,20 @@ public class SkyBlockEventHandler
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
                         String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.func_237500_a_(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getString()).replaceAll("");
+                        String textNoSpecial = scoreText.replaceAll("[^a-z A-Z:0-9/'()]", "");
 
-                        if (scoreText.endsWith("am"))
+                        if (textNoSpecial.endsWith("am "))
                         {
                             SkyBlockEventHandler.SKYBLOCK_AMPM = " AM";
                         }
-                        else if (scoreText.endsWith("pm"))
+                        else if (textNoSpecial.endsWith("pm "))
                         {
                             SkyBlockEventHandler.SKYBLOCK_AMPM = " PM";
                         }
 
                         for (SBLocation location : SBLocation.VALUES)
                         {
-                            if (scoreText.contains("⏣") && scoreText.substring(2).equals(location.getLocation()))
+                            if (scoreText.contains("⏣") && textNoSpecial.substring(2).equals(location.getLocation()))
                             {
                                 SkyBlockEventHandler.SKY_BLOCK_LOCATION = location;
                                 found = true;
