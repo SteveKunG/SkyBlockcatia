@@ -1,22 +1,23 @@
 package com.stevekung.skyblockcatia.mixin.fixes;
 
-import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.social.SocialInteractionsScreen;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
 
 @Mixin(SocialInteractionsScreen.class)
 public class MixinSocialInteractionsScreen
 {
-    @Redirect(method = "func_244680_a(Lnet/minecraft/client/Minecraft;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/play/ClientPlayNetHandler.getPlayerInfoMap()Ljava/util/Collection;"))
-    private Collection<NetworkPlayerInfo> filterPlayer(ClientPlayNetHandler handler)
+    @ModifyVariable(method = "func_244680_a(Lnet/minecraft/client/Minecraft;)V", at = @At(value = "INVOKE_ASSIGN", remap = false, target = "java/util/Collection.size()I", shift = Shift.AFTER))
+    private int filterPlayer(int i)
     {
-        return handler.getPlayerInfoMap().stream().filter(info -> !info.getGameProfile().getName().startsWith("!")).collect(Collectors.toList());
+        return SkyBlockEventHandler.isSkyBlock ? Minecraft.getInstance().getConnection().getPlayerInfoMap().stream().filter(info -> !info.getGameProfile().getName().startsWith("!")).collect(Collectors.toList()).size() : i;
     }
 }

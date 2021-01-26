@@ -546,7 +546,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     @Redirect(method = "itemStackMoved(II)Z", slice = @Slice(
             from = @At(value = "INVOKE", target = "net/minecraft/item/ItemStack.isEmpty()Z"),
             to = @At(value = "CONSTANT", args = "intValue=40")),
-            at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z"))
+            at = @At(value = "INVOKE", remap = false, target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z"))
     private boolean disableItemStackSwap(KeyBinding key, InputMappings.Input keyCodeInput)
     {
         if (SkyBlockEventHandler.isSkyBlock)

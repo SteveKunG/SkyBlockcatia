@@ -1,20 +1,17 @@
 package com.stevekung.skyblockcatia.mixin.fixes;
 
-import java.util.UUID;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.social.FilterList;
 import net.minecraft.client.gui.social.SocialInteractionsScreen;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.network.play.NetworkPlayerInfo;
 
 @Mixin(FilterList.class)
@@ -24,10 +21,9 @@ public class MixinFilterList
     @Final
     private Minecraft field_244651_o;
 
-    @Redirect(method = "func_244759_a(Ljava/util/Collection;D)V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/play/ClientPlayNetHandler.getPlayerInfo(Ljava/util/UUID;)Lnet/minecraft/client/network/play/NetworkPlayerInfo;"))
-    private NetworkPlayerInfo filterPlayerUUID(ClientPlayNetHandler handler, UUID uuid)
+    @ModifyVariable(method = "func_244759_a(Ljava/util/Collection;D)V", index = 6, at = @At(value = "INVOKE_ASSIGN", target = "net/minecraft/client/network/play/ClientPlayNetHandler.getPlayerInfo(Ljava/util/UUID;)Lnet/minecraft/client/network/play/NetworkPlayerInfo;", shift = Shift.AFTER))
+    private NetworkPlayerInfo filterInvalidPlayer(NetworkPlayerInfo networkplayerinfo)
     {
-        NetworkPlayerInfo networkplayerinfo = this.field_244651_o.player.connection.getPlayerInfo(uuid);
         return networkplayerinfo.getGameProfile().getName().startsWith("!") ? null : networkplayerinfo;
     }
 
