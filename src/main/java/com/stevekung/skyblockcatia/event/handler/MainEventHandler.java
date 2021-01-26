@@ -272,19 +272,11 @@ public class MainEventHandler
 
     private void addButtonsToInventory(GuiScreenEvent.InitGuiEvent.Post event, ItemStack wardRobeItem, int width, int height)
     {
-        //        if (inventoryPage == 0)TODO
-        {
-            event.addWidget(new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
-            event.addWidget(new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
-            event.addWidget(new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
-            event.addWidget(new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
-            event.addWidget(new SmallArrowButton(width + 72, height + 90, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
-        }
-        //        else
-        //        {
-        //            event.addWidget(new ItemButton(width - 9, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.sendChatMessage("/ah")));
-        //            event.addWidget(new ItemButton(width + 10, height + 86, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.sendChatMessage("/bz")));
-        //        }
+        event.addWidget(new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.sendChatMessage("/enderchest")));
+        event.addWidget(new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.sendChatMessage("/craft")));
+        event.addWidget(new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.sendChatMessage("/pets")));
+        event.addWidget(new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.sendChatMessage("/wardrobe")));
+        event.addWidget(new SmallArrowButton(width + 72, height + 90, button -> this.changeButtonPage(event, wardRobeItem, width, height)));
 
         ItemButton item = new ItemButton(width + 88, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.sendChatMessage("/ah"));
         item.visible = showAdditionalButtons;
