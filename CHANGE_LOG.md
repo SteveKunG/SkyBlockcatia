@@ -1,5 +1,5 @@
 # Change Log
 
-* * Updated to 1.16.5!
-* * Display player name when player is invisible
-* * All changes included from 1.8.9
+* + Added Skyblock settings screen
+* * Disable offhand swap in skyblock
+* * Fixed conflict with OriginEnhanced
