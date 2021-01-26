@@ -1,6 +1,5 @@
 modLoader="javafml"
 loaderVersion="[35,)"
-updateJSONURL="https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json"
 issueTrackerURL="https://github.com/SteveKunG/SkyBlockcatia/issues"
 license="MIT License"
 
@@ -11,6 +10,7 @@ displayName="SkyBlockcatia"
 description="Useful Hypixel Skyblock features, QOL and In-game API Viewer!"
 credits="Credit to LeaPhant, matdoes for inspiration to make In-game API Viewer possible"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/skyblockcatia"
+updateJSONURL="https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json"
 authors="SteveKunG"
 logoFile="logo.png"
 
