@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -43,6 +44,8 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
@@ -525,6 +528,32 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
         {
             renderer.renderItemOverlayIntoGUI(font, stack, xPosition, yPosition, text);
         }
+    }
+
+    @Redirect(method = "hotkeySwapItems(I)V", slice = @Slice(
+            from = @At(value = "INVOKE", target = "net/minecraft/item/ItemStack.isEmpty()Z"),
+            to = @At(value = "CONSTANT", args = "intValue=40")),
+            at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.matchesMouseKey(I)Z"))
+    private boolean disableHotbarSwap(KeyBinding key, int keyCode)
+    {
+        if (SkyBlockEventHandler.isSkyBlock)
+        {
+            return false;
+        }
+        return key.matchesMouseKey(keyCode);
+    }
+
+    @Redirect(method = "itemStackMoved(II)Z", slice = @Slice(
+            from = @At(value = "INVOKE", target = "net/minecraft/item/ItemStack.isEmpty()Z"),
+            to = @At(value = "CONSTANT", args = "intValue=40")),
+            at = @At(value = "INVOKE", target = "net/minecraft/client/settings/KeyBinding.isActiveAndMatches(Lnet/minecraft/client/util/InputMappings$Input;)Z"))
+    private boolean disableItemStackSwap(KeyBinding key, InputMappings.Input keyCodeInput)
+    {
+        if (SkyBlockEventHandler.isSkyBlock)
+        {
+            return false;
+        }
+        return key.isActiveAndMatches(keyCodeInput);
     }
 
     @Override
