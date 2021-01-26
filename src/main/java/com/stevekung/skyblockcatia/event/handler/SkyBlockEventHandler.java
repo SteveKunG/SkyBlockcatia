@@ -20,6 +20,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
+import com.stevekung.skyblockcatia.gui.screen.config.SkyBlockSettingsScreen;
 import com.stevekung.skyblockcatia.gui.toasts.*;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
@@ -626,7 +627,11 @@ public class SkyBlockEventHandler
             }
         }
 
-        if (KeyBindingHandler.KEY_SB_API_VIEWER.isKeyDown())
+        if (KeyBindingHandler.KEY_SB_SETTINGS.isKeyDown())
+        {
+            this.mc.displayGuiScreen(new SkyBlockSettingsScreen());
+        }
+        else if (KeyBindingHandler.KEY_SB_API_VIEWER.isKeyDown())
         {
             if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
             {

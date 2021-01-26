@@ -10,6 +10,7 @@ import net.minecraft.client.settings.KeyBinding;
 
 public class KeyBindingHandler
 {
+    public static KeyBinding KEY_SB_SETTINGS;
     public static KeyBinding KEY_SB_API_VIEWER;
     public static KeyBinding KEY_SB_ENDER_CHEST;
     public static KeyBinding KEY_SB_CRAFTED_MINIONS;
@@ -23,6 +24,7 @@ public class KeyBindingHandler
 
     public static void init()
     {
+        KeyBindingHandler.KEY_SB_SETTINGS = new KeyBindingBase("key.sb_settings.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_O);
         KeyBindingHandler.KEY_SB_API_VIEWER = new KeyBindingBase("key.sb_api_viewer.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_F6);
         KeyBindingHandler.KEY_SB_ENDER_CHEST = new KeyBindingBase("key.sb_ender_chest.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_KP_5);
         KeyBindingHandler.KEY_SB_CRAFTED_MINIONS = new KeyBindingBase("key.sb_crafted_minions.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_KP_2);
@@ -33,6 +35,7 @@ public class KeyBindingHandler
         KeyBindingHandler.KEY_SB_PETS = new KeyBindingBase("key.sb_pets.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_P);
         KeyBindingHandler.KEY_SB_WARDROBE = new KeyBindingBase("key.sb_wardrobe.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_R);
         KeyBindingHandler.KEY_SB_HOTM = new KeyBindingBase("key.sb_hotm.desc", SkyBlockcatiaMod.MOD_ID, GLFW.GLFW_KEY_M);
+        ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_SETTINGS);
         ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_API_VIEWER);
         ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_ENDER_CHEST);
         ClientRegistryUtils.registerKeyBinding(KeyBindingHandler.KEY_SB_CRAFTED_MINIONS);
