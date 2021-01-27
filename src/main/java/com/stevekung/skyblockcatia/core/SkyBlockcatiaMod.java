@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
+import com.stevekung.skyblockcatia.command.SkyBlockcatiaCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
@@ -92,6 +93,7 @@ public class SkyBlockcatiaMod
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
         ClientCommands.register(new BazaarViewerCommand());
+        ClientCommands.register(new SkyBlockcatiaCommand());
     }
 
     private void loadComplete(FMLLoadCompleteEvent event)
