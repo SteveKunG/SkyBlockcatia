@@ -208,5 +208,12 @@
         "color": "dark_purple",
         "uuid": "9383ffbc-3aa1-3c38-a957-97d4968ee2b7",
         "texture": "ca3a363368ed1e06cee3900717f062e02ec39aee1747675392255b48f7f83600"
+    },
+    {
+        "skin": "HORSE_ZOMBIE",
+        "displayName": "Zombie Skeleton Horse",
+        "color": "dark_purple",
+        "uuid": "76e06cd3-376f-3cfa-9431-1c2b67de42e9",
+        "texture": "578211e1b4d99d1c7bfda4838e48fc884c3eae376f58d932bc2f78b0a919f8e7"
     }
 ]
