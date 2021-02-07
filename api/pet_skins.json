@@ -215,5 +215,26 @@
         "color": "dark_purple",
         "uuid": "76e06cd3-376f-3cfa-9431-1c2b67de42e9",
         "texture": "578211e1b4d99d1c7bfda4838e48fc884c3eae376f58d932bc2f78b0a919f8e7"
+    },
+    {
+        "skin": "DRAGON_NEON_BLUE",
+        "displayName": "Blue Ender Dragon",
+        "color": "gold",
+        "uuid": "d034068b-714d-3264-825e-eb4b89fb27af",
+        "texture": "96a4b9fbcf8c3e7e1232e57d6a2870ba3ea30f76407ae1197fd52e9f76ca46ac"
+    },
+    {
+        "skin": "DRAGON_NEON_PURPLE",
+        "displayName": "Purple Ender Dragon",
+        "color": "gold",
+        "uuid": "9e485884-34c2-388b-b798-ef899b618c33",
+        "texture": "54bdf5ba6289b29e27c57db1ec7f76151c39492d409268e00a9838e8c963159"
+    },
+    {
+        "skin": "DRAGON_NEON_RED",
+        "displayName": "Red Ender Dragon",
+        "color": "gold",
+        "uuid": "8e4b87b0-fd00-3eaa-a732-788e791b42bc",
+        "texture": "e05c9b4f4218677c5b4bcc9c7d9e29e18d1684a536781fede1280fc5e6961538"
     }
 ]
