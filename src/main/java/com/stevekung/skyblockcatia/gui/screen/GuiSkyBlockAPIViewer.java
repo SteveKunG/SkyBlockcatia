@@ -28,7 +28,9 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 import com.stevekung.skyblockcatia.gui.widget.GuiErrorInfoScrollingList;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonItem;
+import com.stevekung.skyblockcatia.integration.sba.IBackpackRenderer;
 import com.stevekung.skyblockcatia.integration.sba.SBABackpackV1;
+import com.stevekung.skyblockcatia.integration.sba.SBABackpackV2;
 import com.stevekung.skyblockcatia.integration.textoverflow.TooltipOverflow;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
@@ -117,6 +119,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private boolean showArmor = true;
     private float oldMouseX;
     private float oldMouseY;
+    private IBackpackRenderer backpackRenderer;
     private static final WorldClient FAKE_WORLD = new WorldClient(Minecraft.getMinecraft().getNetHandler(), new WorldSettings(0L, WorldSettings.GameType.SURVIVAL, false, false, WorldType.DEFAULT), 0, EnumDifficulty.NORMAL, Minecraft.getMinecraft().mcProfiler);
 
     // API
@@ -212,6 +215,16 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.guild = callback.getGuild();
         this.uuid = callback.getUUID();
         this.profile = callback.getGameProfile();
+
+        try
+        {
+            Class.forName("codes.biscuit.skyblockaddons.features.backpacks.ContainerPreviewManager");
+            this.backpackRenderer = new SBABackpackV2();
+        }
+        catch (Exception e)
+        {
+            this.backpackRenderer = new SBABackpackV1();
+        }
 
         this.xSize = 202;
         this.ySize = 125;
@@ -621,7 +634,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     String itemId = extraAttrib.getString("id");
 
-                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpackV1.INSTANCE.isFreezeBackpack())
+                    if (CompatibilityUtils.isSkyblockAddonsLoaded && this.backpackRenderer.isFreezeBackpack())
                     {
                         return;
                     }
@@ -631,7 +644,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
         if (CompatibilityUtils.isSkyblockAddonsLoaded)
         {
-            SBABackpackV1.INSTANCE.keyTyped(keyCode);
+            this.backpackRenderer.keyTyped(keyCode);
         }
         if (keyCode == 1)
         {
@@ -817,7 +830,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         }
                         if (CompatibilityUtils.isSkyblockAddonsLoaded)
                         {
-                            SBABackpackV1.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
+                            this.backpackRenderer.drawBackpacks(this, mouseX, mouseY, partialTicks);
                         }
                     }
                     else if (stat.getType() == EmptyStats.Type.DUNGEON)//TODO
@@ -1386,7 +1399,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
         if (CompatibilityUtils.isSkyblockAddonsLoaded)
         {
-            SBABackpackV1.INSTANCE.clearRenderBackpack();
+            this.backpackRenderer.clearRenderBackpack();
         }
         this.selectedTabIndex = tab.getTabIndex();
         ContainerSkyBlock container = this.skyBlockContainer;
@@ -1492,7 +1505,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     this.theSlot = slot;
 
-                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpackV1.INSTANCE.isFreezeBackpack())
+                    if (CompatibilityUtils.isSkyblockAddonsLoaded && this.backpackRenderer.isFreezeBackpack())
                     {
                         continue;
                     }
