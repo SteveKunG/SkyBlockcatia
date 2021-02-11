@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
 
 import codes.biscuit.skyblockaddons.SkyblockAddons;
-import codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook;
 import codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -15,9 +14,9 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class SBABackpack
+public class SBABackpackV1
 {
-    public static final SBABackpack INSTANCE = new SBABackpack();
+    public static final SBABackpackV1 INSTANCE = new SBABackpackV1();
     private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
     public void drawBackpacks(GuiSkyBlockAPIViewer gui, int mouseX, int mouseY, float partialTicks)
@@ -237,7 +236,7 @@ public class SBABackpack
 
             if (keyCode == 1 || keyCode == Minecraft.getMinecraft().gameSettings.keyBindInventory.getKeyCode())
             {
-                GuiContainerHook.setFreezeBackpack(false);
+                this.setFreezeBackpack();
                 Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
                 Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
                 Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
@@ -246,7 +245,7 @@ public class SBABackpack
             if (keyCode == main.getFreezeBackpackKey().getKeyCode() && this.isFreezeBackpack() && System.currentTimeMillis() - lastBackpackFreezeKey > 500)
             {
                 setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
-                GuiContainerHook.setFreezeBackpack(false);
+                this.setFreezeBackpack();
             }
         }
         catch (Exception e)
@@ -262,7 +261,7 @@ public class SBABackpack
             Method setLastBackpackFreezeKeyMethod = GuiScreenHook.class.getDeclaredMethod("setLastBackpackFreezeKey", long.class);
             setLastBackpackFreezeKeyMethod.setAccessible(true);
             setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
-            GuiContainerHook.setFreezeBackpack(false);
+            this.setFreezeBackpack();
             Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
             Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
             Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
@@ -276,7 +275,21 @@ public class SBABackpack
 
     public boolean isFreezeBackpack()
     {
-        return GuiContainerHook.isFreezeBackpack();
+        try
+        {
+            Object obj = Class.forName("codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook").getDeclaredMethod("isFreezeBackpack").invoke(null);
+            return (boolean)obj;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    private void setFreezeBackpack() throws Exception
+    {
+        Method setFreezeBackpackM = Class.forName("codes.biscuit.skyblockaddons.asm.hooks.GuiContainerHook").getDeclaredMethod("setFreezeBackpack", boolean.class);
+        setFreezeBackpackM.invoke(null, false);
     }
 
     private void clear(Object getUtils) throws Exception

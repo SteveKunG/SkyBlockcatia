@@ -28,7 +28,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
 import com.stevekung.skyblockcatia.gui.widget.GuiErrorInfoScrollingList;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonItem;
-import com.stevekung.skyblockcatia.integration.sba.SBABackpack;
+import com.stevekung.skyblockcatia.integration.sba.SBABackpackV1;
 import com.stevekung.skyblockcatia.integration.textoverflow.TooltipOverflow;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
@@ -621,7 +621,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     String itemId = extraAttrib.getString("id");
 
-                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
+                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpackV1.INSTANCE.isFreezeBackpack())
                     {
                         return;
                     }
@@ -631,7 +631,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
         if (CompatibilityUtils.isSkyblockAddonsLoaded)
         {
-            SBABackpack.INSTANCE.keyTyped(keyCode);
+            SBABackpackV1.INSTANCE.keyTyped(keyCode);
         }
         if (keyCode == 1)
         {
@@ -817,7 +817,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         }
                         if (CompatibilityUtils.isSkyblockAddonsLoaded)
                         {
-                            SBABackpack.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
+                            SBABackpackV1.INSTANCE.drawBackpacks(this, mouseX, mouseY, partialTicks);
                         }
                     }
                     else if (stat.getType() == EmptyStats.Type.DUNGEON)//TODO
@@ -1386,7 +1386,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
         if (CompatibilityUtils.isSkyblockAddonsLoaded)
         {
-            SBABackpack.INSTANCE.clearRenderBackpack();
+            SBABackpackV1.INSTANCE.clearRenderBackpack();
         }
         this.selectedTabIndex = tab.getTabIndex();
         ContainerSkyBlock container = this.skyBlockContainer;
@@ -1492,7 +1492,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     this.theSlot = slot;
 
-                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpack.INSTANCE.isFreezeBackpack())
+                    if (CompatibilityUtils.isSkyblockAddonsLoaded && SBABackpackV1.INSTANCE.isFreezeBackpack())
                     {
                         continue;
                     }
