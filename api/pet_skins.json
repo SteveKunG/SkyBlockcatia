@@ -147,6 +147,27 @@
         "texture": "554a34a80c474206d3700b8fced6b44fab0b0ed0b05c1293ff0c5d86eda251d1"
     },
     {
+        "skin": "ELEPHANT_RED",
+        "displayName": "Red Elephant",
+        "color": "blue",
+        "uuid": "abfffe75-364e-37c4-ae74-e95316a2daa1",
+        "texture": "ba5c66ec66cb6b4b5550085f583b4e5c1cee5247bec5fbcc5c318c30c66cab42"
+    },
+    {
+        "skin": "ELEPHANT_GREEN",
+        "displayName": "Green Elephant",
+        "color": "blue",
+        "uuid": "8a96cf53-45b1-35e2-9f96-cc13d463e6e0",
+        "texture": "360c122ade5b2fedca14aa78c834a7b0ac9cb5da2a0c93112163086f90c13b68"
+    },
+    {
+        "skin": "ELEPHANT_PURPLE",
+        "displayName": "Purple Elephant",
+        "color": "blue",
+        "uuid": "de6b68c9-5d12-3279-b058-cbcf8636b585",
+        "texture": "5ff9df290b6c5a4984fc6e516605f9816b9882f7bf04db08d3f7ee32d1969a44"
+    },
+    {
         "skin": "YETI_GROWN_UP",
         "displayName": "Grown-up Baby Yeti",
         "color": "dark_purple",
