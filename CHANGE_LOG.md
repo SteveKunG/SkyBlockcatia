@@ -1,5 +1,5 @@
 # Change Log
 
-* + Added Skyblock settings screen
-* * Disable offhand swap in skyblock
-* * Fixed conflict with OriginEnhanced
+* * Update features from 1.8.9
+* * Fix string render for crosshair overlay
+* * Fix version checker
