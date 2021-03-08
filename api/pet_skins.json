@@ -257,5 +257,12 @@
         "color": "gold",
         "uuid": "8e4b87b0-fd00-3eaa-a732-788e791b42bc",
         "texture": "e05c9b4f4218677c5b4bcc9c7d9e29e18d1684a536781fede1280fc5e6961538"
+    },
+    {
+        "skin": "WHALE_ORCA",
+        "displayName": "Orca Blue Whale",
+        "color": "dark_purple",
+        "uuid": "b22decd6-faf9-3872-9f85-cc76c011f37b",
+        "texture": "b008ca9c00cecf499685030e8ef0c230a32908619ce9dc10690b69111591faa1"
     }
 ]
