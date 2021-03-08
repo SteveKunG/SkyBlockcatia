@@ -199,31 +199,39 @@ public class InfoOverlays
         {
             if (CompatibilityUtils.isSkyblockAddonsLoaded)
             {
-                StringBuilder builder = new StringBuilder();
-
                 try
                 {
+                    StringBuilder builder = new StringBuilder();
                     Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
                     Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
                     Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
                     Object getCurrentDate = getUtils.getClass().getDeclaredMethod("getCurrentDate").invoke(getUtils);
-                    Class<?> date = getCurrentDate.getClass(); // SkyblockDate
-                    Field hourField = date.getDeclaredField("hour");
-                    Field minuteField = date.getDeclaredField("minute");
-                    Field periodField = date.getDeclaredField("period");
-                    hourField.setAccessible(true);
-                    minuteField.setAccessible(true);
-                    periodField.setAccessible(true);
 
-                    builder.append(hourField.get(getCurrentDate));
-                    builder.append(":");
-                    int minute = (int)minuteField.get(getCurrentDate);
-                    builder.append(minute == 0 ? "0" + minute : minute);
-                    builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.ROOT));
+                    if (getCurrentDate != null)
+                    {
+                        Class<?> date = getCurrentDate.getClass(); // SkyblockDate
+                        Field hourField = date.getDeclaredField("hour");
+                        Field minuteField = date.getDeclaredField("minute");
+                        Field periodField = date.getDeclaredField("period");
+
+                        hourField.setAccessible(true);
+                        minuteField.setAccessible(true);
+                        periodField.setAccessible(true);
+
+                        builder.append(hourField.get(getCurrentDate));
+                        builder.append(":");
+                        int minute = (int)minuteField.get(getCurrentDate);
+                        builder.append(minute == 0 ? "0" + minute : minute);
+                        builder.append(" " + periodField.get(getCurrentDate).toString().toUpperCase(Locale.ROOT));
+                        String currentTime = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
+                        return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeColor).toColoredFont() + "Skyblock Time: " + currentTime + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
+                    }
+                    else
+                    {
+                        return InfoUtils.INSTANCE.getCurrentGameTime(mc.theWorld.getWorldTime() % 24000) + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
+                    }
                 }
                 catch (Exception e) {}
-                String currentTime = ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeDDMMYYValueColor).toColoredFont() + builder.toString();
-                return ColorUtils.stringToRGB(SkyBlockcatiaSettings.INSTANCE.realTimeColor).toColoredFont() + "Skyblock Time: " + currentTime + "/Day: " + mc.theWorld.getWorldTime() / 24000L;
             }
             else
             {
