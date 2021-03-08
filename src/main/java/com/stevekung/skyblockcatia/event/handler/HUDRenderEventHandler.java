@@ -188,7 +188,7 @@ public class HUDRenderEventHandler
                 float fontHeight = this.mc.fontRenderer.FONT_HEIGHT + 1;
                 float width = event.getWindow().getScaledWidth() / 2 + 1.0625F;
                 float height = event.getWindow().getScaledHeight() / 2 + 6 + fontHeight * center;
-                this.mc.fontRenderer.drawStringWithShadow(matrixStack, overlay.color + overlay.getDelay(), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
+                this.mc.fontRenderer.drawStringWithShadow(matrixStack, TextComponentUtils.formattedString(overlay.getDelay(), overlay.color), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
                 center++;
             }
         }
