@@ -93,7 +93,7 @@ public class HUDRenderEventHandler
         }
 
         long now = System.currentTimeMillis();
-        Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
+        Block block = event.getBlockState() != null ? event.getBlockState().getBlock() : event.getWorld().getBlockState(event.getPos()).getBlock();
 
         if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && block instanceof BlockLog)
         {

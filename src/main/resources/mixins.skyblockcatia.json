@@ -1,12 +1,11 @@
 {
     "required": true,
+    "minVersion": "0.6",
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
-    "target": "@env(DEFAULT)",
-    "verbose": "true",
     "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
-    "mixins": [
+    "client": [
         "MinecraftMixin",
         "audio.SoundManagerMixin",
         "block.BlockMixin",
@@ -34,6 +33,7 @@
         "renderer.EntityRendererMixin",
         "renderer.ImageBufferDownloadMixin",
         "renderer.ItemRendererMixin",
+        "renderer.RenderGlobalMixin",
         "renderer.entity.RenderDragonMixin",
         "renderer.entity.RendererLivingEntityMixin",
         "renderer.entity.RenderGuardianMixin",
