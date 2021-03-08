@@ -29,6 +29,7 @@
         "particle.MixinParticleManager",
         "renderer.MixinGameRenderer",
         "renderer.MixinItemRenderer",
+        "renderer.MixinWorldRenderer",
         "renderer.entity.MixinEntityRendererManager",
         "renderer.entity.MixinPlayerRenderer",
         "renderer.entity.layers.MixinArmorLayer",

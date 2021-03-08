@@ -81,7 +81,7 @@ public class HUDRenderEventHandler
 
         if (SkyBlockEventHandler.isSkyBlock && !this.mc.player.getHeldItemMainhand().isEmpty() && this.mc.player.getHeldItemMainhand().hasTag() && (this.mc.player.getHeldItemMainhand().getTag().getCompound("ExtraAttributes").getString("id").equals("JUNGLE_AXE") || this.mc.player.getHeldItemMainhand().getTag().getCompound("ExtraAttributes").getString("id").equals("TREECAPITATOR_AXE")))
         {
-            Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
+            Block block = event.getBlockState() != null ? event.getBlockState().getBlock() : event.getWorld().getBlockState(event.getPos()).getBlock();
 
             if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && block.isIn(BlockTags.LOGS))
             {
