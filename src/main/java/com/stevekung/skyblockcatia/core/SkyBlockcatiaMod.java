@@ -25,7 +25,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
-import com.stevekung.stevekungslib.utils.VersionChecker;
+import com.stevekung.stevekungslib.utils.ModVersionChecker;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 
 import net.minecraftforge.fml.common.Mod;
@@ -39,8 +39,7 @@ public class SkyBlockcatiaMod
     public static final String MOD_ID = "skyblockcatia";
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
     public static final List<String> SUPPORTERS_NAME = Lists.newCopyOnWriteArrayList();
-    public static VersionChecker CHECKER;
-    private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
+    public static final ModVersionChecker CHECKER = new ModVersionChecker(MOD_ID);
 
     static
     {
@@ -72,13 +71,11 @@ public class SkyBlockcatiaMod
         CommonUtils.addModListener(this::phaseOne);
         CommonUtils.addModListener(this::loadComplete);
         CompatibilityUtils.init();
-        SkyBlockcatiaMod.CHECKER = new VersionChecker(this, "SkyBlockcatia", URL);
     }
 
     private void phaseOne(FMLCommonSetupEvent event)
     {
         KeyBindingHandler.init();
-        SkyBlockcatiaMod.CHECKER.startCheck();
 
         CommonUtils.registerEventHandler(this);
         CommonUtils.registerEventHandler(new MainEventHandler());
@@ -99,6 +96,7 @@ public class SkyBlockcatiaMod
     private void loadComplete(FMLLoadCompleteEvent event)
     {
         SBAPIUtils.setApiKey();
+        SkyBlockcatiaMod.CHECKER.startCheck();
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
     }
 

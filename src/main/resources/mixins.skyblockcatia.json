@@ -1,13 +1,10 @@
 {
     "required": true,
-    "verbose": true,
     "minVersion": "0.8.2",
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin",
     "refmap": "mixins.skyblockcatia.refmap.json",
     "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
-    "target": "@env(DEFAULT)",
-    "mixins": [],
     "client": [
         "MixinMinecraft",
         "MixinMouseHelper",

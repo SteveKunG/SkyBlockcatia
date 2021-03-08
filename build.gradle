@@ -2,7 +2,7 @@ buildscript {
     repositories {
         maven { url "https://files.minecraftforge.net/maven" }
         maven { url "https://repo.spongepowered.org/maven" }
-        jcenter()
+        gradlePluginPortal()
         mavenCentral()
     }
     dependencies {
@@ -58,13 +58,13 @@ shadowJar {
     configurations = [project.configurations.embed]
     baseName = "SkyBlockcatia-" + mcVersion
     classifier = ""
-    relocate "org.apache.commons.text", "com.stevekung.skyblockcatia.relocate.org.apache.commons.text"
+    relocate "org.apache.commons.text", group + ".relocate.org.apache.commons.text"
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
-    compile files("libs/SteveKunG's-Lib-${mc_version}-${stevekung_lib_version}-deobf.jar")
-    compile files("libs/Indicatia-${mc_version}-${indicatia_version}-deobf.jar")
+    implementation fg.deobf("curse.maven:stevekungs-lib-296019:${stevekung_lib_deobf}")
+    implementation fg.deobf("curse.maven:indicatia-272146:${indicatia_deobf}")
     embed("org.apache.commons:commons-text:1.8") {
         exclude group: "org.apache.commons", module: "commons-lang3"
     }
@@ -78,6 +78,10 @@ repositories {
     maven {
         name "Shadow"
         url "https://jitpack.io"
+    }
+    maven {
+        name "CurseMaven"
+        url "https://www.cursemaven.com/"
     }
 }
 
@@ -97,7 +101,7 @@ reobf {
 jar {
     manifest {
         attributes([
-            "MixinConnector": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConnector",
+            "MixinConfigs": "mixins.skyblockcatia.json",
             "Implementation-Title": "${archivesBaseName}",
             "Implementation-Version": "${version}",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -122,7 +126,7 @@ task deobfJar(type: Jar) {
     }
     manifest {
         attributes([
-            "MixinConnector": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConnector",
+            "MixinConfigs": "mixins.skyblockcatia.json",
             "Implementation-Title": "${archivesBaseName}",
             "Implementation-Version": "${version}",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")

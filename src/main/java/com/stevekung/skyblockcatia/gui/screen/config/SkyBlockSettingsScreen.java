@@ -63,7 +63,7 @@ public class SkyBlockSettingsScreen extends Screen
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.displayGuiScreen(new SBOptionsScreen(this, LangUtils.translate("menu.skyblock_toast.title"), TOAST_OPTIONS));
         }));
-        this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 160, 20, DialogTexts.GUI_DONE, button ->
+        this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, DialogTexts.GUI_DONE, button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.displayGuiScreen(null);
