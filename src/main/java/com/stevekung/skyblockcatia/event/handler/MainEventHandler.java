@@ -472,6 +472,10 @@ public class MainEventHandler
             {
                 menu.splashText = "Happy birthday, SteveKunG!";
             }
+            if (CompatibilityUtils.isPatcherLoaded)
+            {
+                menu.drawString(ColorUtils.unicodeFontRenderer, "dummy", 1000, 1000, -1);
+            }
         }
     }
 
