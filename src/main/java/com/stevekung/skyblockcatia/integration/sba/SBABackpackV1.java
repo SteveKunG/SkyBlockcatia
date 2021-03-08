@@ -4,8 +4,6 @@ import java.lang.reflect.Method;
 
 import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
 
-import codes.biscuit.skyblockaddons.SkyblockAddons;
-import codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -228,9 +226,11 @@ public class SBABackpackV1 implements IBackpackRenderer
         try
         {
             long lastBackpackFreezeKey = 0L;
-            SkyblockAddons main = SkyblockAddons.getInstance();
-            Method lastBackpackFreezeKeyMethod = GuiScreenHook.class.getDeclaredMethod("getLastBackpackFreezeKey");
-            Method setLastBackpackFreezeKeyMethod = GuiScreenHook.class.getDeclaredMethod("setLastBackpackFreezeKey", long.class);
+            Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
+            Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
+            Object getFreezeBackpackKeyObj = getInstance.getClass().getDeclaredMethod("getFreezeBackpackKey").invoke(getInstance);
+            Method lastBackpackFreezeKeyMethod = Class.forName("codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook").getDeclaredMethod("getLastBackpackFreezeKey");
+            Method setLastBackpackFreezeKeyMethod = Class.forName("codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook").getDeclaredMethod("setLastBackpackFreezeKey", long.class);
             lastBackpackFreezeKeyMethod.setAccessible(true);
             setLastBackpackFreezeKeyMethod.setAccessible(true);
             lastBackpackFreezeKey = (long)lastBackpackFreezeKeyMethod.invoke(null);
@@ -238,12 +238,13 @@ public class SBABackpackV1 implements IBackpackRenderer
             if (keyCode == 1 || keyCode == Minecraft.getMinecraft().gameSettings.keyBindInventory.getKeyCode())
             {
                 this.setFreezeBackpack();
-                Class<?> skyblockAddons = Class.forName("codes.biscuit.skyblockaddons.SkyblockAddons");
-                Object getInstance = skyblockAddons.getDeclaredMethod("getInstance").invoke(skyblockAddons);
                 Object getUtils = getInstance.getClass().getDeclaredMethod("getUtils").invoke(getInstance);
                 this.clear(getUtils);
             }
-            if (keyCode == main.getFreezeBackpackKey().getKeyCode() && this.isFreezeBackpack() && System.currentTimeMillis() - lastBackpackFreezeKey > 500)
+
+            int freezeBackpackKey = (int)getFreezeBackpackKeyObj.getClass().getDeclaredMethod("getKeyCode").invoke(getFreezeBackpackKeyObj);
+
+            if (keyCode == freezeBackpackKey && this.isFreezeBackpack() && System.currentTimeMillis() - lastBackpackFreezeKey > 500)
             {
                 setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
                 this.setFreezeBackpack();
@@ -260,7 +261,7 @@ public class SBABackpackV1 implements IBackpackRenderer
     {
         try
         {
-            Method setLastBackpackFreezeKeyMethod = GuiScreenHook.class.getDeclaredMethod("setLastBackpackFreezeKey", long.class);
+            Method setLastBackpackFreezeKeyMethod = Class.forName("codes.biscuit.skyblockaddons.asm.hooks.GuiScreenHook").getDeclaredMethod("setLastBackpackFreezeKey", long.class);
             setLastBackpackFreezeKeyMethod.setAccessible(true);
             setLastBackpackFreezeKeyMethod.invoke(null, System.currentTimeMillis());
             this.setFreezeBackpack();
