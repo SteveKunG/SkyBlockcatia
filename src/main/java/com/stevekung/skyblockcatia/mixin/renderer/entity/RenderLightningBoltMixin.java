@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 
-@Mixin(RenderLightningBolt.class)
+@Mixin(value = RenderLightningBolt.class, priority = 500)
 public abstract class RenderLightningBoltMixin extends Render<Entity>
 {
     private RenderLightningBoltMixin()
