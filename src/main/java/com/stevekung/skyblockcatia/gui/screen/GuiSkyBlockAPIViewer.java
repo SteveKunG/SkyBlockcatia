@@ -2655,7 +2655,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             DwarvenSacks dwarvenSacks = DwarvenSacks.valueOf(itemId.toUpperCase(Locale.ROOT));
             ItemStack itemStack = dwarvenSacks.getBaseItem();
             itemStack.stackSize = count;
-            this.addSackItemStackCount(itemStack, dwarvenSacks.getDisplayName(), false, sacks);
+            this.addSackItemStackCount(itemStack, dwarvenSacks.getDisplayName(), dwarvenSacks == DwarvenSacks.TITANIUM_ORE, sacks);
         }
         catch (Exception e)
         {
