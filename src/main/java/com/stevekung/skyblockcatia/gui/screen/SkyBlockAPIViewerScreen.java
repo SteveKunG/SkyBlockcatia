@@ -2194,6 +2194,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                         {
                             this.addSackItemStackCount(Blocks.BARRIER, count, TextComponentUtils.formatted(itemId, TextFormatting.RED), false, sacks);
                         }
+                        else
+                        {
+                            this.addSackItemStackCount(item, count, null, false, sacks);
+                        }
                     }
                 }
             }
