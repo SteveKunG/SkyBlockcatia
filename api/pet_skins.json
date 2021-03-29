@@ -264,5 +264,12 @@
         "color": "dark_purple",
         "uuid": "b22decd6-faf9-3872-9f85-cc76c011f37b",
         "texture": "b008ca9c00cecf499685030e8ef0c230a32908619ce9dc10690b69111591faa1"
+    },
+    {
+        "skin": "ELEPHANT_MONOCHROME",
+        "displayName": "Monochrome Elephant",
+        "color": "dark_purple",
+        "uuid": "b22decd6-faf9-3872-9f85-cc76c011f37b",
+        "texture": "4bdf0f628c05e86cabdee2f5858dd5def7f8b8d940cbf25f9937e2ffb53432f4"
     }
 ]
