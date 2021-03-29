@@ -53,7 +53,7 @@ public class SkyBlockProfileButton extends Button
 
     public ITextComponent getGameMode()
     {
-        return TextComponentUtils.component("Game Mode: ").append(this.callback.getGameMode());
+        return TextComponentUtils.component("Game Mode: ").appendSibling(this.callback.getGameMode());
     }
 
     public List<ITextComponent> getIslandMembers()

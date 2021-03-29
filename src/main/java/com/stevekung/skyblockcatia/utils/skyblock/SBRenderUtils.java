@@ -236,11 +236,11 @@ public class SBRenderUtils
 
         if (shadow)
         {
-            toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
+            toastGui.getMinecraft().fontRenderer.drawTextWithShadow(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
         else
         {
-            toastGui.getMinecraft().fontRenderer.func_243248_b(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
+            toastGui.getMinecraft().fontRenderer.drawText(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
 
         RenderSystem.disableScissor();

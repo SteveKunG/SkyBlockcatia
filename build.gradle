@@ -6,10 +6,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "4.1.+", changing: true
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
         classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
-        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.4"
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
     }
 }
 
@@ -63,8 +63,21 @@ shadowJar {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
-    implementation fg.deobf("curse.maven:stevekungs-lib-296019:${stevekung_lib_deobf}")
-    implementation fg.deobf("curse.maven:indicatia-272146:${indicatia_deobf}")
+    annotationProcessor "org.spongepowered:mixin:0.8.2:processor"
+
+    if (file("libs/SteveKunG's-Lib-${mc_version}-dev-deobf.jar").exists())
+    {
+        compile files("libs/SteveKunG's-Lib-${mc_version}-dev-deobf.jar")
+        compile files("libs/Indicatia-${mc_version}-dev-deobf.jar")
+        println("Use existing deobf artifact")
+    }
+    else
+    {
+        implementation fg.deobf("curse.maven:stevekungs-lib-296019:${stevekung_lib_deobf}")
+        implementation fg.deobf("curse.maven:indicatia-272146:${indicatia_deobf}")
+        println("Use CurseForge deobf artifact")
+    }
+
     embed("org.apache.commons:commons-text:1.8") {
         exclude group: "org.apache.commons", module: "commons-lang3"
     }

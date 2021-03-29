@@ -49,7 +49,7 @@ public class ToastUtils
             }
             else if (this.type == ToastUtils.DropType.PET_LEVEL_UP)
             {
-                return this.itemStack.getDisplayName().deepCopy().append(TextComponentUtils.formatted(" is now level ", TextFormatting.GREEN)).append(TextComponentUtils.formatted(value, TextFormatting.BLUE)).append(TextComponentUtils.formatted("!", TextFormatting.GREEN));
+                return this.itemStack.getDisplayName().deepCopy().appendSibling(TextComponentUtils.formatted(" is now level ", TextFormatting.GREEN)).appendSibling(TextComponentUtils.formatted(value, TextFormatting.BLUE)).appendSibling(TextComponentUtils.formatted("!", TextFormatting.GREEN));
             }
             else if (this.type.matches(ToastUtils.DropCondition.GIFT))
             {
@@ -59,7 +59,7 @@ public class ToastUtils
                 }
                 else
                 {
-                    return TextComponentUtils.formatted(value + " ", ColorUtils.rgbToDecimal("255,255,85")).append(this.itemStack.getDisplayName()).append(TextComponentUtils.formatted(" XP", ColorUtils.rgbToDecimal("255,255,85")));
+                    return TextComponentUtils.formatted(value + " ", ColorUtils.rgbToDecimal("255,255,85")).appendSibling(this.itemStack.getDisplayName()).appendSibling(TextComponentUtils.formatted(" XP", ColorUtils.rgbToDecimal("255,255,85")));
                 }
             }
             else

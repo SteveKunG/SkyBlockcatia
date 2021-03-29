@@ -99,11 +99,11 @@ public class ItemDropsToast implements IToast
 
         if (this.hasMagicFind)
         {
-            toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
+            toastGui.getMinecraft().fontRenderer.drawTextWithShadow(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
         }
         else
         {
-            toastGui.getMinecraft().fontRenderer.func_243248_b(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
+            toastGui.getMinecraft().fontRenderer.drawText(matrixStack, TextComponentUtils.formatted(drop.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
         }
 
         SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, 0L, this.maxDrawTime, itemName, this.hasMagicFind);

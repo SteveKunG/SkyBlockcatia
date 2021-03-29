@@ -35,6 +35,6 @@ public class APIErrorInfo extends ScrollingListScreen
     protected void drawPanel(MatrixStack matrixStack, int index, int left, int right, int top)
     {
         IReorderingProcessor stat = this.error.get(index);
-        this.font.func_238407_a_(matrixStack, stat, 40, top, 16777215);
+        this.font.drawTextWithShadow(matrixStack, stat, 40, top, 16777215);
     }
 }

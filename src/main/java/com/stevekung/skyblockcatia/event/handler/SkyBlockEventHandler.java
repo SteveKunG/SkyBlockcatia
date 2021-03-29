@@ -41,8 +41,6 @@ import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.ISound;
-import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.entity.item.ArmorStandEntity;
@@ -53,8 +51,6 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
@@ -62,7 +58,6 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderNameplateEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -636,7 +631,7 @@ public class SkyBlockEventHandler
             if (StringUtils.isNullOrEmpty(SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get()))
             {
                 ClientUtils.printClientMessage("Couldn't open API Viewer, Empty API Key in the Config!", TextFormatting.RED);
-                ClientUtils.printClientMessage(TextComponentUtils.formatted("Make sure you're in the Hypixel!", TextFormatting.YELLOW).append(TextComponentUtils.formatted(" Click Here to create an API key", TextFormatting.GOLD).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
+                ClientUtils.printClientMessage(TextComponentUtils.formatted("Make sure you're in the Hypixel!", TextFormatting.YELLOW).appendSibling(TextComponentUtils.formatted(" Click Here to create an API key", TextFormatting.GOLD).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/api new")))));
                 return;
             }
             if (!SkyBlockcatiaConfig.GENERAL.hypixelApiKey.get().matches(SkyBlockEventHandler.UUID_PATTERN_STRING))
@@ -661,21 +656,6 @@ public class SkyBlockEventHandler
             else
             {
                 this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.EMPTY));
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlaySound(PlaySoundEvent event)
-    {
-        String name = event.getName();
-
-        if (this.mc.world != null)
-        {
-            if (name.equals("records.13") && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.BLAZING_FORTRESS)
-            {
-                this.mc.ingameGUI.func_238452_a_(TextComponentUtils.formatted("Preparing spawn...", TextFormatting.RED), StringTextComponent.EMPTY, 0, 1200, 20);
-                this.mc.getSoundHandler().play(new SimpleSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP.getName(), SoundCategory.PLAYERS, 0.75F, 1.0F, false, 0, ISound.AttenuationType.NONE, (float)this.mc.player.getPosX() + 0.5F, (float)this.mc.player.getPosY() + 0.5F, (float)this.mc.player.getPosZ() + 0.5F, false));
             }
         }
     }
@@ -772,7 +752,7 @@ public class SkyBlockEventHandler
                                     }
 
                                     tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (One): ", TextFormatting.GRAY).appendString(TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + TextFormatting.YELLOW + "/" + TextFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
-                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Last Updated: ", TextFormatting.GRAY).append(TextComponentUtils.formatted(TimeUtils.getRelativeTime(entry.getValue().getLastUpdated()), TextFormatting.WHITE)));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Last Updated: ", TextFormatting.GRAY).appendSibling(TextComponentUtils.formatted(TimeUtils.getRelativeTime(entry.getValue().getLastUpdated()), TextFormatting.WHITE)));
                                 }
                             }
                             else

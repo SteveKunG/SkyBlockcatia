@@ -46,7 +46,7 @@ public class NumericToast implements IToast
         toastGui.getMinecraft().getTextureManager().bindTexture(this.texture);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         AbstractGui.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
-        toastGui.getMinecraft().fontRenderer.func_243246_a(matrixStack, TextComponentUtils.formatted(this.output.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.getType().getColor()));
+        toastGui.getMinecraft().fontRenderer.drawText(matrixStack, TextComponentUtils.formatted(this.output.getType().getName(), TextFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.getType().getColor()));
         SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, this.firstDrawTime, this.maxDrawTime, this.output.getDisplayName(NumberUtils.NUMBER_FORMAT.format(this.value)), false);
         toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(this.output.getItemStack(), 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;

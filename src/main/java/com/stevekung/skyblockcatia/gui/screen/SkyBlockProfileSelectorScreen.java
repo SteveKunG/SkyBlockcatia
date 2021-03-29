@@ -385,7 +385,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                 for (SkyBlockProfileButton button : this.buttons.stream().filter(button -> button instanceof SkyBlockProfileButton).map(button -> (SkyBlockProfileButton)button).collect(Collectors.toList()))
                 {
-                    boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeightRealms();
+                    boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
                     button.visible = button.active = this.suggestionHelper.suggestions == null;
 
                     if (hover)

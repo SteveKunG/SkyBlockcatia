@@ -18,7 +18,7 @@ import net.minecraft.util.math.vector.Matrix4f;
 public class MixinFontRenderer
 {
     //TODO
-    @Redirect(method = "renderString(Ljava/lang/String;FFILnet/minecraft/util/math/vector/Matrix4f;ZZ)I", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.func_238411_a_(Ljava/lang/String;FFIZLnet/minecraft/util/math/vector/Matrix4f;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ZIIZ)I"))
+    @Redirect(method = "renderString(Ljava/lang/String;FFILnet/minecraft/util/math/vector/Matrix4f;ZZ)I", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.drawBidiString(Ljava/lang/String;FFIZLnet/minecraft/util/math/vector/Matrix4f;Lnet/minecraft/client/renderer/IRenderTypeBuffer;ZIIZ)I"))
     private int renderString(FontRenderer fontRenderer, String text, float x, float y, int color, boolean dropShadow, Matrix4f matrix4f, IRenderTypeBuffer buffer, boolean transparent, int colorBackground, int packedLight, boolean bidi)
     {
         if (SkyBlockEventHandler.isSkyBlock)
@@ -38,7 +38,7 @@ public class MixinFontRenderer
                 color = ColorUtils.to32Bit(36, 224, 186, 255);
             }
         }
-        return fontRenderer.func_238411_a_(text, x, y, color, dropShadow, matrix4f, buffer, transparent, colorBackground, packedLight, bidi);
+        return fontRenderer.drawBidiString(text, x, y, color, dropShadow, matrix4f, buffer, transparent, colorBackground, packedLight, bidi);
     }
 
     //    private String replaceSupportersName(String text, String name)

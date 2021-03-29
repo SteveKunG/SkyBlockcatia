@@ -368,7 +368,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         return false;
                     }*/
-                    ClientUtils.printClientMessage(TextComponentUtils.component("Click to view ").append(this.hoveredSlot.getStack().getDisplayName().deepCopy().mergeStyle(TextFormatting.GOLD).append(TextComponentUtils.formatted(" recipe", TextFormatting.GREEN))).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewrecipe " + itemId)).applyFormatting(TextFormatting.GREEN)));
+                    ClientUtils.printClientMessage(TextComponentUtils.component("Click to view ").appendSibling(this.hoveredSlot.getStack().getDisplayName().deepCopy().mergeStyle(TextFormatting.GOLD).appendSibling(TextComponentUtils.formatted(" recipe", TextFormatting.GREEN))).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewrecipe " + itemId)).applyFormatting(TextFormatting.GREEN)));
                 }
             }
         }
@@ -599,7 +599,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.currentSlot.render(matrixStack, mouseX, mouseY, partialTicks);
                 }
 
-                AbstractGui.drawCenteredString(matrixStack, this.font, TextComponentUtils.component(this.displayName).append(TextComponentUtils.formatted(" Profile: ", TextFormatting.YELLOW)).append(this.sbProfileName.deepCopy().mergeStyle(TextFormatting.GOLD)).append(TextComponentUtils.formatted(" Game Mode: ", TextFormatting.YELLOW)).append(this.gameMode).appendString(this.guild), this.width / 2, 29, 16777215);
+                AbstractGui.drawCenteredString(matrixStack, this.font, TextComponentUtils.component(this.displayName).appendSibling(TextComponentUtils.formatted(" Profile: ", TextFormatting.YELLOW)).appendSibling(this.sbProfileName.deepCopy().mergeStyle(TextFormatting.GOLD)).appendSibling(TextComponentUtils.formatted(" Game Mode: ", TextFormatting.YELLOW)).appendSibling(this.gameMode).appendString(this.guild), this.width / 2, 29, 16777215);
 
                 if (this.currentSlot != null && this.currentSlot instanceof EmptyList)
                 {
@@ -1348,7 +1348,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (group != null)
         {
             RenderSystem.disableBlend();
-            this.font.func_243248_b(matrixStack, group.getTranslationKey(), this.guiLeft + 11, this.guiTop + 6, 4210752);
+            this.font.drawText(matrixStack, group.getTranslationKey(), this.guiLeft + 11, this.guiTop + 6, 4210752);
         }
     }
 
@@ -1719,8 +1719,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             for (BankHistory bank : bankHistory)
             {
                 this.sbBankHistories.add(new BankHistory.Stats(TextComponentUtils.formatted("------------------------------", TextFormatting.DARK_GRAY)));
-                this.sbBankHistories.add(new BankHistory.Stats(TextComponentUtils.component("Initiator: ").append(bank.getName().equals("Bank Interest") ? TextComponentUtils.formatted(bank.getName(), ColorUtils.toDecimal(255, 215, 0)) : TextComponentUtils.component(bank.getName()))));
-                this.sbBankHistories.add(new BankHistory.Stats(TextComponentUtils.formatted(bank.getAction().name, bank.getAction().color).append(TextComponentUtils.formatted(" " + SBNumberUtils.formatWithM(bank.getAmount()), TextFormatting.GOLD)).append(TextComponentUtils.formatted(" about " + TimeUtils.getRelativeTime(bank.getTimestamp()), TextFormatting.WHITE))));
+                this.sbBankHistories.add(new BankHistory.Stats(TextComponentUtils.component("Initiator: ").appendSibling(bank.getName().equals("Bank Interest") ? TextComponentUtils.formatted(bank.getName(), ColorUtils.toDecimal(255, 215, 0)) : TextComponentUtils.component(bank.getName()))));
+                this.sbBankHistories.add(new BankHistory.Stats(TextComponentUtils.formatted(bank.getAction().name, bank.getAction().color).appendSibling(TextComponentUtils.formatted(" " + SBNumberUtils.formatWithM(bank.getAmount()), TextFormatting.GOLD)).appendSibling(TextComponentUtils.formatted(" about " + TimeUtils.getRelativeTime(bank.getTimestamp()), TextFormatting.WHITE))));
             }
             this.sbBankHistories.add(new BankHistory.Stats(TextComponentUtils.formatted("------------------------------", TextFormatting.DARK_GRAY)));
         }
@@ -2276,12 +2276,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             if (altName != null)
             {
-                IFormattableTextComponent component = altName.deepCopy().append(TextComponentUtils.formatted(" x" + NumberUtils.NUMBER_FORMAT.format(count), TextFormatting.GRAY));
+                IFormattableTextComponent component = altName.deepCopy().appendSibling(TextComponentUtils.formatted(" x" + NumberUtils.NUMBER_FORMAT.format(count), TextFormatting.GRAY));
                 itemStack.setDisplayName(component.setStyle(component.getStyle().setItalic(false)));
             }
             else
             {
-                IFormattableTextComponent component = itemStack.getDisplayName().deepCopy().append(TextComponentUtils.formatted(" x" + NumberUtils.NUMBER_FORMAT.format(count), TextFormatting.GRAY));
+                IFormattableTextComponent component = itemStack.getDisplayName().deepCopy().appendSibling(TextComponentUtils.formatted(" x" + NumberUtils.NUMBER_FORMAT.format(count), TextFormatting.GRAY));
                 itemStack.setDisplayName(component.setStyle(component.getStyle().setItalic(false)));
             }
         }
@@ -4157,13 +4157,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                         component.setStyle(component.getStyle().setFontId(ClientUtils.UNICODE));
                     }
 
-                    this.font.func_243246_a(matrixStack, component, SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                    this.font.drawText(matrixStack, component, SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
                     this.font.drawString(matrixStack, stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - this.font.getStringWidth(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
                 }
                 else if (obj instanceof BankHistory.Stats)
                 {
                     BankHistory.Stats stat = (BankHistory.Stats)obj;
-                    this.font.func_243246_a(matrixStack, stat.getStats(), SkyBlockAPIViewerScreen.this.guiLeft - 55, top, 16777215);
+                    this.font.drawText(matrixStack, stat.getStats(), SkyBlockAPIViewerScreen.this.guiLeft - 55, top, 16777215);
                 }
             }
         }
@@ -4203,7 +4203,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
                 else
                 {
-                    this.font.func_243246_a(matrixStack, collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
+                    this.font.drawText(matrixStack, collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }
             }
         }
@@ -4243,7 +4243,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 if (craftedMinion.getMinionName() != null)
                 {
-                    this.font.func_243246_a(matrixStack, craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
+                    this.font.drawText(matrixStack, craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
         }

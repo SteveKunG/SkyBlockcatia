@@ -66,7 +66,7 @@ public class MixinPlayerTabOverlayGui
         if (this.isPlayerCountEnabled())
         {
             List<IReorderingProcessor> origin = Lists.newCopyOnWriteArrayList(fontRenderer.trimStringToWidth(str, wrapWidth));
-            origin.add(TextComponentUtils.formatted("Lobby Players Count: ", TextFormatting.GOLD).append(TextComponentUtils.formatted(String.valueOf(this.playerCount), TextFormatting.GREEN)).func_241878_f());
+            origin.add(TextComponentUtils.formatted("Lobby Players Count: ", TextFormatting.GOLD).appendSibling(TextComponentUtils.formatted(String.valueOf(this.playerCount), TextFormatting.GREEN)).func_241878_f());
             return origin;
         }
         else

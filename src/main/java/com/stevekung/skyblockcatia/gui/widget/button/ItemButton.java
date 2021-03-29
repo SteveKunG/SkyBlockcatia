@@ -45,7 +45,7 @@ public class ItemButton extends Button
 
     @SuppressWarnings("deprecation")
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void renderWidget(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         this.mc.getTextureManager().bindTexture(TEXTURE);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);

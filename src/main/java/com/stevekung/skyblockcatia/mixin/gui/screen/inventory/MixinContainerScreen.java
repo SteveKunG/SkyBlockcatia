@@ -703,7 +703,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
                             {
                                 int k2 = -i1 * 9;
                                 RenderSystem.enableBlend();
-                                this.font.func_238407_a_(matrixStack, chatline.getLineString(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
+                                this.font.drawTextWithShadow(matrixStack, chatline.getLineString(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
                                 RenderSystem.disableAlphaTest();
                                 RenderSystem.disableBlend();
                             }
