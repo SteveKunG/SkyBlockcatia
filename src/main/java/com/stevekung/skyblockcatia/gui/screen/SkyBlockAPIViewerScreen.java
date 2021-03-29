@@ -2189,7 +2189,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                     else
                     {
                         Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
-                        this.addSackItemStackCount(item, count, null, false, sacks);
 
                         if (item == Items.AIR)
                         {
