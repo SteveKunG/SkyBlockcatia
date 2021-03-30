@@ -2144,6 +2144,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         List<ItemStack> sacks = Lists.newArrayList();
         JsonElement sacksCounts = currentProfile.get("sacks_counts");
+        Multimap<String, org.apache.commons.lang3.tuple.Pair<Integer, Integer>> runes = HashMultimap.create();
 
         if (sacksCounts != null)
         {
@@ -2168,7 +2169,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     itemId = EntityRenaming1510.ITEM_RENAME_MAP.getOrDefault(newItemReg, newItemReg);
                 }
 
-                if (count > 1)
+                if (count > 0)
                 {
                     if (this.matchSackId(itemId, SBSlayers.Drops.values()))
                     {
@@ -2192,7 +2193,23 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                         if (item == Items.AIR)
                         {
-                            this.addSackItemStackCount(Blocks.BARRIER, count, TextComponentUtils.formatted(itemId, TextFormatting.RED), false, sacks);
+                            if (itemId.startsWith("rune_"))
+                            {
+                                String runeName = itemId.trim().replaceAll("(_[0-9])(?!_[0-9])", "");
+                                int runeLevel = 0;
+                                Pattern runeLvlPattern = Pattern.compile("_[0-9]((?!_[0-9]))");
+                                Matcher runeLvlMatcher = runeLvlPattern.matcher(itemId);
+
+                                if (runeLvlMatcher.find())
+                                {
+                                    runeLevel = Integer.parseInt(runeLvlMatcher.group().replace("_", ""));
+                                }
+                                runes.put(runeName, org.apache.commons.lang3.tuple.Pair.of(runeLevel, count));
+                            }
+                            else
+                            {
+                                this.addSackItemStackCount(Blocks.BARRIER, count, TextComponentUtils.formatted(itemId, TextFormatting.RED), false, sacks);
+                            }
                         }
                         else
                         {
@@ -2201,6 +2218,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                 }
             }
+            this.parseRunes(runes, sacks);
             sacks.sort((itemStack1, itemStack2) -> new CompareToBuilder().append(itemStack2.getCount(), itemStack1.getCount()).build());
         }
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(sacks, SBInventoryGroup.SACKS));
@@ -2264,6 +2282,36 @@ public class SkyBlockAPIViewerScreen extends Screen
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    private void parseRunes(Multimap<String, org.apache.commons.lang3.tuple.Pair<Integer, Integer>> runes, List<ItemStack> sacks)
+    {
+        for (Map.Entry<String, Collection<org.apache.commons.lang3.tuple.Pair<Integer, Integer>>> entry : runes.asMap().entrySet())
+        {
+            RuneSacks rune = RuneSacks.byName(entry.getKey());
+            ItemStack base = rune.getBaseItem();
+            List<org.apache.commons.lang3.tuple.Pair<Integer, Integer>> sortedLvl = entry.getValue().stream().collect(Collectors.toCollection(ArrayList::new));
+            Collections.sort(sortedLvl);
+            int sum = sortedLvl.stream().collect(Collectors.summingInt(org.apache.commons.lang3.tuple.Pair::getRight));
+            base.setCount(sum);
+
+            if (rune == RuneSacks.UNKNOWN)
+            {
+                this.addSackItemStackCount(base, sum, rune.getDisplayName().deepCopy().appendString(" " + entry.getKey()), false, sacks);
+            }
+            else
+            {
+                ListNBT loreList = new ListNBT();
+
+                for (org.apache.commons.lang3.tuple.Pair<Integer, Integer> level : sortedLvl)
+                {
+                    loreList.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.WHITE + NumberUtils.intToRoman(level.getLeft()) + TextFormatting.GRAY + ": x" + level.getRight())));
+                }
+
+                base.getOrCreateChildTag("display").put("Lore", loreList);
+                this.addSackItemStackCount(base, sum, rune.getDisplayName(), true, sacks);
+            }
         }
     }
 
