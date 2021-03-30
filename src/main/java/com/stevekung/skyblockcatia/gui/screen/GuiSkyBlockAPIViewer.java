@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.*;
@@ -2529,7 +2530,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         try
         {
             JsonElement sacksCounts = currentProfile.get("sacks_counts");
-            Multimap<String, org.apache.commons.lang3.tuple.Pair<Integer, Integer>> runes = HashMultimap.create();
+            Multimap<String, Pair<Integer, Integer>> runes = HashMultimap.create();
 
             if (sacksCounts != null)
             {
@@ -2582,7 +2583,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                                     {
                                         runeLevel = Integer.parseInt(runeLvlMatcher.group().replace("_", ""));
                                     }
-                                    runes.put(runeName, org.apache.commons.lang3.tuple.Pair.of(runeLevel, count));
+                                    runes.put(runeName, Pair.of(runeLevel, count));
                                 }
                                 else
                                 {
@@ -2681,15 +2682,15 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
     }
 
-    private void parseRunes(Multimap<String, org.apache.commons.lang3.tuple.Pair<Integer, Integer>> runes, List<ItemStack> sacks)
+    private void parseRunes(Multimap<String, Pair<Integer, Integer>> runes, List<ItemStack> sacks)
     {
-        for (Map.Entry<String, Collection<org.apache.commons.lang3.tuple.Pair<Integer, Integer>>> entry : runes.asMap().entrySet())
+        for (Map.Entry<String, Collection<Pair<Integer, Integer>>> entry : runes.asMap().entrySet())
         {
             RuneSacks rune = RuneSacks.byName(entry.getKey());
             ItemStack base = rune.getBaseItem();
-            List<org.apache.commons.lang3.tuple.Pair<Integer, Integer>> sortedLvl = entry.getValue().stream().collect(Collectors.toCollection(ArrayList::new));
+            List<Pair<Integer, Integer>> sortedLvl = entry.getValue().stream().collect(Collectors.toCollection(ArrayList::new));
             Collections.sort(sortedLvl);
-            int sum = sortedLvl.stream().collect(Collectors.summingInt(org.apache.commons.lang3.tuple.Pair::getRight));
+            int sum = sortedLvl.stream().collect(Collectors.summingInt(Pair::getRight));
             base.stackSize = sum;
 
             if (rune == RuneSacks.UNKNOWN)
@@ -2700,7 +2701,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             {
                 NBTTagList loreList = new NBTTagList();
 
-                for (org.apache.commons.lang3.tuple.Pair<Integer, Integer> level : sortedLvl)
+                for (Pair<Integer, Integer> level : sortedLvl)
                 {
                     loreList.appendTag(new NBTTagString(EnumChatFormatting.WHITE + NumberUtils.intToRoman(level.getLeft()) + EnumChatFormatting.GRAY + ": x" + level.getRight()));
                 }
