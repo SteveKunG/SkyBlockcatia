@@ -46,10 +46,6 @@ public class SupporterUtils
                     }
                 }
             }
-            if (text.contains("SteveKunG"))
-            {
-                return SupporterUtils.replaceSupportersName(text, "SteveKunG", ColorUtils.RANDOM_COLOR[ColorUtils.randomColorIndex]);
-            }
         }
         return text;
     }

@@ -57,6 +57,7 @@ public abstract class ServerListEntryNormalMixin
     private DynamicTexture field_148305_h;
 
     @Shadow
+    @Final
     private ResourceLocation field_148306_i;
 
     @Shadow

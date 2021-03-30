@@ -715,7 +715,6 @@ public class SkyBlockEventHandler
     {
         if (event.entity == this.mc.thePlayer)
         {
-            ColorUtils.randomColorIndex = new Random().nextInt(ColorUtils.RANDOM_COLOR.length);
             this.previousInventory = null;
             this.clearBossData();
             ITEM_DROP_CHECK_LIST.clear();
