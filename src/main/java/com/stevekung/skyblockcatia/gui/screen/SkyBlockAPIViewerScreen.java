@@ -2188,6 +2188,30 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 }
                                 runes.put(runeName, org.apache.commons.lang3.tuple.Pair.of(runeLevel, count));
                             }
+                            else if (itemId.startsWith("enchanted_"))
+                            {
+                                item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId.replace("enchanted_", "")));
+                                ItemStack enchantedItem = SBConstants.ENCHANTED_ID_TO_ITEM.getOrDefault(itemId, new ItemStack(item == Items.AIR ? Items.BARRIER : item, count));
+                                enchantedItem.setCount(count);
+
+                                if (enchantedItem.hasTag())
+                                {
+                                    ListNBT list = new ListNBT();
+                                    list.add(new CompoundNBT());
+                                    enchantedItem.getTag().put("Enchantments", list);
+                                }
+                                else
+                                {
+                                    CompoundNBT compound = new CompoundNBT();
+                                    ListNBT list = new ListNBT();
+                                    list.add(new CompoundNBT());
+                                    compound.put("Enchantments", list);
+                                    enchantedItem.setTag(compound);
+                                }
+                                IFormattableTextComponent component = TextComponentUtils.formatted(WordUtils.capitalize(itemId.replace("_", " ")), TextFormatting.WHITE);
+                                enchantedItem.setDisplayName(component.setStyle(component.getStyle().setItalic(false)));
+                                this.addSackItemStackCount(enchantedItem, count, null, true, sacks);
+                            }
                             else
                             {
                                 this.addSackItemStackCount(Blocks.BARRIER, count, TextComponentUtils.formatted(itemId, TextFormatting.RED), false, sacks);
@@ -2259,7 +2283,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             DwarvenSacks dwarvenSacks = DwarvenSacks.valueOf(itemId.toUpperCase(Locale.ROOT));
             ItemStack base = dwarvenSacks.getBaseItem();
             base.setCount(count);
-            this.addSackItemStackCount(base, count, dwarvenSacks.getDisplayName(), false, sacks);
+            this.addSackItemStackCount(base, count, dwarvenSacks.getDisplayName(), dwarvenSacks == DwarvenSacks.TITANIUM_ORE, sacks);
         }
         catch (Exception e)
         {
@@ -2280,7 +2304,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (rune == RuneSacks.UNKNOWN)
             {
-                this.addSackItemStackCount(base, sum, rune.getDisplayName().deepCopy().appendString(" " + entry.getKey()), false, sacks);
+                this.addSackItemStackCount(base, sum, rune.getDisplayName().deepCopy().appendString(" - " + entry.getKey()), false, sacks);
             }
             else
             {
@@ -2288,7 +2312,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 for (org.apache.commons.lang3.tuple.Pair<Integer, Integer> level : sortedLvl)
                 {
-                    loreList.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.WHITE + NumberUtils.intToRoman(level.getLeft()) + TextFormatting.GRAY + ": x" + level.getRight())));
+                    loreList.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.WHITE + NumberUtils.intToRoman(level.getLeft()) + ":" + TextFormatting.GRAY + " x" + level.getRight())));
                 }
 
                 base.getOrCreateChildTag("display").put("Lore", loreList);

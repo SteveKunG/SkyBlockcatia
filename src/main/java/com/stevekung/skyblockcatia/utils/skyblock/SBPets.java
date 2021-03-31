@@ -90,6 +90,7 @@ public class SBPets
         GHOUL(SBSkills.Type.COMBAT, "3fbb2c84-3693-4dcd-bc49-3b54ca6fa8cc", "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b"),
         GIRAFFE(SBSkills.Type.FORAGING, "11216f12-2843-31c8-bf8a-b8535e6c6dce", "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9"),
         GOLEM(SBSkills.Type.COMBAT, "623fa763-a8d1-36c6-8dcf-09f100723d04", "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714"),
+        GRANDMA_WOLF(SBSkills.Type.COMBAT, "7f1b261f-0595-4160-9b6a-396436f9cc5d", "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884"),
         GRIFFIN(SBSkills.Type.COMBAT, "11e506b9-cb3d-43e6-89d2-9e1575944498", "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8"),
         GUARDIAN(SBSkills.Type.COMBAT, "26508276-c01a-32a9-9201-7dae1724954e", "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d"),
         HORSE(SBSkills.Type.COMBAT, "6d310633-c175-4b47-92ab-778287bb7a5e", "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226"),
@@ -190,7 +191,8 @@ public class SBPets
         MINOS_RELIC(TextFormatting.DARK_PURPLE),
         PET_ITEM_SPOOKY_CUPCAKE(TextFormatting.GREEN),
         PET_ITEM_VAMPIRE_FANG(TextFormatting.GOLD),
-        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", TextFormatting.GOLD);
+        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", TextFormatting.GOLD),
+        REAPER_GEM(TextFormatting.GOLD);
 
         private final String altName;
         private final TextFormatting color;

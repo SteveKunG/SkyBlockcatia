@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.stevekung.stevekungslib.utils.ItemUtils;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.Util;
@@ -95,5 +97,15 @@ public class SBConstants
         map.put(SBCollections.Type.FORAGING, ImmutableList.of(Blocks.OAK_LOG, Blocks.BIRCH_LOG, Blocks.SPRUCE_LOG, Blocks.ACACIA_LOG, Blocks.JUNGLE_LOG, Blocks.DARK_OAK_LOG));
         map.put(SBCollections.Type.FISHING, ImmutableList.of(Items.COD, Items.SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH, Items.PRISMARINE_SHARD, Items.PRISMARINE_CRYSTALS, Items.CLAY_BALL, Blocks.LILY_PAD, Blocks.SPONGE, Items.INK_SAC));
         map.put(SBCollections.Type.FARMING, ImmutableList.of(Items.SUGAR_CANE, Blocks.PUMPKIN, Items.CARROT, Items.WHEAT, Items.POTATO, Items.MELON, Items.COCOA_BEANS, Items.FEATHER, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.LEATHER, Blocks.RED_MUSHROOM, Items.NETHER_WART, Items.RABBIT, Items.WHEAT_SEEDS, Blocks.CACTUS));
+    });
+    public static final Map<String, ItemStack> ENCHANTED_ID_TO_ITEM = Util.make(Maps.newHashMap(), map ->
+    {
+        map.put("enchanted_mithril", new ItemStack(Items.PRISMARINE_CRYSTALS));
+        map.put("enchanted_iron", new ItemStack(Items.IRON_INGOT));
+        map.put("enchanted_endstone", new ItemStack(Blocks.END_STONE));
+        map.put("enchanted_gold", new ItemStack(Items.GOLD_INGOT));
+        map.put("enchanted_lapis_lazuli", new ItemStack(Items.LAPIS_LAZULI));
+        map.put("enchanted_titanium", ItemUtils.getSkullItemStack("deb23698-94ea-3571-bb89-cd37ba5d15d8", "3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26"));
+        map.put("enchanted_dark_oak_log", new ItemStack(Blocks.DARK_OAK_LOG));
     });
 }

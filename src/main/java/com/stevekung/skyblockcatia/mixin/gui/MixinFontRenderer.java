@@ -8,7 +8,6 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.stevekungslib.utils.ColorUtils;
-import com.stevekung.stevekungslib.utils.GameProfileUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -32,10 +31,6 @@ public class MixinFontRenderer
                         color = ColorUtils.to32Bit(36, 224, 186, 255);
                     }
                 }
-            }
-            if (text.contains("SteveKunG") && !GameProfileUtils.isSteveKunG())
-            {
-                color = ColorUtils.to32Bit(36, 224, 186, 255);
             }
         }
         return fontRenderer.drawBidiString(text, x, y, color, dropShadow, matrix4f, buffer, transparent, colorBackground, packedLight, bidi);

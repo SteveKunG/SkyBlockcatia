@@ -49,6 +49,6 @@ public class GuiScreenUtils
 
     public static boolean isOtherProfile(String title)
     {
-        return title.endsWith("'s Profile") || title.endsWith("' Profile");
+        return title.endsWith("'s Profile") || title.endsWith("' Profile") || title.endsWith("[GUEST]");
     }
 }

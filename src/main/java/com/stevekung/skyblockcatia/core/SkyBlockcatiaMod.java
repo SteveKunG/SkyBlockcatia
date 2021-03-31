@@ -3,6 +3,8 @@ package com.stevekung.skyblockcatia.core;
 import java.io.BufferedReader;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
 import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
@@ -28,10 +30,13 @@ import com.stevekung.stevekungslib.utils.LoggerBase;
 import com.stevekung.stevekungslib.utils.ModVersionChecker;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 @Mod(SkyBlockcatiaMod.MOD_ID)
 public class SkyBlockcatiaMod
@@ -67,6 +72,8 @@ public class SkyBlockcatiaMod
     public SkyBlockcatiaMod()
     {
         CommonUtils.registerConfig(ModConfig.Type.CLIENT, SkyBlockcatiaConfig.GENERAL_BUILDER);
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (s, b) -> true));
+
         CommonUtils.registerModEventBus(SkyBlockcatiaConfig.class);
         CommonUtils.addModListener(this::phaseOne);
         CommonUtils.addModListener(this::loadComplete);
