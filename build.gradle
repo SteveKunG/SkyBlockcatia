@@ -2,8 +2,8 @@ buildscript {
     repositories {
         jcenter()
         maven {
-            name "forge"
-            url "https://files.minecraftforge.net/maven"
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
         }
         maven {
             name "sponge"
@@ -51,7 +51,7 @@ configurations {
 
 dependencies {
     embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") { transitive = false }
-    compileOnly files("libs/SkyblockAddons.jar")
+    compile files("libs/SkyblockAddons.jar")
 }
 
 repositories {
