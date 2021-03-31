@@ -136,6 +136,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             .put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder")
             .put("mythos_burrows_chains_complete_common", "mythos_burrows_common_chains_complete").put("mythos_burrows_chains_complete_epic", "mythos_burrows_epic_chains_complete").put("mythos_burrows_chains_complete_legendary", "mythos_burrows_legendary_chains_complete").put("mythos_burrows_chains_complete_rare", "mythos_burrows_rare_chains_complete").put("mythos_burrows_dug_combat_common", "mythos_burrows_dug_common_monsters").put("mythos_burrows_dug_combat_epic", "mythos_burrows_dug_epic_monsters").put("mythos_burrows_dug_combat_legendary", "mythos_burrows_dug_legendary_monsters").put("mythos_burrows_dug_combat_rare", "mythos_burrows_dug_rare_monsters").put("mythos_burrows_dug_next_common", "mythos_burrows_dug_common_arrows").put("mythos_burrows_dug_next_epic", "mythos_burrows_dug_epic_arrows").put("mythos_burrows_dug_next_legendary", "mythos_burrows_dug_legendary_arrows").put("mythos_burrows_dug_next_rare", "mythos_burrows_dug_rare_arrows").put("mythos_burrows_dug_treasure_common", "mythos_burrows_dug_common_treasure").put("mythos_burrows_dug_treasure_epic", "mythos_burrows_dug_epic_treasure").put("mythos_burrows_dug_treasure_legendary", "mythos_burrows_dug_legendary_treasure").put("mythos_burrows_dug_treasure_rare", "mythos_burrows_dug_rare_treasure").build();
     private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").build();
+    private static final Map<String, ItemStack> ENCHANTED_ID_TO_ITEM = ImmutableMap.<String, ItemStack>builder().put("enchanted_mithril", new ItemStack(Items.prismarine_crystals)).put("enchanted_iron", new ItemStack(Items.iron_ingot)).put("enchanted_endstone", new ItemStack(Blocks.end_stone)).put("enchanted_gold", new ItemStack(Items.gold_ingot)).put("enchanted_lapis_lazuli", new ItemStack(Items.dye, 1, 4)).put("enchanted_titanium", RenderUtils.getSkullItemStack("deb23698-94ea-3571-bb89-cd37ba5d15d8", "3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26")).put("enchanted_dark_oak_log", new ItemStack(Blocks.log2, 1, 1)).build();
     private static final ImmutableList<String> BLACKLIST_STATS = ImmutableList.of("highest_crit_damage", "mythos_burrows_dug_combat", "mythos_burrows_dug_combat_null", "mythos_burrows_dug_treasure", "mythos_burrows_dug_next", "mythos_burrows_dug_treasure_null", "mythos_burrows_chains_complete", "mythos_burrows_chains_complete_null", "mythos_burrows_dug_next_null");
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
@@ -2585,6 +2586,31 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                                     }
                                     runes.put(runeName, Pair.of(runeLevel, count));
                                 }
+                                else if (itemId.startsWith("enchanted_"))
+                                {
+                                    item = Item.getByNameOrId(itemId.replace("enchanted_", ""));
+
+                                    if (item == null)
+                                    {
+                                        item = Item.getItemFromBlock(Blocks.barrier);
+                                    }
+
+                                    ItemStack enchantedItem = ENCHANTED_ID_TO_ITEM.getOrDefault(itemId, new ItemStack(item, count, meta));
+                                    enchantedItem.stackSize = count;
+
+                                    if (enchantedItem.hasTagCompound())
+                                    {
+                                        enchantedItem.getTagCompound().setTag("ench", new NBTTagList());
+                                    }
+                                    else
+                                    {
+                                        NBTTagCompound compound = new NBTTagCompound();
+                                        compound.setTag("ench", new NBTTagList());
+                                        enchantedItem.setTagCompound(compound);
+                                    }
+                                    enchantedItem.setStackDisplayName(EnumChatFormatting.RESET.toString() + WordUtils.capitalize(itemId.replace("_", " ")));
+                                    this.addSackItemStackCount(enchantedItem, null, true, sacks);
+                                }
                                 else
                                 {
                                     this.addSackItemStackCount(new ItemStack(Blocks.barrier, count), EnumChatFormatting.RED + itemId, false, sacks);
@@ -2695,7 +2721,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
             if (rune == RuneSacks.UNKNOWN)
             {
-                this.addSackItemStackCount(base, rune.getDisplayName() + " " + entry.getKey(), false, sacks);
+                this.addSackItemStackCount(base, rune.getDisplayName() + " - " + entry.getKey(), false, sacks);
             }
             else
             {
@@ -2703,7 +2729,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                 for (Pair<Integer, Integer> level : sortedLvl)
                 {
-                    loreList.appendTag(new NBTTagString(EnumChatFormatting.WHITE + NumberUtils.intToRoman(level.getLeft()) + EnumChatFormatting.GRAY + ": x" + level.getRight()));
+                    loreList.appendTag(new NBTTagString(EnumChatFormatting.WHITE + NumberUtils.intToRoman(level.getLeft()) + ":" + EnumChatFormatting.GRAY + " x" + level.getRight()));
                 }
 
                 base.getSubCompound("display", true).setTag("Lore", loreList);
