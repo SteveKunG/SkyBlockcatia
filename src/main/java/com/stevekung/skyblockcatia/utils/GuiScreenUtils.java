@@ -54,6 +54,6 @@ public class GuiScreenUtils
     public static boolean isOtherProfile(IInventory lowerChestInventory)
     {
         String name = lowerChestInventory.getDisplayName().getUnformattedText();
-        return name.endsWith("'s Profile") || name.endsWith("' Profile");
+        return name.endsWith("'s Profile") || name.endsWith("' Profile") || name.endsWith("[GUEST]");
     }
 }
