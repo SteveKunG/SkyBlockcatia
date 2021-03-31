@@ -235,7 +235,8 @@ public class SBPets
         MINOS_RELIC(EnumChatFormatting.DARK_PURPLE),
         PET_ITEM_SPOOKY_CUPCAKE(EnumChatFormatting.GREEN),
         PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD),
-        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", EnumChatFormatting.GOLD);
+        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", EnumChatFormatting.GOLD),
+        REAPER_GEM(EnumChatFormatting.GOLD);
 
         private final String altName;
         private final EnumChatFormatting color;
