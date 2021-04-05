@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Lists;
@@ -70,6 +71,8 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
     private GuiScrollingList errorInfo;
     private List<String> errorList = new ArrayList<>();
     private static final Map<String, String> USERNAME_CACHE = Maps.newHashMap();
+    public static final Map<String, Pair<Long, JsonObject>> INIT_PROFILE_CACHE = Maps.newConcurrentMap();
+    public static final Map<String, Pair<Long, JsonObject>> PROFILE_CACHE = Maps.newConcurrentMap();
 
     public GuiSkyBlockProfileSelector(GuiState state)
     {
@@ -467,7 +470,18 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
 
         this.statusMessage = "Getting Hypixel API";
 
-        JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonObject obj = null;
+        String lowerInput = this.input.toLowerCase(Locale.ROOT);
+
+        if (INIT_PROFILE_CACHE.containsKey(lowerInput))
+        {
+            obj = INIT_PROFILE_CACHE.get(lowerInput).getRight();
+        }
+        else
+        {
+            obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            INIT_PROFILE_CACHE.put(lowerInput, Pair.of(System.currentTimeMillis(), obj));
+        }
 
         if (!obj.get("success").getAsBoolean())
         {
@@ -617,7 +631,18 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
         }
 
         URL urlSB = new URL(SBAPIUtils.SKYBLOCK_PROFILES + uuid);
-        JsonObject objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonObject objSB = null;
+
+        if (PROFILE_CACHE.containsKey(uuid))
+        {
+            objSB = PROFILE_CACHE.get(uuid).getRight();
+        }
+        else
+        {
+            objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            PROFILE_CACHE.put(uuid, Pair.of(System.currentTimeMillis(), objSB));
+        }
+
         JsonElement sbProfile = objSB.get("profiles");
         GameProfile gameProfile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
 

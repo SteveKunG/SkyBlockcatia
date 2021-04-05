@@ -12,12 +12,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.config.ToastMode;
@@ -152,6 +154,27 @@ public class SkyBlockEventHandler
                             GuiScreen.setClipboardString("/give @p " + itemStack.getItem().getRegistryName() + " " + 1 + " " + itemStack.getItemDamage() + " " + itemStack.getTagCompound());
                             ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied item data!");
                         }
+                    }
+                }
+
+                for (Map.Entry<String, Pair<Long, JsonObject>> entry : GuiSkyBlockProfileSelector.PROFILE_CACHE.entrySet())
+                {
+                    long now = System.currentTimeMillis();
+                    long checkedTime = entry.getValue().getLeft();
+
+                    if (now - checkedTime > 120000D)
+                    {
+                        GuiSkyBlockProfileSelector.PROFILE_CACHE.remove(entry.getKey());
+                    }
+                }
+                for (Map.Entry<String, Pair<Long, JsonObject>> entry : GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.entrySet())
+                {
+                    long now = System.currentTimeMillis();
+                    long checkedTime = entry.getValue().getLeft();
+
+                    if (now - checkedTime > 120000D)
+                    {
+                        GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.remove(entry.getKey());
                     }
                 }
 
