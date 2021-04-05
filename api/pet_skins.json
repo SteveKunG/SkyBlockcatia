@@ -271,5 +271,12 @@
         "color": "dark_purple",
         "uuid": "b22decd6-faf9-3872-9f85-cc76c011f37b",
         "texture": "4bdf0f628c05e86cabdee2f5858dd5def7f8b8d940cbf25f9937e2ffb53432f4"
+    },
+    {
+        "skin": "CHICKEN_BABY_CHICK",
+        "displayName": "Baby Chick Chicken",
+        "color": "dark_purple",
+        "uuid": "83abf023-37cc-3058-a9ff-c8d46cb57a2b",
+        "texture": "1bde55ed54cb5c87661b86c349186a9d5baffb3cb934b449a2d329e399d34bf"
     }
 ]
