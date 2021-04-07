@@ -19,6 +19,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     static boolean foundPlayerApi;
     static boolean foundRenderPlayerApi;
     static boolean foundBetterSprinting;
+    static boolean foundSmoothFont;
 
     static
     {
@@ -26,6 +27,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         foundPlayerApi = findAndDetectModClass("api.player.client.ClientPlayerAPI", "PlayerAPI");
         foundRenderPlayerApi = findAndDetectModClass("api.player.render.RenderPlayerAPI", "RenderPlayerAPI");
         foundBetterSprinting = findAndDetectModClass("chylex.bettersprinting.client.player.LivingUpdate", "BetterSprinting");
+        foundSmoothFont = findAndDetectModClass("bre.smoothfont.mod_SmoothFont", "Smooth Font");
     }
 
     @Override
@@ -63,6 +65,10 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.better_sprinting.entity.EntityPlayerSPMixin"))
         {
             return foundBetterSprinting;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.gui.FontRendererMixin"))
+        {
+            return !foundSmoothFont;
         }
         return true;
     }

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -13,15 +14,28 @@ import com.stevekung.skyblockcatia.utils.SupporterUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 
-@Mixin(FontRenderer.class)
+@Mixin(value = FontRenderer.class, priority = 500)
 public abstract class FontRendererMixin
 {
-    private boolean dropShadow;
-    private int state;
-    private int redN;
-    private int greenN;
-    private int blueN;
+    @Unique
     private static final int MARKER = 59136;
+
+    @Unique
+    private boolean dropShadow;
+
+    @Unique
+    private int state;
+
+    @Unique
+    private int redN;
+
+    @Unique
+    private int greenN;
+
+    @Unique
+    private int blueN;
+
+    //////////////////////
 
     @Shadow
     private float alpha;
@@ -54,7 +68,7 @@ public abstract class FontRendererMixin
     }
 
     @Inject(method = "renderString(Ljava/lang/String;FFIZ)I", at = @At("HEAD"))
-    private void renderString(String text, float x, float y, int color, boolean dropShadow, CallbackInfoReturnable info)
+    private void renderString(String text, float x, float y, int color, boolean dropShadow, CallbackInfoReturnable<Integer> info)
     {
         this.dropShadow = dropShadow;
     }
@@ -66,7 +80,7 @@ public abstract class FontRendererMixin
     }
 
     @Inject(method = "renderDefaultChar(IZ)F", cancellable = true, at = @At("HEAD"))
-    private void renderDefaultChar(int ch, boolean italic, CallbackInfoReturnable info)
+    private void renderDefaultChar(int ch, boolean italic, CallbackInfoReturnable<Float> info)
     {
         if (ch >= MARKER && ch <= MARKER + 255)
         {
@@ -182,8 +196,8 @@ public abstract class FontRendererMixin
         }
     }
 
-    @Overwrite
-    public static String getFormatFromString(String text)
+    @Inject(method = "getFormatFromString(Ljava/lang/String;)Ljava/lang/String;", cancellable = true, at = @At("RETURN"))
+    private static void getFormatFromString(String text, CallbackInfoReturnable<String> info)
     {
         String s = "";
         int i = -1;
@@ -195,21 +209,13 @@ public abstract class FontRendererMixin
             {
                 char c0 = text.charAt(i + 1);
 
-                if (isFormatColor(c0))
-                {
-                    s = "\u00a7" + c0;
-                }
-                else if (isFormatSpecial(c0))
-                {
-                    s = s + "\u00a7" + c0;
-                }
-                else if (c0 >= MARKER && c0 <= MARKER + 255)
+                if (c0 >= MARKER && c0 <= MARKER + 255)
                 {
                     s = String.format("%s%s%s", c0, text.charAt(i + 1), text.charAt(i + 2));
                     i += 2;
                 }
             }
         }
-        return s;
+        info.setReturnValue(s);
     }
 }
