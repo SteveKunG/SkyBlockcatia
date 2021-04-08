@@ -3,10 +3,7 @@ package com.stevekung.skyblockcatia.gui.screen;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -14,6 +11,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.Lists;
@@ -77,6 +75,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
     private ScrollingListScreen errorInfo;
     private List<ITextComponent> errorList = Lists.newArrayList();
     private static final Map<String, ITextComponent> USERNAME_CACHE = Maps.newHashMap();
+    public static final Map<String, Pair<Long, JsonObject>> INIT_PROFILE_CACHE = Maps.newConcurrentMap();
+    public static final Map<String, Pair<Long, JsonObject>> PROFILE_CACHE = Maps.newConcurrentMap();
 
     public SkyBlockProfileSelectorScreen(Mode mode)
     {
@@ -431,7 +431,18 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
         this.statusMessage = "Getting Hypixel API";
 
-        JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonObject obj = null;
+        String lowerInput = this.input.toLowerCase(Locale.ROOT);
+
+        if (INIT_PROFILE_CACHE.containsKey(lowerInput))
+        {
+            obj = INIT_PROFILE_CACHE.get(lowerInput).getRight();
+        }
+        else
+        {
+            obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            INIT_PROFILE_CACHE.put(lowerInput, Pair.of(System.currentTimeMillis(), obj));
+        }
 
         if (!obj.get("success").getAsBoolean())
         {
@@ -581,7 +592,18 @@ public class SkyBlockProfileSelectorScreen extends Screen
         }
 
         URL urlSB = new URL(APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
-        JsonObject objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonObject objSB = null;
+
+        if (PROFILE_CACHE.containsKey(uuid))
+        {
+            objSB = PROFILE_CACHE.get(uuid).getRight();
+        }
+        else
+        {
+            objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+            PROFILE_CACHE.put(uuid, Pair.of(System.currentTimeMillis(), objSB));
+        }
+
         JsonElement sbProfile = objSB.get("profiles");
         GameProfile gameProfile = SkullTileEntity.updateGameProfile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
 

@@ -12,9 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
 import com.google.common.collect.*;
+import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
@@ -150,6 +152,28 @@ public class SkyBlockEventHandler
                 {
                     this.getInventoryDifference(this.mc.player.inventory.mainInventory);
                 }
+
+                for (Map.Entry<String, Pair<Long, JsonObject>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
+                {
+                    long now = System.currentTimeMillis();
+                    long checkedTime = entry.getValue().getLeft();
+
+                    if (now - checkedTime > 120000D)
+                    {
+                        SkyBlockProfileSelectorScreen.PROFILE_CACHE.remove(entry.getKey());
+                    }
+                }
+                for (Map.Entry<String, Pair<Long, JsonObject>> entry : SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.entrySet())
+                {
+                    long now = System.currentTimeMillis();
+                    long checkedTime = entry.getValue().getLeft();
+
+                    if (now - checkedTime > 120000D)
+                    {
+                        SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.remove(entry.getKey());
+                    }
+                }
+
                 if (this.mc.world != null)
                 {
                     boolean found = false;

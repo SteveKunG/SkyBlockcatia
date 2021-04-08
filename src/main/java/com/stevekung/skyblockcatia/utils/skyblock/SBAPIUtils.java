@@ -34,7 +34,7 @@ public class SBAPIUtils
         catch (Exception e)
         {
             e.printStackTrace();
-            MAX_FAIRY_SOULS = 220;
+            MAX_FAIRY_SOULS = 222;
         }
     }
 
