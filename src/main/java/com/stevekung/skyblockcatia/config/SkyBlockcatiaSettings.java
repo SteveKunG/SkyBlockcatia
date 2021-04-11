@@ -147,7 +147,6 @@ public class SkyBlockcatiaSettings
     public int auctionBidConfirmValue = 500000;
     public boolean supportersFancyColor = true;
     public boolean bazaarOnTooltips = true;
-    public boolean ignoreBushHitbox = false;
     public boolean onlyMineableHitbox = false;
     public boolean ignoreInteractInvisibleArmorStand = true;
     public boolean sneakToTradeOtherPlayerIsland = true;
@@ -296,7 +295,6 @@ public class SkyBlockcatiaSettings
             this.disableBlockParticles = SkyBlockcatiaSettings.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = SkyBlockcatiaSettings.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
             this.bazaarOnTooltips = SkyBlockcatiaSettings.getBoolean(nbt, "BazaarOnTooltips", this.bazaarOnTooltips);
-            this.ignoreBushHitbox = SkyBlockcatiaSettings.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
             this.onlyMineableHitbox = SkyBlockcatiaSettings.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
             this.ignoreInteractInvisibleArmorStand = SkyBlockcatiaSettings.getBoolean(nbt, "IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
             this.sneakToTradeOtherPlayerIsland = SkyBlockcatiaSettings.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
@@ -437,7 +435,6 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.setBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
-            nbt.setBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
             nbt.setBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
             nbt.setBoolean("IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
             nbt.setBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
@@ -798,10 +795,6 @@ public class SkyBlockcatiaSettings
         else if (options == SkyBlockcatiaSettings.Options.BAZAAR_ON_TOOLTIPS)
         {
             this.bazaarOnTooltips = !this.bazaarOnTooltips;
-        }
-        else if (options == SkyBlockcatiaSettings.Options.IGNORE_BUSH_HITBOX)
-        {
-            this.ignoreBushHitbox = !this.ignoreBushHitbox;
         }
         else if (options == SkyBlockcatiaSettings.Options.ONLY_MINEABLE_HITBOX)
         {
@@ -1180,8 +1173,6 @@ public class SkyBlockcatiaSettings
             return this.supportersFancyColor;
         case BAZAAR_ON_TOOLTIPS:
             return this.bazaarOnTooltips;
-        case IGNORE_BUSH_HITBOX:
-            return this.ignoreBushHitbox;
         case ONLY_MINEABLE_HITBOX:
             return this.onlyMineableHitbox;
         case IGNORE_INTERACT_INVISIBLE_ARMOR_STAND:
@@ -1390,7 +1381,6 @@ public class SkyBlockcatiaSettings
         DISABLE_BLOCK_PARTICLES(false, true),
         SUPPORTERS_FANCY_COLOR(false, true),
         BAZAAR_ON_TOOLTIPS(false, true),
-        IGNORE_BUSH_HITBOX(false, true),
         ONLY_MINEABLE_HITBOX(false, true),
         IGNORE_INTERACT_INVISIBLE_ARMOR_STAND(false, true),
         SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND(false, true),

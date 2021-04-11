@@ -8,7 +8,6 @@
     "client": [
         "MinecraftMixin",
         "audio.SoundManagerMixin",
-        "block.BlockMixin",
         "entity.EntityPlayerSPMixin",
         "entity.item.EntityArmorStandMixin",
         "entity.monster.EntityEndermanMixin",
