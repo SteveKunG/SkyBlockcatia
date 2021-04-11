@@ -4,9 +4,9 @@ import java.nio.FloatBuffer;
 
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.ClientEventHandler;
-import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.RenderUtils;
 import com.stevekung.skyblockcatia.utils.ToastUtils;
 
 import net.minecraft.client.Minecraft;
@@ -109,7 +109,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
         GuiToast.drawLongItemName(toastGui, delta, 0L, this.maxDrawTime, this.buffer, itemName, this.hasMagicFind);
         RenderHelper.enableGUIStandardItemLighting();
 
-        EquipmentOverlay.renderItem(itemStack, 8, 8);
+        RenderUtils.renderItem(itemStack, 8, 8);
         Minecraft.getMinecraft().getRenderItem().renderItemOverlayIntoGUI(toastGui.mc.fontRendererObj, itemStack, 8, 8, null);
         GlStateManager.disableLighting();
         return delta >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;

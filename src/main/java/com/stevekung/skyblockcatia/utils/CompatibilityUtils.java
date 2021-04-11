@@ -5,7 +5,6 @@ import net.minecraftforge.fml.common.Loader;
 public class CompatibilityUtils
 {
     public static boolean isSkyblockAddonsLoaded = Loader.isModLoaded("skyblockaddons");
-    public static boolean isIngameAccountSwitcherLoaded = Loader.isModLoaded("IngameAccountSwitcher");
     public static boolean isVanillaEnhancementsLoaded = Loader.isModLoaded("enhancements");
     public static boolean isPatcherLoaded = Loader.isModLoaded("patcher");
     public static boolean isTextOverflowScrollLoaded = Loader.isModLoaded("text_overflow_scroll");

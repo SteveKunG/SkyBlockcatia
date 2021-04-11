@@ -13,17 +13,18 @@ import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonCustomize;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiDropdownMinigamesButton;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiDropdownMinigamesButton.IDropboxCallback;
 import com.stevekung.skyblockcatia.hud.InfoUtils;
-import com.stevekung.skyblockcatia.utils.*;
+import com.stevekung.skyblockcatia.utils.IGuiChat;
+import com.stevekung.skyblockcatia.utils.MinigameCommand;
+import com.stevekung.skyblockcatia.utils.MinigameData;
+import com.stevekung.skyblockcatia.utils.RenderUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -64,16 +65,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                 }
             }
         });
-
-        if (SkyBlockcatiaConfig.enableChatMode && InfoUtils.INSTANCE.isHypixel())
-        {
-            Minecraft mc = Minecraft.getMinecraft();
-            String chatMode = "CHAT MODE: " + JsonUtils.create(this.mode.getDesc()).setChatStyle(new ChatStyle().setColor(this.mode.getColor()).setBold(true)).getFormattedText();
-            int x = 4;
-            int y = mc.currentScreen.height - 30;
-            Gui.drawRect(x - 2, y - 3, x + mc.fontRendererObj.getStringWidth(chatMode) + 2, y + 10, ColorUtils.to32BitColor(128, 0, 0, 0));
-            mc.fontRendererObj.drawStringWithShadow(chatMode, x, y, ColorUtils.rgbToDecimal(255, 255, 255));
-        }
     }
 
     @Override
@@ -217,14 +208,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
 
         if (InfoUtils.INSTANCE.isHypixel())
         {
-            if (SkyBlockcatiaConfig.enableChatMode)
-            {
-                // hypixel chat
-                buttonList.add(new GuiButton(200, width - 23, height - 35, 20, 20, "A"));
-                buttonList.add(new GuiButton(201, width - 23, height - 56, 20, 20, "P"));
-                buttonList.add(new GuiButton(202, width - 23, height - 77, 20, 20, "G"));
-                buttonList.add(new GuiButton(203, width - 31, height - 98, 28, 20, "COOP"));
-            }
             if (!SkyBlockcatiaConfig.enableShortcutGameButton || this.mc.gameSettings.showDebugInfo)
             {
                 return;

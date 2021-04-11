@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MovementInput;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -57,11 +55,6 @@ public class CommonUtils
         int j = i / 60;
         i = i % 60;
         return i < 10 ? j + ":0" + i : j + ":" + i;
-    }
-
-    public static void onInputUpdate(EntityPlayer player, MovementInput movementInput)
-    {
-        MinecraftForge.EVENT_BUS.post(new InputUpdateEvent(player, movementInput));
     }
 
     public static void openLink(String url)

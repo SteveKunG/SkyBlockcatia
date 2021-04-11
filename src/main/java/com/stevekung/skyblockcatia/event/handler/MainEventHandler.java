@@ -1,19 +1,14 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
-import org.lwjgl.input.Keyboard;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,14 +16,10 @@ import com.google.gson.JsonParser;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.GuiDisconnectConfirmation;
-import com.stevekung.skyblockcatia.gui.GuiMojangStatusChecker;
-import com.stevekung.skyblockcatia.gui.config.GuiExtendedConfig;
-import com.stevekung.skyblockcatia.gui.config.GuiRenderPreview;
+import com.stevekung.skyblockcatia.gui.config.GuiSkyBlockSettings;
 import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockProfileSelector;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonItem;
-import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonMojangStatus;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiSmallArrowButton;
-import com.stevekung.skyblockcatia.hud.InfoUtils;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
@@ -38,34 +29,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.multiplayer.ServerAddress;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.EnumConnectionState;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.handshake.client.C00Handshake;
-import net.minecraft.network.status.INetHandlerStatusClient;
-import net.minecraft.network.status.client.C00PacketServerQuery;
-import net.minecraft.network.status.client.C01PacketPing;
-import net.minecraft.network.status.server.S00PacketServerInfo;
-import net.minecraft.network.status.server.S01PacketPong;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -74,14 +48,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class MainEventHandler
 {
     private final Minecraft mc;
-    public static int currentServerPing;
-    private static final ThreadPoolExecutor REALTIME_PINGER = new ScheduledThreadPoolExecutor(5, new ThreadFactoryBuilder().setNameFormat("Real Time Server Pinger #%d").setDaemon(true).build());
-    private long lastPinger = -1L;
     private long lastButtonClick = -1;
     public static String auctionPrice = "";
     public static boolean showChat;
-    private static long sneakTimeOld;
-    private static boolean sneakingOld;
     public static String playerToView;
     public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
     public static boolean bidHighlight = true;
@@ -93,87 +62,10 @@ public class MainEventHandler
     }
 
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event)
-    {
-        if (this.mc.thePlayer != null)
-        {
-            if (event.phase == TickEvent.Phase.START)
-            {
-                if (this.mc.getCurrentServerData() != null)
-                {
-                    long now = System.currentTimeMillis();
-
-                    if (this.lastPinger == -1L || now - this.lastPinger > 5000L)
-                    {
-                        this.lastPinger = now;
-                        MainEventHandler.getRealTimeServerPing(this.mc.getCurrentServerData());
-                    }
-                }
-
-                for (EnumAction action : EnumAction.values())
-                {
-                    if (action != EnumAction.NONE)
-                    {
-                        if (SkyBlockcatiaConfig.enableAdditionalBlockhitAnimation && this.mc.gameSettings.keyBindAttack.isKeyDown() && this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.mc.thePlayer.getCurrentEquippedItem() != null && this.mc.thePlayer.getCurrentEquippedItem().getItemUseAction() == action)
-                        {
-                            this.mc.thePlayer.swingItem();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onInputUpdate(InputUpdateEvent event)
-    {
-        MovementInput movement = event.getMovementInput();
-        EntityPlayer player = event.getEntityPlayer();
-
-        try
-        {
-            if (this.mc.currentScreen == null)
-            {
-                String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
-                int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
-                int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
-
-                if (this.mc.currentScreen == null && this.mc.gameSettings.keyBindSneak.getKeyCode() != Keyboard.KEY_LCONTROL && keyTGCtrl == Keyboard.KEY_LCONTROL && keyTGOther == Keyboard.KEY_S && Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
-                {
-                    ++movement.moveForward;
-                }
-
-                // toggle sneak
-                movement.sneak = this.mc.gameSettings.keyBindSneak.isKeyDown() || SkyBlockcatiaSettings.INSTANCE.toggleSneak && !event.getEntityPlayer().isSpectator();
-
-                if (SkyBlockcatiaSettings.INSTANCE.toggleSneak && !this.mc.gameSettings.keyBindSneak.isKeyDown() && !player.isSpectator() && !player.capabilities.isCreativeMode)
-                {
-                    movement.moveStrafe = (float)(movement.moveStrafe * 0.3D);
-                    movement.moveForward = (float)(movement.moveForward * 0.3D);
-                }
-
-                // toggle sprint
-                if (SkyBlockcatiaSettings.INSTANCE.toggleSprint && !player.isPotionActive(Potion.blindness) && !SkyBlockcatiaSettings.INSTANCE.toggleSneak)
-                {
-                    player.setSprinting(true);
-                }
-            }
-        }
-        catch (Exception e) {}
-    }
-
-    @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event)
     {
         if (event.phase == TickEvent.Phase.START)
         {
-            if (SkyBlockcatiaConfig.enableSmoothSneakingView)
-            {
-                if (this.mc.thePlayer != null)
-                {
-                    this.mc.thePlayer.eyeHeight = MainEventHandler.getSmoothEyeHeight(this.mc.thePlayer);
-                }
-            }
             if (MainEventHandler.playerToView != null)
             {
                 this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
@@ -187,39 +79,8 @@ public class MainEventHandler
     {
         if (KeyBindingsSB.KEY_QUICK_CONFIG.isKeyDown())
         {
-            this.mc.displayGuiScreen(new GuiExtendedConfig());
+            this.mc.displayGuiScreen(new GuiSkyBlockSettings());
         }
-
-        try
-        {
-            if (SkyBlockcatiaSettings.INSTANCE.toggleSprintUseMode.equals("key_binding"))
-            {
-                String[] keyTS = SkyBlockcatiaConfig.keyToggleSprint.split(",");
-                int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sprint");
-                int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sprint");
-
-                if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
-                {
-                    SkyBlockcatiaSettings.INSTANCE.toggleSprint = !SkyBlockcatiaSettings.INSTANCE.toggleSprint;
-                    ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSprint ? LangUtils.translate("message.toggle_sprint_enabled") : LangUtils.translate("message.toggle_sprint_disabled")).getFormattedText());
-                    SkyBlockcatiaSettings.INSTANCE.save();
-                }
-            }
-            if (SkyBlockcatiaSettings.INSTANCE.toggleSneakUseMode.equals("key_binding"))
-            {
-                String[] keyTS = SkyBlockcatiaConfig.keyToggleSneak.split(",");
-                int keyTGCtrl = InfoUtils.INSTANCE.parseInt(keyTS[0], "Toggle Sneak");
-                int keyTGOther = InfoUtils.INSTANCE.parseInt(keyTS[1], "Toggle Sneak");
-
-                if (Keyboard.isKeyDown(keyTGCtrl) && Keyboard.isKeyDown(keyTGOther))
-                {
-                    SkyBlockcatiaSettings.INSTANCE.toggleSneak = !SkyBlockcatiaSettings.INSTANCE.toggleSneak;
-                    ClientUtils.setOverlayMessage(JsonUtils.create(SkyBlockcatiaSettings.INSTANCE.toggleSneak ? LangUtils.translate("message.toggle_sneak_enabled") : LangUtils.translate("message.toggle_sneak_disabled")).getFormattedText());
-                    SkyBlockcatiaSettings.INSTANCE.save();
-                }
-            }
-        }
-        catch (Exception e) {}
     }
 
     @SubscribeEvent
@@ -228,11 +89,6 @@ public class MainEventHandler
         int width = event.gui.width / 2;
         int height = event.gui.height / 2 - 106;
 
-        if (event.gui instanceof GuiMainMenu)
-        {
-            height = event.gui.height / 4 + 48;
-            event.buttonList.add(new GuiButtonMojangStatus(200, width + 104, height + (CompatibilityUtils.isIngameAccountSwitcherLoaded ? 63 : 84)));
-        }
         if (SkyBlockEventHandler.isSkyBlock)
         {
             ItemStack wardRobeItem = new ItemStack(Items.leather_chestplate);
@@ -353,13 +209,6 @@ public class MainEventHandler
     {
         long now = System.currentTimeMillis();
 
-        if (event.gui instanceof GuiMainMenu)
-        {
-            if (event.button.id == 200)
-            {
-                this.mc.displayGuiScreen(new GuiMojangStatusChecker(event.gui));
-            }
-        }
         if ((event.gui instanceof GuiInventory || event.gui instanceof GuiChest) && SkyBlockEventHandler.isSkyBlock)
         {
             if (now - this.lastButtonClick > 100L)
@@ -452,16 +301,6 @@ public class MainEventHandler
     }
 
     @SubscribeEvent
-    public void onRenderHand(RenderHandEvent event)
-    {
-        if (this.mc.currentScreen instanceof GuiRenderPreview)
-        {
-            event.setCanceled(true);
-            return;
-        }
-    }
-
-    @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event)
     {
         if (event.gui instanceof GuiMainMenu)
@@ -516,97 +355,5 @@ public class MainEventHandler
         {
             e.printStackTrace();
         }
-    }
-
-    private static void getRealTimeServerPing(ServerData server)
-    {
-        MainEventHandler.REALTIME_PINGER.submit(() ->
-        {
-            try
-            {
-                ServerAddress address = ServerAddress.fromString(server.serverIP);
-                NetworkManager manager = NetworkManager.func_181124_a(InetAddress.getByName(address.getIP()), address.getPort(), false);
-
-                manager.setNetHandler(new INetHandlerStatusClient()
-                {
-                    private long currentSystemTime = 0L;
-
-                    @Override
-                    public void handleServerInfo(S00PacketServerInfo packet)
-                    {
-                        this.currentSystemTime = Minecraft.getSystemTime();
-                        manager.sendPacket(new C01PacketPing(this.currentSystemTime));
-                    }
-
-                    @Override
-                    public void handlePong(S01PacketPong packet)
-                    {
-                        long i = this.currentSystemTime;
-                        long j = Minecraft.getSystemTime();
-                        MainEventHandler.currentServerPing = (int) (j - i);
-                    }
-
-                    @Override
-                    public void onDisconnect(IChatComponent component) {}
-                });
-                manager.sendPacket(new C00Handshake(47, address.getIP(), address.getPort(), EnumConnectionState.STATUS));
-                manager.sendPacket(new C00PacketServerQuery());
-            }
-            catch (Exception e) {}
-        });
-    }
-
-    private static float getSmoothEyeHeight(EntityPlayer player)
-    {
-        if (MainEventHandler.sneakingOld != player.isSneaking() || MainEventHandler.sneakTimeOld <= 0L)
-        {
-            MainEventHandler.sneakTimeOld = System.currentTimeMillis();
-        }
-
-        MainEventHandler.sneakingOld = player.isSneaking();
-        float defaultEyeHeight = 1.62F;
-        double sneakPress = 0.0006D;
-        double sneakValue = 0.005D;
-        int sneakTime = -35;
-        long smoothRatio = 88L;
-
-        if (player.isSneaking())
-        {
-            int sneakSystemTime = (int)(MainEventHandler.sneakTimeOld + smoothRatio - System.currentTimeMillis());
-
-            if (sneakSystemTime > sneakTime)
-            {
-                defaultEyeHeight += (float)(sneakSystemTime * sneakPress);
-
-                if (defaultEyeHeight < 0.0F || defaultEyeHeight > 10.0F)
-                {
-                    defaultEyeHeight = 1.54F;
-                }
-            }
-            else
-            {
-                defaultEyeHeight = (float)(defaultEyeHeight - sneakValue);
-            }
-        }
-        else
-        {
-            int sneakSystemTime = (int)(MainEventHandler.sneakTimeOld + smoothRatio - System.currentTimeMillis());
-
-            if (sneakSystemTime > sneakTime)
-            {
-                defaultEyeHeight -= (float)(sneakSystemTime * sneakPress);
-                defaultEyeHeight = (float)(defaultEyeHeight - sneakValue);
-
-                if (defaultEyeHeight < 0.0F)
-                {
-                    defaultEyeHeight = 1.62F;
-                }
-            }
-            else
-            {
-                defaultEyeHeight -= 0.0F;
-            }
-        }
-        return defaultEyeHeight;
     }
 }

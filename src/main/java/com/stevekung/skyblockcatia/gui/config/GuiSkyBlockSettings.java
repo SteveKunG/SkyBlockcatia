@@ -4,10 +4,14 @@ import java.io.IOException;
 
 import com.stevekung.skyblockcatia.config.ConfigGuiFactory;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.utils.CommonUtils;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class GuiSkyBlockSettings extends GuiScreen
 {
@@ -15,11 +19,17 @@ public class GuiSkyBlockSettings extends GuiScreen
     private static final SkyBlockcatiaSettings.Options[] RENDERING_OPTIONS = { SkyBlockcatiaSettings.Options.SUPPORTERS_FANCY_COLOR, SkyBlockcatiaSettings.Options.SHOW_ITEM_RARITY, SkyBlockcatiaSettings.Options.ITEM_RARITY_OPACITY, SkyBlockcatiaSettings.Options.MAKE_SPECIAL_ZEALOT_HELD_GOLD, SkyBlockcatiaSettings.Options.SHOW_HITBOX_WHEN_DRAGON_SPAWNED, SkyBlockcatiaSettings.Options.HITBOX_RENDER_MODE, SkyBlockcatiaSettings.Options.GLOWING_DRAGON_ARMOR, SkyBlockcatiaSettings.Options.DISABLE_BLOCK_PARTICLES, SkyBlockcatiaSettings.Options.FIX_SKYBLOCK_ENCHANT_TAG, SkyBlockcatiaSettings.Options.DISABLE_NIGHT_VISION };
     private static final SkyBlockcatiaSettings.Options[] MISC_OPTIONS = { SkyBlockcatiaSettings.Options.RIGHT_CLICK_ADD_PARTY, SkyBlockcatiaSettings.Options.SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON, SkyBlockcatiaSettings.Options.LOBBY_PLAYER_COUNT, SkyBlockcatiaSettings.Options.SHOW_OBTAINED_DATE };
     private static final SkyBlockcatiaSettings.Options[] TOAST_OPTIONS = { SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_MODE, SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_TIME, SkyBlockcatiaSettings.Options.RARE_DROP_TOAST_MODE, SkyBlockcatiaSettings.Options.RARE_DROP_TOAST_TIME, SkyBlockcatiaSettings.Options.SPECIAL_DROP_TOAST_TIME, SkyBlockcatiaSettings.Options.FISH_CATCH_TOAST_MODE, SkyBlockcatiaSettings.Options.FISH_CATCH_TOAST_TIME, SkyBlockcatiaSettings.Options.GIFT_TOAST_MODE, SkyBlockcatiaSettings.Options.GIFT_TOAST_TIME, SkyBlockcatiaSettings.Options.PET_TOAST_MODE, SkyBlockcatiaSettings.Options.PET_TOAST_TIME };
-    private final GuiScreen parent;
 
-    public GuiSkyBlockSettings(GuiScreen parent)
+    public void display()
     {
-        this.parent = parent;
+        CommonUtils.registerEventHandler(this);
+    }
+
+    @SubscribeEvent
+    public void onClientTick(ClientTickEvent event)
+    {
+        CommonUtils.unregisterEventHandler(this);
+        Minecraft.getMinecraft().displayGuiScreen(this);
     }
 
     @Override
@@ -39,7 +49,7 @@ public class GuiSkyBlockSettings extends GuiScreen
         if (keyCode == 1)
         {
             SkyBlockcatiaSettings.INSTANCE.save();
-            this.mc.displayGuiScreen(this.parent);
+            this.mc.displayGuiScreen(null);
         }
     }
 
@@ -70,7 +80,8 @@ public class GuiSkyBlockSettings extends GuiScreen
             }
             else if (button.id == 200)
             {
-                this.mc.displayGuiScreen(this.parent);
+                SkyBlockcatiaSettings.INSTANCE.save();
+                this.mc.displayGuiScreen(null);
             }
         }
         SkyBlockcatiaSettings.INSTANCE.save();

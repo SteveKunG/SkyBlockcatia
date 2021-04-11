@@ -10,7 +10,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
-import com.stevekung.skyblockcatia.command.*;
+import com.stevekung.skyblockcatia.command.CommandApiViewer;
+import com.stevekung.skyblockcatia.command.CommandBazaarViewer;
+import com.stevekung.skyblockcatia.command.CommandSkyBlockcatia;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.*;
@@ -31,7 +33,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -43,13 +44,13 @@ public class SkyBlockcatiaMod
     protected static final String NAME = "SkyBlockcatia";
     public static final String MOD_ID = "skyblockcatia";
     private static final int MAJOR_VERSION = 1;
-    private static final int MINOR_VERSION = 0;
-    private static final int BUILD_VERSION = 17;
+    private static final int MINOR_VERSION = 1;
+    private static final int BUILD_VERSION = 0;
     protected static final String GUI_FACTORY = "com.stevekung.skyblockcatia.config.ConfigGuiFactory";
     public static final String VERSION = SkyBlockcatiaMod.MAJOR_VERSION + "." + SkyBlockcatiaMod.MINOR_VERSION + "." + SkyBlockcatiaMod.BUILD_VERSION;
     protected static final String FORGE_VERSION = "required-after:Forge@[11.15.1.2318,);";
     protected static final String CERTIFICATE = "@FINGERPRINT@";
-    protected static final String DEPENDENCIES = "after:skyblockaddons@[1.5.0,); " + SkyBlockcatiaMod.FORGE_VERSION;
+    protected static final String DEPENDENCIES = "after:skyblockaddons@[1.5.5,); " + SkyBlockcatiaMod.FORGE_VERSION;
     private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
     protected static final String JSON_URL = "https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json";
 
@@ -106,9 +107,7 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new ClientEventHandler());
         CommonUtils.registerEventHandler(new ToastTestEventHandler());
 
-        ClientUtils.registerCommand(new CommandMojangStatusCheck());
         ClientUtils.registerCommand(new CommandSkyBlockcatia());
-        ClientUtils.registerCommand(new CommandProfile());
         ClientUtils.registerCommand(new CommandApiViewer());
         ClientUtils.registerCommand(new CommandBazaarViewer());
     }
@@ -138,19 +137,6 @@ public class SkyBlockcatiaMod
         {
             SkyBlockcatiaConfig.syncConfig(false);
             SBAPIUtils.setApiKey();
-        }
-    }
-
-    @EventHandler
-    public void onFingerprintViolation(FMLFingerprintViolationEvent event)
-    {
-        if (isDevelopment)
-        {
-            LoggerIN.info("Development environment detected! Ignore certificate check.");
-        }
-        else
-        {
-            throw new RuntimeException("Invalid fingerprint detected! This version will NOT be support or responsible by the author!");
         }
     }
 

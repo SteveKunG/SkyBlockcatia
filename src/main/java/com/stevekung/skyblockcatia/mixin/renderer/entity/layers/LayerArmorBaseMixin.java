@@ -92,12 +92,6 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
         }
     }
 
-    @Override
-    public boolean shouldCombineTextures()
-    {
-        return SkyBlockcatiaConfig.enableOldArmorRender;
-    }
-
     private void renderGlowingLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot)
     {
         if (!SkyBlockEventHandler.foundSkyBlockPack || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)

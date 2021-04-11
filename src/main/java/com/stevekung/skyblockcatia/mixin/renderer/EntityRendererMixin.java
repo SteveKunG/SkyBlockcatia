@@ -19,7 +19,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
@@ -29,25 +28,6 @@ public class EntityRendererMixin
 {
     @Shadow
     private Minecraft mc;
-
-    @Inject(method = "renderHand(FI)V", at = @At("HEAD"))
-    private void renderPre(float partialTicks, int xOffset, CallbackInfo info)
-    {
-        if (SkyBlockcatiaConfig.enableTransparentSkinRender)
-        {
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(770, 771);
-        }
-    }
-
-    @Inject(method = "renderHand(FI)V", at = @At("RETURN"))
-    private void renderPost(float partialTicks, int xOffset, CallbackInfo info)
-    {
-        if (SkyBlockcatiaConfig.enableTransparentSkinRender)
-        {
-            GlStateManager.disableBlend();
-        }
-    }
 
     @Inject(method = "hurtCameraEffect(F)V", cancellable = true, at = @At("HEAD"))
     private void hurtCameraEffect(float partialTicks, CallbackInfo info)

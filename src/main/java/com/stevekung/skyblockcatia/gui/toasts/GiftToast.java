@@ -3,8 +3,8 @@ package com.stevekung.skyblockcatia.gui.toasts;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
-import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
+import com.stevekung.skyblockcatia.utils.RenderUtils;
 import com.stevekung.skyblockcatia.utils.ToastUtils;
 
 import net.minecraft.client.Minecraft;
@@ -47,7 +47,7 @@ public class GiftToast implements IToast
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.mc.fontRendererObj.drawString(drop.getType().getColor() + JsonUtils.create(drop.getType().getName()).setChatStyle(JsonUtils.style().setBold(true)).getFormattedText(), 30, 7, 16777215);
         GuiToast.drawLongItemName(toastGui, delta, 0L, this.maxDrawTime, this.buffer, itemName, false);
-        EquipmentOverlay.renderItem(itemStack, 8, 8);
+        RenderUtils.renderItem(itemStack, 8, 8);
         Minecraft.getMinecraft().getRenderItem().renderItemOverlayIntoGUI(toastGui.mc.fontRendererObj, itemStack, 8, 8, null);
         GlStateManager.disableLighting();
         return delta >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;

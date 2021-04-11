@@ -110,7 +110,7 @@ public class TileEntityEnchantedSkullRenderer
         GlStateManager.scale(-1.0F, -1.0F, 1.0F);
         GlStateManager.enableAlpha();
 
-        if (meta == 3 && SkyBlockcatiaConfig.enableTransparentSkinRender)
+        if (meta == 3)
         {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

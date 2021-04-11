@@ -39,7 +39,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
@@ -53,15 +52,11 @@ import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -114,13 +109,11 @@ public class SkyBlockEventHandler
     private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("§r§aYour (?<name>§r§[0-9a-fk-or][\\w ]+) §r§alevelled up to level §r§9(?<level>\\d+)§r§a!§r");
     private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
 
-    private static final List<String> LEFT_PARTY_MESSAGE = new ArrayList<>(Arrays.asList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left."));
     private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("◆ Ice Rune", "◆ Ice Rune I").build();
     public static boolean isSkyBlock = false;
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
     public static SBLocation SKY_BLOCK_LOCATION = SBLocation.YOUR_ISLAND;
-    public static String SKYBLOCK_AMPM = "";
     public static float dragonHealth;
     private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new ArrayList<>();
     private List<ItemStack> previousInventory;
@@ -226,15 +219,6 @@ public class SkyBlockEventHandler
                     {
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
                         String scoreText = EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
-
-                        if (scoreText.endsWith("am"))
-                        {
-                            SkyBlockEventHandler.SKYBLOCK_AMPM = " AM";
-                        }
-                        else if (scoreText.endsWith("pm"))
-                        {
-                            SkyBlockEventHandler.SKYBLOCK_AMPM = " PM";
-                        }
 
                         for (SBLocation location : SBLocation.values())
                         {
@@ -357,15 +341,6 @@ public class SkyBlockEventHandler
 
             if (event.type == 0 || this.mc.isSingleplayer() && SkyBlockcatiaMod.isDevelopment)
             {
-                if (message.contains("Illegal characters in chat") || message.contains("A kick occurred in your connection"))
-                {
-                    cancelMessage = true;
-                }
-                else if (message.contains("You were spawned in Limbo."))
-                {
-                    event.message = JsonUtils.create(message).setChatStyle(JsonUtils.green());
-                }
-
                 if (visitIslandMatcher.matches())
                 {
                     String name = visitIslandMatcher.group("name");
@@ -417,11 +392,6 @@ public class SkyBlockEventHandler
                     cancelMessage = true;
                 }
 
-                if (SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(pmess -> message.equals(pmess)))
-                {
-                    SkyBlockcatiaSettings.INSTANCE.chatMode = 0;
-                    SkyBlockcatiaSettings.INSTANCE.save();
-                }
                 if (SkyBlockcatiaSettings.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
                     this.mc.thePlayer.sendChatMessage("/p leave");
@@ -709,21 +679,6 @@ public class SkyBlockEventHandler
     }
 
     @SubscribeEvent
-    public void onPlaySound(PlaySoundEvent event)
-    {
-        String name = event.name;
-
-        if (this.mc.theWorld != null)
-        {
-            if (name.equals("records.13") && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.BLAZING_FORTRESS)
-            {
-                this.mc.ingameGUI.displayTitle(JsonUtils.create("Preparing spawn...").setChatStyle(JsonUtils.red()).getFormattedText(), JsonUtils.create("").setChatStyle(JsonUtils.red()).getFormattedText(), 0, 1200, 20);
-                this.mc.getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation("random.orb"), 0.75F, 1.0F, (float)this.mc.thePlayer.posX + 0.5F, (float)this.mc.thePlayer.posY + 0.5F, (float)this.mc.thePlayer.posZ + 0.5F));
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void onWorldJoin(EntityJoinWorldEvent event)
     {
         if (event.entity == this.mc.thePlayer)
@@ -871,22 +826,6 @@ public class SkyBlockEventHandler
             }
         }
         catch (Exception e) {}
-    }
-
-    @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent event)
-    {
-        ItemStack itemStack = event.entityPlayer.getCurrentEquippedItem();
-
-        if (SkyBlockEventHandler.isSkyBlock && itemStack != null && itemStack.hasTagCompound() && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
-        {
-            NBTTagCompound extraAttrib = itemStack.getTagCompound().getCompoundTag("ExtraAttributes");
-
-            if (extraAttrib.getString("id").equals("SNOW_BLASTER") || extraAttrib.getString("id").equals("SNOW_CANNON"))
-            {
-                event.setCanceled(true);
-            }
-        }
     }
 
     private String keepLettersAndNumbersOnly(String text)

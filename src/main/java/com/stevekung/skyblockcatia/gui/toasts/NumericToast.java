@@ -2,9 +2,9 @@ package com.stevekung.skyblockcatia.gui.toasts;
 
 import java.nio.FloatBuffer;
 
-import com.stevekung.skyblockcatia.hud.EquipmentOverlay;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
+import com.stevekung.skyblockcatia.utils.RenderUtils;
 import com.stevekung.skyblockcatia.utils.ToastUtils;
 
 import net.minecraft.client.gui.Gui;
@@ -48,7 +48,7 @@ public class NumericToast implements IToast<NumericToast>
         Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.mc.fontRendererObj.drawString(this.output.getType().getColor() + JsonUtils.create(this.output.getType().getName()).setChatStyle(JsonUtils.style().setBold(true)).getFormattedText(), 30, 7, 16777215);
         GuiToast.drawLongItemName(toastGui, delta, this.firstDrawTime, this.maxDrawTime, this.buffer, this.output.getDisplayName(FORMAT.format(this.value)), false);
-        EquipmentOverlay.renderItem(this.output.getItemStack(), 8, 8);
+        RenderUtils.renderItem(this.output.getItemStack(), 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
     }
 
