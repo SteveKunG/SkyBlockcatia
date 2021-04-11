@@ -9,7 +9,6 @@
         "MinecraftMixin",
         "audio.SoundManagerMixin",
         "entity.EntityPlayerSPMixin",
-        "entity.item.EntityArmorStandMixin",
         "entity.monster.EntityEndermanMixin",
         "gui.FontRendererMixin",
         "gui.GuiChatMixin",
