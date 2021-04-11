@@ -147,7 +147,6 @@ public class SkyBlockcatiaSettings
     public int auctionBidConfirmValue = 500000;
     public boolean supportersFancyColor = true;
     public boolean bazaarOnTooltips = true;
-    public boolean onlyMineableHitbox = false;
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
     public boolean lobbyPlayerCount = true;
@@ -294,7 +293,6 @@ public class SkyBlockcatiaSettings
             this.disableBlockParticles = SkyBlockcatiaSettings.getBoolean(nbt, "DisableBlockParticles", this.disableBlockParticles);
             this.supportersFancyColor = SkyBlockcatiaSettings.getBoolean(nbt, "SupportersFancyColor", this.supportersFancyColor);
             this.bazaarOnTooltips = SkyBlockcatiaSettings.getBoolean(nbt, "BazaarOnTooltips", this.bazaarOnTooltips);
-            this.onlyMineableHitbox = SkyBlockcatiaSettings.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
             this.sneakToTradeOtherPlayerIsland = SkyBlockcatiaSettings.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             this.makeSpecialZealotHeldGold = SkyBlockcatiaSettings.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             this.lobbyPlayerCount = SkyBlockcatiaSettings.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
@@ -433,7 +431,6 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("AuctionBidConfirm", this.auctionBidConfirm);
             nbt.setBoolean("SupportersFancyColor", this.supportersFancyColor);
             nbt.setBoolean("BazaarOnTooltips", this.bazaarOnTooltips);
-            nbt.setBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
             nbt.setBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             nbt.setBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             nbt.setBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
@@ -792,10 +789,6 @@ public class SkyBlockcatiaSettings
         else if (options == SkyBlockcatiaSettings.Options.BAZAAR_ON_TOOLTIPS)
         {
             this.bazaarOnTooltips = !this.bazaarOnTooltips;
-        }
-        else if (options == SkyBlockcatiaSettings.Options.ONLY_MINEABLE_HITBOX)
-        {
-            this.onlyMineableHitbox = !this.onlyMineableHitbox;
         }
         else if (options == SkyBlockcatiaSettings.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND)
         {
@@ -1166,8 +1159,6 @@ public class SkyBlockcatiaSettings
             return this.supportersFancyColor;
         case BAZAAR_ON_TOOLTIPS:
             return this.bazaarOnTooltips;
-        case ONLY_MINEABLE_HITBOX:
-            return this.onlyMineableHitbox;
         case SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND:
             return this.sneakToTradeOtherPlayerIsland;
         case MAKE_SPECIAL_ZEALOT_HELD_GOLD:
@@ -1372,7 +1363,6 @@ public class SkyBlockcatiaSettings
         DISABLE_BLOCK_PARTICLES(false, true),
         SUPPORTERS_FANCY_COLOR(false, true),
         BAZAAR_ON_TOOLTIPS(false, true),
-        ONLY_MINEABLE_HITBOX(false, true),
         SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND(false, true),
         MAKE_SPECIAL_ZEALOT_HELD_GOLD(false, true),
         LOBBY_PLAYER_COUNT(false, true),

@@ -10,8 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
-import com.stevekung.skyblockcatia.utils.ClientUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
@@ -57,23 +55,6 @@ public class EntityRendererMixin
         if (SkyBlockcatiaConfig.disableHurtCameraEffect)
         {
             info.cancel();
-        }
-    }
-
-    @Inject(method = "isDrawBlockOutline()Z", cancellable = true, at = @At("HEAD"))
-    private void isDrawBlockOutline(CallbackInfoReturnable info)
-    {
-        if (SkyBlockcatiaSettings.INSTANCE.onlyMineableHitbox && SkyBlockEventHandler.isSkyBlock && !SkyBlockEventHandler.SKY_BLOCK_LOCATION.ignore() && !ClientUtils.isControlKeyDown())
-        {
-            if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-            {
-                IBlockState state = this.mc.theWorld.getBlockState(this.mc.objectMouseOver.getBlockPos());
-
-                if (!SkyBlockEventHandler.SKY_BLOCK_LOCATION.getMineableList().stream().anyMatch(block -> block.getMeta() == -1 ? state.getBlock() == block.getBlock() : state.getBlock() == block.getBlock() && state.getBlock().getMetaFromState(state) == block.getMeta()))
-                {
-                    info.setReturnValue(false);
-                }
-            }
         }
     }
 
