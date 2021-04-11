@@ -426,16 +426,6 @@ public class SkyBlockEventHandler
                 {
                     this.mc.thePlayer.sendChatMessage("/p leave");
                 }
-                if (SkyBlockcatiaSettings.INSTANCE.automaticOpenMaddox)
-                {
-                    for (IChatComponent component : event.message.getSiblings())
-                    {
-                        if (message.contains("[OPEN MENU]") && component.getChatStyle().getChatClickEvent() != null)
-                        {
-                            this.mc.thePlayer.sendChatMessage(component.getChatStyle().getChatClickEvent().getValue());
-                        }
-                    }
-                }
 
                 if (SkyBlockEventHandler.isSkyBlock || SkyBlockcatiaMod.isDevelopment)
                 {

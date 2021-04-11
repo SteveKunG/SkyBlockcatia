@@ -150,7 +150,6 @@ public class SkyBlockcatiaSettings
     public boolean ignoreBushHitbox = false;
     public boolean onlyMineableHitbox = false;
     public boolean ignoreInteractInvisibleArmorStand = true;
-    public boolean automaticOpenMaddox = false;
     public boolean sneakToTradeOtherPlayerIsland = true;
     public boolean makeSpecialZealotHeldGold = true;
     public boolean lobbyPlayerCount = true;
@@ -300,7 +299,6 @@ public class SkyBlockcatiaSettings
             this.ignoreBushHitbox = SkyBlockcatiaSettings.getBoolean(nbt, "IgnoreBushHitbox", this.ignoreBushHitbox);
             this.onlyMineableHitbox = SkyBlockcatiaSettings.getBoolean(nbt, "OnlyMineableHitbox", this.onlyMineableHitbox);
             this.ignoreInteractInvisibleArmorStand = SkyBlockcatiaSettings.getBoolean(nbt, "IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
-            this.automaticOpenMaddox = SkyBlockcatiaSettings.getBoolean(nbt, "AutomaticOpenMaddox", this.automaticOpenMaddox);
             this.sneakToTradeOtherPlayerIsland = SkyBlockcatiaSettings.getBoolean(nbt, "SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             this.makeSpecialZealotHeldGold = SkyBlockcatiaSettings.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             this.lobbyPlayerCount = SkyBlockcatiaSettings.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
@@ -442,7 +440,6 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("IgnoreBushHitbox", this.ignoreBushHitbox);
             nbt.setBoolean("OnlyMineableHitbox", this.onlyMineableHitbox);
             nbt.setBoolean("IgnoreInteractInvisibleArmorStand", this.ignoreInteractInvisibleArmorStand);
-            nbt.setBoolean("AutomaticOpenMaddox", this.automaticOpenMaddox);
             nbt.setBoolean("SneakToTradeOtherPlayerIsland", this.sneakToTradeOtherPlayerIsland);
             nbt.setBoolean("MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             nbt.setBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
@@ -813,10 +810,6 @@ public class SkyBlockcatiaSettings
         else if (options == SkyBlockcatiaSettings.Options.IGNORE_INTERACT_INVISIBLE_ARMOR_STAND)
         {
             this.ignoreInteractInvisibleArmorStand = !this.ignoreInteractInvisibleArmorStand;
-        }
-        else if (options == SkyBlockcatiaSettings.Options.AUTOMATIC_OPEN_MADDOX)
-        {
-            this.automaticOpenMaddox = !this.automaticOpenMaddox;
         }
         else if (options == SkyBlockcatiaSettings.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND)
         {
@@ -1193,8 +1186,6 @@ public class SkyBlockcatiaSettings
             return this.onlyMineableHitbox;
         case IGNORE_INTERACT_INVISIBLE_ARMOR_STAND:
             return this.ignoreInteractInvisibleArmorStand;
-        case AUTOMATIC_OPEN_MADDOX:
-            return this.automaticOpenMaddox;
         case SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND:
             return this.sneakToTradeOtherPlayerIsland;
         case MAKE_SPECIAL_ZEALOT_HELD_GOLD:
@@ -1402,7 +1393,6 @@ public class SkyBlockcatiaSettings
         IGNORE_BUSH_HITBOX(false, true),
         ONLY_MINEABLE_HITBOX(false, true),
         IGNORE_INTERACT_INVISIBLE_ARMOR_STAND(false, true),
-        AUTOMATIC_OPEN_MADDOX(false, true),
         SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND(false, true),
         MAKE_SPECIAL_ZEALOT_HELD_GOLD(false, true),
         LOBBY_PLAYER_COUNT(false, true),
