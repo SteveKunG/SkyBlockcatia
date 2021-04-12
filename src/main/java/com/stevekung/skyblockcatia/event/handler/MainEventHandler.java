@@ -1,14 +1,18 @@
 package com.stevekung.skyblockcatia.event.handler;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,6 +33,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.multiplayer.ServerAddress;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -37,7 +43,16 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.network.EnumConnectionState;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.status.INetHandlerStatusClient;
+import net.minecraft.network.status.client.C00PacketServerQuery;
+import net.minecraft.network.status.client.C01PacketPing;
+import net.minecraft.network.status.server.S00PacketServerInfo;
+import net.minecraft.network.status.server.S01PacketPong;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -55,10 +70,34 @@ public class MainEventHandler
     public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
     public static boolean bidHighlight = true;
     private static boolean showAdditionalButtons;
+    public static int currentServerPing;
+    private static final ThreadPoolExecutor REALTIME_PINGER = new ScheduledThreadPoolExecutor(5, new ThreadFactoryBuilder().setNameFormat("Real Time Server Pinger #%d").setDaemon(true).build());
+    private long lastPinger = -1L;
 
     public MainEventHandler()
     {
         this.mc = Minecraft.getMinecraft();
+    }
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event)
+    {
+        if (this.mc.thePlayer != null)
+        {
+            if (event.phase == TickEvent.Phase.START)
+            {
+                if (this.mc.getCurrentServerData() != null)
+                {
+                    long now = System.currentTimeMillis();
+
+                    if (this.lastPinger == -1L || now - this.lastPinger > 5000L)
+                    {
+                        this.lastPinger = now;
+                        MainEventHandler.getRealTimeServerPing(this.mc.getCurrentServerData());
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
@@ -355,5 +394,43 @@ public class MainEventHandler
         {
             e.printStackTrace();
         }
+    }
+
+    private static void getRealTimeServerPing(ServerData server)
+    {
+        MainEventHandler.REALTIME_PINGER.submit(() ->
+        {
+            try
+            {
+                ServerAddress address = ServerAddress.fromString(server.serverIP);
+                NetworkManager manager = NetworkManager.func_181124_a(InetAddress.getByName(address.getIP()), address.getPort(), false);
+
+                manager.setNetHandler(new INetHandlerStatusClient()
+                {
+                    private long currentSystemTime = 0L;
+
+                    @Override
+                    public void handleServerInfo(S00PacketServerInfo packet)
+                    {
+                        this.currentSystemTime = Minecraft.getSystemTime();
+                        manager.sendPacket(new C01PacketPing(this.currentSystemTime));
+                    }
+
+                    @Override
+                    public void handlePong(S01PacketPong packet)
+                    {
+                        long i = this.currentSystemTime;
+                        long j = Minecraft.getSystemTime();
+                        MainEventHandler.currentServerPing = (int) (j - i);
+                    }
+
+                    @Override
+                    public void onDisconnect(IChatComponent component) {}
+                });
+                manager.sendPacket(new C00Handshake(47, address.getIP(), address.getPort(), EnumConnectionState.STATUS));
+                manager.sendPacket(new C00PacketServerQuery());
+            }
+            catch (Exception e) {}
+        });
     }
 }
