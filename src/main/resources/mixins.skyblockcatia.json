@@ -46,7 +46,6 @@
         "renderer.tileentity.TileEntitySignRendererMixin",
         "tileentity.TileEntitySignMixin",
         "debug.ChatAllowedCharactersMixin",
-        "better_sprinting.entity.EntityPlayerSPMixin",
         "forge.config.GuiConfigMixin",
         "patcher.FontRendererHookMixin",
         "player_api.entity.EntityPlayerSPMixin",
