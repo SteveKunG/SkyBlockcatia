@@ -9,7 +9,6 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 @Mixin(NetworkPlayerInfo.class)
 public class NetworkPlayerInfoMixin implements IViewerLoader
 {
-    private final NetworkPlayerInfo that = (NetworkPlayerInfo) (Object) this;
     private boolean loadedFromViewer;
 
     @Override
@@ -22,6 +21,6 @@ public class NetworkPlayerInfoMixin implements IViewerLoader
     public NetworkPlayerInfo setLoadedFromViewer(boolean loaded)
     {
         this.loadedFromViewer = loaded;
-        return this.that;
+        return (NetworkPlayerInfo)(Object)this;
     }
 }

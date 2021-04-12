@@ -18,7 +18,6 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     static boolean foundPatcher;
     static boolean foundPlayerApi;
     static boolean foundRenderPlayerApi;
-    static boolean foundBetterSprinting;
     static boolean foundSmoothFont;
 
     static
@@ -26,7 +25,6 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         foundPatcher = findAndDetectModClass("club.sk1er.patcher.Patcher", "Patcher");
         foundPlayerApi = findAndDetectModClass("api.player.client.ClientPlayerAPI", "PlayerAPI");
         foundRenderPlayerApi = findAndDetectModClass("api.player.render.RenderPlayerAPI", "RenderPlayerAPI");
-        foundBetterSprinting = findAndDetectModClass("chylex.bettersprinting.client.player.LivingUpdate", "BetterSprinting");
         foundSmoothFont = findAndDetectModClass("bre.smoothfont.mod_SmoothFont", "Smooth Font");
     }
 
@@ -52,7 +50,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         }
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.entity.EntityPlayerSPMixin"))
         {
-            return !(foundPlayerApi || foundBetterSprinting);
+            return !foundPlayerApi;
         }
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.render_player_api.renderer.entity.RenderPlayerMixin"))
         {
@@ -61,10 +59,6 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.renderer.entity.RenderPlayerMixin"))
         {
             return !foundRenderPlayerApi;
-        }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.better_sprinting.entity.EntityPlayerSPMixin"))
-        {
-            return foundBetterSprinting;
         }
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.gui.FontRendererMixin"))
         {

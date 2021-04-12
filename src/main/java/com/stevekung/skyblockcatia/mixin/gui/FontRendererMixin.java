@@ -14,7 +14,7 @@ import com.stevekung.skyblockcatia.utils.SupporterUtils;
 
 import net.minecraft.client.gui.FontRenderer;
 
-@Mixin(value = FontRenderer.class, priority = 500)
+@Mixin(value = FontRenderer.class, priority = 100)
 public abstract class FontRendererMixin
 {
     @Unique
