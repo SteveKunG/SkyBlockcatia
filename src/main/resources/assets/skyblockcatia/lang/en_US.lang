@@ -77,6 +77,7 @@ shortcut_button_in_inventory.extended_config=Shortcut Button in Inventory
 show_obtained_date.extended_config=Show Obtained Date
 fix_skyblock_enchant_tag.extended_config=Fix Skyblock Enchant Tag
 hitbox_render_mode.extended_config=Hitbox Render Mode
+display_realtime_ping.extended_config=Display Realtime Ping
 
 # MESSAGE
 message.key_binding=Key Binding

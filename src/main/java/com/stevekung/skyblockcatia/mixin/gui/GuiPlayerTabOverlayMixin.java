@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.utils.GameProfileUtils;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
@@ -40,8 +41,11 @@ public class GuiPlayerTabOverlayMixin
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiPlayerTabOverlay.getPlayerName(Lnet/minecraft/client/network/NetworkPlayerInfo;)Ljava/lang/String;", ordinal = 0))
     private String getPingPlayerInfo(GuiPlayerTabOverlay overlay, NetworkPlayerInfo networkPlayerInfoIn)
     {
-        int ping = networkPlayerInfoIn.getResponseTime();
-        this.pingWidth = this.mc.fontRendererObj.getStringWidth(String.valueOf(ping));
+        if (SkyBlockcatiaSettings.INSTANCE.displayRealtimePing)
+        {
+            int ping = networkPlayerInfoIn.getResponseTime();
+            this.pingWidth = this.mc.fontRendererObj.getStringWidth(String.valueOf(ping));
+        }
         return overlay.getPlayerName(networkPlayerInfoIn);
     }
 
@@ -57,7 +61,7 @@ public class GuiPlayerTabOverlayMixin
         FontRenderer fontRenderer = this.mc.fontRendererObj;
         int ping = playerInfo.getResponseTime();
 
-        if (GameProfileUtils.getUsername().equals(playerInfo.getGameProfile().getName()) || playerInfo.getDisplayName() != null && GameProfileUtils.getUsername().equals(playerInfo.getDisplayName().getUnformattedText()))
+        if (SkyBlockcatiaSettings.INSTANCE.displayRealtimePing && (GameProfileUtils.getUsername().equals(playerInfo.getGameProfile().getName()) || playerInfo.getDisplayName() != null && GameProfileUtils.getUsername().equals(playerInfo.getDisplayName().getUnformattedText())))
         {
             if (ping <= 1)
             {

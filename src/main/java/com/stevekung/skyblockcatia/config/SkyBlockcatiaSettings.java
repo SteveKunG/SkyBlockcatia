@@ -67,6 +67,7 @@ public class SkyBlockcatiaSettings
     public boolean showObtainedDate = true;
     public boolean fixSkyblockEnchantTag = true;
     public boolean disableNightVision = false;
+    public boolean displayRealtimePing = false;
 
     private SkyBlockcatiaSettings() {}
 
@@ -130,6 +131,7 @@ public class SkyBlockcatiaSettings
             this.showObtainedDate = SkyBlockcatiaSettings.getBoolean(nbt, "ShowObtainedDate", this.showObtainedDate);
             this.fixSkyblockEnchantTag = SkyBlockcatiaSettings.getBoolean(nbt, "FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
             this.disableNightVision = SkyBlockcatiaSettings.getBoolean(nbt, "DisableNightVision", this.disableNightVision);
+            this.displayRealtimePing = SkyBlockcatiaSettings.getBoolean(nbt, "DisplayRealtimePing", this.displayRealtimePing);
 
             LoggerIN.info("Loading extended config {}", SkyBlockcatiaSettings.file.getPath());
         }
@@ -186,6 +188,7 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("ShowObtainedDate", this.showObtainedDate);
             nbt.setBoolean("FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
             nbt.setBoolean("DisableNightVision", this.disableNightVision);
+            nbt.setBoolean("DisplayRealtimePing", this.displayRealtimePing);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             nbt.setInteger("ItemRarityOpacity", this.itemRarityOpacity);
@@ -414,6 +417,10 @@ public class SkyBlockcatiaSettings
         {
             this.disableNightVision = !this.disableNightVision;
         }
+        else if (options == SkyBlockcatiaSettings.Options.DISPLAY_REALTIME_PING)
+        {
+            this.displayRealtimePing = !this.displayRealtimePing;
+        }
     }
 
     public void setOptionFloatValue(SkyBlockcatiaSettings.Options options, float value)
@@ -539,6 +546,8 @@ public class SkyBlockcatiaSettings
             return this.fixSkyblockEnchantTag;
         case DISABLE_NIGHT_VISION:
             return this.disableNightVision;
+        case DISPLAY_REALTIME_PING:
+            return this.displayRealtimePing;
         default:
             return false;
         }
@@ -585,6 +594,7 @@ public class SkyBlockcatiaSettings
         SHOW_OBTAINED_DATE(false, true),
         FIX_SKYBLOCK_ENCHANT_TAG(false, true),
         DISABLE_NIGHT_VISION(false, true),
+        DISPLAY_REALTIME_PING(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
         VISIT_ISLAND_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),

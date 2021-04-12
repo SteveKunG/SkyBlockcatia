@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.gui.config;
 
+import static com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings.Options.*;
+
 import java.io.IOException;
 
 import com.stevekung.skyblockcatia.config.ConfigGuiFactory;
@@ -15,10 +17,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class GuiSkyBlockSettings extends GuiScreen
 {
-    private static final SkyBlockcatiaSettings.Options[] QOL_OPTIONS = { SkyBlockcatiaSettings.Options.JUNGLE_AXE_COOLDOWN, SkyBlockcatiaSettings.Options.GRAPPLING_HOOK_COOLDOWN, SkyBlockcatiaSettings.Options.ZEALOT_RESPAWN_COOLDOWN, SkyBlockcatiaSettings.Options.PLACED_SUMMONING_EYE_TRACKER, SkyBlockcatiaSettings.Options.LEAVE_PARTY_WHEN_LAST_EYE_PLACED, SkyBlockcatiaSettings.Options.LOBBY_PLAYER_VIEWER, SkyBlockcatiaSettings.Options.AUCTION_BID_CONFIRM, SkyBlockcatiaSettings.Options.AUCTION_BID_CONFIRM_VALUE, SkyBlockcatiaSettings.Options.BAZAAR_ON_TOOLTIPS, SkyBlockcatiaSettings.Options.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND, SkyBlockcatiaSettings.Options.DISPLAY_ITEM_ABILITY_MAX_USED, SkyBlockcatiaSettings.Options.SHORTCUT_BUTTON_IN_INVENTORY };
-    private static final SkyBlockcatiaSettings.Options[] RENDERING_OPTIONS = { SkyBlockcatiaSettings.Options.SUPPORTERS_FANCY_COLOR, SkyBlockcatiaSettings.Options.SHOW_ITEM_RARITY, SkyBlockcatiaSettings.Options.ITEM_RARITY_OPACITY, SkyBlockcatiaSettings.Options.MAKE_SPECIAL_ZEALOT_HELD_GOLD, SkyBlockcatiaSettings.Options.SHOW_HITBOX_WHEN_DRAGON_SPAWNED, SkyBlockcatiaSettings.Options.HITBOX_RENDER_MODE, SkyBlockcatiaSettings.Options.GLOWING_DRAGON_ARMOR, SkyBlockcatiaSettings.Options.DISABLE_BLOCK_PARTICLES, SkyBlockcatiaSettings.Options.FIX_SKYBLOCK_ENCHANT_TAG, SkyBlockcatiaSettings.Options.DISABLE_NIGHT_VISION };
-    private static final SkyBlockcatiaSettings.Options[] MISC_OPTIONS = { SkyBlockcatiaSettings.Options.RIGHT_CLICK_ADD_PARTY, SkyBlockcatiaSettings.Options.SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON, SkyBlockcatiaSettings.Options.LOBBY_PLAYER_COUNT, SkyBlockcatiaSettings.Options.SHOW_OBTAINED_DATE };
-    private static final SkyBlockcatiaSettings.Options[] TOAST_OPTIONS = { SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_MODE, SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_TIME, SkyBlockcatiaSettings.Options.RARE_DROP_TOAST_MODE, SkyBlockcatiaSettings.Options.RARE_DROP_TOAST_TIME, SkyBlockcatiaSettings.Options.SPECIAL_DROP_TOAST_TIME, SkyBlockcatiaSettings.Options.FISH_CATCH_TOAST_MODE, SkyBlockcatiaSettings.Options.FISH_CATCH_TOAST_TIME, SkyBlockcatiaSettings.Options.GIFT_TOAST_MODE, SkyBlockcatiaSettings.Options.GIFT_TOAST_TIME, SkyBlockcatiaSettings.Options.PET_TOAST_MODE, SkyBlockcatiaSettings.Options.PET_TOAST_TIME };
+    private static final SkyBlockcatiaSettings.Options[] QOL_OPTIONS = { JUNGLE_AXE_COOLDOWN, GRAPPLING_HOOK_COOLDOWN, ZEALOT_RESPAWN_COOLDOWN, PLACED_SUMMONING_EYE_TRACKER, LEAVE_PARTY_WHEN_LAST_EYE_PLACED, LOBBY_PLAYER_VIEWER, AUCTION_BID_CONFIRM, AUCTION_BID_CONFIRM_VALUE, BAZAAR_ON_TOOLTIPS, SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND, DISPLAY_ITEM_ABILITY_MAX_USED, SHORTCUT_BUTTON_IN_INVENTORY };
+    private static final SkyBlockcatiaSettings.Options[] RENDERING_OPTIONS = { SUPPORTERS_FANCY_COLOR, SHOW_ITEM_RARITY, ITEM_RARITY_OPACITY, MAKE_SPECIAL_ZEALOT_HELD_GOLD, SHOW_HITBOX_WHEN_DRAGON_SPAWNED, HITBOX_RENDER_MODE, GLOWING_DRAGON_ARMOR, DISABLE_BLOCK_PARTICLES, FIX_SKYBLOCK_ENCHANT_TAG, DISABLE_NIGHT_VISION, DISPLAY_REALTIME_PING };
+    private static final SkyBlockcatiaSettings.Options[] MISC_OPTIONS = { RIGHT_CLICK_ADD_PARTY, SNEAK_TO_OPEN_INVENTORY_WHILE_FIGHT_DRAGON, LOBBY_PLAYER_COUNT, SHOW_OBTAINED_DATE };
+    private static final SkyBlockcatiaSettings.Options[] TOAST_OPTIONS = { VISIT_ISLAND_TOAST_MODE, VISIT_ISLAND_TOAST_TIME, RARE_DROP_TOAST_MODE, RARE_DROP_TOAST_TIME, SPECIAL_DROP_TOAST_TIME, FISH_CATCH_TOAST_MODE, FISH_CATCH_TOAST_TIME, GIFT_TOAST_MODE, GIFT_TOAST_TIME, PET_TOAST_MODE, PET_TOAST_TIME };
 
     public void display()
     {
