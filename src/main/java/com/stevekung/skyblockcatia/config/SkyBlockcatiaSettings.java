@@ -63,7 +63,6 @@ public class SkyBlockcatiaSettings
     public boolean makeSpecialZealotHeldGold = true;
     public boolean lobbyPlayerCount = true;
     public boolean displayItemAbilityMaxUsed = false;
-    public boolean preventScrollHotbarWhileFightDragon = false;
     public boolean shortcutButtonInInventory = true;
     public boolean showObtainedDate = true;
     public boolean fixSkyblockEnchantTag = true;
@@ -127,7 +126,6 @@ public class SkyBlockcatiaSettings
             this.makeSpecialZealotHeldGold = SkyBlockcatiaSettings.getBoolean(nbt, "MakeSpecialZealotHeldGold", this.makeSpecialZealotHeldGold);
             this.lobbyPlayerCount = SkyBlockcatiaSettings.getBoolean(nbt, "LobbyPlayerCount", this.lobbyPlayerCount);
             this.displayItemAbilityMaxUsed = SkyBlockcatiaSettings.getBoolean(nbt, "DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
-            this.preventScrollHotbarWhileFightDragon = SkyBlockcatiaSettings.getBoolean(nbt, "PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             this.shortcutButtonInInventory = SkyBlockcatiaSettings.getBoolean(nbt, "ShortcutButtonInInventory", this.shortcutButtonInInventory);
             this.showObtainedDate = SkyBlockcatiaSettings.getBoolean(nbt, "ShowObtainedDate", this.showObtainedDate);
             this.fixSkyblockEnchantTag = SkyBlockcatiaSettings.getBoolean(nbt, "FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
@@ -184,7 +182,6 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("LobbyPlayerCount", this.lobbyPlayerCount);
             nbt.setBoolean("DisableBlockParticles", this.disableBlockParticles);
             nbt.setBoolean("DisplayItemAbilityMaxUsed", this.displayItemAbilityMaxUsed);
-            nbt.setBoolean("PreventScrollHotbarWhileFightDragon", this.preventScrollHotbarWhileFightDragon);
             nbt.setBoolean("ShortcutButtonInInventory", this.shortcutButtonInInventory);
             nbt.setBoolean("ShowObtainedDate", this.showObtainedDate);
             nbt.setBoolean("FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
@@ -401,10 +398,6 @@ public class SkyBlockcatiaSettings
         {
             this.displayItemAbilityMaxUsed = !this.displayItemAbilityMaxUsed;
         }
-        else if (options == SkyBlockcatiaSettings.Options.PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON)
-        {
-            this.preventScrollHotbarWhileFightDragon = !this.preventScrollHotbarWhileFightDragon;
-        }
         else if (options == SkyBlockcatiaSettings.Options.SHORTCUT_BUTTON_IN_INVENTORY)
         {
             this.shortcutButtonInInventory = !this.shortcutButtonInInventory;
@@ -538,8 +531,6 @@ public class SkyBlockcatiaSettings
             return this.lobbyPlayerCount;
         case DISPLAY_ITEM_ABILITY_MAX_USED:
             return this.displayItemAbilityMaxUsed;
-        case PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON:
-            return this.preventScrollHotbarWhileFightDragon;
         case SHORTCUT_BUTTON_IN_INVENTORY:
             return this.shortcutButtonInInventory;
         case SHOW_OBTAINED_DATE:
@@ -590,7 +581,6 @@ public class SkyBlockcatiaSettings
         MAKE_SPECIAL_ZEALOT_HELD_GOLD(false, true),
         LOBBY_PLAYER_COUNT(false, true),
         DISPLAY_ITEM_ABILITY_MAX_USED(false, true),
-        PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON(false, true),
         SHORTCUT_BUTTON_IN_INVENTORY(false, true),
         SHOW_OBTAINED_DATE(false, true),
         FIX_SKYBLOCK_ENCHANT_TAG(false, true),
