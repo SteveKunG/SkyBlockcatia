@@ -12,8 +12,6 @@ import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
@@ -63,14 +61,5 @@ public class MixinMinecraft
             return false;
         }
         return key.isPressed();
-    }
-
-    @Redirect(method = "processKeyBinds()V", at = @At(value = "INVOKE", target = "net/minecraft/client/entity/player/ClientPlayerEntity.sendHorseInventory()V"))
-    private void openPlayerInventory(ClientPlayerEntity player)
-    {
-        if (SkyBlockEventHandler.isSkyBlock)
-        {
-            this.that.displayGuiScreen(new InventoryScreen(player));
-        }
     }
 }

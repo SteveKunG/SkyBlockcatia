@@ -10,7 +10,7 @@ import net.minecraft.inventory.container.Slot;
 @Mixin(targets = "net.minecraft.inventory.container.PlayerContainer$2")
 public class MixinPlayerContainer_2 extends Slot
 {
-    private MixinPlayerContainer_2()
+    MixinPlayerContainer_2()
     {
         super(null, 0, 0, 0);
     }

@@ -77,7 +77,7 @@ public class SBMinions
         FLOWER(SBSkills.Type.FORAGING, "ce005804-135c-3062-8c81-aae83ccd0da2", "baa7c59b2f792d8d091aecacf47a19f8ab93f3fd3c48f6930b1c2baeb09e0f9b"),
         FISHING(SBSkills.Type.FISHING, "7223a6bf-d320-3e0f-aad9-d3dcecc790ab", "53ea0fd89524db3d7a3544904933830b4fc8899ef60c113d948bb3c4fe7aabb1"),
         ZOMBIE(SBSkills.Type.COMBAT, "c62d2e04-ed45-3718-9aac-75e93485d77a", "196063a884d3901c41f35b69a8c9f401c61ac9f6330f964f80c35352c3e8bfb0"),
-        REVENANT(SBSkills.Type.COMBAT, "b22f77c8-1454-392b-8c35-0e0b3d415499", "a3dce8555923558d8d74c2a2b261b2b2d630559db54ef97ed3f9c30e9a20aba"),
+        REVENANT(SBSkills.Type.COMBAT, "b22f77c8-1454-392b-8c35-0e0b3d415499", "a3dce8555923558d8d74c2a2b261b2b2d630559db54ef97ed3f9c30e9a20aba", true),
         SKELETON(SBSkills.Type.COMBAT, "67d71d08-9f30-3b31-87e7-5824bc3c9de2", "2fe009c5cfa44c05c88e5df070ae2533bd682a728e0b33bfc93fd92a6e5f3f64"),
         CREEPER(SBSkills.Type.COMBAT, "15fade4b-f08c-37f3-a9a4-f0faefb62a33", "54a92c2f8c1b3774e80492200d0b2218d7b019314a73c9cb5b9f04cfcacec471"),
         SPIDER(SBSkills.Type.COMBAT, "ff027ceb-6c80-33cf-a232-27b5c7790201", "e77c4c284e10dea038f004d7eb43ac493de69f348d46b5c1f8ef8154ec2afdd0"),

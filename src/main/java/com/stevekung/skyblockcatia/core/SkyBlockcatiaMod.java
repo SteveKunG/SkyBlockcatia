@@ -15,7 +15,6 @@ import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.event.handler.ToastTestEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.DataGetter;
 import com.stevekung.skyblockcatia.utils.ToastLog;
@@ -89,11 +88,6 @@ public class SkyBlockcatiaMod
         CommonUtils.registerEventHandler(new HUDRenderEventHandler());
         CommonUtils.registerEventHandler(new SkyBlockEventHandler());
         CommonUtils.registerEventHandler(new ToastTestEventHandler());
-
-        if (CompatibilityUtils.isIndicatiaLoaded)
-        {
-            IndicatiaIntegration.registerHandler();
-        }
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());
         ClientCommands.register(new BazaarViewerCommand());

@@ -4,26 +4,20 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixUtils;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.datafix.fixes.*;
 import net.minecraftforge.common.util.Constants;
 
@@ -48,8 +42,6 @@ public class SBItemUtils
         obj.put(431, "minecraft:dark_oak_door");
         obj.defaultReturnValue("minecraft:air");
     });
-    public static final ImmutableList<String> BLACKLIST = ImmutableList.of("SNOW_BLASTER", "SNOW_CANNON");
-    public static final ImmutableList<String> CLICKABLE = ImmutableList.of("WEIRD_TUBA", "BAT_WAND", "FLOWER_OF_TRUTH");
 
     public static List<ItemStack> decodeItem(JsonObject currentProfile, InventoryType type)
     {
@@ -188,35 +180,6 @@ public class SBItemUtils
             newNbt.put("tag", sbTag);
         }
         return ItemStack.read(newNbt);
-    }
-
-    public static ActionResult<ItemStack> getBlockedItem(ItemStack itemStack, PlayerEntity player, ActionResult<ItemStack> defaultValue)
-    {
-        if (SkyBlockEventHandler.isSkyBlock && !itemStack.isEmpty() && itemStack.hasTag())
-        {
-            CompoundNBT extraAttrib = itemStack.getTag().getCompound("ExtraAttributes");
-
-            if (!BLACKLIST.stream().anyMatch(extraAttrib.getString("id")::equals))
-            {
-                player.swingArm(Hand.MAIN_HAND);
-            }
-        }
-        return defaultValue;
-    }
-
-    public static ActionResultType getBlockedItemResult(ItemStack itemStack, PlayerEntity player, ActionResultType defaultValue)
-    {
-        if (SkyBlockEventHandler.isSkyBlock && !itemStack.isEmpty() && itemStack.hasTag())
-        {
-            CompoundNBT extraAttrib = itemStack.getTag().getCompound("ExtraAttributes");
-
-            if (!BLACKLIST.stream().anyMatch(extraAttrib.getString("id")::equals))
-            {
-                player.swingArm(Hand.MAIN_HAND);
-                return ActionResultType.SUCCESS;
-            }
-        }
-        return defaultValue;
     }
 
     private static <K, V> K getKey(Map<K, V> map, V value)

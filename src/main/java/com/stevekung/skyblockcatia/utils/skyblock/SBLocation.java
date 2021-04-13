@@ -1,120 +1,20 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-
 public enum SBLocation
 {
     NONE("None"),
     YOUR_ISLAND("Your Island"),
 
-    // Public Island
-    VILLAGE("Village", ImmutableList.of(Blocks.POPPY, Blocks.DANDELION, Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY, Blocks.CARROTS, Blocks.POTATOES, Blocks.WHEAT, Blocks.NETHER_WART)),
-    FARM("Farm", ImmutableList.of(Blocks.WHEAT)),
-    FARMHOUSE("Farmhouse", ImmutableList.of(Blocks.POTATOES, Blocks.WHEAT, Blocks.NETHER_WART)),
-    COAL_MINE("Coal Mine", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE)),
-    FOREST("Forest", ImmutableList.of(Blocks.OAK_LOG, Blocks.OAK_LEAVES)),
-    RUINS("Ruins"),
-    MOUNTAIN("Mountain", ImmutableList.of(Blocks.CARROTS)),
-    HIGH_LEVEL("High Level"),
-    GRAVEYARD("Graveyard"),
-    WILDERNESS("Wilderness"),
-    FISHERMAN_HUT("Fisherman's Hut"),
-    COLOSSEUM("Colosseum"),
-    BAZAAR_ALLEY("Bazaar Alley"),
-    CATACOMBS_ENTRANCE("Catacombs Entrance"),
-
-    // Public Island building
-    FLOWER_HOUSE("Flower House", ImmutableList.of(Blocks.POPPY, Blocks.DANDELION, Blocks.BLUE_ORCHID, Blocks.ALLIUM, Blocks.AZURE_BLUET, Blocks.RED_TULIP, Blocks.ORANGE_TULIP, Blocks.WHITE_TULIP, Blocks.PINK_TULIP, Blocks.OXEYE_DAISY)),
-    LIBRARY("Library"),
-    BANK("Bank"),
-    AUCTION_HOUSE("Auction House"),
-    TAVERN("Tavern"),
-    FASHION_SHOP("Fashion Shop"),
-    WIZARD_TOWER("Wizard Tower"),
-
-    THE_BARN("The Barn", ImmutableList.of(Blocks.WHEAT, Blocks.CARROTS, Blocks.POTATOES, Blocks.PUMPKIN, Blocks.MELON)),
-    MUSHROOM_DESERT("Mushroom Desert", ImmutableList.of(Blocks.COCOA, Blocks.SUGAR_CANE, Blocks.RED_MUSHROOM, Blocks.BROWN_MUSHROOM, Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK, Blocks.CACTUS)),
-
-    BIRCH_PARK("Birch Park", ImmutableList.of(Blocks.BIRCH_LOG, Blocks.BIRCH_LEAVES)),
-    SPRUCE_WOODS("Spruce Woods", ImmutableList.of(Blocks.SPRUCE_LOG, Blocks.SPRUCE_LEAVES)),
-    DARK_THICKET("Dark Thicket", ImmutableList.of(Blocks.DARK_OAK_LOG, Blocks.OAK_LEAVES)),
-    SAVANNA_WOODLAND("Savanna Woodland", ImmutableList.of(Blocks.ACACIA_LOG, Blocks.OAK_LEAVES)),
-    JUNGLE_ISLAND("Jungle Island", ImmutableList.of(Blocks.JUNGLE_LOG, Blocks.JUNGLE_LEAVES)),
-
-    BLAZING_FORTRESS("Blazing Fortress", ImmutableList.of(Blocks.NETHERRACK, Blocks.NETHER_QUARTZ_ORE, Blocks.GLOWSTONE, Blocks.NETHER_WART)),
-
-    SPIDER_DEN("Spider's Den", ImmutableList.of(Blocks.GRAVEL)),
-
-    GOLD_MINE("Gold Mine", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE)),
-    DEEP_CAVERNS("Deep Caverns", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    GUNPOWDER_MINES("Gunpowder Mines", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE)),
-    LAPIS_QUARRY("Lapis Quarry", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.LAPIS_ORE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE)),
-    PIGMENS_DEN("Pigmen's Den", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.REDSTONE_ORE, Blocks.LAPIS_ORE, Blocks.EMERALD_ORE)),
-    SLIMEHILL("Slimehill", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.EMERALD_ORE, Blocks.REDSTONE_ORE, Blocks.DIAMOND_ORE)),
-    DIAMOND_RESERVE("Diamond Reserve", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE)),
-    OBSIDIAN_SANCTUARY("Obsidian Sanctuary", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.DIAMOND_ORE, Blocks.DIAMOND_BLOCK, Blocks.OBSIDIAN)),
-
-    THE_END("The End", ImmutableList.of(Blocks.END_STONE, Blocks.OBSIDIAN)),
-    DRAGON_NEST("Dragon's Nest", ImmutableList.of(Blocks.END_STONE, Blocks.OBSIDIAN)),
-
-    JERRY_WORKSHOP("Jerry's Workshop", ImmutableList.of(Blocks.ICE)),
-    JERRY_POND("Jerry Pond", ImmutableList.of(Blocks.ICE)),
-
-    THE_LIFT("The Lift", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    DWARVEN_VILLAGE("Dwarven Village", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE)),
-    DWARVEN_TAVERN("Dwarven Tavern", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE)),
-    DWARVEN_MINES("Dwarven Mines", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE, Blocks.GOLD_BLOCK, Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS)),
-    GATES_TO_THE_MINES("Gates to the Mines", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    PALACE_BRIDGE("Palace Bridge", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.POLISHED_DIORITE, Blocks.GRAY_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE, Blocks.LIGHT_BLUE_WOOL)),
-    ROYAL_PALACE("Royal Palace", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    BARRACKS_OF_HEROES("Barracks of Heroes", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    ROYAL_QUARTERS("Royal Quarters", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    ROYAL_MINES("Royal Mines", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE, Blocks.GOLD_BLOCK)),
-    ARISTOCRAT_PASSAGE("Aristocrat Passage", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.POLISHED_DIORITE, Blocks.GRAY_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.GOLD_BLOCK)),
-    GRAND_LIBRARY("Grand Library", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    HANGING_COURT("Hanging Court", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    CLIFFSIDE_VEINS("Cliffside Veins", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    DIVANS_GATEWAY("Divan's Gateway", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.POLISHED_DIORITE, Blocks.GRAY_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.GOLD_BLOCK, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE, Blocks.LIGHT_BLUE_WOOL)),
-    GREAT_ICE_WALL("Great Ice Wall", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.POLISHED_DIORITE, Blocks.GRAY_WOOL, Blocks.CYAN_TERRACOTTA)),
-    THE_MIST("The Mist", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE)),
-    FORGE_BASIN("Forge Basin", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    THE_FORGE("The Forge", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.LIGHT_BLUE_WOOL, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    MINERS_GUILD("Miner's Guild", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.POLISHED_DIORITE, Blocks.GRAY_WOOL, Blocks.CYAN_TERRACOTTA)),
-    RAMPARTS_QUARRY("Rampart's Quarry", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    FAR_RESERVE("Far Reserve", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    GOBLIN_BURROWS("Goblin Burrows", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.POLISHED_DIORITE, Blocks.GRAY_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.GOLD_BLOCK)),
-    UPPER_MINES("Upper Mines", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    LAVA_SPRINGS("Lava Springs", ImmutableList.of(Blocks.STONE, Blocks.POLISHED_DIORITE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE, Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.DIAMOND_ORE, Blocks.EMERALD_ORE, Blocks.GRAY_WOOL, Blocks.LIGHT_BLUE_WOOL, Blocks.CYAN_TERRACOTTA, Blocks.PRISMARINE, Blocks.PRISMARINE_BRICKS, Blocks.DARK_PRISMARINE)),
-    CNC_MINECARTS_CO("C&C Minecarts Co.", ImmutableList.of(Blocks.STONE, Blocks.COBBLESTONE, Blocks.COAL_ORE, Blocks.IRON_ORE)),
-
-    DUNGEON_HUB("Dungeon Hub"),
-    DUNGEON("Dungeon"),
-    THE_CATACOMBS_E("The Catacombs (E)"),
-    THE_CATACOMBS_F1("The Catacombs (F1)"),
-    THE_CATACOMBS_F2("The Catacombs (F2)"),
-    THE_CATACOMBS_F3("The Catacombs (F3)"),
-    THE_CATACOMBS_F4("The Catacombs (F4)"),
-    THE_CATACOMBS_F5("The Catacombs (F5)"),
-    THE_CATACOMBS_F6("The Catacombs (F6)"),
-    THE_CATACOMBS_F7("The Catacombs (F7)"),
+    THE_END("The End"),
+    DRAGON_NEST("Dragon's Nest"),
     ;
 
     public static final SBLocation[] VALUES = SBLocation.values();
     private final String location;
-    private final ImmutableList<Block> mineableList;
 
     private SBLocation(String location)
     {
-        this(location, ImmutableList.of());
-    }
-
-    private SBLocation(String location, ImmutableList<Block> mineableList)
-    {
         this.location = location;
-        this.mineableList = mineableList;
     }
 
     public boolean isTheEnd()
@@ -122,18 +22,8 @@ public enum SBLocation
         return this == SBLocation.THE_END || this == SBLocation.DRAGON_NEST;
     }
 
-    public boolean ignore()
-    {
-        return this == SBLocation.YOUR_ISLAND || this == SBLocation.THE_CATACOMBS_E || this == SBLocation.THE_CATACOMBS_F1 || this == SBLocation.THE_CATACOMBS_F2 || this == SBLocation.THE_CATACOMBS_F3 || this == SBLocation.THE_CATACOMBS_F4 || this == SBLocation.THE_CATACOMBS_F5 || this == SBLocation.THE_CATACOMBS_F6 || this == SBLocation.THE_CATACOMBS_F7;
-    }
-
     public String getLocation()
     {
         return this.location;
-    }
-
-    public ImmutableList<Block> getMineableList()
-    {
-        return this.mineableList;
     }
 }

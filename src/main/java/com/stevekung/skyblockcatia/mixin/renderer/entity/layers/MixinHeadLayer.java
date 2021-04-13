@@ -35,7 +35,7 @@ public abstract class MixinHeadLayer<T extends LivingEntity, M extends EntityMod
 {
     private final GenericHeadModel head = new HumanoidHeadModel();
 
-    private MixinHeadLayer()
+    MixinHeadLayer()
     {
         super(null);
     }

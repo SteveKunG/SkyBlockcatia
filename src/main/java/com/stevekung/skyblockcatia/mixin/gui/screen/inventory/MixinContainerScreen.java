@@ -73,7 +73,7 @@ public class MixinContainerScreen<T extends Container> extends Screen implements
     // Auction
     private NumberWidget priceSearch;
 
-    private MixinContainerScreen()
+    MixinContainerScreen()
     {
         super(null);
     }

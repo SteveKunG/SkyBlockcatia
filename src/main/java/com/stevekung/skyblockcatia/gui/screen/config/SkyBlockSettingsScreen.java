@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.gui.screen.config;
 
+import static com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings.*;
+
 import java.io.File;
 
 import com.google.common.collect.ImmutableList;
@@ -19,10 +21,10 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class SkyBlockSettingsScreen extends Screen
 {
-    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> QOL_OPTIONS = ImmutableList.of(SkyBlockcatiaSettings.AXE_COOLDOWN, SkyBlockcatiaSettings.GRAPPLING_HOOK_COOLDOWN, SkyBlockcatiaSettings.ZEALOT_RESPAWN_COOLDOWN, SkyBlockcatiaSettings.PLACED_SUMMONING_EYE_TRACKER, SkyBlockcatiaSettings.LEAVE_PARTY_WHEN_LAST_EYE_PLACED, SkyBlockcatiaSettings.PLAYER_COUNT_LOBBY_VIEWER, SkyBlockcatiaSettings.AUCTION_BID_CONFIRM, SkyBlockcatiaSettings.AUCTION_BID_CONFIRM_VALUE, SkyBlockcatiaSettings.BAZAAR_ON_ITEM_TOOLTIP, SkyBlockcatiaSettings.IGNORE_INTERACT_INVISIBLE_ARMOR_STAND, SkyBlockcatiaSettings.AUTOMATIC_OPEN_MADDOX, SkyBlockcatiaSettings.SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND, SkyBlockcatiaSettings.DISPLAY_ITEM_ABILITY_MAX_USED, SkyBlockcatiaSettings.PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON, SkyBlockcatiaSettings.SHORTCUT_BUTTON_IN_INVENTORY);
-    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> RENDERING_OPTIONS = ImmutableList.of(SkyBlockcatiaSettings.SUPPORTERS_FANCY_COLOR, SkyBlockcatiaSettings.ITEM_RARITY, SkyBlockcatiaSettings.ITEM_RARITY_OPACITY, SkyBlockcatiaSettings.MAKE_SPECIAL_ZEALOT_HELD_GOLD, SkyBlockcatiaSettings.SHOW_HITBOX_WHEN_DRAGON_SPAWNED, SkyBlockcatiaSettings.HITBOX_RENDER_MODE, SkyBlockcatiaSettings.GLOWING_DRAGON_ARMOR, SkyBlockcatiaSettings.DISABLE_BLOCK_PARTICLES, SkyBlockcatiaSettings.FIX_SKYBLOCK_ENCHANT_TAG, SkyBlockcatiaSettings.DISABLE_NIGHT_VISION);
-    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> MISC_OPTIONS = ImmutableList.of(SkyBlockcatiaSettings.PREVENT_SCROLL_HOTBAR_WHILE_FIGHT_DRAGON, SkyBlockcatiaSettings.IGNORE_BUSH_HITBOX, SkyBlockcatiaSettings.ONLY_MINEABLE_HITBOX, SkyBlockcatiaSettings.LOBBY_PLAYER_COUNT, SkyBlockcatiaSettings.SHOW_OBTAINED_DATE);
-    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> TOAST_OPTIONS = ImmutableList.of(SkyBlockcatiaSettings.VISIT_ISLAND_DISPLAY_MODE, SkyBlockcatiaSettings.VISIT_ISLAND_TOAST_TIME, SkyBlockcatiaSettings.ITEM_LOG_DISPLAY_MODE, SkyBlockcatiaSettings.RARE_DROP_TOAST_TIME, SkyBlockcatiaSettings.SPECIAL_DROP_TOAST_TIME, SkyBlockcatiaSettings.FISH_CATCH_DISPLAY_MODE, SkyBlockcatiaSettings.FISH_CATCH_TOAST_TIME, SkyBlockcatiaSettings.GIFT_DISPLAY_MODE, SkyBlockcatiaSettings.GIFT_TOAST_TIME, SkyBlockcatiaSettings.PET_DISPLAY_MODE, SkyBlockcatiaSettings.PET_TOAST_TIME);
+    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> QOL_OPTIONS = ImmutableList.of(AXE_COOLDOWN, GRAPPLING_HOOK_COOLDOWN, ZEALOT_RESPAWN_COOLDOWN, LEAVE_PARTY_WHEN_LAST_EYE_PLACED, PLAYER_COUNT_LOBBY_VIEWER, AUCTION_BID_CONFIRM, AUCTION_BID_CONFIRM_VALUE, BAZAAR_ON_ITEM_TOOLTIP, SNEAK_TO_TRADE_OTHER_PLAYER_ISLAND, DISPLAY_ITEM_ABILITY_MAX_USED, SHORTCUT_BUTTON_IN_INVENTORY);
+    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> RENDERING_OPTIONS = ImmutableList.of(SUPPORTERS_FANCY_COLOR, ITEM_RARITY, ITEM_RARITY_OPACITY, MAKE_SPECIAL_ZEALOT_HELD_GOLD, SHOW_HITBOX_WHEN_DRAGON_SPAWNED, HITBOX_RENDER_MODE, GLOWING_DRAGON_ARMOR, DISABLE_BLOCK_PARTICLES, FIX_SKYBLOCK_ENCHANT_TAG, DISABLE_NIGHT_VISION);
+    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> MISC_OPTIONS = ImmutableList.of(SHOW_OBTAINED_DATE);
+    private static final ImmutableList<AbstractSettings<SkyBlockcatiaSettings>> TOAST_OPTIONS = ImmutableList.of(VISIT_ISLAND_DISPLAY_MODE, VISIT_ISLAND_TOAST_TIME, ITEM_LOG_DISPLAY_MODE, RARE_DROP_TOAST_TIME, SPECIAL_DROP_TOAST_TIME, FISH_CATCH_DISPLAY_MODE, FISH_CATCH_TOAST_TIME, GIFT_DISPLAY_MODE, GIFT_TOAST_TIME, PET_DISPLAY_MODE, PET_TOAST_TIME);
 
     public SkyBlockSettingsScreen()
     {

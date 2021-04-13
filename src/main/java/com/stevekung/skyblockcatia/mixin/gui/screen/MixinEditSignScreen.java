@@ -33,7 +33,7 @@ public class MixinEditSignScreen extends Screen
     @Final
     private String[] field_238846_r_;
 
-    private MixinEditSignScreen()
+    MixinEditSignScreen()
     {
         super(null);
     }

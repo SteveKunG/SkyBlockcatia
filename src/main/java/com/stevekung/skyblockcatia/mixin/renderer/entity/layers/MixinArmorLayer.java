@@ -44,7 +44,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
         return null;
     }
 
-    private MixinArmorLayer()
+    MixinArmorLayer()
     {
         super(null);
     }

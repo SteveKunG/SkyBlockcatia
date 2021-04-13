@@ -26,7 +26,6 @@ import com.stevekung.skyblockcatia.gui.screen.config.SkyBlockSettingsScreen;
 import com.stevekung.skyblockcatia.gui.toasts.*;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.integration.IndicatiaIntegration;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
@@ -115,7 +114,6 @@ public class SkyBlockEventHandler
     private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("(?:§r){0,1}§aYour (?<name>§r§[0-9a-fk-or][\\w ]+) §r§alevelled up to level §r§9(?<level>\\d+)§r§a!§r");
     private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
 
-    private static final List<String> LEFT_PARTY_MESSAGE = Lists.newArrayList("You are not in a party and have been moved to the ALL channel!", "has disbanded the party!", "The party was disbanded because all invites have expired and all members have left.");
     private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("◆ Ice Rune", "◆ Ice Rune I").build();
     public static boolean isSkyBlock;
     public static boolean foundSkyBlockPack;
@@ -241,11 +239,7 @@ public class SkyBlockEventHandler
                     if (scoreObj != null)
                     {
                         SkyBlockEventHandler.isSkyBlock = CUSTOM_FORMATTING_CODE_PATTERN.matcher(scoreObj.getDisplayName().getString()).replaceAll("").contains("SKYBLOCK");
-
-                        if (CompatibilityUtils.isIndicatiaLoaded)
-                        {
-                            otherPlayerIsland = CUSTOM_FORMATTING_CODE_PATTERN.matcher(scoreObj.getDisplayName().getString()).replaceAll("").contains("SKYBLOCK GUEST");
-                        }
+                        otherPlayerIsland = CUSTOM_FORMATTING_CODE_PATTERN.matcher(scoreObj.getDisplayName().getString()).replaceAll("").contains("SKYBLOCK GUEST");
                     }
                     else
                     {
@@ -380,23 +374,9 @@ public class SkyBlockEventHandler
                     cancelMessage = true;
                 }
 
-                if (CompatibilityUtils.isIndicatiaLoaded && SkyBlockEventHandler.LEFT_PARTY_MESSAGE.stream().anyMatch(message::equals))
-                {
-                    IndicatiaIntegration.savePartyChat();
-                }
                 if (SkyBlockcatiaSettings.INSTANCE.leavePartyWhenLastEyePlaced && message.contains(" Brace yourselves! (8/8)"))
                 {
                     this.mc.player.sendChatMessage("/p leave");
-                }
-                if (SkyBlockcatiaSettings.INSTANCE.automaticOpenMaddox)
-                {
-                    for (ITextComponent component : event.getMessage().getSiblings())
-                    {
-                        if (message.contains("[OPEN MENU]") && component.getStyle().getClickEvent() != null)
-                        {
-                            this.mc.player.sendChatMessage(component.getStyle().getClickEvent().getValue());
-                        }
-                    }
                 }
 
                 if (SkyBlockEventHandler.isSkyBlock || dev)

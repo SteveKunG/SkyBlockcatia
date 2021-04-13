@@ -172,15 +172,15 @@ public class HUDRenderEventHandler
 
             if (SkyBlockcatiaSettings.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
             {
-                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.axeCooldownColor, jungleAxeDelay));
+                crosshairInfo.add(new CrosshairOverlay(jungleAxeDelay));
             }
             if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
             {
-                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldownColor, grapplingHookDelay));
+                crosshairInfo.add(new CrosshairOverlay(grapplingHookDelay));
             }
             if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
             {
-                crosshairInfo.add(new CrosshairOverlay(SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldownColor, zealotRespawnDelay));
+                crosshairInfo.add(new CrosshairOverlay(zealotRespawnDelay));
             }
 
             for (CrosshairOverlay overlay : crosshairInfo)
@@ -188,7 +188,7 @@ public class HUDRenderEventHandler
                 float fontHeight = this.mc.fontRenderer.FONT_HEIGHT + 1;
                 float width = event.getWindow().getScaledWidth() / 2 + 1.0625F;
                 float height = event.getWindow().getScaledHeight() / 2 + 6 + fontHeight * center;
-                this.mc.fontRenderer.drawStringWithShadow(matrixStack, TextComponentUtils.formattedString(overlay.getDelay(), overlay.color), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
+                this.mc.fontRenderer.drawTextWithShadow(matrixStack, TextComponentUtils.component(overlay.getDelay()), width - this.mc.fontRenderer.getStringWidth(overlay.getDelay()) / 2, height, 16777215);
                 center++;
             }
         }
@@ -296,12 +296,10 @@ public class HUDRenderEventHandler
 
     static class CrosshairOverlay
     {
-        final String color;
         final double delay;
 
-        CrosshairOverlay(String color, double delay)
+        CrosshairOverlay(double delay)
         {
-            this.color = color;
             this.delay = delay;
         }
 
