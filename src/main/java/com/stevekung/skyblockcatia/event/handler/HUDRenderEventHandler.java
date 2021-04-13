@@ -23,7 +23,6 @@ import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.monster.EndermanEntity;
@@ -270,15 +269,6 @@ public class HUDRenderEventHandler
         {
             this.lastZealotRespawn = -1;
         }
-    }
-
-    public static int getPlayerCount(List<NetworkPlayerInfo> list)
-    {
-        if (!list.isEmpty() && list.get(0).getDisplayName() != null && list.get(0).getDisplayName().getString().startsWith("         Players ("))
-        {
-            return Integer.valueOf(list.get(0).getDisplayName().getString().replaceAll("[^0-9]", ""));
-        }
-        return list.subList(0, Math.min(list.size(), 80)).size();
     }
 
     private double getItemDelay(int base, long delay)

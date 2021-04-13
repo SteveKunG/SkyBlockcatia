@@ -44,7 +44,6 @@ import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.screen.inventory.ChestScreen;
-import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.scoreboard.Score;
@@ -58,11 +57,9 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.RenderNameplateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -119,7 +116,6 @@ public class SkyBlockEventHandler
     public static boolean foundSkyBlockPack;
     public static String skyBlockPackResolution = "16";
     public static SBLocation SKY_BLOCK_LOCATION = SBLocation.YOUR_ISLAND;
-    public static String SKYBLOCK_AMPM = "";
     public static float dragonHealth;
     public static boolean otherPlayerIsland;
     private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = Lists.newArrayList();
@@ -215,15 +211,6 @@ public class SkyBlockEventHandler
                         ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
                         String scoreText = CUSTOM_FORMATTING_CODE_PATTERN.matcher(ScorePlayerTeam.func_237500_a_(scorePlayerTeam, new StringTextComponent(score1.getPlayerName())).getString()).replaceAll("");
                         String textNoSpecial = scoreText.replaceAll("[^a-z A-Z:0-9/'()]", "");
-
-                        if (textNoSpecial.endsWith("am "))
-                        {
-                            SkyBlockEventHandler.SKYBLOCK_AMPM = " AM";
-                        }
-                        else if (textNoSpecial.endsWith("pm "))
-                        {
-                            SkyBlockEventHandler.SKYBLOCK_AMPM = " PM";
-                        }
 
                         for (SBLocation location : SBLocation.VALUES)
                         {
@@ -805,24 +792,6 @@ public class SkyBlockEventHandler
             }
         }
         catch (Exception e) {}
-    }
-
-    @SubscribeEvent // TODO Remove later
-    public void onRenderNameplate(RenderNameplateEvent event)
-    {
-        if (isSkyBlock && event.getEntity() instanceof RemoteClientPlayerEntity && event.getEntity().isInvisible())
-        {
-            event.setResult(Result.ALLOW);
-        }
-        if (event.getEntity() instanceof ArmorStandEntity && event.getEntity().hasCustomName())
-        {
-            String name = event.getEntity().getCustomName().getString();
-
-            if (name.contains("Sven Pup"))
-            {
-                event.setResult(Result.DENY);
-            }
-        }
     }
 
     /**
