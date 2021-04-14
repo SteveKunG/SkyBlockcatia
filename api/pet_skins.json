@@ -278,5 +278,19 @@
         "color": "dark_purple",
         "uuid": "83abf023-37cc-3058-a9ff-c8d46cb57a2b",
         "texture": "1bde55ed54cb5c87661b86c349186a9d5baffb3cb934b449a2d329e399d34bf"
+    },
+    {
+        "skin": "RABBIT_AQUAMARINE",
+        "displayName": "Aquamarine Rabbit",
+        "color": "blue",
+        "uuid": "9217de73-e2db-335f-acbd-c572693c71d2",
+        "texture": "35a2119d122961852c010c1007ab2aff95b4bbeb74407463f6d2e1ff0792c812"
+    },
+    {
+        "skin": "RABBIT_ROSE",
+        "displayName": "Rose Rabbit",
+        "color": "blue",
+        "uuid": "a0482a4d-dc98-3654-855c-21a66508cb72",
+        "texture": "d7cddf5b20cb50d6600e5333c6bb3fb15b4741f17e3675fc2bfc09c2cd09e619"
     }
 ]
