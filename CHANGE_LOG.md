@@ -1,20 +1,20 @@
 # Change Log
 
-* + Added alternate commands
-* + Added Skyblock Pets shortcut key
-* + Added shortcut key for HotM command
-* + Added exact time for Experimentation Table/Forge
-* + Added new pet items support
-* + Added Mithril Golem pet support in API Viewer
-* + Added Mithril Ore support for collection/minion/sack
-* + Added new stats in API Viewer
-* + Added Dwarven Mines locations
-* + Added missing pet item that upgrade pet rarity
-* + Added support for Tier 12 crafted minions in API Viewer
-* + Added support for skill cap and skill level 60
-* * Increased sack item count in API Viewer
-* * Minor performance improved when load player profile for first time
-* * Fixed wrong usage set toast value for pet leveling up, close #54
-* * Fixed Skyblock location checker
-* * Fixed 'MixinFontRendererHook' not applied when Patcher loaded
-* - Removed 'disableReequipAnimation'
+* + Added New Pet support - Grandma Wolf
+* + Added Runes display in Sacks
+* + Added Enchanted Item form in Sacks
+* + Added View API button to island guests
+* + Added Display Realtime Ping on player list
+* + Added Tier 12 Revenant Minion support
+* * Store player profiles into cache to prevent viewing API twice
+* * Make Titanium Ore enchanted in sacks
+* * Update max fairy souls
+* * Disable custom font color when Smooth Font mod loaded, closed #74
+* - Removed Automatic open maddox menu
+* - Removed Ignore Bush Hitbox
+* - Removed Ignore interact with invisible armor stand
+* - Removed prevent item right clicking
+* - Removed Mineable Hitbox
+* - Removed Prevent Scroll Hotbar while fighting dragon
+* - Removed Open Player Inventory when riding a horse
+* - Removed all indicatia features
