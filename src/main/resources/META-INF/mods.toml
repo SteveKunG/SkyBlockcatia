@@ -31,13 +31,13 @@ logoFile="logo.png"
 [[dependencies.skyblockcatia]]
     modId="stevekungs_lib"
     mandatory=true
-    versionRange="[4.0.2,)"
+    versionRange="[4.0.4,)"
     ordering="NONE"
     side="CLIENT"
 
 [[dependencies.skyblockcatia]]
     modId="indicatia"
     mandatory=false
-    versionRange="[4.0.2,)"
+    versionRange="[4.0.4,)"
     ordering="NONE"
     side="CLIENT"
