@@ -33,7 +33,9 @@
         "debug.MixinSharedConstants",
         "optifine.renderer.tileentity.MixinItemStackTileEntityRendererOptifine",
         "fixes.MixinCommandSuggestionHelper",
+        "fixes.MixinEntityDataManager",
         "fixes.MixinFilterList",
+        "fixes.MixinScoreboard",
         "fixes.MixinSocialInteractionsScreen"
     ],
     "injectors": {
