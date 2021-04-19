@@ -1,0 +1,473 @@
+{
+    "unique_minions": 594,
+    "crafted_minions": [
+        {
+            "count": 0,
+            "slot": 5
+        },
+        {
+            "count": 5,
+            "slot": 6
+        },
+        {
+            "count": 15,
+            "slot": 7
+        },
+        {
+            "count": 30,
+            "slot": 8
+        },
+        {
+            "count": 50,
+            "slot": 9
+        },
+        {
+            "count": 75,
+            "slot": 10
+        },
+        {
+            "count": 100,
+            "slot": 11
+        },
+        {
+            "count": 125,
+            "slot": 12
+        },
+        {
+            "count": 150,
+            "slot": 13
+        },
+        {
+            "count": 175,
+            "slot": 14
+        },
+        {
+            "count": 200,
+            "slot": 15
+        },
+        {
+            "count": 225,
+            "slot": 16
+        },
+        {
+            "count": 250,
+            "slot": 17
+        },
+        {
+            "count": 275,
+            "slot": 18
+        },
+        {
+            "count": 300,
+            "slot": 19
+        },
+        {
+            "count": 350,
+            "slot": 20
+        },
+        {
+            "count": 400,
+            "slot": 21
+        },
+        {
+            "count": 450,
+            "slot": 22
+        },
+        {
+            "count": 500,
+            "slot": 23
+        },
+        {
+            "count": 550,
+            "slot": 24
+        },
+        {
+            "count": 600,
+            "slot": 25
+        }
+    ],
+    "type": [
+        {
+            "type": "ACACIA",
+            "category": "FORAGING",
+            "displayName": "Acacia Minion",
+            "uuid": "ec02b209-c96d-3c47-9ddf-e5fcb00bb6b4",
+            "texture": "42183eaf5b133b838db13d145247e389ab4b4f33c67846363792dc3d82b524c0"
+        },
+        {
+            "type": "BIRCH",
+            "category": "FORAGING",
+            "displayName": "Birch Minion",
+            "uuid": "efc6ffa9-3a7a-3e77-9eda-c70dcb8c20b9",
+            "texture": "eb74109dbb88178afb7a9874afc682904cedb3df75978a51f7beeb28f924251"
+        },
+        {
+            "type": "BLAZE",
+            "category": "COMBAT",
+            "displayName": "Blaze Minion",
+            "uuid": "f33a5de3-01a4-3b99-895f-c99c680ba735",
+            "texture": "3208fbd64e97c6e00853d36b3a201e4803cae43dcbd6936a3cece050912e1f20"
+        },
+        {
+            "type": "CACTUS",
+            "category": "FARMING",
+            "displayName": "Cactus Minion",
+            "uuid": "78b57eb1-ea68-3072-a861-9c89a2f467cd",
+            "texture": "ef93ec6e67a6cd272c9a9684b67df62584cb084a265eee3cde141d20e70d7d72"
+        },
+        {
+            "type": "CARROT",
+            "category": "FARMING",
+            "displayName": "Carrot Minion",
+            "uuid": "3a394733-b862-3676-ab4f-60fca79bd18c",
+            "texture": "4baea990b45d330998cb0c1f8515c27b24f93bff1df0db056e647f8200d03b9d"
+        },
+        {
+            "type": "CAVESPIDER",
+            "category": "COMBAT",
+            "displayName": "Cave Spider Minion",
+            "uuid": "b5b999b2-ec38-38ae-b1c8-c62ba9cc03bb",
+            "texture": "5d815df973bcd01ee8dfdb3bd74f0b7cb8fef2a70559e4faa5905127bbb4a435"
+        },
+        {
+            "type": "CHICKEN",
+            "category": "FARMING",
+            "displayName": "Chicken Minion",
+            "uuid": "f01dbc43-b3e0-3766-a03f-c5add6b794d3",
+            "texture": "a04b7da13b0a97839846aa5648f5ac6736ba0ca9fbf38cd366916e417153fd7f"
+        },
+        {
+            "type": "CLAY",
+            "category": "FISHING",
+            "displayName": "Clay Minion",
+            "uuid": "1f9105c0-7873-3e6d-ae1a-a9a5ca044733",
+            "texture": "af9b312c8f53da289060e6452855072e07971458abbf338ddec351e16c171ff8"
+        },
+        {
+            "type": "COAL",
+            "category": "MINING",
+            "displayName": "Coal Minion",
+            "uuid": "304f13a1-ca59-3db9-8194-68d1c07352d1",
+            "texture": "425b8d2ea965c780652d29c26b1572686fd74f6fe6403b5a3800959feb2ad935",
+            "has_tier_12": true
+        },
+        {
+            "type": "COBBLESTONE",
+            "category": "MINING",
+            "displayName": "Cobblestone Minion",
+            "uuid": "44f3d931-5b9a-35a1-a84b-669755c7c7ee",
+            "texture": "2f93289a82bd2a06cbbe61b733cfdc1f1bd93c4340f7a90abd9bdda774109071",
+            "has_tier_12": true
+        },
+        {
+            "type": "COCOA",
+            "category": "FARMING",
+            "displayName": "Cocoa Minion",
+            "uuid": "a1448e51-e34a-3a25-a6cc-fdb3f834ca81",
+            "texture": "acb680e96f6177cd8ffaf27e9625d8b544d720afc50738801818d0e745c0e5f7"
+        },
+        {
+            "type": "COW",
+            "category": "FARMING",
+            "displayName": "Cow Minion",
+            "uuid": "65247dc3-18db-3b4a-a131-ce575839a782",
+            "texture": "c2fd8976e1b64aebfd38afbe62aa1429914253df3417ace1f589e5cf45fbd717"
+        },
+        {
+            "type": "CREEPER",
+            "category": "COMBAT",
+            "displayName": "Creeper Minion",
+            "uuid": "15fade4b-f08c-37f3-a9a4-f0faefb62a33",
+            "texture": "54a92c2f8c1b3774e80492200d0b2218d7b019314a73c9cb5b9f04cfcacec471"
+        },
+        {
+            "type": "DARK_OAK",
+            "category": "FORAGING",
+            "displayName": "Dark Oak Minion",
+            "uuid": "d1d45cb5-6e2d-3f9a-877d-f9acef04178f",
+            "texture": "5ecdc8d6b2b7e081ed9c36609052c91879b89730b9953adbc987e25bf16c5581"
+        },
+        {
+            "type": "DIAMOND",
+            "category": "MINING",
+            "displayName": "Diamond Minion",
+            "uuid": "50cb7221-fcc7-3450-a8ee-6d7593ebec22",
+            "texture": "2354bbe604dfe58bf92e7729730d0c8e37844e831ee3816d7e8427c27a1824a2",
+            "has_tier_12": true
+        },
+        {
+            "type": "EMERALD",
+            "category": "MINING",
+            "displayName": "Emerald Minion",
+            "uuid": "8383fe2e-6c76-32cf-8e5f-264b13de62ae",
+            "texture": "9bf57f3401b130c6b53808f2b1e119cc7b984622dac7077bbd53454e1f65bbf0",
+            "has_tier_12": true
+        },
+        {
+            "type": "ENDERMAN",
+            "category": "COMBAT",
+            "displayName": "Enderman Minion",
+            "uuid": "5a8f2068-aadc-3bd3-bbad-770759233c4e",
+            "texture": "e460d20ba1e9cd1d4cfd6d5fb0179ff41597ac6d2461bd7ccdb58b20291ec46e"
+        },
+        {
+            "type": "ENDER_STONE",
+            "category": "MINING",
+            "displayName": "End Stone Minion",
+            "uuid": "13276fea-088f-32f2-bf79-a3201607ec56",
+            "texture": "7994be3dcfbb4ed0a5a7495b7335af1a3ced0b5888b5007286a790767c3b57e6"
+        },
+        {
+            "type": "FISHING",
+            "category": "FISHING",
+            "displayName": "Fishing Minion",
+            "uuid": "7223a6bf-d320-3e0f-aad9-d3dcecc790ab",
+            "texture": "53ea0fd89524db3d7a3544904933830b4fc8899ef60c113d948bb3c4fe7aabb1"
+        },
+        {
+            "type": "FLOWER",
+            "category": "FORAGING",
+            "displayName": "Flower Minion",
+            "uuid": "ce005804-135c-3062-8c81-aae83ccd0da2",
+            "texture": "baa7c59b2f792d8d091aecacf47a19f8ab93f3fd3c48f6930b1c2baeb09e0f9b"
+        },
+        {
+            "type": "GHAST",
+            "category": "COMBAT",
+            "displayName": "Ghast Minion",
+            "uuid": "3d4096a7-cb00-3d44-8844-562317f13b3b",
+            "texture": "2478547d122ec83a818b46f3b13c5230429559e40c7d144d4ec225f92c1494b3"
+        },
+        {
+            "type": "GLOWSTONE",
+            "category": "MINING",
+            "displayName": "Glowstone Minion",
+            "uuid": "985fcfc1-6922-3fdf-8247-13ffd7def691",
+            "texture": "20f4d7c26b0310990a7d3a3b45948b95dd4ab407a16a4b6d3b7cb4fba031aeed"
+        },
+        {
+            "type": "GOLD",
+            "category": "MINING",
+            "displayName": "Gold Minion",
+            "uuid": "ef5b80f5-2ddc-3005-b441-784230573c60",
+            "texture": "f6da04ed8c810be29bba53c62e712d65cfb25238117b94d7e85a4615775bf14f",
+            "has_tier_12": true
+        },
+        {
+            "type": "GRAVEL",
+            "category": "MINING",
+            "displayName": "Gravel Minion",
+            "uuid": "b499f2a6-291f-3626-a36d-a888e4a2e424",
+            "texture": "7458507ed31cf9a38986ac8795173c609637f03da653f30483a721d3fbe602d"
+        },
+        {
+            "type": "ICE",
+            "category": "MINING",
+            "displayName": "Ice Minion",
+            "uuid": "017c5692-85da-306e-8013-a11fd5f74b59",
+            "texture": "e500064321b12972f8e5750793ec1c823da4627535e9d12feaee78394b86dabe"
+        },
+        {
+            "type": "IRON",
+            "category": "MINING",
+            "displayName": "Iron Minion",
+            "uuid": "785de520-c4f3-371c-88c8-c8f560bc4977",
+            "texture": "af435022cb3809a68db0fccfa8993fc1954dc697a7181494905b03fdda035e4a",
+            "has_tier_12": true
+        },
+        {
+            "type": "JUNGLE",
+            "category": "FORAGING",
+            "displayName": "Jungle Minion",
+            "uuid": "060c1801-f359-3603-ae39-d485ecd64e38",
+            "texture": "2fe73d981690c1be346a16331819c4e8800859fcdc3e5153718c6ad45861924c"
+        },
+        {
+            "type": "LAPIS",
+            "category": "MINING",
+            "displayName": "Lapis Minion",
+            "uuid": "7ef29dbe-89c9-3372-80c8-edf8955b285a",
+            "texture": "64fd97b9346c1208c1db3957530cdfc5789e3e65943786b0071cf2b2904a6b5c",
+            "has_tier_12": true
+        },
+        {
+            "type": "MAGMA_CUBE",
+            "category": "COMBAT",
+            "displayName": "Magma Cube Minion",
+            "uuid": "17531060-11bd-39c5-b2a4-899fb78d34e3",
+            "texture": "18c9a7a24da7e3182e4f62fa62762e21e1680962197c7424144ae1d2c42174f7"
+        },
+        {
+            "type": "MELON",
+            "category": "FARMING",
+            "displayName": "Melon Minion",
+            "uuid": "845dc766-7f65-3750-9807-461185f480ab",
+            "texture": "95d54539ac8d3fba9696c91f4dcc7f15c320ab86029d5c92f12359abd4df811e"
+        },
+        {
+            "type": "MITHRIL",
+            "category": "MINING",
+            "displayName": "Mithril Minion",
+            "uuid": "671ce3e7-e3d7-3add-86fb-2c7854f651ad",
+            "texture": "c62fa670ff8599b32ab344195ba15f3ef64c3a8aa8a37821c08375950cb74cd0",
+            "has_tier_12": true
+        },
+        {
+            "type": "MUSHROOM",
+            "category": "FARMING",
+            "displayName": "Mushroom Minion",
+            "uuid": "4c4116e2-193d-32a4-948b-39ae936ed909",
+            "texture": "4a3b58341d196a9841ef1526b367209cbc9f96767c24f5f587cf413d42b74a93"
+        },
+        {
+            "type": "NETHER_WARTS",
+            "category": "FARMING",
+            "displayName": "Nether Wart Minion",
+            "uuid": "b82584b7-49ba-32b8-b732-f14f160b7ff2",
+            "texture": "71a4620bb3459c1c2fa74b210b1c07b4a02254351f75173e643a0e009a63f558"
+        },
+        {
+            "type": "OAK",
+            "category": "FORAGING",
+            "displayName": "Oak Minion",
+            "uuid": "ab31254d-75fd-3a62-b681-a027d86090c7",
+            "texture": "57e4a30f361204ea9cded3fbff850160731a0081cc452cfe26aed48e97f6364b"
+        },
+        {
+            "type": "OBSIDIAN",
+            "category": "MINING",
+            "displayName": "Obsidian Minion",
+            "uuid": "58c0f4df-db55-3492-be5d-2e72f289aaa9",
+            "texture": "320c29ab966637cb9aecc34ee76d5a0130461e0c4fdb08cdaf80939fa1209102",
+            "has_tier_12": true
+        },
+        {
+            "type": "PIG",
+            "category": "FARMING",
+            "displayName": "Pig Minion",
+            "uuid": "d30f7d75-d0d0-3857-8c11-0ec0867eb91d",
+            "texture": "a9bb5f0c56408c73cfa412345c8fc51f75b6c7311ae60e7099c4781c48760562"
+        },
+        {
+            "type": "POTATO",
+            "category": "FARMING",
+            "displayName": "Potato Minion",
+            "uuid": "4a8b2791-3dd0-3376-9dbf-5683f3dac782",
+            "texture": "7dda35a044cb0374b516015d991a0f65bf7d0fb6566e350496642cf2059ff1d9"
+        },
+        {
+            "type": "PUMPKIN",
+            "category": "FARMING",
+            "displayName": "Pumpkin Minion",
+            "uuid": "a25aead0-758a-3ced-8153-84362a361c47",
+            "texture": "f3fb663e843a7da787e290f23c8af2f97f7b6f572fa59a0d4d02186db6eaabb7"
+        },
+        {
+            "type": "QUARTZ",
+            "category": "MINING",
+            "displayName": "Quartz Minion",
+            "uuid": "26774528-cfaf-398d-9e9c-e68e8761d1ed",
+            "texture": "d270093be62dfd3019f908043db570b5dfd366fd5345fccf9da340e75c701a60"
+        },
+        {
+            "type": "RABBIT",
+            "category": "FARMING",
+            "displayName": "Rabbit Minion",
+            "uuid": "fbb8165f-a72b-37b9-bde2-6d9dbd72ae3e",
+            "texture": "ef59c052d339bb6305cad370fd8c52f58269a957dfaf433a255597d95e68a373"
+        },
+        {
+            "type": "REDSTONE",
+            "category": "MINING",
+            "displayName": "Redstone Minion",
+            "uuid": "a4fff41c-bae4-393c-8d97-e98075ccb590",
+            "texture": "1edefcf1a89d687a0a4ecf1589977af1e520fc673c48a0434be426612e8faa67",
+            "has_tier_12": true
+        },
+        {
+            "type": "REVENANT",
+            "category": "COMBAT",
+            "displayName": "Revenant Minion",
+            "uuid": "b22f77c8-1454-392b-8c35-0e0b3d415499",
+            "texture": "a3dce8555923558d8d74c2a2b261b2b2d630559db54ef97ed3f9c30e9a20aba",
+            "has_tier_12": true
+        },
+        {
+            "type": "SAND",
+            "category": "MINING",
+            "displayName": "Sand Minion",
+            "uuid": "49a80bce-61b1-3f83-b2b4-5122c16a23fe",
+            "texture": "81f8e2ad021eefd1217e650e848b57622144d2bf8a39fbd50dab937a7eac10de"
+        },
+        {
+            "type": "SHEEP",
+            "category": "FARMING",
+            "displayName": "Sheep Minion",
+            "uuid": "dfd57392-0596-366f-82a9-cbf22a077651",
+            "texture": "fd15d4b8bce708f77f963f1b4e87b1b969fef1766a3e9b67b249c59d5e80e8c5"
+        },
+        {
+            "type": "SKELETON",
+            "category": "COMBAT",
+            "displayName": "Skeleton Minion",
+            "uuid": "67d71d08-9f30-3b31-87e7-5824bc3c9de2",
+            "texture": "2fe009c5cfa44c05c88e5df070ae2533bd682a728e0b33bfc93fd92a6e5f3f64"
+        },
+        {
+            "type": "SLIME",
+            "category": "COMBAT",
+            "displayName": "Slime Minion",
+            "uuid": "59e230be-99bd-33f5-a4d1-acc5ca825512",
+            "texture": "c95eced85db62c922724efca804ea0060c4a87fcdedf2fd5c4f9ac1130a6eb26"
+        },
+        {
+            "type": "SNOW",
+            "category": "MINING",
+            "displayName": "Snow Minion",
+            "uuid": "fde00899-094f-3ff8-81b8-253830a8d3e9",
+            "texture": "f6d180684c3521c9fc89478ba4405ae9ce497da8124fa0da5a0126431c4b78c3"
+        },
+        {
+            "type": "SPIDER",
+            "category": "COMBAT",
+            "displayName": "Spider Minion",
+            "uuid": "ff027ceb-6c80-33cf-a232-27b5c7790201",
+            "texture": "e77c4c284e10dea038f004d7eb43ac493de69f348d46b5c1f8ef8154ec2afdd0"
+        },
+        {
+            "type": "SPRUCE",
+            "category": "FORAGING",
+            "displayName": "Spruce Minion",
+            "uuid": "9d35ea53-93e3-3d03-a258-be6da1faa800",
+            "texture": "7ba04bfe516955fd43932dcb33bd5eac20b38a231d9fa8415b3fb301f60f7363"
+        },
+        {
+            "type": "SUGAR_CANE",
+            "category": "FARMING",
+            "displayName": "Sugar Cane Minion",
+            "uuid": "71eee614-7b18-3c47-9bd1-372477730016",
+            "texture": "2fced0e80f0d7a5d1f45a1a7217e6a99ea9720156c63f6efc84916d4837fabde"
+        },
+        {
+            "type": "TARANTULA",
+            "category": "COMBAT",
+            "displayName": "Tarantula Minion",
+            "uuid": "5715f21b-1a5f-3c8f-a831-23c71e80477f",
+            "texture": "97e86007064c9ce26eb4bad8ac9aa30aac309e70a9e0b615936318dea40a721"
+        },
+        {
+            "type": "WHEAT",
+            "category": "FARMING",
+            "displayName": "Wheat Minion",
+            "uuid": "81b06ed8-e9ec-34e2-b11f-234eb6e20318",
+            "texture": "bbc571c5527336352e2fee2b40a9edfa2e809f64230779aa01253c6aa535881b"
+        },
+        {
+            "type": "ZOMBIE",
+            "category": "COMBAT",
+            "displayName": "Zombie Minion",
+            "uuid": "c62d2e04-ed45-3718-9aac-75e93485d77a",
+            "texture": "196063a884d3901c41f35b69a8c9f401c61ac9f6330f964f80c35352c3e8bfb0"
+        }
+    ]
+}
