@@ -3079,9 +3079,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ALCHEMY, this.alchemyLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.TAMING, this.tamingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.CATACOMBS_DUNGEON, this.catacombsLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ZOMBIE_SLAYER, this.zombieSlayerLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.SPIDER_SLAYER, this.spiderSlayerLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.WOLF_SLAYER, this.wolfSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getZombie(), this.zombieSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getSpider(), this.spiderSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getWolf(), this.wolfSlayerLevel));
     }
 
     private BonusStatTemplate calculateSkillBonus(IBonusTemplate[] bonus, int skillLevel)
@@ -3960,8 +3960,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SBSlayers.Type type)
     {
         List<SkyBlockSlayerInfo> list = new ArrayList<>();
-        ExpProgress[] progress = type.getProgress();
-        JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase(Locale.ROOT));
+        String lowerType = type.name().toLowerCase(Locale.ROOT);
+        JsonElement slayer = element.getAsJsonObject().get(lowerType);
 
         if (slayer != null)
         {
@@ -3974,32 +3974,33 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 int slayerLvl = 0;
                 int levelToCheck = 0;
                 int xpToNextLvl = 0;
+                int maxLevel = SBSlayers.SLAYERS.getLeveling().get(lowerType).length;
                 boolean reachLimit = false;
 
-                for (ExpProgress skill : progress)
+                for (int i = 0; i < maxLevel; i++)
                 {
-                    int slayerXp = (int)skill.getXp();
+                    int slayerXp = SBSlayers.SLAYERS.getLeveling().get(lowerType)[i];
 
                     if (slayerXp <= playerSlayerXp)
                     {
-                        levelToCheck = skill.getLevel();
+                        levelToCheck = i + 1;
 
-                        if (levelToCheck < progress.length)
+                        if (levelToCheck < maxLevel)
                         {
-                            xpRequired = (int)progress[levelToCheck].getXp();
+                            xpRequired = SBSlayers.SLAYERS.getLeveling().get(lowerType)[levelToCheck];
                         }
                         ++slayerLvl;
                     }
                 }
 
-                if (levelToCheck < progress.length)
+                if (levelToCheck < maxLevel)
                 {
                     levelToCheck += 1;
                     xpToNextLvl = xpRequired - playerSlayerXp;
                 }
                 else
                 {
-                    levelToCheck = progress.length;
+                    levelToCheck = maxLevel;
                     reachLimit = true;
                 }
 

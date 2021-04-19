@@ -19,10 +19,7 @@ import com.stevekung.skyblockcatia.event.handler.*;
 import com.stevekung.skyblockcatia.gui.GuiChatExtended;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
-import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
-import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
-import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
+import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 
@@ -158,6 +155,7 @@ public class SkyBlockcatiaMod
 
             SBMinions.getMinionSlotFromRemote();
             SBPets.getPets();
+            SBSlayers.getSlayers();
             SBSkills.getSkillsCap();
         }
         catch (Throwable e)
