@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.util.Locale;
 
 import com.google.gson.Gson;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 
 public class ExpProgress
 {
@@ -36,7 +36,7 @@ public class ExpProgress
 
     public static ExpProgress[] getXpProgressFromRemote(Type type) throws Exception
     {
-        BufferedReader in = DataGetter.get("api/exp_progress/" + type.toString().toLowerCase(Locale.ROOT) + ".json");
+        BufferedReader in = DataUtils.get("api/exp_progress/" + type.toString().toLowerCase(Locale.ROOT) + ".json");
         return GSON.fromJson(in, ExpProgress[].class);
     }
 

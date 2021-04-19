@@ -77,7 +77,7 @@ public class SkyBlockcatiaMod
         {
             try
             {
-                BufferedReader reader = DataGetter.get("SKYBLOCKCATIA_USERNAME");
+                BufferedReader reader = DataUtils.get("SKYBLOCKCATIA_USERNAME");
                 String inputLine;
 
                 while ((inputLine = reader.readLine()) != null)

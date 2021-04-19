@@ -10,7 +10,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.LoggerIN;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
@@ -62,7 +62,7 @@ public class SBAPIUtils
     {
         try
         {
-            MAX_FAIRY_SOULS = GSON.fromJson(DataGetter.get("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
+            MAX_FAIRY_SOULS = GSON.fromJson(DataUtils.get("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
         }
         catch (Exception e)
         {
@@ -75,7 +75,7 @@ public class SBAPIUtils
     {
         try
         {
-            PACKS = GSON.fromJson(DataGetter.get("pack_name.json"), SupportedPack.class);
+            PACKS = GSON.fromJson(DataUtils.get("pack_name.json"), SupportedPack.class);
         }
         catch (Exception e)
         {

@@ -3,7 +3,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.io.BufferedReader;
 
 import com.google.gson.Gson;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -18,7 +18,7 @@ public class SBSkills
 
     public static void getSkillsCap() throws Exception
     {
-        BufferedReader in = DataGetter.get("api/default_skills_cap.json");
+        BufferedReader in = DataUtils.get("api/default_skills_cap.json");
         SKILL_CAP = GSON.fromJson(in, SkillCap.class);
     }
 

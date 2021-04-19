@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class DataGetter
+public class DataUtils
 {
     public static BufferedReader get(String path) throws Exception
     {
