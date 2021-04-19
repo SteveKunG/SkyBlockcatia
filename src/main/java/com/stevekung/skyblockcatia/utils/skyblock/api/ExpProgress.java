@@ -15,11 +15,6 @@ public class ExpProgress
     public static ExpProgress[] SPIDER_SLAYER;
     public static ExpProgress[] WOLF_SLAYER;
     public static ExpProgress[] RUNECRAFTING;
-    public static ExpProgress[] PET_COMMON;
-    public static ExpProgress[] PET_UNCOMMON;
-    public static ExpProgress[] PET_RARE;
-    public static ExpProgress[] PET_EPIC;
-    public static ExpProgress[] PET_LEGENDARY;
     public static ExpProgress[] DUNGEON;
     private static final Gson GSON = new Gson();
 
@@ -52,11 +47,6 @@ public class ExpProgress
         SPIDER_SLAYER,
         WOLF_SLAYER,
         RUNECRAFTING,
-        PET_0,
-        PET_1,
-        PET_2,
-        PET_3,
-        PET_4,
         DUNGEON;
     }
 }

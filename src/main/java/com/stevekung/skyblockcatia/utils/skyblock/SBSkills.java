@@ -38,22 +38,22 @@ public class SBSkills
         private final String name;
         private final ItemStack itemStack;
 
-        private Type(String name)
+        Type(String name)
         {
             this(name, Blocks.air);
         }
 
-        private Type(String name, Block block)
+        Type(String name, Block block)
         {
             this(name, new ItemStack(block));
         }
 
-        private Type(String name, Item item)
+        Type(String name, Item item)
         {
             this(name, new ItemStack(item));
         }
 
-        private Type(String name, ItemStack itemStack)
+        Type(String name, ItemStack itemStack)
         {
             this.name = name;
             this.itemStack = itemStack;
@@ -78,7 +78,7 @@ public class SBSkills
         {
             for (SBSkills.Type type : SBSkills.Type.values())
             {
-                if (type.name.equals(name))
+                if (type.name().equals(name))
                 {
                     return type;
                 }

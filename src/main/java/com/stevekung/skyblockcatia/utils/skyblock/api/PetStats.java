@@ -32,15 +32,11 @@ public class PetStats
 
     public void setClientStatByType(SBPets.Type type, int level, boolean active)
     {
-        switch (type)
+        if (type.getType().equals("MONKEY"))
         {
-        case MONKEY:
             this.setAxeCooldown(active ? level * 0.5D : 0);
             System.out.println("axe cooldown: " + this.axeCooldown);
             System.out.println("real axe cooldown: " + this.getAxeCooldown(2000));
-            break;
-        default:
-            break;
         }
     }
 
@@ -145,7 +141,7 @@ public class PetStats
                         {
                             try
                             {
-                                heldItem = SBPets.HeldItem.valueOf(heldItemObj.getAsString());
+                                heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
                             }
                             catch (Exception e) {e.printStackTrace();}
                         }
@@ -153,16 +149,16 @@ public class PetStats
                         SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
                         String petType = element.getAsJsonObject().get("type").getAsString();
 
-                        if (heldItem != null && heldItem.isUpgradeToNextRarity())
+                        if (heldItem != null && heldItem.isUpgrade())
                         {
-                            tier = SBPets.Tier.values()[Math.min(SBPets.Tier.values().length - 1, tier.ordinal() + 1)];
+                            tier = tier.getNextRarity();
                         }
 
                         int level = PetStats.checkPetLevel(exp, tier);
 
                         try
                         {
-                            SBPets.Type type = SBPets.Type.valueOf(petType);
+                            SBPets.Type type = SBPets.PETS.getTypeByName(petType);
                             PetStats.INSTANCE.setClientStatByType(type, level, active);
                         }
                         catch (Exception e) {e.printStackTrace();}
@@ -175,29 +171,30 @@ public class PetStats
 
     private static int checkPetLevel(double petExp, SBPets.Tier tier)
     {
-        ExpProgress[] progress = tier.getProgression();
+        int index = SBPets.PETS.getIndex().get(tier.name());
         int xpRequired = 0;
         int currentLvl = 0;
         double xpTotal = 0;
         double xpToNextLvl = 0;
         double currentXp = 0;
 
-        for (int x = 0; x < progress.length; ++x)
+        for (int i = index; i < 99 + index; i++)
         {
             if (petExp >= xpTotal)
             {
-                xpTotal += progress[x].getXp();
-                currentLvl = x + 1;
-                xpRequired = (int)progress[x].getXp();
+                int level = SBPets.PETS.getLeveling()[i];
+                xpTotal += level;
+                currentLvl = i - index + 1;
+                xpRequired = level;
             }
         }
 
-        if (currentLvl < progress.length)
+        if (currentLvl < 100)
         {
             xpToNextLvl = MathHelper.ceiling_double_int(xpTotal - petExp);
             currentXp = xpRequired - xpToNextLvl;
         }
-        else if (currentLvl == progress.length)
+        else if (currentLvl == 100)
         {
             xpToNextLvl = MathHelper.ceiling_double_int(Math.abs(xpTotal - petExp));
             currentXp = xpRequired - xpToNextLvl;
@@ -205,7 +202,7 @@ public class PetStats
 
         if (petExp >= xpTotal || currentXp >= xpRequired)
         {
-            currentLvl = progress.length + 1;
+            currentLvl = 100;
         }
         return currentLvl;
     }

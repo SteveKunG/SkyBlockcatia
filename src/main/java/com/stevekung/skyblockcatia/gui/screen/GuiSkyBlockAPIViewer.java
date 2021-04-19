@@ -36,7 +36,6 @@ import com.stevekung.skyblockcatia.integration.textoverflow.TooltipOverflow;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
-import com.stevekung.skyblockcatia.utils.skyblock.SBPets.PetSkin;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 
 import net.minecraft.client.Minecraft;
@@ -2814,7 +2813,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     try
                     {
-                        heldItem = SBPets.HeldItem.valueOf(heldItemObj.getAsString());
+                        heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
                     }
                     catch (Exception e)
                     {
@@ -2827,7 +2826,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 NBTTagList list = new NBTTagList();
 
-                if (heldItem != null && heldItem.isUpgradeToNextRarity())
+                if (heldItem != null && heldItem.isUpgrade())
                 {
                     tier = tier.getNextRarity();
                 }
@@ -2837,11 +2836,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 try
                 {
                     EnumChatFormatting rarity = tier.getTierColor();
-                    SBPets.Type type = SBPets.Type.valueOf(petType);
+                    SBPets.Type type = SBPets.PETS.getTypeByName(petType);
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkillType().getName() + " Pet"));
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet"));
                     list.appendTag(new NBTTagString(""));
                     list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
 
@@ -2859,9 +2858,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     }
                     if (skin != null)
                     {
-                        for (PetSkin petSkin : SBPets.PET_SKIN)
+                        for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
                         {
-                            if (skin.equals(petSkin.getSkin()))
+                            if (skin.equals(petSkin.getType()))
                             {
                                 itemStack = RenderUtils.setSkullSkin(itemStack.copy(), petSkin.getUUID(), petSkin.getTexture());
                                 skinName = petSkin.getColor() + petSkin.getName();
@@ -2872,12 +2871,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     }
                     if (heldItem != null)
                     {
-                        String heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.toString().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
-
-                        if (heldItem.getAltName() != null)
-                        {
-                            heldItemName = heldItem.getColor() + heldItem.getAltName();
-                        }
+                        String heldItemName = EnumChatFormatting.getValueByName(heldItem.getColor()) + heldItem.getName();
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + heldItemName));
                     }
                     else
@@ -2941,7 +2935,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     private SBPets.Info checkPetLevel(double petExp, SBPets.Tier tier)
     {
-        ExpProgress[] progress = tier.getProgression();
+        int index = SBPets.PETS.getIndex().get(tier.name());
         int totalPetTypeXp = 0;
         int xpRequired = 0;
         int currentLvl = 0;
@@ -2950,25 +2944,26 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         double xpToNextLvl = 0;
         double currentXp = 0;
 
-        for (int x = 0; x < progress.length; ++x)
+        for (int i = index; i < 99 + index; i++)
         {
-            totalPetTypeXp += progress[x].getXp();
+            int level = SBPets.PETS.getLeveling()[i];
+            totalPetTypeXp += level;
 
             if (petExp >= xpTotal)
             {
-                xpTotal += progress[x].getXp();
-                currentLvl = x + 1;
-                levelToCheck = progress[x].getLevel() + 1;
-                xpRequired = (int)progress[x].getXp();
+                xpTotal += level;
+                currentLvl = i - index + 1;
+                levelToCheck = currentLvl + 1;
+                xpRequired = level;
             }
         }
 
-        if (currentLvl < progress.length)
+        if (currentLvl < 100)
         {
             xpToNextLvl = MathHelper.ceiling_double_int(xpTotal - petExp);
             currentXp = xpRequired - xpToNextLvl;
         }
-        else if (currentLvl == progress.length)
+        else if (currentLvl == 100)
         {
             xpToNextLvl = MathHelper.ceiling_double_int(Math.abs(xpTotal - petExp));
             currentXp = xpRequired - xpToNextLvl;
@@ -2976,7 +2971,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         if (petExp >= xpTotal || currentXp >= xpRequired)
         {
-            currentLvl = progress.length + 1;
+            currentLvl = 100;
             xpRequired = 0;
         }
         return new SBPets.Info(currentLvl, levelToCheck, currentXp, xpRequired, petExp, totalPetTypeXp);
@@ -4795,7 +4790,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         private final int id;
 
-        private ViewButton(int id)
+        ViewButton(int id)
         {
             this.id = id;
         }
@@ -4822,7 +4817,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         private final int id;
 
-        private OthersViewButton(int id)
+        OthersViewButton(int id)
         {
             this.id = id;
         }
@@ -4849,7 +4844,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         private final int id;
 
-        private BasicInfoViewButton(int id)
+        BasicInfoViewButton(int id)
         {
             this.id = id;
         }
