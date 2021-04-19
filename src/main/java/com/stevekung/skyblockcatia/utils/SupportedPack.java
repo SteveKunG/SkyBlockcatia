@@ -30,7 +30,7 @@ public class SupportedPack
 
     public String getType()
     {
-        return type;
+        return this.type;
     }
 
     public String getName()
