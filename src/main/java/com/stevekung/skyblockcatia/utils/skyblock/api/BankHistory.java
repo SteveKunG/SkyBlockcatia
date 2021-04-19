@@ -64,7 +64,7 @@ public class BankHistory
         public final String name;
         public final TextFormatting color;
 
-        private Action(String name, TextFormatting color)
+        Action(String name, TextFormatting color)
         {
             this.name = name;
             this.color = color;

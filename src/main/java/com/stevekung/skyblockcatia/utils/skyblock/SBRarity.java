@@ -32,7 +32,7 @@ public enum SBRarity
         }
     }
 
-    private SBRarity(String name, TextFormatting baseColor, float[] colorToRender)
+    SBRarity(String name, TextFormatting baseColor, float[] colorToRender)
     {
         this.name = name;
         this.baseColor = baseColor;

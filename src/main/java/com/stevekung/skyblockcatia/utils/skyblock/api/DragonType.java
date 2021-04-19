@@ -15,7 +15,7 @@ public enum DragonType
     private final float maxHealth;
     private final String shortName;
 
-    private DragonType(float maxHealth, String shortName)
+    DragonType(float maxHealth, String shortName)
     {
         this.maxHealth = maxHealth;
         this.shortName = shortName;

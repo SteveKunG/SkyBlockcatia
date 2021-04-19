@@ -18,7 +18,7 @@ public enum DwarvenSacks
     private final ItemStack baseItem;
     private final ITextComponent displayName;
 
-    private DwarvenSacks(ItemStack baseItem, ITextComponent displayName)
+    DwarvenSacks(ItemStack baseItem, ITextComponent displayName)
     {
         this.baseItem = baseItem;
         this.displayName = displayName;

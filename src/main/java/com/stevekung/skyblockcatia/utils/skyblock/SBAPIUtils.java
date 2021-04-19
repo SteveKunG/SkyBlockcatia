@@ -64,12 +64,12 @@ public class SBAPIUtils
         private final String head;
         private final String tail;
 
-        private APIUrl(String head)
+        APIUrl(String head)
         {
             this(head, "");
         }
 
-        private APIUrl(String head, String tail)
+        APIUrl(String head, String tail)
         {
             this.head = head;
             this.tail = tail;

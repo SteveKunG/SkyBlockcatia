@@ -19,7 +19,7 @@ public class SBSlayers
         private final String name;
         private final ExpProgress[] progress;
 
-        private Type(String name, ExpProgress[] progress)
+        Type(String name, ExpProgress[] progress)
         {
             this.name = name;
             this.progress = progress;
@@ -45,7 +45,7 @@ public class SBSlayers
         private final ITextComponent displayName;
         private final IItemProvider baseItem;
 
-        private Drops(ITextComponent displayName, IItemProvider baseItem)
+        Drops(ITextComponent displayName, IItemProvider baseItem)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;

@@ -15,7 +15,7 @@ public enum CandySacks
     private final ItemStack baseItem;
     private final ITextComponent displayName;
 
-    private CandySacks(ItemStack baseItem, ITextComponent displayName)
+    CandySacks(ItemStack baseItem, ITextComponent displayName)
     {
         this.baseItem = baseItem;
         this.displayName = displayName;

@@ -16,7 +16,7 @@ public enum ToastMode
     private final int id;
     private final String key;
 
-    private ToastMode(int id, String key)
+    ToastMode(int id, String key)
     {
         this.id = id;
         this.key = key;

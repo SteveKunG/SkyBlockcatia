@@ -16,7 +16,7 @@ public enum HitboxRenderMode
     private final int id;
     private final String key;
 
-    private HitboxRenderMode(int id, String key)
+    HitboxRenderMode(int id, String key)
     {
         this.id = id;
         this.key = key;

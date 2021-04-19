@@ -36,17 +36,17 @@ public class SBSkills
         private final String name;
         private final ItemStack itemStack;
 
-        private Type(String name)
+        Type(String name)
         {
             this(name, ItemStack.EMPTY);
         }
 
-        private Type(String name, IItemProvider item)
+        Type(String name, IItemProvider item)
         {
             this(name, new ItemStack(item));
         }
 
-        private Type(String name, ItemStack itemStack)
+        Type(String name, ItemStack itemStack)
         {
             this.name = name;
             this.itemStack = itemStack;
@@ -71,7 +71,7 @@ public class SBSkills
         {
             for (SBSkills.Type type : SBSkills.Type.values())
             {
-                if (type.name.equals(name))
+                if (type.name().equals(name))
                 {
                     return type;
                 }

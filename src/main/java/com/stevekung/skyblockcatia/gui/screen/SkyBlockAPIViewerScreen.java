@@ -2411,7 +2411,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     try
                     {
-                        heldItem = SBPets.HeldItem.valueOf(heldItemObj.getAsString());
+                        heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
                         addEmpty = heldItem != null;
                     }
                     catch (Exception e)
@@ -2426,7 +2426,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 String petType = element.getAsJsonObject().get("type").getAsString();
                 ListNBT list = new ListNBT();
 
-                if (heldItem != null && heldItem.isUpgradeToNextRarity())
+                if (heldItem != null && heldItem.isUpgrade())
                 {
                     tier = tier.getNextRarity();
                 }
@@ -2436,11 +2436,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 try
                 {
                     TextFormatting rarity = tier.getTierColor();
-                    SBPets.Type type = SBPets.Type.valueOf(petType);
+                    SBPets.Type type = SBPets.PETS.getTypeByName(petType);
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setDisplayName(TextComponentUtils.component(TextFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))));
-                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.DARK_GRAY + type.getType().getName() + " Pet")));
+                    list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.DARK_GRAY + type.getSkill().getName() + " Pet")));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson("")));
                     list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + (level.getCurrentPetLevel() < 100 ? TextFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + TextFormatting.YELLOW + level.getPercent() : level.getPercent()))));
 
@@ -2458,9 +2458,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     if (skin != null)
                     {
-                        for (SBPets.Skin petSkin : SBPets.PET_SKIN)
+                        for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
                         {
-                            if (skin.equals(petSkin.getSkin()))
+                            if (skin.equals(petSkin.getType()))
                             {
                                 ItemStack tmp = itemStack.copy();
                                 itemStack = ItemUtils.setSkullSkin(itemStack, petSkin.getUUID(), petSkin.getTexture());
@@ -2473,12 +2473,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     if (heldItem != null)
                     {
-                        String heldItemName = heldItem.getColor() + WordUtils.capitalize(heldItem.toString().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
-
-                        if (heldItem.getAltName() != null)
-                        {
-                            heldItemName = heldItem.getColor() + heldItem.getAltName();
-                        }
+                        String heldItemName = TextFormatting.getValueByName(heldItem.getColor()) + heldItem.getName();
                         list.add(StringNBT.valueOf(TextComponentUtils.toJson(TextFormatting.RESET.toString() + TextFormatting.GRAY + "Held Item: " + heldItemName)));
                     }
                     else
@@ -2542,7 +2537,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private SBPets.Info checkPetLevel(double petExp, SBPets.Tier tier)
     {
-        ExpProgress[] progress = tier.getProgression();
+        int index = SBPets.PETS.getIndex().get(tier.name());
         int totalPetTypeXp = 0;
         int xpRequired = 0;
         int currentLvl = 0;
@@ -2551,25 +2546,26 @@ public class SkyBlockAPIViewerScreen extends Screen
         double xpToNextLvl = 0;
         double currentXp = 0;
 
-        for (int x = 0; x < progress.length; ++x)
+        for (int i = index; i < 99 + index; i++)
         {
-            totalPetTypeXp += progress[x].getXp();
+            int level = SBPets.PETS.getLeveling()[i];
+            totalPetTypeXp += level;
 
             if (petExp >= xpTotal)
             {
-                xpTotal += progress[x].getXp();
-                currentLvl = x + 1;
-                levelToCheck = progress[x].getLevel() + 1;
-                xpRequired = (int)progress[x].getXp();
+                xpTotal += level;
+                currentLvl = i - index + 1;
+                levelToCheck = currentLvl + 1;
+                xpRequired = level;
             }
         }
 
-        if (currentLvl < progress.length)
+        if (currentLvl < 100)
         {
             xpToNextLvl = MathHelper.ceil(xpTotal - petExp);
             currentXp = xpRequired - xpToNextLvl;
         }
-        else if (currentLvl == progress.length)
+        else if (currentLvl == 100)
         {
             xpToNextLvl = MathHelper.ceil(Math.abs(xpTotal - petExp));
             currentXp = xpRequired - xpToNextLvl;
@@ -2577,7 +2573,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (petExp >= xpTotal || currentXp >= xpRequired)
         {
-            currentLvl = progress.length + 1;
+            currentLvl = 100;
             xpRequired = 0;
         }
         return new SBPets.Info(currentLvl, levelToCheck, currentXp, xpRequired, petExp, totalPetTypeXp);
@@ -3123,7 +3119,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         double magicFindBase = 0;
 
-        for (PlayerStatsBonus.PetsScore score : PlayerStatsBonus.PETS_SCORE)
+        for (SBPets.Score score : SBPets.PETS.getScore())
         {
             int scoreToCheck = score.getScore();
             double magicFind = score.getMagicFind();

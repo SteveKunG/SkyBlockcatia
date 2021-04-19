@@ -16,7 +16,7 @@ public class HypixelRank
         private final String name;
         private final TextFormatting color;
 
-        private Base(String name, TextFormatting color)
+        Base(String name, TextFormatting color)
         {
             this.name = name;
             this.color = color;
@@ -44,7 +44,7 @@ public class HypixelRank
         private final String name;
         private final TextFormatting color;
 
-        private Type(String name, TextFormatting color)
+        Type(String name, TextFormatting color)
         {
             this.name = name;
             this.color = color;

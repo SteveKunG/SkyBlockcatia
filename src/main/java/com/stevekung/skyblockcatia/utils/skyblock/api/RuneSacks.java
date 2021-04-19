@@ -43,7 +43,7 @@ public enum RuneSacks
     private final ItemStack baseItem;
     private final ITextComponent displayName;
 
-    private RuneSacks(ItemStack baseItem, ITextComponent displayName)
+    RuneSacks(ItemStack baseItem, ITextComponent displayName)
     {
         this.baseItem = baseItem;
         this.displayName = displayName;

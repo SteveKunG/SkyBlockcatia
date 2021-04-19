@@ -21,7 +21,6 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
     public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
     public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
-    public static PlayerStatsBonus.PetsScore[] PETS_SCORE;
 
     public static void getBonusFromRemote(Type type) throws Exception
     {
@@ -61,9 +60,6 @@ public class PlayerStatsBonus
             break;
         case TAMING:
             TAMING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Taming[].class);
-            break;
-        case PETS_SCORE:
-            PETS_SCORE = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.PetsScore[].class);
             break;
         case CATACOMBS_DUNGEON:
             CATACOMBS_DUNGEON = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.CatacombsDungeon[].class);
@@ -472,29 +468,6 @@ public class PlayerStatsBonus
         }
     }
 
-    public class PetsScore
-    {
-        private final int score;
-        @SerializedName("magic_find")
-        private final double magicFind;
-
-        public PetsScore(int score, double magicFind)
-        {
-            this.score = score;
-            this.magicFind = magicFind;
-        }
-
-        public int getScore()
-        {
-            return this.score;
-        }
-
-        public double getMagicFind()
-        {
-            return this.magicFind;
-        }
-    }
-
     public enum Type
     {
         FARMING("skill"),
@@ -508,13 +481,12 @@ public class PlayerStatsBonus
         CATACOMBS_DUNGEON("skill"),
         ZOMBIE_SLAYER("slayer"),
         SPIDER_SLAYER("slayer"),
-        WOLF_SLAYER("slayer"),
-        PETS_SCORE("misc");
+        WOLF_SLAYER("slayer");
 
         public static final Type[] VALUES = values();
         private final String path;
 
-        private Type(String path)
+        Type(String path)
         {
             this.path = path;
         }

@@ -12,7 +12,7 @@ public enum SBLocation
     public static final SBLocation[] VALUES = SBLocation.values();
     private final String location;
 
-    private SBLocation(String location)
+    SBLocation(String location)
     {
         this.location = location;
     }

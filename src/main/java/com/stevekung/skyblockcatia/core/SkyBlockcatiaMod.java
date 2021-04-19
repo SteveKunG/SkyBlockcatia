@@ -110,11 +110,6 @@ public class SkyBlockcatiaMod
             ExpProgress.SPIDER_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.SPIDER_SLAYER);
             ExpProgress.WOLF_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.WOLF_SLAYER);
             ExpProgress.RUNECRAFTING = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.RUNECRAFTING);
-            ExpProgress.PET_COMMON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_0);
-            ExpProgress.PET_UNCOMMON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_1);
-            ExpProgress.PET_RARE = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_2);
-            ExpProgress.PET_EPIC = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_3);
-            ExpProgress.PET_LEGENDARY = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.PET_4);
             ExpProgress.DUNGEON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.DUNGEON);
 
             for (PlayerStatsBonus.Type type : PlayerStatsBonus.Type.VALUES)
@@ -123,7 +118,7 @@ public class SkyBlockcatiaMod
             }
             SBAPIUtils.getFairySouls();
             SBMinions.getMinionSlotFromRemote();
-            SBPets.getPetSkins();
+            SBPets.getPets();
             SBSkills.getSkillsCap();
         }
         catch (Throwable e)

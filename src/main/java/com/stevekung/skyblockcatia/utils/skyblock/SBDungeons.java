@@ -21,7 +21,7 @@ public class SBDungeons
 
         private final String name;
 
-        private Type(String name)
+        Type(String name)
         {
             this.name = name;
         }
@@ -43,7 +43,7 @@ public class SBDungeons
         private final IItemProvider baseItem;
         private final boolean enchanted;
 
-        private Drops(ITextComponent displayName, IItemProvider baseItem, boolean enchanted)
+        Drops(ITextComponent displayName, IItemProvider baseItem, boolean enchanted)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;

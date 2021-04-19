@@ -552,7 +552,7 @@ public class SkyBlockEventHandler
                         {
                             String name = petLevelUpPattern.group("name");
                             String level = petLevelUpPattern.group("level");
-                            SBPets.Type type = SBPets.Type.valueOf(TextFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ROOT));
+                            SBPets.Type type = SBPets.PETS.getTypeByName(TextFormatting.getTextWithoutFormattingCodes(name).replace(" ", "_").toUpperCase(Locale.ROOT));
                             ItemStack itemStack = type.getPetItem();
                             itemStack.setDisplayName(TextComponentUtils.component(name));
                             NumericToast.addValueOrUpdate(this.mc.getToastGui(), ToastUtils.DropType.PET_LEVEL_UP, Integer.parseInt(level), itemStack, true, type);
