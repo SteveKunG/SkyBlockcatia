@@ -3520,7 +3520,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     {
         double magicFindBase = 0;
 
-        for (PlayerStatsBonus.PetsScore score : PlayerStatsBonus.PETS_SCORE)
+        for (SBPets.Score score : SBPets.PETS.getScore())
         {
             int scoreToCheck = score.getScore();
             double magicFind = score.getMagicFind();
