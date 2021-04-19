@@ -24,7 +24,7 @@ public class MixinMinecraft
     @Inject(method = "run()V", at = @At("HEAD"))
     private void run(CallbackInfo info)
     {
-        SBAPIUtils.getSupportedPackNames();
+        SBAPIUtils.getMisc();
     }
 
     @Redirect(method = "processKeyBinds()V", slice = @Slice(

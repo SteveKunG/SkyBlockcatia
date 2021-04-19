@@ -4,13 +4,12 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
-import com.stevekung.skyblockcatia.utils.skyblock.api.MaxFairySouls;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 public class SBAPIUtils
 {
     public static int MAX_FAIRY_SOULS;
-    public static SupportedPack PACKS;
+    public static SupportedPack[] PACKS;
     private static String API_KEY;
 
     public static void setApiKey()
@@ -25,29 +24,11 @@ public class SBAPIUtils
         SBAPIUtils.setApiKey();
     }
 
-    public static void getFairySouls()
+    public static void getMisc()
     {
-        try
-        {
-            MAX_FAIRY_SOULS = TextComponentUtils.GSON.fromJson(DataUtils.get("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            MAX_FAIRY_SOULS = 222;
-        }
-    }
-
-    public static void getSupportedPackNames()
-    {
-        try
-        {
-            PACKS = TextComponentUtils.GSON.fromJson(DataUtils.get("pack_name.json"), SupportedPack.class);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        SBMisc misc = TextComponentUtils.GSON.fromJson(DataUtils.getData("misc.json"), SBMisc.class);
+        PACKS = misc.getSupportedPack();
+        MAX_FAIRY_SOULS = misc.getMaxFairySouls();
     }
 
     public enum APIUrl

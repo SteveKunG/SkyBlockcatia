@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.mixin.renderer.entity.layers;
 
+import java.util.Locale;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
+import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -59,7 +61,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
 
     private void renderGlowingLayer(MatrixStack matrixStack, IRenderTypeBuffer buffer, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, EquipmentSlotType slot, int packedLight)
     {
-        if (!SkyBlockEventHandler.foundSkyBlockPack || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
+        if (SupportedPack.TYPE == null || !SupportedPack.FOUND || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
         {
             return;
         }
@@ -99,6 +101,6 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends BipedMod
     private ResourceLocation getArmorType(String id, boolean isLeg)
     {
         DragonType dragonType = DragonType.getDragonTypeById(id);
-        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/models/armor/" + SkyBlockEventHandler.skyBlockPackResolution + "/" + dragonType.getShortName() + "_layer_" + String.valueOf(isLeg ? 2 : 1) + ".png") : null;
+        return dragonType != null ? new ResourceLocation("skyblockcatia:textures/models/armor/" + SupportedPack.RESOLUTION + "/" + SupportedPack.TYPE.toLowerCase(Locale.ROOT) + "/" + dragonType.getShortName() + "_layer_" + String.valueOf(isLeg ? 2 : 1) + ".png") : null;
     }
 }

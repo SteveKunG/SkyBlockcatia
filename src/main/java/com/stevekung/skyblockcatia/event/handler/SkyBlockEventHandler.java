@@ -113,8 +113,6 @@ public class SkyBlockEventHandler
 
     private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("◆ Ice Rune", "◆ Ice Rune I").build();
     public static boolean isSkyBlock;
-    public static boolean foundSkyBlockPack;
-    public static String skyBlockPackResolution = "16";
     public static SBLocation SKY_BLOCK_LOCATION = SBLocation.YOUR_ISLAND;
     public static float dragonHealth;
     public static boolean otherPlayerIsland;
