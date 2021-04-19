@@ -1,5 +1,8 @@
 package com.stevekung.skyblockcatia.mixin;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -10,6 +13,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.LoggerIN;
+import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 
 import net.minecraft.client.Minecraft;
@@ -27,7 +31,7 @@ public class MinecraftMixin
     @Inject(method = "startGame()V", at = @At("HEAD"))
     private void startGame(CallbackInfo info)
     {
-        SBAPIUtils.getSupportedPackNames();
+        SBAPIUtils.getMisc();
     }
 
     @Inject(method = "runGameLoop()V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/EntityRenderer.updateCameraAndRender(FJ)V", shift = At.Shift.AFTER))
@@ -39,7 +43,7 @@ public class MinecraftMixin
     @Inject(method = "refreshResources()V", at = @At("HEAD"))
     private void refreshResources(CallbackInfo info)
     {
-        if (SBAPIUtils.PACKS != null)
+        if (SBAPIUtils.PACKS != null && SBAPIUtils.PACKS.length > 0)
         {
             boolean found = false;
 
@@ -48,35 +52,41 @@ public class MinecraftMixin
                 String packName = entry.getResourcePack().getPackName();
                 String packDesc = entry.getTexturePackDescription();
 
-                if (SBAPIUtils.PACKS.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                for (SupportedPack pack : SBAPIUtils.PACKS)
                 {
-                    SkyBlockEventHandler.skyBlockPackResolution = "16";
-                }
-                if (SBAPIUtils.PACKS.getPack32().stream().anyMatch(name -> packName.contains(name)))
-                {
-                    SkyBlockEventHandler.skyBlockPackResolution = "32";
-                }
+                    if (pack.getPack16().stream().anyMatch(name -> packName.contains(name)))
+                    {
+                        SupportedPack.RESOLUTION = "16";
+                    }
+                    if (pack.getPack32().stream().anyMatch(name -> packName.contains(name)))
+                    {
+                        SupportedPack.RESOLUTION = "32";
+                    }
 
-                if ((packName.contains("Hypixel Skyblock Pack") || packName.contains("Skyblock_Pack")) && (packDesc.contains("by Hypixel Packs HQ") || packDesc.contains("by Packs HQ")))
-                {
-                    SkyBlockEventHandler.foundSkyBlockPack = true;
-                    found = true;
-                    break;
+                    Matcher nameMat = Pattern.compile(pack.getName()).matcher(packName);
+                    Matcher descMat = Pattern.compile(pack.getDescription()).matcher(packDesc);
+
+                    if (nameMat.find() && descMat.find())
+                    {
+                        SupportedPack.FOUND = found = true;
+                        SupportedPack.TYPE = pack.getType();
+                        break;
+                    }
                 }
             }
             if (found)
             {
-                LoggerIN.info("Found SkyBlock Pack with x" + SkyBlockEventHandler.skyBlockPackResolution + "! Loaded Glowing Texture for Dragon Set Armor");
+                LoggerIN.info("Found '{}' Skyblock Pack with x" + SupportedPack.RESOLUTION + "! Loaded Glowing Texture for Dragon Armor Set", SupportedPack.TYPE);
             }
             else
             {
-                SkyBlockEventHandler.foundSkyBlockPack = false;
-                LoggerIN.info("SkyBlock Pack not found! Glowing Texture will not loaded for Dragon Set Armor");
+                SupportedPack.FOUND = false;
+                LoggerIN.info("No Skyblock Pack detected! Disable Glowing Texture for Dragon Armor Set");
             }
         }
         else
         {
-            LoggerIN.warning("SupportedPack is null, Glowing Armor Overlay will not loaded!");
+            LoggerIN.warning("SupportedPack is 'null'! Disable Glowing Texture for Dragon Armor Set");
         }
     }
 

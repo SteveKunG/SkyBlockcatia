@@ -1,5 +1,7 @@
 package com.stevekung.skyblockcatia.mixin.renderer.entity.layers;
 
+import java.util.Locale;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -10,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
+import com.stevekung.skyblockcatia.utils.SupportedPack;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -94,7 +96,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
 
     private void renderGlowingLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot)
     {
-        if (!SkyBlockEventHandler.foundSkyBlockPack || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
+        if (SupportedPack.TYPE == null || !SupportedPack.FOUND || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
         {
             return;
         }
@@ -181,7 +183,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             texture = "holy";
         }
 
-        String s1 = String.format("skyblockcatia:textures/model/armor/" + SkyBlockEventHandler.skyBlockPackResolution + "/%s_layer_%d.png", texture, armorSlot == 2 ? 2 : 1);
+        String s1 = String.format("skyblockcatia:textures/model/armor/" + SupportedPack.RESOLUTION + "/" + SupportedPack.TYPE.toLowerCase(Locale.ROOT) + "/%s_layer_%d.png", texture, armorSlot == 2 ? 2 : 1);
         return texture.isEmpty() ? null : new ResourceLocation(s1);
     }
 }

@@ -156,7 +156,6 @@ public class SkyBlockcatiaMod
                 PlayerStatsBonus.getBonusFromRemote(type);
             }
 
-            SBAPIUtils.getFairySouls();
             SBMinions.getMinionSlotFromRemote();
             SBPets.getPets();
             SBSkills.getSkillsCap();

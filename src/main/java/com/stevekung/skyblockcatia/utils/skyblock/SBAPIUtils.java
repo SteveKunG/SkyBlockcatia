@@ -14,7 +14,6 @@ import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.LoggerIN;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
-import com.stevekung.skyblockcatia.utils.skyblock.api.MaxFairySouls;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -27,7 +26,7 @@ public class SBAPIUtils
 {
     private static final Gson GSON = new Gson();
     public static int MAX_FAIRY_SOULS;
-    public static SupportedPack PACKS;
+    public static SupportedPack[] PACKS;
     private static String API_KEY;
     public static String PLAYER_NAME;
     public static String PLAYER_UUID;
@@ -58,29 +57,11 @@ public class SBAPIUtils
         SBAPIUtils.setApiKey();
     }
 
-    public static void getFairySouls()
+    public static void getMisc()
     {
-        try
-        {
-            MAX_FAIRY_SOULS = GSON.fromJson(DataUtils.get("api/stats_bonuses/misc/max_fairy_souls.json"), MaxFairySouls.class).getMaxFairySouls();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            MAX_FAIRY_SOULS = 222;
-        }
-    }
-
-    public static void getSupportedPackNames()
-    {
-        try
-        {
-            PACKS = GSON.fromJson(DataUtils.get("pack_name.json"), SupportedPack.class);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        SBMisc misc = GSON.fromJson(DataUtils.getData("misc.json"), SBMisc.class);
+        PACKS = misc.getSupportedPack();
+        MAX_FAIRY_SOULS = misc.getMaxFairySouls();
     }
 
     public static List<ItemStack> decodeItem(JsonObject currentProfile, InventoryType type)
