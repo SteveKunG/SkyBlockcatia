@@ -137,7 +137,6 @@ public class SkyBlockAPIViewerScreen extends Screen
     private float oldMouseY;
 
     // API
-    private static final int MAXED_UNIQUE_MINIONS = 583;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
 
     public static boolean renderSecondLayer;
@@ -713,7 +712,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                     else if (this.currentSlot instanceof CraftedMinionsList)
                     {
-                        String total1 = TextFormatting.GRAY + "Unique Minions: " + TextFormatting.YELLOW + this.craftedMinionCount + "/" + SkyBlockAPIViewerScreen.MAXED_UNIQUE_MINIONS + TextFormatting.GRAY + " (" + this.craftedMinionCount * 100 / SkyBlockAPIViewerScreen.MAXED_UNIQUE_MINIONS + "%)";
+                        String total1 = TextFormatting.GRAY + "Unique Minions: " + TextFormatting.YELLOW + this.craftedMinionCount + "/" + SBMinions.MINIONS.getUniqueMinions() + TextFormatting.GRAY + " (" + this.craftedMinionCount * 100 / SBMinions.MINIONS.getUniqueMinions() + "%)";
                         String total2 = TextFormatting.GRAY + "Current Minion Slot: " + TextFormatting.YELLOW + this.currentMinionSlot + (this.additionalMinionSlot > 0 ? TextFormatting.GOLD + " (Bonus +" + this.additionalMinionSlot + ")" : "");
                         AbstractGui.drawString(matrixStack, this.font, total1, this.width - this.font.getStringWidth(total1) - 60, this.height - 68, 16777215);
                         AbstractGui.drawString(matrixStack, this.font, total2, this.width - this.font.getStringWidth(total2) - 60, this.height - 58, 16777215);
@@ -1745,11 +1744,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void processCraftedMinions()
     {
-        for (SBMinions.Slot minion : SBMinions.MINION_SLOTS)
+        for (SBMinions.CraftedMinions minion : SBMinions.MINIONS.getCraftedMinions())
         {
-            if (minion.getCurrentSlot() <= this.craftedMinionCount)
+            if (minion.getCount() <= this.craftedMinionCount)
             {
-                this.currentMinionSlot = minion.getMinionSlot();
+                this.currentMinionSlot = minion.getSlot();
             }
         }
 
@@ -1757,17 +1756,17 @@ public class SkyBlockAPIViewerScreen extends Screen
         List<SBMinions.Data> minionDatas = Lists.newArrayList();
         int level = 1;
 
-        for (SBMinions.Type minion : SBMinions.Type.VALUES)
+        for (SBMinions.Type minion : SBMinions.MINIONS.getType())
         {
             for (String minionType : this.craftedMinions.keySet())
             {
-                if (minion.name().equals(minionType))
+                if (minion.getType().equals(minionType))
                 {
                     level = Collections.max(this.craftedMinions.get(minionType));
                     break;
                 }
             }
-            minionLevels.add(new SBMinions.Info(minion.name(), minion.getAltName(), minion.getMinionItem(), level, minion.getMinionCategory()));
+            minionLevels.add(new SBMinions.Info(minion.getType(), minion.getDisplayName(), minion.getMinionItem(), level, minion.getCategory()));
         }
 
         for (Map.Entry<String, Collection<Integer>> entry : this.craftedMinions.asMap().entrySet())
@@ -1780,9 +1779,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             List<String> minionList = Lists.newArrayList();
             Set<Integer> dummySet = Sets.newHashSet();
             Set<Integer> skippedList = Sets.newHashSet();
-            boolean hasTier12 = SBMinions.Type.getTypeByName(minionType).isHasTier12();
 
-            if (hasTier12)
+            if (SBMinions.MINIONS.getTypeByName(minionType).hasTier12())
             {
                 dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
             }
@@ -2681,9 +2679,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ALCHEMY, this.alchemyLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.TAMING, this.tamingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.CATACOMBS_DUNGEON, this.catacombsLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ZOMBIE_SLAYER, this.zombieSlayerLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.SPIDER_SLAYER, this.spiderSlayerLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.WOLF_SLAYER, this.wolfSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getZombie(), this.zombieSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getSpider(), this.spiderSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getWolf(), this.wolfSlayerLevel));
     }
 
     private BonusStatTemplate calculateSkillBonus(IBonusTemplate[] bonus, int skillLevel)
@@ -3568,7 +3566,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private List<SkyBlockSlayerInfo> getSlayer(JsonElement element, SBSlayers.Type type)
     {
         List<SkyBlockSlayerInfo> list = Lists.newArrayList();
-        ExpProgress[] progress = type.getProgress();
+        String lowerType = type.name().toLowerCase(Locale.ROOT);
         JsonElement slayer = element.getAsJsonObject().get(type.name().toLowerCase(Locale.ROOT));
 
         if (slayer != null)
@@ -3582,32 +3580,33 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int slayerLvl = 0;
                 int levelToCheck = 0;
                 int xpToNextLvl = 0;
+                int maxLevel = SBSlayers.SLAYERS.getLeveling().get(lowerType).length;
                 boolean reachLimit = false;
 
-                for (ExpProgress skill : progress)
+                for (int i = 0; i < maxLevel; i++)
                 {
-                    int slayerXp = (int)skill.getXp();
+                    int slayerXp = SBSlayers.SLAYERS.getLeveling().get(lowerType)[i];
 
                     if (slayerXp <= playerSlayerXp)
                     {
-                        levelToCheck = skill.getLevel();
+                        levelToCheck = i + 1;
 
-                        if (levelToCheck < progress.length)
+                        if (levelToCheck < maxLevel)
                         {
-                            xpRequired = (int)progress[levelToCheck].getXp();
+                            xpRequired = SBSlayers.SLAYERS.getLeveling().get(lowerType)[levelToCheck];
                         }
                         ++slayerLvl;
                     }
                 }
 
-                if (levelToCheck < progress.length)
+                if (levelToCheck < maxLevel)
                 {
                     levelToCheck += 1;
                     xpToNextLvl = xpRequired - playerSlayerXp;
                 }
                 else
                 {
-                    levelToCheck = progress.length;
+                    levelToCheck = maxLevel;
                     reachLimit = true;
                 }
 
@@ -4287,9 +4286,8 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (!craftedMinion.getMinionItem().isEmpty())
             {
-                String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase(Locale.ROOT).replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().getString().toLowerCase(Locale.ROOT).replace("_", " "));
                 this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
-                this.font.drawString(matrixStack, name + " Minion " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
+                this.font.drawString(matrixStack, craftedMinion.getDisplayName() + " " + TextFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
                 this.font.drawString(matrixStack, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.font.getStringWidth(craftedMinion.getCraftedTiers()) + 202, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else

@@ -18,9 +18,6 @@ public class PlayerStatsBonus
     public static PlayerStatsBonus.Alchemy[] ALCHEMY;
     public static PlayerStatsBonus.Taming[] TAMING;
     public static PlayerStatsBonus.CatacombsDungeon[] CATACOMBS_DUNGEON;
-    public static PlayerStatsBonus.ZombieSlayer[] ZOMBIE_SLAYER;
-    public static PlayerStatsBonus.SpiderSlayer[] SPIDER_SLAYER;
-    public static PlayerStatsBonus.WolfSlayer[] WOLF_SLAYER;
 
     public static void getBonusFromRemote(Type type) throws Exception
     {
@@ -48,15 +45,6 @@ public class PlayerStatsBonus
             break;
         case ALCHEMY:
             ALCHEMY = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Alchemy[].class);
-            break;
-        case ZOMBIE_SLAYER:
-            ZOMBIE_SLAYER = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.ZombieSlayer[].class);
-            break;
-        case SPIDER_SLAYER:
-            SPIDER_SLAYER = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.SpiderSlayer[].class);
-            break;
-        case WOLF_SLAYER:
-            WOLF_SLAYER = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.WolfSlayer[].class);
             break;
         case TAMING:
             TAMING = TextComponentUtils.GSON.fromJson(in, PlayerStatsBonus.Taming[].class);
@@ -322,105 +310,6 @@ public class PlayerStatsBonus
         }
     }
 
-    public class ZombieSlayer implements IBonusTemplate
-    {
-        private final int level;
-        private final double health;
-
-        public ZombieSlayer(int level, double health)
-        {
-            this.level = level;
-            this.health = health;
-        }
-
-        @Override
-        public int getLevel()
-        {
-            return this.level;
-        }
-
-        @Override
-        public double getHealth()
-        {
-            return this.health;
-        }
-    }
-
-    public class SpiderSlayer implements IBonusTemplate
-    {
-        private final int level;
-        @SerializedName("crit_chance")
-        private final double critChance;
-        @SerializedName("crit_damage")
-        private final double critDamage;
-
-        public SpiderSlayer(int level, double critChance, double critDamage)
-        {
-            this.level = level;
-            this.critChance = critChance;
-            this.critDamage = critDamage;
-        }
-
-        @Override
-        public int getLevel()
-        {
-            return this.level;
-        }
-
-        @Override
-        public double getCritChance()
-        {
-            return this.critChance;
-        }
-
-        @Override
-        public double getCritDamage()
-        {
-            return this.critDamage;
-        }
-    }
-
-    public class WolfSlayer implements IBonusTemplate
-    {
-        private final int level;
-        private final double health;
-        private final double speed;
-        @SerializedName("crit_damage")
-        private final double critDamage;
-
-        public WolfSlayer(int level, double health, double speed, double critDamage)
-        {
-            this.level = level;
-            this.health = health;
-            this.speed = speed;
-            this.critDamage = critDamage;
-        }
-
-        @Override
-        public int getLevel()
-        {
-            return this.level;
-        }
-
-        @Override
-        public double getHealth()
-        {
-            return this.health;
-        }
-
-        @Override
-        public double getSpeed()
-        {
-            return this.speed;
-        }
-
-        @Override
-        public double getCritDamage()
-        {
-            return this.critDamage;
-        }
-    }
-
     public class FairySouls implements IBonusTemplate
     {
         private final int count;
@@ -478,10 +367,7 @@ public class PlayerStatsBonus
         ENCHANTING("skill"),
         ALCHEMY("skill"),
         TAMING("skill"),
-        CATACOMBS_DUNGEON("skill"),
-        ZOMBIE_SLAYER("slayer"),
-        SPIDER_SLAYER("slayer"),
-        WOLF_SLAYER("slayer");
+        CATACOMBS_DUNGEON("skill");
 
         public static final Type[] VALUES = values();
         private final String path;
