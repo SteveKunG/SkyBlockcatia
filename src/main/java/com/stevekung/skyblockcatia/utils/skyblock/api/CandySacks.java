@@ -13,7 +13,7 @@ public enum CandySacks
     private final ItemStack baseItem;
     private final String displayName;
 
-    private CandySacks(ItemStack baseItem, String displayName)
+    CandySacks(ItemStack baseItem, String displayName)
     {
         this.baseItem = baseItem;
         this.displayName = displayName;

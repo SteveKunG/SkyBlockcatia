@@ -19,7 +19,7 @@ public class SBDungeons
 
         private final String name;
 
-        private Type(String name)
+        Type(String name)
         {
             this.name = name;
         }
@@ -41,7 +41,7 @@ public class SBDungeons
         private final ItemStack baseItem;
         private final boolean enchanted;
 
-        private Drops(String displayName, ItemStack baseItem, boolean enchanted)
+        Drops(String displayName, ItemStack baseItem, boolean enchanted)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;

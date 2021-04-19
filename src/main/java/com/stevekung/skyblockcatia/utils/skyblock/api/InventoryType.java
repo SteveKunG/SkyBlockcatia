@@ -16,7 +16,7 @@ public enum InventoryType
     private final String apiName;
     private final String name;
 
-    private InventoryType(String apiName, String name)
+    InventoryType(String apiName, String name)
     {
         this.apiName = apiName;
         this.name = name;

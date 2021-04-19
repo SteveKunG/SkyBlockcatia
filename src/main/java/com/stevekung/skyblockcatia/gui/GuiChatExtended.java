@@ -304,7 +304,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
         private final EnumChatFormatting color;
         public static final ChatMode[] VALUES = ChatMode.values();
 
-        private ChatMode(String command, String desc, EnumChatFormatting color)
+        ChatMode(String command, String desc, EnumChatFormatting color)
         {
             this.command = command;
             this.desc = desc;

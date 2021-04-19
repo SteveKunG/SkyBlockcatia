@@ -107,7 +107,7 @@ public class SBMinions
         private final boolean hasTier12;
         public static final SBMinions.Type[] VALUES = SBMinions.Type.values();
 
-        private Type(SBSkills.Type category, String altName, String uuid, String value, boolean hasTier12)
+        Type(SBSkills.Type category, String altName, String uuid, String value, boolean hasTier12)
         {
             this.category = category;
             this.altName = altName;
@@ -116,17 +116,17 @@ public class SBMinions
             this.hasTier12 = hasTier12;
         }
 
-        private Type(SBSkills.Type category, String altName, String uuid, String value)
+        Type(SBSkills.Type category, String altName, String uuid, String value)
         {
             this(category, altName, uuid, value, false);
         }
 
-        private Type(SBSkills.Type category, String uuid, String value, boolean hasTier12)
+        Type(SBSkills.Type category, String uuid, String value, boolean hasTier12)
         {
             this(category, null, uuid, value, hasTier12);
         }
 
-        private Type(SBSkills.Type category, String uuid, String value)
+        Type(SBSkills.Type category, String uuid, String value)
         {
             this(category, null, uuid, value, false);
         }

@@ -20,7 +20,7 @@ public class SBBossBar
         private final float maxHealth;
         private final String name;
 
-        private DragonType(float maxHealth, String name)
+        DragonType(float maxHealth, String name)
         {
             this.maxHealth = maxHealth;
             this.name = name;

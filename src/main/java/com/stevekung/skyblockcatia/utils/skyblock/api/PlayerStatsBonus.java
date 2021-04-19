@@ -488,7 +488,7 @@ public class PlayerStatsBonus
         public static final Type[] VALUES = values();
         private final String path;
 
-        private Type(String path)
+        Type(String path)
         {
             this.path = path;
         }

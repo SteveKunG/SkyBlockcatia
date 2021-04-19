@@ -22,7 +22,7 @@ public interface IToast<T>
 
         private final String sound;
 
-        private Visibility(String sound)
+        Visibility(String sound)
         {
             this.sound = sound;
         }

@@ -62,7 +62,7 @@ public class BankHistory
 
         public final String name;
 
-        private Action(String name)
+        Action(String name)
         {
             this.name = name;
         }

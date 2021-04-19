@@ -16,7 +16,7 @@ public enum DwarvenSacks
     private final ItemStack baseItem;
     private final String displayName;
 
-    private DwarvenSacks(ItemStack baseItem, String displayName)
+    DwarvenSacks(ItemStack baseItem, String displayName)
     {
         this.baseItem = baseItem;
         this.displayName = displayName;

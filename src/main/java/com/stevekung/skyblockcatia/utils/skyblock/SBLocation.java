@@ -10,7 +10,7 @@ public enum SBLocation
 
     private final String location;
 
-    private SBLocation(String location)
+    SBLocation(String location)
     {
         this.location = location;
     }

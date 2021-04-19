@@ -16,7 +16,7 @@ public class HypixelRank
         private final String name;
         private final EnumChatFormatting color;
 
-        private Base(String name, EnumChatFormatting color)
+        Base(String name, EnumChatFormatting color)
         {
             this.name = name;
             this.color = color;
@@ -44,7 +44,7 @@ public class HypixelRank
         private final String name;
         private final EnumChatFormatting color;
 
-        private Type(String name, EnumChatFormatting color)
+        Type(String name, EnumChatFormatting color)
         {
             this.name = name;
             this.color = color;

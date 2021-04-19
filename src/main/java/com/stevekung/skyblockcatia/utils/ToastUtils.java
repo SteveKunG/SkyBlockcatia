@@ -143,12 +143,12 @@ public class ToastUtils
         private final String color;
         private final List<DropCondition> properties;
 
-        private DropType(String name, String color)
+        DropType(String name, String color)
         {
             this(name, color, ImmutableList.of());
         }
 
-        private DropType(String name, String color, List<DropCondition> properties)
+        DropType(String name, String color, List<DropCondition> properties)
         {
             this.name = name;
             this.color = color;

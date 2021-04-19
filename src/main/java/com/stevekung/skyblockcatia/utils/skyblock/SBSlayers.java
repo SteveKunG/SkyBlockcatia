@@ -17,7 +17,7 @@ public class SBSlayers
         private final String name;
         private final ExpProgress[] progress;
 
-        private Type(String name, ExpProgress[] progress)
+        Type(String name, ExpProgress[] progress)
         {
             this.name = name;
             this.progress = progress;
@@ -43,7 +43,7 @@ public class SBSlayers
         private final String displayName;
         private final Item baseItem;
 
-        private Drops(String displayName, Item baseItem)
+        Drops(String displayName, Item baseItem)
         {
             this.displayName = displayName;
             this.baseItem = baseItem;

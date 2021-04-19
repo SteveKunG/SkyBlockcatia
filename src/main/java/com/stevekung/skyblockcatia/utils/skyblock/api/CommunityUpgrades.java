@@ -128,7 +128,7 @@ public class CommunityUpgrades
         String name;
         private final int maxed;
 
-        private Type(String name, int maxed)
+        Type(String name, int maxed)
         {
             this.name = name;
             this.maxed = maxed;

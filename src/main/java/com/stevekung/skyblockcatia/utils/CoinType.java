@@ -9,7 +9,7 @@ public enum CoinType
     private final String id;
     private final String value;
 
-    private CoinType(String id, String value)
+    CoinType(String id, String value)
     {
         this.id = id;
         this.value = value;

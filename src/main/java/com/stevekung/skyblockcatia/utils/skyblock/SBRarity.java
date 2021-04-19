@@ -32,7 +32,7 @@ public enum SBRarity
         }
     }
 
-    private SBRarity(String name, EnumChatFormatting baseColor, ColorUtils.RGB colorToRender)
+    SBRarity(String name, EnumChatFormatting baseColor, ColorUtils.RGB colorToRender)
     {
         this.name = name;
         this.baseColor = baseColor;

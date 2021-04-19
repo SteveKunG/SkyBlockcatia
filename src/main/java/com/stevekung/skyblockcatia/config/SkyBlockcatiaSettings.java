@@ -625,22 +625,22 @@ public class SkyBlockcatiaSettings
             return null;
         }
 
-        private Options(boolean isFloat, boolean isBoolean)
+        Options(boolean isFloat, boolean isBoolean)
         {
             this(isFloat, isBoolean, false, 0.0F, 1.0F, 0.0F);
         }
 
-        private Options(boolean isFloat, boolean isBoolean, float valMin, float valMax, float valStep)
+        Options(boolean isFloat, boolean isBoolean, float valMin, float valMax, float valStep)
         {
             this(isFloat, isBoolean, false, valMin, valMax, valStep);
         }
 
-        private Options(boolean isFloat, boolean isBoolean, boolean isTextbox)
+        Options(boolean isFloat, boolean isBoolean, boolean isTextbox)
         {
             this(isFloat, isBoolean, isTextbox, 0.0F, 1.0F, 0.0F);
         }
 
-        private Options(boolean isFloat, boolean isBoolean, boolean isTextbox, float valMin, float valMax, float valStep)
+        Options(boolean isFloat, boolean isBoolean, boolean isTextbox, float valMin, float valMax, float valStep)
         {
             this.isFloat = isFloat;
             this.isBoolean = isBoolean;
