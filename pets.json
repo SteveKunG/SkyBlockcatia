@@ -1,0 +1,993 @@
+{
+    "held_item": [
+        {
+            "type": "PET_ITEM_ALL_SKILLS_BOOST_COMMON",
+            "name": "All Skills Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_BIG_TEETH_COMMON",
+            "name": "Big Teeth",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_IRON_CLAWS_COMMON",
+            "name": "Iron Claws",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_SHARPENED_CLAWS_UNCOMMON",
+            "name": "Sharpened Claws",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_HARDENED_SCALES_UNCOMMON",
+            "name": "Hardened Scales",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_BUBBLEGUM",
+            "name": "Bubblegum",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_LUCKY_CLOVER",
+            "name": "Lucky Clover",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_TEXTBOOK",
+            "name": "Textbook",
+            "color": "gold"
+        },
+        {
+            "type": "PET_ITEM_SADDLE",
+            "name": "Saddle",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_EXP_SHARE",
+            "name": "Exp Share",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_TIER_BOOST",
+            "name": "Tier Boost",
+            "color": "gold",
+            "isUpgrade": true
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_COMMON",
+            "name": "Combat Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON",
+            "name": "Combat Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_RARE",
+            "name": "Combat Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_EPIC",
+            "name": "Combat Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_COMMON",
+            "name": "Fishing Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON",
+            "name": "Fishing Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_RARE",
+            "name": "Fishing Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_EPIC",
+            "name": "Fishing Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_COMMON",
+            "name": "Foraging Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON",
+            "name": "Foraging Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_RARE",
+            "name": "Foraging Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_EPIC",
+            "name": "Foraging Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_COMMON",
+            "name": "Mining Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_UNCOMMON",
+            "name": "Mining Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_RARE",
+            "name": "Mining Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_EPIC",
+            "name": "Mining Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_COMMON",
+            "name": "Farming Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON",
+            "name": "Farming Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_RARE",
+            "name": "Farming Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_EPIC",
+            "name": "Farming Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "REINFORCED_SCALES",
+            "name": "Reinforced Scales",
+            "color": "blue"
+        },
+        {
+            "type": "GOLD_CLAWS",
+            "name": "Gold Claws",
+            "color": "green"
+        },
+        {
+            "type": "ALL_SKILLS_SUPER_BOOST",
+            "name": "All Skills Super Boost",
+            "color": "white"
+        },
+        {
+            "type": "BIGGER_TEETH",
+            "name": "Bigger Teeth",
+            "color": "green"
+        },
+        {
+            "type": "SERRATED_CLAWS",
+            "name": "Serrated Claws",
+            "color": "blue"
+        },
+        {
+            "type": "WASHED_UP_SOUVENIR",
+            "name": "Washed-up Souvenir",
+            "color": "gold"
+        },
+        {
+            "type": "ANTIQUE_REMEDIES",
+            "name": "Antique Remedies",
+            "color": "dark_purple"
+        },
+        {
+            "type": "CROCHET_TIGER_PLUSHIE",
+            "name": "Crochet Tiger Plushie",
+            "color": "dark_purple"
+        },
+        {
+            "type": "DWARF_TURTLE_SHELMET",
+            "name": "Dwarf Turtle Shelmet",
+            "color": "blue"
+        },
+        {
+            "type": "MINOS_RELIC",
+            "name": "Minos Relic",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_SPOOKY_CUPCAKE",
+            "name": "Spooky Cupcake",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_VAMPIRE_FANG",
+            "name": "Vampire Fang",
+            "color": "gold",
+            "isUpgrade": true
+        },
+        {
+            "type": "PET_ITEM_TOY_JERRY",
+            "name": "Jerry 3D Glasses",
+            "color": "gold",
+            "isUpgrade": true
+        },
+        {
+            "type": "REAPER_GEM",
+            "name": "Reaper Gem",
+            "color": "gold"
+        }
+    ],
+    "index": {
+        "COMMON": 0,
+        "UNCOMMON": 6,
+        "RARE": 11,
+        "EPIC": 16,
+        "LEGENDARY": 20,
+        "MYTHIC": 20
+    },
+    "leveling": [
+        100,
+        110,
+        120,
+        130,
+        145,
+        160,
+        175,
+        190,
+        210,
+        230,
+        250,
+        275,
+        300,
+        330,
+        360,
+        400,
+        440,
+        490,
+        540,
+        600,
+        660,
+        730,
+        800,
+        880,
+        960,
+        1050,
+        1150,
+        1260,
+        1380,
+        1510,
+        1650,
+        1800,
+        1960,
+        2130,
+        2310,
+        2500,
+        2700,
+        2920,
+        3160,
+        3420,
+        3700,
+        4000,
+        4350,
+        4750,
+        5200,
+        5700,
+        6300,
+        7000,
+        7800,
+        8700,
+        9700,
+        10800,
+        12000,
+        13300,
+        14700,
+        16200,
+        17800,
+        19500,
+        21300,
+        23200,
+        25200,
+        27400,
+        29800,
+        32400,
+        35200,
+        38200,
+        41400,
+        44800,
+        48400,
+        52200,
+        56200,
+        60400,
+        64800,
+        69400,
+        74200,
+        79200,
+        84700,
+        90700,
+        97200,
+        104200,
+        111700,
+        119700,
+        128200,
+        137200,
+        146700,
+        156700,
+        167700,
+        179700,
+        192700,
+        206700,
+        221700,
+        237700,
+        254700,
+        272700,
+        291700,
+        311700,
+        333700,
+        357700,
+        383700,
+        411700,
+        441700,
+        476700,
+        516700,
+        561700,
+        611700,
+        666700,
+        726700,
+        791700,
+        861700,
+        936700,
+        1016700,
+        1101700,
+        1191700,
+        1286700,
+        1386700,
+        1496700,
+        1616700,
+        1746700,
+        1886700
+    ],
+    "score": [
+        {
+            "value": 0,
+            "magic_find": 0
+        },
+        {
+            "value": 10,
+            "magic_find": 1
+        },
+        {
+            "value": 25,
+            "magic_find": 2
+        },
+        {
+            "value": 50,
+            "magic_find": 3
+        },
+        {
+            "value": 75,
+            "magic_find": 4
+        },
+        {
+            "value": 100,
+            "magic_find": 5
+        },
+        {
+            "value": 130,
+            "magic_find": 6
+        },
+        {
+            "value": 175,
+            "magic_find": 7
+        }
+    ],
+    "skin": [
+        {
+            "skin": "CHICKEN_BABY_CHICK",
+            "displayName": "Baby Chick Chicken",
+            "color": "dark_purple",
+            "uuid": "83abf023-37cc-3058-a9ff-c8d46cb57a2b",
+            "texture": "1bde55ed54cb5c87661b86c349186a9d5baffb3cb934b449a2d329e399d34bf"
+        },
+        {
+            "skin": "DRAGON_NEON_BLUE",
+            "displayName": "Blue Ender Dragon",
+            "color": "gold",
+            "uuid": "d034068b-714d-3264-825e-eb4b89fb27af",
+            "texture": "96a4b9fbcf8c3e7e1232e57d6a2870ba3ea30f76407ae1197fd52e9f76ca46ac"
+        },
+        {
+            "skin": "DRAGON_NEON_PURPLE",
+            "displayName": "Purple Ender Dragon",
+            "color": "gold",
+            "uuid": "9e485884-34c2-388b-b798-ef899b618c33",
+            "texture": "54bdf5ba6289b29e27c57db1ec7f76151c39492d409268e00a9838e8c963159"
+        },
+        {
+            "skin": "DRAGON_NEON_RED",
+            "displayName": "Red Ender Dragon",
+            "color": "gold",
+            "uuid": "8e4b87b0-fd00-3eaa-a732-788e791b42bc",
+            "texture": "e05c9b4f4218677c5b4bcc9c7d9e29e18d1684a536781fede1280fc5e6961538"
+        },
+        {
+            "skin": "ELEPHANT_BLUE",
+            "displayName": "Blue Elephant",
+            "color": "blue",
+            "uuid": "2d6175b3-b23f-3a26-bbb5-a5149b63d0df",
+            "texture": "4b62969c005815d0409136380febc5ac468aaba9bda4db80954fa5426ee0a323"
+        },
+        {
+            "skin": "ELEPHANT_GREEN",
+            "displayName": "Green Elephant",
+            "color": "blue",
+            "uuid": "8a96cf53-45b1-35e2-9f96-cc13d463e6e0",
+            "texture": "360c122ade5b2fedca14aa78c834a7b0ac9cb5da2a0c93112163086f90c13b68"
+        },
+        {
+            "skin": "ELEPHANT_MONOCHROME",
+            "displayName": "Monochrome Elephant",
+            "color": "dark_purple",
+            "uuid": "b22decd6-faf9-3872-9f85-cc76c011f37b",
+            "texture": "4bdf0f628c05e86cabdee2f5858dd5def7f8b8d940cbf25f9937e2ffb53432f4"
+        },
+        {
+            "skin": "ELEPHANT_ORANGE",
+            "displayName": "Orange Elephant",
+            "color": "blue",
+            "uuid": "69a9731d-621a-36db-bb64-e63dd541f7ea",
+            "texture": "554a34a80c474206d3700b8fced6b44fab0b0ed0b05c1293ff0c5d86eda251d1"
+        },
+        {
+            "skin": "ELEPHANT_PINK",
+            "displayName": "Pink Elephant",
+            "color": "blue",
+            "uuid": "800b4068-e32d-3528-b3d1-a7b8157eb790",
+            "texture": "570eef474ec0e56cc34c2307eaa39f024612f8cd7248e7d5b14169ebd307c742"
+        },
+        {
+            "skin": "ELEPHANT_PURPLE",
+            "displayName": "Purple Elephant",
+            "color": "blue",
+            "uuid": "de6b68c9-5d12-3279-b058-cbcf8636b585",
+            "texture": "5ff9df290b6c5a4984fc6e516605f9816b9882f7bf04db08d3f7ee32d1969a44"
+        },
+        {
+            "skin": "ELEPHANT_RED",
+            "displayName": "Red Elephant",
+            "color": "blue",
+            "uuid": "abfffe75-364e-37c4-ae74-e95316a2daa1",
+            "texture": "ba5c66ec66cb6b4b5550085f583b4e5c1cee5247bec5fbcc5c318c30c66cab42"
+        },
+        {
+            "skin": "ENDERMAN",
+            "displayName": "Spooky Enderman",
+            "color": "dark_purple",
+            "uuid": "62d9011f-9a1c-3673-b60e-d38c5ce1e4af",
+            "texture": "ea84cc8818c293484fdaafc8fa2f0bf39e55733a247d68023df2c6c6b9b671d0"
+        },
+        {
+            "skin": "GUARDIAN",
+            "displayName": "Watcher Guardian",
+            "color": "dark_purple",
+            "uuid": "36e3a30b-fa57-3aa6-ab40-76565a7ec96f",
+            "texture": "37cc76e7af29f5f3fbfd6ece794160811eff96f753459fa61d7ad176a064e3c5"
+        },
+        {
+            "skin": "HORSE_ZOMBIE",
+            "displayName": "Zombie Skeleton Horse",
+            "color": "dark_purple",
+            "uuid": "76e06cd3-376f-3cfa-9431-1c2b67de42e9",
+            "texture": "578211e1b4d99d1c7bfda4838e48fc884c3eae376f58d932bc2f78b0a919f8e7"
+        },
+        {
+            "skin": "JERRY_GREEN_ELF",
+            "displayName": "Green Elf Jerry",
+            "color": "green",
+            "uuid": "71523c97-40b1-3c07-8e82-a249ebe9339c",
+            "texture": "4ec5455f43426ca1874b5c7b4a492ec3722a502f8b9599e758e133fed8b3c1e4"
+        },
+        {
+            "skin": "JERRY_RED_ELF",
+            "displayName": "Red Elf Jerry",
+            "color": "green",
+            "uuid": "cf24edde-fca6-3a29-b9e1-51ef7b4f2662",
+            "texture": "1d82f9c36e824c1e37963a849bf5abd76d3b349125023504af58369086089ee9"
+        },
+        {
+            "skin": "MONKEY_GOLDEN",
+            "displayName": "Golden Monkey",
+            "color": "gold",
+            "uuid": "b78e9901-460c-3b18-af8c-8cb9c9739e23",
+            "texture": "e9281c4d87d68526b0749d4361e6ef786c8a35717aa053da704b1d53410d37a6"
+        },
+        {
+            "skin": "RABBIT",
+            "displayName": "Pretty Rabbit",
+            "color": "dark_purple",
+            "uuid": "6e4a93dc-c051-33f0-ae3d-17c29da03219",
+            "texture": "a34631d940fddb689ddef6a3b352c50220c460dba05cd18dc83192b59dc647f8"
+        },
+        {
+            "skin": "RABBIT_AQUAMARINE",
+            "displayName": "Aquamarine Rabbit",
+            "color": "blue",
+            "uuid": "9217de73-e2db-335f-acbd-c572693c71d2",
+            "texture": "35a2119d122961852c010c1007ab2aff95b4bbeb74407463f6d2e1ff0792c812"
+        },
+        {
+            "skin": "RABBIT_ROSE",
+            "displayName": "Rose Rabbit",
+            "color": "blue",
+            "uuid": "a0482a4d-dc98-3654-855c-21a66508cb72",
+            "texture": "d7cddf5b20cb50d6600e5333c6bb3fb15b4741f17e3675fc2bfc09c2cd09e619"
+        },
+        {
+            "skin": "ROCK_COOL",
+            "displayName": "Cool Rock",
+            "color": "blue",
+            "uuid": "0cee5ea7-7af9-30bc-8c91-222ccfc4bae0",
+            "texture": "fefcdbb7d95502acc1ae35a32a40ce4dec8f4c9f0da26c9d9fe7c2c3eb748f6"
+        },
+        {
+            "skin": "ROCK_DERP",
+            "displayName": "Derpy Rock",
+            "color": "blue",
+            "uuid": "7882fc9d-c633-3e5a-8105-8ea45cb6d9ce",
+            "texture": "c4f89fbd12c209f7f26c1f34a1bd7f47635814759c09688dd212b205c73a8c02"
+        },
+        {
+            "skin": "ROCK_EMBARRASSED",
+            "displayName": "Embarrassed Rock",
+            "color": "blue",
+            "uuid": "45ff4431-e837-38be-ac08-8cfc9ad09753",
+            "texture": "27ff34992e66599e8529008be3fb577cb0ab545294253e25a0cc988e416c849"
+        },
+        {
+            "skin": "ROCK_LAUGH",
+            "displayName": "Laughing Rock",
+            "color": "blue",
+            "uuid": "bec85db9-fd91-396d-861e-8ec67ac1eda9",
+            "texture": "8cc1ef513d5f616675242174acde7b9d6259a47c4fe8f6e4b6e20920319d7073"
+        },
+        {
+            "skin": "ROCK_SMILE",
+            "displayName": "Smiling Rock",
+            "color": "blue",
+            "uuid": "67981030-6f1c-3348-81c5-a3d572617693",
+            "texture": "713c8b2916a275db4c1762cf5f13d7b95b91d60baf5164a447d6efa7704cf11b"
+        },
+        {
+            "skin": "ROCK_THINKING",
+            "displayName": "Thinking Rock",
+            "color": "blue",
+            "uuid": "9562f758-0d5d-393c-abc1-482a2067b664",
+            "texture": "dd2f781f03c365bbc5dd1e7186ab38dc69465e836c9fe066a9a844f34a4da92"
+        },
+        {
+            "skin": "SHEEP_BLACK",
+            "displayName": "Black Sheep",
+            "color": "green",
+            "uuid": "a44786f8-b0f4-3e43-ad1b-64956113adec",
+            "texture": "aa9dcda642a807cd2daa4aa6be87cef96e08a8c8f5cec2657dda4266c6a884c2"
+        },
+        {
+            "skin": "SHEEP_LIGHT_BLUE",
+            "displayName": "Light Blue Sheep",
+            "color": "green",
+            "uuid": "5ee3925d-b768-331c-af39-d00e1363aa1f",
+            "texture": "722220de1a863bc5d9b9e7a6a3b03214c9f3d698ed3fe0d28220f3b93b7685c5"
+        },
+        {
+            "skin": "SHEEP_LIGHT_GREEN",
+            "displayName": "Lime Sheep",
+            "color": "green",
+            "uuid": "235159c0-4c38-356f-8a2b-519b15d03730",
+            "texture": "cf183ec2fe58faa43e568419b7a0dc446ece4ea0be52ec784c94e1d74b75939d"
+        },
+        {
+            "skin": "SHEEP_NEON_BLUE",
+            "displayName": "Neon Blue Sheep",
+            "color": "blue",
+            "uuid": "c7ad0ae4-f4bb-3f44-ae71-03dc976ba1f3",
+            "texture": "e55b3fe9311c99342ea565483cbf9e969a258faf7afa30270fb9a0929377acfd"
+        },
+        {
+            "skin": "SHEEP_NEON_GREEN",
+            "displayName": "Neon Green Sheep",
+            "color": "blue",
+            "uuid": "1144114b-5624-323e-bb06-66448d2f0f96",
+            "texture": "2c14d66911554bd0882339074bf6b8110c2d3509b69e7a6144e4d5a7164bacc8"
+        },
+        {
+            "skin": "SHEEP_NEON_RED",
+            "displayName": "Neon Red Sheep",
+            "color": "blue",
+            "uuid": "7714c9a8-c3c0-3a7d-b759-cebb4042136b",
+            "texture": "4918be142a20b2b39bc582f421f6ae87b3184b5c9523d16fbe6d69530107886a"
+        },
+        {
+            "skin": "SHEEP_NEON_YELLOW",
+            "displayName": "Neon Yellow Sheep",
+            "color": "blue",
+            "uuid": "f6751ef8-70a9-3e15-9581-ad4a0ca99327",
+            "texture": "94263428c23da9165b2639a8f2428ff4835227945c9e1038461cf644d67cc82a"
+        },
+        {
+            "skin": "SHEEP_PINK",
+            "displayName": "Pink Sheep",
+            "color": "green",
+            "uuid": "8899dc3a-c587-3d3e-8c1a-aa0fba9c38d5",
+            "texture": "afa7747684dcb96192d90342cea62742ec363da07cb5e6e25eecec888cd2076"
+        },
+        {
+            "skin": "SHEEP_PURPLE",
+            "displayName": "Purple Sheep",
+            "color": "green",
+            "uuid": "98d9a319-e671-34a0-b1da-a912ef421fc9",
+            "texture": "99a88cf7dd33063587c6b540e6130abc5d07f1a65c47573ab3c1ad3ccec8857f"
+        },
+        {
+            "skin": "SHEEP_WHITE",
+            "displayName": "White Sheep",
+            "color": "green",
+            "uuid": "354676d5-1529-327c-b06e-899b92132403",
+            "texture": "b92a1a5c325f25f7438a0abb4f86ba6cf75552d02c7349a7292981459b31d2f7"
+        },
+        {
+            "skin": "SILVERFISH",
+            "displayName": "Fortified Silverfish",
+            "color": "dark_purple",
+            "uuid": "ee81d609-06c4-38e7-97e5-dd3ef196a4ba",
+            "texture": "d8552ff591042c4a38f8ba0626784ae28c4545a97d423fd9037c341035593273"
+        },
+        {
+            "skin": "SILVERFISH_FOSSILIZED",
+            "displayName": "Fossilized Silverfish",
+            "color": "dark_purple",
+            "uuid": "9383ffbc-3aa1-3c38-a957-97d4968ee2b7",
+            "texture": "ca3a363368ed1e06cee3900717f062e02ec39aee1747675392255b48f7f83600"
+        },
+        {
+            "skin": "TIGER_TWILIGHT",
+            "displayName": "Twilight Tiger",
+            "color": "light_purple",
+            "uuid": "76dba2c8-4555-317e-b3f5-550d29427354",
+            "texture": "896211dc599368dbd9056c0116ab61063991db793be93066a858eb4e9ce56438"
+        },
+        {
+            "skin": "WHALE_ORCA",
+            "displayName": "Orca Blue Whale",
+            "color": "dark_purple",
+            "uuid": "b22decd6-faf9-3872-9f85-cc76c011f37b",
+            "texture": "b008ca9c00cecf499685030e8ef0c230a32908619ce9dc10690b69111591faa1"
+        },
+        {
+            "skin": "WITHER",
+            "displayName": "Dark Wither Skeleton",
+            "color": "dark_purple",
+            "uuid": "f336e789-b720-36ff-9326-71c8bf135db4",
+            "texture": "224c2d14a0219af5ccfcaa36e8a333e271724ed61276611f9529e16c10273a0d"
+        },
+        {
+            "skin": "YETI_GROWN_UP",
+            "displayName": "Grown-up Baby Yeti",
+            "color": "dark_purple",
+            "uuid": "3a80504c-0993-3be5-92cd-2200f94a72b6",
+            "texture": "f5f29a975529276d916fc67998833c11ee178ff21e5941afdfb0fa7010f8374e"
+        }
+    ],
+    "type": [
+        {
+            "type": "BABY_YETI",
+            "skill": "FISHING",
+            "uuid": "7895e21a-8f3b-3e30-bea6-06108f64d5dc",
+            "texture": "ab126814fc3fa846dad934c349628a7a1de5b415021a03ef4211d62514d5"
+        },
+        {
+            "type": "BAT",
+            "skill": "MINING",
+            "uuid": "1911c3bb-c0af-3474-98e2-486478c5b9ea",
+            "texture": "382fc3f71b41769376a9e92fe3adbaac3772b999b219c9d6b4680ba9983e527"
+        },
+        {
+            "type": "BEE",
+            "skill": "FARMING",
+            "uuid": "af894c68-45d0-3ae2-952c-b3cf925199ad",
+            "texture": "7e941987e825a24ea7baafab9819344b6c247c75c54a691987cd296bc163c263"
+        },
+        {
+            "type": "BLACK_CAT",
+            "skill": "COMBAT",
+            "uuid": "5992f40a-6406-48a3-867b-232e414232f3",
+            "texture": "e4b45cbaa19fe3d68c856cd3846c03b5f59de81a480eec921ab4fa3cd81317"
+        },
+        {
+            "type": "BLAZE",
+            "skill": "COMBAT",
+            "uuid": "118fe834-28aa-3b0d-afe6-f0c52d01afe8",
+            "texture": "b78ef2e4cf2c41a2d14bfde9caff10219f5b1bf5b35a49eb51c6467882cb5f0"
+        },
+        {
+            "type": "BLUE_WHALE",
+            "skill": "FISHING",
+            "uuid": "47c8ba46-82ac-3c09-b511-5502860eb012",
+            "texture": "dab779bbccc849f88273d844e8ca2f3a67a1699cb216c0a11b44326ce2cc20"
+        },
+        {
+            "type": "CHICKEN",
+            "skill": "FARMING",
+            "uuid": "635fdfb8-3c52-433e-87dc-70a9406c5ff0",
+            "texture": "7f37d524c3eed171ce149887ea1dee4ed399904727d521865688ece3bac75e"
+        },
+        {
+            "type": "DOLPHIN",
+            "skill": "FISHING",
+            "uuid": "48f53ffe-a3f0-3280-aac0-11cc0d6121f4",
+            "texture": "cefe7d803a45aa2af1993df2544a28df849a762663719bfefc58bf389ab7f5"
+        },
+        {
+            "type": "ELEPHANT",
+            "skill": "FARMING",
+            "uuid": "9a58e25a-cf47-447d-b13c-3ea36eccfa31",
+            "texture": "7071a76f669db5ed6d32b48bb2dba55d5317d7f45225cb3267ec435cfa514"
+        },
+        {
+            "type": "ENDER_DRAGON",
+            "skill": "COMBAT",
+            "uuid": "3f9632a1-0ce2-311a-97e7-b144dfcb74f3",
+            "texture": "aec3ff563290b13ff3bcc36898af7eaa988b6cc18dc254147f58374afe9b21b9"
+        },
+        {
+            "type": "ENDERMAN",
+            "skill": "COMBAT",
+            "uuid": "fb3c5e13-61e9-4584-99db-9f9ef9fb834d",
+            "texture": "6eab75eaa5c9f2c43a0d23cfdce35f4df632e9815001850377385f7b2f039ce1"
+        },
+        {
+            "type": "ENDERMITE",
+            "skill": "MINING",
+            "uuid": "3302cdfe-6879-4659-ab0b-587b2cdb98e6",
+            "texture": "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855"
+        },
+        {
+            "type": "FLYING_FISH",
+            "skill": "FISHING",
+            "uuid": "fd4a969b-c84c-4b59-979d-55eca6ec5f0e",
+            "texture": "40cd71fbbbbb66c7baf7881f415c64fa84f6504958a57ccdb8589252647ea"
+        },
+        {
+            "type": "GHOUL",
+            "skill": "COMBAT",
+            "uuid": "3fbb2c84-3693-4dcd-bc49-3b54ca6fa8cc",
+            "texture": "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b"
+        },
+        {
+            "type": "GIRAFFE",
+            "skill": "FORAGING",
+            "uuid": "11216f12-2843-31c8-bf8a-b8535e6c6dce",
+            "texture": "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9"
+        },
+        {
+            "type": "GOLEM",
+            "skill": "COMBAT",
+            "uuid": "623fa763-a8d1-36c6-8dcf-09f100723d04",
+            "texture": "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714"
+        },
+        {
+            "type": "GRANDMA_WOLF",
+            "skill": "COMBAT",
+            "uuid": "7f1b261f-0595-4160-9b6a-396436f9cc5d",
+            "texture": "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884"
+        },
+        {
+            "type": "GRIFFIN",
+            "skill": "COMBAT",
+            "uuid": "11e506b9-cb3d-43e6-89d2-9e1575944498",
+            "texture": "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8"
+        },
+        {
+            "type": "GUARDIAN",
+            "skill": "COMBAT",
+            "uuid": "26508276-c01a-32a9-9201-7dae1724954e",
+            "texture": "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d"
+        },
+        {
+            "type": "HORSE",
+            "skill": "COMBAT",
+            "uuid": "6d310633-c175-4b47-92ab-778287bb7a5e",
+            "texture": "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226"
+        },
+        {
+            "type": "HOUND",
+            "skill": "COMBAT",
+            "uuid": "802a167c-cbcd-3a1f-becd-5b1a25a4cf15",
+            "texture": "b7c8bef6beb77e29af8627ecdc38d86aa2fea7ccd163dc73c00f9f258f9a1457"
+        },
+        {
+            "type": "JELLYFISH",
+            "skill": "ALCHEMY",
+            "uuid": "a7be2bb4-70a1-32e4-a981-8f26c5864371",
+            "texture": "913f086ccb56323f238ba3489ff2a1a34c0fdceeafc483acff0e5488cfd6c2f1"
+        },
+        {
+            "type": "JERRY",
+            "skill": "COMBAT",
+            "uuid": "0a9e8efb-9191-4c81-80f5-e27ca5433156",
+            "texture": "822d8e751c8f2fd4c8942c44bdb2f5ca4d8ae8e575ed3eb34c18a86e93b"
+        },
+        {
+            "type": "LION",
+            "skill": "FORAGING",
+            "uuid": "7e3ed445-3545-3c76-993b-8f292ea576c6",
+            "texture": "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1"
+        },
+        {
+            "type": "MAGMA_CUBE",
+            "skill": "COMBAT",
+            "uuid": "35f02923-7bec-3869-9ef5-b42a4794cac8",
+            "texture": "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429"
+        },
+        {
+            "type": "MEGALODON",
+            "skill": "FISHING",
+            "uuid": "82fc79b9-fded-3c05-b8dc-00e562803862",
+            "texture": "a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9"
+        },
+        {
+            "type": "MITHRIL_GOLEM",
+            "skill": "MINING",
+            "uuid": "39fb84b5-72d3-3221-b373-aa315e956e83",
+            "texture": "c1b2dfe8ed5dffc5b1687bc1c249c39de2d8a6c3d90305c95f6d1a1a330a0b1"
+        },
+        {
+            "type": "MONKEY",
+            "skill": "FORAGING",
+            "uuid": "e410c089-bb3a-40a3-add6-188d6187ac87",
+            "texture": "13cf8db84807c471d7c6922302261ac1b5a179f96d1191156ecf3e1b1d3ca"
+        },
+        {
+            "type": "OCELOT",
+            "skill": "FORAGING",
+            "uuid": "664dd492-3fcd-443b-9e61-4c7ebd9e4e10",
+            "texture": "5657cd5c2989ff97570fec4ddcdc6926a68a3393250c1be1f0b114a1db1"
+        },
+        {
+            "type": "PARROT",
+            "skill": "ALCHEMY",
+            "uuid": "db4d678a-731a-49cc-8dae-2cee4a5b80c9",
+            "texture": "5df4b3401a4d06ad66ac8b5c4d189618ae617f9c143071c8ac39a563cf4e4208"
+        },
+        {
+            "type": "PHOENIX",
+            "skill": "COMBAT",
+            "uuid": "4173bc61-9e2f-3c84-8d31-4517e64062ab",
+            "texture": "23aaf7b1a778949696cb99d4f04ad1aa518ceee256c72e5ed65bfa5c2d88d9e"
+        },
+        {
+            "type": "PIG",
+            "skill": "FARMING",
+            "uuid": "e1e1c2e4-1ed2-473d-bde2-3ec718535399",
+            "texture": "621668ef7cb79dd9c22ce3d1f3f4cb6e2559893b6df4a469514e667c16aa4"
+        },
+        {
+            "type": "PIGMAN",
+            "skill": "COMBAT",
+            "uuid": "e3410337-d22b-4427-beab-d9ceae561d2c",
+            "texture": "63d9cb6513f2072e5d4e426d70a5557bc398554c880d4e7b7ec8ef4945eb02f2"
+        },
+        {
+            "type": "RABBIT",
+            "skill": "FARMING",
+            "uuid": "389b150b-1aed-4bd8-af89-129043e007d1",
+            "texture": "117bffc1972acd7f3b4a8f43b5b6c7534695b8fd62677e0306b2831574b"
+        },
+        {
+            "type": "RAT",
+            "skill": "COMBAT",
+            "uuid": "5e1345bb-612a-4d93-9619-25cc24d04c6b",
+            "texture": "a8abb471db0ab78703011979dc8b40798a941f3a4dec3ec61cbeec2af8cffe8"
+        },
+        {
+            "type": "ROCK",
+            "skill": "MINING",
+            "uuid": "1887aa6a-240a-4927-b868-7d3631f03577",
+            "texture": "cb2b5d48e57577563aca31735519cb622219bc058b1f34648b67b8e71bc0fa"
+        },
+        {
+            "type": "SHEEP",
+            "skill": "ALCHEMY",
+            "uuid": "37bacd66-7fe6-39e3-81cf-82911daf648b",
+            "texture": "64e22a46047d272e89a1cfa13e9734b7e12827e235c2012c1a95962874da0"
+        },
+        {
+            "type": "SILVERFISH",
+            "skill": "MINING",
+            "uuid": "79e570d8-f66e-375c-9e70-97224ccd5692",
+            "texture": "da91dab8391af5fda54acd2c0b18fbd819b865e1a8f1d623813fa761e924540"
+        },
+        {
+            "type": "SKELETON",
+            "skill": "COMBAT",
+            "uuid": "baee4f79-051d-4b7e-9323-58494878ef5a",
+            "texture": "fca445749251bdd898fb83f667844e38a1dff79a1529f79a42447a0599310ea4"
+        },
+        {
+            "type": "SKELETON_HORSE",
+            "skill": "COMBAT",
+            "uuid": "8dfd0bbb-7ce2-444e-ad9a-0eb9518eaffd",
+            "texture": "47effce35132c86ff72bcae77dfbb1d22587e94df3cbc2570ed17cf8973a"
+        },
+        {
+            "type": "SNOWMAN",
+            "skill": "COMBAT",
+            "uuid": "b2b19dcd-dc67-31df-a790-e6cf07ae12ac",
+            "texture": "11136616d8c4a87a54ce78a97b551610c2b2c8f6d410bc38b858f974b113b208"
+        },
+        {
+            "type": "SPIDER",
+            "skill": "COMBAT",
+            "uuid": "7c63f3cf-a963-311a-aeca-3a075b417806",
+            "texture": "cd541541daaff50896cd258bdbdd4cf80c3ba816735726078bfe393927e57f1"
+        },
+        {
+            "type": "SPIRIT",
+            "skill": "COMBAT",
+            "uuid": "38699d98-8bfa-4492-acfb-7191c7c3c3bb",
+            "texture": "8d9ccc670677d0cebaad4058d6aaf9acfab09abea5d86379a059902f2fe22655"
+        },
+        {
+            "type": "SQUID",
+            "skill": "FISHING",
+            "uuid": "7b5da593-80d3-39f4-8220-2cef27c5b9d9",
+            "texture": "01433be242366af126da434b8735df1eb5b3cb2cede39145974e9c483607bac"
+        },
+        {
+            "type": "TARANTULA",
+            "skill": "COMBAT",
+            "uuid": "3e5474d4-4365-3ea7-b4bc-b4edc54da341",
+            "texture": "8300986ed0a04ea79904f6ae53f49ed3a0ff5b1df62bba622ecbd3777f156df8"
+        },
+        {
+            "type": "TIGER",
+            "skill": "COMBAT",
+            "uuid": "33a69ead-44ac-3791-9425-52109aacdaa6",
+            "texture": "fc42638744922b5fcf62cd9bf27eeab91b2e72d6c70e86cc5aa3883993e9d84"
+        },
+        {
+            "type": "TURTLE",
+            "skill": "COMBAT",
+            "uuid": "f10d652b-906b-3065-adf5-9817983201ca",
+            "texture": "212b58c841b394863dbcc54de1c2ad2648af8f03e648988c1f9cef0bc20ee23c"
+        },
+        {
+            "type": "WITHER_SKELETON",
+            "skill": "MINING",
+            "uuid": "d928ce5e-e75e-3cdc-aaf1-0c93d49b5c31",
+            "texture": "f5ec964645a8efac76be2f160d7c9956362f32b6517390c59c3085034f050cff"
+        },
+        {
+            "type": "WOLF",
+            "skill": "COMBAT",
+            "uuid": "85b4606a-2fc7-4451-aa82-3b1afaeee9cd",
+            "texture": "dc3dd984bb659849bd52994046964c22725f717e986b12d548fd169367d494"
+        },
+        {
+            "type": "ZOMBIE",
+            "skill": "COMBAT",
+            "uuid": "1c760ea5-2e91-3c2e-b52a-e17d11733658",
+            "texture": "56fc854bb84cf4b7697297973e02b79bc10698460b51a639c60e5e417734e11"
+        }
+    ]
+}
