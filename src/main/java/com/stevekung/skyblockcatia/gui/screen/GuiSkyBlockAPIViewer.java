@@ -123,7 +123,6 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private static final WorldClient FAKE_WORLD = new WorldClient(Minecraft.getMinecraft().getNetHandler(), new WorldSettings(0L, WorldSettings.GameType.SURVIVAL, false, false, WorldType.DEFAULT), 0, EnumDifficulty.NORMAL, Minecraft.getMinecraft().mcProfiler);
 
     // API
-    private static final int MAXED_UNIQUE_MINIONS = 583;
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
     private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
@@ -903,7 +902,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
                 else if (this.currentSlot instanceof SkyBlockCraftedMinions)
                 {
-                    String total1 = EnumChatFormatting.GRAY + "Unique Minions: " + EnumChatFormatting.YELLOW + this.craftedMinionCount + "/" + GuiSkyBlockAPIViewer.MAXED_UNIQUE_MINIONS + EnumChatFormatting.GRAY + " (" + this.craftedMinionCount * 100 / GuiSkyBlockAPIViewer.MAXED_UNIQUE_MINIONS + "%)";
+                    String total1 = EnumChatFormatting.GRAY + "Unique Minions: " + EnumChatFormatting.YELLOW + this.craftedMinionCount + "/" + SBMinions.MINIONS.getUniqueMinions() + EnumChatFormatting.GRAY + " (" + this.craftedMinionCount * 100 / SBMinions.MINIONS.getUniqueMinions() + "%)";
                     String total2 = EnumChatFormatting.GRAY + "Current Minion Slot: " + EnumChatFormatting.YELLOW + this.currentMinionSlot + (this.additionalMinionSlot > 0 ? EnumChatFormatting.GOLD + " (Bonus +" + this.additionalMinionSlot + ")" : "");
                     this.drawString(this.fontRendererObj, total1, this.width - this.fontRendererObj.getStringWidth(total1) - 60, this.height - 68, 16777215);
                     this.drawString(this.fontRendererObj, total2, this.width - this.fontRendererObj.getStringWidth(total2) - 60, this.height - 58, 16777215);
@@ -2174,11 +2173,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     private void processCraftedMinions()
     {
-        for (SBMinions.MinionSlot minion : SBMinions.MINION_SLOTS)
+        for (SBMinions.CraftedMinions minion : SBMinions.MINIONS.getCraftedMinions())
         {
-            if (minion.getCurrentSlot() <= this.craftedMinionCount)
+            if (minion.getCount() <= this.craftedMinionCount)
             {
-                this.currentMinionSlot = minion.getMinionSlot();
+                this.currentMinionSlot = minion.getSlot();
             }
         }
 
@@ -2186,17 +2185,17 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         List<SBMinions.Data> minionDatas = new ArrayList<>();
         int level = 1;
 
-        for (SBMinions.Type minion : SBMinions.Type.VALUES)
+        for (SBMinions.Type minion : SBMinions.MINIONS.getType())
         {
             for (String minionType : this.craftedMinions.keySet())
             {
-                if (minion.name().equals(minionType))
+                if (minion.getType().equals(minionType))
                 {
                     level = Collections.max(this.craftedMinions.get(minionType));
                     break;
                 }
             }
-            minionLevels.add(new SBMinions.Info(minion.name(), minion.getAltName(), minion.getMinionItem(), level, minion.getMinionCategory()));
+            minionLevels.add(new SBMinions.Info(minion.getType(), minion.getDisplayName(), minion.getMinionItem(), level, minion.getCategory()));
         }
 
         for (Map.Entry<String, Collection<Integer>> entry : this.craftedMinions.asMap().entrySet())
@@ -2209,9 +2208,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             List<String> minionList = new ArrayList<>();
             Set<Integer> dummySet = new HashSet<>();
             Set<Integer> skippedList = new HashSet<>();
-            boolean hasTier12 = SBMinions.Type.getTypeByName(minionType).isHasTier12();
 
-            if (hasTier12)
+            if (SBMinions.MINIONS.getTypeByName(minionType).hasTier12())
             {
                 dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
             }
@@ -4754,9 +4752,8 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
             if (craftedMinion.getMinionItem() != null)
             {
-                String name = craftedMinion.getDisplayName() != null ? WordUtils.capitalize(craftedMinion.getDisplayName().toLowerCase(Locale.ROOT).replace("_", " ")) : WordUtils.capitalize(craftedMinion.getMinionName().toLowerCase(Locale.ROOT).replace("_", " "));
                 this.parent.drawItemStackSlot(this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
-                this.parent.drawString(this.parent.mc.fontRendererObj, name + " Minion " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
+                this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getDisplayName() + " " + EnumChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
                 this.parent.drawString(this.parent.mc.fontRendererObj, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(craftedMinion.getCraftedTiers()) + 202, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else

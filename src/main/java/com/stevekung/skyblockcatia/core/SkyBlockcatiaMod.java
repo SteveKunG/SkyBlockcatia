@@ -153,7 +153,7 @@ public class SkyBlockcatiaMod
                 PlayerStatsBonus.getBonusFromRemote(type);
             }
 
-            SBMinions.getMinionSlotFromRemote();
+            SBMinions.getMinions();
             SBPets.getPets();
             SBSlayers.getSlayers();
             SBSkills.getSkillsCap();
