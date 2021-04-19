@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.util.Locale;
 
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 public class PlayerStatsBonus
@@ -24,7 +24,7 @@ public class PlayerStatsBonus
 
     public static void getBonusFromRemote(Type type) throws Exception
     {
-        BufferedReader in = DataGetter.get("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
+        BufferedReader in = DataUtils.get("api/stats_bonuses/" + type.getPath() + "/" + type.toString() + ".json");
 
         switch (type)
         {

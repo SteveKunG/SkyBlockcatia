@@ -3,7 +3,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.io.BufferedReader;
 
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -16,7 +16,7 @@ public class SBMinions
 
     public static void getMinionSlotFromRemote() throws Exception
     {
-        BufferedReader in = DataGetter.get("api/minion_slots.json");
+        BufferedReader in = DataUtils.get("api/minion_slots.json");
         MINION_SLOTS = TextComponentUtils.GSON.fromJson(in, SBMinions.Slot[].class);
     }
 

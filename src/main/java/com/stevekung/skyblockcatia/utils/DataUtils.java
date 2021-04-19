@@ -1,12 +1,14 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 
-public class DataGetter
+public class DataUtils
 {
     public static BufferedReader get(String path) throws Exception
     {
@@ -24,12 +26,11 @@ public class DataGetter
         return null;
     }
 
-    public static BufferedReader getData(String fileName) throws IOException
+    public static BufferedReader getData(String fileName)
     {
-        URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/skyblock_data/" + fileName);
-
         try
         {
+            URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/skyblock_data/" + fileName);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream(), StandardCharsets.UTF_8));
             return in;
         }
@@ -37,7 +38,7 @@ public class DataGetter
         {
             e.printStackTrace();
             SkyBlockcatiaMod.LOGGER.error("Couldn't get {} from remote, using local data", fileName);
-            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(new File(DataGetter.class.getResource("/assets/skyblockcatia/api/" + fileName).getFile())), StandardCharsets.UTF_8));
+            BufferedReader in = new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/skyblockcatia/api/" + fileName)));
             return in;
         }
     }

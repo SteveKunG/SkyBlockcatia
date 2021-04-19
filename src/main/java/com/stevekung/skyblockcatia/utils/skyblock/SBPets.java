@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -40,7 +40,7 @@ public class SBPets
 
     public static void getPets() throws IOException
     {
-        PETS = TextComponentUtils.GSON.fromJson(DataGetter.getData("pets.json"), SBPets.class);
+        PETS = TextComponentUtils.GSON.fromJson(DataUtils.getData("pets.json"), SBPets.class);
     }
 
     public HeldItem getHeldItemByName(String name)

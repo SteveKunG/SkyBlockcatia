@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.io.BufferedReader;
 
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 import net.minecraft.block.Blocks;
@@ -16,7 +16,7 @@ public class SBSkills
 
     public static void getSkillsCap() throws Exception
     {
-        BufferedReader in = DataGetter.get("api/default_skills_cap.json");
+        BufferedReader in = DataUtils.get("api/default_skills_cap.json");
         SKILL_CAP = TextComponentUtils.GSON.fromJson(in, SkillCap.class);
     }
 

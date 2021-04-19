@@ -16,7 +16,7 @@ import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.event.handler.ToastTestEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
-import com.stevekung.skyblockcatia.utils.DataGetter;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBMinions;
@@ -53,7 +53,7 @@ public class SkyBlockcatiaMod
         {
             try
             {
-                BufferedReader reader = DataGetter.get("SKYBLOCKCATIA_USERNAME");
+                BufferedReader reader = DataUtils.get("SKYBLOCKCATIA_USERNAME");
                 String inputLine;
 
                 while ((inputLine = reader.readLine()) != null)
