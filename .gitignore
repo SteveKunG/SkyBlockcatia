@@ -7,7 +7,7 @@ build
 eclipse
 libs
 run
-src/main/java/test
+src/main/java/debug
 
 # file
 !gradlew.bat

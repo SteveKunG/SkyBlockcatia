@@ -1,195 +1,19 @@
 {
     "held_item": [
         {
-            "type": "PET_ITEM_ALL_SKILLS_BOOST_COMMON",
-            "name": "All Skills Boost",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_BIG_TEETH_COMMON",
-            "name": "Big Teeth",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_IRON_CLAWS_COMMON",
-            "name": "Iron Claws",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_SHARPENED_CLAWS_UNCOMMON",
-            "name": "Sharpened Claws",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_HARDENED_SCALES_UNCOMMON",
-            "name": "Hardened Scales",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_BUBBLEGUM",
-            "name": "Bubblegum",
-            "color": "blue"
-        },
-        {
-            "type": "PET_ITEM_LUCKY_CLOVER",
-            "name": "Lucky Clover",
-            "color": "dark_purple"
-        },
-        {
-            "type": "PET_ITEM_TEXTBOOK",
-            "name": "Textbook",
-            "color": "gold"
-        },
-        {
-            "type": "PET_ITEM_SADDLE",
-            "name": "Saddle",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_EXP_SHARE",
-            "name": "Exp Share",
-            "color": "dark_purple"
-        },
-        {
-            "type": "PET_ITEM_TIER_BOOST",
-            "name": "Tier Boost",
-            "color": "gold",
-            "isUpgrade": true
-        },
-        {
-            "type": "PET_ITEM_COMBAT_SKILL_BOOST_COMMON",
-            "name": "Combat Skill Boost",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON",
-            "name": "Combat Skill Boost",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_COMBAT_SKILL_BOOST_RARE",
-            "name": "Combat Skill Boost",
-            "color": "blue"
-        },
-        {
-            "type": "PET_ITEM_COMBAT_SKILL_BOOST_EPIC",
-            "name": "Combat Skill Boost",
-            "color": "dark_purple"
-        },
-        {
-            "type": "PET_ITEM_FISHING_SKILL_BOOST_COMMON",
-            "name": "Fishing Skill Boost",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON",
-            "name": "Fishing Skill Boost",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_FISHING_SKILL_BOOST_RARE",
-            "name": "Fishing Skill Boost",
-            "color": "blue"
-        },
-        {
-            "type": "PET_ITEM_FISHING_SKILL_BOOST_EPIC",
-            "name": "Fishing Skill Boost",
-            "color": "dark_purple"
-        },
-        {
-            "type": "PET_ITEM_FORAGING_SKILL_BOOST_COMMON",
-            "name": "Foraging Skill Boost",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON",
-            "name": "Foraging Skill Boost",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_FORAGING_SKILL_BOOST_RARE",
-            "name": "Foraging Skill Boost",
-            "color": "blue"
-        },
-        {
-            "type": "PET_ITEM_FORAGING_SKILL_BOOST_EPIC",
-            "name": "Foraging Skill Boost",
-            "color": "dark_purple"
-        },
-        {
-            "type": "PET_ITEM_MINING_SKILL_BOOST_COMMON",
-            "name": "Mining Skill Boost",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_MINING_SKILL_BOOST_UNCOMMON",
-            "name": "Mining Skill Boost",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_MINING_SKILL_BOOST_RARE",
-            "name": "Mining Skill Boost",
-            "color": "blue"
-        },
-        {
-            "type": "PET_ITEM_MINING_SKILL_BOOST_EPIC",
-            "name": "Mining Skill Boost",
-            "color": "dark_purple"
-        },
-        {
-            "type": "PET_ITEM_FARMING_SKILL_BOOST_COMMON",
-            "name": "Farming Skill Boost",
-            "color": "white"
-        },
-        {
-            "type": "PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON",
-            "name": "Farming Skill Boost",
-            "color": "green"
-        },
-        {
-            "type": "PET_ITEM_FARMING_SKILL_BOOST_RARE",
-            "name": "Farming Skill Boost",
-            "color": "blue"
-        },
-        {
-            "type": "PET_ITEM_FARMING_SKILL_BOOST_EPIC",
-            "name": "Farming Skill Boost",
-            "color": "dark_purple"
-        },
-        {
-            "type": "REINFORCED_SCALES",
-            "name": "Reinforced Scales",
-            "color": "blue"
-        },
-        {
-            "type": "GOLD_CLAWS",
-            "name": "Gold Claws",
-            "color": "green"
-        },
-        {
             "type": "ALL_SKILLS_SUPER_BOOST",
             "name": "All Skills Super Boost",
             "color": "white"
         },
         {
-            "type": "BIGGER_TEETH",
-            "name": "Bigger Teeth",
-            "color": "green"
-        },
-        {
-            "type": "SERRATED_CLAWS",
-            "name": "Serrated Claws",
-            "color": "blue"
-        },
-        {
-            "type": "WASHED_UP_SOUVENIR",
-            "name": "Washed-up Souvenir",
-            "color": "gold"
-        },
-        {
             "type": "ANTIQUE_REMEDIES",
             "name": "Antique Remedies",
             "color": "dark_purple"
+        },
+        {
+            "type": "BIGGER_TEETH",
+            "name": "Bigger Teeth",
+            "color": "green"
         },
         {
             "type": "CROCHET_TIGER_PLUSHIE",
@@ -202,9 +26,159 @@
             "color": "blue"
         },
         {
+            "type": "GOLD_CLAWS",
+            "name": "Gold Claws",
+            "color": "green"
+        },
+        {
             "type": "MINOS_RELIC",
             "name": "Minos Relic",
             "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_ALL_SKILLS_BOOST_COMMON",
+            "name": "All Skills Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_BIG_TEETH_COMMON",
+            "name": "Big Teeth",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_BUBBLEGUM",
+            "name": "Bubblegum",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_COMMON",
+            "name": "Combat Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_EPIC",
+            "name": "Combat Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_RARE",
+            "name": "Combat Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON",
+            "name": "Combat Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_EXP_SHARE",
+            "name": "Exp Share",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_COMMON",
+            "name": "Farming Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_EPIC",
+            "name": "Farming Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_RARE",
+            "name": "Farming Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON",
+            "name": "Farming Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_COMMON",
+            "name": "Fishing Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_EPIC",
+            "name": "Fishing Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_RARE",
+            "name": "Fishing Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON",
+            "name": "Fishing Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_COMMON",
+            "name": "Foraging Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_EPIC",
+            "name": "Foraging Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_RARE",
+            "name": "Foraging Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON",
+            "name": "Foraging Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_HARDENED_SCALES_UNCOMMON",
+            "name": "Hardened Scales",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_IRON_CLAWS_COMMON",
+            "name": "Iron Claws",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_LUCKY_CLOVER",
+            "name": "Lucky Clover",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_COMMON",
+            "name": "Mining Skill Boost",
+            "color": "white"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_EPIC",
+            "name": "Mining Skill Boost",
+            "color": "dark_purple"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_RARE",
+            "name": "Mining Skill Boost",
+            "color": "blue"
+        },
+        {
+            "type": "PET_ITEM_MINING_SKILL_BOOST_UNCOMMON",
+            "name": "Mining Skill Boost",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_SADDLE",
+            "name": "Saddle",
+            "color": "green"
+        },
+        {
+            "type": "PET_ITEM_SHARPENED_CLAWS_UNCOMMON",
+            "name": "Sharpened Claws",
+            "color": "green"
         },
         {
             "type": "PET_ITEM_SPOOKY_CUPCAKE",
@@ -212,8 +186,13 @@
             "color": "green"
         },
         {
-            "type": "PET_ITEM_VAMPIRE_FANG",
-            "name": "Vampire Fang",
+            "type": "PET_ITEM_TEXTBOOK",
+            "name": "Textbook",
+            "color": "gold"
+        },
+        {
+            "type": "PET_ITEM_TIER_BOOST",
+            "name": "Tier Boost",
             "color": "gold",
             "isUpgrade": true
         },
@@ -224,8 +203,29 @@
             "isUpgrade": true
         },
         {
+            "type": "PET_ITEM_VAMPIRE_FANG",
+            "name": "Vampire Fang",
+            "color": "gold",
+            "isUpgrade": true
+        },
+        {
             "type": "REAPER_GEM",
             "name": "Reaper Gem",
+            "color": "gold"
+        },
+        {
+            "type": "REINFORCED_SCALES",
+            "name": "Reinforced Scales",
+            "color": "blue"
+        },
+        {
+            "type": "SERRATED_CLAWS",
+            "name": "Serrated Claws",
+            "color": "blue"
+        },
+        {
+            "type": "WASHED_UP_SOUVENIR",
+            "name": "Washed-up Souvenir",
             "color": "gold"
         }
     ],
@@ -744,12 +744,6 @@
             "texture": "7071a76f669db5ed6d32b48bb2dba55d5317d7f45225cb3267ec435cfa514"
         },
         {
-            "type": "ENDER_DRAGON",
-            "skill": "COMBAT",
-            "uuid": "3f9632a1-0ce2-311a-97e7-b144dfcb74f3",
-            "texture": "aec3ff563290b13ff3bcc36898af7eaa988b6cc18dc254147f58374afe9b21b9"
-        },
-        {
             "type": "ENDERMAN",
             "skill": "COMBAT",
             "uuid": "fb3c5e13-61e9-4584-99db-9f9ef9fb834d",
@@ -760,6 +754,12 @@
             "skill": "MINING",
             "uuid": "3302cdfe-6879-4659-ab0b-587b2cdb98e6",
             "texture": "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855"
+        },
+        {
+            "type": "ENDER_DRAGON",
+            "skill": "COMBAT",
+            "uuid": "3f9632a1-0ce2-311a-97e7-b144dfcb74f3",
+            "texture": "aec3ff563290b13ff3bcc36898af7eaa988b6cc18dc254147f58374afe9b21b9"
         },
         {
             "type": "FLYING_FISH",
