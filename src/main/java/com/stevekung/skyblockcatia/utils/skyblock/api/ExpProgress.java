@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.google.gson.Gson;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 
+@Deprecated
 public class ExpProgress
 {
     private final int level;

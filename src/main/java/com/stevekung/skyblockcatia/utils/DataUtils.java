@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class DataUtils
 {
+    @Deprecated
     public static BufferedReader get(String path) throws Exception
     {
         URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/1.8.9/" + path);
