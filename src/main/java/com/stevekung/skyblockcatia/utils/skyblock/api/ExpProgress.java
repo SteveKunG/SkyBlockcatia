@@ -10,11 +10,6 @@ public class ExpProgress
 {
     private final int level;
     private final double xp;
-    public static ExpProgress[] SKILL;
-    public static ExpProgress[] ZOMBIE_SLAYER;
-    public static ExpProgress[] SPIDER_SLAYER;
-    public static ExpProgress[] WOLF_SLAYER;
-    public static ExpProgress[] RUNECRAFTING;
     public static ExpProgress[] DUNGEON;
 
     public ExpProgress(int level, double xp)
@@ -41,11 +36,6 @@ public class ExpProgress
 
     public enum Type
     {
-        SKILL,
-        ZOMBIE_SLAYER,
-        SPIDER_SLAYER,
-        WOLF_SLAYER,
-        RUNECRAFTING,
         DUNGEON;
 
         @Override

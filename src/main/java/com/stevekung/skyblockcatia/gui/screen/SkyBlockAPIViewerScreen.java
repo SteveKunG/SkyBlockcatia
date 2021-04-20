@@ -2670,14 +2670,14 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.getFairySouls(fairyExchanges);
         this.getMagicFindFromPets(this.petScore);
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FARMING, this.farmingLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FORAGING, this.foragingLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.MINING, this.miningLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.FISHING, this.fishingLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.COMBAT, this.combatLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ENCHANTING, this.enchantingLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.ALCHEMY, this.alchemyLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.TAMING, this.tamingLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getFarming(), this.farmingLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getForaging(), this.foragingLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getMining(), this.miningLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getFishing(), this.fishingLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getCombat(), this.combatLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getEnchanting(), this.enchantingLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getAlchemy(), this.alchemyLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getTaming(), this.tamingLevel));
         this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.CATACOMBS_DUNGEON, this.catacombsLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getZombie(), this.zombieSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getSpider(), this.spiderSlayerLevel));
@@ -3142,7 +3142,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SBSkills.Type.FORAGING));
         this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SBSkills.Type.MINING));
         this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SBSkills.Type.FISHING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SBSkills.Type.RUNECRAFTING, ExpProgress.RUNECRAFTING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SBSkills.Type.RUNECRAFTING, SBSkills.SKILLS.getLeveling().get("runecrafting")));
 
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SBSkills.Type.COMBAT));
         this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SBSkills.Type.ENCHANTING));
@@ -3183,10 +3183,10 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type)
     {
-        return this.checkSkill(element, type, ExpProgress.SKILL);
+        return this.checkSkill(element, type, SBSkills.SKILLS.getLeveling().get("default"));
     }
 
-    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type, ExpProgress[] progress)
+    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type, int[] leveling)
     {
         if (element != null)
         {
@@ -3198,7 +3198,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             double xpToNextLvl = 0;
             double currentXp = 0;
             double skillProgress = 0;
-            int cap = SBSkills.SKILL_CAP.getCapBySkill(type);
+            int cap = SBSkills.SKILLS.getCap().get(type.name().toLowerCase(Locale.ROOT));
 
             if (type == SBSkills.Type.FARMING)
             {
@@ -3209,13 +3209,13 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 if (playerXp >= xpTotal)
                 {
-                    xpTotal += progress[x].getXp();
+                    xpTotal += leveling[x];
                     currentLvl = x;
-                    levelToCheck = progress[x].getLevel();
+                    levelToCheck = currentLvl + 1;
 
                     if (levelToCheck <= cap)
                     {
-                        xpRequired = (int)progress[x].getXp();
+                        xpRequired = leveling[x];
                     }
                 }
             }
