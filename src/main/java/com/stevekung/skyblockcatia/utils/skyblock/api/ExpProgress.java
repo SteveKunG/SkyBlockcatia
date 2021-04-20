@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
+@Deprecated
 public class ExpProgress
 {
     private final int level;

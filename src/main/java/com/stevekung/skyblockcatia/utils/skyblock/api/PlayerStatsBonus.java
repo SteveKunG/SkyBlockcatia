@@ -6,6 +6,7 @@ import java.util.Locale;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
+@Deprecated
 public class PlayerStatsBonus
 {
     public static PlayerStatsBonus.CatacombsDungeon[] CATACOMBS_DUNGEON;
@@ -44,53 +45,6 @@ public class PlayerStatsBonus
         public double getHealth()
         {
             return this.health;
-        }
-    }
-
-    public class FairySouls implements IBonusTemplate
-    {
-        private final int count;
-        private final double health;
-        private final double defense;
-        private final double strength;
-        private final double speed;
-
-        public FairySouls(int count, double health, double defense, double strength, double speed)
-        {
-            this.count = count;
-            this.health = health;
-            this.defense = defense;
-            this.strength = strength;
-            this.speed = speed;
-        }
-
-        public int getCount()
-        {
-            return this.count;
-        }
-
-        @Override
-        public double getHealth()
-        {
-            return this.health;
-        }
-
-        @Override
-        public double getDefense()
-        {
-            return this.defense;
-        }
-
-        @Override
-        public double getStrength()
-        {
-            return this.strength;
-        }
-
-        @Override
-        public double getSpeed()
-        {
-            return this.speed;
         }
     }
 
