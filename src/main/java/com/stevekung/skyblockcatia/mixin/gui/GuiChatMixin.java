@@ -45,20 +45,4 @@ public class GuiChatMixin extends GuiScreen
     {
         GuiChatRegistry.getGuiChatList().forEach(gui -> gui.handleMouseInput(this.width, this.height));
     }
-
-    @Override
-    public void sendChatMessage(String msg)
-    {
-        if (!msg.startsWith("/"))
-        {
-            for (IGuiChat chat : GuiChatRegistry.getGuiChatList())
-            {
-                this.sendChatMessage(chat.sendChatMessage(msg), true);
-            }
-        }
-        else
-        {
-            super.sendChatMessage(msg);
-        }
-    }
 }

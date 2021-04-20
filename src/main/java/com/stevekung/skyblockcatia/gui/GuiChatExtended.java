@@ -25,7 +25,6 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
@@ -33,7 +32,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
 {
     private GuiDropdownMinigamesButton dropdown;
     private int prevSelect = -1;
-    private ChatMode mode = ChatMode.ALL;
     private final Minecraft mc;
 
     public GuiChatExtended()
@@ -45,7 +43,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
     public void initGui(List<GuiButton> buttonList, int width, int height)
     {
         this.updateButton(buttonList, width, height);
-        this.mode = ChatMode.VALUES[SkyBlockcatiaSettings.INSTANCE.chatMode];
     }
 
     @Override
@@ -113,42 +110,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
             {
                 player.sendChatMessage(buttomCustom.command);
             }
-        }
-
-        switch (button.id)
-        {
-        case 200:
-            this.mode = ChatMode.ALL;
-            player.sendChatMessage("/chat a");
-            SkyBlockcatiaSettings.INSTANCE.chatMode = 0;
-            break;
-        case 201:
-            this.mode = ChatMode.PARTY;
-            player.sendChatMessage("/chat p");
-            SkyBlockcatiaSettings.INSTANCE.chatMode = 1;
-            break;
-        case 202:
-            this.mode = ChatMode.GUILD;
-            player.sendChatMessage("/chat g");
-            SkyBlockcatiaSettings.INSTANCE.chatMode = 2;
-            break;
-        case 203:
-            this.mode = ChatMode.SKYBLOCK_COOP;
-            SkyBlockcatiaSettings.INSTANCE.chatMode = 3;
-            break;
-        }
-    }
-
-    @Override
-    public String sendChatMessage(String original)
-    {
-        if (this.mode == ChatMode.SKYBLOCK_COOP)
-        {
-            return this.mode.getCommand() + " " + original;
-        }
-        else
-        {
-            return original;
         }
     }
 
@@ -289,41 +250,6 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
             {
                 button.visible = false;
             }
-        }
-    }
-
-    public enum ChatMode
-    {
-        ALL("/achat", "All Chat", EnumChatFormatting.GRAY),
-        PARTY("/pchat", "Party Chat", EnumChatFormatting.BLUE),
-        GUILD("/gchat", "Guild Chat", EnumChatFormatting.DARK_GREEN),
-        SKYBLOCK_COOP("/cc", "Coop Chat", EnumChatFormatting.AQUA);
-
-        private final String command;
-        private final String desc;
-        private final EnumChatFormatting color;
-        public static final ChatMode[] VALUES = ChatMode.values();
-
-        ChatMode(String command, String desc, EnumChatFormatting color)
-        {
-            this.command = command;
-            this.desc = desc;
-            this.color = color;
-        }
-
-        public String getCommand()
-        {
-            return this.command;
-        }
-
-        public String getDesc()
-        {
-            return this.desc;
-        }
-
-        public EnumChatFormatting getColor()
-        {
-            return this.color;
         }
     }
 }

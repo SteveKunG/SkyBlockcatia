@@ -12,5 +12,4 @@ public interface IGuiChat
     void actionPerformed(GuiButton button);
     void onGuiClosed();
     void handleMouseInput(int width, int height);
-    String sendChatMessage(String original);
 }

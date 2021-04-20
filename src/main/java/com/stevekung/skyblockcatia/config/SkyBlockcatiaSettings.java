@@ -46,7 +46,6 @@ public class SkyBlockcatiaSettings
     public int giftToastTime = 5;
     public int petToastMode = 2;
     public int petToastTime = 10;
-    public int chatMode = 0;
     public boolean placedSummoningEyeTracker = false;
     public boolean showItemRarity = true;
     public boolean showHitboxWhenDragonSpawned = false;
@@ -101,7 +100,6 @@ public class SkyBlockcatiaSettings
             this.giftToastTime = SkyBlockcatiaSettings.getInteger(nbt, "GiftToastTime", this.giftToastTime);
             this.petToastMode = SkyBlockcatiaSettings.getInteger(nbt, "PetToastMode", this.petToastMode);
             this.petToastTime = SkyBlockcatiaSettings.getInteger(nbt, "PetToastTime", this.petToastTime);
-            this.chatMode = SkyBlockcatiaSettings.getInteger(nbt, "ChatMode", this.chatMode);
 
             // Hypixel
             this.rightClickToAddParty = SkyBlockcatiaSettings.getBoolean(nbt, "RightClickToAddParty", this.rightClickToAddParty);
@@ -162,7 +160,6 @@ public class SkyBlockcatiaSettings
             nbt.setInteger("GiftToastTime", this.giftToastTime);
             nbt.setInteger("PetToastMode", this.petToastMode);
             nbt.setInteger("PetToastTime", this.petToastTime);
-            nbt.setInteger("ChatMode", this.chatMode);
 
             // Hypixel
             nbt.setBoolean("RightClickToAddParty", this.rightClickToAddParty);
