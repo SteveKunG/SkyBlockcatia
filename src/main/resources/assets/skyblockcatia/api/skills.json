@@ -1,0 +1,205 @@
+{
+    "cap": {
+        "farming": 50,
+        "mining": 60,
+        "combat": 50,
+        "foraging": 50,
+        "fishing": 50,
+        "enchanting": 60,
+        "alchemy": 50,
+        "taming": 50,
+        "carpentry": 50,
+        "runecrafting": 25
+    },
+    "leveling": {
+        "default": [
+            50,
+            125,
+            200,
+            300,
+            500,
+            750,
+            1000,
+            1500,
+            2000,
+            3500,
+            5000,
+            7500,
+            10000,
+            15000,
+            20000,
+            30000,
+            50000,
+            75000,
+            100000,
+            200000,
+            300000,
+            400000,
+            500000,
+            600000,
+            700000,
+            800000,
+            900000,
+            1000000,
+            1100000,
+            1200000,
+            1300000,
+            1400000,
+            1500000,
+            1600000,
+            1700000,
+            1800000,
+            1900000,
+            2000000,
+            2100000,
+            2200000,
+            2300000,
+            2400000,
+            2500000,
+            2600000,
+            2750000,
+            2900000,
+            3100000,
+            3400000,
+            3700000,
+            4000000,
+            4300000,
+            4600000,
+            4900000,
+            5200000,
+            5500000,
+            5800000,
+            6100000,
+            6400000,
+            6700000,
+            7000000
+        ],
+        "runecrafting": [
+            50,
+            100,
+            125,
+            160,
+            200,
+            250,
+            315,
+            400,
+            500,
+            625,
+            785,
+            1000,
+            1250,
+            1600,
+            2000,
+            2465,
+            3125,
+            4000,
+            5000,
+            6200,
+            7800,
+            9800,
+            12200,
+            15300,
+            19050
+        ]
+    },
+    "bonus": {
+        "farming": [
+            {
+                "level": 1,
+                "health": 2,
+                "farming_fortune": 4
+            },
+            {
+                "level": 15,
+                "health": 3,
+                "farming_fortune": 4
+            },
+            {
+                "level": 20,
+                "health": 4,
+                "farming_fortune": 4
+            },
+            {
+                "level": 26,
+                "health": 5,
+                "farming_fortune": 4
+            }
+        ],
+        "mining": [
+            {
+                "level": 1,
+                "defense": 1,
+                "mining_fortune": 4
+            },
+            {
+                "level": 15,
+                "defense": 2,
+                "mining_fortune": 4
+            }
+        ],
+        "combat": [
+            {
+                "level": 1,
+                "crit_chance": 0.5
+            }
+        ],
+        "foraging": [
+            {
+                "level": 1,
+                "strength": 1,
+                "foraging_fortune": 4
+            },
+            {
+                "level": 15,
+                "strength": 2,
+                "foraging_fortune": 4
+            }
+        ],
+        "fishing": [
+            {
+                "level": 1,
+                "health": 2
+            },
+            {
+                "level": 15,
+                "health": 3
+            },
+            {
+                "level": 20,
+                "health": 4
+            },
+            {
+                "level": 26,
+                "health": 5
+            }
+        ],
+        "enchanting": [
+            {
+                "level": 1,
+                "intelligence": 1,
+                "ability_damage": 0.5
+            },
+            {
+                "level": 15,
+                "intelligence": 2,
+                "ability_damage": 0.5
+            }
+        ],
+        "alchemy": [
+            {
+                "level": 1,
+                "intelligence": 1
+            },
+            {
+                "level": 15,
+                "intelligence": 2
+            }
+        ],
+        "taming": [
+            {
+                "level": 1,
+                "pet_luck": 1
+            }
+        ]
+    }
+}

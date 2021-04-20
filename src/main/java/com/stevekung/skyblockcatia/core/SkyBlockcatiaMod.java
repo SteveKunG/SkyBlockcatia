@@ -141,11 +141,6 @@ public class SkyBlockcatiaMod
     {
         try
         {
-            ExpProgress.SKILL = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.SKILL);
-            ExpProgress.ZOMBIE_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.ZOMBIE_SLAYER);
-            ExpProgress.SPIDER_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.SPIDER_SLAYER);
-            ExpProgress.WOLF_SLAYER = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.WOLF_SLAYER);
-            ExpProgress.RUNECRAFTING = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.RUNECRAFTING);
             ExpProgress.DUNGEON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.DUNGEON);
 
             for (PlayerStatsBonus.Type type : PlayerStatsBonus.Type.VALUES)
@@ -156,7 +151,7 @@ public class SkyBlockcatiaMod
             SBMinions.getMinions();
             SBPets.getPets();
             SBSlayers.getSlayers();
-            SBSkills.getSkillsCap();
+            SBSkills.getSkills();
         }
         catch (Throwable e)
         {

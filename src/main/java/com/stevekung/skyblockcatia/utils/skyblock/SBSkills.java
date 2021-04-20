@@ -1,9 +1,12 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataUtils;
+import com.stevekung.skyblockcatia.utils.skyblock.api.IBonusTemplate;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -14,12 +17,331 @@ import net.minecraft.item.ItemStack;
 public class SBSkills
 {
     private static final Gson GSON = new Gson();
-    public static SkillCap SKILL_CAP;
+    public static SBSkills SKILLS;
 
-    public static void getSkillsCap() throws Exception
+    private final Map<String, Integer> cap;
+    private final Map<String, int[]> leveling;
+    private final Bonus bonus;
+
+    public SBSkills(Map<String, Integer> cap, Map<String, int[]> leveling, Bonus bonus)
     {
-        BufferedReader in = DataUtils.get("api/default_skills_cap.json");
-        SKILL_CAP = GSON.fromJson(in, SkillCap.class);
+        this.cap = cap;
+        this.leveling = leveling;
+        this.bonus = bonus;
+    }
+
+    public Map<String, Integer> getCap()
+    {
+        return this.cap;
+    }
+
+    public Map<String, int[]> getLeveling()
+    {
+        return this.leveling;
+    }
+
+    public Bonus getBonus()
+    {
+        return this.bonus;
+    }
+
+    public static void getSkills() throws IOException
+    {
+        SKILLS = GSON.fromJson(DataUtils.getData("skills.json"), SBSkills.class);
+    }
+
+    public class Bonus
+    {
+        private final Farming[] farming;
+        private final Mining[] mining;
+        private final Combat[] combat;
+        private final Foraging[] foraging;
+        private final Fishing[] fishing;
+        private final Enchanting[] enchanting;
+        private final Alchemy[] alchemy;
+        private final Taming[] taming;
+
+        public Bonus(Farming[] farming, Mining[] mining, Combat[] combat, Foraging[] foraging, Fishing[] fishing, Enchanting[] enchanting, Alchemy[] alchemy, Taming[] taming)
+        {
+            this.farming = farming;
+            this.mining = mining;
+            this.combat = combat;
+            this.foraging = foraging;
+            this.fishing = fishing;
+            this.enchanting = enchanting;
+            this.alchemy = alchemy;
+            this.taming = taming;
+        }
+
+        public Farming[] getFarming()
+        {
+            return this.farming;
+        }
+
+        public Mining[] getMining()
+        {
+            return this.mining;
+        }
+
+        public Combat[] getCombat()
+        {
+            return this.combat;
+        }
+
+        public Foraging[] getForaging()
+        {
+            return this.foraging;
+        }
+
+        public Fishing[] getFishing()
+        {
+            return this.fishing;
+        }
+
+        public Enchanting[] getEnchanting()
+        {
+            return this.enchanting;
+        }
+
+        public Alchemy[] getAlchemy()
+        {
+            return this.alchemy;
+        }
+
+        public Taming[] getTaming()
+        {
+            return this.taming;
+        }
+    }
+
+    public class Farming implements IBonusTemplate
+    {
+        private final int level;
+        private final double health;
+        @SerializedName("farming_fortune")
+        private final double farmingFortune;
+
+        public Farming(int level, double health, double farmingFortune)
+        {
+            this.level = level;
+            this.health = health;
+            this.farmingFortune = farmingFortune;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getHealth()
+        {
+            return this.health;
+        }
+
+        @Override
+        public double getFarmingFortune()
+        {
+            return this.farmingFortune;
+        }
+    }
+
+    public class Foraging implements IBonusTemplate
+    {
+        private final int level;
+        private final double strength;
+        @SerializedName("foraging_fortune")
+        private final double foragingFortune;
+
+        public Foraging(int level, double strength, double foragingFortune)
+        {
+            this.level = level;
+            this.strength = strength;
+            this.foragingFortune = foragingFortune;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getStrength()
+        {
+            return this.strength;
+        }
+
+        @Override
+        public double getForagingFortune()
+        {
+            return this.foragingFortune;
+        }
+    }
+
+    public class Mining implements IBonusTemplate
+    {
+        private final int level;
+        private final double defense;
+        @SerializedName("mining_fortune")
+        private final double miningFortune;
+
+        public Mining(int level, double defense, double miningFortune)
+        {
+            this.level = level;
+            this.defense = defense;
+            this.miningFortune = miningFortune;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getDefense()
+        {
+            return this.defense;
+        }
+
+        @Override
+        public double getMiningFortune()
+        {
+            return this.miningFortune;
+        }
+    }
+
+    public class Fishing implements IBonusTemplate
+    {
+        private final int level;
+        private final double health;
+
+        public Fishing(int level, double health)
+        {
+            this.level = level;
+            this.health = health;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getHealth()
+        {
+            return this.health;
+        }
+    }
+
+    public class Combat implements IBonusTemplate
+    {
+        private final int level;
+        @SerializedName("crit_chance")
+        private final double critChance;
+
+        public Combat(int level, double critChance)
+        {
+            this.level = level;
+            this.critChance = critChance;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getCritChance()
+        {
+            return this.critChance;
+        }
+    }
+
+    public class Enchanting implements IBonusTemplate
+    {
+        private final int level;
+        private final double intelligence;
+        @SerializedName("ability_damage")
+        private final double abilityDamage;
+
+        public Enchanting(int level, double intelligence, double abilityDamage)
+        {
+            this.level = level;
+            this.intelligence = intelligence;
+            this.abilityDamage = abilityDamage;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getIntelligence()
+        {
+            return this.intelligence;
+        }
+
+        @Override
+        public double getAbilityDamage()
+        {
+            return this.abilityDamage;
+        }
+    }
+
+    public class Alchemy implements IBonusTemplate
+    {
+        private final int level;
+        private final double intelligence;
+
+        public Alchemy(int level, double intelligence)
+        {
+            this.level = level;
+            this.intelligence = intelligence;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getIntelligence()
+        {
+            return this.intelligence;
+        }
+    }
+
+    public class Taming implements IBonusTemplate
+    {
+        private final int level;
+        @SerializedName("pet_luck")
+        private final double petLuck;
+
+        public Taming(int level, double petLuck)
+        {
+            this.level = level;
+            this.petLuck = petLuck;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getPetLuck()
+        {
+            return this.petLuck;
+        }
     }
 
     public enum Type
@@ -134,63 +456,6 @@ public class SBSkills
         public boolean isReachLimit()
         {
             return this.reachLimit;
-        }
-    }
-
-    public static class SkillCap
-    {
-        private final int alchemy;
-        private final int carpentry;
-        private final int combat;
-        private final int enchanting;
-        private final int farming;
-        private final int fishing;
-        private final int foraging;
-        private final int mining;
-        private final int runecrafting;
-        private final int taming;
-
-        public SkillCap(int alchemy, int carpentry, int combat, int enchanting, int farming, int fishing, int foraging, int mining, int runecrafting, int taming)
-        {
-            this.alchemy = alchemy;
-            this.carpentry = carpentry;
-            this.combat = combat;
-            this.enchanting = enchanting;
-            this.farming = farming;
-            this.fishing = fishing;
-            this.foraging = foraging;
-            this.mining = mining;
-            this.runecrafting = runecrafting;
-            this.taming = taming;
-        }
-
-        public int getCapBySkill(SBSkills.Type type)
-        {
-            switch (type)
-            {
-            case ALCHEMY:
-                return this.alchemy;
-            case CARPENTRY:
-                return this.carpentry;
-            case COMBAT:
-                return this.combat;
-            case ENCHANTING:
-                return this.enchanting;
-            case FARMING:
-                return this.farming;
-            case FISHING:
-                return this.fishing;
-            case FORAGING:
-                return this.foraging;
-            case MINING:
-                return this.mining;
-            case RUNECRAFTING:
-                return this.runecrafting;
-            case TAMING:
-                return this.taming;
-            default:
-                return 50;
-            }
         }
     }
 }
