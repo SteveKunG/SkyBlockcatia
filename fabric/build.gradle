@@ -1,0 +1,131 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.matthewprenger.cursegradle"
+}
+
+configurations {
+    shadow
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+repositories {
+    maven {
+        name "ModMenu Maven"
+        url "https://maven.terraformersmc.com/releases/"
+    }
+}
+
+loom {
+    mixinConfigs = ["mixins.originatia.json", "mixins.originatia_fabric.json"]
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modApi "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
+    modApi "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    implementation(project(path: ":common")) {
+        transitive = false
+    }
+    developmentFabric(project(path: ":common")) {
+        transitive = false
+    }
+    shadow(project(path: ":common", configuration: "transformProductionFabric")) {
+        transitive = false
+    }
+
+    if (file("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar").exists()) {
+        compile files("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar")
+        println("Use existing deobf artifact")
+    } else {
+        modCompile("curse.maven:stevekungs-lib-296019:${rootProject.stevekung_lib_fabric_deobf}")
+        println("Use CurseForge deobf artifact")
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+def fileName = "${rootProject.archives_base_name}-mc${rootProject.mc_version}"
+
+jar {
+    version "v${project.version}"
+    baseName fileName
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    classifier "dev"
+    version "v${project.version}"
+    baseName fileName
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+    classifier "source"
+    version "v${project.version}"
+    baseName fileName
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "fabric"
+    version "v${project.version}"
+    baseName fileName
+}
+
+artifacts {
+    archives sourcesJar
+    archives shadowJar
+}
+
+curseforge {
+    if (project.hasProperty("upload_api_key")) {
+        apiKey = project.upload_api_key
+        project {
+            id = "434676"
+            changelog = file("../CHANGE_LOG.md")
+            changelogType = "markdown"
+            releaseType = "beta"
+            addGameVersion "Fabric"
+            addGameVersion rootProject.mc_version
+
+            mainArtifact(remapJar.archiveFile) {
+                displayName = "[Fabric] ${rootProject.archives_base_name}-mc${rootProject.mc_version}-v${project.version}"
+            }
+            relations {
+                requiredDependency "architectury-fabric"
+                requiredDependency "stevekungs-lib"
+                requiredDependency "fabric-api"
+            }
+            afterEvaluate {
+                uploadTask.dependsOn(remapJar)
+            }
+            addArtifact sourcesJar
+            addArtifact shadowJar
+        }
+        options {
+            forgeGradleIntegration = false
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.curseforge434676.dependsOn remapJar
+}

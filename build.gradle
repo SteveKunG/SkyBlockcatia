@@ -1,192 +1,54 @@
-buildscript {
-    repositories {
-        maven { url "https://files.minecraftforge.net/maven" }
-        maven { url "https://repo.spongepowered.org/maven" }
-        gradlePluginPortal()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "4.1.+", changing: true
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
-        classpath "com.github.jengelman.gradle.plugins:shadow:5.0.0"
-    }
-}
-
 plugins {
-    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "architectury-plugin" version "3.1-SNAPSHOT"
+    id "forgified-fabric-loom" version "0.7.0-SNAPSHOT" apply false
+    id "com.matthewprenger.cursegradle" version "1.4.0" apply false
 }
 
-def mcVersion = project.mc_version
-def username = project.username
-def password = project.password
+architectury {
+    minecraft = rootProject.mc_version
+}
 
-apply plugin: "com.github.johnrengelman.shadow"
-apply plugin: "net.minecraftforge.gradle"
-apply plugin: "org.spongepowered.mixin"
-apply plugin: "eclipse"
+subprojects {
+    apply plugin: "forgified-fabric-loom"
 
-import net.minecraftforge.gradle.common.task.SignJar
+    loom {
+        silentMojangMappingsLicense()
+    }
 
-version = project.version
-group = "com.stevekung.skyblockcatia"
-archivesBaseName = "SkyBlockcatia"
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = 1.8
-println("Java: " + System.getProperty("java.version") + " JVM: " + System.getProperty("java.vm.version") + "(" + System.getProperty("java.vendor") + ") Arch: " + System.getProperty("os.arch"))
-compileJava.options.encoding = "UTF-8"
-
-minecraft {
-    mappings channel: "snapshot", version: "${mcp_mapping}"
-    accessTransformer file("src/main/resources/META-INF/accesstransformer.cfg")
-
-    runs {
-        client {
-            workingDirectory project.file("run")
-            source sourceSets.main
-            args "--mixin", "mixins.skyblockcatia.json", "--username", username, "--password", password
-            jvmArgs "-Dmixin.debug.export=true", "-Dmixin.debug.verbose=true"
-        }
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.mc_version}"
+        mappings loom.officialMojangMappings()
     }
 }
 
-configurations {
-    embed
-    compile.extendsFrom(embed)
-}
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
 
-shadowJar {
-    configurations = [project.configurations.embed]
-    baseName = "SkyBlockcatia-" + mcVersion
-    classifier = ""
-    relocate "org.apache.commons.text", group + ".relocate.org.apache.commons.text"
-}
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
 
-dependencies {
-    minecraft "net.minecraftforge:forge:${forge_version}"
-    annotationProcessor "org.spongepowered:mixin:0.8.2:processor"
-
-    if (file("libs/SteveKunG's-Lib-${mc_version}-dev-deobf.jar").exists())
-    {
-        compile files("libs/SteveKunG's-Lib-${mc_version}-dev-deobf.jar")
-        compile files("libs/Indicatia-${mc_version}-dev-deobf.jar")
-        println("Use existing deobf artifact")
-    }
-    else
-    {
-        implementation fg.deobf("curse.maven:stevekungs-lib-296019:${stevekung_lib_deobf}")
-        implementation fg.deobf("curse.maven:indicatia-272146:${indicatia_deobf}")
-        println("Use CurseForge deobf artifact")
-    }
-
-    embed("org.apache.commons:commons-text:1.8") {
-        exclude group: "org.apache.commons", module: "commons-lang3"
-    }
-}
-
-repositories {
-    maven {
-        name "CurseGradle"
-        url "https://plugins.gradle.org/m2/"
-    }
-    maven {
-        name "Shadow"
-        url "https://jitpack.io"
-    }
-    maven {
-        name "CurseMaven"
-        url "https://www.cursemaven.com/"
-    }
-}
-
-sourceSets {
-    main {
-        ext.refMap = "mixins.skyblockcatia.refmap.json"
-    }
-}
-
-reobf {
-    shadowJar {
-        dependsOn tasks.createMcpToSrg
-        mappings = tasks.createMcpToSrg.outputs.files.singleFile
-    }
-}
-
-jar {
-    manifest {
-        attributes([
-            "MixinConfigs": "mixins.skyblockcatia.json",
-            "Implementation-Title": "${archivesBaseName}",
-            "Implementation-Version": "${version}",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-    baseName = "SkyBlockcatia-" + mcVersion
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }) {
-        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
-    }
-    baseName = "SkyBlockcatia-" + mcVersion
-    classifier = "sources"
-}
-
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    from(configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }) {
-        exclude "LICENSE.txt", "META-INF/*.txt", "META-INF/MANIFSET.MF", "META-INF/maven/**", "META-INF/*.RSA", "META-INF/*.SF"
-    }
-    manifest {
-        attributes([
-            "MixinConfigs": "mixins.skyblockcatia.json",
-            "Implementation-Title": "${archivesBaseName}",
-            "Implementation-Version": "${version}",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-    baseName = "SkyBlockcatia-" + mcVersion
-    classifier = "deobf"
-}
-
-artifacts {
-    archives sourcesJar
-    archives deobfJar
-}
-
-curseforge {
-    if (project.hasProperty("upload_api_key")) {
-        apiKey = project.upload_api_key
-        project {
-            id = "397441"
-            changelog = file("CHANGE_LOG.md")
-            changelogType = "markdown"
-            releaseType = "release"
-            addGameVersion mcVersion
-
-            mainArtifact(jar) {
-                displayName = "SkyBlockcatia-" + mcVersion + "-" + version
-                relations {
-                    requiredLibrary "stevekungs-lib"
-                    optionalLibrary "indicatia"
-                }
+    repositories {
+        maven {
+            name "CurseMaven"
+            url "https://www.cursemaven.com/"
+            content {
+                includeGroup "curse.maven"
             }
-            addArtifact sourcesJar
-            addArtifact deobfJar
         }
     }
-}
 
-task signJar(type: SignJar, dependsOn: jar) {
-    if (project.hasProperty("upload_api_key")) {
-        keyStore = project.keystore_path
-        alias = project.alias
-        storePass = project.keystore_pass
-        keyPass = project.keystore_pass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+
+        def targetVersion = 8
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.release = targetVersion
+        }
+    }
+
+    java {
+        withSourcesJar()
     }
 }
-
-build.dependsOn signJar
-tasks.curseforge.dependsOn(build)

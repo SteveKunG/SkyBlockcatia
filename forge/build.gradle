@@ -1,0 +1,115 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.matthewprenger.cursegradle"
+}
+
+configurations {
+    shadow
+}
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+loom {
+    mixinConfigs = ["mixins.skyblockcatia.json"]
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${rootProject.mc_version}-${rootProject.forge_version}"
+    modApi "me.shedaniel:architectury-forge:${rootProject.architectury_version}"
+
+    implementation(project(path: ":common")) {
+        transitive = false
+    }
+    developmentForge(project(path: ":common")) {
+        transitive = false
+    }
+    shadow(project(path: ":common", configuration: "transformProductionForge")) {
+        transitive = false
+    }
+
+    if (file("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar").exists()) {
+        compile files("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar")
+        println("Use existing deobf artifact")
+    } else {
+        modCompile("curse.maven:stevekungs-lib-296019:${rootProject.stevekung_lib_forge_deobf}")
+        println("Use CurseForge deobf artifact")
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+def fileName = "${rootProject.archives_base_name}-mc${rootProject.mc_version}"
+
+jar {
+    version "v${project.version}"
+    baseName fileName
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    classifier "dev"
+    version "v${project.version}"
+    baseName fileName
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+    classifier "source"
+    version "v${project.version}"
+    baseName fileName
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier "forge"
+    version "v${project.version}"
+    baseName fileName
+}
+
+artifacts {
+    archives sourcesJar
+    archives shadowJar
+}
+
+curseforge {
+    if (project.hasProperty("upload_api_key")) {
+        apiKey = project.upload_api_key
+        project {
+            id = "434676"
+            changelog = file("../CHANGE_LOG.md")
+            changelogType = "markdown"
+            releaseType = "beta"
+            addGameVersion "Forge"
+            addGameVersion rootProject.mc_version
+
+            mainArtifact(remapJar.archiveFile) {
+                displayName = "[Forge] ${rootProject.archives_base_name}-mc${rootProject.mc_version}-v${project.version}"
+            }
+            relations {
+                requiredDependency "stevekungs-lib"
+                requiredDependency "architectury-forge"
+                optionalDependency "indicatia"
+            }
+            afterEvaluate {
+                uploadTask.dependsOn(remapJar)
+            }
+            addArtifact sourcesJar
+            addArtifact shadowJar
+        }
+        options {
+            forgeGradleIntegration = false
+        }
+    }
+}
