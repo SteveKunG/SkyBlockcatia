@@ -27,6 +27,7 @@ public class SkyBlockcatiaConfig
     public static boolean enableOverwriteSignEditing;
     public static boolean enableSignSelectionList;
     public static boolean enableChatInContainerScreen;
+    public static boolean disableErrorLog;
 
     public static void init(File file)
     {
@@ -97,6 +98,10 @@ public class SkyBlockcatiaConfig
 
         prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Enable Chat in Container Screen", true);
         SkyBlockcatiaConfig.enableChatInContainerScreen = prop.getBoolean();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Disable Error Log", true);
+        SkyBlockcatiaConfig.disableErrorLog = prop.getBoolean();
         propOrder.add(prop.getName());
 
         return propOrder;
