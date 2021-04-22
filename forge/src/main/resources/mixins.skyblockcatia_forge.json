@@ -3,9 +3,10 @@
     "minVersion": "0.8.2",
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin.forge",
-    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
+    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaForgeMixinConfigPlugin",
     "client": [
         "gui.screens.inventory.MixinAbstractContainerScreen",
+        "renderer.entity.layers.MixinHumanoidArmorLayer",
         "optifine.renderer.MixinBlockEntityWithoutLevelRendererOptifine"
     ],
     "injectors": {

@@ -3,9 +3,9 @@
     "minVersion": "0.8.2",
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin.fabric",
-    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
     "client": [
-        "gui.screens.inventory.MixinAbstractContainerScreen"
+        "gui.screens.inventory.MixinAbstractContainerScreen",
+        "renderer.entity.layers.MixinHumanoidArmorLayer"
     ],
     "injectors": {
         "defaultRequire": 1
