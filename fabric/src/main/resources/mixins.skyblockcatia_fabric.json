@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "minVersion": "0.8.2",
+    "compatibilityLevel": "JAVA_8",
+    "package": "com.stevekung.skyblockcatia.mixin.fabric",
+    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
+    "client": [
+        "gui.screens.inventory.MixinAbstractContainerScreen"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

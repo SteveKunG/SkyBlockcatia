@@ -75,7 +75,7 @@ public abstract class MixinArmorLayer<T extends LivingEntity, M extends Humanoid
                 A model = this.getArmorModel(slot);
                 ResourceLocation location = this.getArmorType(itemStack.getTag().getCompound("ExtraAttributes").getString("id"), this.usesInnerModel(slot));
                 model = this.getArmorModelHook(entity, itemStack, slot, model);
-                ((HumanoidModel)this.getParentModel()).copyPropertiesTo(model);
+                this.getParentModel().copyPropertiesTo(model);
                 model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
                 this.setPartVisibility(model, slot);
                 model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);

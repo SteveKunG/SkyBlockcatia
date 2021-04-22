@@ -35,7 +35,7 @@ public class ToastTestEventHandler
         Random rand = player.level.random;
         ItemStack itemStack = event.getStack();
         String magic = rand.nextBoolean() ? " §r§b(+" + rand.nextInt(100) + "% Magic Find!)§r" : "";
-        char formatter = ChatFormatting.values()[new Random().nextInt(ChatFormatting.values().length)].code;
+//        char formatter = ChatFormatting.values()[new Random().nextInt(ChatFormatting.values().length)].code;
 
         // Pet Level Up
         //String[] pet = new String[] {"Enderman","Bat","Parrot","Blue Whale","Bee","Skeleton Horse","Flying Fish","Magma Cube"};

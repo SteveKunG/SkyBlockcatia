@@ -13,7 +13,7 @@ architectury {
 }
 
 loom {
-    mixinConfigs = ["mixins.skyblockcatia.json"]
+    mixinConfigs = ["mixins.skyblockcatia.json", "mixins.skyblockcatia_forge.json"]
 }
 
 dependencies {

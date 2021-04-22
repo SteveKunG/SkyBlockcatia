@@ -1,0 +1,14 @@
+{
+    "required": true,
+    "minVersion": "0.8.2",
+    "compatibilityLevel": "JAVA_8",
+    "package": "com.stevekung.skyblockcatia.mixin.forge",
+    "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
+    "client": [
+        "gui.screens.inventory.MixinAbstractContainerScreen",
+        "optifine.renderer.MixinBlockEntityWithoutLevelRendererOptifine"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

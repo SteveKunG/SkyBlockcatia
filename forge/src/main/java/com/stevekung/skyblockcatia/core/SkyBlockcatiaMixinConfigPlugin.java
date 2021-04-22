@@ -10,7 +10,7 @@ import com.stevekung.stevekungslib.utils.LoggerBase;
 
 public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
 {
-    static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia MixinConfig");
+    static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia:Forge MixinConfig");
     static boolean foundOptifine;
 
     static
@@ -30,13 +30,9 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName)
     {
-        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.optifine.renderer.tileentity.MixinItemStackTileEntityRendererOptifine"))
+        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.forge.optifine.renderer.MixinBlockEntityWithoutLevelRendererOptifine"))
         {
             return foundOptifine;
-        }
-        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.renderer.tileentity.MixinItemStackTileEntityRenderer"))
-        {
-            return !foundOptifine;
         }
         return true;
     }

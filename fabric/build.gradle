@@ -20,7 +20,7 @@ repositories {
 }
 
 loom {
-    mixinConfigs = ["mixins.originatia.json", "mixins.originatia_fabric.json"]
+    mixinConfigs = ["mixins.skyblockcatia.json", "mixins.skyblockcatia_fabric.json"]
 }
 
 dependencies {
