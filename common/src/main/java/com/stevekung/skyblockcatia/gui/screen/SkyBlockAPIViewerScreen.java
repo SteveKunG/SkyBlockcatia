@@ -2139,6 +2139,15 @@ public class SkyBlockAPIViewerScreen extends Screen
                     itemId = EntityTheRenameningFix.RENAMED_ITEMS.getOrDefault(newItemReg, newItemReg);
                 }
 
+                if (itemId.equals("minecraft:carved_pumpkin"))
+                {
+                    itemId = "minecraft:pumpkin";
+                }
+                else if (itemId.equals("melon"))
+                {
+                    itemId = "melon_slice";
+                }
+
                 if (count > 0)
                 {
                     if (this.matchSackId(itemId, SBSlayers.Drops.values()))
