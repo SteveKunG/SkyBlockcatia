@@ -1,20 +1,30 @@
 package com.stevekung.skyblockcatia.event.handler;
 
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.event.GrapplingHookEvent;
+import com.stevekung.skyblockcatia.integration.sba.SBAMana;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.CoordsPair;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 import com.stevekung.stevekungslib.utils.ModDecimalFormat;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import me.shedaniel.architectury.event.events.EntityEvent;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -80,94 +90,90 @@ public class HUDRenderEventHandler
         }
     }
 
-//    public void onPreInfoRender(RenderGameOverlayEvent.Pre event)
-//    {
-//        PoseStack matrixStack = event.getMatrixStack();
-//        double jungleAxeDelay = 0;
-//        double grapplingHookDelay = 0;
-//        double zealotRespawnDelay = 0;
-//
-//        if (SkyBlockcatiaSettings.INSTANCE.axeCooldown)
-//        {
-//            jungleAxeDelay = this.getItemDelay(PetStats.INSTANCE.getAxeCooldown(2000), this.lastBlockBreak);
-//        }
-//        if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown)
-//        {
-//            grapplingHookDelay = this.getItemDelay(2000, this.lastGrapplingHookUse);
-//        }
-//        if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown)
-//        {
-//            zealotRespawnDelay = this.getItemDelay(11000, this.lastZealotRespawn);
-//        }
-//
-//        if (event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
-//        {
-//            if (this.mc.options.renderDebug || this.mc.player == null && this.mc.level == null)
-//            {
-//                return;
-//            }
-//
-//            if (CompatibilityUtils.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getMainHandItem().isEmpty())
-//            {
-//                ItemStack itemStack = this.mc.player.getMainHandItem();
-//
-//                if (itemStack.hasTag())
-//                {
-//                    CompoundTag compound = itemStack.getTag().getCompound("display");
-//
-//                    if (compound.getTagType("Lore") == 9)
-//                    {
-//                        ListTag list = compound.getList("Lore", 8);
-//
-//                        for (int j1 = 0; j1 < list.size(); ++j1)
-//                        {
-//                            String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
-//
-//                            if (lore.startsWith("Mana Cost: "))
-//                            {
-//                                int count = SBAMana.INSTANCE.getMana() / Integer.parseInt(lore.replace("Mana Cost: ", ""));
-//
-//                                if (count > 0)
-//                                {
-//                                    String usedCount = ChatFormatting.AQUA + String.valueOf(count);
-//                                    float fontHeight = this.mc.font.lineHeight + 1;
-//                                    float width = event.getWindow().getGuiScaledWidth() / 2F + 1.0625F;
-//                                    float height = event.getWindow().getGuiScaledHeight() / 2F - 24 + fontHeight;
-//                                    this.mc.font.drawShadow(matrixStack, usedCount, width - this.mc.font.width(usedCount) / 2F, height, 16777215);
-//                                }
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            List<CrosshairOverlay> crosshairInfo = Lists.newArrayList();
-//            int center = 0;
-//
-//            if (SkyBlockcatiaSettings.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
-//            {
-//                crosshairInfo.add(new CrosshairOverlay(jungleAxeDelay));
-//            }
-//            if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
-//            {
-//                crosshairInfo.add(new CrosshairOverlay(grapplingHookDelay));
-//            }
-//            if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
-//            {
-//                crosshairInfo.add(new CrosshairOverlay(zealotRespawnDelay));
-//            }
-//
-//            for (CrosshairOverlay overlay : crosshairInfo)
-//            {
-//                float fontHeight = this.mc.font.lineHeight + 1;
-//                float width = event.getWindow().getGuiScaledWidth() / 2F + 1.0625F;
-//                float height = event.getWindow().getGuiScaledHeight() / 2F + 6 + fontHeight * center;
-//                this.mc.font.drawShadow(matrixStack, TextComponentUtils.component(overlay.getDelay()), width - this.mc.font.width(overlay.getDelay()) / 2F, height, 16777215);
-//                center++;
-//            }
-//        }
-//    }
+    public void onPreInfoRender(PoseStack poseStack, Window window)
+    {
+        double jungleAxeDelay = 0;
+        double grapplingHookDelay = 0;
+        double zealotRespawnDelay = 0;
+
+        if (SkyBlockcatiaSettings.INSTANCE.axeCooldown)
+        {
+            jungleAxeDelay = this.getItemDelay(PetStats.INSTANCE.getAxeCooldown(2000), this.lastBlockBreak);
+        }
+        if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown)
+        {
+            grapplingHookDelay = this.getItemDelay(2000, this.lastGrapplingHookUse);
+        }
+        if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown)
+        {
+            zealotRespawnDelay = this.getItemDelay(11000, this.lastZealotRespawn);
+        }
+
+        if (this.mc.options.renderDebug || this.mc.player == null && this.mc.level == null)
+        {
+            return;
+        }
+
+        if (CompatibilityUtils.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getMainHandItem().isEmpty())
+        {
+            ItemStack itemStack = this.mc.player.getMainHandItem();
+
+            if (itemStack.hasTag())
+            {
+                CompoundTag compound = itemStack.getTag().getCompound("display");
+
+                if (compound.getTagType("Lore") == 9)
+                {
+                    ListTag list = compound.getList("Lore", 8);
+
+                    for (int j1 = 0; j1 < list.size(); ++j1)
+                    {
+                        String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+
+                        if (lore.startsWith("Mana Cost: "))
+                        {
+                            int count = SBAMana.INSTANCE.getMana() / Integer.parseInt(lore.replace("Mana Cost: ", ""));
+
+                            if (count > 0)
+                            {
+                                String usedCount = ChatFormatting.AQUA + String.valueOf(count);
+                                float fontHeight = this.mc.font.lineHeight + 1;
+                                float width = window.getGuiScaledWidth() / 2F + 1.0625F;
+                                float height = window.getGuiScaledHeight() / 2F - 24 + fontHeight;
+                                this.mc.font.drawShadow(poseStack, usedCount, width - this.mc.font.width(usedCount) / 2F, height, 16777215);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        List<CrosshairOverlay> crosshairInfo = Lists.newArrayList();
+        int center = 0;
+
+        if (SkyBlockcatiaSettings.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
+        {
+            crosshairInfo.add(new CrosshairOverlay(jungleAxeDelay));
+        }
+        if (SkyBlockcatiaSettings.INSTANCE.grapplingHookCooldown && grapplingHookDelay >= 0.01D)
+        {
+            crosshairInfo.add(new CrosshairOverlay(grapplingHookDelay));
+        }
+        if (SkyBlockcatiaSettings.INSTANCE.zealotRespawnCooldown && zealotRespawnDelay >= 0.01D && !HUDRenderEventHandler.foundDragon)
+        {
+            crosshairInfo.add(new CrosshairOverlay(zealotRespawnDelay));
+        }
+
+        for (CrosshairOverlay overlay : crosshairInfo)
+        {
+            float fontHeight = this.mc.font.lineHeight + 1;
+            float width = window.getGuiScaledWidth() / 2F + 1.0625F;
+            float height = window.getGuiScaledHeight() / 2F + 6 + fontHeight * center;
+            this.mc.font.drawShadow(poseStack, TextComponentUtils.component(overlay.getDelay()), width - this.mc.font.width(overlay.getDelay()) / 2F, height, 16777215);
+            center++;
+        }
+    }
 
     public InteractionResult onEntityJoinWorld(Entity entity, Level level)
     {

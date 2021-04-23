@@ -112,4 +112,10 @@ public class SBClientEventHandler
     {
         SkyBlockEventHandler.INSTANCE.onPressKey();
     }
+
+    @SubscribeEvent
+    public void onRenderOverlay(RenderGameOverlayEvent.Text event)
+    {
+        HUDRenderEventHandler.INSTANCE.onPreInfoRender(event.getMatrixStack(), event.getWindow());
+    }
 }
