@@ -28,7 +28,7 @@
         "fabric": "*",
         "minecraft": ">=1.16.4",
         "stevekungs_lib": ">=4.1.1",
-        "architectury": ">=1.8.131"
+        "architectury": ">=1.12.145"
     },
     "mixins": [
         "mixins.skyblockcatia.json",
