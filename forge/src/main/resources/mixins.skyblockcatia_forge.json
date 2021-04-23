@@ -5,9 +5,7 @@
     "package": "com.stevekung.skyblockcatia.mixin.forge",
     "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaForgeMixinConfigPlugin",
     "client": [
-        "gui.screens.inventory.MixinAbstractContainerScreen",
-        "renderer.entity.layers.MixinHumanoidArmorLayer",
-        "optifine.renderer.MixinBlockEntityWithoutLevelRendererOptifine"
+        "renderer.entity.layers.MixinHumanoidArmorLayer"
     ],
     "injectors": {
         "defaultRequire": 1

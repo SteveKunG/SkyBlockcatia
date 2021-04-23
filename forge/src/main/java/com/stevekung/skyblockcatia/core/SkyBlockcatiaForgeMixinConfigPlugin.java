@@ -6,7 +6,9 @@ import java.util.Set;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import com.google.common.collect.Lists;
 import com.stevekung.stevekungslib.utils.LoggerBase;
+import net.minecraftforge.fml.loading.FMLLoader;
 
 public class SkyBlockcatiaForgeMixinConfigPlugin implements IMixinConfigPlugin
 {
@@ -30,10 +32,6 @@ public class SkyBlockcatiaForgeMixinConfigPlugin implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName)
     {
-        if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.forge.optifine.renderer.MixinBlockEntityWithoutLevelRendererOptifine"))
-        {
-            return foundOptifine;
-        }
         return true;
     }
 
@@ -43,7 +41,21 @@ public class SkyBlockcatiaForgeMixinConfigPlugin implements IMixinConfigPlugin
     @Override
     public List<String> getMixins()
     {
-        return null;
+        List<String> mixins = Lists.newArrayList();
+
+        if (FMLLoader.isProduction())
+        {
+            if (foundOptifine)
+            {
+                mixins.add("optifine.renderer.MixinBlockEntityWithoutLevelRendererOptifine");
+            }
+            mixins.add("gui.screens.inventory.MixinAbstractContainerScreen");
+        }
+        else
+        {
+            mixins.add("gui.screens.inventory.MixinAbstractContainerScreenDev");
+        }
+        return mixins;
     }
 
     @Override
