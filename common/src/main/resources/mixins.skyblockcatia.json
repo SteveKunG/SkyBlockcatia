@@ -21,6 +21,7 @@
         "gui.components.MixinBossHealthOverlay",
         "gui.components.MixinPlayerTabOverlay",
         "gui.screens.inventory.MixinAbstractContainerScreen",
+        "gui.screens.inventory.MixinInventoryScreen",
         "gui.screens.inventory.MixinSignEditScreen",
         "multiplayer.MixinMultiPlayerGameMode",
         "multiplayer.MixinPlayerInfo",

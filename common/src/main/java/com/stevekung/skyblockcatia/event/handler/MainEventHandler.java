@@ -85,7 +85,6 @@ public class MainEventHandler
 
             if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory && screen instanceof InventoryScreen)
             {
-                ((AccessorScreen)screen).getButtons().remove(((AccessorScreen)screen).getButtons().get(0));
                 this.addButtonsToInventory(screen, wardRobeItem, width, height);
             }
             else if (screen instanceof ContainerScreen)
