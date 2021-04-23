@@ -132,8 +132,6 @@ public class SkyBlockAPIViewerScreen extends Screen
     private ScrollingListScreen errorInfo;
     private final List<Component> errorList = Lists.newArrayList();
     private boolean showArmor = true;
-    private float oldMouseX;
-    private float oldMouseY;
 
     // API
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
@@ -536,8 +534,6 @@ public class SkyBlockAPIViewerScreen extends Screen
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         this.renderBackground(matrixStack);
-        this.oldMouseX = mouseX;
-        this.oldMouseY = mouseY;
 
         if (this.loadingApi)
         {
@@ -599,7 +595,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                         RenderSystem.enableDepthTest();
-                        SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
+                        SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, this.guiLeft - 55 - (float)mouseX, this.guiTop + 25 - (float)mouseY, this.player);
                         this.drawContainerSlot(matrixStack, mouseX, mouseY, true);
 
                         if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
@@ -630,7 +626,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             RenderSystem.disableLighting();
 
                             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                            SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
+                            SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, this.guiLeft - 46 - (float)mouseX, this.guiTop + 75 - 50 - (float)mouseY, this.player);
 
                             if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
                             {
@@ -732,7 +728,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             case PLAYER:
             default:
                 this.currentSlot = new InfosList(this.width - 119, this.height, 40, this.height - 50, 59, 12, this.infoList);
-                this.refreshBasicInfoViewButton(this.basicInfoButton, true);
+                this.refreshBasicInfoViewButton(this.basicInfoButton);
                 this.refreshOthersViewButton(this.othersButton, false);
                 this.performedBasicInfo(this.basicInfoButton);
                 break;
@@ -786,7 +782,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 this.showArmorButton.visible = false;
                 break;
         }
-        this.refreshBasicInfoViewButton(basicInfoButton, true);
+        this.refreshBasicInfoViewButton(basicInfoButton);
     }
 
     private void performedOthers(OthersViewButton othersButton)
@@ -859,7 +855,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void refreshBasicInfoViewButton(BasicInfoViewButton basicInfoButton, boolean visible)
+    private void refreshBasicInfoViewButton(BasicInfoViewButton basicInfoButton)
     {
         this.basicInfoButton = basicInfoButton;
 
@@ -874,7 +870,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     if (!this.data.hasInventories())
                     {
                         view.button.active = false;
-                        view.button.visible = visible;
+                        view.button.visible = true;
                         continue;
                     }
                 }
@@ -883,7 +879,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     if (!this.data.hasCollections())
                     {
                         view.button.active = false;
-                        view.button.visible = visible;
+                        view.button.visible = true;
                         continue;
                     }
                 }
@@ -892,12 +888,12 @@ public class SkyBlockAPIViewerScreen extends Screen
                     if (!this.data.hasMinions())
                     {
                         view.button.active = false;
-                        view.button.visible = visible;
+                        view.button.visible = true;
                         continue;
                     }
                 }
 
-                view.button.visible = visible;
+                view.button.visible = true;
             }
         }
     }
@@ -1485,7 +1481,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         this.refreshViewButton(this.viewButton);
-        this.refreshBasicInfoViewButton(this.basicInfoButton, true);
+        this.refreshBasicInfoViewButton(this.basicInfoButton);
         this.refreshOthersViewButton(this.othersButton, false);
         this.showArmorButton.visible = true;
         this.loadingApi = false;
@@ -3735,13 +3731,14 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private static void renderEntity(int posX, int posY, int scale, LivingEntity entity)
+    private static void renderEntity(int posX, int posY, LivingEntity entity)
     {
         RenderSystem.pushMatrix();
         RenderSystem.translatef(posX, posY, 1050.0F);
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
         PoseStack matrixstack = new PoseStack();
         matrixstack.translate(0.0D, 0.0D, 1000.0D);
+        float scale = 40F;
         matrixstack.scale(scale, scale, scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(-180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(-10.0F);
@@ -3762,7 +3759,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    private static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, LivingEntity livingEntity)
+    private static void renderEntity(int posX, int posY, float mouseX, float mouseY, LivingEntity livingEntity)
     {
         float f = (float)Math.atan(mouseX / 40.0F);
         float f1 = (float)Math.atan(mouseY / 40.0F);
@@ -3771,6 +3768,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
         PoseStack matrixstack = new PoseStack();
         matrixstack.translate(0.0D, 0.0D, 1000.0D);
+        float scale = 40F;
         matrixstack.scale(scale, scale, scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
@@ -4111,21 +4109,21 @@ public class SkyBlockAPIViewerScreen extends Screen
                     zombie.setItemSlot(EquipmentSlot.FEET, boots);
                     zombie.setItemSlot(EquipmentSlot.MAINHAND, heldItem);
                     zombie.tickCount = LibClientProxy.ticks;
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, zombie);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, zombie);
                 }
                 else if (stat.text.equals("Spider"))
                 {
                     Spider spider = new Spider(EntityType.SPIDER, this.world);
                     CaveSpider cave = new CaveSpider(EntityType.CAVE_SPIDER, this.world);
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 40, 40, cave);
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, spider);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 40, cave);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, spider);
                     RenderSystem.blendFunc(770, 771);
                 }
                 else
                 {
                     Wolf wolf = new Wolf(EntityType.WOLF, this.world);
                     wolf.setRemainingPersistentAngerTime(Integer.MAX_VALUE);
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, 40, wolf);
+                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, wolf);
                 }
 
                 float[] color = ColorUtils.toFloatArray(0, 255, 255);

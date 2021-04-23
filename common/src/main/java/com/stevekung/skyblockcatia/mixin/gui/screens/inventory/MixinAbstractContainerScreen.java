@@ -393,7 +393,7 @@ public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> exten
 
                                 if (lore.startsWith("Seller: "))
                                 {
-                                    this.minecraft.player.chat("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B?\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])? ", ""));
+                                    this.minecraft.player.chat("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B?]|\\[MVP?\\u002B{0,2}]|\\[YOUTUBE])? ", ""));
                                 }
                             }
                         }
@@ -410,16 +410,14 @@ public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> exten
     {
         if (this.that instanceof ContainerScreen)
         {
-            int i = 0;
-            int j = 0;
             String levelString = "";
 
             if (this.getTitle().getString().equals("Anvil") || this.getTitle().getString().equals("Reforge Item"))
             {
                 Slot anvilSlot = this.that.getMenu().slots.get(31);
                 ItemStack itemStack = this.that.getMenu().slots.get(22).getItem();
-                i = anvilSlot.x;
-                j = anvilSlot.y;
+                int i = anvilSlot.x;
+                int j = anvilSlot.y;
 
                 if (!itemStack.isEmpty() && itemStack.hasTag())
                 {

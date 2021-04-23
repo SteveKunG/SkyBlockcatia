@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.*;
 import com.google.gson.JsonObject;
@@ -61,22 +62,22 @@ import net.minecraft.world.scores.Scoreboard;
 public class SkyBlockEventHandler
 {
     private static final Pattern CUSTOM_FORMATTING_CODE_PATTERN = Pattern.compile("(?i)§[0-9A-Z]");
-    private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock\\]|\\[SkyBlock\\] (?:\\[VIP?\\+{0,1}\\]|\\[MVP?\\+{0,2}\\]|\\[YOUTUBE\\])) (?<name>\\w+) is visiting Your Island!");
+    private static final Pattern VISIT_ISLAND_PATTERN = Pattern.compile("(?:\\[SkyBlock]|\\[SkyBlock] (?:\\[VIP?\\+?]|\\[MVP?\\+{0,2}]|\\[YOUTUBE])) (?<name>\\w+) is visiting Your Island!");
     public static final String UUID_PATTERN_STRING = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
     private static final Pattern UUID_PATTERN = Pattern.compile("Your new API key is (?<uuid>" + SkyBlockEventHandler.UUID_PATTERN_STRING + ")");
-    private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\+{0,1}\\]|\\[MVP?\\+{0,2}\\]|\\[YOUTUBE\\]) \\w)+";
-    private static final Pattern PET_CARE_PATTERN = Pattern.compile("§r§aI'm currently taking care of your §r(?<pet>§[0-9a-fk-or][\\w ]+)§r§a! You can pick it up in (?:(?<day>[\\d]+) day(?:s){0,1} ){0,1}(?:(?<hour>[\\d]+) hour(?:s){0,1} ){0,1}(?:(?<minute>[\\d]+) minute(?:s){0,1} ){0,1}(?:(?<second>[\\d]+) second(?:s){0,1}).§r");
-    private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("(?:§r){0,1} +§r§6§l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!§r");
+    private static final String RANKED_PATTERN = "(?:(?:\\w)|(?:\\[VIP?\\+?]|\\[MVP?\\+{0,2}]|\\[YOUTUBE]) \\w)+";
+    private static final Pattern PET_CARE_PATTERN = Pattern.compile("§r§aI'm currently taking care of your §r(?<pet>§[0-9a-fk-or][\\w ]+)§r§a! You can pick it up in (?:(?<day>[\\d]+) days? )?(?:(?<hour>[\\d]+) hours? )?(?:(?<minute>[\\d]+) minutes? )?(?:(?<second>[\\d]+) seconds?).§r");
+    private static final Pattern DRAGON_DOWN_PATTERN = Pattern.compile("(?:§r)? +§r§6§l(?<dragon>SUPERIOR|STRONG|YOUNG|OLD|PROTECTOR|UNSTABLE|WISE) DRAGON DOWN!§r");
     private static final Pattern DRAGON_SPAWNED_PATTERN = Pattern.compile("§5☬ §r§d§lThe §r§5§c§l(?<dragon>Superior|Strong|Young|Unstable|Wise|Old|Protector) Dragon§r§d§l has spawned!§r");
-    private static final Pattern ESTIMATED_TIME_PATTERN = Pattern.compile("\\((?<time>(?:\\d+d ){0,1}(?:\\d+h ){0,1}(?:\\d+m ){0,1}(?:\\d+s)|(?:\\d+h))\\)");
+    private static final Pattern ESTIMATED_TIME_PATTERN = Pattern.compile("\\((?<time>(?:\\d+d )?(?:\\d+h )?(?:\\d+m )?(?:\\d+s)|(?:\\d+h))\\)");
 
     // Item Drop Stuff
-    private static final String ITEM_PATTERN = "[\\w\\'◆\\[\\] -]+";
-    private static final String DROP_PATTERN = "(?<item>(?:§r§[0-9a-fk-or]){0,1}(?:§[0-9a-fk-or]){0,1}" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)]){0,1})";
-    private static final Pattern RARE_DROP_PATTERN = Pattern.compile("(?:§r){0,1}§6§lRARE DROP! " + DROP_PATTERN + "(?:\\b§r\\b){0,1} ?(?:§r§b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)§r){0,1}");
-    private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("(?:§r){0,1}§b§lRARE DROP! §r§7\\(" + DROP_PATTERN + "§r§7\\)(?:\\b§r\\b){0,1} ?(?:§r§b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)§r){0,1}");
-    private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>(?:§r){0,1}§9§lVERY RARE|§r§5§lVERY RARE|§r§d§lCRAZY RARE) DROP!  §r§7\\(" + DROP_PATTERN + "§r§7\\)(?:\\b§r\\b){0,1} ?(?:§r§b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)§r){0,1}");
-    private static final Pattern BOSS_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\+{0,1}\\]|\\[MVP?\\+{0,2}\\]|\\[YOUTUBE\\]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
+    private static final String ITEM_PATTERN = "[\\w'◆\\[] -]+";
+    private static final String DROP_PATTERN = "(?<item>(?:§r§[0-9a-fk-or])?(?:§[0-9a-fk-or])?" + ITEM_PATTERN + "(?:[\\(][^\\)]" + ITEM_PATTERN + "[\\)])?)";
+    private static final Pattern RARE_DROP_PATTERN = Pattern.compile("(?:§r)?§6§lRARE DROP! " + DROP_PATTERN + "(?:\\b§r\\b)? ?(?:§r§b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)§r)?");
+    private static final Pattern RARE_DROP_2_SPACE_PATTERN = Pattern.compile("(?:§r)?§b§lRARE DROP! §r§7\\(" + DROP_PATTERN + "§r§7\\)(?:\\b§r\\b)? ?(?:§r§b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)§r)?");
+    private static final Pattern RARE_DROP_WITH_BRACKET_PATTERN = Pattern.compile("(?<type>(?:§r)?§9§lVERY RARE|§r§5§lVERY RARE|§r§d§lCRAZY RARE) DROP!  §r§7\\(" + DROP_PATTERN + "§r§7\\)(?:\\b§r\\b)? ?(?:§r§b\\(\\+(?<mf>[0-9]+)% Magic Find!\\)§r)?");
+    private static final Pattern BOSS_DROP_PATTERN = Pattern.compile("(?:(?:" + GameProfileUtils.getUsername() + ")|(?:\\[VIP?\\+?]|\\[MVP?\\+{0,2}]|\\[YOUTUBE]) " + GameProfileUtils.getUsername() + ") has obtained " + DROP_PATTERN + "!");
 
     // Mythos Events
     private static final Pattern RARE_DROP_MYTHOS_PATTERN = Pattern.compile("RARE DROP! You dug out a " + DROP_PATTERN + "!");
@@ -101,8 +102,8 @@ public class SkyBlockEventHandler
     private static final Pattern SANTA_TIER_PATTERN = Pattern.compile("SANTA TIER! " + DROP_PATTERN + " gift with " + RANKED_PATTERN + "!");
 
     // Pet
-    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("(?:§r){0,1}§aYour (?<name>§r§[0-9a-fk-or][\\w ]+) §r§alevelled up to level §r§9(?<level>\\d+)§r§a!§r");
-    private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\)){0,1}");
+    private static final Pattern PET_LEVEL_UP_PATTERN = Pattern.compile("(?:§r)?§aYour (?<name>§r§[0-9a-fk-or][\\w ]+) §r§alevelled up to level §r§9(?<level>\\d+)§r§a!§r");
+    private static final Pattern PET_DROP_PATTERN = Pattern.compile("PET DROP! " + DROP_PATTERN + " ?(?:\\(\\+(?<mf>[0-9]+)% Magic Find!\\))?");
 
     private static final Map<String, String> RENAMED_DROP = ImmutableMap.<String, String>builder().put("◆ Ice Rune", "◆ Ice Rune I").build();
     public static boolean isSkyBlock;
@@ -225,6 +226,7 @@ public class SkyBlockEventHandler
         }
     }
 
+    @NotNull
     public InteractionResultHolder<Component> onClientChatReceived(ChatType chatType, Component smessage, @Nullable UUID sender)
     {
         Minecraft mc = Minecraft.getInstance();

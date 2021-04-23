@@ -1,14 +1,12 @@
 package com.stevekung.skyblockcatia.config;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.HitboxRenderMode;
 import com.stevekung.skyblockcatia.utils.ToastMode;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
-import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import com.stevekung.stevekungslib.utils.config.BooleanSettings;
 import com.stevekung.stevekungslib.utils.config.IteratableSettings;
 import com.stevekung.stevekungslib.utils.config.Settings;
@@ -21,10 +19,7 @@ public class SkyBlockcatiaSettings extends Settings
 {
     public static SkyBlockcatiaSettings INSTANCE = new SkyBlockcatiaSettings();
     public static final File INDICATIA_DIR = new File(Minecraft.getInstance().gameDirectory, "skyblockcatia");
-    public static final File USER_DIR = new File(SkyBlockcatiaSettings.INDICATIA_DIR, GameProfileUtils.getUUID().toString());
-    public static final File DEFAULT_CONFIG_FILE = new File(SkyBlockcatiaSettings.USER_DIR, "default.dat");
-    public static String CURRENT_PROFILE = "";
-    private static File PROFILE_FILE;
+    public static final File USER_DIR = new File(SkyBlockcatiaSettings.INDICATIA_DIR, GameProfileUtils.getUUID().toString() + ".dat");
 
     // Hypixel
     public boolean axeCooldown = true;
@@ -83,7 +78,7 @@ public class SkyBlockcatiaSettings extends Settings
     public static final BooleanSettings<SkyBlockcatiaSettings> SHOW_HITBOX_WHEN_DRAGON_SPAWNED = new BooleanSettings<>("skyblockcatia_setting.show_hitbox_when_dragon_spawned", config -> config.showHitboxWhenDragonSpawned, (config, value) -> config.showHitboxWhenDragonSpawned = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SNEAK_TO_OPEN_INVENTORY = new BooleanSettings<>("skyblockcatia_setting.sneak_to_open_inventory", config -> config.sneakToOpenInventoryWhileFightDragon, (config, value) -> config.sneakToOpenInventoryWhileFightDragon = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> LEAVE_PARTY_WHEN_LAST_EYE_PLACED = new BooleanSettings<>("skyblockcatia_setting.leave_party_when_last_eye_placed", config -> config.leavePartyWhenLastEyePlaced, (config, value) -> config.leavePartyWhenLastEyePlaced = value);
-    public static final BooleanSettings<SkyBlockcatiaSettings> PLAYER_COUNT_LOBBY_VIEWER = new BooleanSettings<>("skyblockcatia_setting.player_count_lobby_viewer", config -> config.lobbyPlayerViewer, (config, value) -> config.lobbyPlayerViewer = value);
+    public static final BooleanSettings<SkyBlockcatiaSettings> LOBBY_PLAYER_VIEWER = new BooleanSettings<>("skyblockcatia_setting.lobby_player_viewer", config -> config.lobbyPlayerViewer, (config, value) -> config.lobbyPlayerViewer = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> AUCTION_BID_CONFIRM = new BooleanSettings<>("skyblockcatia_setting.auction_bid_confirm", config -> config.auctionBidConfirm, (config, value) -> config.auctionBidConfirm = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> DISABLE_BLOCK_PARTICLES = new BooleanSettings<>("skyblockcatia_setting.disable_block_particles", config -> config.disableBlockParticles, (config, value) -> config.disableBlockParticles = value);
     public static final BooleanSettings<SkyBlockcatiaSettings> SUPPORTERS_FANCY_COLOR = new BooleanSettings<>("skyblockcatia_setting.supporters_fancy_color", config -> config.supportersFancyColor, (config, value) -> config.supportersFancyColor = value);
@@ -106,17 +101,11 @@ public class SkyBlockcatiaSettings extends Settings
 
     private SkyBlockcatiaSettings() {}
 
-    public static void setCurrentProfile(String profileName)
-    {
-        SkyBlockcatiaSettings.PROFILE_FILE = new File(USER_DIR, profileName + ".dat");
-        SkyBlockcatiaSettings.CURRENT_PROFILE = profileName;
-    }
-
     public void load()
     {
         try
         {
-            CompoundTag nbt = NbtIo.read(SkyBlockcatiaSettings.PROFILE_FILE);
+            CompoundTag nbt = NbtIo.read(SkyBlockcatiaSettings.USER_DIR);
 
             if (nbt == null)
             {
@@ -155,18 +144,13 @@ public class SkyBlockcatiaSettings extends Settings
             this.petDisplayMode = ToastMode.byId(this.getInteger(nbt, "PetDisplayMode", this.petDisplayMode.getId()));
             this.hitboxRenderMode = HitboxRenderMode.byId(this.getInteger(nbt, "HitboxRenderMode", this.hitboxRenderMode.getId()));
 
-            SkyBlockcatiaMod.LOGGER.info("Loading extended config {}", SkyBlockcatiaSettings.PROFILE_FILE.getPath());
+            SkyBlockcatiaMod.LOGGER.info("Loading extended config {}", SkyBlockcatiaSettings.USER_DIR.getPath());
         }
         catch (Exception ignored) {}
     }
 
     @Override
     public void save()
-    {
-        this.save(!SkyBlockcatiaSettings.CURRENT_PROFILE.isEmpty() ? SkyBlockcatiaSettings.CURRENT_PROFILE : "default");
-    }
-
-    public void save(String profileName)
     {
         try
         {
@@ -204,31 +188,9 @@ public class SkyBlockcatiaSettings extends Settings
             nbt.putInt("ItemRarityOpacity", this.itemRarityOpacity);
             nbt.putInt("AuctionBidConfirmValue", this.auctionBidConfirmValue);
 
-            NbtIo.write(nbt, !profileName.equalsIgnoreCase("default") ? new File(USER_DIR, profileName + ".dat") : SkyBlockcatiaSettings.PROFILE_FILE);
+            NbtIo.write(nbt, USER_DIR);
         }
         catch (Exception ignored) {}
-    }
-
-    public static void saveProfileFile(String profileName)
-    {
-        File profile = new File(SkyBlockcatiaSettings.USER_DIR, "profile.txt");
-
-        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(profile), StandardCharsets.UTF_8)))
-        {
-            writer.println("profile:" + profileName);
-            SkyBlockcatiaMod.LOGGER.info("Saving profile name!");
-        }
-        catch (IOException e)
-        {
-            SkyBlockcatiaMod.LOGGER.error("Failed to save profile", (Throwable)e);
-        }
-    }
-
-    public static void resetConfig()
-    {
-        SkyBlockcatiaSettings.INSTANCE = new SkyBlockcatiaSettings();
-        SkyBlockcatiaSettings.INSTANCE.save(SkyBlockcatiaSettings.CURRENT_PROFILE);
-        ClientUtils.printClientMessage(LangUtils.translate("misc.extended_config.reset_config", SkyBlockcatiaSettings.CURRENT_PROFILE));
     }
 
     private boolean getBoolean(CompoundTag nbt, String key, boolean defaultValue)

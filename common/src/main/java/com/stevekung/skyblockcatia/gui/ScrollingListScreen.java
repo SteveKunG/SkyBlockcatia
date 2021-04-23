@@ -234,7 +234,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
         return barHeight;
     }
 
-    @SuppressWarnings("deprecated")
+    @SuppressWarnings("deprecation")
     private static void drawGradientRect(Matrix4f mat, int zLevel, int left, int top, int right, int bottom, int startColor, int endColor)
     {
         float startAlpha = (float)(startColor >> 24 & 255) / 255.0F;

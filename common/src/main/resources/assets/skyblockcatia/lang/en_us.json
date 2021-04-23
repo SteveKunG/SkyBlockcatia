@@ -60,6 +60,7 @@
     "skyblockcatia_setting.gift_display_mode": "Gift Display Mode",
     "skyblockcatia_setting.pet_display_mode": "Pet Display Mode",
     "skyblockcatia_setting.hitbox_render_mode": "Hitbox Render Mode",
+    "skyblockcatia_setting.lobby_player_viewer": "Lobby Player Viewer",
     "_comment": "MESSAGE",
     "message.check": "Check",
     "message.bid_confirm_title": "Bid Confirmation",
