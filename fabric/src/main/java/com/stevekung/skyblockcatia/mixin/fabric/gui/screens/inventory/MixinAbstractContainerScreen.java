@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 @Mixin(AbstractContainerScreen.class)
 public class MixinAbstractContainerScreen
 {
-    @Redirect(method = "checkHotbarKeyPressed(II)Z", slice = @Slice(from = @At(value = "INVOKE", target = "net/minecraft/world/item/ItemStack.isEmpty()Z"), to = @At(value = "CONSTANT", args = "intValue=40")), at = @At(value = "INVOKE", remap = false, target = "net/minecraft/client/KeyMapping.matches(II)Z"))
+    @Redirect(method = "checkHotbarKeyPressed(II)Z", slice = @Slice(from = @At(value = "INVOKE", target = "net/minecraft/world/item/ItemStack.isEmpty()Z"), to = @At(value = "CONSTANT", args = "intValue=40")), at = @At(value = "INVOKE", target = "net/minecraft/client/KeyMapping.matches(II)Z"))
     private boolean disableItemStackSwap(KeyMapping key, int i, int j)
     {
         if (SkyBlockEventHandler.isSkyBlock)
