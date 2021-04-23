@@ -1,4 +1,6 @@
 # Change Log
 
-* * API Viewer is now getting dynamic data, including pets, minions, slayers, skills, etc.
-* * Internal code clean up
+* * Now using Architectury API
+* * Set default value of Fix Skin Rendering to 'true'
+* * Fixed melon and pumpkin Item ID
+* * Fixed config not saved

@@ -113,6 +113,7 @@ curseforge {
                 requiredDependency "architectury-fabric"
                 requiredDependency "stevekungs-lib"
                 requiredDependency "fabric-api"
+                optionalDependency "indicatia"
             }
             afterEvaluate {
                 uploadTask.dependsOn(remapJar)
