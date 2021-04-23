@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.config;
 
 import java.io.File;
 
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.HitboxRenderMode;
 import com.stevekung.skyblockcatia.utils.ToastMode;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
@@ -18,8 +17,8 @@ import net.minecraft.nbt.NbtIo;
 public class SkyBlockcatiaSettings extends Settings
 {
     public static SkyBlockcatiaSettings INSTANCE = new SkyBlockcatiaSettings();
-    public static final File INDICATIA_DIR = new File(Minecraft.getInstance().gameDirectory, "skyblockcatia");
-    public static final File USER_DIR = new File(SkyBlockcatiaSettings.INDICATIA_DIR, GameProfileUtils.getUUID().toString() + ".dat");
+    public static final File SBC_DIR = new File(Minecraft.getInstance().gameDirectory, "skyblockcatia");
+    public static final File PROFILE = new File(SkyBlockcatiaSettings.SBC_DIR, GameProfileUtils.getUUID().toString() + ".dat");
 
     // Hypixel
     public boolean axeCooldown = true;
@@ -105,14 +104,13 @@ public class SkyBlockcatiaSettings extends Settings
     {
         try
         {
-            CompoundTag nbt = NbtIo.read(SkyBlockcatiaSettings.USER_DIR);
+            CompoundTag nbt = NbtIo.read(SkyBlockcatiaSettings.PROFILE);
 
             if (nbt == null)
             {
                 return;
             }
 
-            // Hypixel
             this.axeCooldown = this.getBoolean(nbt, "AxeCooldown", this.axeCooldown);
             this.grapplingHookCooldown = this.getBoolean(nbt, "GrapplingHookCooldown", this.grapplingHookCooldown);
             this.zealotRespawnCooldown = this.getBoolean(nbt, "ZealotRespawnCooldown", this.zealotRespawnCooldown);
@@ -136,6 +134,12 @@ public class SkyBlockcatiaSettings extends Settings
 
             this.itemRarityOpacity = this.getInteger(nbt, "ItemRarityOpacity", this.itemRarityOpacity);
             this.auctionBidConfirmValue = this.getInteger(nbt, "AuctionBidConfirmValue", this.auctionBidConfirmValue);
+            this.visitIslandToastTime = this.getInteger(nbt, "VisitIslandToastTime", this.visitIslandToastTime);
+            this.rareDropToastTime = this.getInteger(nbt, "RareDropToastTime", this.rareDropToastTime);
+            this.specialDropToastTime = this.getInteger(nbt, "SpecialDropToastTime", this.specialDropToastTime);
+            this.fishCatchToastTime = this.getInteger(nbt, "FishCatchToastTime", this.fishCatchToastTime);
+            this.giftToastTime = this.getInteger(nbt, "GiftToastTime", this.giftToastTime);
+            this.petToastTime = this.getInteger(nbt, "PetToastTime", this.petToastTime);
 
             this.visitIslandDisplayMode = ToastMode.byId(this.getInteger(nbt, "VisitIslandDisplayMode", this.visitIslandDisplayMode.getId()));
             this.itemLogDisplayMode = ToastMode.byId(this.getInteger(nbt, "ItemLogDisplayMode", this.itemLogDisplayMode.getId()));
@@ -143,8 +147,6 @@ public class SkyBlockcatiaSettings extends Settings
             this.giftDisplayMode = ToastMode.byId(this.getInteger(nbt, "GiftDisplayMode", this.giftDisplayMode.getId()));
             this.petDisplayMode = ToastMode.byId(this.getInteger(nbt, "PetDisplayMode", this.petDisplayMode.getId()));
             this.hitboxRenderMode = HitboxRenderMode.byId(this.getInteger(nbt, "HitboxRenderMode", this.hitboxRenderMode.getId()));
-
-            SkyBlockcatiaMod.LOGGER.info("Loading extended config {}", SkyBlockcatiaSettings.USER_DIR.getPath());
         }
         catch (Exception ignored) {}
     }
@@ -187,8 +189,14 @@ public class SkyBlockcatiaSettings extends Settings
 
             nbt.putInt("ItemRarityOpacity", this.itemRarityOpacity);
             nbt.putInt("AuctionBidConfirmValue", this.auctionBidConfirmValue);
+            nbt.putInt("VisitIslandToastTime", this.visitIslandToastTime);
+            nbt.putInt("RareDropToastTime", this.rareDropToastTime);
+            nbt.putInt("SpecialDropToastTime", this.specialDropToastTime);
+            nbt.putInt("FishCatchToastTime", this.fishCatchToastTime);
+            nbt.putInt("GiftToastTime", this.giftToastTime);
+            nbt.putInt("PetToastTime", this.petToastTime);
 
-            NbtIo.write(nbt, USER_DIR);
+            NbtIo.write(nbt, PROFILE);
         }
         catch (Exception ignored) {}
     }

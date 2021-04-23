@@ -48,6 +48,20 @@ public class SkyBlockcatiaMod
                 e.printStackTrace();
             }
         });
+        if (!SkyBlockcatiaSettings.SBC_DIR.exists())
+        {
+            SkyBlockcatiaSettings.SBC_DIR.mkdirs();
+        }
+        if (!SkyBlockcatiaSettings.PROFILE.exists())
+        {
+            SkyBlockcatiaMod.LOGGER.info("Creating SkyBlockcatia settings");
+            SkyBlockcatiaSettings.INSTANCE.save();
+        }
+        else
+        {
+            SkyBlockcatiaMod.LOGGER.info("Loading SkyBlockcatia settings");
+            SkyBlockcatiaSettings.INSTANCE.load();
+        }
     }
 
     public static void init()
