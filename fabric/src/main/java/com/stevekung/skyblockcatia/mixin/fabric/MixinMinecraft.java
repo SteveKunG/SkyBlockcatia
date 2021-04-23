@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 @Mixin(Minecraft.class)
 public class MixinMinecraft
 {
-    @Inject(method = "runTick", at = @At(value = "INVOKE_STRING", target = "net/minecraft/util/profiling/ProfilerFiller.popPush(Ljava/lang/String;)V", args = { "ldc=gameRenderer" }))
+    @Inject(method = "runTick", at = @At(value = "INVOKE_STRING", target = "net/minecraft/util/profiling/ProfilerFiller.popPush(Ljava/lang/String;)V", args = {"ldc=gameRenderer"}))
     private void renderTicks(boolean bl, CallbackInfo info)
     {
         if (MainEventHandler.playerToView != null)

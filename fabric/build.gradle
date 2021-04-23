@@ -99,7 +99,7 @@ curseforge {
     if (project.hasProperty("upload_api_key")) {
         apiKey = project.upload_api_key
         project {
-            id = "434676"
+            id = "397441"
             changelog = file("../CHANGE_LOG.md")
             changelogType = "markdown"
             releaseType = "beta"
@@ -127,5 +127,5 @@ curseforge {
 }
 
 afterEvaluate {
-    tasks.curseforge434676.dependsOn remapJar
+    tasks.curseforge397441.dependsOn remapJar
 }
