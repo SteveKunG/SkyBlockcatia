@@ -31,7 +31,7 @@ side = "CLIENT"
 [[dependencies.skyblockcatia]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.8.131,)"
+versionRange = "[1.12.145,)"
 ordering = "NONE"
 side = "CLIENT"
 
