@@ -6,6 +6,7 @@ import java.util.Set;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
 
 public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
@@ -21,7 +22,10 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     }
 
     @Override
-    public void onLoad(String mixinPackage) {}
+    public void onLoad(String mixinPackage)
+    {
+        SBAPIUtils.getMisc();
+    }
 
     @Override
     public String getRefMapperConfig()

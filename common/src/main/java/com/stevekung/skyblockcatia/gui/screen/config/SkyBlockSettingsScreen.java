@@ -43,7 +43,7 @@ public class SkyBlockSettingsScreen extends Screen
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(new SBOptionsScreen(this, LangUtils.translate("menu.skyblock_misc.title"), MISC_OPTIONS));
         }));
-        this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 13, 150, 20, LangUtils.translate("menu.skyblock_global.title"), button -> openConfig()));
+        this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 13, 150, 20, LangUtils.translate("menu.skyblock_global.title"), button -> openConfig(this)));
         this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 38, 150, 20, LangUtils.translate("menu.skyblock_toast.title"), button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
@@ -72,5 +72,5 @@ public class SkyBlockSettingsScreen extends Screen
     }
 
     @ExpectPlatform
-    private static void openConfig() {}
+    private static void openConfig(Screen parent) {}
 }

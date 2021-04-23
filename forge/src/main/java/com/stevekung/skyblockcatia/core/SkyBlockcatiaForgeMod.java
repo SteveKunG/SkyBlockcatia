@@ -4,6 +4,7 @@ import com.stevekung.skyblockcatia.command.BazaarViewerCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockAPIViewerCommand;
 import com.stevekung.skyblockcatia.command.SkyBlockcatiaCommand;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
+import com.stevekung.skyblockcatia.event.handler.SBClientEventHandler;
 import com.stevekung.skyblockcatia.event.handler.ToastTestEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.stevekungslib.utils.ForgeCommonUtils;
@@ -26,6 +27,7 @@ public class SkyBlockcatiaForgeMod
         EventBuses.registerModEventBus(SkyBlockcatiaMod.MOD_ID, ForgeCommonUtils.getModEventBus());
         ForgeCommonUtils.registerConfig(ModConfig.Type.CLIENT, SkyBlockcatiaConfig.GENERAL_BUILDER);
         ForgeCommonUtils.registerClientOnly();
+        ForgeCommonUtils.registerConfigScreen(() -> (mc, screen) -> ForgeCommonUtils.openConfigFile(screen, SkyBlockcatiaMod.MOD_ID, ModConfig.Type.CLIENT));
 
         ForgeCommonUtils.registerModEventBus(SkyBlockcatiaConfig.class);
         ForgeCommonUtils.addModListener(this::phaseOne);
@@ -35,6 +37,7 @@ public class SkyBlockcatiaForgeMod
     private void phaseOne(FMLCommonSetupEvent event)
     {
         ForgeCommonUtils.registerEventHandler(this);
+        ForgeCommonUtils.registerEventHandler(new SBClientEventHandler());
         ForgeCommonUtils.registerEventHandler(new ToastTestEventHandler());
 
         ClientCommands.register(new SkyBlockAPIViewerCommand());

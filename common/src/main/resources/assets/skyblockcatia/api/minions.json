@@ -113,14 +113,16 @@
             "category": "FARMING",
             "displayName": "Cactus Minion",
             "uuid": "78b57eb1-ea68-3072-a861-9c89a2f467cd",
-            "texture": "ef93ec6e67a6cd272c9a9684b67df62584cb084a265eee3cde141d20e70d7d72"
+            "texture": "ef93ec6e67a6cd272c9a9684b67df62584cb084a265eee3cde141d20e70d7d72",
+            "has_tier_12": true
         },
         {
             "type": "CARROT",
             "category": "FARMING",
             "displayName": "Carrot Minion",
             "uuid": "3a394733-b862-3676-ab4f-60fca79bd18c",
-            "texture": "4baea990b45d330998cb0c1f8515c27b24f93bff1df0db056e647f8200d03b9d"
+            "texture": "4baea990b45d330998cb0c1f8515c27b24f93bff1df0db056e647f8200d03b9d",
+            "has_tier_12": true
         },
         {
             "type": "CAVESPIDER",
@@ -134,7 +136,8 @@
             "category": "FARMING",
             "displayName": "Chicken Minion",
             "uuid": "f01dbc43-b3e0-3766-a03f-c5add6b794d3",
-            "texture": "a04b7da13b0a97839846aa5648f5ac6736ba0ca9fbf38cd366916e417153fd7f"
+            "texture": "a04b7da13b0a97839846aa5648f5ac6736ba0ca9fbf38cd366916e417153fd7f",
+            "has_tier_12": true
         },
         {
             "type": "CLAY",
@@ -164,14 +167,16 @@
             "category": "FARMING",
             "displayName": "Cocoa Minion",
             "uuid": "a1448e51-e34a-3a25-a6cc-fdb3f834ca81",
-            "texture": "acb680e96f6177cd8ffaf27e9625d8b544d720afc50738801818d0e745c0e5f7"
+            "texture": "acb680e96f6177cd8ffaf27e9625d8b544d720afc50738801818d0e745c0e5f7",
+            "has_tier_12": true
         },
         {
             "type": "COW",
             "category": "FARMING",
             "displayName": "Cow Minion",
             "uuid": "65247dc3-18db-3b4a-a131-ce575839a782",
-            "texture": "c2fd8976e1b64aebfd38afbe62aa1429914253df3417ace1f589e5cf45fbd717"
+            "texture": "c2fd8976e1b64aebfd38afbe62aa1429914253df3417ace1f589e5cf45fbd717",
+            "has_tier_12": true
         },
         {
             "type": "CREEPER",
@@ -302,7 +307,8 @@
             "category": "FARMING",
             "displayName": "Melon Minion",
             "uuid": "845dc766-7f65-3750-9807-461185f480ab",
-            "texture": "95d54539ac8d3fba9696c91f4dcc7f15c320ab86029d5c92f12359abd4df811e"
+            "texture": "95d54539ac8d3fba9696c91f4dcc7f15c320ab86029d5c92f12359abd4df811e",
+            "has_tier_12": true
         },
         {
             "type": "MITHRIL",
@@ -317,14 +323,16 @@
             "category": "FARMING",
             "displayName": "Mushroom Minion",
             "uuid": "4c4116e2-193d-32a4-948b-39ae936ed909",
-            "texture": "4a3b58341d196a9841ef1526b367209cbc9f96767c24f5f587cf413d42b74a93"
+            "texture": "4a3b58341d196a9841ef1526b367209cbc9f96767c24f5f587cf413d42b74a93",
+            "has_tier_12": true
         },
         {
             "type": "NETHER_WARTS",
             "category": "FARMING",
             "displayName": "Nether Wart Minion",
             "uuid": "b82584b7-49ba-32b8-b732-f14f160b7ff2",
-            "texture": "71a4620bb3459c1c2fa74b210b1c07b4a02254351f75173e643a0e009a63f558"
+            "texture": "71a4620bb3459c1c2fa74b210b1c07b4a02254351f75173e643a0e009a63f558",
+            "has_tier_12": true
         },
         {
             "type": "OAK",
@@ -346,21 +354,24 @@
             "category": "FARMING",
             "displayName": "Pig Minion",
             "uuid": "d30f7d75-d0d0-3857-8c11-0ec0867eb91d",
-            "texture": "a9bb5f0c56408c73cfa412345c8fc51f75b6c7311ae60e7099c4781c48760562"
+            "texture": "a9bb5f0c56408c73cfa412345c8fc51f75b6c7311ae60e7099c4781c48760562",
+            "has_tier_12": true
         },
         {
             "type": "POTATO",
             "category": "FARMING",
             "displayName": "Potato Minion",
             "uuid": "4a8b2791-3dd0-3376-9dbf-5683f3dac782",
-            "texture": "7dda35a044cb0374b516015d991a0f65bf7d0fb6566e350496642cf2059ff1d9"
+            "texture": "7dda35a044cb0374b516015d991a0f65bf7d0fb6566e350496642cf2059ff1d9",
+            "has_tier_12": true
         },
         {
             "type": "PUMPKIN",
             "category": "FARMING",
             "displayName": "Pumpkin Minion",
             "uuid": "a25aead0-758a-3ced-8153-84362a361c47",
-            "texture": "f3fb663e843a7da787e290f23c8af2f97f7b6f572fa59a0d4d02186db6eaabb7"
+            "texture": "f3fb663e843a7da787e290f23c8af2f97f7b6f572fa59a0d4d02186db6eaabb7",
+            "has_tier_12": true
         },
         {
             "type": "QUARTZ",
@@ -374,7 +385,8 @@
             "category": "FARMING",
             "displayName": "Rabbit Minion",
             "uuid": "fbb8165f-a72b-37b9-bde2-6d9dbd72ae3e",
-            "texture": "ef59c052d339bb6305cad370fd8c52f58269a957dfaf433a255597d95e68a373"
+            "texture": "ef59c052d339bb6305cad370fd8c52f58269a957dfaf433a255597d95e68a373",
+            "has_tier_12": true
         },
         {
             "type": "REDSTONE",
@@ -404,7 +416,8 @@
             "category": "FARMING",
             "displayName": "Sheep Minion",
             "uuid": "dfd57392-0596-366f-82a9-cbf22a077651",
-            "texture": "fd15d4b8bce708f77f963f1b4e87b1b969fef1766a3e9b67b249c59d5e80e8c5"
+            "texture": "fd15d4b8bce708f77f963f1b4e87b1b969fef1766a3e9b67b249c59d5e80e8c5",
+            "has_tier_12": true
         },
         {
             "type": "SKELETON",
@@ -446,7 +459,8 @@
             "category": "FARMING",
             "displayName": "Sugar Cane Minion",
             "uuid": "71eee614-7b18-3c47-9bd1-372477730016",
-            "texture": "2fced0e80f0d7a5d1f45a1a7217e6a99ea9720156c63f6efc84916d4837fabde"
+            "texture": "2fced0e80f0d7a5d1f45a1a7217e6a99ea9720156c63f6efc84916d4837fabde",
+            "has_tier_12": true
         },
         {
             "type": "TARANTULA",
@@ -460,7 +474,8 @@
             "category": "FARMING",
             "displayName": "Wheat Minion",
             "uuid": "81b06ed8-e9ec-34e2-b11f-234eb6e20318",
-            "texture": "bbc571c5527336352e2fee2b40a9edfa2e809f64230779aa01253c6aa535881b"
+            "texture": "bbc571c5527336352e2fee2b40a9edfa2e809f64230779aa01253c6aa535881b",
+            "has_tier_12": true
         },
         {
             "type": "ZOMBIE",

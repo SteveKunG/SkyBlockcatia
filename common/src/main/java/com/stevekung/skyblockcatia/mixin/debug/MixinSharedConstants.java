@@ -11,7 +11,7 @@ import net.minecraft.SharedConstants;
 public class MixinSharedConstants
 {
     @Inject(method = "isAllowedChatCharacter", cancellable = true, at = @At("HEAD"))
-    private static void isAllowedCharacter(char character, CallbackInfoReturnable<Boolean> info)
+    private static void debugSectionSign(char character, CallbackInfoReturnable<Boolean> info)
     {
         if (GameProfileUtils.isSteveKunG())
         {

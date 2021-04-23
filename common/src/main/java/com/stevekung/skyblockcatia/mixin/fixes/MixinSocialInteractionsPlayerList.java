@@ -26,7 +26,7 @@ public class MixinSocialInteractionsPlayerList
         return networkplayerinfo.getProfile().getName().startsWith("!") ? null : networkplayerinfo;
     }
 
-    @Inject(method = "addPlayer(Lnet/minecraft/client/network/play/NetworkPlayerInfo;Lnet/minecraft/client/gui/social/SocialInteractionsScreen$Mode;)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/social/SocialInteractionsPlayerList.addEntry(Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;)I", shift = Shift.BEFORE))
+    @Inject(method = "addPlayer(Lnet/minecraft/client/multiplayer/PlayerInfo;Lnet/minecraft/client/gui/screens/social/SocialInteractionsScreen$Page;)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/social/SocialInteractionsPlayerList.addEntry(Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;)I", shift = Shift.BEFORE))
     private void filterPlayer(PlayerInfo playerInfo, SocialInteractionsScreen.Page mode, CallbackInfo info)
     {
         if (playerInfo.getProfile().getName().startsWith("!"))

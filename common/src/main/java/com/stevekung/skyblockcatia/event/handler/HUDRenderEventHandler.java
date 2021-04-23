@@ -1,32 +1,25 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.ClientBlockBreakEvent;
 import com.stevekung.skyblockcatia.event.GrapplingHookEvent;
-import com.stevekung.skyblockcatia.integration.sba.SBAMana;
-import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.CoordsPair;
-import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 import com.stevekung.stevekungslib.utils.ModDecimalFormat;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
-import net.minecraft.ChatFormatting;
+import me.shedaniel.architectury.event.events.EntityEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.item.ItemStack;
@@ -46,12 +39,16 @@ public class HUDRenderEventHandler
     public static boolean foundDragon;
     private final Set<CoordsPair> recentlyLoadedChunks = Sets.newHashSet();
     private static final ImmutableList<AABB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AABB(-609, 9, -303, -631, 5, -320), new AABB(-622, 5, -321, -640, 5, -334), new AABB(-631, 7, -293, -648, 7, -312), new AABB(-658, 8, -308, -672, 7, -320), new AABB(-709, 9, -325, -694, 10, -315), new AABB(-702, 10, -303, -738, 5, -261), new AABB(-705, 5, -257, -678, 5, -296), new AABB(-657, 5, -210, -624, 8, -242), new AABB(-625, 7, -256, -662, 5, -286));
+    public static final HUDRenderEventHandler INSTANCE = new HUDRenderEventHandler();
 
     public HUDRenderEventHandler()
     {
         this.mc = Minecraft.getInstance();
         GrapplingHookEvent.GRAPPLING_HOOK.register(this::onGrapplingHookUse);
         ClientBlockBreakEvent.CLIENT_BLOCK_BREAK.register(this::onClientBlockBreak);
+        EntityEvent.LIVING_DEATH.register(this::onLivingDeath);
+        EntityEvent.ADD.register(this::onEntityJoinWorld);
+        EntityEvent.ENTER_CHUNK.register(this::onEntityEnteringChunk);
     }
 
     public void onGrapplingHookUse(ItemStack itemStack)
@@ -83,19 +80,6 @@ public class HUDRenderEventHandler
         }
     }
 
-//    public void onRenderChat(RenderGameOverlayEvent.Chat event)
-//    {
-//        if (this.mc.screen != null && this.mc.screen instanceof ContainerScreen)
-//        {
-//            ContainerScreen chest = (ContainerScreen)this.mc.screen;
-//
-//            if (MainEventHandler.showChat && GuiScreenUtils.isChatable(chest.getTitle()))
-//            {
-//                event.setCanceled(true);
-//            }
-//        }
-//    }
-//
 //    public void onPreInfoRender(RenderGameOverlayEvent.Pre event)
 //    {
 //        PoseStack matrixStack = event.getMatrixStack();
@@ -184,80 +168,83 @@ public class HUDRenderEventHandler
 //            }
 //        }
 //    }
-//
-//    public void onEntityJoinWorld(EntityJoinWorldEvent event)
-//    {
-//        if (SkyBlockEventHandler.isSkyBlock)
-//        {
-//            if (event.getEntity() == this.mc.player)
-//            {
-//                this.recentlyLoadedChunks.clear();
-//            }
-//            if (event.getEntity() instanceof EnderDragon)
-//            {
-//                HUDRenderEventHandler.foundDragon = true;
-//
-//                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
-//                {
-//                    this.mc.getEntityRenderDispatcher().setRenderHitBoxes(true);
-//                }
-//            }
-//        }
-//    }
-//
-//    public void onLivingDeath(LivingDeathEvent event)
-//    {
-//        if (SkyBlockEventHandler.isSkyBlock)
-//        {
-//            if (event.getEntity() instanceof EnderDragon)
-//            {
-//                HUDRenderEventHandler.foundDragon = false;
-//
-//                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
-//                {
-//                    this.mc.getEntityRenderDispatcher().setRenderHitBoxes(false);
-//                }
-//            }
-//        }
-//    }
-//
-//    public void onChunkLoad(ChunkEvent.Load event)
-//    {
-//        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
-//        {
-//            CoordsPair coords = new CoordsPair(event.getChunk().getPos().x, event.getChunk().getPos().z);
-//            this.recentlyLoadedChunks.add(coords);
-//            TimeUtils.schedule(() -> this.recentlyLoadedChunks.remove(coords), 20);
-//        }
-//    }
-//
-//    public void onEntityEnteringChunk(EntityEvent.EnteringChunk event)
-//    {
-//        Entity entity = event.getEntity();
-//
-//        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
-//        {
-//            if (ZEALOT_SPAWN_AREA.stream().anyMatch(aabb -> aabb.contains(new Vec3(entity.getX(), entity.getY(), entity.getZ()))))
-//            {
-//                if (entity instanceof EnderMan)
-//                {
-//                    if (!this.recentlyLoadedChunks.contains(new CoordsPair(event.getNewChunkX(), event.getNewChunkZ())) && entity.tickCount == 0)
-//                    {
-//                        long now = System.currentTimeMillis();
-//
-//                        if (now - this.lastZealotRespawn > 11000L)
-//                        {
-//                            this.lastZealotRespawn = now;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        else
-//        {
-//            this.lastZealotRespawn = -1;
-//        }
-//    }
+
+    public InteractionResult onEntityJoinWorld(Entity entity, Level level)
+    {
+        if (SkyBlockEventHandler.isSkyBlock)
+        {
+            if (entity == this.mc.player)
+            {
+                this.recentlyLoadedChunks.clear();
+                return InteractionResult.SUCCESS;
+            }
+            if (entity instanceof EnderDragon)
+            {
+                HUDRenderEventHandler.foundDragon = true;
+
+                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
+                {
+                    this.mc.getEntityRenderDispatcher().setRenderHitBoxes(true);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    public InteractionResult onLivingDeath(LivingEntity entity, DamageSource source)
+    {
+        if (SkyBlockEventHandler.isSkyBlock)
+        {
+            if (entity instanceof EnderDragon)
+            {
+                HUDRenderEventHandler.foundDragon = false;
+
+                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
+                {
+                    this.mc.getEntityRenderDispatcher().setRenderHitBoxes(false);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    public void onChunkLoad(int chunkX, int chunkZ)
+    {
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
+        {
+            CoordsPair coords = new CoordsPair(chunkX, chunkZ);
+            this.recentlyLoadedChunks.add(coords);
+            TimeUtils.schedule(() -> this.recentlyLoadedChunks.remove(coords), 20);
+        }
+    }
+
+    public void onEntityEnteringChunk(Entity entity, int chunkX, int chunkZ, int prevX, int prevZ)
+    {
+        if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
+        {
+            if (ZEALOT_SPAWN_AREA.stream().anyMatch(aabb -> aabb.contains(new Vec3(entity.getX(), entity.getY(), entity.getZ()))))
+            {
+                if (entity instanceof EnderMan)
+                {
+                    if (!this.recentlyLoadedChunks.contains(new CoordsPair(chunkX, chunkZ)) && entity.tickCount == 0)
+                    {
+                        long now = System.currentTimeMillis();
+
+                        if (now - this.lastZealotRespawn > 11000L)
+                        {
+                            this.lastZealotRespawn = now;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            this.lastZealotRespawn = -1;
+        }
+    }
 
     private double getItemDelay(int base, long delay)
     {

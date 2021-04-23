@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
+import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
+import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
 import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.DataUtils;
@@ -51,6 +54,9 @@ public class SkyBlockcatiaMod
         CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
         CompatibilityUtils.init();
         KeyBindingHandler.init();
+        new MainEventHandler();
+        new HUDRenderEventHandler();
+        new SkyBlockEventHandler();
     }
 
     private static void downloadAPIData()

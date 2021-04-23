@@ -4,7 +4,10 @@
     "compatibilityLevel": "JAVA_8",
     "package": "com.stevekung.skyblockcatia.mixin.fabric",
     "client": [
+        "MixinMinecraft",
+        "gui.components.MixinChatComponent",
         "gui.screens.inventory.MixinAbstractContainerScreen",
+        "renderer.entity.MixinEntityRenderer",
         "renderer.entity.layers.MixinHumanoidArmorLayer"
     ],
     "injectors": {

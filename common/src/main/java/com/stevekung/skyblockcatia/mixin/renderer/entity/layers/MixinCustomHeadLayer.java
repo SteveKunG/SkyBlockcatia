@@ -61,7 +61,7 @@ public abstract class MixinCustomHeadLayer<T extends LivingEntity, M extends Ent
                 matrixStack.translate(0.0D, 1.0D, 0.0D);
             }
 
-            ((HeadedModel)this.getParentModel()).getHead().translateAndRotate(matrixStack);
+            this.getParentModel().getHead().translateAndRotate(matrixStack);
 
             if (item instanceof BlockItem && ((BlockItem)item).getBlock() instanceof AbstractSkullBlock && itemStack.hasTag())
             {

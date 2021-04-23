@@ -61,7 +61,7 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(AbstractContainerScreen.class)
 public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> extends Screen implements ITradeScreen
 {
-    private final AbstractContainerScreen that = (AbstractContainerScreen)(Object)this;
+    private final AbstractContainerScreen<?> that = (AbstractContainerScreen<?>)(Object)this;
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -393,7 +393,7 @@ public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> exten
 
                                 if (lore.startsWith("Seller: "))
                                 {
-                                    this.minecraft.player.chat("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
+                                    this.minecraft.player.chat("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B?\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\])? ", ""));
                                 }
                             }
                         }
@@ -439,7 +439,7 @@ public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> exten
 
                                 try
                                 {
-                                    level = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Exp Level(?:s){0,1}", "")).intValue();
+                                    level = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Exp Levels?", "")).intValue();
                                 }
                                 catch (ParseException ignored) {}
 
@@ -461,7 +461,7 @@ public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> exten
 
                                 try
                                 {
-                                    coin = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Coin(?:s){0,1}", "")).intValue();
+                                    coin = NumberFormat.getNumberInstance(Locale.ROOT).parse(lore.replaceAll(" Coins?", "")).intValue();
                                 }
                                 catch (ParseException ignored) {}
 
