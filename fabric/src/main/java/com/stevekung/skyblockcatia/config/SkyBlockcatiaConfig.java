@@ -3,6 +3,7 @@ package com.stevekung.skyblockcatia.config;
 import java.io.IOException;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaFabricMod;
+import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -26,6 +27,7 @@ public class SkyBlockcatiaConfig
             try
             {
                 SkyBlockcatiaFabricMod.CONFIG.saveConfig();
+                SBAPIUtils.setApiKey();
             }
             catch (IOException e)
             {
@@ -34,7 +36,7 @@ public class SkyBlockcatiaConfig
         });
         ConfigEntryBuilder entry = ConfigEntryBuilder.create();
         ConfigCategory generalCategory = builder.getOrCreateCategory(TextComponentUtils.component("General Settings"));
-        generalCategory.addEntry(entry.startBooleanToggle(LangUtils.translate("skyblockcatia.configgui.enable_skin_rendering_fix"), config.enableSkinRenderingFix).setSaveConsumer(value -> config.enableSkinRenderingFix = value).setDefaultValue(false).build());
+        generalCategory.addEntry(entry.startBooleanToggle(LangUtils.translate("skyblockcatia.configgui.enable_skin_rendering_fix"), config.enableSkinRenderingFix).setSaveConsumer(value -> config.enableSkinRenderingFix = value).setDefaultValue(true).build());
         generalCategory.addEntry(entry.startBooleanToggle(LangUtils.translate("skyblockcatia.configgui.disable_hurt_camera_effect"), config.disableHurtCameraEffect).setSaveConsumer(value -> config.disableHurtCameraEffect = value).setDefaultValue(false).build());
         generalCategory.addEntry(entry.startBooleanToggle(LangUtils.translate("skyblockcatia.configgui.enable_chat_in_container_screen"), config.enableChatInContainerScreen).setSaveConsumer(value -> config.enableChatInContainerScreen = value).setDefaultValue(true).build());
         generalCategory.addEntry(entry.startStrField(LangUtils.translate("skyblockcatia.configgui.hypixel_api_key"), config.hypixelApiKey).setSaveConsumer(value -> config.hypixelApiKey = value).setDefaultValue("").build());

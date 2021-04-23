@@ -25,7 +25,7 @@ public class SkyBlockcatiaConfig
 
             this.hypixelApiKey = builder.translation("skyblockcatia.configgui.hypixel_api_key").define("hypixelApiKey", "");
 
-            this.enableSkinRenderingFix = builder.translation("skyblockcatia.configgui.enable_skin_rendering_fix").define("enableSkinRenderingFix", false);
+            this.enableSkinRenderingFix = builder.translation("skyblockcatia.configgui.enable_skin_rendering_fix").define("enableSkinRenderingFix", true);
 
             this.disableHurtCameraEffect = builder.translation("skyblockcatia.configgui.disable_hurt_camera_effect").define("disableHurtCameraEffect", false);
 
