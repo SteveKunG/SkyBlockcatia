@@ -837,8 +837,8 @@ public class SkyBlockEventHandler
     private void getInventoryDifference(ItemStack[] currentInventory)
     {
         List<ItemStack> newInventory = this.copyInventory(currentInventory);
-        Map<String, ItemDropDiff> previousInventoryMap = Maps.newHashMap();
-        Map<String, ItemDropDiff> newInventoryMap = Maps.newHashMap();
+        Map<String, ItemDropDiff> previousInventoryMap = Maps.newConcurrentMap();
+        Map<String, ItemDropDiff> newInventoryMap = Maps.newConcurrentMap();
         SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.removeIf(this::removeUndisplayedToast);
 
         if (this.previousInventory != null)
