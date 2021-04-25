@@ -394,6 +394,20 @@
     ],
     "skin": [
         {
+            "type": "BLACK_CAT_IVORY",
+            "displayName": "Ivory Black Cat",
+            "color": "dark_purple",
+            "uuid": "226082cc-4eae-30ba-b3df-f73b2f898e29",
+            "texture": "f51b17d7ded6c7e8f3b2dac12378a6fc4e9228b911986f64c8af45837ae6d9e1"
+        },
+        {
+            "type": "BLACK_CAT_ONYX",
+            "displayName": "Onyx Black Cat",
+            "color": "dark_purple",
+            "uuid": "9c1f2945-99bf-3ab2-bd0f-7f223a58c7db",
+            "texture": "be924115d3a8bbacfd4fafb6cc70f99a2f7580e4583a50fa9b9c285a98ac0c56"
+        },
+        {
             "type": "CHICKEN_BABY_CHICK",
             "displayName": "Baby Chick Chicken",
             "color": "dark_purple",
