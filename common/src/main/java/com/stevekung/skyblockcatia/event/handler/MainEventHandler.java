@@ -163,15 +163,18 @@ public class MainEventHandler
     @SuppressWarnings("deprecation")
     public void onPostGuiDrawScreen(Screen screen, PoseStack poseStack, int mouseX, int mouseY, float delta)
     {
-        for (ItemButton button : ((AccessorScreen)screen).getButtons().stream().filter(button -> button instanceof ItemButton).map(button -> (ItemButton)button).collect(Collectors.toList()))
+        if (screen != null)
         {
-            boolean hover = mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
-
-            if (hover && button.visible)
+            for (ItemButton button : ((AccessorScreen)screen).getButtons().stream().filter(button -> button instanceof ItemButton).map(button -> (ItemButton)button).collect(Collectors.toList()))
             {
-                screen.renderTooltip(poseStack, button.getName(), mouseX, mouseY);
-                RenderSystem.disableLighting();
-                break;
+                boolean hover = mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+
+                if (hover && button.visible)
+                {
+                    screen.renderTooltip(poseStack, button.getName(), mouseX, mouseY);
+                    RenderSystem.disableLighting();
+                    break;
+                }
             }
         }
     }
