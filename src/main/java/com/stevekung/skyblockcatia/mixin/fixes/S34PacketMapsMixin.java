@@ -17,10 +17,10 @@ public class S34PacketMapsMixin
     @Shadow
     private byte[] mapDataBytes;
 
-    @Inject(method = "setMapdataTo", cancellable = true, at = @At("HEAD"))
+    @Inject(method = "setMapdataTo", cancellable = true, at = @At(value = "FIELD", target = "net/minecraft/network/play/server/S34PacketMaps.mapMaxX:I", ordinal = 0))
     private void disableLog(MapData data, CallbackInfo info)
     {
-        if (SkyBlockcatiaConfig.disableErrorLog && (this.mapDataBytes.length == 0 || data.colors.length == 0))
+        if (SkyBlockcatiaConfig.disableErrorLog && data.colors.length < 1)
         {
             info.cancel();
         }
