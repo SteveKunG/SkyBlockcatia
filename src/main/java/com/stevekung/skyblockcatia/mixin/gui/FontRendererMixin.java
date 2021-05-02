@@ -196,8 +196,8 @@ public abstract class FontRendererMixin
         }
     }
 
-    @Inject(method = "getFormatFromString(Ljava/lang/String;)Ljava/lang/String;", cancellable = true, at = @At("RETURN"))
-    private static void getFormatFromString(String text, CallbackInfoReturnable<String> info)
+    @Overwrite
+    public static String getFormatFromString(String text)
     {
         String s = "";
         int i = -1;
@@ -209,13 +209,21 @@ public abstract class FontRendererMixin
             {
                 char c0 = text.charAt(i + 1);
 
-                if (c0 >= MARKER && c0 <= MARKER + 255)
+                if (isFormatColor(c0))
+                {
+                    s = "\u00a7" + c0;
+                }
+                else if (isFormatSpecial(c0))
+                {
+                    s = s + "\u00a7" + c0;
+                }
+                else if (c0 >= MARKER && c0 <= MARKER + 255)
                 {
                     s = String.format("%s%s%s", c0, text.charAt(i + 1), text.charAt(i + 2));
                     i += 2;
                 }
             }
         }
-        info.setReturnValue(s);
+        return s;
     }
 }
