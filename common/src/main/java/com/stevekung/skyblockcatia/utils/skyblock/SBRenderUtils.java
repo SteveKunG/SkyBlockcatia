@@ -87,7 +87,7 @@ public class SBRenderUtils
                                         }
                                     }
 
-                                    if (color != null)
+                                    if (color != null && color.getColor() != null)
                                     {
                                         renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getColor().toString()).toString()));
                                     }
@@ -118,16 +118,23 @@ public class SBRenderUtils
                                 if (i == 1)
                                 {
                                     Component color = component2.getSiblings().get(i);
-                                    renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getStyle().getColor().toString()).toString()));
-                                    break;
+
+                                    if (color.getStyle().getColor() != null)
+                                    {
+                                        renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getStyle().getColor().toString()).toString()));
+                                        break;
+                                    }
                                 }
                             }
                         }
 
                         for (Component component3 : component2.getSiblings())
                         {
-                            renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(component3.getStyle().getColor().toString()).toString()));
-                            break;
+                            if (component3.getStyle().getColor() != null)
+                            {
+                                renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(component3.getStyle().getColor().toString()).toString()));
+                                break;
+                            }
                         }
                     }
                     SBRenderUtils.renderPetRarity(displayName, itemStack, matrixStack, xPos, yPos);
