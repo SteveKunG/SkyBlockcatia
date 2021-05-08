@@ -2208,8 +2208,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             List<String> minionList = new ArrayList<>();
             Set<Integer> dummySet = new HashSet<>();
             Set<Integer> skippedList = new HashSet<>();
+            SBMinions.Type type = SBMinions.MINIONS.getTypeByName(minionType);
 
-            if (SBMinions.MINIONS.getTypeByName(minionType).hasTier12())
+            if (type != null && type.hasTier12())
             {
                 dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
             }
@@ -2809,13 +2810,12 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
                 if (heldItemObj != null && !heldItemObj.isJsonNull())
                 {
-                    try
-                    {
-                        heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
-                    }
-                    catch (Exception e)
+                    heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
+
+                    if (heldItem == null)
                     {
                         heldItemType = heldItemObj.getAsString();
+                        LoggerIN.warning("Found an unknown pet item!, type: {}", heldItemType);
                     }
                 }
 
@@ -2830,11 +2830,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
 
                 SBPets.Info level = this.checkPetLevel(exp, tier);
+                EnumChatFormatting rarity = tier.getTierColor();
+                SBPets.Type type = SBPets.PETS.getTypeByName(petType);
 
-                try
+                if (type != null)
                 {
-                    EnumChatFormatting rarity = tier.getTierColor();
-                    SBPets.Type type = SBPets.PETS.getTypeByName(petType);
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
@@ -2912,7 +2912,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         break;
                     }
                 }
-                catch (Exception e)
+                else
                 {
                     ItemStack itemStack = new ItemStack(Items.bone);
                     itemStack.setStackDisplayName(EnumChatFormatting.RESET + "" + EnumChatFormatting.RED + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
