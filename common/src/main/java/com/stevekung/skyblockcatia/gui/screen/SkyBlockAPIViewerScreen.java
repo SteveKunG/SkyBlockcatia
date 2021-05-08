@@ -1767,8 +1767,9 @@ public class SkyBlockAPIViewerScreen extends Screen
             List<String> minionList = Lists.newArrayList();
             Set<Integer> dummySet = Sets.newHashSet();
             Set<Integer> skippedList = Sets.newHashSet();
+            SBMinions.Type type = SBMinions.MINIONS.getTypeByName(minionType);
 
-            if (SBMinions.MINIONS.getTypeByName(minionType).hasTier12())
+            if (type != null && type.hasTier12())
             {
                 dummyTiers = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
             }
@@ -2405,15 +2406,12 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
                 if (heldItemObj != null && !heldItemObj.isJsonNull())
                 {
-                    try
-                    {
-                        heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
-                        addEmpty = heldItem != null;
-                    }
-                    catch (Exception e)
+                    heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
+
+                    if (heldItem == null)
                     {
                         heldItemType = heldItemObj.getAsString();
-                        addEmpty = heldItemType != null;
+                        SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemType);
                     }
                 }
 
@@ -2428,11 +2426,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
 
                 SBPets.Info level = this.checkPetLevel(exp, tier);
+                ChatFormatting rarity = tier.getTierColor();
+                SBPets.Type type = SBPets.PETS.getTypeByName(petType);
 
-                try
+                if (type != null)
                 {
-                    ChatFormatting rarity = tier.getTierColor();
-                    SBPets.Type type = SBPets.PETS.getTypeByName(petType);
                     ItemStack itemStack = type.getPetItem();
 
                     itemStack.setHoverName(TextComponentUtils.component(ChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))));
@@ -2512,7 +2510,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             break;
                     }
                 }
-                catch (Exception e)
+                else
                 {
                     ItemStack itemStack = new ItemStack(Items.BONE);
                     itemStack.setHoverName(TextComponentUtils.formatted(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), ChatFormatting.RED));
@@ -3020,7 +3018,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.infoList.add(new SkyBlockInfo("✯ Magic Find", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getMagicFind()), magicFind));
         this.infoList.add(new SkyBlockInfo("♣ Pet Luck", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getPetLuck()), petLuck));
         this.infoList.add(new SkyBlockInfo("⫽ Ferocity", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getFerocity()), ferocity));
-        this.infoList.add(new SkyBlockInfo("✹ Ability Damage", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getAbilityDamage()) + "%", abilityDamage));
+        this.infoList.add(new SkyBlockInfo("๑ Ability Damage", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getAbilityDamage()) + "%", abilityDamage));
         this.infoList.add(new SkyBlockInfo("♆ Mining Fortune", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getMiningFortune()), miningSpeed));
         this.infoList.add(new SkyBlockInfo("♆ Farming Fortune", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getFarmingFortune()), miningSpeed));
         this.infoList.add(new SkyBlockInfo("♆ Foraging Fortune", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getForagingFortune()), miningSpeed));
