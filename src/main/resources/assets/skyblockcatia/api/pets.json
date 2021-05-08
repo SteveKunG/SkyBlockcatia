@@ -116,6 +116,11 @@
             "color": "green"
         },
         {
+            "type": "PET_ITEM_FLYING_PIG",
+            "name": "Flying Pig",
+            "color": "green"
+        },
+        {
             "type": "PET_ITEM_FORAGING_SKILL_BOOST_COMMON",
             "name": "Foraging Skill Boost",
             "color": "white"
