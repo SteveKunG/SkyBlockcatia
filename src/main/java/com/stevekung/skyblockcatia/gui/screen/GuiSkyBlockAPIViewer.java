@@ -3427,7 +3427,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.infoList.add(new SkyBlockInfo(magicFind + "\u272F Magic Find", magicFind + SKILL_AVG.format(this.allStat.getMagicFind())));
         this.infoList.add(new SkyBlockInfo(petLuck + "\u2663 Pet Luck", petLuck + SKILL_AVG.format(this.allStat.getPetLuck())));
         this.infoList.add(new SkyBlockInfo(ferocity + "\u2AFD Ferocity", ferocity + SKILL_AVG.format(this.allStat.getFerocity())));
-        this.infoList.add(new SkyBlockInfo(abilityDamage + "\u2739 Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage()) + "%"));
+        this.infoList.add(new SkyBlockInfo(abilityDamage + "๑ Ability Damage", abilityDamage + SKILL_AVG.format(this.allStat.getAbilityDamage()) + "%"));
         this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2646 Mining Fortune", miningSpeed + SKILL_AVG.format(this.allStat.getMiningFortune())));
         this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2646 Farming Fortune", miningSpeed + SKILL_AVG.format(this.allStat.getFarmingFortune())));
         this.infoList.add(new SkyBlockInfo(miningSpeed + "\u2646 Foraging Fortune", miningSpeed + SKILL_AVG.format(this.allStat.getForagingFortune())));
