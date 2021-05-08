@@ -378,7 +378,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 super.render(matrixStack, mouseX, mouseY, partialTicks);
                 List<Component> displayStrings = Lists.newArrayList();
 
-                for (SkyBlockProfileButton button : this.buttons.stream().filter(button -> button instanceof SkyBlockProfileButton).map(button -> (SkyBlockProfileButton)button).collect(Collectors.toList()))
+                for (SkyBlockProfileButton button : this.buttons.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
                 {
                     boolean hover = ((InvokerCommandSuggestions)this.suggestionHelper).getSuggestions() == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
                     button.visible = button.active = ((InvokerCommandSuggestions)this.suggestionHelper).getSuggestions() == null;
@@ -404,7 +404,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
     private void checkAPI() throws IOException
     {
-        this.buttons.removeIf(b -> b instanceof SkyBlockProfileButton);
+        this.buttons.removeIf(SkyBlockProfileButton.class::isInstance);
         URL url;
 
         if (this.input.length() == 32)

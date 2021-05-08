@@ -12,8 +12,17 @@ architectury {
     forge()
 }
 
+def username = project.username
+def password = project.password
+
 loom {
     mixinConfigs = ["mixins.skyblockcatia.json", "mixins.skyblockcatia_forge.json"]
+
+    launches {
+        client {
+            arg "--username", username, "--password", password
+        }
+    }
 }
 
 dependencies {

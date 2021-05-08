@@ -2,7 +2,6 @@ package com.stevekung.skyblockcatia.gui.screen;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -91,7 +90,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
@@ -3526,17 +3524,8 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         if (this.minecraft.getConnection().getPlayerInfo(this.profile.getName()) == null)
         {
-            try
-            {
-                Class<?> innerClass = ClientboundPlayerInfoPacket.PlayerUpdate.class;
-                Constructor<?> ctor = innerClass.getDeclaredConstructor(ClientboundPlayerInfoPacket.class, GameProfile.class, int.class, GameType.class, Component.class);
-                Object innerInstance = ctor.newInstance(new ClientboundPlayerInfoPacket(), this.profile, 0, null, null);
-                ((InvokerClientPacketListener)this.minecraft.getConnection()).getPlayerInfoMap().put(this.profile.getId(), ((IViewerLoader)new PlayerInfo((ClientboundPlayerInfoPacket.PlayerUpdate)innerInstance)).setLoadedFromViewer(true)); // hack into map to show their skin :D
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            ClientboundPlayerInfoPacket.PlayerUpdate playerUpdate = new ClientboundPlayerInfoPacket().new PlayerUpdate(this.profile, 0, null, null);
+            ((InvokerClientPacketListener)this.minecraft.getConnection()).getPlayerInfoMap().put(this.profile.getId(), ((IViewerLoader)new PlayerInfo(playerUpdate)).setLoadedFromViewer(true)); // hack into map to show their skin :D
         }
 
         this.player = new SBFakePlayerEntity(this.minecraft.level, this.profile);

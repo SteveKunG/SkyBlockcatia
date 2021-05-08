@@ -51,7 +51,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
@@ -653,7 +652,7 @@ public class SkyBlockEventHandler
         SkyBlockEventHandler.dragonHealth = 0;
     }
 
-    public void onItemTooltip(ItemStack itemStack, TooltipFlag context, List<Component> tooltip)
+    public void onItemTooltip(ItemStack itemStack, List<Component> tooltip)
     {
         try
         {

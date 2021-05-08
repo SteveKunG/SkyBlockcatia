@@ -94,7 +94,7 @@ public class SBClientEventHandler
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent event)
     {
-        SkyBlockEventHandler.INSTANCE.onItemTooltip(event.getItemStack(), event.getFlags(), event.getToolTip());
+        SkyBlockEventHandler.INSTANCE.onItemTooltip(event.getItemStack(), event.getToolTip());
     }
 
     @SubscribeEvent

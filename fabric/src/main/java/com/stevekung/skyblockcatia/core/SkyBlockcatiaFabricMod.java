@@ -29,7 +29,7 @@ public class SkyBlockcatiaFabricMod implements ClientModInitializer
 
         ClientChunkEvents.CHUNK_LOAD.register((level, chunk) -> HUDRenderEventHandler.INSTANCE.onChunkLoad(chunk.getPos().x, chunk.getPos().z));
         ClientLoginConnectionEvents.DISCONNECT.register((handler, mc) -> SkyBlockEventHandler.INSTANCE.onDisconnectedFromServerEvent());
-        ItemTooltipCallback.EVENT.register(SkyBlockEventHandler.INSTANCE::onItemTooltip);
+        ItemTooltipCallback.EVENT.register((itemStack, context, lines) -> SkyBlockEventHandler.INSTANCE.onItemTooltip(itemStack, lines));
         ClientTickEvents.END_CLIENT_TICK.register(mc ->
         {
             SkyBlockEventHandler.INSTANCE.onPressKey();

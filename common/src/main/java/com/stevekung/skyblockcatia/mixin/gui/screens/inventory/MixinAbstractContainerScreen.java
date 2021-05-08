@@ -53,13 +53,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 @Mixin(AbstractContainerScreen.class)
-public class MixinAbstractContainerScreen<T extends AbstractContainerMenu> extends Screen implements ITradeScreen
+public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 {
     private final AbstractContainerScreen<?> that = (AbstractContainerScreen<?>)(Object)this;
     private SearchMode mode = SearchMode.SIMPLE;

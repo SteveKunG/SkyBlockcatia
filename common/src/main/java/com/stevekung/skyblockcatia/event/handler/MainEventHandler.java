@@ -17,7 +17,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SmallArrowButton;
-import com.stevekung.skyblockcatia.mixin.AccessorScreen;
 import com.stevekung.skyblockcatia.mixin.InvokerAbstractContainerScreen;
 import com.stevekung.skyblockcatia.mixin.InvokerTitleScreen;
 import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
@@ -27,6 +26,7 @@ import com.stevekung.stevekungslib.utils.CalendarUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import me.shedaniel.architectury.event.events.GuiEvent;
 import me.shedaniel.architectury.event.events.client.ClientTickEvent;
+import me.shedaniel.architectury.hooks.ScreenHooks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -104,7 +104,7 @@ public class MainEventHandler
                     {
                         String chat = MainEventHandler.showChat ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
 
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(2, screen.height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
+                        ScreenHooks.addButton(screen, new ItemButton(2, screen.height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
                         {
                             MainEventHandler.showChat = !MainEventHandler.showChat;
                             ((ItemButton)button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + (MainEventHandler.showChat ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
@@ -113,34 +113,34 @@ public class MainEventHandler
 
                     if (GuiScreenUtils.contains(GuiScreenUtils.INVENTORY, title) && !title.getString().startsWith("Ender Chest"))
                     {
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 85, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 85, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
                     }
                     else if (title.getString().equals("Craft Item"))
                     {
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
                     }
                     else if (title.getString().startsWith("Ender Chest"))
                     {
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
                     }
                     else if (title.getString().contains("Wardrobe"))
                     {
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 47, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.chat("/pets")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.chat("/pets")));
                     }
                     else if (title.getString().contains("Pets"))
                     {
-                        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 88, height + 47, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.chat("/wardrobe")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.chat("/wardrobe")));
                     }
                 }
 
                 if (GuiScreenUtils.isAuctionBrowser(title.getString()))
                 {
                     String bid = MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
-                    ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? ((InvokerAbstractContainerScreen)chest).getTopPos() + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
+                    ScreenHooks.addButton(screen, new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? ((InvokerAbstractContainerScreen)chest).getTopPos() + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
                     {
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
                         ((ItemButton)button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
@@ -149,7 +149,7 @@ public class MainEventHandler
                 else if (title.getString().contains("Hub Selector"))
                 {
                     String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
-                    ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 89, height + 29, Items.COMPASS, TextComponentUtils.component("Lobby Player Overlay: " + overlay), button ->
+                    ScreenHooks.addButton(screen, new ItemButton(width + 89, height + 29, Items.COMPASS, TextComponentUtils.component("Lobby Player Overlay: " + overlay), button ->
                     {
                         SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
                         ((ItemButton)button).setName(TextComponentUtils.component("Lobby Player Overlay: " + (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
@@ -165,7 +165,7 @@ public class MainEventHandler
     {
         if (screen != null)
         {
-            for (ItemButton button : ((AccessorScreen)screen).getButtons().stream().filter(button -> button instanceof ItemButton).map(button -> (ItemButton)button).collect(Collectors.toList()))
+            for (ItemButton button : ScreenHooks.getButtons(screen).stream().filter(ItemButton.class::isInstance).map(ItemButton.class::cast).collect(Collectors.toList()))
             {
                 boolean hover = mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
 
@@ -234,30 +234,30 @@ public class MainEventHandler
 
     private void addButtonsToInventory(Screen screen, ItemStack wardRobeItem, int width, int height)
     {
-        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
-        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
-        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.chat("/pets")));
-        ((AccessorScreen)screen).invokeAddButton(new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.chat("/wardrobe")));
-        ((AccessorScreen)screen).invokeAddButton(new SmallArrowButton(width + 72, height + 90, button -> this.changeButtonPage(screen, wardRobeItem, width, height)));
+        ScreenHooks.addButton(screen, new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
+        ScreenHooks.addButton(screen, new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
+        ScreenHooks.addButton(screen, new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.chat("/pets")));
+        ScreenHooks.addButton(screen, new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.chat("/wardrobe")));
+        ScreenHooks.addButton(screen, new SmallArrowButton(width + 72, height + 90, button -> this.changeButtonPage(screen, wardRobeItem, width, height)));
 
         ItemButton item = new ItemButton(width + 88, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.chat("/ah"));
         item.visible = showAdditionalButtons;
-        ((AccessorScreen)screen).invokeAddButton(item);
+        ScreenHooks.addButton(screen, item);
         item = new ItemButton(width + 88, height + 105, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.chat("/bz"));
         item.visible = showAdditionalButtons;
-        ((AccessorScreen)screen).invokeAddButton(item);
+        ScreenHooks.addButton(screen, item);
         item = new ItemButton(width + 107, height + 86, new ItemStack(Blocks.ENCHANTING_TABLE), TextComponentUtils.component("Enchanting"), button -> this.mc.player.chat("/et"));
         item.visible = showAdditionalButtons;
-        ((AccessorScreen)screen).invokeAddButton(item);
+        ScreenHooks.addButton(screen, item);
         item = new ItemButton(width + 107, height + 105, new ItemStack(Blocks.ANVIL), TextComponentUtils.component("Anvil"), button -> this.mc.player.chat("/av"));
         item.visible = showAdditionalButtons;
-        ((AccessorScreen)screen).invokeAddButton(item);
+        ScreenHooks.addButton(screen, item);
     }
 
     private void changeButtonPage(Screen screen, ItemStack wardRobeItem, int width, int height)
     {
         showAdditionalButtons = !showAdditionalButtons;
-        ((AccessorScreen)screen).getButtons().removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
+        ScreenHooks.getButtons(screen).removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
         screen.children().removeIf(widget -> widget instanceof ItemButton || widget instanceof SmallArrowButton);
         this.addButtonsToInventory(screen, wardRobeItem, width, height);
     }

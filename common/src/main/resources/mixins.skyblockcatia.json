@@ -5,7 +5,6 @@
     "package": "com.stevekung.skyblockcatia.mixin",
     "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
     "client": [
-        "AccessorScreen",
         "InvokerAbstractContainerScreen",
         "InvokerChatComponent",
         "InvokerClientPacketListener",
