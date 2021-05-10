@@ -114,12 +114,12 @@ public class MainEventHandler
                     if (GuiScreenUtils.contains(GuiScreenUtils.INVENTORY, title) && !title.getString().startsWith("Ender Chest"))
                     {
                         ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
-                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 66, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 66, Blocks.CHEST, button -> this.mc.player.chat("/storage")));
                         ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 85, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
                     }
                     else if (title.getString().equals("Craft Item"))
                     {
-                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
+                        ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 47, Blocks.CHEST, button -> this.mc.player.chat("/storage")));
                         ScreenHooks.addButton(screen, new ItemButton(width + 88, height + 66, skyBlockMenu, button -> this.mc.player.chat("/sbmenu")));
                     }
                     else if (title.getString().startsWith("Ender Chest"))
@@ -234,7 +234,7 @@ public class MainEventHandler
 
     private void addButtonsToInventory(Screen screen, ItemStack wardRobeItem, int width, int height)
     {
-        ScreenHooks.addButton(screen, new ItemButton(width - 9, height + 86, Blocks.ENDER_CHEST, button -> this.mc.player.chat("/enderchest")));
+        ScreenHooks.addButton(screen, new ItemButton(width - 9, height + 86, Blocks.CHEST, button -> this.mc.player.chat("/storage")));
         ScreenHooks.addButton(screen, new ItemButton(width + 10, height + 86, Blocks.CRAFTING_TABLE, button -> this.mc.player.chat("/craft")));
         ScreenHooks.addButton(screen, new ItemButton(width + 29, height + 86, Items.BONE, TextComponentUtils.component("Pets"), button -> this.mc.player.chat("/pets")));
         ScreenHooks.addButton(screen, new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.chat("/wardrobe")));
