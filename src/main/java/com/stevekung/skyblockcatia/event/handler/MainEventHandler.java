@@ -135,7 +135,7 @@ public class MainEventHandler
 
             if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory && event.gui instanceof GuiInventory)
             {
-                event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.ender_chest)));
+                event.buttonList.add(new GuiButtonItem(1000, width - 9, height + 86, width + 51, new ItemStack(Blocks.chest), "Storage"));
                 event.buttonList.add(new GuiButtonItem(1001, width + 10, height + 86, width + 70, new ItemStack(Blocks.crafting_table)));
                 event.buttonList.add(new GuiButtonItem(1002, width + 29, height + 86, width + 89, new ItemStack(Items.bone), "Pets"));
                 event.buttonList.add(new GuiButtonItem(1003, width + 48, height + 86, width + 108, wardRobeItem, "Wardrobe"));
@@ -176,12 +176,12 @@ public class MainEventHandler
                     if (GuiScreenUtils.contains(GuiScreenUtils.INVENTORY, lowerChestInventory) && !lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Ender Chest"))
                     {
                         event.buttonList.add(new GuiButtonItem(1001, width + 88, height + 47, new ItemStack(Blocks.crafting_table)));
-                        event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, new ItemStack(Blocks.ender_chest)));
+                        event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 66, new ItemStack(Blocks.chest), "Storage"));
                         event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 85, width + 88, skyBlockMenu));
                     }
                     else if (lowerChestInventory.getDisplayName().getUnformattedText().equals("Craft Item"))
                     {
-                        event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, new ItemStack(Blocks.ender_chest)));
+                        event.buttonList.add(new GuiButtonItem(1000, width + 88, height + 47, new ItemStack(Blocks.chest), "Storage"));
                         event.buttonList.add(new GuiButtonItem(1004, width + 88, height + 65, skyBlockMenu));
                     }
                     else if (lowerChestInventory.getDisplayName().getUnformattedText().startsWith("Ender Chest"))
@@ -254,7 +254,7 @@ public class MainEventHandler
             {
                 if (event.button.id == 1000)
                 {
-                    this.mc.thePlayer.sendChatMessage("/enderchest");
+                    this.mc.thePlayer.sendChatMessage("/storage");
                 }
                 else if (event.button.id == 1001)
                 {
