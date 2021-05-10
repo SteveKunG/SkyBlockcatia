@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[35,)"
+loaderVersion = "[36,)"
 issueTrackerURL = "https://github.com/SteveKunG/SkyBlockcatia/issues"
 license = "MIT License"
 
@@ -17,28 +17,28 @@ logoFile = "logo.png"
 [[dependencies.skyblockcatia]]
 modId = "forge"
 mandatory = true
-versionRange = "[35.1.0,)"
+versionRange = "[36.1.0,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.skyblockcatia]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.4,)"
+versionRange = "[1.16.5,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.skyblockcatia]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.12.145,)"
+versionRange = "[1.12,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.skyblockcatia]]
 modId = "stevekungs_lib"
 mandatory = true
-versionRange = "[4.1.1,)"
+versionRange = "[4.1.2,)"
 ordering = "NONE"
 side = "CLIENT"
 

@@ -26,9 +26,9 @@
     "depends": {
         "fabricloader": ">=0.11",
         "fabric": "*",
-        "minecraft": ">=1.16.4",
-        "stevekungs_lib": ">=4.1.1",
-        "architectury": ">=1.12.145"
+        "minecraft": ">=1.16.5",
+        "stevekungs_lib": ">=4.1.2",
+        "architectury": ">=1.12"
     },
     "mixins": [
         "mixins.skyblockcatia.json",
