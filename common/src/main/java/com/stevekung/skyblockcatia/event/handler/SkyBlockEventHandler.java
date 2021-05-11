@@ -113,16 +113,19 @@ public class SkyBlockEventHandler
     private List<ItemStack> previousInventory;
     private DragonType dragonType;
     private boolean initApiData;
-    public static final SkyBlockEventHandler INSTANCE = new SkyBlockEventHandler();
+    public static SkyBlockEventHandler INSTANCE = new SkyBlockEventHandler(false);
 
-    public SkyBlockEventHandler()
+    public SkyBlockEventHandler(boolean register)
     {
-        ClientTickEvent.CLIENT_PRE.register(this::onClientTick);
-        ClientChatEvent.CLIENT_RECEIVED.register(this::onClientChatReceived);
-        EntityEvent.ADD.register(this::onWorldJoin);
+        if (register)
+        {
+            ClientTickEvent.CLIENT_PRE.register(this::onClientTick);
+            ClientChatEvent.CLIENT_RECEIVED.register((chatType, component, sender) -> this.onClientChatReceived(chatType, component));
+            EntityEvent.ADD.register(this::onWorldJoin);
+        }
     }
 
-    public void onClientTick(Minecraft mc)
+    private void onClientTick(Minecraft mc)
     {
         if (mc.player != null)
         {
@@ -225,8 +228,7 @@ public class SkyBlockEventHandler
         }
     }
 
-    @NotNull
-    public InteractionResultHolder<Component> onClientChatReceived(ChatType chatType, Component smessage, @Nullable UUID sender)
+    private InteractionResultHolder<Component> onClientChatReceived(ChatType chatType, Component smessage)
     {
         Minecraft mc = Minecraft.getInstance();
         String formattedMessage = smessage.getString();
@@ -540,7 +542,7 @@ public class SkyBlockEventHandler
                 }
                 if (cancelMessage)
                 {
-                    return InteractionResultHolder.fail(TextComponent.EMPTY);
+                    return InteractionResultHolder.pass(TextComponent.EMPTY);
                 }
             }
         }
@@ -625,7 +627,7 @@ public class SkyBlockEventHandler
         }
     }
 
-    public InteractionResult onWorldJoin(Entity entity, Level level)
+    private InteractionResult onWorldJoin(Entity entity, Level level)
     {
         if (entity == Minecraft.getInstance().player)
         {

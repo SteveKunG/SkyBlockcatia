@@ -64,7 +64,7 @@ public class MainEventHandler
         GuiEvent.RENDER_POST.register(this::onPostGuiDrawScreen);
     }
 
-    public void onClientTick(Minecraft mc)
+    private void onClientTick(Minecraft mc)
     {
         if (this.mc.screen instanceof TitleScreen)
         {
@@ -73,7 +73,7 @@ public class MainEventHandler
         rainbowTicks += 5;
     }
 
-    public void onInitGui(Screen screen, List<AbstractWidget> widgets, List<GuiEventListener> children)
+    private void onInitGui(Screen screen, List<AbstractWidget> widgets, List<GuiEventListener> children)
     {
         int width = screen.width / 2;
         int height = screen.height / 2 - 106;
@@ -161,7 +161,7 @@ public class MainEventHandler
     }
 
     @SuppressWarnings("deprecation")
-    public void onPostGuiDrawScreen(Screen screen, PoseStack poseStack, int mouseX, int mouseY, float delta)
+    private void onPostGuiDrawScreen(Screen screen, PoseStack poseStack, int mouseX, int mouseY, float delta)
     {
         if (screen != null)
         {
@@ -179,7 +179,7 @@ public class MainEventHandler
         }
     }
 
-    public InteractionResultHolder<Screen> onGuiOpen(Screen screen)
+    private InteractionResultHolder<Screen> onGuiOpen(Screen screen)
     {
         if (screen instanceof TitleScreen)
         {

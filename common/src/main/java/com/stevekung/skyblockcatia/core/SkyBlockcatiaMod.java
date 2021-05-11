@@ -71,8 +71,8 @@ public class SkyBlockcatiaMod
         CompatibilityUtils.init();
         KeyBindingHandler.init();
         new MainEventHandler();
-        new HUDRenderEventHandler();
-        new SkyBlockEventHandler();
+        new HUDRenderEventHandler(true);
+        new SkyBlockEventHandler(true);
     }
 
     private static void downloadAPIData()

@@ -49,19 +49,23 @@ public class HUDRenderEventHandler
     public static boolean foundDragon;
     private final Set<CoordsPair> recentlyLoadedChunks = Sets.newHashSet();
     private static final ImmutableList<AABB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AABB(-609, 9, -303, -631, 5, -320), new AABB(-622, 5, -321, -640, 5, -334), new AABB(-631, 7, -293, -648, 7, -312), new AABB(-658, 8, -308, -672, 7, -320), new AABB(-709, 9, -325, -694, 10, -315), new AABB(-702, 10, -303, -738, 5, -261), new AABB(-705, 5, -257, -678, 5, -296), new AABB(-657, 5, -210, -624, 8, -242), new AABB(-625, 7, -256, -662, 5, -286));
-    public static final HUDRenderEventHandler INSTANCE = new HUDRenderEventHandler();
+    public static final HUDRenderEventHandler INSTANCE = new HUDRenderEventHandler(false);
 
-    public HUDRenderEventHandler()
+    public HUDRenderEventHandler(boolean register)
     {
         this.mc = Minecraft.getInstance();
-        GrapplingHookEvent.GRAPPLING_HOOK.register(this::onGrapplingHookUse);
-        ClientBlockBreakEvent.CLIENT_BLOCK_BREAK.register(this::onClientBlockBreak);
-        EntityEvent.LIVING_DEATH.register(this::onLivingDeath);
-        EntityEvent.ADD.register(this::onEntityJoinWorld);
-        EntityEvent.ENTER_CHUNK.register(this::onEntityEnteringChunk);
+
+        if (register)
+        {
+            GrapplingHookEvent.GRAPPLING_HOOK.register(this::onGrapplingHookUse);
+            ClientBlockBreakEvent.CLIENT_BLOCK_BREAK.register(this::onClientBlockBreak);
+            EntityEvent.LIVING_DEATH.register(this::onLivingDeath);
+            EntityEvent.ADD.register(this::onEntityJoinWorld);
+            EntityEvent.ENTER_CHUNK.register(this::onEntityEnteringChunk);
+        }
     }
 
-    public void onGrapplingHookUse(ItemStack itemStack)
+    private void onGrapplingHookUse(ItemStack itemStack)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -75,7 +79,7 @@ public class HUDRenderEventHandler
         }
     }
 
-    public void onClientBlockBreak(Level level, BlockPos pos, BlockState prevState)
+    private void onClientBlockBreak(Level level, BlockPos pos, BlockState prevState)
     {
         long now = System.currentTimeMillis();
 
@@ -175,7 +179,7 @@ public class HUDRenderEventHandler
         }
     }
 
-    public InteractionResult onEntityJoinWorld(Entity entity, Level level)
+    private InteractionResult onEntityJoinWorld(Entity entity, Level level)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -198,7 +202,7 @@ public class HUDRenderEventHandler
         return InteractionResult.PASS;
     }
 
-    public InteractionResult onLivingDeath(LivingEntity entity, DamageSource source)
+    private InteractionResult onLivingDeath(LivingEntity entity, DamageSource source)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -226,7 +230,7 @@ public class HUDRenderEventHandler
         }
     }
 
-    public void onEntityEnteringChunk(Entity entity, int chunkX, int chunkZ, int prevX, int prevZ)
+    private void onEntityEnteringChunk(Entity entity, int chunkX, int chunkZ, int prevX, int prevZ)
     {
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
