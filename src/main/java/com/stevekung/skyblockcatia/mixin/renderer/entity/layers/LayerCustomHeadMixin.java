@@ -5,12 +5,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.mojang.authlib.GameProfile;
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.renderer.TileEntityEnchantedSkullRenderer;
+import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelHumanoidHead;
@@ -19,9 +21,9 @@ import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
-import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -36,14 +38,14 @@ public class LayerCustomHeadMixin
     @Final
     private ModelRenderer field_177209_a;
 
-    @Redirect(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/TileEntitySkullRenderer.renderSkull(FFFLnet/minecraft/util/EnumFacing;FILcom/mojang/authlib/GameProfile;I)V"))
-    private void renderEnchantedSkull(TileEntitySkullRenderer renderer, float x, float y, float z, EnumFacing facing, float rotation, int meta, GameProfile profile, int p_180543_8_, EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
+    @Inject(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/TileEntitySkullRenderer.renderSkull(FFFLnet/minecraft/util/EnumFacing;FILcom/mojang/authlib/GameProfile;I)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void renderEnchantedSkull(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info, ItemStack itemStack, Item item, Minecraft minecraft, boolean flag, float f3, GameProfile gameprofile)
     {
-        ItemStack itemStack = entity.getCurrentArmor(3);
-
-        if (itemStack != null)
+        if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && !CompatibilityUtils.hasDisableEnchantmentGlint())
         {
-            TileEntityEnchantedSkullRenderer.INSTANCE.renderSkull(x, y, z, facing, rotation, meta, profile, partialTicks, itemStack.hasEffect(), entity);
+            TileEntityEnchantedSkullRenderer.INSTANCE.renderSkull(-0.5F, 0.0F, -0.5F, EnumFacing.UP, 180.0F, itemStack.getMetadata(), gameprofile, -1, itemStack.hasEffect(), entity);
+            GlStateManager.popMatrix();
+            info.cancel();
         }
     }
 
