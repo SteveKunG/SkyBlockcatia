@@ -532,6 +532,13 @@
             "texture": "e9281c4d87d68526b0749d4361e6ef786c8a35717aa053da704b1d53410d37a6"
         },
         {
+            "type": "MONKEY_GORILLA",
+            "displayName": "Gorilla Monkey",
+            "color": "light_purple",
+            "uuid": "3dcb342c-23bb-3ba8-8abe-1b6ac6c03022",
+            "texture": "c3eb3e37e9873bfc176b9ed8ef4fbef833de144546bfaefdf24863c3eb87bb86"
+        },
+        {
             "type": "RABBIT",
             "displayName": "Pretty Rabbit",
             "color": "dark_purple",
