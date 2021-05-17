@@ -13,6 +13,9 @@ architectury {
 }
 
 repositories {
+    flatDir {
+        dirs "libs"
+    }
     maven {
         name "ModMenu Maven"
         url "https://maven.terraformersmc.com/releases/"
@@ -43,7 +46,7 @@ dependencies {
     }
 
     if (file("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar").exists()) {
-        compile files("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar")
+        modImplementation(":SteveKunG's-Lib-mc${mc_version}-dev")
         println("Use existing deobf artifact")
     } else {
         modCompile("curse.maven:stevekungs-lib-296019:${rootProject.stevekung_lib_fabric_deobf}")

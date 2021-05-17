@@ -12,6 +12,12 @@ architectury {
     forge()
 }
 
+repositories {
+    flatDir {
+        dirs "libs"
+    }
+}
+
 def username = project.username
 def password = project.password
 
@@ -40,7 +46,7 @@ dependencies {
     }
 
     if (file("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar").exists()) {
-        compile files("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar")
+        modImplementation(":SteveKunG's-Lib-mc${mc_version}-dev")
         println("Use existing deobf artifact")
     } else {
         modCompile("curse.maven:stevekungs-lib-296019:${rootProject.stevekung_lib_forge_deobf}")
@@ -61,6 +67,7 @@ def fileName = "${rootProject.archives_base_name}-mc${rootProject.mc_version}"
 jar {
     version "v${project.version}"
     baseName fileName
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 shadowJar {
@@ -77,6 +84,7 @@ sourcesJar {
     classifier "source"
     version "v${project.version}"
     baseName fileName
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 remapJar {
