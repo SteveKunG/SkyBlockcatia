@@ -24,7 +24,7 @@ public abstract class MixinScoreboard
     @Inject(method = "addPlayerTeam", cancellable = true, at = @At(value = "NEW", target = "java/lang/IllegalArgumentException", remap = false, shift = At.Shift.BEFORE))
     private void disableLog(String name, CallbackInfoReturnable<PlayerTeam> info)
     {
-        PlayerTeam scoreplayerteam = ((Scoreboard)(Object)this).getPlayerTeam(name);
+        PlayerTeam scoreplayerteam = ((Scoreboard) (Object) this).getPlayerTeam(name);
 
         if (scoreplayerteam != null)
         {

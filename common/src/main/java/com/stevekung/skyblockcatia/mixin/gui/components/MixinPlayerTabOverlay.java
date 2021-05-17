@@ -17,6 +17,6 @@ public class MixinPlayerTabOverlay
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "net/minecraft/client/multiplayer/ClientPacketListener.getOnlinePlayers()Ljava/util/Collection;"))
     private Collection<PlayerInfo> filterPlayerInfo(ClientPacketListener clientplaynethandler)
     {
-        return clientplaynethandler.getOnlinePlayers().stream().filter(network -> !((IViewerLoader)network).isLoadedFromViewer()).collect(Collectors.toList());
+        return clientplaynethandler.getOnlinePlayers().stream().filter(network -> !((IViewerLoader) network).isLoadedFromViewer()).collect(Collectors.toList());
     }
 }

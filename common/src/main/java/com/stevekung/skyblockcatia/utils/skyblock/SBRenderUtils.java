@@ -204,10 +204,10 @@ public class SBRenderUtils
     // Credit to https://gist.github.com/killjoy1221/71b4cd975b92afe8dbd2e5f6222b1140
     public static void drawLongItemName(ToastComponent toastGui, PoseStack matrixStack, long delta, long firstDrawTime, long maxDrawTime, Component itemName, boolean shadow)
     {
-        long minDraw = (long)(maxDrawTime * 0.1D);
+        long minDraw = (long) (maxDrawTime * 0.1D);
         long maxDraw = maxDrawTime + 500L;
-        long backwardDraw = (long)(maxDrawTime * 0.5D);
-        long textSpeed = 1500L + (long)(maxDrawTime * 0.1D);
+        long backwardDraw = (long) (maxDrawTime * 0.5D);
+        long textSpeed = 1500L + (long) (maxDrawTime * 0.1D);
         int x = 30;
         int textWidth = toastGui.getMinecraft().font.width(itemName);
         int maxSize = textWidth - 135;
@@ -219,10 +219,10 @@ public class SBRenderUtils
         {
             if (timeElapsed > 0)
             {
-                x = Math.max((int)(-textWidth * timeElapsed / textSpeed + x), -maxSize + 16);
+                x = Math.max((int) (-textWidth * timeElapsed / textSpeed + x), -maxSize + 16);
             }
 
-            int backward = Math.max(Math.min((int)-(textWidth * timeElapsed2 / textSpeed), 30), -maxSize + 16);
+            int backward = Math.max(Math.min((int) -(textWidth * timeElapsed2 / textSpeed), 30), -maxSize + 16);
 
             if (timeElapsed > timeElapsed2)
             {
@@ -236,7 +236,7 @@ public class SBRenderUtils
         GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, trans);
         float xpos = trans[12];
 
-        RenderSystem.enableScissor((int)((xpos + 29) * scale), (int)((height - 196) * scale), (int)(126 * scale), (int)(195 * scale));
+        RenderSystem.enableScissor((int) ((xpos + 29) * scale), (int) ((height - 196) * scale), (int) (126 * scale), (int) (195 * scale));
 
         if (shadow)
         {

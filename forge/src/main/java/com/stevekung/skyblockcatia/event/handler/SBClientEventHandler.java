@@ -76,7 +76,7 @@ public class SBClientEventHandler
     {
         if (this.mc.screen != null && this.mc.screen instanceof ContainerScreen)
         {
-            ContainerScreen chest = (ContainerScreen)this.mc.screen;
+            ContainerScreen chest = (ContainerScreen) this.mc.screen;
 
             if (MainEventHandler.showChat && GuiScreenUtils.isChatable(chest.getTitle()))
             {
@@ -102,7 +102,7 @@ public class SBClientEventHandler
     {
         if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && mc.crosshairPickEntity != null && mc.crosshairPickEntity instanceof RemotePlayer && mc.player.isShiftKeyDown() && SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland && SkyBlockEventHandler.otherPlayerIsland)
         {
-            RemotePlayer player = (RemotePlayer)mc.crosshairPickEntity;
+            RemotePlayer player = (RemotePlayer) mc.crosshairPickEntity;
             mc.player.chat("/trade " + ChatFormatting.stripFormatting(player.getName().getString()));
         }
     }

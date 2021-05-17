@@ -19,6 +19,6 @@ public class MixinPlayerInfo implements IViewerLoader
     public PlayerInfo setLoadedFromViewer(boolean loaded)
     {
         this.loadedFromViewer = loaded;
-        return (PlayerInfo)(Object)this;
+        return (PlayerInfo) (Object) this;
     }
 }

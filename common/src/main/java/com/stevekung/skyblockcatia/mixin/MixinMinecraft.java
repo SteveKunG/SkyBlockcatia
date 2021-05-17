@@ -14,7 +14,7 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 @Mixin(Minecraft.class)
 public class MixinMinecraft
 {
-    private final Minecraft that = (Minecraft)(Object)this;
+    private final Minecraft that = (Minecraft) (Object) this;
 
     @Redirect(method = "handleKeybinds()V", slice = @Slice(from = @At(value = "FIELD", target = "net/minecraft/client/Options.keyInventory:Lnet/minecraft/client/KeyMapping;"), to = @At(value = "INVOKE", target = "net/minecraft/client/multiplayer/MultiPlayerGameMode.isServerControlledInventory()Z")), at = @At(value = "INVOKE", target = "net/minecraft/client/KeyMapping.consumeClick()Z"))
     private boolean disableInventory(KeyMapping key)

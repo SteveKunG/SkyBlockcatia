@@ -60,7 +60,7 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(AbstractContainerScreen.class)
 public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 {
-    private final AbstractContainerScreen<?> that = (AbstractContainerScreen<?>)(Object)this;
+    private final AbstractContainerScreen<?> that = (AbstractContainerScreen<?>) (Object) this;
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -144,7 +144,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
-                if (this.commandSuggestionHelper.mouseClicked((int)mouseX, (int)mouseY, mouseButton))
+                if (this.commandSuggestionHelper.mouseClicked((int) mouseX, (int) mouseY, mouseButton))
                 {
                     this.inputField.setFocus(true);
                     info.setReturnValue(true);
@@ -648,10 +648,10 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         ChatComponent chat = this.minecraft.gui.getChat();
 
-        if (!((InvokerChatComponent)chat).invokeIsChatHidden())
+        if (!((InvokerChatComponent) chat).invokeIsChatHidden())
         {
             int i = chat.getLinesPerPage();
-            int j = ((InvokerChatComponent)chat).getTrimmedMessages().size();
+            int j = ((InvokerChatComponent) chat).getTrimmedMessages().size();
 
             if (j > 0)
             {
@@ -661,9 +661,9 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 RenderSystem.scaled(d0, d0, 1.0D);
                 double d1 = this.minecraft.options.chatOpacity * 0.9F + 0.1F;
 
-                for (int i1 = 0; i1 + ((InvokerChatComponent)chat).getChatScrollbarPos() < ((InvokerChatComponent)chat).getTrimmedMessages().size() && i1 < i; ++i1)
+                for (int i1 = 0; i1 + ((InvokerChatComponent) chat).getChatScrollbarPos() < ((InvokerChatComponent) chat).getTrimmedMessages().size() && i1 < i; ++i1)
                 {
-                    GuiMessage<FormattedCharSequence> chatline = ((InvokerChatComponent)chat).getTrimmedMessages().get(i1 + ((InvokerChatComponent)chat).getChatScrollbarPos());
+                    GuiMessage<FormattedCharSequence> chatline = ((InvokerChatComponent) chat).getTrimmedMessages().get(i1 + ((InvokerChatComponent) chat).getChatScrollbarPos());
 
                     if (chatline != null)
                     {
@@ -672,7 +672,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         if (j1 < 200)
                         {
                             double d3 = InvokerChatComponent.invokeGetTimeFactor(j1);
-                            int l1 = (int)(255.0D * d3 * d1);
+                            int l1 = (int) (255.0D * d3 * d1);
                             if (l1 > 3)
                             {
                                 int k2 = -i1 * 9;
@@ -716,7 +716,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
                     }
 
-                    if (((ITradeScreen)this.that).getNumberEditBox() == null || ((ITradeScreen)this.that).getNumberEditBox().getValue().isEmpty())
+                    if (((ITradeScreen) this.that).getNumberEditBox() == null || ((ITradeScreen) this.that).getNumberEditBox().getValue().isEmpty())
                     {
                         if (lore.startsWith("Starting bid:"))
                         {
@@ -850,12 +850,12 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
     private int getRGBPlayerCount(int playerCount, int maxedPlayerCount)
     {
-        return Mth.hsvToRgb(Math.max(0.0F, (float)(1.0F - this.getPlayerCount(playerCount, maxedPlayerCount))) / 3.0F, 1.0F, 1.0F);
+        return Mth.hsvToRgb(Math.max(0.0F, (float) (1.0F - this.getPlayerCount(playerCount, maxedPlayerCount))) / 3.0F, 1.0F, 1.0F);
     }
 
     private double getPlayerCount(int playerCount, int maxedPlayerCount)
     {
-        return (double)playerCount / maxedPlayerCount;
+        return (double) playerCount / maxedPlayerCount;
     }
 
     private void checkCondition(PoseStack matrixStack, int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)

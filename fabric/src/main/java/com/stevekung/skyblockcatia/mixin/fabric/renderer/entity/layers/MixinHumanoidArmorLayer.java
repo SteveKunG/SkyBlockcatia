@@ -65,7 +65,7 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
 
         if (itemStack.getItem() instanceof ArmorItem && itemStack.hasTag())
         {
-            ArmorItem armorItem = (ArmorItem)itemStack.getItem();
+            ArmorItem armorItem = (ArmorItem) itemStack.getItem();
 
             if (armorItem.getSlot() == slot)
             {

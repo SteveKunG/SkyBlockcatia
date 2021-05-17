@@ -51,7 +51,7 @@ public class CoordsPair
         {
             return false;
         }
-        CoordsPair chunkCoords = (CoordsPair)obj;
+        CoordsPair chunkCoords = (CoordsPair) obj;
         return new EqualsBuilder().append(this.getX(), chunkCoords.getX()).append(this.getY(), chunkCoords.getY()).isEquals();
     }
 

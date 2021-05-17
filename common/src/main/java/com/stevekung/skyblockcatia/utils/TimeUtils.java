@@ -17,7 +17,7 @@ public class TimeUtils
             {
                 return "just now";
             }
-            return TimeUtils.convertCorrectTime((int)timeElapsed, "second", false);
+            return TimeUtils.convertCorrectTime((int) timeElapsed, "second", false);
         }
         else
         {

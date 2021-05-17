@@ -25,7 +25,7 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
     @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Z)V", at = @At("RETURN"))
     private void init(EntityRenderDispatcher renderManager, boolean useSmallArms, CallbackInfo info)
     {
-        this.addLayer(new GlowingSteveLayer((PlayerRenderer)(Object)this));
+        this.addLayer(new GlowingSteveLayer((PlayerRenderer) (Object) this));
     }
 
     @Redirect(method = "setModelProperties", at = @At(value = "INVOKE", target = "net/minecraft/client/player/AbstractClientPlayer.isModelPartShown(Lnet/minecraft/world/entity/player/PlayerModelPart;)Z"))

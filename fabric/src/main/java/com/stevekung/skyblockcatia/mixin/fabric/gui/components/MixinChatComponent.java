@@ -25,7 +25,7 @@ public class MixinChatComponent
     {
         if (this.minecraft.screen != null && this.minecraft.screen instanceof ContainerScreen)
         {
-            ContainerScreen chest = (ContainerScreen)this.minecraft.screen;
+            ContainerScreen chest = (ContainerScreen) this.minecraft.screen;
 
             if (MainEventHandler.showChat && GuiScreenUtils.isChatable(chest.getTitle()))
             {

@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.*;
 import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
@@ -609,7 +607,7 @@ public class SkyBlockEventHandler
             }
             if (mc.crosshairPickEntity instanceof RemotePlayer)
             {
-                RemotePlayer player = (RemotePlayer)mc.crosshairPickEntity;
+                RemotePlayer player = (RemotePlayer) mc.crosshairPickEntity;
 
                 if (mc.player.connection.getOnlinePlayers().stream().anyMatch(info -> info.getProfile().getName().equals(player.getName().getString())))
                 {
@@ -857,7 +855,7 @@ public class SkyBlockEventHandler
 
                     if (!newItem.isEmpty())
                     {
-                        for (Iterator<ToastUtils.ItemDropCheck> iterator = SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext();)
+                        for (Iterator<ToastUtils.ItemDropCheck> iterator = SkyBlockEventHandler.ITEM_DROP_CHECK_LIST.iterator(); iterator.hasNext(); )
                         {
                             ToastUtils.ItemDropCheck drop = iterator.next();
                             String dropName = drop.getName();
@@ -868,7 +866,7 @@ public class SkyBlockEventHandler
                                 {
                                     newItem.setCount(diff);
 
-                                    if (((InvokerToastComponent)mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                     {
                                         iterator.remove();
                                     }
@@ -889,14 +887,14 @@ public class SkyBlockEventHandler
 
                                     if (drop.getToastType() == ToastType.DROP)
                                     {
-                                        if (((InvokerToastComponent)mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                        if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                         {
                                             iterator.remove();
                                         }
                                     }
                                     else
                                     {
-                                        if (((InvokerToastComponent)mc.getToasts()).getQueued().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                        if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
                                         {
                                             iterator.remove();
                                         }
@@ -904,7 +902,7 @@ public class SkyBlockEventHandler
                                 }
                                 else if (drop.getType().matches(ToastUtils.DropCondition.CONTAINS) && key.contains(dropName))
                                 {
-                                    if (((InvokerToastComponent)mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                     {
                                         iterator.remove();
                                     }

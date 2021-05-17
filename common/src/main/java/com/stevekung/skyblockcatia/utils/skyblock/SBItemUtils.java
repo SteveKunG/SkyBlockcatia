@@ -95,7 +95,7 @@ public class SBItemUtils
         {
             try
             {
-                String itemId2 = SBItemUtils.getKey(InvokerEntityBlockStateFix.getMap(), (int)oldItemId);
+                String itemId2 = SBItemUtils.getKey(InvokerEntityBlockStateFix.getMap(), (int) oldItemId);
                 String newItemReg2 = ItemStackTheFlatteningFix.updateItem(itemId2, damage);
 
                 if (newItemReg2 != null)

@@ -81,7 +81,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
         int k = this.getRowLeft();
-        int l = this.y0 + 4 - (int)this.getScrollAmount();
+        int l = this.y0 + 4 - (int) this.getScrollAmount();
         this.renderList(matrixStack, k, l, mouseX, mouseY, partialTicks);
         this.minecraft.font.draw(matrixStack, this.title + ":", k, this.y0 - 12, 16777215);
     }
@@ -125,7 +125,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int mouseEvent)
         {
-            SignBlockEntity sign = ((InvokerSignEditScreen)this.mc.screen).getSign();
+            SignBlockEntity sign = ((InvokerSignEditScreen) this.mc.screen).getSign();
 
             if (mouseEvent == 0)
             {
@@ -164,7 +164,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
                 }
                 SignSelectionList.this.setSelected(this);
                 sign.setMessage(0, TextComponentUtils.component(this.value));
-                ((InvokerSignEditScreen)this.mc.screen).getSignField().setCursorToEnd();
+                ((InvokerSignEditScreen) this.mc.screen).getSignField().setCursorToEnd();
                 this.lastClicked = Util.getMillis();
                 return true;
             }
@@ -192,7 +192,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
             {
                 return true;
             }
-            SignSelectionList.Entry other = (SignSelectionList.Entry)obj;
+            SignSelectionList.Entry other = (SignSelectionList.Entry) obj;
             return new EqualsBuilder().append(this.value, other.value).isEquals();
         }
 

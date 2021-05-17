@@ -81,7 +81,7 @@ public class MainEventHandler
         if (SkyBlockEventHandler.isSkyBlock)
         {
             ItemStack wardRobeItem = new ItemStack(Items.LEATHER_CHESTPLATE);
-            ((DyeableArmorItem)wardRobeItem.getItem()).setColor(wardRobeItem, 8339378);
+            ((DyeableArmorItem) wardRobeItem.getItem()).setColor(wardRobeItem, 8339378);
 
             if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory && screen instanceof InventoryScreen)
             {
@@ -89,7 +89,7 @@ public class MainEventHandler
             }
             else if (screen instanceof ContainerScreen)
             {
-                ContainerScreen chest = (ContainerScreen)screen;
+                ContainerScreen chest = (ContainerScreen) screen;
                 Component title = chest.getTitle();
 
                 if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory)
@@ -107,7 +107,7 @@ public class MainEventHandler
                         ScreenHooks.addButton(screen, new ItemButton(2, screen.height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
                         {
                             MainEventHandler.showChat = !MainEventHandler.showChat;
-                            ((ItemButton)button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + (MainEventHandler.showChat ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
+                            ((ItemButton) button).setName(TextComponentUtils.component("Toggle Inventory Chat: " + (MainEventHandler.showChat ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
                         }));
                     }
 
@@ -140,10 +140,10 @@ public class MainEventHandler
                 if (GuiScreenUtils.isAuctionBrowser(title.getString()))
                 {
                     String bid = MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
-                    ScreenHooks.addButton(screen, new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? ((InvokerAbstractContainerScreen)chest).getTopPos() + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
+                    ScreenHooks.addButton(screen, new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? ((InvokerAbstractContainerScreen) chest).getTopPos() + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
                     {
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
-                        ((ItemButton)button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
+                        ((ItemButton) button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
                     }));
                 }
                 else if (title.getString().contains("Hub Selector"))
@@ -152,7 +152,7 @@ public class MainEventHandler
                     ScreenHooks.addButton(screen, new ItemButton(width + 89, height + 29, Items.COMPASS, TextComponentUtils.component("Lobby Player Overlay: " + overlay), button ->
                     {
                         SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
-                        ((ItemButton)button).setName(TextComponentUtils.component("Lobby Player Overlay: " + (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
+                        ((ItemButton) button).setName(TextComponentUtils.component("Lobby Player Overlay: " + (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
                         SkyBlockcatiaSettings.INSTANCE.save();
                     }));
                 }
@@ -183,11 +183,11 @@ public class MainEventHandler
     {
         if (screen instanceof TitleScreen)
         {
-            TitleScreen menu = (TitleScreen)screen;
+            TitleScreen menu = (TitleScreen) screen;
 
             if (CalendarUtils.isMyBirthDay())
             {
-                ((InvokerTitleScreen)menu).setSplash("Happy birthday, SteveKunG!");
+                ((InvokerTitleScreen) menu).setSplash("Happy birthday, SteveKunG!");
             }
         }
         return InteractionResultHolder.pass(screen);

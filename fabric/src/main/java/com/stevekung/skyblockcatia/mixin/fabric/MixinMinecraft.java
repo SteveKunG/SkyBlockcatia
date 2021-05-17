@@ -16,7 +16,7 @@ public class MixinMinecraft
     {
         if (MainEventHandler.playerToView != null)
         {
-            ((Minecraft)(Object)this).setScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, MainEventHandler.playerToView, "", ""));
+            ((Minecraft) (Object) this).setScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, MainEventHandler.playerToView, "", ""));
             MainEventHandler.playerToView = null;
         }
     }

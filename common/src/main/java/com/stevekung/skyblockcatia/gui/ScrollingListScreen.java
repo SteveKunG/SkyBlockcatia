@@ -104,7 +104,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder buffer = tess.getBuilder();
         double scale = this.mc.getWindow().getGuiScale();
-        RenderSystem.enableScissor((int)(this.left * scale), (int)(this.mc.getWindow().getScreenHeight() - this.bottom * scale), (int)(this.width * scale), (int)(this.viewHeight * scale));
+        RenderSystem.enableScissor((int) (this.left * scale), (int) (this.mc.getWindow().getScreenHeight() - this.bottom * scale), (int) (this.width * scale), (int) (this.viewHeight * scale));
 
         if (this.mc.level != null)
         {
@@ -118,14 +118,14 @@ public abstract class ScrollingListScreen implements GuiEventListener
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             final float texScale = 32.0F;
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            buffer.vertex(this.left, this.bottom, 0.0D).uv(this.left / texScale, (this.bottom + (int)this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
-            buffer.vertex(this.right, this.bottom, 0.0D).uv(this.right / texScale, (this.bottom + (int)this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
-            buffer.vertex(this.right, this.top, 0.0D).uv(this.right / texScale, (this.top + (int)this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
-            buffer.vertex(this.left, this.top, 0.0D).uv(this.left / texScale, (this.top + (int)this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
+            buffer.vertex(this.left, this.bottom, 0.0D).uv(this.left / texScale, (this.bottom + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
+            buffer.vertex(this.right, this.bottom, 0.0D).uv(this.right / texScale, (this.bottom + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
+            buffer.vertex(this.right, this.top, 0.0D).uv(this.right / texScale, (this.top + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
+            buffer.vertex(this.left, this.top, 0.0D).uv(this.left / texScale, (this.top + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
             tess.end();
         }
 
-        int baseY = this.top + this.border - (int)this.scrollDistance;
+        int baseY = this.top + this.border - (int) this.scrollDistance;
 
         for (int index = 0; index < this.getSize(); ++index)
         {
@@ -154,7 +154,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
                 height = this.viewHeight - this.border * 2;
             }
 
-            int barTop = (int)this.scrollDistance * (this.viewHeight - height) / extraHeight + this.top;
+            int barTop = (int) this.scrollDistance * (this.viewHeight - height) / extraHeight + this.top;
 
             if (barTop < this.top)
             {
@@ -237,14 +237,14 @@ public abstract class ScrollingListScreen implements GuiEventListener
     @SuppressWarnings("deprecation")
     private static void drawGradientRect(Matrix4f mat, int zLevel, int left, int top, int right, int bottom, int startColor, int endColor)
     {
-        float startAlpha = (float)(startColor >> 24 & 255) / 255.0F;
-        float startRed = (float)(startColor >> 16 & 255) / 255.0F;
-        float startGreen = (float)(startColor >> 8 & 255) / 255.0F;
-        float startBlue = (float)(startColor & 255) / 255.0F;
-        float endAlpha = (float)(endColor >> 24 & 255) / 255.0F;
-        float endRed = (float)(endColor >> 16 & 255) / 255.0F;
-        float endGreen = (float)(endColor >> 8 & 255) / 255.0F;
-        float endBlue = (float)(endColor & 255) / 255.0F;
+        float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
+        float startRed = (float) (startColor >> 16 & 255) / 255.0F;
+        float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
+        float startBlue = (float) (startColor & 255) / 255.0F;
+        float endAlpha = (float) (endColor >> 24 & 255) / 255.0F;
+        float endRed = (float) (endColor >> 16 & 255) / 255.0F;
+        float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
+        float endBlue = (float) (endColor & 255) / 255.0F;
         RenderSystem.enableDepthTest();
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
@@ -253,10 +253,10 @@ public abstract class ScrollingListScreen implements GuiEventListener
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         buffer.begin(7, DefaultVertexFormat.POSITION_COLOR);
-        buffer.vertex(mat, (float)right, (float)top, (float)zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-        buffer.vertex(mat, (float)left, (float)top, (float)zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
-        buffer.vertex(mat, (float)left, (float)bottom, (float)zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
-        buffer.vertex(mat, (float)right, (float)bottom, (float)zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
+        buffer.vertex(mat, (float) right, (float) top, (float) zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
+        buffer.vertex(mat, (float) left, (float) top, (float) zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
+        buffer.vertex(mat, (float) left, (float) bottom, (float) zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
+        buffer.vertex(mat, (float) right, (float) bottom, (float) zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
         tessellator.end();
         RenderSystem.shadeModel(7424);
         RenderSystem.disableBlend();

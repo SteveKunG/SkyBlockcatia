@@ -49,7 +49,7 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
 public class SkyBlockProfileSelectorScreen extends Screen
 {
-    public static final String[] downloadingStates = new String[]{"", ".", "..", "..."};
+    public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
     private static boolean firstLoad;
     private static ItemStack selfItemCache;
     private RightClickTextFieldWidget usernameTextField;
@@ -316,7 +316,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
     {
         if (!this.loadingApi)
         {
-            if (this.suggestionHelper.mouseClicked((int)mouseX, (int)mouseY, mouseButton))
+            if (this.suggestionHelper.mouseClicked((int) mouseX, (int) mouseY, mouseButton))
             {
                 return true;
             }
@@ -341,7 +341,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             String text = "Downloading SkyBlock stats";
             int i = this.font.width(text);
             GuiComponent.drawCenteredString(matrixStack, this.font, text, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
-            GuiComponent.drawString(matrixStack, this.font, downloadingStates[(int)(Util.getMillis() / 500L % downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
+            GuiComponent.drawString(matrixStack, this.font, downloadingStates[(int) (Util.getMillis() / 500L % downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
             GuiComponent.drawCenteredString(matrixStack, this.font, "Status: " + ChatFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 15, 16777215);
         }
         else
@@ -370,7 +370,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 this.suggestionHelper.render(matrixStack, mouseX, mouseY);
                 this.usernameTextField.render(matrixStack, mouseX, mouseY, partialTicks);
 
-                if (((InvokerCommandSuggestions)this.suggestionHelper).getSuggestions() == null && StringUtil.isNullOrEmpty(this.usernameTextField.getValue()) && !this.usernameTextField.isFocused())
+                if (((InvokerCommandSuggestions) this.suggestionHelper).getSuggestions() == null && StringUtil.isNullOrEmpty(this.usernameTextField.getValue()) && !this.usernameTextField.isFocused())
                 {
                     GuiComponent.drawString(matrixStack, this.font, "Enter Username or UUID", this.width / 2 - 71, 51, 10526880);
                 }
@@ -380,8 +380,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                 for (SkyBlockProfileButton button : this.buttons.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
                 {
-                    boolean hover = ((InvokerCommandSuggestions)this.suggestionHelper).getSuggestions() == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
-                    button.visible = button.active = ((InvokerCommandSuggestions)this.suggestionHelper).getSuggestions() == null;
+                    boolean hover = ((InvokerCommandSuggestions) this.suggestionHelper).getSuggestions() == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+                    button.visible = button.active = ((InvokerCommandSuggestions) this.suggestionHelper).getSuggestions() == null;
 
                     if (hover)
                     {

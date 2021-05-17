@@ -39,7 +39,7 @@ public class PetStats
 
     public int getAxeCooldown(int base)
     {
-        return (int)(base - base * this.axeCooldown / 100.0D);
+        return (int) (base - base * this.axeCooldown / 100.0D);
     }
 
     public void setAxeCooldown(double axeCooldown)

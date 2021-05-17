@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 @Mixin(SignEditScreen.class)
 public class MixinSignEditScreen extends Screen
 {
-    private final SignEditScreen that = (SignEditScreen)(Object)this;
+    private final SignEditScreen that = (SignEditScreen) (Object) this;
     private SignSelectionList globalSelector;
 
     @Shadow

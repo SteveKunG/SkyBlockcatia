@@ -30,7 +30,7 @@ public class SBInventoryGroup
         public ItemStack getIcon()
         {
             ItemStack itemStack = new ItemStack(Items.LEATHER_CHESTPLATE);
-            ((DyeableArmorItem)itemStack.getItem()).setColor(itemStack, 8339378);
+            ((DyeableArmorItem) itemStack.getItem()).setColor(itemStack, 8339378);
             return itemStack;
         }
     };
