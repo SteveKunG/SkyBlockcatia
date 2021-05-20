@@ -8,12 +8,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.LoggerIN;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
+import com.stevekung.skyblockcatia.utils.skyblock.api.SkyblockProfiles;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -64,12 +64,12 @@ public class SBAPIUtils
         MAX_FAIRY_SOULS = misc.getMaxFairySouls();
     }
 
-    public static List<ItemStack> decodeItem(JsonObject currentProfile, InventoryType type)
+    public static List<ItemStack> decodeItem(SkyblockProfiles.Inventory inventory, InventoryType type)
     {
-        if (currentProfile.has(type.getApiName()))
+        if (inventory != null)
         {
             List<ItemStack> itemStack = new ArrayList<>();
-            byte[] decode = Base64.getDecoder().decode(currentProfile.get(type.getApiName()).getAsJsonObject().get("data").getAsString().replace("\\u003d", "="));
+            byte[] decode = Base64.getDecoder().decode(inventory.getData());
 
             try
             {

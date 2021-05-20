@@ -2,29 +2,22 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 public enum InventoryType
 {
-    ARMOR("inv_armor", "Armor"),
-    INVENTORY("inv_contents", "Main Inventory"),
-    ENDER_CHEST("ender_chest_contents", "Ender Chest"),
-    PERSONAL_VAULT("personal_vault_contents", "Personal Vault"),
-    ACCESSORY_BAG("talisman_bag", "Accessory Bag"),
-    POTION_BAG("potion_bag", "Potion Bag"),
-    FISHING_BAG("fishing_bag", "Fishing Bag"),
-    WARDROBE("wardrobe_contents", "Wardrobe"),
-    QUIVER("quiver", "Quiver"),
-    CANDY("candy_inventory_contents", "Candy Bag");
+    ARMOR("Armor"),
+    INVENTORY("Main Inventory"),
+    ENDER_CHEST("Ender Chest"),
+    PERSONAL_VAULT("Personal Vault"),
+    ACCESSORY_BAG("Accessory Bag"),
+    POTION_BAG("Potion Bag"),
+    FISHING_BAG("Fishing Bag"),
+    WARDROBE("Wardrobe"),
+    QUIVER("Quiver"),
+    CANDY("Candy Bag");
 
-    private final String apiName;
     private final String name;
 
-    InventoryType(String apiName, String name)
+    InventoryType(String name)
     {
-        this.apiName = apiName;
         this.name = name;
-    }
-
-    public String getApiName()
-    {
-        return this.apiName;
     }
 
     public String getName()

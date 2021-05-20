@@ -171,6 +171,7 @@ public class SBSlayers
 
     public enum Type
     {
+        UNKNOWN("Unknown"),
         ZOMBIE("Zombie"),
         SPIDER("Spider"),
         WOLF("Wolf");
@@ -185,6 +186,18 @@ public class SBSlayers
         public String getName()
         {
             return this.name;
+        }
+
+        public static Type getSlayerByName(String name)
+        {
+            for (Type type : values())
+            {
+                if (name.equals(type.name()))
+                {
+                    return type;
+                }
+            }
+            return UNKNOWN;
         }
     }
 

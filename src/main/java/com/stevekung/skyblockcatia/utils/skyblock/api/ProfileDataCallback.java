@@ -2,12 +2,11 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import java.util.List;
 
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 
 public class ProfileDataCallback
 {
-    private JsonObject sbProfile;
+    private SkyblockProfiles.Profile sbProfile;
     private String sbProfileId;
     private String profileName;
     private String username;
@@ -32,7 +31,7 @@ public class ProfileDataCallback
         this.lastSave = lastSave;
     }
 
-    public ProfileDataCallback(JsonObject sbProfile, String username, String displayName, String gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave, List<String> islandMembers)
+    public ProfileDataCallback(SkyblockProfiles.Profile sbProfile, String username, String displayName, String gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave, List<String> islandMembers)
     {
         this.sbProfile = sbProfile;
         this.username = username;
@@ -45,19 +44,19 @@ public class ProfileDataCallback
         this.islandMembers = islandMembers;
     }
 
-    public JsonObject getSkyblockProfile()
+    public SkyblockProfiles.Profile getSkyblockProfile()
     {
         return this.sbProfile;
     }
 
     public String getProfileId()
     {
-        return this.sbProfile == null ? this.sbProfileId : this.sbProfile.get("profile_id").getAsString();
+        return this.sbProfile == null ? this.sbProfileId : this.sbProfile.getProfileId();
     }
 
     public String getProfileName()
     {
-        return this.sbProfile == null ? this.profileName : this.sbProfile.get("cute_name").getAsString();
+        return this.sbProfile == null ? this.profileName : this.sbProfile.getCuteName();
     }
 
     public String getUsername()

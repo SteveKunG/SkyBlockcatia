@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.config.ToastMode;
@@ -36,7 +35,9 @@ import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
+import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelProfiles;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
+import com.stevekung.skyblockcatia.utils.skyblock.api.SkyblockProfiles;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
@@ -148,7 +149,7 @@ public class SkyBlockEventHandler
                     }
                 }
 
-                for (Map.Entry<String, Pair<Long, JsonObject>> entry : GuiSkyBlockProfileSelector.PROFILE_CACHE.entrySet())
+                for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : GuiSkyBlockProfileSelector.PROFILE_CACHE.entrySet())
                 {
                     long now = System.currentTimeMillis();
                     long checkedTime = entry.getValue().getLeft();
@@ -158,7 +159,7 @@ public class SkyBlockEventHandler
                         GuiSkyBlockProfileSelector.PROFILE_CACHE.remove(entry.getKey());
                     }
                 }
-                for (Map.Entry<String, Pair<Long, JsonObject>> entry : GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.entrySet())
+                for (Map.Entry<String, Pair<Long, HypixelProfiles>> entry : GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.entrySet())
                 {
                     long now = System.currentTimeMillis();
                     long checkedTime = entry.getValue().getLeft();
