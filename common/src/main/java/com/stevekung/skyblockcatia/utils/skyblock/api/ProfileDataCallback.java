@@ -2,14 +2,13 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import java.util.List;
 
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.network.chat.Component;
 
 public class ProfileDataCallback
 {
-    private JsonObject sbProfile;
+    private SkyblockProfiles.Profile sbProfile;
     private String sbProfileId;
     private Component profileName;
     private final String username;
@@ -34,7 +33,7 @@ public class ProfileDataCallback
         this.lastSave = lastSave;
     }
 
-    public ProfileDataCallback(JsonObject sbProfile, String username, String displayName, Component gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave, List<Component> islandMembers)
+    public ProfileDataCallback(SkyblockProfiles.Profile sbProfile, String username, String displayName, Component gameMode, String guild, String uuid, GameProfile gameProfile, long lastSave, List<Component> islandMembers)
     {
         this.sbProfile = sbProfile;
         this.username = username;
@@ -47,19 +46,19 @@ public class ProfileDataCallback
         this.islandMembers = islandMembers;
     }
 
-    public JsonObject getSkyblockProfile()
+    public SkyblockProfiles.Profile getSkyblockProfile()
     {
         return this.sbProfile;
     }
 
     public String getProfileId()
     {
-        return this.sbProfile == null ? this.sbProfileId : this.sbProfile.get("profile_id").getAsString();
+        return this.sbProfile == null ? this.sbProfileId : this.sbProfile.getProfileId();
     }
 
     public Component getProfileName()
     {
-        return this.sbProfile == null ? this.profileName : TextComponentUtils.component(this.sbProfile.get("cute_name").getAsString());
+        return this.sbProfile == null ? this.profileName : TextComponentUtils.component(this.sbProfile.getCuteName());
     }
 
     public String getUsername()

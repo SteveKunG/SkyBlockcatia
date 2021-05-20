@@ -20,10 +20,8 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -109,7 +107,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private Button doneButton;
     private Button backButton;
     private ItemButton showArmorButton;
-    private JsonObject skyblockProfiles;
+    private SkyblockProfiles.Profile skyblockProfiles;
     private final List<ProfileDataCallback> profiles;
     private final String sbProfileId;
     private final Component sbProfileName;
@@ -1385,41 +1383,40 @@ public class SkyBlockAPIViewerScreen extends Screen
     private void getPlayerData() throws IOException
     {
         this.statusMessage = "Getting Player Data";
-        JsonObject profiles;
-        JsonElement banking;
+        Map<String, SkyblockProfiles.Members> profiles;
+        SkyblockProfiles.Banking banking;
         CommunityUpgrades communityUpgrade;
 
         if (this.skyblockProfiles == null)
         {
             URL url = new URL(APIUrl.SKYBLOCK_PROFILE.getUrl() + this.sbProfileId);
-            JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-            JsonElement profile = obj.get("profile");
+            SkyblockProfiles.DirectProfile profile = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.DirectProfile.class);
 
-            if (profile == null || profile.isJsonNull())
+            if (profile.getProfile() == null)
             {
                 this.setErrorMessage("No API data returned, please try again later!", false);
                 return;
             }
-            profiles = profile.getAsJsonObject().get("members").getAsJsonObject();
-            banking = profile.getAsJsonObject().get("banking");
-            communityUpgrade = TextComponentUtils.GSON.fromJson(profile.getAsJsonObject().get("community_upgrades"), CommunityUpgrades.class);
+            profiles = profile.getProfile().getMembers();
+            banking = profile.getProfile().getBanking();
+            communityUpgrade = profile.getProfile().getCommunityUpgrades();
         }
         else
         {
-            profiles = this.skyblockProfiles.get("members").getAsJsonObject();
-            banking = this.skyblockProfiles.get("banking");
-            communityUpgrade = TextComponentUtils.GSON.fromJson(this.skyblockProfiles.getAsJsonObject().get("community_upgrades"), CommunityUpgrades.class);
+            profiles = this.skyblockProfiles.getMembers();
+            banking = this.skyblockProfiles.getBanking();
+            communityUpgrade = this.skyblockProfiles.getCommunityUpgrades();
         }
 
-        for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
+        for (Map.Entry<String, SkyblockProfiles.Members> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
-            JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
+            SkyblockProfiles.Members currentUserProfile = profiles.get(userUUID);
             this.getCraftedMinions(currentUserProfile);
 
             if (banking != null)
             {
-                this.getBankHistories(banking.getAsJsonObject());
+                this.getBankHistories(banking);
             }
             this.data.setHasBankHistory(banking != null && this.sbBankHistories.size() > 0);
         }
@@ -1427,20 +1424,20 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.processCraftedMinions();
         String checkUUID = this.uuid;
 
-        for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
+        for (Map.Entry<String, SkyblockProfiles.Members> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
             checkUUID = userUUID;
 
             if (userUUID.equals(this.uuid))
             {
-                JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
+                SkyblockProfiles.Members currentUserProfile = profiles.get(userUUID);
                 URL urlStatus = new URL(SBAPIUtils.APIUrl.STATUS.getUrl() + this.uuid);
-                JsonObject objStatus = new JsonParser().parse(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
+                GameStatus status = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8), GameStatus.class);
 
-                if (currentUserProfile.get("jacob2") != null)
+                if (currentUserProfile.getJacob() != null)
                 {
-                    this.jacobInfo = this.getJacobData(currentUserProfile.get("jacob2"));
+                    this.jacobInfo = this.getJacobData(currentUserProfile.getJacob());
                 }
 
                 this.getSkills(currentUserProfile);
@@ -1467,7 +1464,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                 this.data.setHasInventories(this.totalDisabledInv != 11);
                 this.allStat.setEffectiveHealth(this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int) (this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)));
-                this.getBasicInfo(currentUserProfile, banking, objStatus, communityUpgrade);
+                this.getBasicInfo(currentUserProfile, banking, status, communityUpgrade);
                 break;
             }
         }
@@ -1485,42 +1482,27 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.loadingApi = false;
     }
 
-    private List<SkyBlockInfo> getJacobData(JsonElement jacob)
+    private List<SkyBlockInfo> getJacobData(SkyblockProfiles.Jacob jacob)
     {
         List<SkyBlockInfo> info = Lists.newArrayList();
-        JsonElement medals = jacob.getAsJsonObject().get("medals_inv");
-        JsonElement perks = jacob.getAsJsonObject().get("perks");
+        SkyblockProfiles.MedalInventory medals = jacob.getMedals();
+        SkyblockProfiles.FarmingPerks perks = jacob.getPerks();
 
-        if (medals.getAsJsonObject().entrySet().size() > 0)
+        if (medals != null)
         {
             String gold = ColorUtils.toHex(255, 215, 0);
             String silver = ColorUtils.toHex(192, 192, 192);
             String bronze = ColorUtils.toHex(205, 127, 50);
 
-            if (medals.getAsJsonObject().get("gold") != null)
-            {
-                info.add(new SkyBlockInfo("Gold Medal", medals.getAsJsonObject().get("gold").getAsString(), gold));
-            }
-            if (medals.getAsJsonObject().get("silver") != null)
-            {
-                info.add(new SkyBlockInfo("Silver Medal", medals.getAsJsonObject().get("silver").getAsString(), silver));
-            }
-            if (medals.getAsJsonObject().get("bronze") != null)
-            {
-                info.add(new SkyBlockInfo("Bronze Medal", medals.getAsJsonObject().get("bronze").getAsString(), bronze));
-            }
+            info.add(new SkyBlockInfo("Gold Medal", String.valueOf(medals.getGold()), gold));
+            info.add(new SkyBlockInfo("Silver Medal", String.valueOf(medals.getSilver()), silver));
+            info.add(new SkyBlockInfo("Bronze Medal", String.valueOf(medals.getBronze()), bronze));
         }
-        if (perks.getAsJsonObject().entrySet().size() > 0)
+        if (perks != null)
         {
-            if (perks.getAsJsonObject().get("double_drops") != null)
-            {
-                info.add(new SkyBlockInfo("Double Drops Perk", perks.getAsJsonObject().get("double_drops").getAsInt() * 2 + "%"));
-            }
-            if (perks.getAsJsonObject().get("farming_level_cap") != null)
-            {
-                this.farmingLevelCap = perks.getAsJsonObject().get("farming_level_cap").getAsInt();
-                info.add(new SkyBlockInfo("Farming Level Cap", perks.getAsJsonObject().get("farming_level_cap").getAsString()));
-            }
+            info.add(new SkyBlockInfo("Double Drops Perk", perks.getDoubleDrops() * 2 + "%"));
+            this.farmingLevelCap = perks.getLevelCap();
+            info.add(new SkyBlockInfo("Farming Level Cap", String.valueOf(this.farmingLevelCap)));
         }
         return info;
     }
@@ -1564,9 +1546,9 @@ public class SkyBlockAPIViewerScreen extends Screen
     @Deprecated
     private final List<String> dungeonData = Lists.newArrayList();
 
-    private void getDungeons(JsonObject currentUserProfile)//TODO
+    private void getDungeons(SkyblockProfiles.Members currentUserProfile)//TODO
     {
-        JsonElement dungeon = currentUserProfile.get("dungeons");
+        JsonElement dungeon = currentUserProfile.getDungeons();
         int i = 0;
 
         if (dungeon != null)
@@ -1678,9 +1660,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
     }
 
-    private void getBankHistories(JsonObject banking)
+    private void getBankHistories(SkyblockProfiles.Banking banking)
     {
-        BankHistory[] bankHistory = TextComponentUtils.GSON.fromJson(banking.get("transactions"), BankHistory[].class);
+        BankHistory[] bankHistory = banking.getTransactions();
         Collections.reverse(Arrays.asList(bankHistory));
 
         if (bankHistory.length > 0)
@@ -1695,33 +1677,33 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private String getLocation(JsonObject objStatus)
+    private String getLocation(GameStatus status)
     {
-        JsonObject session = objStatus.get("session").getAsJsonObject();
+        GameStatus.Session session = status.getSession();
         String locationText = "";
 
-        if (session.get("online").getAsBoolean())
+        if (session.isOnline())
         {
-            JsonElement gameType = session.get("gameType");
-            JsonElement mode = session.get("mode");
+            String gameType = session.getGameType();
+            String mode = session.getMode();
 
-            if (gameType.getAsString().equals("SKYBLOCK"))
+            if (gameType.equals("SKYBLOCK"))
             {
-                locationText = SBConstants.CURRENT_LOCATION_MAP.getOrDefault(mode.getAsString(), mode.getAsString());
+                return SBConstants.CURRENT_LOCATION_MAP.getOrDefault(mode, mode);
             }
         }
         return locationText;
     }
 
-    private void getCraftedMinions(JsonObject currentProfile)
+    private void getCraftedMinions(SkyblockProfiles.Members currentProfile)
     {
-        JsonElement craftedGenerators = currentProfile.get("crafted_generators");
+        String[] craftedGenerators = currentProfile.getCraftedGenerators();
 
-        if (craftedGenerators != null)
+        if (craftedGenerators != null && craftedGenerators.length > 0)
         {
-            for (JsonElement craftedMinion : craftedGenerators.getAsJsonArray())
+            for (String craftedMinion : craftedGenerators)
             {
-                String[] split = craftedMinion.getAsString().split("_");
+                String[] split = craftedMinion.split("_");
                 String minionType = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
                 this.craftedMinions.put(minionType, unlockedLvl);
@@ -1906,19 +1888,17 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void getCollections(JsonObject currentProfile)
+    private void getCollections(SkyblockProfiles.Members currentProfile)
     {
-        JsonElement collections = currentProfile.get("collection");
-        JsonElement unlockedTiersElement = currentProfile.get("unlocked_coll_tiers");
+        Map<String, Integer> collections = currentProfile.getCollection();
+        String[] unlockedTiers = currentProfile.getUnlockedCollections();
         Multimap<String, Integer> skyblockCollectionMap = HashMultimap.create();
 
-        if (unlockedTiersElement != null)
+        if (unlockedTiers != null && unlockedTiers.length > 0)
         {
-            JsonArray unlockedTiers = unlockedTiersElement.getAsJsonArray();
-
-            for (JsonElement unlockedTier : unlockedTiers)
+            for (String unlockedTier : unlockedTiers)
             {
-                String[] split = unlockedTier.getAsString().toLowerCase(Locale.ROOT).split("_");
+                String[] split = unlockedTier.toLowerCase(Locale.ROOT).split("_");
                 String unlockedId = split.length >= 3 ? split[0] + "_" + split[1] : split[0];
                 int unlockedLvl = Integer.parseInt(split[split.length - 1]);
                 skyblockCollectionMap.put(this.replaceId(unlockedId), unlockedLvl);
@@ -1927,7 +1907,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         SBCollections dummyCollection = new SBCollections(ItemStack.EMPTY, null, -1, -1);
 
-        if (collections != null && collections.getAsJsonObject().entrySet().size() > 0)
+        if (collections != null && collections.entrySet().size() > 0)
         {
             List<SBCollections> farming = Lists.newArrayList();
             List<SBCollections> mining = Lists.newArrayList();
@@ -1937,10 +1917,10 @@ public class SkyBlockAPIViewerScreen extends Screen
             List<SBCollections> unknown = Lists.newArrayList();
             List<ItemLike> allItem = Lists.newArrayList();
 
-            for (Map.Entry<String, JsonElement> collection : collections.getAsJsonObject().entrySet())
+            for (Map.Entry<String, Integer> collection : collections.entrySet())
             {
                 String collectionId = this.replaceId(collection.getKey().toLowerCase(Locale.ROOT));
-                int collectionCount = collection.getValue().getAsInt();
+                int collectionCount = collection.getValue();
                 String[] split = collectionId.split(":");
                 String itemId = split[0];
                 int meta = 0;
@@ -2109,17 +2089,16 @@ public class SkyBlockAPIViewerScreen extends Screen
         list.add(new SBCollections(itemStack, type, collectionCount, level));
     }
 
-    private void getSacks(JsonObject currentProfile)
+    private void getSacks(SkyblockProfiles.Members currentProfile)
     {
         List<ItemStack> sacks = Lists.newArrayList();
-        JsonElement sacksCounts = currentProfile.get("sacks_counts");
         Multimap<String, org.apache.commons.lang3.tuple.Pair<Integer, Integer>> runes = HashMultimap.create();
 
-        if (sacksCounts != null)
+        if (currentProfile.getSacks() != null && !currentProfile.getSacks().isEmpty())
         {
-            for (Map.Entry<String, JsonElement> sackEntry : sacksCounts.getAsJsonObject().entrySet())
+            for (Map.Entry<String, Integer> sackEntry : currentProfile.getSacks().entrySet())
             {
-                int count = sackEntry.getValue().getAsInt();
+                int count = sackEntry.getValue();
                 String sackId = this.replaceId(sackEntry.getKey().toLowerCase(Locale.ROOT));
                 String[] split = sackId.split(":");
                 String itemId = split[0];
@@ -2357,174 +2336,157 @@ public class SkyBlockAPIViewerScreen extends Screen
         sacks.add(itemStack);
     }
 
-    private void getPets(JsonObject currentUserProfile)
+    private void getPets(SkyblockProfiles.Members currentUserProfile)
     {
         List<SBPets.Data> petData = Lists.newArrayList();
         List<ItemStack> petItem = Lists.newArrayList();
-        JsonElement petsObj = currentUserProfile.get("pets");
+        SkyblockProfiles.Pets[] pets = currentUserProfile.getPets();
 
-        if (petsObj == null)
+        if (pets == null || pets.length <= 0)
         {
             this.totalDisabledInv++;
+            SKYBLOCK_INV.add(new SBInventoryGroup.Data(Collections.singletonList(new ItemStack(Blocks.BARRIER)), SBInventoryGroup.PET));
             return;
         }
 
-        JsonArray pets = petsObj.getAsJsonArray();
-
-        if (pets.size() > 0)
+        for (SkyblockProfiles.Pets pet : pets)
         {
-            for (JsonElement element : pets)
+            double exp = pet.getExp();
+            String petRarity = pet.getTier();
+            int candyUsed = pet.getCandyUsed();
+            String heldItemObj = pet.getHeldItem();
+            String skinObj = pet.getSkin();
+            SBPets.HeldItem heldItem = null;
+            String heldItemType = null;
+            String skin = null;
+            String skinName = null;
+            boolean addEmpty = false;
+
+            if (skinObj != null)
             {
-                double exp = 0.0D;
-                String petRarity = SBPets.Tier.COMMON.name();
-                int candyUsed = 0;
-                JsonElement heldItemObj = element.getAsJsonObject().get("heldItem");
-                JsonElement skinObj = element.getAsJsonObject().get("skin");
-                SBPets.HeldItem heldItem = null;
-                String heldItemType = null;
-                String skin = null;
-                String skinName = null;
-                boolean addEmpty = false;
+                skin = skinObj;
+                addEmpty = skin != null;
+            }
+            if (heldItemObj != null)
+            {
+                heldItem = SBPets.PETS.getHeldItemByName(heldItemObj);
 
-                if (element.getAsJsonObject().get("exp") != null)
+                if (heldItem == null)
                 {
-                    exp = element.getAsJsonObject().get("exp").getAsDouble();
+                    heldItemType = heldItemObj;
+                    SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemType);
                 }
-                if (element.getAsJsonObject().get("tier") != null)
+            }
+
+            SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
+            boolean active = pet.isActive();
+            String petType = pet.getType();
+            ListTag list = new ListTag();
+
+            if (heldItem != null && heldItem.isUpgrade())
+            {
+                tier = tier.getNextRarity();
+            }
+
+            SBPets.Info level = this.checkPetLevel(exp, tier);
+            ChatFormatting rarity = tier.getTierColor();
+            SBPets.Type type = SBPets.PETS.getTypeByName(petType);
+
+            if (type != null)
+            {
+                ItemStack itemStack = type.getPetItem();
+
+                itemStack.setHoverName(TextComponentUtils.component(ChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet")));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + (level.getCurrentPetLevel() < 100 ? ChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + ChatFormatting.YELLOW + level.getPercent() : level.getPercent()))));
+
+                if (level.getCurrentPetLevel() < 100)
                 {
-                    petRarity = element.getAsJsonObject().get("tier").getAsString();
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + this.getTextPercentage((int) level.getCurrentPetXp(), level.getXpRequired()) + " " + ChatFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level.getCurrentPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired()))));
                 }
-                if (element.getAsJsonObject().get("candyUsed") != null)
+                if (addEmpty)
                 {
-                    candyUsed = element.getAsJsonObject().get("candyUsed").getAsInt();
-                    addEmpty = candyUsed > 0;
-                }
-                if (skinObj != null && !skinObj.isJsonNull())
-                {
-                    skin = skinObj.getAsString();
-                    addEmpty = skin != null;
-                }
-                if (heldItemObj != null && !heldItemObj.isJsonNull())
-                {
-                    heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
-
-                    if (heldItem == null)
-                    {
-                        heldItemType = heldItemObj.getAsString();
-                        SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemType);
-                    }
-                }
-
-                SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
-                boolean active = element.getAsJsonObject().get("active").getAsBoolean();
-                String petType = element.getAsJsonObject().get("type").getAsString();
-                ListTag list = new ListTag();
-
-                if (heldItem != null && heldItem.isUpgrade())
-                {
-                    tier = tier.getNextRarity();
-                }
-
-                SBPets.Info level = this.checkPetLevel(exp, tier);
-                ChatFormatting rarity = tier.getTierColor();
-                SBPets.Type type = SBPets.PETS.getTypeByName(petType);
-
-                if (type != null)
-                {
-                    ItemStack itemStack = type.getPetItem();
-
-                    itemStack.setHoverName(TextComponentUtils.component(ChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))));
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet")));
                     list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + (level.getCurrentPetLevel() < 100 ? ChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + ChatFormatting.YELLOW + level.getPercent() : level.getPercent()))));
-
-                    if (level.getCurrentPetLevel() < 100)
+                }
+                if (candyUsed > 0)
+                {
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Candy Used: " + ChatFormatting.YELLOW + candyUsed + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + 10)));
+                }
+                if (skin != null)
+                {
+                    for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
                     {
-                        list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + this.getTextPercentage((int) level.getCurrentPetXp(), level.getXpRequired()) + " " + ChatFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level.getCurrentPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired()))));
-                    }
-                    if (addEmpty)
-                    {
-                        list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
-                    }
-                    if (candyUsed > 0)
-                    {
-                        list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Candy Used: " + ChatFormatting.YELLOW + candyUsed + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + 10)));
-                    }
-                    if (skin != null)
-                    {
-                        for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
+                        if (skin.equals(petSkin.getType()))
                         {
-                            if (skin.equals(petSkin.getType()))
-                            {
-                                ItemStack tmp = itemStack.copy();
-                                itemStack = ItemUtils.setSkullSkin(itemStack, petSkin.getUUID(), petSkin.getTexture());
-                                itemStack.setHoverName(tmp.getHoverName());
-                                skinName = petSkin.getColor() + petSkin.getName();
-                                break;
-                            }
-                        }
-                        list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName))));
-                    }
-                    if (heldItem != null)
-                    {
-                        String heldItemName = ChatFormatting.getByName(heldItem.getColor()) + heldItem.getName();
-                        list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Held Item: " + heldItemName)));
-                    }
-                    else
-                    {
-                        if (heldItemType != null)
-                        {
-                            list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Held Item: " + ChatFormatting.RED + heldItemType)));
+                            ItemStack tmp = itemStack.copy();
+                            itemStack = ItemUtils.setSkullSkin(itemStack, petSkin.getUUID(), petSkin.getTexture());
+                            itemStack.setHoverName(tmp.getHoverName());
+                            skinName = petSkin.getColor() + petSkin.getName();
+                            break;
                         }
                     }
-
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Total XP: " + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp()))));
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(rarity.toString() + ChatFormatting.BOLD + tier + " PET")));
-                    itemStack.getTag().getCompound("display").put("Lore", list);
-                    itemStack.getOrCreateTagElement("ExtraAttributes").putString("id", "PET");
-                    itemStack.getTag().putBoolean("active", active);
-                    petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), TextComponentUtils.component(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))), active, Collections.singletonList(itemStack)));
-
-                    switch (tier)
-                    {
-                        case COMMON:
-                            this.petScore += 1;
-                            break;
-                        case UNCOMMON:
-                            this.petScore += 2;
-                            break;
-                        case RARE:
-                            this.petScore += 3;
-                            break;
-                        case EPIC:
-                            this.petScore += 4;
-                            break;
-                        case LEGENDARY:
-                            this.petScore += 5;
-                            break;
-                        case MYTHIC:
-                            this.petScore += 6;
-                            break;
-                        default:
-                            break;
-                    }
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName))));
+                }
+                if (heldItem != null)
+                {
+                    String heldItemName = ChatFormatting.getByName(heldItem.getColor()) + heldItem.getName();
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Held Item: " + heldItemName)));
                 }
                 else
                 {
-                    ItemStack itemStack = new ItemStack(Items.BONE);
-                    itemStack.setHoverName(TextComponentUtils.formatted(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), ChatFormatting.RED));
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RED.toString() + ChatFormatting.BOLD + "UNKNOWN PET")));
-                    itemStack.getTag().getCompound("display").put("Lore", list);
-                    petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, itemStack.getHoverName(), false, Lists.newArrayList(itemStack)));
-                    SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
+                    if (heldItemType != null)
+                    {
+                        list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Held Item: " + ChatFormatting.RED + heldItemType)));
+                    }
                 }
-                petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getName().getString(), o1.getName().getString()).build());
+
+                list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Total XP: " + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp()))));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(rarity.toString() + ChatFormatting.BOLD + tier + " PET")));
+                itemStack.getTag().getCompound("display").put("Lore", list);
+                itemStack.getOrCreateTagElement("ExtraAttributes").putString("id", "PET");
+                itemStack.getTag().putBoolean("active", active);
+                petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), TextComponentUtils.component(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))), active, Collections.singletonList(itemStack)));
+
+                switch (tier)
+                {
+                    case COMMON:
+                        this.petScore += 1;
+                        break;
+                    case UNCOMMON:
+                        this.petScore += 2;
+                        break;
+                    case RARE:
+                        this.petScore += 3;
+                        break;
+                    case EPIC:
+                        this.petScore += 4;
+                        break;
+                    case LEGENDARY:
+                        this.petScore += 5;
+                        break;
+                    case MYTHIC:
+                        this.petScore += 6;
+                        break;
+                    default:
+                        break;
+                }
             }
-            for (SBPets.Data data : petData)
+            else
             {
-                petItem.addAll(data.getItemStack());
+                ItemStack itemStack = new ItemStack(Items.BONE);
+                itemStack.setHoverName(TextComponentUtils.formatted(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), ChatFormatting.RED));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RED.toString() + ChatFormatting.BOLD + "UNKNOWN PET")));
+                itemStack.getTag().getCompound("display").put("Lore", list);
+                petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, itemStack.getHoverName(), false, Lists.newArrayList(itemStack)));
+                SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
             }
+            petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getName().getString(), o1.getName().getString()).build());
+        }
+        for (SBPets.Data data : petData)
+        {
+            petItem.addAll(data.getItemStack());
         }
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(petItem, SBInventoryGroup.PET));
     }
@@ -2649,22 +2611,10 @@ public class SkyBlockAPIViewerScreen extends Screen
         });
     }
 
-    private void calculatePlayerStats(JsonObject currentProfile)
+    private void calculatePlayerStats(SkyblockProfiles.Members currentProfile)
     {
-        JsonElement fairySouls = currentProfile.get("fairy_souls_collected");
-        JsonElement fairyExchangesEle = currentProfile.get("fairy_exchanges");
-        int fairyExchanges = 0;
-
-        if (fairySouls != null)
-        {
-            this.totalFairySouls = fairySouls.getAsInt();
-        }
-        if (fairyExchangesEle != null)
-        {
-            fairyExchanges = fairyExchangesEle.getAsInt();
-        }
-
-        this.getFairySouls(fairyExchanges);
+        this.totalFairySouls = currentProfile.getFairySoulsCollected();
+        this.getFairySouls(currentProfile.getFairyExchanges());
         this.getMagicFindFromPets(this.petScore);
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getFarming(), this.farmingLevel));
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getForaging(), this.foragingLevel));
@@ -2883,7 +2833,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                             {
                                 valueD = NumberUtils.NUMBER_FORMAT_WITH_OPERATORS.parse(value).intValue();
                             }
-                            catch (Exception ignored) {}
+                            catch (Exception ignored)
+                            {
+                            }
 
                             switch (type)
                             {
@@ -2950,33 +2902,13 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.allStat.add(new BonusStatTemplate(healthTemp, defenseTemp, trueDefenseTemp, 0, strengthTemp, speedTemp, critChanceTemp, critDamageTemp, attackSpeedTemp, intelligenceTemp, seaCreatureChanceTemp, magicFindTemp, petLuckTemp, ferocityTemp, abilityDamageTemp, miningSpeedTemp, miningFortuneTemp, farmingFortuneTemp, foragingFortuneTemp));
     }
 
-    private void getBasicInfo(JsonObject currentProfile, JsonElement banking, JsonObject objStatus, CommunityUpgrades communityUpgrade)
+    private void getBasicInfo(SkyblockProfiles.Members currentProfile, SkyblockProfiles.Banking banking, GameStatus status, CommunityUpgrades communityUpgrade)
     {
-        JsonElement deathCount = currentProfile.get("death_count");
-        JsonElement purse = currentProfile.get("coin_purse");
-        JsonElement lastSave = currentProfile.get("last_save");
-        JsonElement firstJoin = currentProfile.get("first_join");
-        int deathCounts = 0;
-        double coins = 0.0D;
-        long lastSaveMillis = -1;
-        long firstJoinMillis = -1;
+        int deathCounts = currentProfile.getDeathCount();
+        double coins = currentProfile.getPurse();
+        long lastSaveMillis = currentProfile.getLastSave();
+        long firstJoinMillis = currentProfile.getFirstJoin();
 
-        if (deathCount != null)
-        {
-            deathCounts = deathCount.getAsInt();
-        }
-        if (purse != null)
-        {
-            coins = purse.getAsDouble();
-        }
-        if (lastSave != null)
-        {
-            lastSaveMillis = lastSave.getAsLong();
-        }
-        if (firstJoin != null)
-        {
-            firstJoinMillis = firstJoin.getAsLong();
-        }
         if (this.uuid.equals("eef3a6031c1b4c988264d2f04b231ef4")) // special case for me :D
         {
             firstJoinMillis = 1565111612000L;
@@ -3000,7 +2932,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         String purseColor = ColorUtils.toHex(255, 165, 0);
         String ferocity = ColorUtils.toHex(224, 120, 0);
         String abilityDamage = ColorUtils.toHex(214, 36, 0);
-        String location = this.getLocation(objStatus);
+        String location = this.getLocation(status);
 
         this.infoList.add(new SkyBlockInfo(ChatFormatting.YELLOW.toString() + ChatFormatting.BOLD + ChatFormatting.UNDERLINE + "Base Stats", ""));
         this.infoList.add(new SkyBlockInfo("❤ Health", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(this.allStat.getHealth()), heath));
@@ -3038,7 +2970,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (banking != null)
         {
-            double balance = banking.getAsJsonObject().get("balance").getAsDouble();
+            double balance = banking.getBalance();
             this.infoList.add(new SkyBlockInfo("Banking Account", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(balance), bank));
         }
         else
@@ -3128,19 +3060,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         return original.equals(replace) ? "Total " + replace : WordUtils.capitalize(original) + " " + replace;
     }
 
-    private void getSkills(JsonObject currentProfile)
+    private void getSkills(SkyblockProfiles.Members currentProfile)
     {
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_farming"), SBSkills.Type.FARMING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_foraging"), SBSkills.Type.FORAGING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_mining"), SBSkills.Type.MINING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_fishing"), SBSkills.Type.FISHING));
-        this.skillLeftList.add(this.checkSkill(currentProfile.get("experience_skill_runecrafting"), SBSkills.Type.RUNECRAFTING, SBSkills.SKILLS.getLeveling().get("runecrafting")));
+        this.skillLeftList.add(this.checkSkill(currentProfile.getFarmingExp(), SBSkills.Type.FARMING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.getForagingExp(), SBSkills.Type.FORAGING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.getMiningExp(), SBSkills.Type.MINING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.getFishingExp(), SBSkills.Type.FISHING));
+        this.skillLeftList.add(this.checkSkill(currentProfile.getRunecraftingExp(), SBSkills.Type.RUNECRAFTING, SBSkills.SKILLS.getLeveling().get("runecrafting")));
 
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_combat"), SBSkills.Type.COMBAT));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_enchanting"), SBSkills.Type.ENCHANTING));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_alchemy"), SBSkills.Type.ALCHEMY));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_taming"), SBSkills.Type.TAMING));
-        this.skillRightList.add(this.checkSkill(currentProfile.get("experience_skill_carpentry"), SBSkills.Type.CARPENTRY));
+        this.skillRightList.add(this.checkSkill(currentProfile.getCombatExp(), SBSkills.Type.COMBAT));
+        this.skillRightList.add(this.checkSkill(currentProfile.getEnchantingExp(), SBSkills.Type.ENCHANTING));
+        this.skillRightList.add(this.checkSkill(currentProfile.getAlchemyExp(), SBSkills.Type.ALCHEMY));
+        this.skillRightList.add(this.checkSkill(currentProfile.getTamingExp(), SBSkills.Type.TAMING));
+        this.skillRightList.add(this.checkSkill(currentProfile.getCarpentryExp(), SBSkills.Type.CARPENTRY));
 
         double avg = 0.0D;
         double progress = 0.0D;
@@ -3173,16 +3105,16 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type)
+    private SBSkills.Info checkSkill(Double exp, SBSkills.Type type)
     {
-        return this.checkSkill(element, type, SBSkills.SKILLS.getLeveling().get("default"));
+        return this.checkSkill(exp, type, SBSkills.SKILLS.getLeveling().get("default"));
     }
 
-    private SBSkills.Info checkSkill(JsonElement element, SBSkills.Type type, int[] leveling)
+    private SBSkills.Info checkSkill(Double exp, SBSkills.Type type, int[] leveling)
     {
-        if (element != null)
+        if (exp != null)
         {
-            double playerXp = element.getAsDouble();
+            double playerXp = exp;
             int xpRequired = 0;
             int currentLvl = 0;
             int levelToCheck = 0;
@@ -3276,9 +3208,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void getStats(JsonObject currentProfile)
+    private void getStats(SkyblockProfiles.Members currentProfile)
     {
-        JsonObject stats = currentProfile.get("stats").getAsJsonObject();
+        JsonObject stats = currentProfile.getStats();
         List<SBStats> auctions = Lists.newArrayList();
         List<SBStats> fished = Lists.newArrayList();
         List<SBStats> winter = Lists.newArrayList();
@@ -3446,9 +3378,9 @@ public class SkyBlockAPIViewerScreen extends Screen
         return predicate.negate();
     }
 
-    private void getInventories(JsonObject currentProfile)
+    private void getInventories(SkyblockProfiles.Members currentProfile)
     {
-        this.armorItems.addAll(SBItemUtils.decodeItem(currentProfile, InventoryType.ARMOR).stream().filter(this.not(ItemStack::isEmpty)).collect(Collectors.toList()));
+        this.armorItems.addAll(SBItemUtils.decodeItem(currentProfile.getArmorInventory(), InventoryType.ARMOR).stream().filter(this.not(ItemStack::isEmpty)).collect(Collectors.toList()));
 
         if (this.armorItems.size() > 0)
         {
@@ -3458,39 +3390,32 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
-        List<ItemStack> mainInventory = SBItemUtils.decodeItem(currentProfile, InventoryType.INVENTORY);
-        List<ItemStack> accessoryInventory = SBItemUtils.decodeItem(currentProfile, InventoryType.ACCESSORY_BAG);
+        List<ItemStack> mainInventory = SBItemUtils.decodeItem(currentProfile.getMainInventory(), InventoryType.INVENTORY);
+        List<ItemStack> accessoryInventory = SBItemUtils.decodeItem(currentProfile.getAccessoryInventory(), InventoryType.ACCESSORY_BAG);
 
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(mainInventory, SBInventoryGroup.INVENTORY));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.ENDER_CHEST), SBInventoryGroup.ENDER_CHEST));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.PERSONAL_VAULT), SBInventoryGroup.PERSONAL_VAULT));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getEnderChestInventory(), InventoryType.ENDER_CHEST), SBInventoryGroup.ENDER_CHEST));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getVaultInventory(), InventoryType.PERSONAL_VAULT), SBInventoryGroup.PERSONAL_VAULT));
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(accessoryInventory, SBInventoryGroup.ACCESSORY));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.POTION_BAG), SBInventoryGroup.POTION));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.FISHING_BAG), SBInventoryGroup.FISHING));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.QUIVER), SBInventoryGroup.QUIVER));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.CANDY), SBInventoryGroup.CANDY));
-        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile, InventoryType.WARDROBE), SBInventoryGroup.WARDROBE));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getPotionInventory(), InventoryType.POTION_BAG), SBInventoryGroup.POTION));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getFishingInventory(), InventoryType.FISHING_BAG), SBInventoryGroup.FISHING));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getQuiverInventory(), InventoryType.QUIVER), SBInventoryGroup.QUIVER));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getCandyInventory(), InventoryType.CANDY), SBInventoryGroup.CANDY));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getWardrobeInventory(), InventoryType.WARDROBE), SBInventoryGroup.WARDROBE));
 
         this.inventoryToStats.addAll(mainInventory);
         this.inventoryToStats.addAll(accessoryInventory);
     }
 
-    private void getSlayerInfo(JsonObject currentProfile)
+    private void getSlayerInfo(SkyblockProfiles.Members currentProfile)
     {
-        JsonElement slayerBosses = currentProfile.get("slayer_bosses");
-        JsonElement slayerQuest = currentProfile.get("slayer_quest");
+        JsonObject slayerBosses = currentProfile.getSlayerBoss();
+        SkyblockProfiles.SlayerQuest slayerQuest = currentProfile.getSlayerQuest();
 
         if (slayerQuest != null)
         {
-            try
-            {
-                this.activeSlayerType = SBSlayers.Type.valueOf(slayerQuest.getAsJsonObject().get("type").getAsString().toUpperCase(Locale.ROOT));
-                this.activeSlayerTier = 1 + slayerQuest.getAsJsonObject().get("tier").getAsInt();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            this.activeSlayerType = slayerQuest.getType();
+            this.activeSlayerTier = 1 + slayerQuest.getTier();
         }
 
         if (slayerBosses != null)

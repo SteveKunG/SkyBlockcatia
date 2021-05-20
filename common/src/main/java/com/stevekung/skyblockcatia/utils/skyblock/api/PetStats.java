@@ -10,10 +10,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.gson.*;
+import com.google.gson.JsonSyntaxException;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
+import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.util.Mth;
 
 /**
@@ -53,32 +55,28 @@ public class PetStats
         {
             String uuid = GameProfileUtils.getUUID().toString().replace("-", "");
             URL urlSB = new URL(SBAPIUtils.APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
-            JsonObject objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-            JsonElement sbProfile = objSB.get("profiles");
+            SkyblockProfiles sbProfiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
             List<Profile> profiles = Lists.newArrayList();
 
-            if (!sbProfile.isJsonNull())
+            if (sbProfiles != null)
             {
-                JsonArray profilesList = sbProfile.getAsJsonArray();
-                boolean hasOneProfile = profilesList.size() == 1;
+                SkyblockProfiles.Profile[] profilesList = sbProfiles.getProfiles();
+                boolean hasOneProfile = profilesList.length == 1;
 
-                for (JsonElement profile : profilesList)
+                for (SkyblockProfiles.Profile profile : profilesList)
                 {
                     long lastSave = -1;
-                    JsonObject availableProfile;
 
-                    for (Map.Entry<String, JsonElement> entry : profile.getAsJsonObject().get("members").getAsJsonObject().entrySet())
+                    for (Map.Entry<String, SkyblockProfiles.Members> entry : profile.getMembers().entrySet())
                     {
                         if (!entry.getKey().equals(uuid))
                         {
                             continue;
                         }
-                        JsonElement lastSaveEle = entry.getValue().getAsJsonObject().get("last_save");
-                        lastSave = lastSaveEle == null ? -1 : lastSaveEle.getAsLong();
+                        lastSave = entry.getValue().getLastSave();
                     }
 
-                    availableProfile = profile.getAsJsonObject();
-                    profiles.add(new Profile(availableProfile, lastSave));
+                    profiles.add(new Profile(profile, lastSave));
 
                     if (hasOneProfile)
                     {
@@ -96,75 +94,60 @@ public class PetStats
         }
     }
 
-    private static void refreshPetStats(JsonObject profile, String uuid) throws JsonSyntaxException, IOException
+    private static void refreshPetStats(SkyblockProfiles.Profile profile, String uuid) throws JsonSyntaxException, IOException
     {
-        JsonObject profiles = profile.get("members").getAsJsonObject();
+        Map<String, SkyblockProfiles.Members> profiles = profile.getMembers();
 
-        for (Map.Entry<String, JsonElement> entry : profiles.entrySet())
+        for (Map.Entry<String, SkyblockProfiles.Members> entry : profiles.entrySet())
         {
             String userUUID = entry.getKey();
 
             if (userUUID.equals(uuid))
             {
-                JsonObject currentUserProfile = profiles.get(userUUID).getAsJsonObject();
-                JsonElement petsObj = currentUserProfile.get("pets");
+                SkyblockProfiles.Members currentUserProfile = profiles.get(userUUID);
+                SkyblockProfiles.Pets[] pets = currentUserProfile.getPets();
 
-                if (petsObj == null)
+                if (pets == null || pets.length <= 0)
                 {
                     return;
                 }
 
-                JsonArray pets = petsObj.getAsJsonArray();
-
-                if (pets.size() > 0)
+                for (SkyblockProfiles.Pets pet : pets)
                 {
-                    for (JsonElement element : pets)
+                    double exp = pet.getExp();
+                    String petRarity = pet.getTier();
+                    String heldItemObj = pet.getHeldItem();
+                    boolean active = pet.isActive();
+                    SBPets.HeldItem heldItem = null;
+
+                    if (heldItemObj != null)
                     {
-                        double exp = 0.0D;
-                        String petRarity = SBPets.Tier.COMMON.name();
-                        JsonElement heldItemObj = element.getAsJsonObject().get("heldItem");
-                        boolean active = element.getAsJsonObject().get("active").getAsBoolean();
-                        SBPets.HeldItem heldItem = null;
+                        heldItem = SBPets.PETS.getHeldItemByName(heldItemObj);
 
-                        if (element.getAsJsonObject().get("exp") != null)
+                        if (heldItem == null)
                         {
-                            exp = element.getAsJsonObject().get("exp").getAsDouble();
+                            SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemObj);
                         }
-                        if (element.getAsJsonObject().get("tier") != null)
-                        {
-                            petRarity = element.getAsJsonObject().get("tier").getAsString();
-                        }
-                        if (heldItemObj != null && !heldItemObj.isJsonNull())
-                        {
-                            try
-                            {
-                                heldItem = SBPets.PETS.getHeldItemByName(heldItemObj.getAsString());
-                            }
-                            catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
+                    }
 
-                        SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
-                        String petType = element.getAsJsonObject().get("type").getAsString();
+                    SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
+                    String petType = pet.getType();
 
-                        if (heldItem != null && heldItem.isUpgrade())
-                        {
-                            tier = tier.getNextRarity();
-                        }
+                    if (heldItem != null && heldItem.isUpgrade())
+                    {
+                        tier = tier.getNextRarity();
+                    }
 
-                        int level = PetStats.checkPetLevel(exp, tier);
+                    int level = PetStats.checkPetLevel(exp, tier);
 
-                        try
-                        {
-                            SBPets.Type type = SBPets.PETS.getTypeByName(petType);
-                            PetStats.INSTANCE.setClientStatByType(type, level, active);
-                        }
-                        catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
+                    try
+                    {
+                        SBPets.Type type = SBPets.PETS.getTypeByName(petType);
+                        PetStats.INSTANCE.setClientStatByType(type, level, active);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -212,10 +195,10 @@ public class PetStats
 
     static class Profile
     {
-        JsonObject profile;
+        SkyblockProfiles.Profile profile;
         long lastSave;
 
-        Profile(JsonObject profile, long lastSave)
+        Profile(SkyblockProfiles.Profile profile, long lastSave)
         {
             this.profile = profile;
             this.lastSave = lastSave;

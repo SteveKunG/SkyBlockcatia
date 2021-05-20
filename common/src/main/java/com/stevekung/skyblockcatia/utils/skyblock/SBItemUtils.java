@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.util.*;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixUtils;
 import com.stevekung.skyblockcatia.mixin.InvokerEntityBlockStateFix;
 import com.stevekung.skyblockcatia.mixin.InvokerItemPotionFix;
 import com.stevekung.skyblockcatia.mixin.InvokerItemStackEnchantmentNamesFix;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
+import com.stevekung.skyblockcatia.utils.skyblock.api.SkyblockProfiles;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -47,12 +47,12 @@ public class SBItemUtils
         obj.defaultReturnValue("minecraft:air");
     });
 
-    public static List<ItemStack> decodeItem(JsonObject currentProfile, InventoryType type)
+    public static List<ItemStack> decodeItem(SkyblockProfiles.Inventory inventory, InventoryType type)
     {
-        if (currentProfile.has(type.getApiName()))
+        if (inventory != null)
         {
             List<ItemStack> itemStack = Lists.newArrayList();
-            byte[] decode = Base64.getDecoder().decode(currentProfile.get(type.getApiName()).getAsJsonObject().get("data").getAsString().replace("\\u003d", "="));
+            byte[] decode = Base64.getDecoder().decode(inventory.getData());
 
             try
             {

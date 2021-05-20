@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.*;
-import com.google.gson.JsonObject;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
@@ -28,9 +27,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
-import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
-import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
-import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
+import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
 import me.shedaniel.architectury.event.events.EntityEvent;
@@ -132,7 +129,7 @@ public class SkyBlockEventHandler
                 this.getInventoryDifference(mc, mc.player.inventory.items);
             }
 
-            for (Map.Entry<String, Pair<Long, JsonObject>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
+            for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
             {
                 long now = System.currentTimeMillis();
                 long checkedTime = entry.getValue().getLeft();
@@ -142,7 +139,7 @@ public class SkyBlockEventHandler
                     SkyBlockProfileSelectorScreen.PROFILE_CACHE.remove(entry.getKey());
                 }
             }
-            for (Map.Entry<String, Pair<Long, JsonObject>> entry : SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.entrySet())
+            for (Map.Entry<String, Pair<Long, HypixelProfiles>> entry : SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.entrySet())
             {
                 long now = System.currentTimeMillis();
                 long checkedTime = entry.getValue().getLeft();
@@ -685,9 +682,9 @@ public class SkyBlockEventHandler
                 }
                 if (SkyBlockcatiaSettings.INSTANCE.bazaarOnItemTooltip)
                 {
-                    for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
+                    for (Map.Entry<String, Bazaar.Data> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                     {
-                        BazaarData.Product product = entry.getValue().getProduct();
+                        Bazaar.Status status = entry.getValue().getStatus();
 
                         if (extraAttrib.getString("id").equals(entry.getKey()))
                         {
@@ -703,10 +700,10 @@ public class SkyBlockEventHandler
                                 }
                                 else
                                 {
-                                    double buyStack = 64 * product.getBuyPrice();
-                                    double sellStack = 64 * product.getSellPrice();
-                                    double buyCurrent = itemStack.getCount() * product.getBuyPrice();
-                                    double sellCurrent = itemStack.getCount() * product.getSellPrice();
+                                    double buyStack = 64 * status.getBuyPrice();
+                                    double sellStack = 64 * status.getSellPrice();
+                                    double buyCurrent = itemStack.getCount() * status.getBuyPrice();
+                                    double sellCurrent = itemStack.getCount() * status.getSellPrice();
                                     tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (Stack): ", ChatFormatting.GRAY).append(ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyStack) + ChatFormatting.YELLOW + "/" + ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellStack) + " coins"));
 
                                     if (itemStack.getCount() > 1 && itemStack.getCount() < 64)
@@ -714,7 +711,7 @@ public class SkyBlockEventHandler
                                         tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (Current): ", ChatFormatting.GRAY).append(ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(buyCurrent) + ChatFormatting.YELLOW + "/" + ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(sellCurrent) + " coins"));
                                     }
 
-                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (One): ", ChatFormatting.GRAY).append(ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getBuyPrice()) + ChatFormatting.YELLOW + "/" + ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(product.getSellPrice()) + " coins"));
+                                    tooltip.add(insertAt++, TextComponentUtils.formatted("Buy/Sell (One): ", ChatFormatting.GRAY).append(ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(status.getBuyPrice()) + ChatFormatting.YELLOW + "/" + ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(status.getSellPrice()) + " coins"));
                                     tooltip.add(insertAt++, TextComponentUtils.formatted("Last Updated: ", ChatFormatting.GRAY).append(TextComponentUtils.formatted(TimeUtils.getRelativeTime(entry.getValue().getLastUpdated()), ChatFormatting.WHITE)));
                                 }
                             }

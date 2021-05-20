@@ -14,8 +14,6 @@ import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -30,8 +28,7 @@ import com.stevekung.skyblockcatia.gui.widget.button.SkyBlockProfileButton;
 import com.stevekung.skyblockcatia.mixin.InvokerCommandSuggestions;
 import com.stevekung.skyblockcatia.utils.PlayerNameSuggestionHelper;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
-import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelRank;
-import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
+import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.utils.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -71,8 +68,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
     private ScrollingListScreen errorInfo;
     private final List<Component> errorList = Lists.newArrayList();
     private static final Map<String, Component> USERNAME_CACHE = Maps.newHashMap();
-    public static final Map<String, Pair<Long, JsonObject>> INIT_PROFILE_CACHE = Maps.newConcurrentMap();
-    public static final Map<String, Pair<Long, JsonObject>> PROFILE_CACHE = Maps.newConcurrentMap();
+    public static final Map<String, Pair<Long, HypixelProfiles>> INIT_PROFILE_CACHE = Maps.newConcurrentMap();
+    public static final Map<String, Pair<Long, SkyblockProfiles>> PROFILE_CACHE = Maps.newConcurrentMap();
 
     public SkyBlockProfileSelectorScreen(Mode mode)
     {
@@ -426,40 +423,40 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
         this.statusMessage = "Getting Hypixel API";
 
-        JsonObject obj;
+        HypixelProfiles profiles;
         String lowerInput = this.input.toLowerCase(Locale.ROOT);
 
         if (INIT_PROFILE_CACHE.containsKey(lowerInput))
         {
-            obj = INIT_PROFILE_CACHE.get(lowerInput).getRight();
+            profiles = INIT_PROFILE_CACHE.get(lowerInput).getRight();
         }
         else
         {
-            obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-            INIT_PROFILE_CACHE.put(lowerInput, Pair.of(System.currentTimeMillis(), obj));
+            profiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelProfiles.class);
+            INIT_PROFILE_CACHE.put(lowerInput, Pair.of(System.currentTimeMillis(), profiles));
         }
 
-        if (!obj.get("success").getAsBoolean())
+        if (!profiles.isSuccess())
         {
-            this.setErrorMessage(obj.get("cause").getAsString(), false);
+            this.setErrorMessage(profiles.getCause(), false);
             return;
         }
 
-        JsonElement jsonPlayer = obj.get("player");
+        HypixelProfiles.HypixelPlayerProfile player = profiles.getPlayer();
 
-        if (jsonPlayer.isJsonNull())
+        if (player == null)
         {
             this.setErrorMessage("Player not found!", false);
             return;
         }
 
-        JsonElement newPackageRank = jsonPlayer.getAsJsonObject().get("newPackageRank"); // base rank
-        JsonElement rank = jsonPlayer.getAsJsonObject().get("rank"); // rank priority NORMAL/YOUTUBER
-        JsonElement rankPlusColor = jsonPlayer.getAsJsonObject().get("rankPlusColor");
+        String newPackageRank = player.getNewPackageRank(); // base rank
+        String rank = player.getRank(); // rank priority NORMAL/YOUTUBER
+        String rankPlusColor = player.getRankPlusColor();
 
-        JsonElement monthlyPackageRank = jsonPlayer.getAsJsonObject().get("monthlyPackageRank");
-        JsonElement monthlyRankColor = jsonPlayer.getAsJsonObject().get("monthlyRankColor");
-        JsonElement prefix = jsonPlayer.getAsJsonObject().get("prefix");
+        String monthlyPackageRank = player.getMonthlyPackageRank();
+        String monthlyRankColor = player.getMonthlyRankColor();
+        String prefix = player.getPrefix();
 
         String baseRankText = "";
         String rankPlus = "";
@@ -471,14 +468,14 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 if (rank != null)
                 {
-                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank.getAsString());
+                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank);
 
                     if (rankType == HypixelRank.Type.NORMAL)
                     {
-                        HypixelRank.Base baseRank = HypixelRank.Base.valueOf(newPackageRank.getAsString());
+                        HypixelRank.Base baseRank = HypixelRank.Base.valueOf(newPackageRank);
                         baseRankText = baseRank.getName();
                         color = baseRank.getColor().toString();
-                        rankPlus = ChatFormatting.valueOf(rankPlusColor.getAsString()) + "+";
+                        rankPlus = ChatFormatting.valueOf(rankPlusColor) + "+";
                     }
                     else
                     {
@@ -488,13 +485,13 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
                 else
                 {
-                    HypixelRank.Base baseRank = HypixelRank.Base.valueOf(newPackageRank.getAsString());
+                    HypixelRank.Base baseRank = HypixelRank.Base.valueOf(newPackageRank);
 
-                    if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
+                    if (monthlyPackageRank != null && !monthlyPackageRank.equals("NONE"))
                     {
                         if (rankPlusColor != null)
                         {
-                            baseRankText = "MVP" + ChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
+                            baseRankText = "MVP" + ChatFormatting.valueOf(rankPlusColor) + "++";
                         }
                         else
                         {
@@ -503,7 +500,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                         if (monthlyRankColor != null)
                         {
-                            color = ChatFormatting.valueOf(monthlyRankColor.getAsString()).toString();
+                            color = ChatFormatting.valueOf(monthlyRankColor).toString();
                         }
                         else
                         {
@@ -519,7 +516,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                         {
                             if (rankPlusColor != null)
                             {
-                                rankPlus = ChatFormatting.valueOf(rankPlusColor.getAsString()) + "+";
+                                rankPlus = ChatFormatting.valueOf(rankPlusColor) + "+";
                             }
                             else
                             {
@@ -533,17 +530,17 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 if (rank != null)
                 {
-                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank.getAsString());
+                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank);
                     baseRankText = rankType == HypixelRank.Type.YOUTUBER ? ChatFormatting.WHITE + rankType.getName() : rankType.getName();
                     color = rankType.getColor().toString();
                 }
-                if (monthlyPackageRank != null && !monthlyPackageRank.getAsString().equals("NONE"))
+                if (monthlyPackageRank != null && !monthlyPackageRank.equals("NONE"))
                 {
-                    baseRankText = "MVP" + ChatFormatting.valueOf(rankPlusColor.getAsString()) + "++";
+                    baseRankText = "MVP" + ChatFormatting.valueOf(rankPlusColor) + "++";
 
                     if (monthlyRankColor != null)
                     {
-                        color = ChatFormatting.valueOf(monthlyRankColor.getAsString()).toString();
+                        color = ChatFormatting.valueOf(monthlyRankColor).toString();
                     }
                     else
                     {
@@ -557,11 +554,11 @@ public class SkyBlockProfileSelectorScreen extends Screen
             e.printStackTrace();
         }
 
-        this.input = jsonPlayer.getAsJsonObject().get("displayname").getAsString();
+        this.input = player.getDisplayName();
 
         if (prefix != null)
         {
-            this.displayName = prefix.getAsString() + " " + this.input;
+            this.displayName = prefix + " " + this.input;
         }
         else
         {
@@ -575,34 +572,33 @@ public class SkyBlockProfileSelectorScreen extends Screen
             }
         }
 
-        String uuid = jsonPlayer.getAsJsonObject().get("uuid").getAsString();
+        String uuid = player.getUUID();
         URL urlGuild = new URL(APIUrl.GUILD.getUrl() + uuid);
-        JsonObject objGuild = new JsonParser().parse(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-        JsonElement guild = objGuild.get("guild");
+        HypixelGuild.Guild guild = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelGuild.class).getGuild();
 
-        if (!guild.isJsonNull())
+        if (guild != null)
         {
-            String guildName = guild.getAsJsonObject().get("name").getAsString();
+            String guildName = guild.getName();
             this.guild = ChatFormatting.YELLOW + " Guild: " + ChatFormatting.GOLD + guildName;
         }
 
         URL urlSB = new URL(APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
-        JsonObject objSB;
+        SkyblockProfiles sbProfiles;
 
         if (PROFILE_CACHE.containsKey(uuid))
         {
-            objSB = PROFILE_CACHE.get(uuid).getRight();
+            sbProfiles = PROFILE_CACHE.get(uuid).getRight();
         }
         else
         {
-            objSB = new JsonParser().parse(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-            PROFILE_CACHE.put(uuid, Pair.of(System.currentTimeMillis(), objSB));
+            sbProfiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
+            PROFILE_CACHE.put(uuid, Pair.of(System.currentTimeMillis(), sbProfiles));
         }
 
-        JsonElement sbProfile = objSB.get("profiles");
+        SkyblockProfiles.Profile[] sbProfile = sbProfiles.getProfiles();
         GameProfile gameProfile = SkullBlockEntity.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
 
-        if (sbProfile.isJsonNull())
+        if (sbProfile.length <= 0)
         {
             this.statusMessage = "Found default profile";
             ProfileDataCallback callback = new ProfileDataCallback(uuid, TextComponentUtils.component("Avocado"), this.input, this.displayName, TextComponentUtils.formatted("Normal", ChatFormatting.GOLD), this.guild, uuid, gameProfile, -1);
@@ -610,27 +606,26 @@ public class SkyBlockProfileSelectorScreen extends Screen
             return;
         }
 
-        JsonArray profilesList = sbProfile.getAsJsonArray();
         List<SkyBlockProfileButton> buttons = Lists.newArrayList();
 
-        for (JsonElement profile : profilesList)
+        for (SkyblockProfiles.Profile profile : sbProfile)
         {
-            boolean hasOneProfile = profilesList.size() == 1;
+            boolean hasOneProfile = sbProfile.length == 1;
             long lastSave = -1;
-            JsonObject availableProfile;
-            JsonElement gameModeType = profile.getAsJsonObject().get("game_mode");
+            SkyblockProfiles.Profile availableProfile;
+            String gameModeType = profile.getGameMode();
             Component gameMode = TextComponentUtils.formatted("Normal", ChatFormatting.GOLD);
 
             if (gameModeType != null)
             {
-                gameMode = gameModeType.getAsString().equals("ironman") ? TextComponentUtils.formatted("♲ Iron Man", ChatFormatting.GRAY) : TextComponentUtils.formatted(gameModeType.getAsString(), ChatFormatting.RED);
+                gameMode = gameModeType.equals("ironman") ? TextComponentUtils.formatted("♲ Iron Man", ChatFormatting.GRAY) : TextComponentUtils.formatted(gameModeType, ChatFormatting.RED);
             }
 
             List<Component> islandMembers = Lists.newLinkedList();
-            Set<Map.Entry<String, JsonElement>> membersEntry = profile.getAsJsonObject().get("members").getAsJsonObject().entrySet();
+            Set<Map.Entry<String, SkyblockProfiles.Members>> membersEntry = profile.getMembers().entrySet();
             int memberSize = 1;
 
-            for (Map.Entry<String, JsonElement> entry : membersEntry)
+            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry)
             {
                 String memberUuid = entry.getKey();
 
@@ -657,11 +652,10 @@ public class SkyBlockProfileSelectorScreen extends Screen
                     }
                     continue;
                 }
-                JsonElement lastSaveEle = entry.getValue().getAsJsonObject().get("last_save");
-                lastSave = lastSaveEle == null ? -1 : lastSaveEle.getAsLong();
+                lastSave = entry.getValue().getLastSave();
             }
 
-            availableProfile = profile.getAsJsonObject();
+            availableProfile = profile;
             ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
             SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
 
