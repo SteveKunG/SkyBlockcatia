@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.GuiDisconnectConfirmation;
@@ -27,7 +24,7 @@ import com.stevekung.skyblockcatia.gui.widget.button.GuiSmallArrowButton;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
-import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
+import com.stevekung.skyblockcatia.utils.skyblock.api.Bazaar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -67,12 +64,13 @@ public class MainEventHandler
     public static String auctionPrice = "";
     public static boolean showChat;
     public static String playerToView;
-    public static final Map<String, BazaarData> BAZAAR_DATA = new HashMap<>();
+    public static final Map<String, Bazaar.Data> BAZAAR_DATA = new HashMap<>();
     public static boolean bidHighlight = true;
     private static boolean showAdditionalButtons;
     public static int currentServerPing;
     private static final ThreadPoolExecutor REALTIME_PINGER = new ScheduledThreadPoolExecutor(5, new ThreadFactoryBuilder().setNameFormat("Real Time Server Pinger #%d").setDaemon(true).build());
     private long lastPinger = -1L;
+    private static final Gson GSON = new Gson();
 
     public MainEventHandler()
     {
@@ -367,26 +365,26 @@ public class MainEventHandler
         try
         {
             URL url = new URL(SBAPIUtils.BAZAAR);
-            JsonObject obj = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonObject();
-            JsonElement lastUpdated = obj.get("lastUpdated");
+            Bazaar bazaar = GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), Bazaar.class);
+            long lastUpdated = bazaar.getLastUpdated();
 
-            for (Map.Entry<String, JsonElement> product : obj.get("products").getAsJsonObject().entrySet())
+            for (Map.Entry<String, Bazaar.Product> product : bazaar.getProducts().entrySet())
             {
                 String productName = product.getKey();
-                JsonElement currentProduct = product.getValue();
-                JsonElement quickStatus = currentProduct.getAsJsonObject().get("quick_status");
-                JsonElement buyPrice = quickStatus.getAsJsonObject().get("buyPrice");
-                JsonElement sellPrice = quickStatus.getAsJsonObject().get("sellPrice");
-                JsonArray buyArray = currentProduct.getAsJsonObject().get("buy_summary").getAsJsonArray();
-                JsonArray sellArray = currentProduct.getAsJsonObject().get("sell_summary").getAsJsonArray();
+                Bazaar.Product currentProduct = product.getValue();
+                Bazaar.Status quickStatus = currentProduct.getQuickStatus();
+                double buyPrice = quickStatus.getBuyPrice();
+                double sellPrice = quickStatus.getSellPrice();
+                Bazaar.Summary[] buyArray = currentProduct.getBuySummary();
+                Bazaar.Summary[] sellArray = currentProduct.getSellSummary();
 
-                if (sellArray.size() == 0 && buyArray.size() == 0 || sellArray.size() == 0 || buyArray.size() == 0)
+                if (sellArray.length == 0 && buyArray.length == 0 || sellArray.length == 0 || buyArray.length == 0)
                 {
-                    BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyPrice.getAsDouble(), sellPrice.getAsDouble())));
+                    BAZAAR_DATA.put(productName, new Bazaar.Data(lastUpdated, new Bazaar.Status(buyPrice, sellPrice)));
                 }
                 else
                 {
-                    BAZAAR_DATA.put(productName, new BazaarData(lastUpdated.getAsLong(), new BazaarData.Product(buyArray.get(0).getAsJsonObject().get("pricePerUnit").getAsDouble(), sellArray.get(0).getAsJsonObject().get("pricePerUnit").getAsDouble())));
+                    BAZAAR_DATA.put(productName, new Bazaar.Data(lastUpdated, new Bazaar.Status(buyArray[0].getPricePerUnit(), sellArray[0].getPricePerUnit())));
                 }
             }
         }

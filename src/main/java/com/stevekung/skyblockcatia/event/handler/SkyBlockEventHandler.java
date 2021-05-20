@@ -34,7 +34,7 @@ import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
-import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
+import com.stevekung.skyblockcatia.utils.skyblock.api.Bazaar;
 import com.stevekung.skyblockcatia.utils.skyblock.api.HypixelProfiles;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 import com.stevekung.skyblockcatia.utils.skyblock.api.SkyblockProfiles;
@@ -745,9 +745,9 @@ public class SkyBlockEventHandler
                 }
                 if (SkyBlockcatiaSettings.INSTANCE.bazaarOnTooltips)
                 {
-                    for (Map.Entry<String, BazaarData> entry : MainEventHandler.BAZAAR_DATA.entrySet())
+                    for (Map.Entry<String, Bazaar.Data> entry : MainEventHandler.BAZAAR_DATA.entrySet())
                     {
-                        BazaarData.Product product = entry.getValue().getProduct();
+                        Bazaar.Status status = entry.getValue().getStatus();
 
                         if (extraAttrib.getString("id").equals(entry.getKey()))
                         {
@@ -763,10 +763,10 @@ public class SkyBlockEventHandler
                                 }
                                 else
                                 {
-                                    double buyStack = 64 * product.getBuyPrice();
-                                    double sellStack = 64 * product.getSellPrice();
-                                    double buyCurrent = itemStack.stackSize * product.getBuyPrice();
-                                    double sellCurrent = itemStack.stackSize * product.getSellPrice();
+                                    double buyStack = 64 * status.getBuyPrice();
+                                    double sellStack = 64 * status.getSellPrice();
+                                    double buyCurrent = itemStack.stackSize * status.getBuyPrice();
+                                    double sellCurrent = itemStack.stackSize * status.getSellPrice();
                                     event.toolTip.add(insertAt++, "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(buyStack) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellStack) + " coins");
 
                                     if (itemStack.stackSize > 1 && itemStack.stackSize < 64)
@@ -774,7 +774,7 @@ public class SkyBlockEventHandler
                                         event.toolTip.add(insertAt++, "Buy/Sell (Current): " + EnumChatFormatting.GOLD + format.format(buyCurrent) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(sellCurrent) + " coins");
                                     }
 
-                                    event.toolTip.add(insertAt++, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(product.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(product.getSellPrice()) + " coins");
+                                    event.toolTip.add(insertAt++, "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(status.getBuyPrice()) + EnumChatFormatting.YELLOW + "/" + EnumChatFormatting.GOLD + format.format(status.getSellPrice()) + " coins");
                                     event.toolTip.add(insertAt++, "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(entry.getValue().getLastUpdated()));
                                 }
                             }

@@ -8,7 +8,7 @@ import com.stevekung.skyblockcatia.utils.ClientUtils;
 import com.stevekung.skyblockcatia.utils.CommonUtils;
 import com.stevekung.skyblockcatia.utils.JsonUtils;
 import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
-import com.stevekung.skyblockcatia.utils.skyblock.api.BazaarData;
+import com.stevekung.skyblockcatia.utils.skyblock.api.Bazaar;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -43,11 +43,11 @@ public class CommandBazaarViewer extends ClientCommandBase
             if (MainEventHandler.BAZAAR_DATA.keySet().stream().anyMatch(product -> product.equals(args[0])))
             {
                 ModDecimalFormat format = new ModDecimalFormat("#,###.#");
-                BazaarData data = MainEventHandler.BAZAAR_DATA.get(args[0]);
+                Bazaar.Data data = MainEventHandler.BAZAAR_DATA.get(args[0]);
                 ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Last Updated: " + EnumChatFormatting.WHITE + CommonUtils.getRelativeTime(data.getLastUpdated()));
                 ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Product: " + EnumChatFormatting.GOLD + args[0]);
-                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(data.getProduct().getBuyPrice() * 64.0D) + "/" + format.format(data.getProduct().getSellPrice() * 64.0D));
-                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(data.getProduct().getBuyPrice()) + "/" + format.format(data.getProduct().getSellPrice()));
+                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell (Stack): " + EnumChatFormatting.GOLD + format.format(data.getStatus().getBuyPrice() * 64.0D) + "/" + format.format(data.getStatus().getSellPrice() * 64.0D));
+                ClientUtils.printClientMessage(EnumChatFormatting.YELLOW + "Buy/Sell (One): " + EnumChatFormatting.GOLD + format.format(data.getStatus().getBuyPrice()) + "/" + format.format(data.getStatus().getSellPrice()));
             }
             else
             {
