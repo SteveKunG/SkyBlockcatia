@@ -1839,7 +1839,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     }
                 }
 
-                this.data.setHasInventories(this.totalDisabledInv != 11);
+                this.data.setHasInventories(this.totalDisabledInv != 12);
                 this.allStat.setEffectiveHealth(this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)));
                 this.getBasicInfo(currentUserProfile, banking, status, userUUID, communityUpgrade);
                 break;
@@ -2769,7 +2769,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             SBPets.HeldItem heldItem = null;
             String heldItemType = null;
             String skin = null;
-            String skinName = null;
+            String skinName = "";
 
             if (skinObj != null)
             {
@@ -3001,9 +3001,25 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
 
                 ItemStack itemStack = type.getPetItem();
+                String skinMark = "";
 
-                itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
-                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet"));
+                if (skin != null)
+                {
+                    for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
+                    {
+                        if (skin.equals(petSkin.getType()))
+                        {
+                            itemStack = RenderUtils.setSkullSkin(itemStack.copy(), petSkin.getUUID(), petSkin.getTexture());
+                            skinName = petSkin.getName();
+                            break;
+                        }
+                    }
+                    skinName = ", " + (skinName.isEmpty() ? skin : skinName) + " Skin";
+                    skinMark = " ✦";
+                }
+
+                itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")) + skinMark);
+                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet" + skinName));
 
                 if (listStats.size() > 0)
                 {
@@ -3029,44 +3045,37 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     list.appendTag(new NBTTagString(""));
                 }
 
-                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + petInfo.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + petInfo.getPercent() : petInfo.getPercent())));
-
-                if (level < 100)
-                {
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)petInfo.getCurrentPetXp(), petInfo.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(petInfo.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(petInfo.getXpRequired())));
-                }
-                if (candyUsed > 0 || heldItem != null || heldItemType != null || skin != null)
-                {
-                    list.appendTag(new NBTTagString(""));
-                }
-                if (candyUsed > 0)
-                {
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Candy Used: " + EnumChatFormatting.YELLOW + candyUsed + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + 10));
-                }
-                if (skin != null)
-                {
-                    for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
-                    {
-                        if (skin.equals(petSkin.getType()))
-                        {
-                            itemStack = RenderUtils.setSkullSkin(itemStack.copy(), petSkin.getUUID(), petSkin.getTexture());
-                            skinName = petSkin.getColor() + petSkin.getName();
-                            break;
-                        }
-                    }
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName)));
-                }
                 if (heldItem != null)
                 {
                     String heldItemName = EnumChatFormatting.getValueByName(heldItem.getColor()) + heldItem.getName();
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + heldItemName));
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GOLD + "Held Item: " + heldItemName));
+
+                    for (String heldItemLore : heldItem.getLore())
+                    {
+                        list.appendTag(new NBTTagString(heldItemLore));
+                    }
+                    list.appendTag(new NBTTagString(""));
                 }
                 else
                 {
                     if (heldItemType != null)
                     {
                         list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Held Item: " + EnumChatFormatting.RED + heldItemType));
+                        list.appendTag(new NBTTagString(""));
                     }
+                }
+
+                if (candyUsed > 0)
+                {
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET.toString() + EnumChatFormatting.GREEN + "(" + candyUsed + "/" + 10 + EnumChatFormatting.GREEN + ") Pet Candy Used"));
+                    list.appendTag(new NBTTagString(""));
+                }
+
+                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + petInfo.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + petInfo.getPercent() : petInfo.getPercent())));
+
+                if (level < 100)
+                {
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)petInfo.getCurrentPetXp(), petInfo.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(petInfo.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(petInfo.getXpRequired())));
                 }
 
                 list.appendTag(new NBTTagString(""));

@@ -3,235 +3,518 @@
         {
             "type": "ALL_SKILLS_SUPER_BOOST",
             "name": "All Skills Super Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a20% §7pet exp for all",
+                "§7skills"
+            ]
         },
         {
             "type": "ANTIQUE_REMEDIES",
             "name": "Antique Remedies",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Increases the pet\u0027s §c❁",
+                "§cStrength §7by §a80%"
+            ],
+            "stats": {
+                "strength": {
+                    "value": 80.0,
+                    "isPercent": true
+                }
+            }
         },
         {
             "type": "BIGGER_TEETH",
             "name": "Bigger Teeth",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Increases §9☣ Crit Chance §7by",
+                "§a10"
+            ],
+            "stats": {
+                "crit_chance": {
+                    "value": 10.0
+                }
+            }
         },
         {
             "type": "CROCHET_TIGER_PLUSHIE",
             "name": "Crochet Tiger Plushie",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Increases §e⚔ Bonus",
+                "§eAttack Speed §7by §a35."
+            ],
+            "stats": {
+                "attack_speed": {
+                    "value": 35.0
+                }
+            }
         },
         {
             "type": "DWARF_TURTLE_SHELMET",
             "name": "Dwarf Turtle Shelmet",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Makes the pet\u0027s owner",
+                "§7immune to knockback."
+            ]
         },
         {
             "type": "GOLD_CLAWS",
             "name": "Gold Claws",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Increases the pet\u0027s §9☠ Crit",
+                "§9Damage §7by §a50% §7and §9☣ Crit",
+                "§9Chance §7by §a50%"
+            ],
+            "stats": {
+                "crit_damage": {
+                    "value": 50.0,
+                    "isPercent": true
+                },
+                "crit_chance": {
+                    "value": 50.0,
+                    "isPercent": true
+                }
+            }
         },
         {
             "type": "MINOS_RELIC",
             "name": "Minos Relic",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Increases all pet stats",
+                "§7by §a33.3%§7."
+            ]
         },
         {
             "type": "PET_ITEM_ALL_SKILLS_BOOST_COMMON",
             "name": "All Skills Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a10% §7pet exp",
+                "§7for all skills."
+            ]
         },
         {
             "type": "PET_ITEM_BIG_TEETH_COMMON",
             "name": "Big Teeth",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Increases §9☣ Crit Chance §7by",
+                "§a5"
+            ],
+            "stats": {
+                "crit_chance": {
+                    "value": 5.0
+                }
+            }
         },
         {
             "type": "PET_ITEM_BUBBLEGUM",
             "name": "Bubblegum",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Your pet fuses its power",
+                "§7with placed §aOrbs §7to",
+                "§7give them §a2x §7duration."
+            ]
         },
         {
             "type": "PET_ITEM_COMBAT_SKILL_BOOST_COMMON",
             "name": "Combat Skill Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a20% §7pet exp",
+                "§7for Combat."
+            ]
         },
         {
             "type": "PET_ITEM_COMBAT_SKILL_BOOST_EPIC",
             "name": "Combat Skill Boost",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Gives +§a50% §7pet exp",
+                "§7for Combat."
+            ]
         },
         {
             "type": "PET_ITEM_COMBAT_SKILL_BOOST_RARE",
             "name": "Combat Skill Boost",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Gives +§a40% §7pet exp",
+                "§7for Combat."
+            ]
         },
         {
             "type": "PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON",
             "name": "Combat Skill Boost",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Gives +§a30% §7pet exp",
+                "§7for Combat."
+            ]
         },
         {
             "type": "PET_ITEM_EXP_SHARE",
             "name": "Exp Share",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7While unequipped this pet",
+                "§7gains §a25% §7of the",
+                "§7equipped pet\u0027s xp, this is",
+                "§7split between all pets",
+                "§7holding the item."
+            ]
         },
         {
             "type": "PET_ITEM_FARMING_SKILL_BOOST_COMMON",
             "name": "Farming Skill Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a20% §7pet exp",
+                "§7for Farming."
+            ]
         },
         {
             "type": "PET_ITEM_FARMING_SKILL_BOOST_EPIC",
             "name": "Farming Skill Boost",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Gives +§a50% §7pet exp",
+                "§7for Farming."
+            ]
         },
         {
             "type": "PET_ITEM_FARMING_SKILL_BOOST_RARE",
             "name": "Farming Skill Boost",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Gives +§a40% §7pet exp",
+                "§7for Farming."
+            ]
         },
         {
             "type": "PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON",
             "name": "Farming Skill Boost",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Gives +§a30% §7pet exp",
+                "§7for Farming."
+            ]
         },
         {
             "type": "PET_ITEM_FISHING_SKILL_BOOST_COMMON",
             "name": "Fishing Skill Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a20% §7pet exp",
+                "§7for Fishing."
+            ]
         },
         {
             "type": "PET_ITEM_FISHING_SKILL_BOOST_EPIC",
             "name": "Fishing Skill Boost",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Gives +§a50% §7pet exp",
+                "§7for Fishing."
+            ]
         },
         {
             "type": "PET_ITEM_FISHING_SKILL_BOOST_RARE",
             "name": "Fishing Skill Boost",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Gives +§a40% §7pet exp",
+                "§7for Fishing."
+            ]
         },
         {
             "type": "PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON",
             "name": "Fishing Skill Boost",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Gives +§a30% §7pet exp",
+                "§7for Fishing."
+            ]
         },
         {
             "type": "PET_ITEM_FLYING_PIG",
             "name": "Flying Pig",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Grants your pig pet the",
+                "§7ability to fly while on",
+                "§7your private island! You",
+                "§7also don\u0027t need to hold a",
+                "§7carrot on a stick to",
+                "§7control your pig."
+            ]
         },
         {
             "type": "PET_ITEM_FORAGING_SKILL_BOOST_COMMON",
             "name": "Foraging Skill Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a20% §7pet exp",
+                "§7for Foraging."
+            ]
         },
         {
             "type": "PET_ITEM_FORAGING_SKILL_BOOST_EPIC",
             "name": "Foraging Skill Boost",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Gives +§a50% §7pet exp",
+                "§7for Foraging."
+            ]
         },
         {
             "type": "PET_ITEM_FORAGING_SKILL_BOOST_RARE",
             "name": "Foraging Skill Boost",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Gives +§a40% §7pet exp",
+                "§7for Foraging."
+            ]
         },
         {
             "type": "PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON",
             "name": "Foraging Skill Boost",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Gives +§a30% §7pet exp",
+                "§7for Foraging."
+            ]
         },
         {
             "type": "PET_ITEM_HARDENED_SCALES_UNCOMMON",
             "name": "Hardened Scales",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Increases §a❈ Defense §7by",
+                "§a25"
+            ],
+            "stats": {
+                "defense": {
+                    "value": 25.0
+                }
+            }
         },
         {
             "type": "PET_ITEM_IRON_CLAWS_COMMON",
             "name": "Iron Claws",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Increases the pet\u0027s §9☠ Crit",
+                "§9Damage §7by §a40% §7and §9☣ Crit",
+                "§9Chance §7by §a40%"
+            ],
+            "stats": {
+                "crit_damage": {
+                    "value": 40.0,
+                    "isPercent": true
+                },
+                "crit_chance": {
+                    "value": 40.0,
+                    "isPercent": true
+                }
+            }
         },
         {
             "type": "PET_ITEM_LUCKY_CLOVER",
             "name": "Lucky Clover",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Increases §b✯ Magic Find",
+                "§7by §a7."
+            ],
+            "stats": {
+                "magic_find": {
+                    "value": 7.0
+                }
+            }
         },
         {
             "type": "PET_ITEM_MINING_SKILL_BOOST_COMMON",
             "name": "Mining Skill Boost",
-            "color": "white"
+            "color": "white",
+            "lore": [
+                "§7Gives +§a20% §7pet exp",
+                "§7for Mining."
+            ]
         },
         {
             "type": "PET_ITEM_MINING_SKILL_BOOST_EPIC",
             "name": "Mining Skill Boost",
-            "color": "dark_purple"
+            "color": "dark_purple",
+            "lore": [
+                "§7Gives +§a50% §7pet exp",
+                "§7for Mining."
+            ]
         },
         {
             "type": "PET_ITEM_MINING_SKILL_BOOST_RARE",
             "name": "Mining Skill Boost",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Gives +§a40% §7pet exp",
+                "§7for Mining."
+            ]
         },
         {
             "type": "PET_ITEM_MINING_SKILL_BOOST_UNCOMMON",
             "name": "Mining Skill Boost",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Gives +§a30% §7pet exp",
+                "§7for Mining."
+            ]
         },
         {
             "type": "PET_ITEM_SADDLE",
             "name": "Saddle",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Increases horse speed by",
+                "§a50% §7and jump boost by",
+                "§a100%"
+            ]
         },
         {
             "type": "PET_ITEM_SHARPENED_CLAWS_UNCOMMON",
             "name": "Sharpened Claws",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Increases §9☠ Crit Damage §7by",
+                "§a15"
+            ],
+            "stats": {
+                "crit_damage": {
+                    "value": 15.0
+                }
+            }
         },
         {
             "type": "PET_ITEM_SPOOKY_CUPCAKE",
             "name": "Spooky Cupcake",
-            "color": "green"
+            "color": "green",
+            "lore": [
+                "§7Increases §c❁ Strength",
+                "§7by §a30 §7and §f✦ Speed",
+                "§7by §a20."
+            ],
+            "stats": {
+                "strength": {
+                    "value": 30.0
+                },
+                "speed": {
+                    "value": 20.0
+                }
+            }
         },
         {
             "type": "PET_ITEM_TEXTBOOK",
             "name": "Textbook",
-            "color": "gold"
+            "color": "gold",
+            "lore": [
+                "§7Increases the pet\u0027s §b✎",
+                "§bIntelligence §7by §a100%"
+            ],
+            "stats": {
+                "intelligence": {
+                    "value": 100.0
+                }
+            }
         },
         {
             "type": "PET_ITEM_TIER_BOOST",
             "name": "Tier Boost",
             "color": "gold",
-            "isUpgrade": true
+            "isUpgrade": true,
+            "lore": [
+                "§7Boosts the §ararity §7of your",
+                "§7pet by 1 tier!"
+            ]
         },
         {
             "type": "PET_ITEM_TOY_JERRY",
             "name": "Jerry 3D Glasses",
             "color": "gold",
-            "isUpgrade": true
+            "isUpgrade": true,
+            "lore": [
+                "§7Upgrades a Jerry pet from",
+                "§6Legendary §7to §dMythic",
+                "§7and granting it a new perk!"
+            ]
         },
         {
             "type": "PET_ITEM_VAMPIRE_FANG",
             "name": "Vampire Fang",
             "color": "gold",
-            "isUpgrade": true
+            "isUpgrade": true,
+            "lore": [
+                "§7Upgrades a Bat pet from",
+                "§6Legendary §7to §dMythic",
+                "§7adding a bonus perk and",
+                "§7bonus stats!"
+            ]
         },
         {
             "type": "REAPER_GEM",
             "name": "Reaper Gem",
-            "color": "gold"
+            "color": "gold",
+            "lore": [
+                "§7Gain §c8⫽ Ferocity §7for 5s on",
+                "§7kill"
+            ]
         },
         {
             "type": "REINFORCED_SCALES",
             "name": "Reinforced Scales",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Increases §a❈ Defense §7by",
+                "§a40"
+            ],
+            "stats": {
+                "defense": {
+                    "value": 40.0
+                }
+            }
         },
         {
             "type": "SERRATED_CLAWS",
             "name": "Serrated Claws",
-            "color": "blue"
+            "color": "blue",
+            "lore": [
+                "§7Increases §9☠ Crit Damage §7by",
+                "§a25"
+            ],
+            "stats": {
+                "crit_damage": {
+                    "value": 25.0
+                }
+            }
         },
         {
             "type": "WASHED_UP_SOUVENIR",
             "name": "Washed-up Souvenir",
-            "color": "gold"
+            "color": "gold",
+            "lore": [
+                "§7Increases §3α Sea",
+                "§3Creature Chance §7by §a5."
+            ],
+            "stats": {
+                "sea_creature_chance": {
+                    "value": 5.0
+                }
+            }
         }
     ],
     "index": {
@@ -2536,7 +2819,15 @@
                         0.0
                     ],
                     "multiply": [
-                        0.09
+                        0.1
+                    ]
+                },
+                "MYTHIC": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5
                     ]
                 }
             },
@@ -2555,6 +2846,11 @@
                     "§6Jerry",
                     "§7Actually adds §c5 damage §7to",
                     "§7the Aspect of the Jerry"
+                ],
+                "MYTHIC": [
+                    "§6Jerry",
+                    "§7Tiny chance to find Jerry",
+                    "§7Candies when killing mobs"
                 ]
             }
         },

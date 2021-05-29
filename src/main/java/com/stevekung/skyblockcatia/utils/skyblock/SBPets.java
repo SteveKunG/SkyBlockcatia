@@ -379,13 +379,17 @@ public class SBPets
         private final String name;
         private final String color;
         private final boolean isUpgrade;
+        private final List<String> lore;
+        private final Stats stats;
 
-        public HeldItem(String type, String name, String color, boolean isUpgrade)
+        public HeldItem(String type, String name, String color, boolean isUpgrade, List<String> lore, Stats stats)
         {
             this.type = type;
             this.name = name;
             this.color = color;
             this.isUpgrade = isUpgrade;
+            this.lore = lore;
+            this.stats = stats;
         }
 
         public String getType()
@@ -406,6 +410,16 @@ public class SBPets
         public boolean isUpgrade()
         {
             return this.isUpgrade;
+        }
+
+        public List<String> getLore()
+        {
+            return this.lore;
+        }
+
+        public Stats getStats()
+        {
+            return this.stats;
         }
     }
 

@@ -188,6 +188,7 @@ public class PetsBuilder
         for (HeldItem item : heldItemSort)
         {
             Map<String, Object> prop = Maps.newLinkedHashMap();
+            Map<String, Object> innerStats = Maps.newLinkedHashMap();
             String heldItemName = WordUtils.capitalize(item.toString().toLowerCase(Locale.ROOT).replace("pet_item_", "").replace("_", " "));
 
             if (item.altName != null)
@@ -203,7 +204,27 @@ public class PetsBuilder
             {
                 prop.put("isUpgrade", true);
             }
+            if (item.lore != null)
+            {
+                prop.put("lore", item.lore);
+            }
+            if (item.stats != null)
+            {
+                for (Stats stats : item.stats)
+                {
+                    String statType = stats.type;
+                    Property statValue = stats.prop;
+                    Map<String, Object> realstats = Maps.newLinkedHashMap();
+                    realstats.put("value", statValue.base);
 
+                    if (statValue.percent)
+                    {
+                        realstats.put("isPercent", statValue.percent);
+                    }
+                    innerStats.put(statType, realstats);
+                }
+                prop.put("stats", innerStats);
+            }
             heldItemList.add(prop);
         }
 
@@ -1147,7 +1168,8 @@ public class PetsBuilder
             map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, -1))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("LEGENDARY", Pair.of(Property.build("[0]"), Property.build("[0.09]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0]"), Property.build("[0.1]")));
+            map.put("MYTHIC", Pair.of(Property.build("[0]"), Property.build("[0.5]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -1166,6 +1188,12 @@ public class PetsBuilder
                 list.add("§6Jerry");
                 list.add("§7Actually adds §c5 damage §7to");
                 list.add("§7the Aspect of the Jerry");
+            }));
+            map.put("MYTHIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Jerry");
+                list.add("§7Tiny chance to find Jerry");
+                list.add("§7Candies when killing mobs");
             }));
         })),
 
@@ -1292,65 +1320,278 @@ public class PetsBuilder
 
     enum HeldItem
     {
-        PET_ITEM_ALL_SKILLS_BOOST_COMMON(formatName("ALL_SKILLS_BOOST"), EnumChatFormatting.WHITE),
-        PET_ITEM_BIG_TEETH_COMMON(formatName("BIG_TEETH"), EnumChatFormatting.WHITE),
-        PET_ITEM_IRON_CLAWS_COMMON(formatName("IRON_CLAWS"), EnumChatFormatting.WHITE),
-        PET_ITEM_SHARPENED_CLAWS_UNCOMMON(formatName("SHARPENED_CLAWS"), EnumChatFormatting.GREEN),
-        PET_ITEM_HARDENED_SCALES_UNCOMMON(formatName("HARDENED_SCALES"), EnumChatFormatting.GREEN),
-        PET_ITEM_BUBBLEGUM(EnumChatFormatting.BLUE),
-        PET_ITEM_LUCKY_CLOVER(EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_TEXTBOOK(EnumChatFormatting.GOLD),
-        PET_ITEM_SADDLE(EnumChatFormatting.GREEN),
-        PET_ITEM_EXP_SHARE(EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_TIER_BOOST(EnumChatFormatting.GOLD),
-        PET_ITEM_COMBAT_SKILL_BOOST_COMMON(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.WHITE),
-        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.GREEN),
-        PET_ITEM_COMBAT_SKILL_BOOST_RARE(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.BLUE),
-        PET_ITEM_COMBAT_SKILL_BOOST_EPIC(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_FISHING_SKILL_BOOST_COMMON(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.WHITE),
-        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.GREEN),
-        PET_ITEM_FISHING_SKILL_BOOST_RARE(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.BLUE),
-        PET_ITEM_FISHING_SKILL_BOOST_EPIC(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_FORAGING_SKILL_BOOST_COMMON(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.WHITE),
-        PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.GREEN),
-        PET_ITEM_FORAGING_SKILL_BOOST_RARE(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.BLUE),
-        PET_ITEM_FORAGING_SKILL_BOOST_EPIC(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_MINING_SKILL_BOOST_COMMON(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.WHITE),
-        PET_ITEM_MINING_SKILL_BOOST_UNCOMMON(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.GREEN),
-        PET_ITEM_MINING_SKILL_BOOST_RARE(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.BLUE),
-        PET_ITEM_MINING_SKILL_BOOST_EPIC(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_FARMING_SKILL_BOOST_COMMON(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.WHITE),
-        PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.GREEN),
-        PET_ITEM_FARMING_SKILL_BOOST_RARE(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.BLUE),
-        PET_ITEM_FARMING_SKILL_BOOST_EPIC(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE),
-        REINFORCED_SCALES(EnumChatFormatting.BLUE),
-        GOLD_CLAWS(EnumChatFormatting.GREEN),
-        ALL_SKILLS_SUPER_BOOST(EnumChatFormatting.WHITE),
-        BIGGER_TEETH(EnumChatFormatting.GREEN),
-        SERRATED_CLAWS(EnumChatFormatting.BLUE),
-        WASHED_UP_SOUVENIR("Washed-up Souvenir", EnumChatFormatting.GOLD),
-        ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE),
-        CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE),
-        DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE),
-        MINOS_RELIC(EnumChatFormatting.DARK_PURPLE),
-        PET_ITEM_SPOOKY_CUPCAKE(EnumChatFormatting.GREEN),
-        PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD),
-        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", EnumChatFormatting.GOLD),
-        REAPER_GEM(EnumChatFormatting.GOLD),
-        PET_ITEM_FLYING_PIG(EnumChatFormatting.GREEN);
+        PET_ITEM_ALL_SKILLS_BOOST_COMMON(formatName("ALL_SKILLS_BOOST"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a10% §7pet exp");
+            list.add("§7for all skills.");
+        })),
+        PET_ITEM_BIG_TEETH_COMMON(formatName("BIG_TEETH"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §9☣ Crit Chance §7by");
+            list.add("§a5");
+        }), new Stats[] {Stats.build("crit_chance", Property.build(5, 0))}),
+        PET_ITEM_IRON_CLAWS_COMMON(formatName("IRON_CLAWS"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases the pet's §9☠ Crit");
+            list.add("§9Damage §7by §a40% §7and §9☣ Crit");
+            list.add("§9Chance §7by §a40%");
+        }), new Stats[] {Stats.build("crit_damage", Property.build(40, 0, true)), Stats.build("crit_chance", Property.build(40, 0, true))}),
+        PET_ITEM_SHARPENED_CLAWS_UNCOMMON(formatName("SHARPENED_CLAWS"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §9☠ Crit Damage §7by");
+            list.add("§a15");
+        }), new Stats[] {Stats.build("crit_damage", Property.build(15, 0))}),
+        PET_ITEM_HARDENED_SCALES_UNCOMMON(formatName("HARDENED_SCALES"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §a❈ Defense §7by");
+            list.add("§a25");
+        }), new Stats[] {Stats.build("defense", Property.build(25, 0))}),
+        PET_ITEM_BUBBLEGUM(EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Your pet fuses its power");
+            list.add("§7with placed §aOrbs §7to");
+            list.add("§7give them §a2x §7duration.");
+        })),
+        PET_ITEM_LUCKY_CLOVER(EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §b✯ Magic Find");
+            list.add("§7by §a7.");
+        }), new Stats[] {Stats.build("magic_find", Property.build(7, 0))}),
+        PET_ITEM_TEXTBOOK(EnumChatFormatting.GOLD, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases the pet's §b✎");
+            list.add("§bIntelligence §7by §a100%");
+        }), new Stats[] {Stats.build("intelligence", Property.build(100, 0))}),
+        PET_ITEM_SADDLE(EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases horse speed by");
+            list.add("§a50% §7and jump boost by");
+            list.add("§a100%");
+        })),
+        PET_ITEM_EXP_SHARE(EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7While unequipped this pet");
+            list.add("§7gains §a25% §7of the");
+            list.add("§7equipped pet's xp, this is");
+            list.add("§7split between all pets");
+            list.add("§7holding the item.");
+        })),
+        PET_ITEM_TIER_BOOST(EnumChatFormatting.GOLD, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Boosts the §ararity §7of your");
+            list.add("§7pet by 1 tier!");
+        })),
+        PET_ITEM_COMBAT_SKILL_BOOST_COMMON(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a20% §7pet exp");
+            list.add("§7for Combat.");
+        })),
+        PET_ITEM_COMBAT_SKILL_BOOST_UNCOMMON(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a30% §7pet exp");
+            list.add("§7for Combat.");
+        })),
+        PET_ITEM_COMBAT_SKILL_BOOST_RARE(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a40% §7pet exp");
+            list.add("§7for Combat.");
+        })),
+        PET_ITEM_COMBAT_SKILL_BOOST_EPIC(formatName("COMBAT_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a50% §7pet exp");
+            list.add("§7for Combat.");
+        })),
+        PET_ITEM_FISHING_SKILL_BOOST_COMMON(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a20% §7pet exp");
+            list.add("§7for Fishing.");
+        })),
+        PET_ITEM_FISHING_SKILL_BOOST_UNCOMMON(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a30% §7pet exp");
+            list.add("§7for Fishing.");
+        })),
+        PET_ITEM_FISHING_SKILL_BOOST_RARE(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a40% §7pet exp");
+            list.add("§7for Fishing.");
+        })),
+        PET_ITEM_FISHING_SKILL_BOOST_EPIC(formatName("FISHING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a50% §7pet exp");
+            list.add("§7for Fishing.");
+        })),
+        PET_ITEM_FORAGING_SKILL_BOOST_COMMON(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a20% §7pet exp");
+            list.add("§7for Foraging.");
+        })),
+        PET_ITEM_FORAGING_SKILL_BOOST_UNCOMMON(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a30% §7pet exp");
+            list.add("§7for Foraging.");
+        })),
+        PET_ITEM_FORAGING_SKILL_BOOST_RARE(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a40% §7pet exp");
+            list.add("§7for Foraging.");
+        })),
+        PET_ITEM_FORAGING_SKILL_BOOST_EPIC(formatName("FORAGING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a50% §7pet exp");
+            list.add("§7for Foraging.");
+        })),
+        PET_ITEM_MINING_SKILL_BOOST_COMMON(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a20% §7pet exp");
+            list.add("§7for Mining.");
+        })),
+        PET_ITEM_MINING_SKILL_BOOST_UNCOMMON(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a30% §7pet exp");
+            list.add("§7for Mining.");
+        })),
+        PET_ITEM_MINING_SKILL_BOOST_RARE(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a40% §7pet exp");
+            list.add("§7for Mining.");
+        })),
+        PET_ITEM_MINING_SKILL_BOOST_EPIC(formatName("MINING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a50% §7pet exp");
+            list.add("§7for Mining.");
+        })),
+        PET_ITEM_FARMING_SKILL_BOOST_COMMON(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a20% §7pet exp");
+            list.add("§7for Farming.");
+        })),
+        PET_ITEM_FARMING_SKILL_BOOST_UNCOMMON(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a30% §7pet exp");
+            list.add("§7for Farming.");
+        })),
+        PET_ITEM_FARMING_SKILL_BOOST_RARE(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a40% §7pet exp");
+            list.add("§7for Farming.");
+        })),
+        PET_ITEM_FARMING_SKILL_BOOST_EPIC(formatName("FARMING_SKILL_BOOST"), EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a50% §7pet exp");
+            list.add("§7for Farming.");
+        })),
+        REINFORCED_SCALES(EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §a❈ Defense §7by");
+            list.add("§a40");
+        }), new Stats[] {Stats.build("defense", Property.build(40, 0))}),
+        GOLD_CLAWS(EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases the pet's §9☠ Crit");
+            list.add("§9Damage §7by §a50% §7and §9☣ Crit");
+            list.add("§9Chance §7by §a50%");
+        }), new Stats[] {Stats.build("crit_damage", Property.build(50, 0, true)), Stats.build("crit_chance", Property.build(50, 0, true))}),
+        ALL_SKILLS_SUPER_BOOST(EnumChatFormatting.WHITE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gives +§a20% §7pet exp for all");
+            list.add("§7skills");
+        })),
+        BIGGER_TEETH(EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §9☣ Crit Chance §7by");
+            list.add("§a10");
+        }), new Stats[] {Stats.build("crit_chance", Property.build(10, 0))}),
+        SERRATED_CLAWS(EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §9☠ Crit Damage §7by");
+            list.add("§a25");
+        }), new Stats[] {Stats.build("crit_damage", Property.build(25, 0))}),
+        WASHED_UP_SOUVENIR("Washed-up Souvenir", EnumChatFormatting.GOLD, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §3α Sea");
+            list.add("§3Creature Chance §7by §a5.");
+        }), new Stats[] {Stats.build("sea_creature_chance", Property.build(5, 0))}),
+        ANTIQUE_REMEDIES(EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases the pet's §c❁");
+            list.add("§cStrength §7by §a80%");
+        }), new Stats[] {Stats.build("strength", Property.build(80, 0, true))}),
+        CROCHET_TIGER_PLUSHIE(EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §e⚔ Bonus");
+            list.add("§eAttack Speed §7by §a35.");
+        }), new Stats[] {Stats.build("attack_speed", Property.build(35, 0))}),
+        DWARF_TURTLE_SHELMET(EnumChatFormatting.BLUE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Makes the pet's owner");
+            list.add("§7immune to knockback.");
+        })),
+        MINOS_RELIC(EnumChatFormatting.DARK_PURPLE, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases all pet stats");
+            list.add("§7by §a33.3%§7.");
+        })),
+        PET_ITEM_SPOOKY_CUPCAKE(EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Increases §c❁ Strength");
+            list.add("§7by §a30 §7and §f✦ Speed");
+            list.add("§7by §a20.");
+        }), new Stats[] {Stats.build("strength", Property.build(30, 0)), Stats.build("speed", Property.build(20, 0))}),
+        PET_ITEM_VAMPIRE_FANG(EnumChatFormatting.GOLD, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Upgrades a Bat pet from");
+            list.add("§6Legendary §7to §dMythic");
+            list.add("§7adding a bonus perk and");
+            list.add("§7bonus stats!");
+        })),
+        PET_ITEM_TOY_JERRY("Jerry 3D Glasses", EnumChatFormatting.GOLD, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Upgrades a Jerry pet from");
+            list.add("§6Legendary §7to §dMythic");
+            list.add("§7and granting it a new perk!");
+        })),
+        REAPER_GEM(EnumChatFormatting.GOLD, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Gain §c8⫽ Ferocity §7for 5s on");
+            list.add("§7kill");
+        })),
+        PET_ITEM_FLYING_PIG(EnumChatFormatting.GREEN, make(Lists.newLinkedList(), list ->
+        {
+            list.add("§7Grants your pig pet the");
+            list.add("§7ability to fly while on");
+            list.add("§7your private island! You");
+            list.add("§7also don't need to hold a");
+            list.add("§7carrot on a stick to");
+            list.add("§7control your pig.");
+        }));
 
         String altName;
         EnumChatFormatting color;
+        List<String> lore;
+        Stats[] stats;
 
-        HeldItem(EnumChatFormatting color)
+        HeldItem(EnumChatFormatting color, List<String> lore)
         {
-            this(null, color);
+            this(null, color, lore, null);
         }
 
-        HeldItem(String altName, EnumChatFormatting color)
+        HeldItem(EnumChatFormatting color, List<String> lore, Stats[] stats)
+        {
+            this(null, color, lore, stats);
+        }
+
+        HeldItem(String altName, EnumChatFormatting color, List<String> lore)
+        {
+            this(altName, color, lore, null);
+        }
+
+        HeldItem(String altName, EnumChatFormatting color, List<String> lore, Stats[] stats)
         {
             this.altName = altName;
             this.color = color;
+            this.lore = lore;
+            this.stats = stats;
         }
 
         boolean isUpgradeToNextRarity()
