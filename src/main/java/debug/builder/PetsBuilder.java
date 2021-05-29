@@ -215,7 +215,7 @@ public class PetsBuilder
                     String statType = stats.type;
                     Property statValue = stats.prop;
                     Map<String, Object> realstats = Maps.newLinkedHashMap();
-                    realstats.put("value", statValue.base);
+                    realstats.put("base", statValue.base);
 
                     if (statValue.percent)
                     {

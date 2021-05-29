@@ -19,7 +19,7 @@
             ],
             "stats": {
                 "strength": {
-                    "value": 80.0,
+                    "base": 80.0,
                     "isPercent": true
                 }
             }
@@ -34,7 +34,7 @@
             ],
             "stats": {
                 "crit_chance": {
-                    "value": 10.0
+                    "base": 10.0
                 }
             }
         },
@@ -48,7 +48,7 @@
             ],
             "stats": {
                 "attack_speed": {
-                    "value": 35.0
+                    "base": 35.0
                 }
             }
         },
@@ -72,11 +72,11 @@
             ],
             "stats": {
                 "crit_damage": {
-                    "value": 50.0,
+                    "base": 50.0,
                     "isPercent": true
                 },
                 "crit_chance": {
-                    "value": 50.0,
+                    "base": 50.0,
                     "isPercent": true
                 }
             }
@@ -109,7 +109,7 @@
             ],
             "stats": {
                 "crit_chance": {
-                    "value": 5.0
+                    "base": 5.0
                 }
             }
         },
@@ -302,7 +302,7 @@
             ],
             "stats": {
                 "defense": {
-                    "value": 25.0
+                    "base": 25.0
                 }
             }
         },
@@ -317,11 +317,11 @@
             ],
             "stats": {
                 "crit_damage": {
-                    "value": 40.0,
+                    "base": 40.0,
                     "isPercent": true
                 },
                 "crit_chance": {
-                    "value": 40.0,
+                    "base": 40.0,
                     "isPercent": true
                 }
             }
@@ -336,7 +336,7 @@
             ],
             "stats": {
                 "magic_find": {
-                    "value": 7.0
+                    "base": 7.0
                 }
             }
         },
@@ -396,7 +396,7 @@
             ],
             "stats": {
                 "crit_damage": {
-                    "value": 15.0
+                    "base": 15.0
                 }
             }
         },
@@ -411,10 +411,10 @@
             ],
             "stats": {
                 "strength": {
-                    "value": 30.0
+                    "base": 30.0
                 },
                 "speed": {
-                    "value": 20.0
+                    "base": 20.0
                 }
             }
         },
@@ -428,7 +428,7 @@
             ],
             "stats": {
                 "intelligence": {
-                    "value": 100.0
+                    "base": 100.0
                 }
             }
         },
@@ -484,7 +484,7 @@
             ],
             "stats": {
                 "defense": {
-                    "value": 40.0
+                    "base": 40.0
                 }
             }
         },
@@ -498,7 +498,7 @@
             ],
             "stats": {
                 "crit_damage": {
-                    "value": 25.0
+                    "base": 25.0
                 }
             }
         },
@@ -512,7 +512,7 @@
             ],
             "stats": {
                 "sea_creature_chance": {
-                    "value": 5.0
+                    "base": 5.0
                 }
             }
         }
