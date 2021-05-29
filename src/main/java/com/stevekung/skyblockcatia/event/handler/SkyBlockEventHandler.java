@@ -148,13 +148,38 @@ public class SkyBlockEventHandler
                         }
                     }
                 }
+                if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F8))
+                {
+                    if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer)
+                    {
+                        GuiContainer container = (GuiContainer)this.mc.currentScreen;
+                        Slot slot = container.getSlotUnderMouse();
+
+                        if (slot != null && slot.getHasStack())
+                        {
+                            ItemStack itemStack = slot.getStack();
+                            StringBuilder builder = new StringBuilder();
+
+                            for (int i = 0; i < itemStack.getTagCompound().getCompoundTag("display").getTagList("Lore", 8).tagCount(); i++)
+                            {
+                                String test = itemStack.getTagCompound().getCompoundTag("display").getTagList("Lore", 8).getStringTagAt(i);
+                                builder.append("list.add(\"");
+                                builder.append(test);
+                                builder.append("\");");
+                                builder.append("\n");
+                            }
+                            GuiScreen.setClipboardString(builder.toString());
+                            ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied lore data!");
+                        }
+                    }
+                }
 
                 for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : GuiSkyBlockProfileSelector.PROFILE_CACHE.entrySet())
                 {
                     long now = System.currentTimeMillis();
                     long checkedTime = entry.getValue().getLeft();
 
-                    if (now - checkedTime > 120000D)
+                    if (now - checkedTime > 180000D)
                     {
                         GuiSkyBlockProfileSelector.PROFILE_CACHE.remove(entry.getKey());
                     }
@@ -164,7 +189,7 @@ public class SkyBlockEventHandler
                     long now = System.currentTimeMillis();
                     long checkedTime = entry.getValue().getLeft();
 
-                    if (now - checkedTime > 120000D)
+                    if (now - checkedTime > 180000D)
                     {
                         GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.remove(entry.getKey());
                     }

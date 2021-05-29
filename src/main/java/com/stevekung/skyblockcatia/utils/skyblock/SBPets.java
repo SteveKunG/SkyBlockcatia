@@ -173,13 +173,19 @@ public class SBPets
         private final String skill;
         private final String uuid;
         private final String texture;
+        private final Map<String, Stats> stats;
+        private final Map<String, StatsPropertyArray> statsLore;
+        private final Map<String, List<String>> lore;
 
-        public Type(String type, String skill, String uuid, String texture)
+        public Type(String type, String skill, String uuid, String texture, Map<String, Stats> stats, Map<String, StatsPropertyArray> statsLore, Map<String, List<String>> lore)
         {
             this.type = type;
             this.skill = skill;
             this.uuid = uuid;
             this.texture = texture;
+            this.stats = stats;
+            this.statsLore = statsLore;
+            this.lore = lore;
         }
 
         public String getType()
@@ -192,9 +198,178 @@ public class SBPets
             return SBSkills.Type.byName(this.skill);
         }
 
+        public Map<String, Stats> getStats()
+        {
+            return this.stats;
+        }
+
+        public Map<String, StatsPropertyArray> getStatsLore()
+        {
+            return this.statsLore;
+        }
+
+        public Map<String, List<String>> getLore()
+        {
+            return this.lore;
+        }
+
         public ItemStack getPetItem()
         {
             return RenderUtils.getSkullItemStack(this.uuid, this.texture);
+        }
+    }
+
+    public class Stats
+    {
+        private final StatsProperty health;
+        private final StatsProperty strength;
+        @SerializedName("crit_damage")
+        private final StatsProperty critDamage;
+        @SerializedName("crit_chance")
+        private final StatsProperty critChance;
+        @SerializedName("attack_speed")
+        private final StatsProperty attackSpeed;
+        private final StatsProperty ferocity;
+        private final StatsProperty defense;
+        private final StatsProperty speed;
+        private final StatsProperty intelligence;
+        @SerializedName("sea_creature_chance")
+        private final StatsProperty seaCreatureChance;
+        @SerializedName("magic_find")
+        private final StatsProperty magicFind;
+
+        public Stats(StatsProperty health, StatsProperty strength, StatsProperty critDamage, StatsProperty critChance, StatsProperty attackSpeed, StatsProperty ferocity, StatsProperty defense, StatsProperty speed, StatsProperty intelligence, StatsProperty seaCreatureChance, StatsProperty magicFind)
+        {
+            this.health = health;
+            this.strength = strength;
+            this.critDamage = critDamage;
+            this.critChance = critChance;
+            this.attackSpeed = attackSpeed;
+            this.ferocity = ferocity;
+            this.defense = defense;
+            this.speed = speed;
+            this.intelligence = intelligence;
+            this.seaCreatureChance = seaCreatureChance;
+            this.magicFind = magicFind;
+        }
+
+        public StatsProperty getHealth()
+        {
+            return this.health;
+        }
+
+        public StatsProperty getStrength()
+        {
+            return this.strength;
+        }
+
+        public StatsProperty getCritDamage()
+        {
+            return this.critDamage;
+        }
+
+        public StatsProperty getCritChance()
+        {
+            return this.critChance;
+        }
+
+        public StatsProperty getFerocity()
+        {
+            return this.ferocity;
+        }
+
+        public StatsProperty getAttackSpeed()
+        {
+            return this.attackSpeed;
+        }
+
+        public StatsProperty getSpeed()
+        {
+            return this.speed;
+        }
+
+        public StatsProperty getDefense()
+        {
+            return this.defense;
+        }
+
+        public StatsProperty getIntelligence()
+        {
+            return this.intelligence;
+        }
+
+        public StatsProperty getSeaCreatureChance()
+        {
+            return this.seaCreatureChance;
+        }
+
+        public StatsProperty getMagicFind()
+        {
+            return this.magicFind;
+        }
+    }
+
+    public class StatsProperty
+    {
+        private final double base;
+        private final double multiply;
+        @SerializedName("isPercent")
+        private final boolean percent;
+
+        public StatsProperty(double base, double multiply, boolean percent)
+        {
+            this.base = base;
+            this.multiply = multiply;
+            this.percent = percent;
+        }
+
+        public int getValue(int level)
+        {
+            return (int)(this.base + this.multiply * level);
+        }
+
+        public String getString(String type, int level)
+        {
+            int value = this.getValue(level);
+            return EnumChatFormatting.RESET.toString() + EnumChatFormatting.GRAY + type + ": " + EnumChatFormatting.GREEN + (value < 0 ? "" : "+") + value + (this.percent ? "%" : "");
+        }
+    }
+
+    public class StatsPropertyArray
+    {
+        private final double[] base;
+        private final double[] multiply;
+        @SerializedName("rounding_mode")
+        private final String roundingMode;
+        @SerializedName("display_mode")
+        private final String displayMode;
+
+        public StatsPropertyArray(double[] base, double[] multiply, String roundingMode, String displayMode)
+        {
+            this.base = base;
+            this.multiply = multiply;
+            this.roundingMode = roundingMode;
+            this.displayMode = displayMode;
+        }
+
+        public double[] getBase()
+        {
+            return this.base;
+        }
+
+        public double[] getMultiply()
+        {
+            return this.multiply;
+        }
+
+        public String getRoundingMode()
+        {
+            return this.roundingMode;
+        }
+
+        public String getDisplayMode()
+        {
+            return this.displayMode;
         }
     }
 

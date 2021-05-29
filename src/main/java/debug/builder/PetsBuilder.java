@@ -2,6 +2,7 @@ package debug.builder;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -154,6 +155,15 @@ public class PetsBuilder
 
                     realstats.put("base", baseList);
                     realstats.put("multiply", multiplyList);
+
+                    if (lore.getValue().getRight().roundingMode != null)
+                    {
+                        realstats.put("rounding_mode", lore.getValue().getRight().roundingMode.name());
+                    }
+                    if (lore.getValue().getRight().displayMode != null)
+                    {
+                        realstats.put("display_mode", lore.getValue().getRight().displayMode);
+                    }
                     statsLore.put(lore.getKey(), realstats);
                 }
                 prop.put("statsLore", statsLore);
@@ -244,11 +254,11 @@ public class PetsBuilder
         maps.put("leveling", levels);
 
         File file = new File("M:/Modding/SkyBlockcatia/SkyblockData", "pets.json");
-                File file2 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.8.9/src/main/resources/assets/skyblockcatia/api", "pets.json");
+        File file2 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.8.9/src/main/resources/assets/skyblockcatia/api", "pets.json");
         //        File file3 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.16.5_architectury/common/src/main/resources/assets/skyblockcatia/api", "pets.json");
         //
         Helper.writeFile(maps, file);
-                Helper.writeFile(maps, file2);
+        Helper.writeFile(maps, file2);
         //        Helper.writeFile(maps, file3);
     }
 
@@ -275,6 +285,12 @@ public class PetsBuilder
         double multiply;
         boolean percent;
 
+        Property(double base, double multiply)
+        {
+            this.base = base;
+            this.multiply = multiply;
+        }
+
         Property(double base, double multiply, boolean percent)
         {
             this.base = base;
@@ -283,10 +299,24 @@ public class PetsBuilder
         }
 
         String doubleList;
+        String displayMode;
+        RoundingMode roundingMode;
 
         Property(String doubleList)
         {
             this.doubleList = doubleList;
+        }
+
+        Property(String doubleList, String displayMode)
+        {
+            this.doubleList = doubleList;
+            this.displayMode = displayMode;
+        }
+
+        Property(String doubleList, RoundingMode roundingMode)
+        {
+            this.doubleList = doubleList;
+            this.roundingMode = roundingMode;
         }
 
         static Property build(double base, double multiply)
@@ -302,6 +332,16 @@ public class PetsBuilder
         static Property build(String doubleList)
         {
             return new Property(doubleList);
+        }
+
+        static Property build(String doubleList, String displayMode)
+        {
+            return new Property(doubleList, displayMode);
+        }
+
+        static Property build(String doubleList, RoundingMode roundingMode)
+        {
+            return new Property(doubleList, roundingMode);
         }
     }
 
@@ -340,12 +380,12 @@ public class PetsBuilder
             map.put("ALL", new Stats[] {Stats.build("speed", Property.build(0, 0.05)), Stats.build("intelligence", Property.build(0, 1))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.1]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.1]")));
-            map.put("RARE", Pair.of(Property.build("[0.2, 0.3, 0]"), Property.build("[0.2, 0.3, 0.5]")));
-            map.put("EPIC", Pair.of(Property.build("[0.2, 0.3, 0]"), Property.build("[0.2, 0.3, 0.5]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 0.3, 0, 0]"), Property.build("[0.2, 0.3, 0.5, 0.5]")));
-            map.put("MYTHIC", Pair.of(Property.build("[0.2, 0.3, 0, 0, 0]"), Property.build("[0.2, 0.3, 0.5, 0.5, 0.25]")));
+            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0.1]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0]"), Property.build("[0.1]")));
+            map.put("RARE", Pair.of(Property.build("[0, 0, 0]"), Property.build("[0.2, 0.3, 0.5]")));
+            map.put("EPIC", Pair.of(Property.build("[0, 0, 0]"), Property.build("[0.2, 0.3, 0.5]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0, 0, 0, 0]"), Property.build("[0.2, 0.3, 0.5, 0.5]")));
+            map.put("MYTHIC", Pair.of(Property.build("[0, 0, 0, 0, 0]"), Property.build("[0.2, 0.3, 0.5, 0.5, 0.25]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -381,11 +421,11 @@ public class PetsBuilder
             map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, 0.5)), Stats.build("speed", Property.build(0, 0.1)), Stats.build("strength", Property.build(5, 0.25))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[1, 1]"), Property.build("[0.03, 0.03]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[1, 1]"), Property.build("[0.05, 0.05]")));
-            map.put("RARE", Pair.of(Property.build("[1.1, 1.1, 0.5]"), Property.build("[0.1, 0.08, 0.005]")));
-            map.put("EPIC", Pair.of(Property.build("[1.1, 1.1, 1]"), Property.build("[0.15, 0.12, 1]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[1.2, 1.1, 1, 5.2]"), Property.build("[0.2, 0.15, 1, 0.25]")));
+            map.put("COMMON", Pair.of(Property.build("[1, 1]"), Property.build("[0.02, 0.02]", RoundingMode.DOWN)));
+            map.put("UNCOMMON", Pair.of(Property.build("[1, 1]"), Property.build("[0.04, 0.04]", RoundingMode.DOWN)));
+            map.put("RARE", Pair.of(Property.build("[1.1, 1.1, 0.5]"), Property.build("[0.089, 0.069, 0.995]", RoundingMode.DOWN)));
+            map.put("EPIC", Pair.of(Property.build("[1.1, 1.1, 0]"), Property.build("[0.139, 0.109, 1]", RoundingMode.DOWN)));
+            map.put("LEGENDARY", Pair.of(Property.build("[1.2, 1.1, 0, 5.2]"), Property.build("[0.188, 0.139, 1, 0.198]", RoundingMode.DOWN)));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -415,7 +455,7 @@ public class PetsBuilder
             map.put("ALL", new Stats[] {Stats.build("speed", Property.build(0, 0.25)), Stats.build("intelligence", Property.build(0, 1))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("LEGENDARY", Pair.of(Property.build("[1, 0.1, 0.1]"), Property.build("[1, 0.15, 0.15]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0, 0.1, 0.1]"), Property.build("[1, 0.149, 0.149]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
@@ -437,7 +477,7 @@ public class PetsBuilder
             map.put("ALL", new Stats[] {Stats.build("defense", Property.build(10, 0.2)), Stats.build("intelligence", Property.build(0, 1))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("ALL", Pair.of(Property.build("[0.2, 0.4]"), Property.build("[0.2, 0.4]")));
+            map.put("ALL", Pair.of(Property.build("[0.2, 0.4]"), Property.build("[0.2, 0.4]", "DISPLAY_AT_LEVEL_1")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("EPIC", make(Lists.newLinkedList(), list ->
@@ -457,17 +497,17 @@ public class PetsBuilder
                 list.add("§7books");
             }));
         })),
-        
+
         BLUE_WHALE("FISHING", "47c8ba46-82ac-3c09-b511-5502860eb012", "dab779bbccc849f88273d844e8ca2f3a67a1699cb216c0a11b44326ce2cc20", make(Maps.newHashMap(), map ->
         {
             map.put("ALL", new Stats[] {Stats.build("health", Property.build(0, 2))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[0.5]"), Property.build("[0.5]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[1]"), Property.build("[1]")));
-            map.put("RARE", Pair.of(Property.build("[1.5, 0]"), Property.build("[1.5, 0.03]")));
+            map.put("COMMON", Pair.of(Property.build("[0.5]"), Property.build("[0.495]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0]"), Property.build("[1]")));
+            map.put("RARE", Pair.of(Property.build("[1.5, 0]"), Property.build("[1.485, 0.03]")));
             map.put("EPIC", Pair.of(Property.build("[2, 0]"), Property.build("[2, 0.03]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[2.5, 0, 0.2]"), Property.build("[2.5, 0.03, 0.2]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[2.5, 0, 0.2]"), Property.build("[2.475, 0.03, 0.198]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -487,17 +527,17 @@ public class PetsBuilder
                 list.add("§7Gain §c+{2}% Max §c❤ Health");
             }));
         })),
-        
+
         CHICKEN("FARMING", "635fdfb8-3c52-433e-87dc-70a9406c5ff0", "7f37d524c3eed171ce149887ea1dee4ed399904727d521865688ece3bac75e", make(Maps.newHashMap(), map ->
         {
             map.put("ALL", new Stats[] {Stats.build("health", Property.build(0, 2))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[0.3]"), Property.build("[0.3]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[0.4]"), Property.build("[0.4]")));
-            map.put("RARE", Pair.of(Property.build("[0.4, 0.8]"), Property.build("[0.4, 0.8]")));
-            map.put("EPIC", Pair.of(Property.build("[0.5, 1]"), Property.build("[0.5, 1]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[0.5, 1, 0.3]"), Property.build("[0.5, 1, 0.3]")));
+            map.put("COMMON", Pair.of(Property.build("[0.3]"), Property.build("[0.3]", "DISPLAY_AT_LEVEL_1")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.4]"), Property.build("[0.4]", "DISPLAY_AT_LEVEL_1")));
+            map.put("RARE", Pair.of(Property.build("[0.4, 0.8]"), Property.build("[0.4, 0.8]", "DISPLAY_AT_LEVEL_1")));
+            map.put("EPIC", Pair.of(Property.build("[0.5, 0]"), Property.build("[0.5, 1]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.5, 0, 0.3]"), Property.build("[0.5, 1, 0.3]", "DISPLAY_AT_LEVEL_1")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -520,16 +560,17 @@ public class PetsBuilder
             }));
         })),
 
+        //TODO Unmatched stats, first ability
         DOLPHIN("FISHING", "48f53ffe-a3f0-3280-aac0-11cc0d6121f4", "cefe7d803a45aa2af1993df2544a28df849a762663719bfefc58bf389ab7f5", make(Maps.newHashMap(), map ->
         {
             map.put("ALL", new Stats[] {Stats.build("sea_creature_chance", Property.build(0, 0.05, true)), Stats.build("intelligence", Property.build(0, 1))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0.03]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[0]"), Property.build("[0.04]")));
-            map.put("RARE", Pair.of(Property.build("[0, 0.1]"), Property.build("[0.04, 0.07]")));
-            map.put("EPIC", Pair.of(Property.build("[0.1, 0.1]"), Property.build("[0.05, 0.1]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[0.1, 0.1]"), Property.build("[0.05, 0.1]")));
+            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0.03]")));//15
+            map.put("UNCOMMON", Pair.of(Property.build("[0]"), Property.build("[0.04]")));//20
+            map.put("RARE", Pair.of(Property.build("[0, 0.1]"), Property.build("[0.04, 0.07]", "DISPLAY_AT_LEVEL_1")));//20
+            map.put("EPIC", Pair.of(Property.build("[0.1, 0.1]"), Property.build("[0.1, 0.1]", "DISPLAY_AT_LEVEL_1")));//25
+            map.put("LEGENDARY", Pair.of(Property.build("[0.1, 0.1]"), Property.build("[0.1, 0.1]", "DISPLAY_AT_LEVEL_1")));//25
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -537,7 +578,7 @@ public class PetsBuilder
                 list.add("§6Pod Tactics");
                 list.add("§7Increases your fishing speed");
                 list.add("§7by §a{0}% §7for each player within");
-                list.add("§710 blocks up to §a25%");
+                list.add("§710 blocks up to §a{A}%");//TODO Replace alphabet marker with characters
             }));
             map.put("RARE", make(Lists.newLinkedList(), list ->
             {
@@ -558,11 +599,11 @@ public class PetsBuilder
             map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, 0.75)), Stats.build("health", Property.build(0, 1))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.1]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.15]")));
-            map.put("RARE", Pair.of(Property.build("[0.1, 0]"), Property.build("[0.15, 0.01]")));
-            map.put("EPIC", Pair.of(Property.build("[0.2, 0]"), Property.build("[0.2, 0.01]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 0, 1.8]"), Property.build("[0.2, 0.01, 1.8]")));
+            map.put("COMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.099]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.149]")));
+            map.put("RARE", Pair.of(Property.build("[0.1, 0]"), Property.build("[0.149, 0.01]")));
+            map.put("EPIC", Pair.of(Property.build("[0.2, 0]"), Property.build("[0.198, 0.01]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 0, 1.8]"), Property.build("[0.198, 0.01, 1.782]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -612,17 +653,17 @@ public class PetsBuilder
                 list.add("§7Increases most stats by §a{3}%");
             }));
         })),
-        
+
         ENDERMAN("COMBAT", "fb3c5e13-61e9-4584-99db-9f9ef9fb834d", "6eab75eaa5c9f2c43a0d23cfdce35f4df632e9815001850377385f7b2f039ce1", make(Maps.newHashMap(), map ->
         {
             map.put("ALL", new Stats[] {Stats.build("crit_damage", Property.build(0, 0.75, true))});
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("COMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.1]")));
-            map.put("UNCOMMON", Pair.of(Property.build("[0.2]"), Property.build("[0.2]")));
-            map.put("RARE", Pair.of(Property.build("[0.2, 0.4]"), Property.build("[0.2, 0.4]")));
-            map.put("EPIC", Pair.of(Property.build("[0.3, 0.5]"), Property.build("[0.3, 0.5]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[0.3, 0.5, 0.2]"), Property.build("[0.3, 0.5, 0.25]")));
+            map.put("COMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.1]", "DISPLAY_AT_LEVEL_1")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.2]"), Property.build("[0.2]", "DISPLAY_AT_LEVEL_1")));
+            map.put("RARE", Pair.of(Property.build("[0.2, 0.4]"), Property.build("[0.2, 0.4]", "DISPLAY_AT_LEVEL_1")));
+            map.put("EPIC", Pair.of(Property.build("[0.3, 0.5]"), Property.build("[0.3, 0.5]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.3, 0.5, 0.2]"), Property.build("[0.3, 0.5, 0.2]", "DISPLAY_AT_LEVEL_1")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -645,21 +686,556 @@ public class PetsBuilder
                 list.add("§7special Zealot by §a{2}%");
             }));
         })),
-        
-        ENDERMITE("MINING", "3302cdfe-6879-4659-ab0b-587b2cdb98e6", "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855"),
-        FLYING_FISH("FISHING", "fd4a969b-c84c-4b59-979d-55eca6ec5f0e", "40cd71fbbbbb66c7baf7881f415c64fa84f6504958a57ccdb8589252647ea"),
-        GHOUL("COMBAT", "3fbb2c84-3693-4dcd-bc49-3b54ca6fa8cc", "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b"),
-        GIRAFFE("FORAGING", "11216f12-2843-31c8-bf8a-b8535e6c6dce", "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9"),
-        GOLEM("COMBAT", "623fa763-a8d1-36c6-8dcf-09f100723d04", "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714"),
-        GRANDMA_WOLF("COMBAT", "7f1b261f-0595-4160-9b6a-396436f9cc5d", "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884"),
-        GRIFFIN("COMBAT", "11e506b9-cb3d-43e6-89d2-9e1575944498", "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8"),
-        GUARDIAN("COMBAT", "26508276-c01a-32a9-9201-7dae1724954e", "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d"),
-        HORSE("COMBAT", "6d310633-c175-4b47-92ab-778287bb7a5e", "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226"),
-        HOUND("COMBAT", "802a167c-cbcd-3a1f-becd-5b1a25a4cf15", "b7c8bef6beb77e29af8627ecdc38d86aa2fea7ccd163dc73c00f9f258f9a1457"),
-        JELLYFISH("ALCHEMY", "a7be2bb4-70a1-32e4-a981-8f26c5864371", "913f086ccb56323f238ba3489ff2a1a34c0fdceeafc483acff0e5488cfd6c2f1"),
-        JERRY("COMBAT", "0a9e8efb-9191-4c81-80f5-e27ca5433156", "822d8e751c8f2fd4c8942c44bdb2f5ca4d8ae8e575ed3eb34c18a86e93b"),
-        LION("FORAGING", "7e3ed445-3545-3c76-993b-8f292ea576c6", "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1"),
-        MAGMA_CUBE("COMBAT", "35f02923-7bec-3869-9ef5-b42a4794cac8", "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429"),
+
+        ENDERMITE("MINING", "3302cdfe-6879-4659-ab0b-587b2cdb98e6", "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, 1))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0.4]"), Property.build("[0.396]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.4]"), Property.build("[0.396]")));
+            map.put("RARE", Pair.of(Property.build("[0.5, 5]"), Property.build("[0.495, 0.05]")));
+            map.put("EPIC", Pair.of(Property.build("[0.5, 5]"), Property.build("[0.495, 0.05]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.5, 5, 10.4]"), Property.build("[0.495, 0.05, 0.396]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6More Stonks");
+                list.add("§7Gain more exp orbs for");
+                list.add("§7breaking end stone and gain a");
+                list.add("§7+§a{0}% §7chance to get an extra");
+                list.add("§7block dropped");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Pearl Muncher");
+                list.add("§7Upon picking up an ender");
+                list.add("§7pearl, consume it and gain §a{1}");
+                list.add("§6coins");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Pearl Powered");
+                list.add("§7Upon consuming an ender pearl,");
+                list.add("§7gain +§a{2} §7speed for 10");
+                list.add("§7seconds");
+            }));
+        })),
+
+        FLYING_FISH("FISHING", "fd4a969b-c84c-4b59-979d-55eca6ec5f0e", "40cd71fbbbbb66c7baf7881f415c64fa84f6504958a57ccdb8589252647ea", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("strength", Property.build(0, 0.5)), Stats.build("defense", Property.build(0, 0.5))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("RARE", Pair.of(Property.build("[0.3, 0.4]"), Property.build("[0.297, 0.396]")));
+            map.put("EPIC", Pair.of(Property.build("[0.4, 0.5]"), Property.build("[0.396, 0.495]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.4, 0.5, 0.3]"), Property.build("[0.396, 0.495, 0.297]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Quick Reel");
+                list.add("§7Increases fishing speed by");
+                list.add("§a{0}%");
+                list.add("");
+                list.add("§6Water Bender");
+                list.add("§7Gives §a{1} §c❁ Strength §7and");
+                list.add("§a❈ Defense §7when near water");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Deep Sea Diver");
+                list.add("§7Increases the stats of Diver");
+                list.add("§7Armor by §a{2}%");
+            }));
+        })),
+
+        GHOUL("COMBAT", "3fbb2c84-3693-4dcd-bc49-3b54ca6fa8cc", "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("ferocity", Property.build(0, 0.05)), Stats.build("health", Property.build(0, 1)), Stats.build("intelligence", Property.build(0, 0.75))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", Pair.of(Property.build("[0.2, 0.5]"), Property.build("[0.25, 0.5]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 0.5, 0]"), Property.build("[0.25, 0.5, 1]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Amplified Healing");
+                list.add("§7Increases all healing by §a{0}%");
+                list.add("");
+                list.add("§6Zombie Arm");
+                list.add("§7Increases the health and range");
+                list.add("§7of the Zombie sword by §a{1}%");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Reaper Soul");
+                list.add("§7Increases the health and");
+                list.add("§7lifespan of the Reaper Scythe");
+                list.add("§7zombies by §a{2}%");
+            }));
+        })),
+
+        GIRAFFE("FORAGING", "11216f12-2843-31c8-bf8a-b8535e6c6dce", "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("health", Property.build(0, 1)), Stats.build("crit_chance", Property.build(0, 0.05, true))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.05]", "DISPLAY_AT_LEVEL_1")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.1]", "DISPLAY_AT_LEVEL_1")));
+            map.put("RARE", Pair.of(Property.build("[0.1, 0.4, 20.1]"), Property.build("[0.5, 0.4, 0.1]", "DISPLAY_AT_LEVEL_1")));//TODO
+            map.put("EPIC", Pair.of(Property.build("[0.2, 0.5, 20.2]"), Property.build("[0.2, 0.5, 0.25]", "DISPLAY_AT_LEVEL_1")));//TODO
+            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 0.5, 20.4, 0.2]"), Property.build("[0.25, 0.5, 0.4, 0.25]", "DISPLAY_AT_LEVEL_1")));//TODO
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Good Heart");
+                list.add("§7Regen §c{0} ❤ §7per second");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Higher Ground");
+                list.add("§7Grants §c+{1}❁ Strength §7and");
+                list.add("§9+{2}☠ Crit Damage §7when mid");
+                list.add("§7air or jumping");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Long Neck");
+                list.add("§7See enemies from afar and gain");
+                list.add("§a{3}% §7dodge chance");
+            }));
+        })),
+
+        GOLEM("COMBAT", "623fa763-a8d1-36c6-8dcf-09f100723d04", "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("strength", Property.build(0, 0.5)), Stats.build("health", Property.build(0, 1.5))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", Pair.of(Property.build("[0.3, 0.2]"), Property.build("[0.3, 0.25]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.3, 0.2, 203]"), Property.build("[0.3, 0.25, 2.97]", "DISPLAY_AT_LEVEL_1")));//TODO
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Last Stand");
+                list.add("§7While less than 15% HP, deal");
+                list.add("§a{0}% §7more damage");
+                list.add("");
+                list.add("§6Ricochet");
+                list.add("§7Your iron plating causes");
+                list.add("§a{1}% §7of attacks to ricochet");
+                list.add("§7and hit the attacker");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Toss");
+                list.add("§7Every 5 hits, throw the enemy");
+                list.add("§7up into the air and deal §a{2}%");
+                list.add("§7damage (10s cooldown)");
+            }));
+        })),
+
+        //TODO Lore per tier
+        GRANDMA_WOLF("COMBAT", "7f1b261f-0595-4160-9b6a-396436f9cc5d", "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("strength", Property.build(0, 1)), Stats.build("health", Property.build(0, 0.25))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("ALL", Pair.of(Property.build("[0]"), Property.build("[0]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Kill Combo");
+                list.add("§7Gain buffs for combo kills.");
+                list.add("§7Effects stack as you increase");
+                list.add("§7your combo.");
+                list.add("");
+                list.add("§a5 Combo §8(lasts §a9s§8)");
+                list.add("  §8+§b1% §b✯ Magic Find");
+                list.add("§a10 Combo §8(lasts §a7s§8)");
+                list.add("  §8+§62 §7coins per kill");
+                list.add("§a15 Combo §8(lasts §a5s§8)");
+                list.add("  §8+§b1% §b✯ Magic Find");
+                list.add("§a20 Combo §8(lasts §a4s§8)");
+                list.add("  §8+§35% §7Combat Exp");
+                list.add("§a25 Combo §8(lasts §a3.5s§8)");
+                list.add("  §8+§b1% §b✯ Magic Find");
+                list.add("§a30 Combo §8(lasts §a2.5s§8)");
+                list.add("  §8+§62 §7coins per kill");
+                list.add("");
+                list.add("§8This pet's perks are active");
+                list.add("§8even when the pet is not");
+                list.add("§8summoned!");
+            }));
+            map.put("UNCOMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Kill Combo");
+                list.add("§7Gain buffs for combo kills.");
+                list.add("§7Effects stack as you increase");
+                list.add("§7your combo.");
+                list.add("");
+                list.add("§a5 Combo §8(lasts §a9s§8)");
+                list.add("  §8+§b1% §b✯ Magic Find");
+                list.add("§a10 Combo §8(lasts §a7s§8)");
+                list.add("  §8+§64 §7coins per kill");
+                list.add("§a15 Combo §8(lasts §a5s§8)");
+                list.add("  §8+§b2% §b✯ Magic Find");
+                list.add("§a20 Combo §8(lasts §a4s§8)");
+                list.add("  §8+§37% §7Combat Exp");
+                list.add("§a25 Combo §8(lasts §a3.5s§8)");
+                list.add("  §8+§b1% §b✯ Magic Find");
+                list.add("§a30 Combo §8(lasts §a2.5s§8)");
+                list.add("  §8+§64 §7coins per kill");
+                list.add("");
+                list.add("§8This pet's perks are active");
+                list.add("§8even when the pet is not");
+                list.add("§8summoned!");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Kill Combo");
+                list.add("§7Gain buffs for combo kills.");
+                list.add("§7Effects stack as you increase");
+                list.add("§7your combo.");
+                list.add("");
+                list.add("§a5 Combo §8(lasts §a9s§8)");
+                list.add("  §8+§b2% §b✯ Magic Find");
+                list.add("§a10 Combo §8(lasts §a7s§8)");
+                list.add("  §8+§66 §7coins per kill");
+                list.add("§a15 Combo §8(lasts §a5s§8)");
+                list.add("  §8+§b2% §b✯ Magic Find");
+                list.add("§a20 Combo §8(lasts §a4s§8)");
+                list.add("  §8+§39% §7Combat Exp");
+                list.add("§a25 Combo §8(lasts §a3.5s§8)");
+                list.add("  §8+§b2% §b✯ Magic Find");
+                list.add("§a30 Combo §8(lasts §a2.5s§8)");
+                list.add("  §8+§66 §7coins per kill");
+                list.add("");
+                list.add("§8This pet's perks are active");
+                list.add("§8even when the pet is not");
+                list.add("§8summoned!");
+            }));
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Kill Combo");
+                list.add("§7Gain buffs for combo kills.");
+                list.add("§7Effects stack as you increase");
+                list.add("§7your combo.");
+                list.add("");
+                list.add("§a5 Combo §8(lasts §a9s§8)");
+                list.add("  §8+§b2% §b✯ Magic Find");
+                list.add("§a10 Combo §8(lasts §a7s§8)");
+                list.add("  §8+§68 §7coins per kill");
+                list.add("§a15 Combo §8(lasts §a5s§8)");
+                list.add("  §8+§b3% §b✯ Magic Find");
+                list.add("§a20 Combo §8(lasts §a4s§8)");
+                list.add("  §8+§312% §7Combat Exp");
+                list.add("§a25 Combo §8(lasts §a3.5s§8)");
+                list.add("  §8+§b2% §b✯ Magic Find");
+                list.add("§a30 Combo §8(lasts §a2.5s§8)");
+                list.add("  §8+§68 §7coins per kill");
+                list.add("");
+                list.add("§8This pet's perks are active");
+                list.add("§8even when the pet is not");
+                list.add("§8summoned!");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Kill Combo");
+                list.add("§7Gain buffs for combo kills.");
+                list.add("§7Effects stack as you increase");
+                list.add("§7your combo.");
+                list.add("");
+                list.add("§a5 Combo §8(lasts §a9s§8)");
+                list.add("  §8+§b3% §b✯ Magic Find");
+                list.add("§a10 Combo §8(lasts §a7s§8)");
+                list.add("  §8+§610 §7coins per kill");
+                list.add("§a15 Combo §8(lasts §a5s§8)");
+                list.add("  §8+§b3% §b✯ Magic Find");
+                list.add("§a20 Combo §8(lasts §a4s§8)");
+                list.add("  §8+§315% §7Combat Exp");
+                list.add("§a25 Combo §8(lasts §a3.5s§8)");
+                list.add("  §8+§b3% §b✯ Magic Find");
+                list.add("§a30 Combo §8(lasts §a2.5s§8)");
+                list.add("  §8+§610 §7coins per kill");
+                list.add("");
+                list.add("§8This pet's perks are active");
+                list.add("§8even when the pet is not");
+                list.add("§8summoned!");
+            }));
+        })),
+
+        //TODO Replace lore for each tier
+        GRIFFIN("COMBAT", "11e506b9-cb3d-43e6-89d2-9e1575944498", "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("crit_chance", Property.build(0, 0.1, true)), Stats.build("crit_damage", Property.build(0, 0.5, true)), Stats.build("intelligence", Property.build(0, 0.5)), Stats.build("magic_find", Property.build(0, 0.1)), Stats.build("strength", Property.build(0, 0.25)), Stats.build("attack_speed", Property.build(0, 0.35, true))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[5, 7]"), Property.build("[0, 0]")));
+            map.put("RARE", Pair.of(Property.build("[6, 7]"), Property.build("[0, 0]")));
+            map.put("EPIC", Pair.of(Property.build("[6, 8, 1]"), Property.build("[0, 0, 0.16]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[7, 8, 1, 1]"), Property.build("[0, 0, 0.2, 0.15]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Odyssey");
+                list.add("§2Mythological creatures §7you");
+                list.add("§7find and burrows you dig scale");
+                list.add("§7in §cdifficulty §7and §6rewards");
+                list.add("§7based on your equipped");
+                list.add("§7Griffin's rarity.");
+            }));
+            map.put("UNCOMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Legendary Constitution");
+                list.add("§7Permanent §cRegeneration 7");
+                list.add("§7and §4Strength 8§7.");
+            }));
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Perpetual Empathy");
+                list.add("§7Heal nearby players for");
+                list.add("§a{0}% §7of the final damage");
+                list.add("§7you receive.");
+                list.add("§8Excludes other griffins.");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6King of Kings");
+                list.add("§7Gain §c+{1}% §c❁ Strength");
+                list.add("§7when above §c85% §7health.");
+            }));
+        })),
+
+        GUARDIAN("COMBAT", "26508276-c01a-32a9-9201-7dae1724954e", "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, 1)), Stats.build("defense", Property.build(0, 0.5))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0.2]"), Property.build("[0.02]", "DISPLAY_AT_LEVEL_1")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.2]"), Property.build("[0.06]", "DISPLAY_AT_LEVEL_1")));
+            map.put("RARE", Pair.of(Property.build("[0.2, 0.2]"), Property.build("[0.1, 0.25]", "DISPLAY_AT_LEVEL_1")));
+            map.put("EPIC", Pair.of(Property.build("[0.2, 0.3]"), Property.build("[0.2, 0.3]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 0.3, 0.3]"), Property.build("[0.2, 0.3, 0.3]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Lazerbeam");
+                list.add("§7Zaps your enemies for §b{0}x");
+                list.add("§7your §b✎ Intelligence §7every");
+                list.add("§a3s");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Enchanting Exp Boost");
+                list.add("§7Boosts your Enchanting exp");
+                list.add("§7by §a{1}%");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Mana Pool");
+                list.add("§7Regenerate §b{2}% §7extra mana,");
+                list.add("§7doubled when near or in water");
+            }));
+        })),
+
+        //TODO Stats
+        HORSE("COMBAT", "6d310633-c175-4b47-92ab-778287bb7a5e", "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, 0.5)), Stats.build("speed", Property.build(0, 0.25))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0]"), Property.build("[0]")));
+            map.put("RARE", Pair.of(Property.build("[1.1]"), Property.build("[1.1]", "DISPLAY_AT_LEVEL_1")));
+            map.put("EPIC", Pair.of(Property.build("[1.2]"), Property.build("[1.2]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[1.2, 0.2]"), Property.build("[1.2, 0.25]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Ridable");
+                list.add("§7Right-click your summoned pet");
+                list.add("§7to ride it!");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Run");
+                list.add("§7Increases the speed of your");
+                list.add("§7mount by §a{0}%");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Ride Into Battle");
+                list.add("§7While riding your horse, gain");
+                list.add("§7+§a{1}% §7 bow damage");
+            }));
+        })),
+
+        HOUND("COMBAT", "802a167c-cbcd-3a1f-becd-5b1a25a4cf15", "b7c8bef6beb77e29af8627ecdc38d86aa2fea7ccd163dc73c00f9f258f9a1457", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("ferocity", Property.build(0, 0.05)), Stats.build("strength", Property.build(0, 0.4)), Stats.build("attack_speed", Property.build(0, 0.15, true))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", Pair.of(Property.build("[0.1, 0.1]"), Property.build("[0.05, 0.1]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.1, 0.1, 0.1]"), Property.build("[0.05, 0.1, 0.1]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Scavenger");
+                list.add("§7Gain +§a{0} §7coins per");
+                list.add("§7monster kill");
+                list.add("");
+                list.add("§6Finder");
+                list.add("§7Increases the chance for");
+                list.add("§7monsters to drop their armor by");
+                list.add("§a{1}%");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Fury Claws");
+                list.add("§7Grants §a{2}% §e⚔ Bonus Attack");
+                list.add("§eSpeed");
+            }));
+        })),
+
+        JELLYFISH("ALCHEMY", "a7be2bb4-70a1-32e4-a981-8f26c5864371", "913f086ccb56323f238ba3489ff2a1a34c0fdceeafc483acff0e5488cfd6c2f1", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("health", Property.build(0, 2))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", Pair.of(Property.build("[0]"), Property.build("[1]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0, 0]"), Property.build("[1, 0.5]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Radiant Regeneration");
+                list.add("§7While in dungeons, increases");
+                list.add("§7your base health regen by §a{0}%");
+                list.add("§7and heals players within 8");
+                list.add("§7blocks by up to 10hp/s");
+                list.add("");
+                list.add("§6Hungry Healer");
+                list.add("§7While in dungeons, for every");
+                list.add("§71000 you heal teammates apply");
+                list.add("§7the §aenchanted golden apple");
+                list.add("§7effect to all players within");
+                list.add("§710 blocks (10s cooldown)");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Powerful Potions");
+                list.add("§7While in dungeons, increase");
+                list.add("§7the effectiveness of Instant");
+                list.add("§7Health and Mana splash potions");
+                list.add("§7by §a{1}%");
+            }));
+        })),
+
+        JERRY("COMBAT", "0a9e8efb-9191-4c81-80f5-e27ca5433156", "822d8e751c8f2fd4c8942c44bdb2f5ca4d8ae8e575ed3eb34c18a86e93b", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("intelligence", Property.build(0, -1))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("LEGENDARY", Pair.of(Property.build("[0]"), Property.build("[0.09]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Jerry");
+                list.add("§7Gain §a50% §7chance to deal");
+                list.add("§7your regular damage");
+                list.add("");
+                list.add("§6Jerry");
+                list.add("§7Gain §a100% §7chance to");
+                list.add("§7receive a normal amount of drops");
+                list.add("§7from mobs");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Jerry");
+                list.add("§7Actually adds §c5 damage §7to");
+                list.add("§7the Aspect of the Jerry");
+            }));
+        })),
+
+        LION("FORAGING", "7e3ed445-3545-3c76-993b-8f292ea576c6", "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("ferocity", Property.build(0, 0.05)), Stats.build("strength", Property.build(0, 0.5)), Stats.build("speed", Property.build(0, 0.25))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0.03]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0.1]"), Property.build("[0.049]", "DISPLAY_AT_LEVEL_1")));
+            map.put("RARE", Pair.of(Property.build("[0.1, 0.8]"), Property.build("[0.099, 0.742]", "DISPLAY_AT_LEVEL_1")));
+            map.put("EPIC", Pair.of(Property.build("[0.1, 1]"), Property.build("[0.149, 1]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.2, 1, 0.1]"), Property.build("[0.198, 1, 0.149]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Primal Force");
+                list.add("§7Adds §c+{0} §c❁ Damage §7and");
+                list.add("§c+{0} §c❁ Strength §7to your");
+                list.add("§7weapons.");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6First Pounce");
+                list.add("§7First Strike,");
+                list.add("§7Triple-Strike, and §d§lCombo");
+                list.add("§7are §a{1}% §7more effective.");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6King of the Jungle");
+                list.add("§7Deal §c+{2}% §c❁ Damage");
+                list.add("§7against mobs that have");
+                list.add("§7attacked you.");
+            }));
+        })),
+
+        MAGMA_CUBE("COMBAT", "35f02923-7bec-3869-9ef5-b42a4794cac8", "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429", make(Maps.newHashMap(), map ->
+        {
+            map.put("ALL", new Stats[] {Stats.build("health", Property.build(0, 0.5)), Stats.build("defense", Property.build(0, 0.33)), Stats.build("strength", Property.build(0, 0.2))});
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[0]"), Property.build("[0.2]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[0]"), Property.build("[0.2]")));
+            map.put("RARE", Pair.of(Property.build("[0.2, 0.2]"), Property.build("[0.2, 0.248]", "DISPLAY_AT_LEVEL_1")));
+            map.put("EPIC", Pair.of(Property.build("[0.3, 0.2]"), Property.build("[0.297, 0.248]", "DISPLAY_AT_LEVEL_1")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.3, 0.2, 1]"), Property.build("[0.297, 0.248, 1]", "DISPLAY_AT_LEVEL_1")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Slimy Minions");
+                list.add("§7Slime minions work §a{0}%");
+                list.add("§7faster while on your island");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Salt Blade");
+                list.add("§7Deal §a{1}% §7more damage to");
+                list.add("§7slimes");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Hot Ember");
+                list.add("§7Buffs the stats of Ember Armor");
+                list.add("§7by §a{2}%");
+            }));
+        })),
+
         MEGALODON("FISHING", "82fc79b9-fded-3c05-b8dc-00e562803862", "a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9"),
         MITHRIL_GOLEM("MINING", "39fb84b5-72d3-3221-b373-aa315e956e83", "c1b2dfe8ed5dffc5b1687bc1c249c39de2d8a6c3d90305c95f6d1a1a330a0b1"),
         MONKEY("FORAGING", "e410c089-bb3a-40a3-add6-188d6187ac87", "13cf8db84807c471d7c6922302261ac1b5a179f96d1191156ecf3e1b1d3ca"),
@@ -702,7 +1278,7 @@ public class PetsBuilder
             this.descStats = descStats;
             this.petLore = petLore;
         }
-        
+
         PetType(String type, String uuid, String value, Map<String, Stats[]> stats, Map<String, Pair<Property, Property>> descStats)
         {
             this(type, uuid, value, stats, descStats, null);

@@ -2796,22 +2796,244 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 tier = tier.getNextRarity();
             }
 
-            SBPets.Info level = this.checkPetLevel(exp, tier);
+            SBPets.Info petInfo = this.checkPetLevel(exp, tier);
             EnumChatFormatting rarity = tier.getTierColor();
             SBPets.Type type = SBPets.PETS.getTypeByName(petType);
+            int level = petInfo.getCurrentPetLevel();
 
             if (type != null)
             {
+                Map<String, SBPets.Stats> stats = type.getStats();
+                Map<String, SBPets.StatsPropertyArray> statsLore = type.getStatsLore();
+                Map<String, List<String>> lore = type.getLore();
+                List<NBTTagString> listStats = Lists.newLinkedList();
+                List<NBTTagString> listLore = Lists.newLinkedList();
+
+                if (stats != null)
+                {
+                    for (Map.Entry<String, SBPets.Stats> entry : stats.entrySet())
+                    {
+                        String statTierName = entry.getKey();
+
+                        if (statTierName.equals("ALL"))
+                        {
+                            SBPets.StatsProperty health = entry.getValue().getHealth();
+                            SBPets.StatsProperty strength = entry.getValue().getStrength();
+                            SBPets.StatsProperty critDamage = entry.getValue().getCritDamage();
+                            SBPets.StatsProperty critChance = entry.getValue().getCritChance();
+                            SBPets.StatsProperty ferocity = entry.getValue().getFerocity();
+                            SBPets.StatsProperty attackSpeed = entry.getValue().getAttackSpeed();
+                            SBPets.StatsProperty defense = entry.getValue().getDefense();
+                            SBPets.StatsProperty speed = entry.getValue().getSpeed();
+                            SBPets.StatsProperty intelligence = entry.getValue().getIntelligence();
+                            SBPets.StatsProperty seaCreatureChance = entry.getValue().getSeaCreatureChance();
+                            SBPets.StatsProperty magicFind = entry.getValue().getMagicFind();
+
+                            if (health != null)
+                            {
+                                listStats.add(new NBTTagString(health.getString("Health", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addHealth(health.getValue(level));
+                                }
+                            }
+                            if (strength != null)
+                            {
+                                listStats.add(new NBTTagString(strength.getString("Strength", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addStrength(strength.getValue(level));
+                                }
+                            }
+                            if (critDamage != null)
+                            {
+                                listStats.add(new NBTTagString(critDamage.getString("Crit Damage", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addCritDamage(critDamage.getValue(level));
+                                }
+                            }
+                            if (critChance != null)
+                            {
+                                listStats.add(new NBTTagString(critChance.getString("Crit Chance", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addCritChance(critChance.getValue(level));
+                                }
+                            }
+                            if (ferocity != null)
+                            {
+                                listStats.add(new NBTTagString(ferocity.getString("Ferocity", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addCritChance(ferocity.getValue(level));
+                                }
+                            }
+                            if (attackSpeed != null)
+                            {
+                                listStats.add(new NBTTagString(attackSpeed.getString("Bonus Attack Speed", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addAttackSpeed(attackSpeed.getValue(level));
+                                }
+                            }
+                            if (speed != null)
+                            {
+                                listStats.add(new NBTTagString(speed.getString("Speed", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addSpeed(speed.getValue(level));
+                                }
+                            }
+                            if (defense != null)
+                            {
+                                listStats.add(new NBTTagString(defense.getString("Defense", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addDefense(defense.getValue(level));
+                                }
+                            }
+                            if (intelligence != null)
+                            {
+                                listStats.add(new NBTTagString(intelligence.getString("Intelligence", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addIntelligence(intelligence.getValue(level));
+                                }
+                            }
+                            if (seaCreatureChance != null)
+                            {
+                                listStats.add(new NBTTagString(seaCreatureChance.getString("Sea Creature Chance", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addIntelligence(seaCreatureChance.getValue(level));
+                                }
+                            }
+                            if (magicFind != null)
+                            {
+                                listStats.add(new NBTTagString(magicFind.getString("Magic Find", level)));
+
+                                if (active)
+                                {
+                                    this.allStat.addMagicFind(magicFind.getValue(level));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //TODO
+                        }
+                    }
+                }
+                if (lore != null)
+                {
+                    for (Map.Entry<String, List<String>> entry : lore.entrySet())
+                    {
+                        String statTierName = entry.getKey();
+                        SBPets.Tier statTier = SBPets.Tier.valueOf(statTierName);
+                        boolean foundLowTier = tier.ordinal() < statTier.ordinal();
+
+                        if (statTierName.equals("ALL"))
+                        {
+                            //TODO
+                        }
+                        else
+                        {
+                            for (String lore2 : entry.getValue())
+                            {
+                                if (foundLowTier)
+                                {
+                                    continue;
+                                }
+
+                                SBPets.StatsPropertyArray array = statsLore.get(tier.name());
+
+                                if (array == null)
+                                {
+                                    array = statsLore.get("ALL");
+                                }
+
+                                double[] statsLoreBase = array.getBase();
+                                double[] statsLoreMult = array.getMultiply();
+                                String roundingMode = array.getRoundingMode();
+                                String displayMode = array.getDisplayMode();
+
+                                for (int i = 0; i < statsLoreMult.length; i++)
+                                {
+                                    double value = statsLoreBase[i] + statsLoreMult[i] * level;
+                                    BigDecimal decimal = new BigDecimal(value);
+
+                                    if (roundingMode != null)
+                                    {
+                                        decimal = decimal.setScale(1, RoundingMode.valueOf(roundingMode));
+                                    }
+                                    if (displayMode != null)
+                                    {
+                                        if (displayMode.equals("DISPLAY_AT_LEVEL_1"))
+                                        {
+                                            lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : statsLoreMult[i] * level));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : decimal));
+                                    }
+                                }
+                                listLore.add(new NBTTagString(lore2));
+                            }
+
+                            if (!foundLowTier)
+                            {
+                                listLore.add(new NBTTagString(""));
+                            }
+                        }
+                    }
+                }
+
                 ItemStack itemStack = type.getPetItem();
 
-                itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
+                itemStack.setStackDisplayName(EnumChatFormatting.GRAY + "[Lvl " + level + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")));
                 list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet"));
-                list.appendTag(new NBTTagString(""));
-                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level.getCurrentPetLevel() < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + level.getPercent() : level.getPercent())));
 
-                if (level.getCurrentPetLevel() < 100)
+                if (listStats.size() > 0)
                 {
-                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)level.getCurrentPetXp(), level.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(level.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getXpRequired())));
+                    list.appendTag(new NBTTagString(""));
+
+                    for (NBTTagString statsLoreDis : listStats)
+                    {
+                        list.appendTag(statsLoreDis);
+                    }
+                }
+
+                if (listLore.size() > 0)
+                {
+                    list.appendTag(new NBTTagString(""));
+
+                    for (NBTTagString statsLoreDis : listLore)
+                    {
+                        list.appendTag(statsLoreDis);
+                    }
+                }
+                else
+                {
+                    list.appendTag(new NBTTagString(""));
+                }
+
+                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + (level < 100 ? EnumChatFormatting.GRAY + "Progress to Level " + petInfo.getNextPetLevel() + ": " + EnumChatFormatting.YELLOW + petInfo.getPercent() : petInfo.getPercent())));
+
+                if (level < 100)
+                {
+                    list.appendTag(new NBTTagString(EnumChatFormatting.RESET + this.getTextPercentage((int)petInfo.getCurrentPetXp(), petInfo.getXpRequired()) + " " + EnumChatFormatting.YELLOW + FORMAT_2.format(petInfo.getCurrentPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(petInfo.getXpRequired())));
                 }
                 if (candyUsed > 0 || heldItem != null || heldItemType != null || skin != null)
                 {
@@ -2848,12 +3070,12 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 }
 
                 list.appendTag(new NBTTagString(""));
-                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(level.getTotalPetTypeXp())));
+                list.appendTag(new NBTTagString(EnumChatFormatting.RESET + "" + EnumChatFormatting.GRAY + "Total XP: " + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(petInfo.getPetXp()) + EnumChatFormatting.GOLD + "/" + EnumChatFormatting.YELLOW + NumberUtils.formatWithM(petInfo.getTotalPetTypeXp())));
                 list.appendTag(new NBTTagString(rarity + "" + EnumChatFormatting.BOLD + tier + " PET"));
                 itemStack.getTagCompound().getCompoundTag("display").setTag("Lore", list);
                 itemStack.getSubCompound("ExtraAttributes", true).setString("id", "PET");
                 itemStack.getTagCompound().setBoolean("active", active);
-                petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), active, Arrays.asList(itemStack)));
+                petData.add(new SBPets.Data(tier, level, WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")), active, Arrays.asList(itemStack)));
 
                 switch (tier)
                 {

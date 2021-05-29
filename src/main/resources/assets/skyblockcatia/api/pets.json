@@ -719,151 +719,2032 @@
             "type": "BABY_YETI",
             "skill": "FISHING",
             "uuid": "7895e21a-8f3b-3e30-bea6-06108f64d5dc",
-            "texture": "ab126814fc3fa846dad934c349628a7a1de5b415021a03ef4211d62514d5"
+            "texture": "ab126814fc3fa846dad934c349628a7a1de5b415021a03ef4211d62514d5",
+            "stats": {
+                "ALL": {
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.4
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 0.75
+                    }
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        1.0
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Cold Breeze",
+                    "§7Gives §a{0} §c❁ Strength §7and",
+                    "§9☠ Crit Damage §7when near snow",
+                    "",
+                    "§6Ice Shields",
+                    "§7Gain §a{1}% §7of your strength",
+                    "§7as §a❈ Defense"
+                ],
+                "LEGENDARY": [
+                    "§6Yeti Fury",
+                    "§7Buff the Yeti sword by §a{2}",
+                    "§c❁ Damage §7and §b✎",
+                    "§bIntelligence"
+                ]
+            }
         },
         {
             "type": "BAT",
             "skill": "MINING",
             "uuid": "1911c3bb-c0af-3474-98e2-486478c5b9ea",
-            "texture": "382fc3f71b41769376a9e92fe3adbaac3772b999b219c9d6b4680ba9983e527"
+            "texture": "382fc3f71b41769376a9e92fe3adbaac3772b999b219c9d6b4680ba9983e527",
+            "stats": {
+                "ALL": {
+                    "speed": {
+                        "base": 0.0,
+                        "multiply": 0.05
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.3,
+                        0.5
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.3,
+                        0.5
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.3,
+                        0.5,
+                        0.5
+                    ]
+                },
+                "MYTHIC": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.3,
+                        0.5,
+                        0.5,
+                        0.25
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Candy Lover",
+                    "§7Increases drop chance of",
+                    "§7candies from mobs by §a{0}%"
+                ],
+                "RARE": [
+                    "§6Nightmare",
+                    "§7During night, gain §a{1} §b✎",
+                    "§bIntelligence§7, §a{2} §f✦",
+                    "§fSpeed§7, and night vision"
+                ],
+                "LEGENDARY": [
+                    "§6Wings of Steel",
+                    "§7Deals §a+{3}% §7damage to",
+                    "§6Spooky §7enemies during the",
+                    "§6Spooky Festival"
+                ],
+                "MYTHIC": [
+                    "§6Sonar",
+                    "§7+§a{4}% §7chance to fish up",
+                    "§7spooky sea creatures"
+                ]
+            }
         },
         {
             "type": "BEE",
             "skill": "FARMING",
             "uuid": "af894c68-45d0-3ae2-952c-b3cf925199ad",
-            "texture": "7e941987e825a24ea7baafab9819344b6c247c75c54a691987cd296bc163c263"
+            "texture": "7e941987e825a24ea7baafab9819344b6c247c75c54a691987cd296bc163c263",
+            "stats": {
+                "ALL": {
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "speed": {
+                        "base": 0.0,
+                        "multiply": 0.1
+                    },
+                    "strength": {
+                        "base": 5.0,
+                        "multiply": 0.25
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        1.0,
+                        1.0
+                    ],
+                    "multiply": [
+                        0.02,
+                        0.02
+                    ],
+                    "rounding_mode": "DOWN"
+                },
+                "UNCOMMON": {
+                    "base": [
+                        1.0,
+                        1.0
+                    ],
+                    "multiply": [
+                        0.04,
+                        0.04
+                    ],
+                    "rounding_mode": "DOWN"
+                },
+                "RARE": {
+                    "base": [
+                        1.1,
+                        1.1,
+                        0.5
+                    ],
+                    "multiply": [
+                        0.089,
+                        0.069,
+                        0.995
+                    ],
+                    "rounding_mode": "DOWN"
+                },
+                "EPIC": {
+                    "base": [
+                        1.1,
+                        1.1,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.139,
+                        0.109,
+                        1.0
+                    ],
+                    "rounding_mode": "DOWN"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        1.2,
+                        1.1,
+                        0.0,
+                        5.2
+                    ],
+                    "multiply": [
+                        0.188,
+                        0.139,
+                        1.0,
+                        0.198
+                    ],
+                    "rounding_mode": "DOWN"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Hive",
+                    "§7Gain §b+{0}✎ Intelligence",
+                    "§7and §c+{1}❁ Strength §7for",
+                    "§7each nearby bee.",
+                    "§8Max 15 bees"
+                ],
+                "RARE": [
+                    "§6Busy Buzz Buzz",
+                    "§7Has §a{2}% §7chance for flowers",
+                    "§7to drop an extra one"
+                ],
+                "LEGENDARY": [
+                    "§6Weaponized Honey",
+                    "§7Gain §a{3}% §7of received",
+                    "§7damage as §6❤ Absorption"
+                ]
+            }
         },
         {
             "type": "BLACK_CAT",
             "skill": "COMBAT",
             "uuid": "5992f40a-6406-48a3-867b-232e414232f3",
-            "texture": "e4b45cbaa19fe3d68c856cd3846c03b5f59de81a480eec921ab4fa3cd81317"
+            "texture": "e4b45cbaa19fe3d68c856cd3846c03b5f59de81a480eec921ab4fa3cd81317",
+            "stats": {
+                "ALL": {
+                    "speed": {
+                        "base": 0.0,
+                        "multiply": 0.25
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        1.0,
+                        0.149,
+                        0.149
+                    ]
+                }
+            },
+            "lore": {
+                "LEGENDARY": [
+                    "§6Hunter",
+                    "§7Increases your speed and speed",
+                    "§7cap by +§a{0}",
+                    "",
+                    "§6Omen",
+                    "§7Grants §a{1} §d♣ Pet Luck",
+                    "",
+                    "§6Supernatural",
+                    "§7Grants §a{2} §b✯ Magic Find"
+                ]
+            }
         },
         {
             "type": "BLAZE",
             "skill": "COMBAT",
             "uuid": "118fe834-28aa-3b0d-afe6-f0c52d01afe8",
-            "texture": "b78ef2e4cf2c41a2d14bfde9caff10219f5b1bf5b35a49eb51c6467882cb5f0"
+            "texture": "b78ef2e4cf2c41a2d14bfde9caff10219f5b1bf5b35a49eb51c6467882cb5f0",
+            "stats": {
+                "ALL": {
+                    "defense": {
+                        "base": 10.0,
+                        "multiply": 0.2
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "ALL": {
+                    "base": [
+                        0.2,
+                        0.4
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.4
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Nether Embodiment",
+                    "§7Increases all stats by §a{0}%",
+                    "§7while on the Blazing Fortress",
+                    "",
+                    "§6Bling Armor",
+                    "§7Upgrades §cBlaze Armor §7stats",
+                    "§7and ability by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Fusion-Style Potato",
+                    "§7Double effects of hot potato",
+                    "§7books"
+                ]
+            }
         },
         {
             "type": "BLUE_WHALE",
             "skill": "FISHING",
             "uuid": "47c8ba46-82ac-3c09-b511-5502860eb012",
-            "texture": "dab779bbccc849f88273d844e8ca2f3a67a1699cb216c0a11b44326ce2cc20"
+            "texture": "dab779bbccc849f88273d844e8ca2f3a67a1699cb216c0a11b44326ce2cc20",
+            "stats": {
+                "ALL": {
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 2.0
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.5
+                    ],
+                    "multiply": [
+                        0.495
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        1.5,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.485,
+                        0.03
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        2.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        2.0,
+                        0.03
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        2.5,
+                        0.0,
+                        0.2
+                    ],
+                    "multiply": [
+                        2.475,
+                        0.03,
+                        0.198
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Ingest",
+                    "§7All potions heal §c+{0}❤"
+                ],
+                "RARE": [
+                    "§6Bulk",
+                    "§7Gain §a{1}§a❈ Defense §7per",
+                    "§c20 Max §c❤ Health"
+                ],
+                "LEGENDARY": [
+                    "§6Archimedes",
+                    "§7Gain §c+{2}% Max §c❤ Health"
+                ]
+            }
         },
         {
             "type": "CHICKEN",
             "skill": "FARMING",
             "uuid": "635fdfb8-3c52-433e-87dc-70a9406c5ff0",
-            "texture": "7f37d524c3eed171ce149887ea1dee4ed399904727d521865688ece3bac75e"
+            "texture": "7f37d524c3eed171ce149887ea1dee4ed399904727d521865688ece3bac75e",
+            "stats": {
+                "ALL": {
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 2.0
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.3
+                    ],
+                    "multiply": [
+                        0.3
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.4
+                    ],
+                    "multiply": [
+                        0.4
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "RARE": {
+                    "base": [
+                        0.4,
+                        0.8
+                    ],
+                    "multiply": [
+                        0.4,
+                        0.8
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.5,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        1.0
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.5,
+                        0.0,
+                        0.3
+                    ],
+                    "multiply": [
+                        0.5,
+                        1.0,
+                        0.3
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Light Feet",
+                    "§7Reduces fall damage by",
+                    "§a{0}%"
+                ],
+                "RARE": [
+                    "§6Eggstra",
+                    "§7Killing chickens has a §a{1}%",
+                    "§7chance to drop an egg"
+                ],
+                "LEGENDARY": [
+                    "§6Mighty Chickens",
+                    "§7Chicken minions work §a{2}%",
+                    "§7faster while on your island"
+                ]
+            }
         },
         {
             "type": "DOLPHIN",
             "skill": "FISHING",
             "uuid": "48f53ffe-a3f0-3280-aac0-11cc0d6121f4",
-            "texture": "cefe7d803a45aa2af1993df2544a28df849a762663719bfefc58bf389ab7f5"
+            "texture": "cefe7d803a45aa2af1993df2544a28df849a762663719bfefc58bf389ab7f5",
+            "stats": {
+                "ALL": {
+                    "sea_creature_chance": {
+                        "base": 0.0,
+                        "multiply": 0.05,
+                        "isPercent": true
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.03
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.04
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.04,
+                        0.07
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Pod Tactics",
+                    "§7Increases your fishing speed",
+                    "§7by §a{0}% §7for each player within",
+                    "§710 blocks up to §a{A}%"
+                ],
+                "RARE": [
+                    "§6Echolocation",
+                    "§7Increases sea creatures catch",
+                    "§7chance by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Splash Surprise",
+                    "§7Stun sea creatures for §a5s",
+                    "§7after fishing them up"
+                ]
+            }
         },
         {
             "type": "ELEPHANT",
             "skill": "FARMING",
             "uuid": "9a58e25a-cf47-447d-b13c-3ea36eccfa31",
-            "texture": "7071a76f669db5ed6d32b48bb2dba55d5317d7f45225cb3267ec435cfa514"
+            "texture": "7071a76f669db5ed6d32b48bb2dba55d5317d7f45225cb3267ec435cfa514",
+            "stats": {
+                "ALL": {
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 0.75
+                    },
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.099
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.149
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.1,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.149,
+                        0.01
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.2,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.198,
+                        0.01
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.2,
+                        0.0,
+                        1.8
+                    ],
+                    "multiply": [
+                        0.198,
+                        0.01,
+                        1.782
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Stomp",
+                    "§7Gain §a{0}❈ Defense §7for",
+                    "§7every 100 §f✦ Speed"
+                ],
+                "RARE": [
+                    "§6Walking Fortress",
+                    "§7Gain §c{1}❤ Health §7for every",
+                    "§710 §a❈ Defense"
+                ],
+                "LEGENDARY": [
+                    "§6Trunk Efficiency",
+                    "§7Grants §a+{2} §6☘ Farming",
+                    "§6Fortune, §7which increases your",
+                    "§7chance for multiple drops."
+                ]
+            }
         },
         {
             "type": "ENDERMAN",
             "skill": "COMBAT",
             "uuid": "fb3c5e13-61e9-4584-99db-9f9ef9fb834d",
-            "texture": "6eab75eaa5c9f2c43a0d23cfdce35f4df632e9815001850377385f7b2f039ce1"
+            "texture": "6eab75eaa5c9f2c43a0d23cfdce35f4df632e9815001850377385f7b2f039ce1",
+            "stats": {
+                "ALL": {
+                    "crit_damage": {
+                        "base": 0.0,
+                        "multiply": 0.75,
+                        "isPercent": true
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.2
+                    ],
+                    "multiply": [
+                        0.2
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "RARE": {
+                    "base": [
+                        0.2,
+                        0.4
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.4
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.3,
+                        0.5
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.3,
+                        0.5,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5,
+                        0.2
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Enderian",
+                    "§7Take §a{0}% §7less damage",
+                    "§7from end monsters"
+                ],
+                "RARE": [
+                    "§6Teleport Savvy",
+                    "§7Buffs the Aspect of the End",
+                    "§7ability granting §a{1} §7weapon",
+                    "§7damage for 5s on use"
+                ],
+                "LEGENDARY": [
+                    "§6Zealot Madness",
+                    "§7Increases your odds to find a",
+                    "§7special Zealot by §a{2}%"
+                ]
+            }
         },
         {
             "type": "ENDERMITE",
             "skill": "MINING",
             "uuid": "3302cdfe-6879-4659-ab0b-587b2cdb98e6",
-            "texture": "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855"
+            "texture": "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855",
+            "stats": {
+                "ALL": {
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.4
+                    ],
+                    "multiply": [
+                        0.396
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.4
+                    ],
+                    "multiply": [
+                        0.396
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.5,
+                        5.0
+                    ],
+                    "multiply": [
+                        0.495,
+                        0.05
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.5,
+                        5.0
+                    ],
+                    "multiply": [
+                        0.495,
+                        0.05
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.5,
+                        5.0,
+                        10.4
+                    ],
+                    "multiply": [
+                        0.495,
+                        0.05,
+                        0.396
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6More Stonks",
+                    "§7Gain more exp orbs for",
+                    "§7breaking end stone and gain a",
+                    "§7+§a{0}% §7chance to get an extra",
+                    "§7block dropped"
+                ],
+                "RARE": [
+                    "§6Pearl Muncher",
+                    "§7Upon picking up an ender",
+                    "§7pearl, consume it and gain §a{1}",
+                    "§6coins"
+                ],
+                "LEGENDARY": [
+                    "§6Pearl Powered",
+                    "§7Upon consuming an ender pearl,",
+                    "§7gain +§a{2} §7speed for 10",
+                    "§7seconds"
+                ]
+            }
         },
         {
             "type": "ENDER_DRAGON",
             "skill": "COMBAT",
             "uuid": "3f9632a1-0ce2-311a-97e7-b144dfcb74f3",
-            "texture": "aec3ff563290b13ff3bcc36898af7eaa988b6cc18dc254147f58374afe9b21b9"
+            "texture": "aec3ff563290b13ff3bcc36898af7eaa988b6cc18dc254147f58374afe9b21b9",
+            "stats": {
+                "ALL": {
+                    "crit_damage": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "crit_chance": {
+                        "base": 0.0,
+                        "multiply": 0.1
+                    },
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    }
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.2,
+                        0.5,
+                        0.3
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.5,
+                        0.3
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.2,
+                        0.5,
+                        0.3,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.5,
+                        0.3,
+                        0.1
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6End Strike",
+                    "§7Deal §a{0}% §7more damage to",
+                    "§7end mobs",
+                    "",
+                    "§6One With The Dragon",
+                    "§7Buffs the Aspect of the",
+                    "§7Dragons sword by §a{1} §c❁ Damage",
+                    "§7and §a{2} §c❁ Strength"
+                ],
+                "LEGENDARY": [
+                    "§6Superior",
+                    "§7Increases most stats by §a{3}%"
+                ]
+            }
         },
         {
             "type": "FLYING_FISH",
             "skill": "FISHING",
             "uuid": "fd4a969b-c84c-4b59-979d-55eca6ec5f0e",
-            "texture": "40cd71fbbbbb66c7baf7881f415c64fa84f6504958a57ccdb8589252647ea"
+            "texture": "40cd71fbbbbb66c7baf7881f415c64fa84f6504958a57ccdb8589252647ea",
+            "stats": {
+                "ALL": {
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "defense": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    }
+                }
+            },
+            "statsLore": {
+                "RARE": {
+                    "base": [
+                        0.3,
+                        0.4
+                    ],
+                    "multiply": [
+                        0.297,
+                        0.396
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.4,
+                        0.5
+                    ],
+                    "multiply": [
+                        0.396,
+                        0.495
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.4,
+                        0.5,
+                        0.3
+                    ],
+                    "multiply": [
+                        0.396,
+                        0.495,
+                        0.297
+                    ]
+                }
+            },
+            "lore": {
+                "RARE": [
+                    "§6Quick Reel",
+                    "§7Increases fishing speed by",
+                    "§a{0}%",
+                    "",
+                    "§6Water Bender",
+                    "§7Gives §a{1} §c❁ Strength §7and",
+                    "§a❈ Defense §7when near water"
+                ],
+                "LEGENDARY": [
+                    "§6Deep Sea Diver",
+                    "§7Increases the stats of Diver",
+                    "§7Armor by §a{2}%"
+                ]
+            }
         },
         {
             "type": "GHOUL",
             "skill": "COMBAT",
             "uuid": "3fbb2c84-3693-4dcd-bc49-3b54ca6fa8cc",
-            "texture": "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b"
+            "texture": "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b",
+            "stats": {
+                "ALL": {
+                    "ferocity": {
+                        "base": 0.0,
+                        "multiply": 0.05
+                    },
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 0.75
+                    }
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.2,
+                        0.5
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.5
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.2,
+                        0.5,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.5,
+                        1.0
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Amplified Healing",
+                    "§7Increases all healing by §a{0}%",
+                    "",
+                    "§6Zombie Arm",
+                    "§7Increases the health and range",
+                    "§7of the Zombie sword by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Reaper Soul",
+                    "§7Increases the health and",
+                    "§7lifespan of the Reaper Scythe",
+                    "§7zombies by §a{2}%"
+                ]
+            }
         },
         {
             "type": "GIRAFFE",
             "skill": "FORAGING",
             "uuid": "11216f12-2843-31c8-bf8a-b8535e6c6dce",
-            "texture": "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9"
+            "texture": "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9",
+            "stats": {
+                "ALL": {
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    },
+                    "crit_chance": {
+                        "base": 0.0,
+                        "multiply": 0.05,
+                        "isPercent": true
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.05
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "RARE": {
+                    "base": [
+                        0.1,
+                        0.4,
+                        20.1
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.4,
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.2,
+                        0.5,
+                        20.2
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.5,
+                        0.25
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.2,
+                        0.5,
+                        20.4,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.5,
+                        0.4,
+                        0.25
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Good Heart",
+                    "§7Regen §c{0} ❤ §7per second"
+                ],
+                "RARE": [
+                    "§6Higher Ground",
+                    "§7Grants §c+{1}❁ Strength §7and",
+                    "§9+{2}☠ Crit Damage §7when mid",
+                    "§7air or jumping"
+                ],
+                "LEGENDARY": [
+                    "§6Long Neck",
+                    "§7See enemies from afar and gain",
+                    "§a{3}% §7dodge chance"
+                ]
+            }
         },
         {
             "type": "GOLEM",
             "skill": "COMBAT",
             "uuid": "623fa763-a8d1-36c6-8dcf-09f100723d04",
-            "texture": "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714"
+            "texture": "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714",
+            "stats": {
+                "ALL": {
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 1.5
+                    }
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.3,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.25
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.3,
+                        0.2,
+                        203.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.25,
+                        2.97
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Last Stand",
+                    "§7While less than 15% HP, deal",
+                    "§a{0}% §7more damage",
+                    "",
+                    "§6Ricochet",
+                    "§7Your iron plating causes",
+                    "§a{1}% §7of attacks to ricochet",
+                    "§7and hit the attacker"
+                ],
+                "LEGENDARY": [
+                    "§6Toss",
+                    "§7Every 5 hits, throw the enemy",
+                    "§7up into the air and deal §a{2}%",
+                    "§7damage (10s cooldown)"
+                ]
+            }
         },
         {
             "type": "GRANDMA_WOLF",
             "skill": "COMBAT",
             "uuid": "7f1b261f-0595-4160-9b6a-396436f9cc5d",
-            "texture": "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884"
+            "texture": "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884",
+            "stats": {
+                "ALL": {
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    },
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 0.25
+                    }
+                }
+            },
+            "statsLore": {
+                "ALL": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.0
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Kill Combo",
+                    "§7Gain buffs for combo kills.",
+                    "§7Effects stack as you increase",
+                    "§7your combo.",
+                    "",
+                    "§a5 Combo §8(lasts §a9s§8)",
+                    "  §8+§b1% §b✯ Magic Find",
+                    "§a10 Combo §8(lasts §a7s§8)",
+                    "  §8+§62 §7coins per kill",
+                    "§a15 Combo §8(lasts §a5s§8)",
+                    "  §8+§b1% §b✯ Magic Find",
+                    "§a20 Combo §8(lasts §a4s§8)",
+                    "  §8+§35% §7Combat Exp",
+                    "§a25 Combo §8(lasts §a3.5s§8)",
+                    "  §8+§b1% §b✯ Magic Find",
+                    "§a30 Combo §8(lasts §a2.5s§8)",
+                    "  §8+§62 §7coins per kill",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ],
+                "UNCOMMON": [
+                    "§6Kill Combo",
+                    "§7Gain buffs for combo kills.",
+                    "§7Effects stack as you increase",
+                    "§7your combo.",
+                    "",
+                    "§a5 Combo §8(lasts §a9s§8)",
+                    "  §8+§b1% §b✯ Magic Find",
+                    "§a10 Combo §8(lasts §a7s§8)",
+                    "  §8+§64 §7coins per kill",
+                    "§a15 Combo §8(lasts §a5s§8)",
+                    "  §8+§b2% §b✯ Magic Find",
+                    "§a20 Combo §8(lasts §a4s§8)",
+                    "  §8+§37% §7Combat Exp",
+                    "§a25 Combo §8(lasts §a3.5s§8)",
+                    "  §8+§b1% §b✯ Magic Find",
+                    "§a30 Combo §8(lasts §a2.5s§8)",
+                    "  §8+§64 §7coins per kill",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ],
+                "RARE": [
+                    "§6Kill Combo",
+                    "§7Gain buffs for combo kills.",
+                    "§7Effects stack as you increase",
+                    "§7your combo.",
+                    "",
+                    "§a5 Combo §8(lasts §a9s§8)",
+                    "  §8+§b2% §b✯ Magic Find",
+                    "§a10 Combo §8(lasts §a7s§8)",
+                    "  §8+§66 §7coins per kill",
+                    "§a15 Combo §8(lasts §a5s§8)",
+                    "  §8+§b2% §b✯ Magic Find",
+                    "§a20 Combo §8(lasts §a4s§8)",
+                    "  §8+§39% §7Combat Exp",
+                    "§a25 Combo §8(lasts §a3.5s§8)",
+                    "  §8+§b2% §b✯ Magic Find",
+                    "§a30 Combo §8(lasts §a2.5s§8)",
+                    "  §8+§66 §7coins per kill",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ],
+                "EPIC": [
+                    "§6Kill Combo",
+                    "§7Gain buffs for combo kills.",
+                    "§7Effects stack as you increase",
+                    "§7your combo.",
+                    "",
+                    "§a5 Combo §8(lasts §a9s§8)",
+                    "  §8+§b2% §b✯ Magic Find",
+                    "§a10 Combo §8(lasts §a7s§8)",
+                    "  §8+§68 §7coins per kill",
+                    "§a15 Combo §8(lasts §a5s§8)",
+                    "  §8+§b3% §b✯ Magic Find",
+                    "§a20 Combo §8(lasts §a4s§8)",
+                    "  §8+§312% §7Combat Exp",
+                    "§a25 Combo §8(lasts §a3.5s§8)",
+                    "  §8+§b2% §b✯ Magic Find",
+                    "§a30 Combo §8(lasts §a2.5s§8)",
+                    "  §8+§68 §7coins per kill",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ],
+                "LEGENDARY": [
+                    "§6Kill Combo",
+                    "§7Gain buffs for combo kills.",
+                    "§7Effects stack as you increase",
+                    "§7your combo.",
+                    "",
+                    "§a5 Combo §8(lasts §a9s§8)",
+                    "  §8+§b3% §b✯ Magic Find",
+                    "§a10 Combo §8(lasts §a7s§8)",
+                    "  §8+§610 §7coins per kill",
+                    "§a15 Combo §8(lasts §a5s§8)",
+                    "  §8+§b3% §b✯ Magic Find",
+                    "§a20 Combo §8(lasts §a4s§8)",
+                    "  §8+§315% §7Combat Exp",
+                    "§a25 Combo §8(lasts §a3.5s§8)",
+                    "  §8+§b3% §b✯ Magic Find",
+                    "§a30 Combo §8(lasts §a2.5s§8)",
+                    "  §8+§610 §7coins per kill",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ]
+            }
         },
         {
             "type": "GRIFFIN",
             "skill": "COMBAT",
             "uuid": "11e506b9-cb3d-43e6-89d2-9e1575944498",
-            "texture": "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8"
+            "texture": "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8",
+            "stats": {
+                "ALL": {
+                    "crit_chance": {
+                        "base": 0.0,
+                        "multiply": 0.1,
+                        "isPercent": true
+                    },
+                    "crit_damage": {
+                        "base": 0.0,
+                        "multiply": 0.5,
+                        "isPercent": true
+                    },
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "magic_find": {
+                        "base": 0.0,
+                        "multiply": 0.1
+                    },
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.25
+                    },
+                    "attack_speed": {
+                        "base": 0.0,
+                        "multiply": 0.35,
+                        "isPercent": true
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.0
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        5.0,
+                        7.0
+                    ],
+                    "multiply": [
+                        0.0,
+                        0.0
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        6.0,
+                        7.0
+                    ],
+                    "multiply": [
+                        0.0,
+                        0.0
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        6.0,
+                        8.0,
+                        1.0
+                    ],
+                    "multiply": [
+                        0.0,
+                        0.0,
+                        0.16
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        7.0,
+                        8.0,
+                        1.0,
+                        1.0
+                    ],
+                    "multiply": [
+                        0.0,
+                        0.0,
+                        0.2,
+                        0.15
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Odyssey",
+                    "§2Mythological creatures §7you",
+                    "§7find and burrows you dig scale",
+                    "§7in §cdifficulty §7and §6rewards",
+                    "§7based on your equipped",
+                    "§7Griffin\u0027s rarity."
+                ],
+                "UNCOMMON": [
+                    "§6Legendary Constitution",
+                    "§7Permanent §cRegeneration 7",
+                    "§7and §4Strength 8§7."
+                ],
+                "EPIC": [
+                    "§6Perpetual Empathy",
+                    "§7Heal nearby players for",
+                    "§a{0}% §7of the final damage",
+                    "§7you receive.",
+                    "§8Excludes other griffins."
+                ],
+                "LEGENDARY": [
+                    "§6King of Kings",
+                    "§7Gain §c+{1}% §c❁ Strength",
+                    "§7when above §c85% §7health."
+                ]
+            }
         },
         {
             "type": "GUARDIAN",
             "skill": "COMBAT",
             "uuid": "26508276-c01a-32a9-9201-7dae1724954e",
-            "texture": "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d"
+            "texture": "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d",
+            "stats": {
+                "ALL": {
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 1.0
+                    },
+                    "defense": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.2
+                    ],
+                    "multiply": [
+                        0.02
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.2
+                    ],
+                    "multiply": [
+                        0.06
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "RARE": {
+                    "base": [
+                        0.2,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.25
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.2,
+                        0.3
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.3
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.2,
+                        0.3,
+                        0.3
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.3,
+                        0.3
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Lazerbeam",
+                    "§7Zaps your enemies for §b{0}x",
+                    "§7your §b✎ Intelligence §7every",
+                    "§a3s"
+                ],
+                "RARE": [
+                    "§6Enchanting Exp Boost",
+                    "§7Boosts your Enchanting exp",
+                    "§7by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Mana Pool",
+                    "§7Regenerate §b{2}% §7extra mana,",
+                    "§7doubled when near or in water"
+                ]
+            }
         },
         {
             "type": "HORSE",
             "skill": "COMBAT",
             "uuid": "6d310633-c175-4b47-92ab-778287bb7a5e",
-            "texture": "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226"
+            "texture": "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226",
+            "stats": {
+                "ALL": {
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "speed": {
+                        "base": 0.0,
+                        "multiply": 0.25
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.0
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.0
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        1.1
+                    ],
+                    "multiply": [
+                        1.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        1.2
+                    ],
+                    "multiply": [
+                        1.2
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        1.2,
+                        0.2
+                    ],
+                    "multiply": [
+                        1.2,
+                        0.25
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Ridable",
+                    "§7Right-click your summoned pet",
+                    "§7to ride it!"
+                ],
+                "RARE": [
+                    "§6Run",
+                    "§7Increases the speed of your",
+                    "§7mount by §a{0}%"
+                ],
+                "LEGENDARY": [
+                    "§6Ride Into Battle",
+                    "§7While riding your horse, gain",
+                    "§7+§a{1}% §7 bow damage"
+                ]
+            }
         },
         {
             "type": "HOUND",
             "skill": "COMBAT",
             "uuid": "802a167c-cbcd-3a1f-becd-5b1a25a4cf15",
-            "texture": "b7c8bef6beb77e29af8627ecdc38d86aa2fea7ccd163dc73c00f9f258f9a1457"
+            "texture": "b7c8bef6beb77e29af8627ecdc38d86aa2fea7ccd163dc73c00f9f258f9a1457",
+            "stats": {
+                "ALL": {
+                    "ferocity": {
+                        "base": 0.0,
+                        "multiply": 0.05
+                    },
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.4
+                    },
+                    "attack_speed": {
+                        "base": 0.0,
+                        "multiply": 0.15,
+                        "isPercent": true
+                    }
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.05,
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.1,
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.05,
+                        0.1,
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Scavenger",
+                    "§7Gain +§a{0} §7coins per",
+                    "§7monster kill",
+                    "",
+                    "§6Finder",
+                    "§7Increases the chance for",
+                    "§7monsters to drop their armor by",
+                    "§a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Fury Claws",
+                    "§7Grants §a{2}% §e⚔ Bonus Attack",
+                    "§eSpeed"
+                ]
+            }
         },
         {
             "type": "JELLYFISH",
             "skill": "ALCHEMY",
             "uuid": "a7be2bb4-70a1-32e4-a981-8f26c5864371",
-            "texture": "913f086ccb56323f238ba3489ff2a1a34c0fdceeafc483acff0e5488cfd6c2f1"
+            "texture": "913f086ccb56323f238ba3489ff2a1a34c0fdceeafc483acff0e5488cfd6c2f1",
+            "stats": {
+                "ALL": {
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 2.0
+                    }
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0,
+                        0.5
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Radiant Regeneration",
+                    "§7While in dungeons, increases",
+                    "§7your base health regen by §a{0}%",
+                    "§7and heals players within 8",
+                    "§7blocks by up to 10hp/s",
+                    "",
+                    "§6Hungry Healer",
+                    "§7While in dungeons, for every",
+                    "§71000 you heal teammates apply",
+                    "§7the §aenchanted golden apple",
+                    "§7effect to all players within",
+                    "§710 blocks (10s cooldown)"
+                ],
+                "LEGENDARY": [
+                    "§6Powerful Potions",
+                    "§7While in dungeons, increase",
+                    "§7the effectiveness of Instant",
+                    "§7Health and Mana splash potions",
+                    "§7by §a{1}%"
+                ]
+            }
         },
         {
             "type": "JERRY",
             "skill": "COMBAT",
             "uuid": "0a9e8efb-9191-4c81-80f5-e27ca5433156",
-            "texture": "822d8e751c8f2fd4c8942c44bdb2f5ca4d8ae8e575ed3eb34c18a86e93b"
+            "texture": "822d8e751c8f2fd4c8942c44bdb2f5ca4d8ae8e575ed3eb34c18a86e93b",
+            "stats": {
+                "ALL": {
+                    "intelligence": {
+                        "base": 0.0,
+                        "multiply": -1.0
+                    }
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.09
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Jerry",
+                    "§7Gain §a50% §7chance to deal",
+                    "§7your regular damage",
+                    "",
+                    "§6Jerry",
+                    "§7Gain §a100% §7chance to",
+                    "§7receive a normal amount of drops",
+                    "§7from mobs"
+                ],
+                "LEGENDARY": [
+                    "§6Jerry",
+                    "§7Actually adds §c5 damage §7to",
+                    "§7the Aspect of the Jerry"
+                ]
+            }
         },
         {
             "type": "LION",
             "skill": "FORAGING",
             "uuid": "7e3ed445-3545-3c76-993b-8f292ea576c6",
-            "texture": "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1"
+            "texture": "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1",
+            "stats": {
+                "ALL": {
+                    "ferocity": {
+                        "base": 0.0,
+                        "multiply": 0.05
+                    },
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "speed": {
+                        "base": 0.0,
+                        "multiply": 0.25
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.03
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.049
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "RARE": {
+                    "base": [
+                        0.1,
+                        0.8
+                    ],
+                    "multiply": [
+                        0.099,
+                        0.742
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.1,
+                        1.0
+                    ],
+                    "multiply": [
+                        0.149,
+                        1.0
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.2,
+                        1.0,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.198,
+                        1.0,
+                        0.149
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Primal Force",
+                    "§7Adds §c+{0} §c❁ Damage §7and",
+                    "§c+{0} §c❁ Strength §7to your",
+                    "§7weapons."
+                ],
+                "RARE": [
+                    "§6First Pounce",
+                    "§7First Strike,",
+                    "§7Triple-Strike, and §d§lCombo",
+                    "§7are §a{1}% §7more effective."
+                ],
+                "LEGENDARY": [
+                    "§6King of the Jungle",
+                    "§7Deal §c+{2}% §c❁ Damage",
+                    "§7against mobs that have",
+                    "§7attacked you."
+                ]
+            }
         },
         {
             "type": "MAGMA_CUBE",
             "skill": "COMBAT",
             "uuid": "35f02923-7bec-3869-9ef5-b42a4794cac8",
-            "texture": "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429"
+            "texture": "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429",
+            "stats": {
+                "ALL": {
+                    "health": {
+                        "base": 0.0,
+                        "multiply": 0.5
+                    },
+                    "defense": {
+                        "base": 0.0,
+                        "multiply": 0.33
+                    },
+                    "strength": {
+                        "base": 0.0,
+                        "multiply": 0.2
+                    }
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.2,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.248
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "EPIC": {
+                    "base": [
+                        0.3,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.297,
+                        0.248
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.3,
+                        0.2,
+                        1.0
+                    ],
+                    "multiply": [
+                        0.297,
+                        0.248,
+                        1.0
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Slimy Minions",
+                    "§7Slime minions work §a{0}%",
+                    "§7faster while on your island"
+                ],
+                "RARE": [
+                    "§6Salt Blade",
+                    "§7Deal §a{1}% §7more damage to",
+                    "§7slimes"
+                ],
+                "LEGENDARY": [
+                    "§6Hot Ember",
+                    "§7Buffs the stats of Ember Armor",
+                    "§7by §a{2}%"
+                ]
+            }
         },
         {
             "type": "MEGALODON",
