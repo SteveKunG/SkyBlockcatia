@@ -173,19 +173,24 @@ public class SBPets
         private final String skill;
         private final String uuid;
         private final String texture;
-        private final Map<String, Stats> stats;
+        private final Stats stats;
+        private final List<String> description;
         private final Map<String, StatsPropertyArray> statsLore;
         private final Map<String, List<String>> lore;
+        @SerializedName("lore_mode")
+        private final String loreMode;
 
-        public Type(String type, String skill, String uuid, String texture, Map<String, Stats> stats, Map<String, StatsPropertyArray> statsLore, Map<String, List<String>> lore)
+        public Type(String type, String skill, String uuid, String texture, Stats stats, List<String> description, Map<String, StatsPropertyArray> statsLore, Map<String, List<String>> lore, String loreMode)
         {
             this.type = type;
             this.skill = skill;
             this.uuid = uuid;
             this.texture = texture;
+            this.description = description;
             this.stats = stats;
             this.statsLore = statsLore;
             this.lore = lore;
+            this.loreMode = loreMode;
         }
 
         public String getType()
@@ -198,9 +203,14 @@ public class SBPets
             return SBSkills.Type.byName(this.skill);
         }
 
-        public Map<String, Stats> getStats()
+        public Stats getStats()
         {
             return this.stats;
+        }
+
+        public List<String> getDescription()
+        {
+            return this.description;
         }
 
         public Map<String, StatsPropertyArray> getStatsLore()
@@ -213,6 +223,11 @@ public class SBPets
             return this.lore;
         }
 
+        public String getLoreMode()
+        {
+            return this.loreMode;
+        }
+
         public ItemStack getPetItem()
         {
             return RenderUtils.getSkullItemStack(this.uuid, this.texture);
@@ -221,6 +236,7 @@ public class SBPets
 
     public class Stats
     {
+        private final StatsProperty damage;
         private final StatsProperty health;
         private final StatsProperty strength;
         @SerializedName("crit_damage")
@@ -231,15 +247,20 @@ public class SBPets
         private final StatsProperty attackSpeed;
         private final StatsProperty ferocity;
         private final StatsProperty defense;
+        @SerializedName("true_defense")
+        private final StatsProperty trueDefense;
         private final StatsProperty speed;
         private final StatsProperty intelligence;
         @SerializedName("sea_creature_chance")
         private final StatsProperty seaCreatureChance;
         @SerializedName("magic_find")
         private final StatsProperty magicFind;
+        @SerializedName("ability_damage")
+        private final StatsProperty abilityDamage;
 
-        public Stats(StatsProperty health, StatsProperty strength, StatsProperty critDamage, StatsProperty critChance, StatsProperty attackSpeed, StatsProperty ferocity, StatsProperty defense, StatsProperty speed, StatsProperty intelligence, StatsProperty seaCreatureChance, StatsProperty magicFind)
+        public Stats(StatsProperty damage, StatsProperty health, StatsProperty strength, StatsProperty critDamage, StatsProperty critChance, StatsProperty attackSpeed, StatsProperty ferocity, StatsProperty defense, StatsProperty trueDefense, StatsProperty speed, StatsProperty intelligence, StatsProperty seaCreatureChance, StatsProperty magicFind, StatsProperty abilityDamage)
         {
+            this.damage = damage;
             this.health = health;
             this.strength = strength;
             this.critDamage = critDamage;
@@ -247,10 +268,17 @@ public class SBPets
             this.attackSpeed = attackSpeed;
             this.ferocity = ferocity;
             this.defense = defense;
+            this.trueDefense = trueDefense;
             this.speed = speed;
             this.intelligence = intelligence;
             this.seaCreatureChance = seaCreatureChance;
             this.magicFind = magicFind;
+            this.abilityDamage = abilityDamage;
+        }
+
+        public StatsProperty getDamage()
+        {
+            return this.damage;
         }
 
         public StatsProperty getHealth()
@@ -293,6 +321,11 @@ public class SBPets
             return this.defense;
         }
 
+        public StatsProperty getTrueDefense()
+        {
+            return this.trueDefense;
+        }
+
         public StatsProperty getIntelligence()
         {
             return this.intelligence;
@@ -307,13 +340,17 @@ public class SBPets
         {
             return this.magicFind;
         }
+
+        public StatsProperty getAbilityDamage()
+        {
+            return this.abilityDamage;
+        }
     }
 
     public class StatsProperty
     {
         private final double base;
         private final double multiply;
-        @SerializedName("isPercent")
         private final boolean percent;
 
         public StatsProperty(double base, double multiply, boolean percent)
@@ -339,15 +376,17 @@ public class SBPets
     {
         private final double[] base;
         private final double[] multiply;
+        private final double[] additional;
         @SerializedName("rounding_mode")
         private final String roundingMode;
         @SerializedName("display_mode")
         private final String displayMode;
 
-        public StatsPropertyArray(double[] base, double[] multiply, String roundingMode, String displayMode)
+        public StatsPropertyArray(double[] base, double[] multiply, double[] additional, String roundingMode, String displayMode)
         {
             this.base = base;
             this.multiply = multiply;
+            this.additional = additional;
             this.roundingMode = roundingMode;
             this.displayMode = displayMode;
         }
@@ -360,6 +399,11 @@ public class SBPets
         public double[] getMultiply()
         {
             return this.multiply;
+        }
+
+        public double[] getAdditional()
+        {
+            return this.additional;
         }
 
         public String getRoundingMode()

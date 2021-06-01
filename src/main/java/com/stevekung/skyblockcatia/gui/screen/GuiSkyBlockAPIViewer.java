@@ -2803,135 +2803,158 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
             if (type != null)
             {
-                Map<String, SBPets.Stats> stats = type.getStats();
+                SBPets.Stats stats = type.getStats();
                 Map<String, SBPets.StatsPropertyArray> statsLore = type.getStatsLore();
                 Map<String, List<String>> lore = type.getLore();
+                List<String> descList = type.getDescription();
+                String loreMode = type.getLoreMode();
                 List<NBTTagString> listStats = Lists.newLinkedList();
                 List<NBTTagString> listLore = Lists.newLinkedList();
 
+                if (descList != null)
+                {
+                    for (String desc : descList)
+                    {
+                        listStats.add(new NBTTagString(desc));
+                    }
+                    listStats.add(new NBTTagString(""));
+                }
                 if (stats != null)
                 {
-                    for (Map.Entry<String, SBPets.Stats> entry : stats.entrySet())
+                    SBPets.StatsProperty damage = stats.getDamage();
+                    SBPets.StatsProperty health = stats.getHealth();
+                    SBPets.StatsProperty strength = stats.getStrength();
+                    SBPets.StatsProperty critDamage = stats.getCritDamage();
+                    SBPets.StatsProperty critChance = stats.getCritChance();
+                    SBPets.StatsProperty ferocity = stats.getFerocity();
+                    SBPets.StatsProperty attackSpeed = stats.getAttackSpeed();
+                    SBPets.StatsProperty defense = stats.getDefense();
+                    SBPets.StatsProperty trueDefense = stats.getTrueDefense();
+                    SBPets.StatsProperty speed = stats.getSpeed();
+                    SBPets.StatsProperty intelligence = stats.getIntelligence();
+                    SBPets.StatsProperty seaCreatureChance = stats.getSeaCreatureChance();
+                    SBPets.StatsProperty magicFind = stats.getMagicFind();
+                    SBPets.StatsProperty abilityDamage = stats.getAbilityDamage();
+
+                    if (damage != null)
                     {
-                        String statTierName = entry.getKey();
+                        listStats.add(new NBTTagString(damage.getString("Damage", level)));
+                    }
+                    if (health != null)
+                    {
+                        listStats.add(new NBTTagString(health.getString("Health", level)));
 
-                        if (statTierName.equals("ALL"))
+                        if (active)
                         {
-                            SBPets.StatsProperty health = entry.getValue().getHealth();
-                            SBPets.StatsProperty strength = entry.getValue().getStrength();
-                            SBPets.StatsProperty critDamage = entry.getValue().getCritDamage();
-                            SBPets.StatsProperty critChance = entry.getValue().getCritChance();
-                            SBPets.StatsProperty ferocity = entry.getValue().getFerocity();
-                            SBPets.StatsProperty attackSpeed = entry.getValue().getAttackSpeed();
-                            SBPets.StatsProperty defense = entry.getValue().getDefense();
-                            SBPets.StatsProperty speed = entry.getValue().getSpeed();
-                            SBPets.StatsProperty intelligence = entry.getValue().getIntelligence();
-                            SBPets.StatsProperty seaCreatureChance = entry.getValue().getSeaCreatureChance();
-                            SBPets.StatsProperty magicFind = entry.getValue().getMagicFind();
-
-                            if (health != null)
-                            {
-                                listStats.add(new NBTTagString(health.getString("Health", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addHealth(health.getValue(level));
-                                }
-                            }
-                            if (strength != null)
-                            {
-                                listStats.add(new NBTTagString(strength.getString("Strength", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addStrength(strength.getValue(level));
-                                }
-                            }
-                            if (critDamage != null)
-                            {
-                                listStats.add(new NBTTagString(critDamage.getString("Crit Damage", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addCritDamage(critDamage.getValue(level));
-                                }
-                            }
-                            if (critChance != null)
-                            {
-                                listStats.add(new NBTTagString(critChance.getString("Crit Chance", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addCritChance(critChance.getValue(level));
-                                }
-                            }
-                            if (ferocity != null)
-                            {
-                                listStats.add(new NBTTagString(ferocity.getString("Ferocity", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addCritChance(ferocity.getValue(level));
-                                }
-                            }
-                            if (attackSpeed != null)
-                            {
-                                listStats.add(new NBTTagString(attackSpeed.getString("Bonus Attack Speed", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addAttackSpeed(attackSpeed.getValue(level));
-                                }
-                            }
-                            if (speed != null)
-                            {
-                                listStats.add(new NBTTagString(speed.getString("Speed", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addSpeed(speed.getValue(level));
-                                }
-                            }
-                            if (defense != null)
-                            {
-                                listStats.add(new NBTTagString(defense.getString("Defense", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addDefense(defense.getValue(level));
-                                }
-                            }
-                            if (intelligence != null)
-                            {
-                                listStats.add(new NBTTagString(intelligence.getString("Intelligence", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addIntelligence(intelligence.getValue(level));
-                                }
-                            }
-                            if (seaCreatureChance != null)
-                            {
-                                listStats.add(new NBTTagString(seaCreatureChance.getString("Sea Creature Chance", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addIntelligence(seaCreatureChance.getValue(level));
-                                }
-                            }
-                            if (magicFind != null)
-                            {
-                                listStats.add(new NBTTagString(magicFind.getString("Magic Find", level)));
-
-                                if (active)
-                                {
-                                    this.allStat.addMagicFind(magicFind.getValue(level));
-                                }
-                            }
+                            this.allStat.addHealth(health.getValue(level));
                         }
-                        else
+                    }
+                    if (strength != null)
+                    {
+                        listStats.add(new NBTTagString(strength.getString("Strength", level)));
+
+                        if (active)
                         {
-                            //TODO
+                            this.allStat.addStrength(strength.getValue(level));
+                        }
+                    }
+                    if (critDamage != null)
+                    {
+                        listStats.add(new NBTTagString(critDamage.getString("Crit Damage", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addCritDamage(critDamage.getValue(level));
+                        }
+                    }
+                    if (critChance != null)
+                    {
+                        listStats.add(new NBTTagString(critChance.getString("Crit Chance", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addCritChance(critChance.getValue(level));
+                        }
+                    }
+                    if (ferocity != null)
+                    {
+                        listStats.add(new NBTTagString(ferocity.getString("Ferocity", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addFerocity(ferocity.getValue(level));
+                        }
+                    }
+                    if (attackSpeed != null)
+                    {
+                        listStats.add(new NBTTagString(attackSpeed.getString("Bonus Attack Speed", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addAttackSpeed(attackSpeed.getValue(level));
+                        }
+                    }
+                    if (speed != null)
+                    {
+                        listStats.add(new NBTTagString(speed.getString("Speed", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addSpeed(speed.getValue(level));
+                        }
+                    }
+                    if (defense != null)
+                    {
+                        listStats.add(new NBTTagString(defense.getString("Defense", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addDefense(defense.getValue(level));
+                        }
+                    }
+                    if (trueDefense != null)
+                    {
+                        listStats.add(new NBTTagString(trueDefense.getString("True Defense", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addTrueDefense(trueDefense.getValue(level));
+                        }
+                    }
+                    if (intelligence != null)
+                    {
+                        listStats.add(new NBTTagString(intelligence.getString("Intelligence", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addIntelligence(intelligence.getValue(level));
+                        }
+                    }
+                    if (seaCreatureChance != null)
+                    {
+                        listStats.add(new NBTTagString(seaCreatureChance.getString("Sea Creature Chance", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addSeaCreatureChance(seaCreatureChance.getValue(level));
+                        }
+                    }
+                    if (magicFind != null)
+                    {
+                        listStats.add(new NBTTagString(magicFind.getString("Magic Find", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addMagicFind(magicFind.getValue(level));
+                        }
+                    }
+                    if (abilityDamage != null)
+                    {
+                        listStats.add(new NBTTagString(abilityDamage.getString("Ability Damage", level)));
+
+                        if (active)
+                        {
+                            this.allStat.addAbilityDamage(abilityDamage.getValue(level));
                         }
                     }
                 }
@@ -2943,28 +2966,48 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         SBPets.Tier statTier = SBPets.Tier.valueOf(statTierName);
                         boolean foundLowTier = tier.ordinal() < statTier.ordinal();
 
-                        if (statTierName.equals("ALL"))
+                        if (loreMode != null && loreMode.equals("REPLACE") && !tier.equals(statTier))
                         {
-                            //TODO
+                            continue;
                         }
-                        else
-                        {
-                            for (String lore2 : entry.getValue())
-                            {
-                                if (foundLowTier)
-                                {
-                                    continue;
-                                }
 
+                        List<NBTTagString> formattedLore = Lists.newArrayList();
+
+                        for (String lore2 : entry.getValue())
+                        {
+                            if (foundLowTier)
+                            {
+                                continue;
+                            }
+
+                            if (statsLore != null)
+                            {
                                 SBPets.StatsPropertyArray array = statsLore.get(tier.name());
 
-                                if (array == null)
+                                if (statsLore.get("ALL") != null)
                                 {
                                     array = statsLore.get("ALL");
+                                }
+                                else
+                                {
+                                    for (SBPets.Tier tierTmp : SBPets.Tier.values())
+                                    {
+                                        SBPets.StatsPropertyArray foundProp = statsLore.get(tierTmp.name());
+
+                                        if (foundProp == null)
+                                        {
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            array = foundProp;
+                                        }
+                                    }
                                 }
 
                                 double[] statsLoreBase = array.getBase();
                                 double[] statsLoreMult = array.getMultiply();
+                                double[] statsLoreAddit = array.getAdditional();
                                 String roundingMode = array.getRoundingMode();
                                 String displayMode = array.getDisplayMode();
 
@@ -2976,6 +3019,13 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                                     if (roundingMode != null)
                                     {
                                         decimal = decimal.setScale(1, RoundingMode.valueOf(roundingMode));
+                                    }
+                                    if (statsLoreAddit != null)
+                                    {
+                                        for (int i2 = 0; i2 < statsLoreAddit.length; i2++)
+                                        {
+                                            lore2 = lore2.replace("{" + (char)(i2 + 65) + "}", SKILL_AVG.format(statsLoreAddit[i2]));
+                                        }
                                     }
                                     if (displayMode != null)
                                     {
@@ -2989,13 +3039,15 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                                         lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : decimal));
                                     }
                                 }
-                                listLore.add(new NBTTagString(lore2));
                             }
+                            formattedLore.add(new NBTTagString(lore2));
+                        }
 
-                            if (!foundLowTier)
-                            {
-                                listLore.add(new NBTTagString(""));
-                            }
+                        listLore.addAll(formattedLore);
+
+                        if (!foundLowTier)
+                        {
+                            listLore.add(new NBTTagString(""));
                         }
                     }
                 }
