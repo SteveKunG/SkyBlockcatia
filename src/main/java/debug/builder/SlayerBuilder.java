@@ -46,6 +46,10 @@ public class SlayerBuilder
         ENDERMAN_BONUS.add(new SlayerBonus(1, "health=1"));
         ENDERMAN_BONUS.add(new SlayerBonus(2, "intelligence=2"));
         ENDERMAN_BONUS.add(new SlayerBonus(3, "health=2"));
+        ENDERMAN_BONUS.add(new SlayerBonus(4, "intelligence=2"));
+        ENDERMAN_BONUS.add(new SlayerBonus(5, "health=3"));
+        ENDERMAN_BONUS.add(new SlayerBonus(6, "intelligence=3"));
+        ENDERMAN_BONUS.add(new SlayerBonus(7, "health=4"));
     }
 
     public static void main(String[] args)

@@ -132,6 +132,22 @@
             {
                 "level": 3,
                 "health": 2
+            },
+            {
+                "level": 4,
+                "intelligence": 2
+            },
+            {
+                "level": 5,
+                "health": 3
+            },
+            {
+                "level": 6,
+                "intelligence": 3
+            },
+            {
+                "level": 7,
+                "health": 4
             }
         ]
     }
