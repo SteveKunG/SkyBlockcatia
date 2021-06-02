@@ -32,6 +32,17 @@
             100000,
             400000,
             1000000
+        ],
+        "enderman": [
+            10,
+            30,
+            250,
+            1500,
+            5000,
+            20000,
+            100000,
+            400000,
+            1000000
         ]
     },
     "bonus": {
@@ -107,6 +118,36 @@
             {
                 "level": 8,
                 "speed": 1
+            }
+        ],
+        "enderman": [
+            {
+                "level": 1,
+                "health": 1
+            },
+            {
+                "level": 2,
+                "intelligence": 2
+            },
+            {
+                "level": 3,
+                "health": 2
+            },
+            {
+                "level": 4,
+                "intelligence": 2
+            },
+            {
+                "level": 5,
+                "health": 3
+            },
+            {
+                "level": 6,
+                "intelligence": 3
+            },
+            {
+                "level": 7,
+                "health": 4
             }
         ]
     }
