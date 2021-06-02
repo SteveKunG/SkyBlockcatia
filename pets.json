@@ -780,6 +780,13 @@
             "texture": "ea84cc8818c293484fdaafc8fa2f0bf39e55733a247d68023df2c6c6b9b671d0"
         },
         {
+            "type": "ENDERMITE_RADIANT",
+            "displayName": "Radiant Endermite",
+            "color": "light_purple",
+            "uuid": "f09dfb7d-81f5-32d3-b491-9dd1626cf611",
+            "texture": "2fc4a7542b754420b1b19f9a28ea00040555a9e876052b97f65840308a93348d"
+        },
+        {
             "type": "GUARDIAN",
             "displayName": "Watcher Guardian",
             "color": "dark_purple",
