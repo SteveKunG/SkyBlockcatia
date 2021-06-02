@@ -1,13 +1,11 @@
 buildscript {
     repositories {
-        jcenter()
+        gradlePluginPortal()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url "https://maven.minecraftforge.net"
         }
         maven {
-            name "sponge"
-            url "https://repo.spongepowered.org/maven"
+            url "https://repo.spongepowered.org/repository/maven-public/"
         }
     }
     dependencies {
@@ -51,17 +49,15 @@ configurations {
 
 dependencies {
     embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") { transitive = false }
-    compile files("libs/SkyblockAddons.jar")
+
+    if (file("libs/SkyblockAddons.jar").exists()) {
+        compile files("libs/SkyblockAddons.jar")
+    }
 }
 
 repositories {
     maven {
-        name "CurseGradle"
-        url "https://plugins.gradle.org/m2/"
-    }
-    maven {
-        name "sponge"
-        url "https://repo.spongepowered.org/maven/"
+        url "https://repo.spongepowered.org/repository/maven-public/"
     }
 }
 
@@ -83,7 +79,7 @@ jar {
                    "ForceLoadAsMod": "true"
         )
     }
-    exclude "test/**"
+    exclude "debug/**"
     exclude "club/**"
     baseName = "SkyBlockcatia-" + mcVersion
 }
@@ -91,7 +87,7 @@ jar {
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
     baseName = "SkyBlockcatia-" + mcVersion
-    exclude "test/**"
+    exclude "debug/**"
     classifier = "sources"
 }
 
@@ -108,7 +104,7 @@ task deobfJar(type: Jar) {
                    "ForceLoadAsMod": "true"
         )
     }
-    exclude "test/**"
+    exclude "debug/**"
     baseName = "SkyBlockcatia-" + mcVersion
     classifier = "deobf"
 }
