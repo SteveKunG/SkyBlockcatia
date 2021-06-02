@@ -20,7 +20,7 @@
             "stats": {
                 "strength": {
                     "base": 80.0,
-                    "isPercent": true
+                    "percent": true
                 }
             }
         },
@@ -73,11 +73,11 @@
             "stats": {
                 "crit_damage": {
                     "base": 50.0,
-                    "isPercent": true
+                    "percent": true
                 },
                 "crit_chance": {
                     "base": 50.0,
-                    "isPercent": true
+                    "percent": true
                 }
             }
         },
@@ -318,11 +318,11 @@
             "stats": {
                 "crit_damage": {
                     "base": 40.0,
-                    "isPercent": true
+                    "percent": true
                 },
                 "crit_chance": {
                     "base": 40.0,
-                    "isPercent": true
+                    "percent": true
                 }
             }
         },
@@ -1004,15 +1004,13 @@
             "uuid": "7895e21a-8f3b-3e30-bea6-06108f64d5dc",
             "texture": "ab126814fc3fa846dad934c349628a7a1de5b415021a03ef4211d62514d5",
             "stats": {
-                "ALL": {
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.4
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 0.75
-                    }
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.4
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.75
                 }
             },
             "statsLore": {
@@ -1063,15 +1061,13 @@
             "uuid": "1911c3bb-c0af-3474-98e2-486478c5b9ea",
             "texture": "382fc3f71b41769376a9e92fe3adbaac3772b999b219c9d6b4680ba9983e527",
             "stats": {
-                "ALL": {
-                    "speed": {
-                        "base": 0.0,
-                        "multiply": 0.05
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    }
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.05
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "statsLore": {
@@ -1177,19 +1173,17 @@
             "uuid": "af894c68-45d0-3ae2-952c-b3cf925199ad",
             "texture": "7e941987e825a24ea7baafab9819344b6c247c75c54a691987cd296bc163c263",
             "stats": {
-                "ALL": {
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "speed": {
-                        "base": 0.0,
-                        "multiply": 0.1
-                    },
-                    "strength": {
-                        "base": 5.0,
-                        "multiply": 0.25
-                    }
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "strength": {
+                    "base": 5.0,
+                    "multiply": 0.25
                 }
             },
             "statsLore": {
@@ -1283,28 +1277,26 @@
             "uuid": "5992f40a-6406-48a3-867b-232e414232f3",
             "texture": "e4b45cbaa19fe3d68c856cd3846c03b5f59de81a480eec921ab4fa3cd81317",
             "stats": {
-                "ALL": {
-                    "speed": {
-                        "base": 0.0,
-                        "multiply": 0.25
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    }
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "statsLore": {
                 "LEGENDARY": {
                     "base": [
                         0.0,
-                        0.1,
-                        0.1
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         1.0,
-                        0.149,
-                        0.149
+                        0.15,
+                        0.15
                     ]
                 }
             },
@@ -1328,28 +1320,25 @@
             "uuid": "118fe834-28aa-3b0d-afe6-f0c52d01afe8",
             "texture": "b78ef2e4cf2c41a2d14bfde9caff10219f5b1bf5b35a49eb51c6467882cb5f0",
             "stats": {
-                "ALL": {
-                    "defense": {
-                        "base": 10.0,
-                        "multiply": 0.2
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    }
+                "defense": {
+                    "base": 10.0,
+                    "multiply": 0.2
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "statsLore": {
                 "ALL": {
                     "base": [
-                        0.2,
-                        0.4
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.2,
                         0.4
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -1375,20 +1364,18 @@
             "uuid": "47c8ba46-82ac-3c09-b511-5502860eb012",
             "texture": "dab779bbccc849f88273d844e8ca2f3a67a1699cb216c0a11b44326ce2cc20",
             "stats": {
-                "ALL": {
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 2.0
-                    }
+                "health": {
+                    "base": 0.0,
+                    "multiply": 2.0
                 }
             },
             "statsLore": {
                 "COMMON": {
                     "base": [
-                        0.5
+                        0.0
                     ],
                     "multiply": [
-                        0.495
+                        0.5
                     ]
                 },
                 "UNCOMMON": {
@@ -1401,17 +1388,17 @@
                 },
                 "RARE": {
                     "base": [
-                        1.5,
+                        0.0,
                         0.0
                     ],
                     "multiply": [
-                        1.485,
+                        1.5,
                         0.03
                     ]
                 },
                 "EPIC": {
                     "base": [
-                        2.0,
+                        0.0,
                         0.0
                     ],
                     "multiply": [
@@ -1421,14 +1408,14 @@
                 },
                 "LEGENDARY": {
                     "base": [
-                        2.5,
                         0.0,
-                        0.2
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        2.475,
+                        2.5,
                         0.03,
-                        0.198
+                        0.2
                     ]
                 }
             },
@@ -1454,66 +1441,59 @@
             "uuid": "635fdfb8-3c52-433e-87dc-70a9406c5ff0",
             "texture": "7f37d524c3eed171ce149887ea1dee4ed399904727d521865688ece3bac75e",
             "stats": {
-                "ALL": {
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 2.0
-                    }
+                "health": {
+                    "base": 0.0,
+                    "multiply": 2.0
                 }
             },
             "statsLore": {
                 "COMMON": {
                     "base": [
-                        0.3
+                        0.0
                     ],
                     "multiply": [
                         0.3
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "UNCOMMON": {
                     "base": [
-                        0.4
+                        0.0
                     ],
                     "multiply": [
                         0.4
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "RARE": {
                     "base": [
-                        0.4,
-                        0.8
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.4,
                         0.8
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "EPIC": {
                     "base": [
-                        0.5,
+                        0.0,
                         0.0
                     ],
                     "multiply": [
                         0.5,
                         1.0
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.5,
                         0.0,
-                        0.3
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.5,
                         1.0,
                         0.3
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -1540,16 +1520,14 @@
             "uuid": "48f53ffe-a3f0-3280-aac0-11cc0d6121f4",
             "texture": "cefe7d803a45aa2af1993df2544a28df849a762663719bfefc58bf389ab7f5",
             "stats": {
-                "ALL": {
-                    "sea_creature_chance": {
-                        "base": 0.0,
-                        "multiply": 0.05,
-                        "isPercent": true
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    }
+                "sea_creature_chance": {
+                    "base": 0.0,
+                    "multiply": 0.05,
+                    "percent": true
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "statsLore": {
@@ -1559,6 +1537,9 @@
                     ],
                     "multiply": [
                         0.03
+                    ],
+                    "additional": [
+                        15.0
                     ]
                 },
                 "UNCOMMON": {
@@ -1567,6 +1548,9 @@
                     ],
                     "multiply": [
                         0.04
+                    ],
+                    "additional": [
+                        20.0
                     ]
                 },
                 "RARE": {
@@ -1577,6 +1561,9 @@
                     "multiply": [
                         0.04,
                         0.07
+                    ],
+                    "additional": [
+                        20.0
                     ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
                 },
@@ -1589,6 +1576,9 @@
                         0.1,
                         0.1
                     ],
+                    "additional": [
+                        25.0
+                    ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
                 },
                 "LEGENDARY": {
@@ -1597,8 +1587,11 @@
                         0.1
                     ],
                     "multiply": [
-                        0.1,
+                        0.05,
                         0.1
+                    ],
+                    "additional": [
+                        25.0
                     ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
                 }
@@ -1628,64 +1621,62 @@
             "uuid": "9a58e25a-cf47-447d-b13c-3ea36eccfa31",
             "texture": "7071a76f669db5ed6d32b48bb2dba55d5317d7f45225cb3267ec435cfa514",
             "stats": {
-                "ALL": {
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 0.75
-                    },
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    }
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.75
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "statsLore": {
                 "COMMON": {
                     "base": [
-                        0.1
+                        0.0
                     ],
                     "multiply": [
-                        0.099
+                        0.1
                     ]
                 },
                 "UNCOMMON": {
                     "base": [
-                        0.1
+                        0.0
                     ],
                     "multiply": [
-                        0.149
+                        0.15
                     ]
                 },
                 "RARE": {
                     "base": [
-                        0.1,
+                        0.0,
                         0.0
                     ],
                     "multiply": [
-                        0.149,
+                        0.15,
                         0.01
                     ]
                 },
                 "EPIC": {
                     "base": [
-                        0.2,
+                        0.0,
                         0.0
                     ],
                     "multiply": [
-                        0.198,
+                        0.2,
                         0.01
                     ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.2,
                         0.0,
-                        1.8
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        0.198,
+                        0.2,
                         0.01,
-                        1.782
+                        1.8
                     ]
                 }
             },
@@ -1714,67 +1705,74 @@
             "uuid": "fb3c5e13-61e9-4584-99db-9f9ef9fb834d",
             "texture": "6eab75eaa5c9f2c43a0d23cfdce35f4df632e9815001850377385f7b2f039ce1",
             "stats": {
-                "ALL": {
-                    "crit_damage": {
-                        "base": 0.0,
-                        "multiply": 0.75,
-                        "isPercent": true
-                    }
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.75,
+                    "percent": true
                 }
             },
             "statsLore": {
                 "COMMON": {
                     "base": [
-                        0.1
+                        0.0
                     ],
                     "multiply": [
                         0.1
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "UNCOMMON": {
                     "base": [
-                        0.2
+                        0.0
                     ],
                     "multiply": [
                         0.2
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "RARE": {
                     "base": [
-                        0.2,
-                        0.4
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.2,
                         0.4
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "EPIC": {
                     "base": [
-                        0.3,
-                        0.5
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.3,
                         0.5
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.3,
-                        0.5,
-                        0.2
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.3,
                         0.5,
-                        0.2
+                        0.25
+                    ]
+                },
+                "MYTHIC": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                     ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    "multiply": [
+                        0.3,
+                        0.5,
+                        0.25,
+                        0.4
+                    ]
                 }
             },
             "lore": {
@@ -1793,6 +1791,11 @@
                     "§6Zealot Madness",
                     "§7Increases your odds to find a",
                     "§7special Zealot by §a{2}%"
+                ],
+                "MYTHIC": [
+                    "§6Enderman Slayer",
+                    "§7Gain +§a{3}% §7more combat xp",
+                    "§7from endermen"
                 ]
             }
         },
@@ -1802,28 +1805,26 @@
             "uuid": "3302cdfe-6879-4659-ab0b-587b2cdb98e6",
             "texture": "5a1a0831aa03afb4212adcbb24e5dfaa7f476a1173fce259ef75a85855",
             "stats": {
-                "ALL": {
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    }
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "statsLore": {
                 "COMMON": {
                     "base": [
-                        0.4
+                        0.0
                     ],
                     "multiply": [
-                        0.396
+                        0.4
                     ]
                 },
                 "UNCOMMON": {
                     "base": [
-                        0.4
+                        0.0
                     ],
                     "multiply": [
-                        0.396
+                        0.4
                     ]
                 },
                 "RARE": {
@@ -1887,27 +1888,25 @@
             "uuid": "3f9632a1-0ce2-311a-97e7-b144dfcb74f3",
             "texture": "aec3ff563290b13ff3bcc36898af7eaa988b6cc18dc254147f58374afe9b21b9",
             "stats": {
-                "ALL": {
-                    "crit_damage": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "crit_chance": {
-                        "base": 0.0,
-                        "multiply": 0.1
-                    },
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    }
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
                 }
             },
             "statsLore": {
                 "EPIC": {
                     "base": [
-                        0.2,
-                        0.5,
-                        0.3
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.2,
@@ -1917,10 +1916,10 @@
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.2,
-                        0.5,
-                        0.3,
-                        0.1
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.2,
@@ -1953,48 +1952,46 @@
             "uuid": "fd4a969b-c84c-4b59-979d-55eca6ec5f0e",
             "texture": "40cd71fbbbbb66c7baf7881f415c64fa84f6504958a57ccdb8589252647ea",
             "stats": {
-                "ALL": {
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "defense": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    }
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 0.5
                 }
             },
             "statsLore": {
                 "RARE": {
                     "base": [
-                        0.3,
-                        0.4
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        0.297,
-                        0.396
+                        0.3,
+                        0.4
                     ]
                 },
                 "EPIC": {
                     "base": [
-                        0.4,
-                        0.5
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        0.396,
-                        0.495
+                        0.4,
+                        0.5
                     ]
                 },
                 "LEGENDARY": {
                     "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
                         0.4,
                         0.5,
                         0.3
-                    ],
-                    "multiply": [
-                        0.396,
-                        0.495,
-                        0.297
                     ]
                 }
             },
@@ -2021,45 +2018,41 @@
             "uuid": "3fbb2c84-3693-4dcd-bc49-3b54ca6fa8cc",
             "texture": "87934565bf522f6f4726cdfe127137be11d37c310db34d8c70253392b5ff5b",
             "stats": {
-                "ALL": {
-                    "ferocity": {
-                        "base": 0.0,
-                        "multiply": 0.05
-                    },
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 0.75
-                    }
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.05
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.75
                 }
             },
             "statsLore": {
                 "EPIC": {
                     "base": [
-                        0.2,
-                        0.5
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.25,
                         0.5
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.2,
-                        0.5,
+                        0.0,
+                        0.0,
                         0.0
                     ],
                     "multiply": [
                         0.25,
                         0.5,
                         1.0
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -2085,16 +2078,14 @@
             "uuid": "11216f12-2843-31c8-bf8a-b8535e6c6dce",
             "texture": "176b4e390f2ecdb8a78dc611789ca0af1e7e09229319c3a7aa8209b63b9",
             "stats": {
-                "ALL": {
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    },
-                    "crit_chance": {
-                        "base": 0.0,
-                        "multiply": 0.05,
-                        "isPercent": true
-                    }
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.05,
+                    "percent": true
                 }
             },
             "statsLore": {
@@ -2103,59 +2094,54 @@
                         0.1
                     ],
                     "multiply": [
-                        0.05
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                        0.049
+                    ]
                 },
                 "UNCOMMON": {
                     "base": [
-                        0.1
+                        0.0
                     ],
                     "multiply": [
                         0.1
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "RARE": {
                     "base": [
                         0.1,
-                        0.4,
+                        0.0,
                         20.1
                     ],
                     "multiply": [
-                        0.5,
+                        0.149,
                         0.4,
-                        0.1
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                        0.099
+                    ]
                 },
                 "EPIC": {
                     "base": [
-                        0.2,
-                        0.5,
+                        0.0,
+                        0.0,
                         20.2
                     ],
                     "multiply": [
                         0.2,
                         0.5,
-                        0.25
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                        0.248
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.2,
-                        0.5,
+                        0.0,
+                        0.0,
                         20.4,
-                        0.2
+                        0.0
                     ],
                     "multiply": [
                         0.25,
                         0.5,
-                        0.4,
+                        0.396,
                         0.25
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -2182,41 +2168,37 @@
             "uuid": "623fa763-a8d1-36c6-8dcf-09f100723d04",
             "texture": "89091d79ea0f59ef7ef94d7bba6e5f17f2f7d4572c44f90f76c4819a714",
             "stats": {
-                "ALL": {
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 1.5
-                    }
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.5
                 }
             },
             "statsLore": {
                 "EPIC": {
                     "base": [
-                        0.3,
-                        0.2
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.3,
                         0.25
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.3,
-                        0.2,
+                        0.0,
+                        0.0,
                         203.0
                     ],
                     "multiply": [
                         0.3,
                         0.25,
                         2.97
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -2244,26 +2226,13 @@
             "uuid": "7f1b261f-0595-4160-9b6a-396436f9cc5d",
             "texture": "4e794274c1bb197ad306540286a7aa952974f5661bccf2b725424f6ed79c7884",
             "stats": {
-                "ALL": {
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    },
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 0.25
-                    }
-                }
-            },
-            "statsLore": {
-                "ALL": {
-                    "base": [
-                        0.0
-                    ],
-                    "multiply": [
-                        0.0
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
                 }
             },
             "lore": {
@@ -2382,7 +2351,8 @@
                     "§8even when the pet is not",
                     "§8summoned!"
                 ]
-            }
+            },
+            "lore_mode": "REPLACE"
         },
         {
             "type": "GRIFFIN",
@@ -2390,89 +2360,66 @@
             "uuid": "11e506b9-cb3d-43e6-89d2-9e1575944498",
             "texture": "4c27e3cb52a64968e60c861ef1ab84e0a0cb5f07be103ac78da67761731f00c8",
             "stats": {
-                "ALL": {
-                    "crit_chance": {
-                        "base": 0.0,
-                        "multiply": 0.1,
-                        "isPercent": true
-                    },
-                    "crit_damage": {
-                        "base": 0.0,
-                        "multiply": 0.5,
-                        "isPercent": true
-                    },
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "magic_find": {
-                        "base": 0.0,
-                        "multiply": 0.1
-                    },
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.25
-                    },
-                    "attack_speed": {
-                        "base": 0.0,
-                        "multiply": 0.35,
-                        "isPercent": true
-                    }
+                "magic_find": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.5,
+                    "percent": true
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.1,
+                    "percent": true
                 }
             },
             "statsLore": {
-                "COMMON": {
-                    "base": [
-                        0.0
-                    ],
-                    "multiply": [
-                        0.0
-                    ]
-                },
                 "UNCOMMON": {
-                    "base": [
+                    "additional": [
                         5.0,
                         7.0
-                    ],
-                    "multiply": [
-                        0.0,
-                        0.0
                     ]
                 },
                 "RARE": {
-                    "base": [
+                    "additional": [
                         6.0,
                         7.0
-                    ],
-                    "multiply": [
-                        0.0,
-                        0.0
                     ]
                 },
                 "EPIC": {
                     "base": [
-                        6.0,
-                        8.0,
                         1.0
                     ],
                     "multiply": [
-                        0.0,
-                        0.0,
-                        0.16
+                        0.15
+                    ],
+                    "additional": [
+                        6.0,
+                        8.0
                     ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        7.0,
-                        8.0,
                         1.0,
                         1.0
                     ],
                     "multiply": [
-                        0.0,
-                        0.0,
-                        0.2,
-                        0.15
+                        0.19,
+                        0.14
+                    ],
+                    "additional": [
+                        7.0,
+                        8.0
                     ]
                 }
             },
@@ -2487,8 +2434,8 @@
                 ],
                 "UNCOMMON": [
                     "§6Legendary Constitution",
-                    "§7Permanent §cRegeneration 7",
-                    "§7and §4Strength 8§7."
+                    "§7Permanent §cRegeneration {A}",
+                    "§7and §4Strength {B}§7."
                 ],
                 "EPIC": [
                     "§6Perpetual Empathy",
@@ -2510,15 +2457,13 @@
             "uuid": "26508276-c01a-32a9-9201-7dae1724954e",
             "texture": "221025434045bda7025b3e514b316a4b770c6faa4ba9adb4be3809526db77f9d",
             "stats": {
-                "ALL": {
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 1.0
-                    },
-                    "defense": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    }
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 0.5
                 }
             },
             "statsLore": {
@@ -2564,16 +2509,15 @@
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.2,
-                        0.3,
-                        0.3
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         0.2,
                         0.3,
                         0.3
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -2601,62 +2545,41 @@
             "uuid": "6d310633-c175-4b47-92ab-778287bb7a5e",
             "texture": "36fcd3ec3bc84bafb4123ea479471f9d2f42d8fb9c5f11cf5f4e0d93226",
             "stats": {
-                "ALL": {
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "speed": {
-                        "base": 0.0,
-                        "multiply": 0.25
-                    }
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.25
                 }
             },
             "statsLore": {
-                "COMMON": {
-                    "base": [
-                        0.0
-                    ],
-                    "multiply": [
-                        0.0
-                    ]
-                },
-                "UNCOMMON": {
-                    "base": [
-                        0.0
-                    ],
-                    "multiply": [
-                        0.0
-                    ]
-                },
                 "RARE": {
                     "base": [
-                        1.1
+                        0.0
                     ],
                     "multiply": [
                         1.1
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "EPIC": {
                     "base": [
-                        1.2
+                        0.0
                     ],
                     "multiply": [
                         1.2
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        1.2,
-                        0.2
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
                         1.2,
                         0.25
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -2683,20 +2606,18 @@
             "uuid": "802a167c-cbcd-3a1f-becd-5b1a25a4cf15",
             "texture": "b7c8bef6beb77e29af8627ecdc38d86aa2fea7ccd163dc73c00f9f258f9a1457",
             "stats": {
-                "ALL": {
-                    "ferocity": {
-                        "base": 0.0,
-                        "multiply": 0.05
-                    },
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.4
-                    },
-                    "attack_speed": {
-                        "base": 0.0,
-                        "multiply": 0.15,
-                        "isPercent": true
-                    }
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.05
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.4
+                },
+                "attack_speed": {
+                    "base": 0.0,
+                    "multiply": 0.15,
+                    "percent": true
                 }
             },
             "statsLore": {
@@ -2749,11 +2670,9 @@
             "uuid": "a7be2bb4-70a1-32e4-a981-8f26c5864371",
             "texture": "913f086ccb56323f238ba3489ff2a1a34c0fdceeafc483acff0e5488cfd6c2f1",
             "stats": {
-                "ALL": {
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 2.0
-                    }
+                "health": {
+                    "base": 0.0,
+                    "multiply": 2.0
                 }
             },
             "statsLore": {
@@ -2806,11 +2725,9 @@
             "uuid": "0a9e8efb-9191-4c81-80f5-e27ca5433156",
             "texture": "822d8e751c8f2fd4c8942c44bdb2f5ca4d8ae8e575ed3eb34c18a86e93b",
             "stats": {
-                "ALL": {
-                    "intelligence": {
-                        "base": 0.0,
-                        "multiply": -1.0
-                    }
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": -1.0
                 }
             },
             "statsLore": {
@@ -2860,19 +2777,17 @@
             "uuid": "7e3ed445-3545-3c76-993b-8f292ea576c6",
             "texture": "38ff473bd52b4db2c06f1ac87fe1367bce7574fac330ffac7956229f82efba1",
             "stats": {
-                "ALL": {
-                    "ferocity": {
-                        "base": 0.0,
-                        "multiply": 0.05
-                    },
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "speed": {
-                        "base": 0.0,
-                        "multiply": 0.25
-                    }
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.05
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.25
                 }
             },
             "statsLore": {
@@ -2889,7 +2804,7 @@
                         0.1
                     ],
                     "multiply": [
-                        0.049
+                        0.05
                     ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
                 },
@@ -2899,8 +2814,8 @@
                         0.8
                     ],
                     "multiply": [
-                        0.099,
-                        0.742
+                        0.1,
+                        0.75
                     ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
                 },
@@ -2910,7 +2825,7 @@
                         1.0
                     ],
                     "multiply": [
-                        0.149,
+                        0.15,
                         1.0
                     ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
@@ -2922,9 +2837,9 @@
                         0.1
                     ],
                     "multiply": [
-                        0.198,
+                        0.2,
                         1.0,
-                        0.149
+                        0.15
                     ],
                     "display_mode": "DISPLAY_AT_LEVEL_1"
                 }
@@ -2956,19 +2871,17 @@
             "uuid": "35f02923-7bec-3869-9ef5-b42a4794cac8",
             "texture": "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429",
             "stats": {
-                "ALL": {
-                    "health": {
-                        "base": 0.0,
-                        "multiply": 0.5
-                    },
-                    "defense": {
-                        "base": 0.0,
-                        "multiply": 0.33
-                    },
-                    "strength": {
-                        "base": 0.0,
-                        "multiply": 0.2
-                    }
+                "health": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 0.33
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.2
                 }
             },
             "statsLore": {
@@ -2990,38 +2903,35 @@
                 },
                 "RARE": {
                     "base": [
-                        0.2,
-                        0.2
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        0.2,
-                        0.248
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                        0.25,
+                        0.2
+                    ]
                 },
                 "EPIC": {
                     "base": [
-                        0.3,
-                        0.2
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        0.297,
-                        0.248
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                        0.3,
+                        0.25
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
-                        0.3,
-                        0.2,
-                        1.0
+                        0.0,
+                        0.0,
+                        0.0
                     ],
                     "multiply": [
-                        0.297,
-                        0.248,
+                        0.3,
+                        0.25,
                         1.0
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
@@ -3046,151 +2956,1852 @@
             "type": "MEGALODON",
             "skill": "FISHING",
             "uuid": "82fc79b9-fded-3c05-b8dc-00e562803862",
-            "texture": "a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9"
+            "texture": "a94ae433b301c7fb7c68cba625b0bd36b0b14190f20e34a7c8ee0d9de06d53b9",
+            "stats": {
+                "magic_find": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.05
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.2
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.2,
+                        0.5
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Blood Scent",
+                    "§7Deal up to §c+{0}% §c❁ Damage",
+                    "§7based on the enemy\u0027s missing",
+                    "§7health",
+                    "",
+                    "§6Enhanced Scales",
+                    "§7Increases the stats of Shark",
+                    "§7Armor by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Feeding Frenzy",
+                    "§7On kill gain §c{2}❁ Damage",
+                    "§7and §f✦ Speed §7for 5 seconds"
+                ]
+            }
         },
         {
             "type": "MITHRIL_GOLEM",
             "skill": "MINING",
             "uuid": "39fb84b5-72d3-3221-b373-aa315e956e83",
-            "texture": "c1b2dfe8ed5dffc5b1687bc1c249c39de2d8a6c3d90305c95f6d1a1a330a0b1"
+            "texture": "c1b2dfe8ed5dffc5b1687bc1c249c39de2d8a6c3d90305c95f6d1a1a330a0b1",
+            "stats": {
+                "true_defense": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.8
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.8,
+                        0.1
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0,
+                        0.2
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0,
+                        0.2,
+                        0.2
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Mithril Affinity",
+                    "§7Gain §a+{0} §6⸕ Mining Speed",
+                    "§7when mining §eMithril"
+                ],
+                "RARE": [
+                    "§6The Smell Of Powder",
+                    "§7Gain §a+{1}% §7chance to gain",
+                    "§7extra §2Mithril Powder §7while",
+                    "§7mining."
+                ],
+                "LEGENDARY": [
+                    "§6Danger Averse",
+                    "§7Increases your combat stats by",
+                    "§a+{2}% §7on mining islands"
+                ]
+            }
         },
         {
             "type": "MONKEY",
             "skill": "FORAGING",
             "uuid": "e410c089-bb3a-40a3-add6-188d6187ac87",
-            "texture": "13cf8db84807c471d7c6922302261ac1b5a179f96d1191156ecf3e1b1d3ca"
+            "texture": "13cf8db84807c471d7c6922302261ac1b5a179f96d1191156ecf3e1b1d3ca",
+            "stats": {
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.2
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.4
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.8
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.6,
+                        1.0
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.6,
+                        1.0,
+                        0.5
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Treeborn",
+                    "§7Grants §a+{0} §6☘ Foraging",
+                    "§6Fortune§7, which increases your",
+                    "§7chance at double logs."
+                ],
+                "RARE": [
+                    "§6Vine Swing",
+                    "§7Gain +§a{1} §f✦ Speed §7while",
+                    "§7in The Park"
+                ],
+                "LEGENDARY": [
+                    "§6Evolved Axes",
+                    "§7Reduce the cooldown of Jungle",
+                    "§7Axe and Treecapitator by §a{2}%"
+                ]
+            }
         },
         {
             "type": "OCELOT",
             "skill": "FORAGING",
             "uuid": "664dd492-3fcd-443b-9e61-4c7ebd9e4e10",
-            "texture": "5657cd5c2989ff97570fec4ddcdc6926a68a3393250c1be1f0b114a1db1"
+            "texture": "5657cd5c2989ff97570fec4ddcdc6926a68a3393250c1be1f0b114a1db1",
+            "stats": {
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.25
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.3
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.3,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Foraging Exp Boost",
+                    "§7Boosts your Foraging exp by",
+                    "§a{0}%"
+                ],
+                "RARE": [
+                    "§6Tree Hugger",
+                    "§7Foraging minions work §a{1}%",
+                    "§7faster while on your island"
+                ],
+                "LEGENDARY": [
+                    "§6Tree Essence",
+                    "§7Gain a §a{2}% §7chance to get",
+                    "§7exp from breaking a log"
+                ]
+            }
         },
         {
             "type": "PARROT",
             "skill": "ALCHEMY",
             "uuid": "db4d678a-731a-49cc-8dae-2cee4a5b80c9",
-            "texture": "5df4b3401a4d06ad66ac8b5c4d189618ae617f9c143071c8ac39a563cf4e4208"
+            "texture": "5df4b3401a4d06ad66ac8b5c4d189618ae617f9c143071c8ac39a563cf4e4208",
+            "stats": {
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.1,
+                    "percent": true
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        1.0,
+                        5.0
+                    ],
+                    "multiply": [
+                        0.15,
+                        0.35
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        1.0,
+                        5.0,
+                        5.0,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.4,
+                        0.3,
+                        0.2
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Flamboyant",
+                    "§7Adds §a{0} §7levels to",
+                    "§7intimidation accessories",
+                    "",
+                    "§6Repeat",
+                    "§7Boosts potions duration by",
+                    "§a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Bird Discourse",
+                    "§7Gives §c+{2}❁ Strength §7to",
+                    "§7players within §a20 §7blocks",
+                    "§8Doesn\u0027t stack",
+                    "",
+                    "§6Parrot Feather Infusion",
+                    "§7When summoned or in your pets",
+                    "§7menu, boost the duration of",
+                    "§7consumed §cGod Potions §7by",
+                    "§a{3}%"
+                ]
+            }
         },
         {
             "type": "PHOENIX",
             "skill": "COMBAT",
             "uuid": "4173bc61-9e2f-3c84-8d31-4517e64062ab",
-            "texture": "23aaf7b1a778949696cb99d4f04ad1aa518ceee256c72e5ed65bfa5c2d88d9e"
+            "texture": "23aaf7b1a778949696cb99d4f04ad1aa518ceee256c72e5ed65bfa5c2d88d9e",
+            "stats": {
+                "intelligence": {
+                    "base": 51.0,
+                    "multiply": 0.99
+                },
+                "strength": {
+                    "base": 10.0,
+                    "multiply": 0.4
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        10.1,
+                        2.0,
+                        1.1,
+                        2.0
+                    ],
+                    "multiply": [
+                        0.099,
+                        0.02,
+                        0.119,
+                        0.02
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        15.2,
+                        2.0,
+                        0.0,
+                        2.0
+                    ],
+                    "multiply": [
+                        0.148,
+                        0.02,
+                        0.139,
+                        0.03
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Rekindle",
+                    "§7Before death, become §eimmune",
+                    "§7and gain §c{0} §c❁ Strength",
+                    "§7for §a{1} §7seconds",
+                    "§83 minutes cooldown",
+                    "",
+                    "§6Fourth Flare",
+                    "§7On 4th melee strike, §6ignite",
+                    "§7mobs, dealing §c{2}x §7your",
+                    "§9☠ Crit Damage §7each second",
+                    "§7for §a{3} §7seconds"
+                ],
+                "LEGENDARY": [
+                    "§6Magic Bird",
+                    "§7You may always fly on your",
+                    "§7private island",
+                    "",
+                    "§6Eternal Coins",
+                    "§7Don\u0027t lose coins from death."
+                ]
+            }
         },
         {
             "type": "PIG",
             "skill": "FARMING",
             "uuid": "e1e1c2e4-1ed2-473d-bde2-3ec718535399",
-            "texture": "621668ef7cb79dd9c22ce3d1f3f4cb6e2559893b6df4a469514e667c16aa4"
+            "texture": "621668ef7cb79dd9c22ce3d1f3f4cb6e2559893b6df4a469514e667c16aa4",
+            "stats": {
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.4
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.4,
+                        0.4
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.5
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.5
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Ridable",
+                    "§7Right-click your summoned pet",
+                    "§7to ride it!",
+                    "",
+                    "§6Run",
+                    "§7Increases the speed of your",
+                    "§7mount by §a{0}%"
+                ],
+                "RARE": [
+                    "§6Sprint",
+                    "§7While holding an Enchanted",
+                    "§7Carrot on a Stick, increase the",
+                    "§7speed of your mount by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Trample",
+                    "§7While on your private island,",
+                    "§7break all crops your pig rides",
+                    "§7over"
+                ]
+            }
         },
         {
             "type": "PIGMAN",
             "skill": "COMBAT",
             "uuid": "e3410337-d22b-4427-beab-d9ceae561d2c",
-            "texture": "63d9cb6513f2072e5d4e426d70a5557bc398554c880d4e7b7ec8ef4945eb02f2"
+            "texture": "63d9cb6513f2072e5d4e426d70a5557bc398554c880d4e7b7ec8ef4945eb02f2",
+            "stats": {
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.05
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.4,
+                        0.25
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.4,
+                        0.25,
+                        0.25
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Bacon Farmer",
+                    "§7Pig minions work §a{0}%",
+                    "§7faster while on your island",
+                    "",
+                    "§6Pork Master",
+                    "§7Buffs the Pigman sword by §a{1}",
+                    "§c❁ Damage §7and §a{2} §c❁",
+                    "§cStrength"
+                ],
+                "LEGENDARY": [
+                    "§6Giant Slayer",
+                    "§7Deal §a{3}% §7extra damage to",
+                    "§7monsters level 100 and up"
+                ]
+            }
         },
         {
             "type": "RABBIT",
             "skill": "FARMING",
             "uuid": "389b150b-1aed-4bd8-af89-129043e007d1",
-            "texture": "117bffc1972acd7f3b4a8f43b5b6c7534695b8fd62677e0306b2831574b"
+            "texture": "117bffc1972acd7f3b4a8f43b5b6c7534695b8fd62677e0306b2831574b",
+            "stats": {
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.2
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.4
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.4,
+                        0.25
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.3
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.3,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Happy Feet",
+                    "§7Jump potions also give §a+{0}",
+                    "§7speed"
+                ],
+                "RARE": [
+                    "§6Farming Exp Boost",
+                    "§7Boosts your Farming exp by",
+                    "§a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Efficient Farming",
+                    "§7Farming minions work §a{2}%",
+                    "§7faster while on your island"
+                ]
+            }
         },
         {
             "type": "RAT",
             "skill": "COMBAT",
             "uuid": "5e1345bb-612a-4d93-9619-25cc24d04c6b",
-            "texture": "a8abb471db0ab78703011979dc8b40798a941f3a4dec3ec61cbeec2af8cffe8"
+            "texture": "a8abb471db0ab78703011979dc8b40798a941f3a4dec3ec61cbeec2af8cffe8",
+            "stats": {
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.1,
+                    "percent": true
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        2.0,
+                        20.0
+                    ],
+                    "multiply": [
+                        0.05,
+                        0.4
+                    ]
+                }
+            },
+            "lore": {
+                "LEGENDARY": [
+                    "§6Morph",
+                    "§7Right-click your summoned pet",
+                    "§7to morph into it!",
+                    "",
+                    "§6CHEESE!",
+                    "§7As a Rat, you smell",
+                    "§e§lCHEESE§7 nearby! Yummy!",
+                    "",
+                    "§6Rat\u0027s Blessing",
+                    "§7Has a chance to grant a random",
+                    "§7player §b+{0}✯ Magic Find§7 for",
+                    "§a{1}§7 seconds after finding a",
+                    "§7yummy piece of Cheese! If the",
+                    "§7player gets a drop during this",
+                    "§7buff, you have a §a20%§7 to get",
+                    "§7it too."
+                ]
+            }
         },
         {
             "type": "ROCK",
             "skill": "MINING",
             "uuid": "1887aa6a-240a-4927-b868-7d3631f03577",
-            "texture": "cb2b5d48e57577563aca31735519cb622219bc058b1f34648b67b8e71bc0fa"
+            "texture": "cb2b5d48e57577563aca31735519cb622219bc058b1f34648b67b8e71bc0fa",
+            "stats": {
+                "true_defense": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 2.0
+                }
+            },
+            "statsLore": {
+                "RARE": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Ridable",
+                    "§7Right-click your summoned pet",
+                    "§7to ride it!",
+                    "",
+                    "§6Sailing Stone",
+                    "§7Sneak to move your rock to",
+                    "§7your location (15s cooldown)"
+                ],
+                "RARE": [
+                    "§6Fortify",
+                    "§7While sitting on your rock,",
+                    "§7gain +§a{0}%§7 defense"
+                ],
+                "LEGENDARY": [
+                    "§6Steady Ground",
+                    "§7While sitting on your rock,",
+                    "§7gain +§a{1}%§7 damage"
+                ]
+            }
         },
         {
             "type": "SHEEP",
             "skill": "ALCHEMY",
             "uuid": "37bacd66-7fe6-39e3-81cf-82911daf648b",
-            "texture": "64e22a46047d272e89a1cfa13e9734b7e12827e235c2012c1a95962874da0"
+            "texture": "64e22a46047d272e89a1cfa13e9734b7e12827e235c2012c1a95962874da0",
+            "stats": {
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 2.0
+                },
+                "ability_damage": {
+                    "base": 0.0,
+                    "multiply": 0.2,
+                    "percent": true
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.1
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.1
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.1,
+                        0.25
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Mana Saver",
+                    "§7Reduces the mana cost of",
+                    "§7abilities by §a{0}%"
+                ],
+                "RARE": [
+                    "§6Overheal",
+                    "§7Gives a §a{1}% §7shield after",
+                    "§7not taking damage for 10s"
+                ],
+                "LEGENDARY": [
+                    "§6Dungeon Wizard",
+                    "§7Increases your total mana by",
+                    "§a{2}% §7while in dungeons"
+                ]
+            }
         },
         {
             "type": "SILVERFISH",
             "skill": "MINING",
             "uuid": "79e570d8-f66e-375c-9e70-97224ccd5692",
-            "texture": "da91dab8391af5fda54acd2c0b18fbd819b865e1a8f1d623813fa761e924540"
+            "texture": "da91dab8391af5fda54acd2c0b18fbd819b865e1a8f1d623813fa761e924540",
+            "stats": {
+                "health": {
+                    "base": 0.0,
+                    "multiply": 0.2
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.049
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.25
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.1,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.149,
+                        0.3
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.1,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.149,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6True Defense Boost",
+                    "§7Boosts your §f❂ True",
+                    "§fDefense§7 by §a{0}"
+                ],
+                "RARE": [
+                    "§6Mining Exp Boost",
+                    "§7Boosts your Mining exp by",
+                    "§a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Dexterity",
+                    "§7Gives permanent haste III"
+                ]
+            }
         },
         {
             "type": "SKELETON",
             "skill": "COMBAT",
             "uuid": "baee4f79-051d-4b7e-9323-58494878ef5a",
-            "texture": "fca445749251bdd898fb83f667844e38a1dff79a1529f79a42447a0599310ea4"
+            "texture": "fca445749251bdd898fb83f667844e38a1dff79a1529f79a42447a0599310ea4",
+            "stats": {
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.3,
+                    "percent": true
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.15,
+                    "percent": true
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.149
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.149,
+                        0.149
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.2
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.168
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.2
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Bone Arrows",
+                    "§7Increase arrow damage by",
+                    "§a{0}%§7 which is tripled while",
+                    "§7in dungeons"
+                ],
+                "RARE": [
+                    "§6Combo",
+                    "§7Gain a combo stack for every",
+                    "§7bow hit granting +§a3 §c❁",
+                    "§cStrength§7. Max §a{1} §7stacks,",
+                    "§7stacks disappear after 8",
+                    "§7seconds."
+                ],
+                "LEGENDARY": [
+                    "§6Skeletal Defense",
+                    "§7Your skeleton shoots an arrow",
+                    "§7dealing §a30x §7your §9☠ Crit",
+                    "§9Damage §7when a mob gets close",
+                    "§7to you (5s cooldown)."
+                ]
+            }
         },
         {
             "type": "SKELETON_HORSE",
             "skill": "COMBAT",
             "uuid": "8dfd0bbb-7ce2-444e-ad9a-0eb9518eaffd",
-            "texture": "47effce35132c86ff72bcae77dfbb1d22587e94df3cbc2570ed17cf8973a"
+            "texture": "47effce35132c86ff72bcae77dfbb1d22587e94df3cbc2570ed17cf8973a",
+            "description": [
+                "§7Run around town on your scary,",
+                "§7yet trusty, steed!"
+            ],
+            "stats": {
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.5,
+                        0.4
+                    ]
+                }
+            },
+            "lore": {
+                "LEGENDARY": [
+                    "§6Ridable",
+                    "§7Right-click your summoned pet",
+                    "§7to ride it!",
+                    "",
+                    "§6Run",
+                    "§7Increases the speed of your",
+                    "§7mount by §a{0}%",
+                    "",
+                    "§6Ride Into Battle",
+                    "§7While riding your horse, gain",
+                    "§7+§a{1}%§7 bow damage"
+                ]
+            }
         },
         {
             "type": "SNOWMAN",
             "skill": "COMBAT",
             "uuid": "b2b19dcd-dc67-31df-a790-e6cf07ae12ac",
-            "texture": "11136616d8c4a87a54ce78a97b551610c2b2c8f6d410bc38b858f974b113b208"
+            "texture": "11136616d8c4a87a54ce78a97b551610c2b2c8f6d410bc38b858f974b113b208",
+            "description": [
+                "§7Fight alongside your pet",
+                "§7Snowman!"
+            ],
+            "stats": {
+                "damage": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.25,
+                    "percent": true
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        4.0,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.04,
+                        0.149
+                    ]
+                }
+            },
+            "lore": {
+                "LEGENDARY": [
+                    "§6Blizzard",
+                    "§7Slow all enemies within §a{0}",
+                    "§7blocks",
+                    "",
+                    "§6Frostbite",
+                    "§7Your freezing aura slows enemy",
+                    "§7attacks causing you to take",
+                    "§a{1}% §7reduced damage",
+                    "",
+                    "§6Snow Cannon",
+                    "§7Your snowman fires a snowball",
+                    "§7dealing §a5x§7 your §c❁ Strength",
+                    "§7when a mob gets close to you",
+                    "§7(1s cooldown)"
+                ]
+            }
         },
         {
             "type": "SPIDER",
             "skill": "COMBAT",
             "uuid": "7c63f3cf-a963-311a-aeca-3a075b417806",
-            "texture": "cd541541daaff50896cd258bdbdd4cf80c3ba816735726078bfe393927e57f1"
+            "texture": "cd541541daaff50896cd258bdbdd4cf80c3ba816735726078bfe393927e57f1",
+            "stats": {
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.1,
+                    "percent": true
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.4
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.4
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.4,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6One With The Spider",
+                    "§7Gain §a{0} §c❁ Strength §7for",
+                    "§7every nearby spider",
+                    "§8Max 10 spiders"
+                ],
+                "RARE": [
+                    "§6Web-weaver",
+                    "§7Upon hitting a monster it",
+                    "§7becomes slowed by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Spider Whisperer",
+                    "§7Spider and tarantula minions",
+                    "§7work §a{2}% §7faster while on",
+                    "§7your island"
+                ]
+            }
         },
         {
             "type": "SPIRIT",
             "skill": "COMBAT",
             "uuid": "38699d98-8bfa-4492-acfb-7191c7c3c3bb",
-            "texture": "8d9ccc670677d0cebaad4058d6aaf9acfab09abea5d86379a059902f2fe22655"
+            "texture": "8d9ccc670677d0cebaad4058d6aaf9acfab09abea5d86379a059902f2fe22655",
+            "stats": {
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.3
+                }
+            },
+            "statsLore": {
+                "ALL": {
+                    "base": [
+                        5.5
+                    ],
+                    "multiply": [
+                        0.445
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Spirit Assistance",
+                    "§7Spawns and assists you when",
+                    "§7you are ghost in Dungeons.",
+                    "",
+                    "§6Spirit Cooldowns",
+                    "§7Reduces the cooldown of your",
+                    "§7ghost abilities in dungeons by",
+                    "§a{0}%§7.",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ],
+                "LEGENDARY": [
+                    "§6Spirit Assistance",
+                    "§7Spawns and assists you when",
+                    "§7you are ghost in Dungeons.",
+                    "",
+                    "§6Spirit Cooldowns",
+                    "§7Reduces the cooldown of your",
+                    "§7ghost abilities in dungeons by",
+                    "§a{0}%§7.",
+                    "",
+                    "§6Half Life",
+                    "§7If you are the first player to",
+                    "§7die in a dungeon, the score",
+                    "§7penalty for that death is",
+                    "§7reduced to §a1§7.",
+                    "",
+                    "§8This pet\u0027s perks are active",
+                    "§8even when the pet is not",
+                    "§8summoned!"
+                ]
+            },
+            "lore_mode": "REPLACE"
         },
         {
             "type": "SQUID",
             "skill": "FISHING",
             "uuid": "7b5da593-80d3-39f4-8220-2cef27c5b9d9",
-            "texture": "01433be242366af126da434b8735df1eb5b3cb2cede39145974e9c483607bac"
+            "texture": "01433be242366af126da434b8735df1eb5b3cb2cede39145974e9c483607bac",
+            "stats": {
+                "health": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.8
+                    ],
+                    "multiply": [
+                        0.742
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.8,
+                        0.0,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.742,
+                        0.3,
+                        0.149
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0,
+                        0.4,
+                        0.2
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.0,
+                        0.4,
+                        0.2,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6More Ink",
+                    "§7Gain a §a{0}% §7chance to get",
+                    "§7double drops from squids"
+                ],
+                "RARE": [
+                    "§6Ink Specialty",
+                    "§7Buffs the Ink Wand by §a{1} §c❁",
+                    "§cDamage §7and §a{2} §c❁ Strength"
+                ],
+                "LEGENDARY": [
+                    "§6Fishing Exp Boost",
+                    "§7Boosts your Fishing exp by",
+                    "§a{3}%"
+                ]
+            }
         },
         {
             "type": "TARANTULA",
             "skill": "COMBAT",
             "uuid": "3e5474d4-4365-3ea7-b4bc-b4edc54da341",
-            "texture": "8300986ed0a04ea79904f6ae53f49ed3a0ff5b1df62bba622ecbd3777f156df8"
+            "texture": "8300986ed0a04ea79904f6ae53f49ed3a0ff5b1df62bba622ecbd3777f156df8",
+            "stats": {
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.3,
+                    "percent": true
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.1,
+                    "percent": true
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5,
+                        0.4
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Webbed Cells",
+                    "§7Anti-healing is §a{0}% §7less",
+                    "§7effective against you",
+                    "",
+                    "§6Eight Legs",
+                    "§7Decreases the mana cost of",
+                    "§7Spider, Tarantula and Thorn\u0027s",
+                    "§7boots by §a{1}%"
+                ],
+                "LEGENDARY": [
+                    "§6Arachnid Slayer",
+                    "§7Gain +§a{2}% §7more combat xp",
+                    "§7from spiders"
+                ]
+            }
         },
         {
             "type": "TIGER",
             "skill": "COMBAT",
             "uuid": "33a69ead-44ac-3791-9425-52109aacdaa6",
-            "texture": "fc42638744922b5fcf62cd9bf27eeab91b2e72d6c70e86cc5aa3883993e9d84"
+            "texture": "fc42638744922b5fcf62cd9bf27eeab91b2e72d6c70e86cc5aa3883993e9d84",
+            "stats": {
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.5,
+                    "percent": true
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.05,
+                    "percent": true
+                },
+                "strength": {
+                    "base": 5.0,
+                    "multiply": 0.1
+                },
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.15
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.33
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.33,
+                        0.3
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.6
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.544
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.6,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.544,
+                        0.2
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Merciless Swipe",
+                    "§7Gain §c+50% §c⫽ Ferocity."
+                ],
+                "RARE": [
+                    "§6Hemorrhage",
+                    "§7Melee attacks reduce healing",
+                    "§7by §655% §7for §a10s"
+                ],
+                "LEGENDARY": [
+                    "§6Apex Predator",
+                    "§7Deal §c+20% §7damage against",
+                    "§7targets with no other mobs",
+                    "§7within §a15 §7blocks"
+                ]
+            }
         },
         {
             "type": "TURTLE",
             "skill": "COMBAT",
             "uuid": "f10d652b-906b-3065-adf5-9817983201ca",
-            "texture": "212b58c841b394863dbcc54de1c2ad2648af8f03e648988c1f9cef0bc20ee23c"
+            "texture": "212b58c841b394863dbcc54de1c2ad2648af8f03e648988c1f9cef0bc20ee23c",
+            "stats": {
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        3.2,
+                        5.3,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.168,
+                        0.347,
+                        0.2
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        3.2,
+                        5.3,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.168,
+                        0.447,
+                        0.25
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Turtle Tactics",
+                    "§7Gain §a+{0}% §a❈ Defense",
+                    "",
+                    "§6Genius Amniote",
+                    "§7Gain §a+{1}❈ Defense §7and",
+                    "§7regen §c+{2}❤ §7per second when",
+                    "§7near or in water"
+                ],
+                "LEGENDARY": [
+                    "§6Unflippable",
+                    "§7Gain §aimmunity §7to knockback"
+                ]
+            }
         },
         {
             "type": "WITHER_SKELETON",
             "skill": "MINING",
             "uuid": "d928ce5e-e75e-3cdc-aaf1-0c93d49b5c31",
-            "texture": "f5ec964645a8efac76be2f160d7c9956362f32b6517390c59c3085034f050cff"
+            "texture": "f5ec964645a8efac76be2f160d7c9956362f32b6517390c59c3085034f050cff",
+            "stats": {
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.25,
+                    "percent": true
+                },
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "intelligence": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "crit_chance": {
+                    "base": 0.0,
+                    "multiply": 0.05,
+                    "percent": true
+                },
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5,
+                        2.0
+                    ]
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Stronger Bones",
+                    "§7Take §a{0}% §7less damage from",
+                    "§7skeletons",
+                    "",
+                    "§6Wither Blood",
+                    "§7Deal §a{1}% §7more damage to",
+                    "§7wither mobs"
+                ],
+                "LEGENDARY": [
+                    "§6Death\u0027s Touch",
+                    "§7Upon hitting an enemy inflict",
+                    "§7the wither effect for §a{2}%",
+                    "§7damage over 3 seconds",
+                    "§8Does not stack"
+                ]
+            }
         },
         {
             "type": "WOLF",
             "skill": "COMBAT",
             "uuid": "85b4606a-2fc7-4451-aa82-3b1afaeee9cd",
-            "texture": "dc3dd984bb659849bd52994046964c22725f717e986b12d548fd169367d494"
+            "texture": "dc3dd984bb659849bd52994046964c22725f717e986b12d548fd169367d494",
+            "stats": {
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.1,
+                    "percent": true
+                },
+                "speed": {
+                    "base": 0.0,
+                    "multiply": 0.2
+                },
+                "health": {
+                    "base": 0.0,
+                    "multiply": 0.5
+                },
+                "true_defense": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.1
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2,
+                        0.1
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.149
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.1,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.149,
+                        0.3
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Alpha Dog",
+                    "§7Take §a{0}% §7less damage",
+                    "§7from wolves"
+                ],
+                "RARE": [
+                    "§6Pack Leader",
+                    "§7Gain §a{1} §9☠ Crit Damage",
+                    "§7for every nearby wolf monsters",
+                    "§8Max 10 wolves"
+                ],
+                "LEGENDARY": [
+                    "§6Combat Exp Boost",
+                    "§7Boosts your Combat exp by",
+                    "§a{2}%"
+                ]
+            }
         },
         {
             "type": "ZOMBIE",
             "skill": "COMBAT",
             "uuid": "1c760ea5-2e91-3c2e-b52a-e17d11733658",
-            "texture": "56fc854bb84cf4b7697297973e02b79bc10698460b51a639c60e5e417734e11"
+            "texture": "56fc854bb84cf4b7697297973e02b79bc10698460b51a639c60e5e417734e11",
+            "stats": {
+                "health": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "crit_damage": {
+                    "base": 0.0,
+                    "multiply": 0.3,
+                    "percent": true
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        0.0
+                    ],
+                    "multiply": [
+                        0.2
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.25
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.25
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.25,
+                        0.25,
+                        0.2
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Chomp",
+                    "§7Gain +§a{0} §7hp per zombie",
+                    "§7kill"
+                ],
+                "RARE": [
+                    "§6Rotten Blade",
+                    "§7Deal §a{1}% §7more damage to",
+                    "§7zombies"
+                ],
+                "LEGENDARY": [
+                    "§6Living Dead",
+                    "§7Increases the defense of all",
+                    "§7undead armor sets by §a{2}%"
+                ]
+            }
         }
     ]
 }
