@@ -14,10 +14,12 @@ public class SlayerBuilder
     static final String ZOMBIE = "5,15,200,1000,5000,20000,100000,400000,1000000";
     static final String SPIDER = "5,25,200,1000,5000,20000,100000,400000,1000000";
     static final String WOLF = "10,30,250,1500,5000,20000,100000,400000,1000000";
+    static final String ENDERMAN = "10,30,250,1500,5000,20000,100000,400000,1000000";
 
     static final List<SlayerBonus> ZOMBIE_BONUS = Lists.newLinkedList();
     static final List<SlayerBonus> SPIDER_BONUS = Lists.newLinkedList();
     static final List<SlayerBonus> WOLF_BONUS = Lists.newLinkedList();
+    static final List<SlayerBonus> ENDERMAN_BONUS = Lists.newLinkedList();
 
     static
     {
@@ -40,6 +42,10 @@ public class SlayerBuilder
         WOLF_BONUS.add(new SlayerBonus(6, "health=3"));
         WOLF_BONUS.add(new SlayerBonus(7, "crit_damage=2"));
         WOLF_BONUS.add(new SlayerBonus(8, "speed=1"));
+
+        ENDERMAN_BONUS.add(new SlayerBonus(1, "health=1"));
+        ENDERMAN_BONUS.add(new SlayerBonus(2, "intelligence=2"));
+        ENDERMAN_BONUS.add(new SlayerBonus(3, "health=2"));
     }
 
     public static void main(String[] args)
@@ -50,12 +56,14 @@ public class SlayerBuilder
         addLevel(levelMaps, ZOMBIE, "zombie");
         addLevel(levelMaps, SPIDER, "spider");
         addLevel(levelMaps, WOLF, "wolf");
+        addLevel(levelMaps, ENDERMAN, "enderman");
 
         Map<String, Object> bonusMap = Maps.newLinkedHashMap();
 
         addBonus(bonusMap, ZOMBIE_BONUS, "zombie");
         addBonus(bonusMap, SPIDER_BONUS, "spider");
         addBonus(bonusMap, WOLF_BONUS, "wolf");
+        addBonus(bonusMap, ENDERMAN_BONUS, "enderman");
 
         maps.put("leveling", levelMaps);
         maps.put("bonus", bonusMap);

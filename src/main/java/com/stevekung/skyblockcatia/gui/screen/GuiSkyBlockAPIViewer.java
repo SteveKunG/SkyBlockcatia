@@ -55,6 +55,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCaveSpider;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityWolf;
@@ -193,6 +194,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
+    private int endermanSlayerLevel;
     private BonusStatTemplate allStat = BonusStatTemplate.getDefault();
 
     // GuiContainer fields
@@ -4111,6 +4113,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             List<SkyBlockSlayerInfo> zombie = this.getSlayer(slayerBosses, SBSlayers.Type.ZOMBIE);
             List<SkyBlockSlayerInfo> spider = this.getSlayer(slayerBosses, SBSlayers.Type.SPIDER);
             List<SkyBlockSlayerInfo> wolf = this.getSlayer(slayerBosses, SBSlayers.Type.WOLF);
+            List<SkyBlockSlayerInfo> enderman = this.getSlayer(slayerBosses, SBSlayers.Type.ENDERMAN);
 
             if (!zombie.isEmpty())
             {
@@ -4123,6 +4126,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             if (!wolf.isEmpty())
             {
                 this.slayerInfo.addAll(wolf);
+            }
+            if (!enderman.isEmpty())
+            {
+                this.slayerInfo.addAll(enderman);
             }
         }
         if (this.slayerInfo.isEmpty())
@@ -4199,6 +4206,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         }
                         ++slayerLvl;
                     }
+                    if (slayerLvl == 0)
+                    {
+                        xpRequired = SBSlayers.SLAYERS.getLeveling().get(lowerType)[0];
+                    }
                 }
 
                 if (levelToCheck < maxLevel)
@@ -4254,6 +4265,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             break;
         case WOLF:
             this.wolfSlayerLevel = currentLevel;
+            break;
+        case ENDERMAN:
+            this.endermanSlayerLevel = currentLevel;
             break;
         default:
             break;
@@ -4763,11 +4777,17 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
                     GlStateManager.blendFunc(770, 771);
                 }
-                else
+                else if (stat.getText().equals("Wolf"))
                 {
                     EntityWolf wolf = new EntityWolf(FAKE_WORLD);
                     wolf.setAngry(true);
                     GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
+                }
+                else
+                {
+                    EntityEnderman enderman = new EntityEnderman(FAKE_WORLD);
+                    enderman.setScreaming(true);
+                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 30, enderman);
                 }
 
                 ColorUtils.RGB color = ColorUtils.stringToRGB("0,255,255");

@@ -757,6 +757,7 @@ public class PetsBuilder
             map.put("RARE", Pair.of(null, Property.build("[0.2, 0.4]")));
             map.put("EPIC", Pair.of(null, Property.build("[0.3, 0.5]")));
             map.put("LEGENDARY", Pair.of(null, Property.build("[0.3, 0.5, 0.25]")));
+            map.put("MYTHIC", Pair.of(null, Property.build("[0.3, 0.5, 0.25, 0.4]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
@@ -777,6 +778,12 @@ public class PetsBuilder
                 list.add("§6Zealot Madness");
                 list.add("§7Increases your odds to find a");
                 list.add("§7special Zealot by §a{2}%");
+            }));
+            map.put("MYTHIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Enderman Slayer");
+                list.add("§7Gain +§a{3}% §7more combat xp");
+                list.add("§7from endermen");
             }));
         })),
 

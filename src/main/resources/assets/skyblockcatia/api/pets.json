@@ -1759,6 +1759,20 @@
                         0.5,
                         0.25
                     ]
+                },
+                "MYTHIC": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.3,
+                        0.5,
+                        0.25,
+                        0.4
+                    ]
                 }
             },
             "lore": {
@@ -1777,6 +1791,11 @@
                     "§6Zealot Madness",
                     "§7Increases your odds to find a",
                     "§7special Zealot by §a{2}%"
+                ],
+                "MYTHIC": [
+                    "§6Enderman Slayer",
+                    "§7Gain +§a{3}% §7more combat xp",
+                    "§7from endermen"
                 ]
             }
         },
