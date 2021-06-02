@@ -2053,18 +2053,18 @@ public class PetsBuilder
             map.put("COMMON", make(Lists.newLinkedList(), list ->
             {
                 list.add("§6Merciless Swipe");
-                list.add("§7Gain §c+50% §c⫽ Ferocity.");
+                list.add("§7Gain §c+{0}% §c⫽ Ferocity.");
             }));
             map.put("RARE", make(Lists.newLinkedList(), list ->
             {
                 list.add("§6Hemorrhage");
                 list.add("§7Melee attacks reduce healing");
-                list.add("§7by §655% §7for §a10s");
+                list.add("§7by §6{1}% §7for §a10s");
             }));
             map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
             {
                 list.add("§6Apex Predator");
-                list.add("§7Deal §c+20% §7damage against");
+                list.add("§7Deal §c+{2}% §7damage against");
                 list.add("§7targets with no other mobs");
                 list.add("§7within §a15 §7blocks");
             }));

@@ -2996,11 +2996,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                                     {
                                         SBPets.StatsPropertyArray foundProp = statsLore.get(tierTmp.name());
 
-                                        if (foundProp == null)
-                                        {
-                                            continue;
-                                        }
-                                        else
+                                        if (foundProp != null && array == null)
                                         {
                                             array = foundProp;
                                         }
@@ -3009,36 +3005,41 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                                 double[] statsLoreBase = array.getBase();
                                 double[] statsLoreMult = array.getMultiply();
-                                double[] statsLoreAddit = array.getAdditional();
                                 String roundingMode = array.getRoundingMode();
                                 String displayMode = array.getDisplayMode();
 
-                                for (int i = 0; i < statsLoreMult.length; i++)
+                                if (statsLoreBase != null && statsLoreMult != null)
                                 {
-                                    double value = statsLoreBase[i] + statsLoreMult[i] * level;
-                                    BigDecimal decimal = new BigDecimal(value);
+                                    for (int i = 0; i < statsLoreMult.length; i++)
+                                    {
+                                        double value = statsLoreBase[i] + statsLoreMult[i] * level;
+                                        BigDecimal decimal = new BigDecimal(value);
 
-                                    if (roundingMode != null)
-                                    {
-                                        decimal = decimal.setScale(1, RoundingMode.valueOf(roundingMode));
-                                    }
-                                    if (statsLoreAddit != null)
-                                    {
-                                        for (int i2 = 0; i2 < statsLoreAddit.length; i2++)
+                                        if (roundingMode != null)
                                         {
-                                            lore2 = lore2.replace("{" + (char)(i2 + 65) + "}", SKILL_AVG.format(statsLoreAddit[i2]));
+                                            decimal = decimal.setScale(1, RoundingMode.valueOf(roundingMode));
+                                        }
+                                        if (displayMode != null)
+                                        {
+                                            if (displayMode.equals("DISPLAY_AT_LEVEL_1"))
+                                            {
+                                                lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : statsLoreMult[i] * level));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : decimal));
                                         }
                                     }
-                                    if (displayMode != null)
+                                }
+
+                                double[] statsLoreAddit = array.getAdditional();
+
+                                if (statsLoreAddit != null)
+                                {
+                                    for (int i2 = 0; i2 < statsLoreAddit.length; i2++)
                                     {
-                                        if (displayMode.equals("DISPLAY_AT_LEVEL_1"))
-                                        {
-                                            lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : statsLoreMult[i] * level));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        lore2 = lore2.replace("{" + i + "}", SKILL_AVG.format(level == 1 ? statsLoreBase[i] : decimal));
+                                        lore2 = lore2.replace("{" + (char)(i2 + 65) + "}", SKILL_AVG.format(statsLoreAddit[i2]));
                                     }
                                 }
                             }
