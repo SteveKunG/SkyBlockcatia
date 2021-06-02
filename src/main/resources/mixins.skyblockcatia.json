@@ -52,7 +52,6 @@
         "fixes.SoundManagerMixin",
         "fixes.WorldRendererMixin",
         "forge.config.GuiConfigMixin",
-        "neu.renderer.entity.layers.LayerCustomHeadMixin",
         "patcher.FontRendererHookMixin",
         "player_api.entity.EntityPlayerSPMixin",
         "render_player_api.renderer.entity.RenderPlayerMixin"

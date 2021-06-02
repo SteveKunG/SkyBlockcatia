@@ -1,5 +1,6 @@
 package com.stevekung.skyblockcatia.renderer;
 
+import com.mojang.authlib.GameProfile;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 
 import net.minecraft.client.Minecraft;
@@ -11,11 +12,40 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 
-public interface IGlowingCustomHead
+public class GlowingCustomHead
 {
-    default void renderGlowingArmor(ModelRenderer field_177209_a, ModelSkeletonHead humanoidHead, EntityLivingBase entity, float partialTicks)
+    public static GameProfile getGameProfile(ItemStack itemStack)
+    {
+        GameProfile gameProfile = null;
+
+        if (itemStack.hasTagCompound())
+        {
+            NBTTagCompound nbttagcompound = itemStack.getTagCompound();
+
+            if (nbttagcompound.hasKey("SkullOwner", 10))
+            {
+                gameProfile = NBTUtil.readGameProfileFromNBT(nbttagcompound.getCompoundTag("SkullOwner"));
+            }
+            else if (nbttagcompound.hasKey("SkullOwner", 8))
+            {
+                String s = nbttagcompound.getString("SkullOwner");
+
+                if (!StringUtils.isNullOrEmpty(s))
+                {
+                    gameProfile = TileEntitySkull.updateGameprofile(new GameProfile(null, s));
+                    nbttagcompound.setTag("SkullOwner", NBTUtil.writeGameProfile(new NBTTagCompound(), gameProfile));
+                }
+            }
+        }
+        return gameProfile;
+    }
+
+    public static void renderGlowingArmor(ModelRenderer field_177209_a, ModelSkeletonHead humanoidHead, EntityLivingBase entity, float partialTicks)
     {
         ItemStack itemStack = entity.getCurrentArmor(3);
 
