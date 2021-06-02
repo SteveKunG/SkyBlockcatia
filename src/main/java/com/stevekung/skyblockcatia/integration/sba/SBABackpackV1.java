@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.integration.sba;
 
 import java.lang.reflect.Method;
 
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -17,7 +17,7 @@ public class SBABackpackV1 implements IBackpackRenderer
     private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
     @Override
-    public void drawBackpacks(GuiSkyBlockAPIViewer gui, int mouseX, int mouseY, float partialTicks)
+    public void drawBackpacks(SkyBlockAPIViewerScreen gui, int mouseX, int mouseY, float partialTicks)
     {
         try
         {

@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.util.List;
 
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 import com.stevekung.skyblockcatia.utils.LangUtils;
 import com.stevekung.skyblockcatia.utils.RenderUtils;
 
@@ -122,7 +122,7 @@ public class SBInventoryTabs
 
     public void displayAllItems(List<ItemStack> items)
     {
-        for (SBInventoryTabs.Data inventory : GuiSkyBlockAPIViewer.SKYBLOCK_INV)
+        for (SBInventoryTabs.Data inventory : SkyBlockAPIViewerScreen.SKYBLOCK_INV)
         {
             if (inventory.getTab() == this)
             {
@@ -133,7 +133,7 @@ public class SBInventoryTabs
 
     public boolean isDisabled()
     {
-        for (SBInventoryTabs.Data inventory : GuiSkyBlockAPIViewer.SKYBLOCK_INV)
+        for (SBInventoryTabs.Data inventory : SkyBlockAPIViewerScreen.SKYBLOCK_INV)
         {
             if (inventory.getTab() == this)
             {

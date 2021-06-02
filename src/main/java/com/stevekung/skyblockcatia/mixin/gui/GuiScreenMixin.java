@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockProfileSelector;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.utils.*;
 
 import net.minecraft.client.gui.GuiButton;
@@ -112,7 +112,7 @@ public class GuiScreenMixin
             else if (button.id == 156)
             {
                 String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-                this.that.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
+                this.that.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
             }
         }
     }

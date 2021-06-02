@@ -81,7 +81,7 @@ import net.minecraft.world.WorldSettings;
 import net.minecraft.world.WorldType;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
-public class GuiSkyBlockAPIViewer extends GuiScreen
+public class SkyBlockAPIViewerScreen extends GuiScreen
 {
     private static final ResourceLocation INVENTORY_TABS = new ResourceLocation("skyblockcatia:textures/gui/tabs.png");
     private static final ResourceLocation XP_BARS = new ResourceLocation("skyblockcatia:textures/gui/skill_xp_bar.png");
@@ -170,7 +170,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
     // Info & Inventory
     private static final int SIZE = 36;
-    private static final SBInventoryTabs.InventoryExtended TEMP_INVENTORY = new SBInventoryTabs.InventoryExtended(GuiSkyBlockAPIViewer.SIZE);
+    private static final SBInventoryTabs.InventoryExtended TEMP_INVENTORY = new SBInventoryTabs.InventoryExtended(SkyBlockAPIViewerScreen.SIZE);
     private static final SBInventoryTabs.InventoryExtended TEMP_ARMOR_INVENTORY = new SBInventoryTabs.InventoryExtended(4);
     public static final List<SBInventoryTabs.Data> SKYBLOCK_INV = new ArrayList<>();
     private int selectedTabIndex = SBInventoryTabs.INVENTORY.getTabIndex();
@@ -204,7 +204,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     private int guiTop;
     private Slot theSlot;
 
-    public GuiSkyBlockAPIViewer(List<ProfileDataCallback> profiles, ProfileDataCallback callback)
+    public SkyBlockAPIViewerScreen(List<ProfileDataCallback> profiles, ProfileDataCallback callback)
     {
         this.firstLoad = true;
         this.allowUserInput = true;
@@ -585,7 +585,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         TEMP_ARMOR_INVENTORY.clear();
         SKYBLOCK_INV.clear();
         this.mc.getNetHandler().getPlayerInfoMap().removeIf(network -> ((IViewerLoader)network).isLoadedFromViewer());
-        GuiSkyBlockAPIViewer.renderSecondLayer = false;
+        SkyBlockAPIViewerScreen.renderSecondLayer = false;
     }
 
     @Override
@@ -599,11 +599,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
             if (button.id == 0)
             {
-                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null);
+                this.mc.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null);
             }
             else if (button.id == 1)
             {
-                this.mc.displayGuiScreen(this.profiles.size() == 0 ? new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.EMPTY, this.username, this.displayName, "") : new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
+                this.mc.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY, this.username, this.displayName, "") : new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
             }
             else if (button.id == 2)
             {
@@ -658,7 +658,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         else if (keyCode == 63)
         {
             this.skyblockProfiles = null;
-            this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.gameMode, this.guild, this.uuid, this.profile, -1)));
+            this.mc.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, new ProfileDataCallback(this.sbProfileId, this.sbProfileName, this.username, this.displayName, this.gameMode, this.guild, this.uuid, this.profile, -1)));
         }
     }
 
@@ -714,7 +714,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             String text = "Downloading SkyBlock stats";
             int i = this.fontRendererObj.getStringWidth(text);
             this.drawCenteredString(this.fontRendererObj, text, this.width / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 35, 16777215);
-            this.drawString(this.fontRendererObj, GuiSkyBlockProfileSelector.downloadingStates[(int)(Minecraft.getSystemTime() / 500L % GuiSkyBlockProfileSelector.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 35, 16777215);
+            this.drawString(this.fontRendererObj, SkyBlockProfileSelectorScreen.downloadingStates[(int)(Minecraft.getSystemTime() / 500L % SkyBlockProfileSelectorScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 35, 16777215);
             this.drawCenteredString(this.fontRendererObj, "Status: " + EnumChatFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.fontRendererObj.FONT_HEIGHT * 2 - 15, 16777215);
             this.showArmorButton.visible = false;
         }
@@ -791,7 +791,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                 {
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     GlStateManager.enableDepth();
-                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
 
                     this.drawContainerSlot(mouseX, mouseY, true);
 
@@ -815,7 +815,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         GlStateManager.disableLighting();
 
-                        GuiSkyBlockAPIViewer.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
                         for (SBInventoryTabs tab : SBInventoryTabs.tabArray)
@@ -3319,6 +3319,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getZombie(), this.zombieSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getSpider(), this.spiderSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getWolf(), this.wolfSlayerLevel));
+        this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getEnderman(), this.endermanSlayerLevel));
     }
 
     private BonusStatTemplate calculateSkillBonus(IBonusTemplate[] bonus, int skillLevel)
@@ -4076,7 +4077,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         {
             for (int i = 0; i < 4; ++i)
             {
-                GuiSkyBlockAPIViewer.TEMP_ARMOR_INVENTORY.setInventorySlotContents(i, this.armorItems.get(i));
+                SkyBlockAPIViewerScreen.TEMP_ARMOR_INVENTORY.setInventorySlotContents(i, this.armorItems.get(i));
             }
         }
 
@@ -4146,7 +4147,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         }
 
         this.player = new SBFakePlayerEntity(FAKE_WORLD, this.profile);
-        GuiSkyBlockAPIViewer.renderSecondLayer = true;
+        SkyBlockAPIViewerScreen.renderSecondLayer = true;
         this.setPlayerArmors();
     }
 
@@ -4441,10 +4442,10 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         public ContainerArmor(boolean info)
         {
             int x = info ? -62 : -52;
-            this.addSlotToContainer(new Slot(GuiSkyBlockAPIViewer.TEMP_ARMOR_INVENTORY, 0, x, 75)); // boots
-            this.addSlotToContainer(new Slot(GuiSkyBlockAPIViewer.TEMP_ARMOR_INVENTORY, 1, x, 56));
-            this.addSlotToContainer(new Slot(GuiSkyBlockAPIViewer.TEMP_ARMOR_INVENTORY, 2, x, 36));
-            this.addSlotToContainer(new Slot(GuiSkyBlockAPIViewer.TEMP_ARMOR_INVENTORY, 3, x, 12)); // helmet
+            this.addSlotToContainer(new Slot(SkyBlockAPIViewerScreen.TEMP_ARMOR_INVENTORY, 0, x, 75)); // boots
+            this.addSlotToContainer(new Slot(SkyBlockAPIViewerScreen.TEMP_ARMOR_INVENTORY, 1, x, 56));
+            this.addSlotToContainer(new Slot(SkyBlockAPIViewerScreen.TEMP_ARMOR_INVENTORY, 2, x, 36));
+            this.addSlotToContainer(new Slot(SkyBlockAPIViewerScreen.TEMP_ARMOR_INVENTORY, 3, x, 12)); // helmet
         }
 
         @Override
@@ -4485,7 +4486,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
             {
                 for (int rows = 0; rows < 9; ++rows)
                 {
-                    this.addSlotToContainer(new Slot(GuiSkyBlockAPIViewer.TEMP_INVENTORY, columns * 9 + rows, 12 + rows * 18, 18 + columns * 18));
+                    this.addSlotToContainer(new Slot(SkyBlockAPIViewerScreen.TEMP_INVENTORY, columns * 9 + rows, 12 + rows * 18, 18 + columns * 18));
                 }
             }
             this.scrollTo(0.0F);
@@ -4520,7 +4521,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
         public boolean canScroll()
         {
-            return this.itemList.size() > GuiSkyBlockAPIViewer.SIZE;
+            return this.itemList.size() > SkyBlockAPIViewerScreen.SIZE;
         }
 
         public void scrollTo(float scroll)
@@ -4541,11 +4542,11 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
 
                     if (i1 >= 0 && i1 < this.itemList.size())
                     {
-                        GuiSkyBlockAPIViewer.TEMP_INVENTORY.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
+                        SkyBlockAPIViewerScreen.TEMP_INVENTORY.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
                     }
                     else
                     {
-                        GuiSkyBlockAPIViewer.TEMP_INVENTORY.setInventorySlotContents(l + k * 9, null);
+                        SkyBlockAPIViewerScreen.TEMP_INVENTORY.setInventorySlotContents(l + k * 9, null);
                     }
                 }
             }
@@ -4686,9 +4687,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     class InfoStats extends GuiScrollingList
     {
         private final List<SkyBlockInfo> stats;
-        private final GuiSkyBlockAPIViewer parent;
+        private final SkyBlockAPIViewerScreen parent;
 
-        public InfoStats(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockInfo> stats)
+        public InfoStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockInfo> stats)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.stats = stats;
@@ -4706,7 +4707,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
         {
             SkyBlockInfo stat = this.stats.get(index);
             boolean isCurrentUpgrade = stat.getTitle().equals("Current Upgrade");
-            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getTitle() + (isCurrentUpgrade ? GuiSkyBlockProfileSelector.downloadingStates[(int)(Minecraft.getSystemTime() / 250L % GuiSkyBlockProfileSelector.downloadingStates.length)] : ""), this.parent.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
+            this.parent.drawString(this.parent.mc.fontRendererObj, stat.getTitle() + (isCurrentUpgrade ? SkyBlockProfileSelectorScreen.downloadingStates[(int)(Minecraft.getSystemTime() / 250L % SkyBlockProfileSelectorScreen.downloadingStates.length)] : ""), this.parent.guiLeft - 20, top, index % 2 == 0 ? 16777215 : 9474192);
             this.parent.drawString(this.parent.mc.fontRendererObj, stat.getValue(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getValue()) + 195, top, index % 2 == 0 ? 16777215 : 9474192);
         }
 
@@ -4726,9 +4727,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     class SlayerStats extends GuiScrollingList
     {
         private final List<SkyBlockSlayerInfo> stats;
-        private final GuiSkyBlockAPIViewer parent;
+        private final SkyBlockAPIViewerScreen parent;
 
-        public SlayerStats(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockSlayerInfo> stats)
+        public SlayerStats(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SkyBlockSlayerInfo> stats)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.stats = stats;
@@ -4755,7 +4756,7 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     EntityZombie zombie = new EntityZombie(FAKE_WORLD);
                     ItemStack heldItem = new ItemStack(Items.diamond_hoe);
                     heldItem.addEnchantment(Enchantment.unbreaking, 1);
-                    ItemStack helmet = RenderUtils.getSkullItemStack(GuiSkyBlockAPIViewer.REVENANT_HORROR_HEAD[0], GuiSkyBlockAPIViewer.REVENANT_HORROR_HEAD[1]);
+                    ItemStack helmet = RenderUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
                     ItemStack chestplate = new ItemStack(Items.diamond_chestplate);
                     chestplate.addEnchantment(Enchantment.unbreaking, 1);
                     ItemStack leggings = new ItemStack(Items.chainmail_leggings);
@@ -4767,27 +4768,27 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
                     zombie.setCurrentItemOrArmor(3, chestplate);
                     zombie.setCurrentItemOrArmor(4, helmet);
                     zombie.ticksExisted = ClientEventHandler.ticks;
-                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, zombie);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, zombie);
                 }
                 else if (stat.getText().equals("Spider"))
                 {
                     EntitySpider spider = new EntitySpider(FAKE_WORLD);
                     EntityCaveSpider cave = new EntityCaveSpider(this.parent.mc.theWorld);
-                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
-                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
                     GlStateManager.blendFunc(770, 771);
                 }
                 else if (stat.getText().equals("Wolf"))
                 {
                     EntityWolf wolf = new EntityWolf(FAKE_WORLD);
                     wolf.setAngry(true);
-                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
                 }
                 else
                 {
                     EntityEnderman enderman = new EntityEnderman(FAKE_WORLD);
                     enderman.setScreaming(true);
-                    GuiSkyBlockAPIViewer.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 30, enderman);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 30, enderman);
                 }
 
                 ColorUtils.RGB color = ColorUtils.stringToRGB("0,255,255");
@@ -4849,9 +4850,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     class Others extends GuiScrollingList
     {
         private final List<?> stats;
-        private final GuiSkyBlockAPIViewer parent;
+        private final SkyBlockAPIViewerScreen parent;
 
-        public Others(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<?> stats)
+        public Others(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<?> stats)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.stats = stats;
@@ -4908,9 +4909,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     class SkyBlockCollections extends GuiScrollingList
     {
         private final List<SBCollections> collection;
-        private final GuiSkyBlockAPIViewer parent;
+        private final SkyBlockAPIViewerScreen parent;
 
-        public SkyBlockCollections(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SBCollections> collection)
+        public SkyBlockCollections(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SBCollections> collection)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.collection = collection;
@@ -4960,9 +4961,9 @@ public class GuiSkyBlockAPIViewer extends GuiScreen
     class SkyBlockCraftedMinions extends GuiScrollingList
     {
         private final List<SBMinions.CraftedInfo> craftMinions;
-        private final GuiSkyBlockAPIViewer parent;
+        private final SkyBlockAPIViewerScreen parent;
 
-        public SkyBlockCraftedMinions(GuiSkyBlockAPIViewer parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SBMinions.CraftedInfo> craftMinions)
+        public SkyBlockCraftedMinions(SkyBlockAPIViewerScreen parent, int width, int height, int top, int bottom, int left, int entryHeight, int parentWidth, int parentHeight, List<SBMinions.CraftedInfo> craftMinions)
         {
             super(parent.mc, width, height, top, bottom, left, entryHeight, parentWidth, parentHeight);
             this.craftMinions = craftMinions;

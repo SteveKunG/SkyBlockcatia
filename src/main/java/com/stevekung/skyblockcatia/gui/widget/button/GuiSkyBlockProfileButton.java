@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.gui.widget.button;
 
 import java.util.List;
 
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 import com.stevekung.skyblockcatia.utils.CommonUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.ProfileDataCallback;
 
@@ -27,7 +27,7 @@ public class GuiSkyBlockProfileButton extends GuiButton
     {
         if (this.enabled && this.visible && mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height)
         {
-            this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(this.profiles, this.callback));
+            this.mc.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, this.callback));
             return true;
         }
         return false;

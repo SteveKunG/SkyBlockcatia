@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 import com.stevekung.skyblockcatia.renderer.LayerGlowingSteveKunG;
 
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -28,6 +28,6 @@ public class RenderPlayerMixin
     @Redirect(method = "localSetModelVisibilities(Lnet/minecraft/client/entity/AbstractClientPlayer;)V", remap = false, at = @At(value = "INVOKE", remap = false, target = "net/minecraft/client/entity/AbstractClientPlayer.func_175148_a(Lnet/minecraft/entity/player/EnumPlayerModelParts;)Z"))
     private boolean fixSecondLayer(AbstractClientPlayer clientPlayer, EnumPlayerModelParts part)
     {
-        return GuiSkyBlockAPIViewer.renderSecondLayer || clientPlayer.isWearing(part);
+        return SkyBlockAPIViewerScreen.renderSecondLayer || clientPlayer.isWearing(part);
     }
 }

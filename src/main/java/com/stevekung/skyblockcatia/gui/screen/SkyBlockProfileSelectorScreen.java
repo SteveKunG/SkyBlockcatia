@@ -41,7 +41,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
-public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplete
+public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComplete
 {
     public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
     private static boolean firstLoad;
@@ -73,17 +73,17 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
     public static final Map<String, Pair<Long, HypixelProfiles>> INIT_PROFILE_CACHE = Maps.newConcurrentMap();
     public static final Map<String, Pair<Long, SkyblockProfiles>> PROFILE_CACHE = Maps.newConcurrentMap();
 
-    public GuiSkyBlockProfileSelector(GuiState state)
+    public SkyBlockProfileSelectorScreen(GuiState state)
     {
         this(state, "", "", "");
     }
 
-    public GuiSkyBlockProfileSelector(GuiState state, String username, String displayName, String guild)
+    public SkyBlockProfileSelectorScreen(GuiState state, String username, String displayName, String guild)
     {
         this(state, username, displayName, guild, null);
     }
 
-    public GuiSkyBlockProfileSelector(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
+    public SkyBlockProfileSelectorScreen(GuiState state, String username, String displayName, String guild, List<ProfileDataCallback> profiles)
     {
         if (state == GuiState.SEARCH)
         {
@@ -252,11 +252,11 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
             }
             else if (button.id == 1)
             {
-                this.mc.displayGuiScreen(this.error ? new GuiSkyBlockProfileSelector(GuiState.ERROR, this.input, this.displayName, this.guild) : null);
+                this.mc.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null);
             }
             else if (button.id == 2)
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""));
             }
         }
     }
@@ -284,7 +284,7 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
             }
             else if (keyCode == 63 && !this.profiles.isEmpty())
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiState.PLAYER, this.input, this.displayName, this.guild));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, this.input, this.displayName, this.guild));
             }
         }
         else
@@ -648,7 +648,7 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
         {
             this.statusMessage = "Found default profile";
             ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.input, this.displayName, EnumChatFormatting.GOLD + "Normal", this.guild, uuid, gameProfile, -1);
-            this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(this.profiles, callback));
+            this.mc.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
             return;
         }
 
@@ -707,7 +707,7 @@ public class GuiSkyBlockProfileSelector extends GuiScreen implements ITabComplet
 
             if (hasOneProfile)
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockAPIViewer(this.profiles, callback));
+                this.mc.displayGuiScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
                 break;
             }
 

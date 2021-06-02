@@ -24,7 +24,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.config.ToastMode;
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
 import com.stevekung.skyblockcatia.gui.SignSelectionList;
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockProfileSelector;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.gui.toasts.GiftToast;
 import com.stevekung.skyblockcatia.gui.toasts.ItemDropsToast;
 import com.stevekung.skyblockcatia.gui.toasts.NumericToast;
@@ -174,24 +174,24 @@ public class SkyBlockEventHandler
                     }
                 }
 
-                for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : GuiSkyBlockProfileSelector.PROFILE_CACHE.entrySet())
+                for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
                 {
                     long now = System.currentTimeMillis();
                     long checkedTime = entry.getValue().getLeft();
 
                     if (now - checkedTime > 180000D)
                     {
-                        GuiSkyBlockProfileSelector.PROFILE_CACHE.remove(entry.getKey());
+                        SkyBlockProfileSelectorScreen.PROFILE_CACHE.remove(entry.getKey());
                     }
                 }
-                for (Map.Entry<String, Pair<Long, HypixelProfiles>> entry : GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.entrySet())
+                for (Map.Entry<String, Pair<Long, HypixelProfiles>> entry : SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.entrySet())
                 {
                     long now = System.currentTimeMillis();
                     long checkedTime = entry.getValue().getLeft();
 
                     if (now - checkedTime > 180000D)
                     {
-                        GuiSkyBlockProfileSelector.INIT_PROFILE_CACHE.remove(entry.getKey());
+                        SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.remove(entry.getKey());
                     }
                 }
 
@@ -688,16 +688,16 @@ public class SkyBlockEventHandler
 
                 if (CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue).stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
                 {
-                    this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.PLAYER, player.getDisplayNameString(), "", ""));
+                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, player.getDisplayNameString(), "", ""));
                 }
                 else
                 {
-                    this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.EMPTY));
+                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY));
                 }
             }
             else
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.EMPTY));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY));
             }
         }
     }

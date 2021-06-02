@@ -1,6 +1,6 @@
 package com.stevekung.skyblockcatia.gui.widget.button;
 
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockAPIViewer;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class GuiSmallArrowButton extends GuiButton
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY)
     {
-        if (!(CompatibilityUtils.hasInventoryFix() || this.mc.currentScreen instanceof GuiSkyBlockAPIViewer))
+        if (!(CompatibilityUtils.hasInventoryFix() || this.mc.currentScreen instanceof SkyBlockAPIViewerScreen))
         {
             boolean hasVisibleEffect = false;
 

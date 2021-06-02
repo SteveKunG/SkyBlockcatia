@@ -18,7 +18,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.GuiDisconnectConfirmation;
 import com.stevekung.skyblockcatia.gui.config.GuiSkyBlockSettings;
-import com.stevekung.skyblockcatia.gui.screen.GuiSkyBlockProfileSelector;
+import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiButtonItem;
 import com.stevekung.skyblockcatia.gui.widget.button.GuiSmallArrowButton;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
@@ -105,7 +105,7 @@ public class MainEventHandler
         {
             if (MainEventHandler.playerToView != null)
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockProfileSelector(GuiSkyBlockProfileSelector.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
+                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
                 MainEventHandler.playerToView = null;
             }
         }

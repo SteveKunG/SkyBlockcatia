@@ -175,7 +175,7 @@ public class SBSlayers
             return this.critDamage;
         }
     }
-    
+
     public class Enderman implements IBonusTemplate
     {
         private final int level;

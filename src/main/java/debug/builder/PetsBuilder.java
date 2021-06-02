@@ -1519,7 +1519,7 @@ public class PetsBuilder
             }));
         })),
 
-      //TODO Check stats, because i don't have it D:
+        //TODO Check stats, because i don't have it D:
         PHOENIX("COMBAT", "4173bc61-9e2f-3c84-8d31-4517e64062ab", "23aaf7b1a778949696cb99d4f04ad1aa518ceee256c72e5ed65bfa5c2d88d9e", make(Lists.newLinkedList(), list ->
         {
             list.add(Stats.build("intelligence", 51, 0.99));
