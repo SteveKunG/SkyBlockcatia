@@ -4489,16 +4489,16 @@
             "lore": {
                 "COMMON": [
                     "§6Merciless Swipe",
-                    "§7Gain §c+50% §c⫽ Ferocity."
+                    "§7Gain §c+{0}% §c⫽ Ferocity."
                 ],
                 "RARE": [
                     "§6Hemorrhage",
                     "§7Melee attacks reduce healing",
-                    "§7by §655% §7for §a10s"
+                    "§7by §6{1}% §7for §a10s"
                 ],
                 "LEGENDARY": [
                     "§6Apex Predator",
-                    "§7Deal §c+20% §7damage against",
+                    "§7Deal §c+{2}% §7damage against",
                     "§7targets with no other mobs",
                     "§7within §a15 §7blocks"
                 ]
