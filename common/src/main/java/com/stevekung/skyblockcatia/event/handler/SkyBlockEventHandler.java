@@ -134,7 +134,7 @@ public class SkyBlockEventHandler
                 long now = System.currentTimeMillis();
                 long checkedTime = entry.getValue().getLeft();
 
-                if (now - checkedTime > 120000D)
+                if (now - checkedTime > 180000D)
                 {
                     SkyBlockProfileSelectorScreen.PROFILE_CACHE.remove(entry.getKey());
                 }
@@ -144,7 +144,7 @@ public class SkyBlockEventHandler
                 long now = System.currentTimeMillis();
                 long checkedTime = entry.getValue().getLeft();
 
-                if (now - checkedTime > 120000D)
+                if (now - checkedTime > 180000D)
                 {
                     SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.remove(entry.getKey());
                 }

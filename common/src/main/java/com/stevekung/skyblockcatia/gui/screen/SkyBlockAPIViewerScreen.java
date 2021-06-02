@@ -78,6 +78,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.monster.CaveSpider;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -131,7 +132,6 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     // API
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
-
     public static boolean renderSecondLayer;
     private final List<SkyBlockInfo> infoList = Lists.newArrayList();
     private final List<SBSkills.Info> skillLeftList = Lists.newArrayList();
@@ -185,6 +185,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     private int zombieSlayerLevel;
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
+    private int endermanSlayerLevel;
     private final BonusStatTemplate allStat = BonusStatTemplate.getDefault();
 
     // ContainerScreen fields
@@ -1462,7 +1463,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                 }
 
-                this.data.setHasInventories(this.totalDisabledInv != 11);
+                this.data.setHasInventories(this.totalDisabledInv != 12);
                 this.allStat.setEffectiveHealth(this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int) (this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)));
                 this.getBasicInfo(currentUserProfile, banking, status, communityUpgrade);
                 break;
@@ -2359,13 +2360,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             SBPets.HeldItem heldItem = null;
             String heldItemType = null;
             String skin = null;
-            String skinName = null;
-            boolean addEmpty = false;
+            String skinName = "";
 
             if (skinObj != null)
             {
                 skin = skinObj;
-                addEmpty = skin != null;
             }
             if (heldItemObj != null)
             {
@@ -2388,66 +2387,335 @@ public class SkyBlockAPIViewerScreen extends Screen
                 tier = tier.getNextRarity();
             }
 
-            SBPets.Info level = this.checkPetLevel(exp, tier);
+            SBPets.Info petInfo = this.checkPetLevel(exp, tier);
             ChatFormatting rarity = tier.getTierColor();
             SBPets.Type type = SBPets.PETS.getTypeByName(petType);
+            int level = petInfo.getCurrentPetLevel();
 
             if (type != null)
             {
+                SBPets.Stats stats = type.getStats();
+                Map<String, SBPets.StatsPropertyArray> statsLore = type.getStatsLore();
+                Map<String, List<String>> lore = type.getLore();
+                List<String> descList = type.getDescription();
+                String loreMode = type.getLoreMode();
+                List<StringTag> listStats = Lists.newLinkedList();
+                List<StringTag> listLore = Lists.newLinkedList();
+
+                if (descList != null)
+                {
+                    for (String desc : descList)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(desc)));
+                    }
+                    listStats.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                }
+                if (stats != null)
+                {
+                    SBPets.StatsProperty damage = stats.getDamage();
+                    SBPets.StatsProperty health = stats.getHealth();
+                    SBPets.StatsProperty strength = stats.getStrength();
+                    SBPets.StatsProperty critDamage = stats.getCritDamage();
+                    SBPets.StatsProperty critChance = stats.getCritChance();
+                    SBPets.StatsProperty ferocity = stats.getFerocity();
+                    SBPets.StatsProperty attackSpeed = stats.getAttackSpeed();
+                    SBPets.StatsProperty defense = stats.getDefense();
+                    SBPets.StatsProperty trueDefense = stats.getTrueDefense();
+                    SBPets.StatsProperty speed = stats.getSpeed();
+                    SBPets.StatsProperty intelligence = stats.getIntelligence();
+                    SBPets.StatsProperty seaCreatureChance = stats.getSeaCreatureChance();
+                    SBPets.StatsProperty magicFind = stats.getMagicFind();
+                    SBPets.StatsProperty abilityDamage = stats.getAbilityDamage();
+
+                    if (damage != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(damage.getString("Damage", level))));
+                    }
+                    if (health != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(health.getString("Health", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addHealth(health.getValue(level));
+                        }
+                    }
+                    if (strength != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(strength.getString("Strength", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addStrength(strength.getValue(level));
+                        }
+                    }
+                    if (critDamage != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(critDamage.getString("Crit Damage", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addCritDamage(critDamage.getValue(level));
+                        }
+                    }
+                    if (critChance != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(critChance.getString("Crit Chance", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addCritChance(critChance.getValue(level));
+                        }
+                    }
+                    if (ferocity != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(ferocity.getString("Ferocity", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addFerocity(ferocity.getValue(level));
+                        }
+                    }
+                    if (attackSpeed != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(attackSpeed.getString("Bonus Attack Speed", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addAttackSpeed(attackSpeed.getValue(level));
+                        }
+                    }
+                    if (speed != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(speed.getString("Speed", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addSpeed(speed.getValue(level));
+                        }
+                    }
+                    if (defense != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(defense.getString("Defense", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addDefense(defense.getValue(level));
+                        }
+                    }
+                    if (trueDefense != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(trueDefense.getString("True Defense", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addTrueDefense(trueDefense.getValue(level));
+                        }
+                    }
+                    if (intelligence != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(intelligence.getString("Intelligence", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addIntelligence(intelligence.getValue(level));
+                        }
+                    }
+                    if (seaCreatureChance != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(seaCreatureChance.getString("Sea Creature Chance", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addSeaCreatureChance(seaCreatureChance.getValue(level));
+                        }
+                    }
+                    if (magicFind != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(magicFind.getString("Magic Find", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addMagicFind(magicFind.getValue(level));
+                        }
+                    }
+                    if (abilityDamage != null)
+                    {
+                        listStats.add(StringTag.valueOf(TextComponentUtils.toJson(abilityDamage.getString("Ability Damage", level))));
+
+                        if (active)
+                        {
+                            this.allStat.addAbilityDamage(abilityDamage.getValue(level));
+                        }
+                    }
+                }
+                if (lore != null)
+                {
+                    for (Map.Entry<String, List<String>> entry : lore.entrySet())
+                    {
+                        String statTierName = entry.getKey();
+                        SBPets.Tier statTier = SBPets.Tier.valueOf(statTierName);
+                        boolean foundLowTier = tier.ordinal() < statTier.ordinal();
+
+                        if (loreMode != null && loreMode.equals("REPLACE") && !tier.equals(statTier))
+                        {
+                            continue;
+                        }
+
+                        List<StringTag> formattedLore = Lists.newArrayList();
+
+                        for (String lore2 : entry.getValue())
+                        {
+                            if (foundLowTier)
+                            {
+                                continue;
+                            }
+
+                            if (statsLore != null)
+                            {
+                                SBPets.StatsPropertyArray array = statsLore.get(tier.name());
+
+                                if (statsLore.get("ALL") != null)
+                                {
+                                    array = statsLore.get("ALL");
+                                }
+                                else
+                                {
+                                    for (SBPets.Tier tierTmp : SBPets.Tier.values())
+                                    {
+                                        SBPets.StatsPropertyArray foundProp = statsLore.get(tierTmp.name());
+
+                                        if (foundProp != null)
+                                        {
+                                            array = foundProp;
+                                        }
+                                    }
+                                }
+
+                                double[] statsLoreBase = array.getBase();
+                                double[] statsLoreMult = array.getMultiply();
+                                double[] statsLoreAddit = array.getAdditional();
+                                String roundingMode = array.getRoundingMode();
+                                String displayMode = array.getDisplayMode();
+
+                                for (int i = 0; i < statsLoreMult.length; i++)
+                                {
+                                    double value = statsLoreBase[i] + statsLoreMult[i] * level;
+                                    BigDecimal decimal = new BigDecimal(value);
+
+                                    if (roundingMode != null)
+                                    {
+                                        decimal = decimal.setScale(1, RoundingMode.valueOf(roundingMode));
+                                    }
+                                    if (statsLoreAddit != null)
+                                    {
+                                        for (int i2 = 0; i2 < statsLoreAddit.length; i2++)
+                                        {
+                                            lore2 = lore2.replace("{" + (char)(i2 + 65) + "}", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(statsLoreAddit[i2]));
+                                        }
+                                    }
+                                    if (displayMode != null)
+                                    {
+                                        if (displayMode.equals("DISPLAY_AT_LEVEL_1"))
+                                        {
+                                            lore2 = lore2.replace("{" + i + "}", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level == 1 ? statsLoreBase[i] : statsLoreMult[i] * level));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        lore2 = lore2.replace("{" + i + "}", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level == 1 ? statsLoreBase[i] : decimal));
+                                    }
+                                }
+                            }
+                            formattedLore.add(StringTag.valueOf(TextComponentUtils.toJson(lore2)));
+                        }
+
+                        listLore.addAll(formattedLore);
+
+                        if (!foundLowTier)
+                        {
+                            listLore.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                        }
+                    }
+                }
+
                 ItemStack itemStack = type.getPetItem();
+                String skinMark = "";
 
-                itemStack.setHoverName(TextComponentUtils.component(ChatFormatting.GRAY + "[Lvl " + level.getCurrentPetLevel() + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))));
-                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet")));
-                list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
-                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + (level.getCurrentPetLevel() < 100 ? ChatFormatting.GRAY + "Progress to Level " + level.getNextPetLevel() + ": " + ChatFormatting.YELLOW + level.getPercent() : level.getPercent()))));
-
-                if (level.getCurrentPetLevel() < 100)
-                {
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + this.getTextPercentage((int) level.getCurrentPetXp(), level.getXpRequired()) + " " + ChatFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(level.getCurrentPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getXpRequired()))));
-                }
-                if (addEmpty)
-                {
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
-                }
-                if (candyUsed > 0)
-                {
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Candy Used: " + ChatFormatting.YELLOW + candyUsed + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + 10)));
-                }
                 if (skin != null)
                 {
                     for (SBPets.Skin petSkin : SBPets.PETS.getSkin())
                     {
                         if (skin.equals(petSkin.getType()))
                         {
-                            ItemStack tmp = itemStack.copy();
-                            itemStack = ItemUtils.setSkullSkin(itemStack, petSkin.getUUID(), petSkin.getTexture());
-                            itemStack.setHoverName(tmp.getHoverName());
-                            skinName = petSkin.getColor() + petSkin.getName();
+                            itemStack = ItemUtils.setSkullSkin(itemStack.copy(), petSkin.getUUID(), petSkin.getTexture());
+                            skinName = petSkin.getName();
                             break;
                         }
                     }
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Skin: " + (skinName == null ? skin : skinName))));
+                    skinName = ", " + (skinName.isEmpty() ? skin : skinName) + " Skin";
+                    skinMark = " ✦";
                 }
+
+                itemStack.setHoverName(TextComponentUtils.component(ChatFormatting.GRAY + "[Lvl " + level + "] " + rarity + WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " ")) + skinMark));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.DARK_GRAY + type.getSkill().getName() + " Pet" + skinName)));
+
+                if (listStats.size() > 0)
+                {
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                    list.addAll(listStats);
+                }
+
+                if (listLore.size() > 0)
+                {
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                    list.addAll(listLore);
+                }
+                else
+                {
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                }
+
                 if (heldItem != null)
                 {
                     String heldItemName = ChatFormatting.getByName(heldItem.getColor()) + heldItem.getName();
-                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Held Item: " + heldItemName)));
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GOLD + "Held Item: " + heldItemName)));
+
+                    for (String heldItemLore : heldItem.getLore())
+                    {
+                        list.add(StringTag.valueOf(TextComponentUtils.toJson(heldItemLore)));
+                    }
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
                 }
                 else
                 {
                     if (heldItemType != null)
                     {
                         list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Held Item: " + ChatFormatting.RED + heldItemType)));
+                        list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
                     }
                 }
 
+                if (candyUsed > 0)
+                {
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Candy Used: " + ChatFormatting.YELLOW + candyUsed + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + 10)));
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
+                }
+
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + (level < 100 ? ChatFormatting.GRAY + "Progress to Level " + petInfo.getNextPetLevel() + ": " + ChatFormatting.YELLOW + petInfo.getPercent() : petInfo.getPercent()))));
+
+                if (level < 100)
+                {
+                    list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET + this.getTextPercentage((int) petInfo.getCurrentPetXp(), petInfo.getXpRequired()) + " " + ChatFormatting.YELLOW + NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(petInfo.getCurrentPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(petInfo.getXpRequired()))));
+                }
+
                 list.add(StringTag.valueOf(TextComponentUtils.toJson("")));
-                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Total XP: " + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(level.getTotalPetTypeXp()))));
+                list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RESET.toString() + ChatFormatting.GRAY + "Total XP: " + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(petInfo.getPetXp()) + ChatFormatting.GOLD + "/" + ChatFormatting.YELLOW + SBNumberUtils.formatWithM(petInfo.getTotalPetTypeXp()))));
                 list.add(StringTag.valueOf(TextComponentUtils.toJson(rarity.toString() + ChatFormatting.BOLD + tier + " PET")));
                 itemStack.getTag().getCompound("display").put("Lore", list);
                 itemStack.getOrCreateTagElement("ExtraAttributes").putString("id", "PET");
                 itemStack.getTag().putBoolean("active", active);
-                petData.add(new SBPets.Data(tier, level.getCurrentPetLevel(), TextComponentUtils.component(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))), active, Collections.singletonList(itemStack)));
+                petData.add(new SBPets.Data(tier, level, TextComponentUtils.component(WordUtils.capitalize(petType.toLowerCase(Locale.ROOT).replace("_", " "))), active, Collections.singletonList(itemStack)));
 
                 switch (tier)
                 {
@@ -2482,7 +2750,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, itemStack.getHoverName(), false, Lists.newArrayList(itemStack)));
                 SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
             }
-            petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o2.getName().getString(), o1.getName().getString()).build());
+            petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o1.getName().getString(), o2.getName().getString()).build());
         }
         for (SBPets.Data data : petData)
         {
@@ -3423,6 +3691,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             List<SkyBlockSlayerInfo> zombie = this.getSlayer(slayerBosses, SBSlayers.Type.ZOMBIE);
             List<SkyBlockSlayerInfo> spider = this.getSlayer(slayerBosses, SBSlayers.Type.SPIDER);
             List<SkyBlockSlayerInfo> wolf = this.getSlayer(slayerBosses, SBSlayers.Type.WOLF);
+            List<SkyBlockSlayerInfo> enderman = this.getSlayer(slayerBosses, SBSlayers.Type.ENDERMAN);
 
             if (!zombie.isEmpty())
             {
@@ -3435,6 +3704,10 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (!wolf.isEmpty())
             {
                 this.slayerInfo.addAll(wolf);
+            }
+            if (!enderman.isEmpty())
+            {
+                this.slayerInfo.addAll(enderman);
             }
         }
         if (this.slayerInfo.isEmpty())
@@ -3505,6 +3778,10 @@ public class SkyBlockAPIViewerScreen extends Screen
                         }
                         ++slayerLvl;
                     }
+                    if (slayerLvl == 0)
+                    {
+                        xpRequired = SBSlayers.SLAYERS.getLeveling().get(lowerType)[0];
+                    }
                 }
 
                 if (levelToCheck < maxLevel)
@@ -3560,6 +3837,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 break;
             case WOLF:
                 this.wolfSlayerLevel = currentLevel;
+                break;
+            case ENDERMAN:
+                this.endermanSlayerLevel = currentLevel;
                 break;
             default:
                 break;
@@ -3654,12 +3934,16 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private static void renderEntity(int posX, int posY, LivingEntity entity)
     {
+        renderEntity(posX, posY, entity, 40.0F);
+    }
+
+    private static void renderEntity(int posX, int posY, LivingEntity entity, float scale)
+    {
         RenderSystem.pushMatrix();
         RenderSystem.translatef(posX, posY, 1050.0F);
         RenderSystem.scalef(1.0F, 1.0F, -1.0F);
         PoseStack matrixstack = new PoseStack();
         matrixstack.translate(0.0D, 0.0D, 1000.0D);
-        float scale = 40F;
         matrixstack.scale(scale, scale, scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(-180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(-10.0F);
@@ -4013,38 +4297,43 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (stat.type == SkyBlockSlayerInfo.Type.XP_AND_MOB)
             {
-                if (stat.text.equals("Zombie"))
+                switch (stat.text)
                 {
-                    Zombie zombie = new Zombie(this.world);
-                    ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
-                    heldItem.enchant(Enchantments.UNBREAKING, 1);
-                    ItemStack helmet = ItemUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
-                    ItemStack chestplate = new ItemStack(Items.DIAMOND_CHESTPLATE);
-                    chestplate.enchant(Enchantments.UNBREAKING, 1);
-                    ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
-                    leggings.enchant(Enchantments.UNBREAKING, 1);
-                    ItemStack boots = new ItemStack(Items.DIAMOND_BOOTS);
-                    zombie.setItemSlot(EquipmentSlot.HEAD, helmet);
-                    zombie.setItemSlot(EquipmentSlot.CHEST, chestplate);
-                    zombie.setItemSlot(EquipmentSlot.LEGS, leggings);
-                    zombie.setItemSlot(EquipmentSlot.FEET, boots);
-                    zombie.setItemSlot(EquipmentSlot.MAINHAND, heldItem);
-                    zombie.tickCount = LibClientProxy.ticks;
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, zombie);
-                }
-                else if (stat.text.equals("Spider"))
-                {
-                    Spider spider = new Spider(EntityType.SPIDER, this.world);
-                    CaveSpider cave = new CaveSpider(EntityType.CAVE_SPIDER, this.world);
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 40, cave);
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, spider);
-                    RenderSystem.blendFunc(770, 771);
-                }
-                else
-                {
-                    Wolf wolf = new Wolf(EntityType.WOLF, this.world);
-                    wolf.setRemainingPersistentAngerTime(Integer.MAX_VALUE);
-                    SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, wolf);
+                    case "Zombie":
+                        Zombie zombie = new Zombie(this.world);
+                        ItemStack heldItem = new ItemStack(Items.DIAMOND_HOE);
+                        heldItem.enchant(Enchantments.UNBREAKING, 1);
+                        ItemStack helmet = ItemUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
+                        ItemStack chestplate = new ItemStack(Items.DIAMOND_CHESTPLATE);
+                        chestplate.enchant(Enchantments.UNBREAKING, 1);
+                        ItemStack leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
+                        leggings.enchant(Enchantments.UNBREAKING, 1);
+                        ItemStack boots = new ItemStack(Items.DIAMOND_BOOTS);
+                        zombie.setItemSlot(EquipmentSlot.HEAD, helmet);
+                        zombie.setItemSlot(EquipmentSlot.CHEST, chestplate);
+                        zombie.setItemSlot(EquipmentSlot.LEGS, leggings);
+                        zombie.setItemSlot(EquipmentSlot.FEET, boots);
+                        zombie.setItemSlot(EquipmentSlot.MAINHAND, heldItem);
+                        zombie.tickCount = LibClientProxy.ticks;
+                        SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, zombie);
+                        break;
+                    case "Spider":
+                        Spider spider = new Spider(EntityType.SPIDER, this.world);
+                        CaveSpider cave = new CaveSpider(EntityType.CAVE_SPIDER, this.world);
+                        SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 40, cave);
+                        SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, spider);
+                        RenderSystem.blendFunc(770, 771);
+                        break;
+                    case "Wolf":
+                        Wolf wolf = new Wolf(EntityType.WOLF, this.world);
+                        wolf.setRemainingPersistentAngerTime(Integer.MAX_VALUE);
+                        SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, wolf);
+                        break;
+                    case "Enderman":
+                        EnderMan enderman = new EnderMan(EntityType.ENDERMAN, this.world);
+                        enderman.setRemainingPersistentAngerTime(Integer.MAX_VALUE);
+                        SkyBlockAPIViewerScreen.renderEntity(SkyBlockAPIViewerScreen.this.guiLeft - 30, top + 60, enderman, 30.0F);
+                        break;
                 }
 
                 float[] color = ColorUtils.toFloatArray(0, 255, 255);

@@ -103,25 +103,25 @@ public class SkyblockProfiles
         private final Jacob jacob;
 
         @SerializedName("experience_skill_farming")
-        private final double farmingExp;
+        private final Double farmingExp;
         @SerializedName("experience_skill_foraging")
-        private final double foragingExp;
+        private final Double foragingExp;
         @SerializedName("experience_skill_mining")
-        private final double miningExp;
+        private final Double miningExp;
         @SerializedName("experience_skill_fishing")
-        private final double fishingExp;
+        private final Double fishingExp;
         @SerializedName("experience_skill_runecrafting")
-        private final double runecraftingExp;
+        private final Double runecraftingExp;
         @SerializedName("experience_skill_combat")
-        private final double combatExp;
+        private final Double combatExp;
         @SerializedName("experience_skill_enchanting")
-        private final double enchantingExp;
+        private final Double enchantingExp;
         @SerializedName("experience_skill_alchemy")
-        private final double alchemyExp;
+        private final Double alchemyExp;
         @SerializedName("experience_skill_taming")
-        private final double tamingExp;
+        private final Double tamingExp;
         @SerializedName("experience_skill_carpentry")
-        private final double carpentryExp;
+        private final Double carpentryExp;
 
         @SerializedName("fairy_souls_collected")
         private final int fairySoulsCollected;
@@ -227,52 +227,52 @@ public class SkyblockProfiles
             return this.jacob;
         }
 
-        public double getFarmingExp()
+        public Double getFarmingExp()
         {
             return this.farmingExp;
         }
 
-        public double getForagingExp()
+        public Double getForagingExp()
         {
             return this.foragingExp;
         }
 
-        public double getMiningExp()
+        public Double getMiningExp()
         {
             return this.miningExp;
         }
 
-        public double getFishingExp()
+        public Double getFishingExp()
         {
             return this.fishingExp;
         }
 
-        public double getRunecraftingExp()
+        public Double getRunecraftingExp()
         {
             return this.runecraftingExp;
         }
 
-        public double getCombatExp()
+        public Double getCombatExp()
         {
             return this.combatExp;
         }
 
-        public double getEnchantingExp()
+        public Double getEnchantingExp()
         {
             return this.enchantingExp;
         }
 
-        public double getAlchemyExp()
+        public Double getAlchemyExp()
         {
             return this.alchemyExp;
         }
 
-        public double getTamingExp()
+        public Double getTamingExp()
         {
             return this.tamingExp;
         }
 
-        public double getCarpentryExp()
+        public Double getCarpentryExp()
         {
             return this.carpentryExp;
         }

@@ -44,12 +44,14 @@ public class SBSlayers
         private final Zombie[] zombie;
         private final Spider[] spider;
         private final Wolf[] wolf;
+        private final Enderman[] enderman;
 
-        public Bonus(Zombie[] zombie, Spider[] spider, Wolf[] wolf)
+        public Bonus(Zombie[] zombie, Spider[] spider, Wolf[] wolf, Enderman[] enderman)
         {
             this.zombie = zombie;
             this.spider = spider;
             this.wolf = wolf;
+            this.enderman = enderman;
         }
 
         public Zombie[] getZombie()
@@ -65,6 +67,11 @@ public class SBSlayers
         public Wolf[] getWolf()
         {
             return this.wolf;
+        }
+
+        public Enderman[] getEnderman()
+        {
+            return this.enderman;
         }
     }
 
@@ -167,12 +174,45 @@ public class SBSlayers
         }
     }
 
+    public class Enderman implements IBonusTemplate
+    {
+        private final int level;
+        private final double health;
+        private final double intelligence;
+
+        public Enderman(int level, double health, double intelligence)
+        {
+            this.level = level;
+            this.health = health;
+            this.intelligence = intelligence;
+        }
+
+        @Override
+        public int getLevel()
+        {
+            return this.level;
+        }
+
+        @Override
+        public double getHealth()
+        {
+            return this.health;
+        }
+
+        @Override
+        public double getIntelligence()
+        {
+            return this.intelligence;
+        }
+    }
+
     public enum Type
     {
         UNKNOWN("Unknown"),
         ZOMBIE("Zombie"),
         SPIDER("Spider"),
-        WOLF("Wolf");
+        WOLF("Wolf"),
+        ENDERMAN("Enderman");
 
         private final String name;
 

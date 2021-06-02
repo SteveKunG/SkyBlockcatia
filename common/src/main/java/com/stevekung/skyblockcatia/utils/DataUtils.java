@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import me.shedaniel.architectury.platform.Platform;
 
 public class DataUtils
 {
@@ -28,6 +29,11 @@ public class DataUtils
 
     public static BufferedReader getData(String fileName)
     {
+        if (Platform.isDevelopmentEnvironment())
+        {
+            return new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/skyblockcatia/api/" + fileName)));
+        }
+
         try
         {
             URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/skyblock_data/" + fileName);
