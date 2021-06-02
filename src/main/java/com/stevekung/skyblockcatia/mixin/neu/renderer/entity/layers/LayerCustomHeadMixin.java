@@ -1,4 +1,4 @@
-package com.stevekung.skyblockcatia.mixin.renderer.entity.layers;
+package com.stevekung.skyblockcatia.mixin.neu.renderer.entity.layers;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,14 +14,12 @@ import com.stevekung.skyblockcatia.renderer.IGlowingCustomHead;
 import com.stevekung.skyblockcatia.renderer.TileEntityEnchantedSkullRenderer;
 import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelHumanoidHead;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.model.ModelSkeletonHead;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerCustomHead;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
@@ -35,7 +33,7 @@ public class LayerCustomHeadMixin implements IGlowingCustomHead
     private ModelRenderer field_177209_a;
 
     @Inject(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", cancellable = true, at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/TileEntitySkullRenderer.renderSkull(FFFLnet/minecraft/util/EnumFacing;FILcom/mojang/authlib/GameProfile;I)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void renderEnchantedSkull(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info, ItemStack itemStack, Item item, Minecraft minecraft, boolean flag, float f3, GameProfile gameprofile)
+    private void renderEnchantedSkull(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info, ItemStack itemStack, GameProfile gameprofile)
     {
         if (SkyBlockcatiaConfig.enableEnchantedGlintForSkull && !CompatibilityUtils.hasDisableEnchantmentGlint())
         {

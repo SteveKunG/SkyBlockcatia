@@ -19,6 +19,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
     static boolean foundPlayerApi;
     static boolean foundRenderPlayerApi;
     static boolean foundSmoothFont;
+    static boolean foundNEUCustomHead;
 
     static
     {
@@ -26,6 +27,7 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         foundPlayerApi = findAndDetectModClass("api.player.client.ClientPlayerAPI", "PlayerAPI");
         foundRenderPlayerApi = findAndDetectModClass("api.player.render.RenderPlayerAPI", "RenderPlayerAPI");
         foundSmoothFont = findAndDetectModClass("bre.smoothfont.mod_SmoothFont", "Smooth Font");
+        foundNEUCustomHead = findAndDetectModClass("io.github.moulberry.notenoughupdates.mixins.MixinLayerCustomHead", "NotEnoughUpdates");
     }
 
     @Override
@@ -63,6 +65,14 @@ public class SkyBlockcatiaMixinConfigPlugin implements IMixinConfigPlugin
         else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.gui.FontRendererMixin"))
         {
             return !foundSmoothFont;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.neu.renderer.entity.layers.LayerCustomHeadMixin"))
+        {
+            return foundNEUCustomHead;
+        }
+        else if (mixinClassName.equals("com.stevekung.skyblockcatia.mixin.renderer.entity.layers.LayerCustomHeadMixin"))
+        {
+            return !foundNEUCustomHead;
         }
         return true;
     }
