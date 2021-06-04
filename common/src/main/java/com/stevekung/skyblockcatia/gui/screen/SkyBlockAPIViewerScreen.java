@@ -2611,7 +2611,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                     {
                                         for (int i2 = 0; i2 < statsLoreAddit.length; i2++)
                                         {
-                                            lore2 = lore2.replace("{" + (char)(i2 + 65) + "}", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(statsLoreAddit[i2]));
+                                            lore2 = lore2.replace("{" + (char) (i2 + 65) + "}", NumberUtils.NUMBER_FORMAT_WITH_DECIMAL.format(statsLoreAddit[i2]));
                                         }
                                     }
                                     if (displayMode != null)

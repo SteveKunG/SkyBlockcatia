@@ -360,7 +360,7 @@ public class SBPets
 
         public int getValue(int level)
         {
-            return (int)(this.base + this.multiply * level);
+            return (int) (this.base + this.multiply * level);
         }
 
         public String getString(String type, int level)
