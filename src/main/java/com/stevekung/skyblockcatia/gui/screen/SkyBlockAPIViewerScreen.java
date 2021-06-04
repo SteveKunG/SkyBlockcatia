@@ -21,7 +21,10 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
-import com.google.common.collect.*;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -42,7 +45,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -73,9 +75,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.WorldSettings;
-import net.minecraft.world.WorldType;
 import net.minecraftforge.fml.client.GuiScrollingList;
 
 public class SkyBlockAPIViewerScreen extends GuiScreen
@@ -119,7 +118,6 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private boolean showArmor = true;
     private float oldMouseX;
     private float oldMouseY;
-    private static final WorldClient FAKE_WORLD = new WorldClient(Minecraft.getMinecraft().getNetHandler(), new WorldSettings(0L, WorldSettings.GameType.SURVIVAL, false, false, WorldType.DEFAULT), 0, EnumDifficulty.NORMAL, Minecraft.getMinecraft().mcProfiler);
 
     // API
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
@@ -127,23 +125,17 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private static final ModDecimalFormat FORMAT_2 = new ModDecimalFormat("#,###.#");
     private static final ModDecimalFormat NUMBER_FORMAT_WITH_SYMBOL = new ModDecimalFormat("+#;-#");
     private static final ModDecimalFormat SKILL_AVG = new ModDecimalFormat("##.#");
-    private static final List<String> SEA_CREATURES = ImmutableList.of("sea_walker", "pond_squid", "night_squid", "frozen_steve", "grinch", "yeti", "frosty_the_snowman", "sea_guardian", "sea_archer", "sea_witch", "chicken_deep", "zombie_deep", "catfish", "sea_leech", "deep_sea_protector", "water_hydra", "skeleton_emperor", "guardian_defender", "guardian_emperor", "carrot_king", "nurse_shark", "blue_shark", "tiger_shark", "great_white_shark", "nightmare", "scarecrow", "werewolf", "phantom_fisherman", "grim_reaper");
-    private static final Map<String, String> CURRENT_LOCATION_MAP = ImmutableMap.<String, String>builder().put("dynamic", "Private Island").put("hub", "Hub").put("mining_1", "Gold Mine").put("mining_2", "Deep Caverns").put("combat_1", "Spider's Den").put("combat_2", "Blazing Fortress").put("combat_3", "The End").put("farming_1", "The Barn").put("farming_2", "Mushroom Desert").put("foraging_1", "The Park").put("winter", "Jerry's Workshop").put("dungeon_hub", "Dungeon Hub").put("dungeon", "Dungeon").put("dark_auction", "Dark Auction").put("mining_3", "Dwarven Mines").build();
-    private static final Map<String, String> RENAMED_STATS_MAP = ImmutableMap.<String, String>builder().put("auctions_bought_common", "common_auctions_bought").put("auctions_bought_epic", "epic_auctions_bought").put("auctions_bought_legendary", "legendary_auctions_bought").put("auctions_bought_rare", "rare_auctions_bought").put("auctions_bought_special", "special_auctions_bought").put("auctions_bought_uncommon", "uncommon_auctions_bought").put("auctions_sold_common", "common_auctions_sold").put("auctions_sold_epic", "epic_auctions_sold").put("auctions_sold_legendary", "legendary_auctions_sold")
-            .put("auctions_sold_rare", "rare_auctions_sold").put("auctions_sold_special", "special_auctions_sold").put("auctions_sold_uncommon", "uncommon_auctions_sold").put("items_fished_large_treasure", "large_treasure_items_fished").put("items_fished_normal", "normal_items_fished").put("items_fished_treasure", "treasure_items_fished").put("shredder_bait", "bait_used_with_shredder")
-            .put("mythos_burrows_chains_complete_common", "mythos_burrows_common_chains_complete").put("mythos_burrows_chains_complete_epic", "mythos_burrows_epic_chains_complete").put("mythos_burrows_chains_complete_legendary", "mythos_burrows_legendary_chains_complete").put("mythos_burrows_chains_complete_rare", "mythos_burrows_rare_chains_complete").put("mythos_burrows_dug_combat_common", "mythos_burrows_dug_common_monsters").put("mythos_burrows_dug_combat_epic", "mythos_burrows_dug_epic_monsters").put("mythos_burrows_dug_combat_legendary", "mythos_burrows_dug_legendary_monsters").put("mythos_burrows_dug_combat_rare", "mythos_burrows_dug_rare_monsters").put("mythos_burrows_dug_next_common", "mythos_burrows_dug_common_arrows").put("mythos_burrows_dug_next_epic", "mythos_burrows_dug_epic_arrows").put("mythos_burrows_dug_next_legendary", "mythos_burrows_dug_legendary_arrows").put("mythos_burrows_dug_next_rare", "mythos_burrows_dug_rare_arrows").put("mythos_burrows_dug_treasure_common", "mythos_burrows_dug_common_treasure").put("mythos_burrows_dug_treasure_epic", "mythos_burrows_dug_epic_treasure").put("mythos_burrows_dug_treasure_legendary", "mythos_burrows_dug_legendary_treasure").put("mythos_burrows_dug_treasure_rare", "mythos_burrows_dug_rare_treasure").build();
     private static final Map<String, String> SKYBLOCK_ITEM_ID_REMAP = ImmutableMap.<String, String>builder().put("seeds", "wheat_seeds").put("raw_chicken", "chicken").put("carrot_item", "carrot").put("potato_item", "potato").put("sulphur", "gunpowder").put("mushroom_collection", "red_mushroom").put("sugar_cane", "reeds").put("pork", "porkchop").put("nether_stalk", "nether_wart").put("raw_fish", "fish").put("ink_sack", "dye").put("water_lily", "waterlily").put("ender_stone", "end_stone").put("log_2", "log2").put("snow_ball", "snowball").build();
     private static final Map<String, ItemStack> ENCHANTED_ID_TO_ITEM = ImmutableMap.<String, ItemStack>builder().put("enchanted_mithril", new ItemStack(Items.prismarine_crystals)).put("enchanted_iron", new ItemStack(Items.iron_ingot)).put("enchanted_endstone", new ItemStack(Blocks.end_stone)).put("enchanted_gold", new ItemStack(Items.gold_ingot)).put("enchanted_lapis_lazuli", new ItemStack(Items.dye, 1, 4)).put("enchanted_titanium", RenderUtils.getSkullItemStack("deb23698-94ea-3571-bb89-cd37ba5d15d8", "3dcc0ec9873f4f8d407ba0a0f983e257787772eaf8784e226a61c7f727ac9e26")).put("enchanted_dark_oak_log", new ItemStack(Blocks.log2, 1, 1)).build();
-    private static final ImmutableList<String> BLACKLIST_STATS = ImmutableList.of("highest_crit_damage", "mythos_burrows_dug_combat", "mythos_burrows_dug_combat_null", "mythos_burrows_dug_treasure", "mythos_burrows_dug_next", "mythos_burrows_dug_treasure_null", "mythos_burrows_chains_complete", "mythos_burrows_chains_complete_null", "mythos_burrows_dug_next_null");
     public static boolean renderSecondLayer;
     private static final Gson GSON = new Gson();
     private final List<SkyBlockInfo> infoList = new ArrayList<>();
     private final List<SBSkills.Info> skillLeftList = new ArrayList<>();
     private final List<SBSkills.Info> skillRightList = new ArrayList<>();
     private final List<SkyBlockSlayerInfo> slayerInfo = new ArrayList<>();
-    private final List<SBStats> sbKills = new ArrayList<>();
-    private final List<SBStats> sbDeaths = new ArrayList<>();
-    private final List<SBStats> sbOthers = new ArrayList<>();
+    private final List<SBStats.Display> sbKills = new ArrayList<>();
+    private final List<SBStats.Display> sbDeaths = new ArrayList<>();
+    private final List<SBStats.Display> sbOthers = new ArrayList<>();
     private final List<BankHistory.Stats> sbBankHistories = new ArrayList<>();
     private final List<SBMinions.CraftedInfo> sbCraftedMinions = new ArrayList<>();
     private final List<ItemStack> armorItems = new ArrayList<>();
@@ -2098,7 +2090,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
             if (gameType.equals("SKYBLOCK"))
             {
-                return CURRENT_LOCATION_MAP.getOrDefault(mode, mode);
+                return SBStats.STATS.getCurrentLocations().getOrDefault(mode, mode);
             }
         }
         return locationText;
@@ -3874,29 +3866,29 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private void getStats(SkyblockProfiles.Members currentProfile)
     {
         JsonObject stats = currentProfile.getStats();
-        List<SBStats> auctions = new ArrayList<>();
-        List<SBStats> fished = new ArrayList<>();
-        List<SBStats> winter = new ArrayList<>();
-        List<SBStats> petMilestone = new ArrayList<>();
-        List<SBStats> others = new ArrayList<>();
-        List<SBStats> mobKills = new ArrayList<>();
-        List<SBStats> seaCreatures = new ArrayList<>();
-        List<SBStats> dragons = new ArrayList<>();
-        List<SBStats> race = new ArrayList<>();
-        List<SBStats> mythosBurrowsDug = new ArrayList<>();
+        List<SBStats.Display> auctions = new ArrayList<>();
+        List<SBStats.Display> fished = new ArrayList<>();
+        List<SBStats.Display> winter = new ArrayList<>();
+        List<SBStats.Display> petMilestone = new ArrayList<>();
+        List<SBStats.Display> others = new ArrayList<>();
+        List<SBStats.Display> mobKills = new ArrayList<>();
+        List<SBStats.Display> seaCreatures = new ArrayList<>();
+        List<SBStats.Display> dragons = new ArrayList<>();
+        List<SBStats.Display> race = new ArrayList<>();
+        List<SBStats.Display> mythosBurrowsDug = new ArrayList<>();
 
         // special case
         int emperorKills = 0;
         int deepMonsterKills = 0;
 
-        for (Map.Entry<String, JsonElement> stat : stats.entrySet().stream().filter(entry -> !BLACKLIST_STATS.stream().anyMatch(stat -> entry.getKey().equals(stat))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+        for (Map.Entry<String, JsonElement> stat : stats.entrySet().stream().filter(entry -> !SBStats.STATS.getBlacklist().stream().anyMatch(stat -> entry.getKey().equals(stat))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
         {
             String statName = stat.getKey().toLowerCase(Locale.ROOT);
             double value = stat.getValue().getAsDouble();
 
             if (statName.startsWith("kills") || statName.endsWith("kills"))
             {
-                if (SEA_CREATURES.stream().anyMatch(statName::contains))
+                if (SBStats.STATS.getSeaCreatures().stream().anyMatch(statName::contains))
                 {
                     if (statName.contains("skeleton_emperor") || statName.contains("guardian_emperor"))
                     {
@@ -3908,53 +3900,53 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                     }
                     else
                     {
-                        seaCreatures.add(new SBStats(this.replaceStatsString(statName, "kills"), value));
+                        seaCreatures.add(new SBStats.Display(this.replaceStatsString(statName, "kills"), value));
                     }
                 }
                 else if (statName.contains("dragon"))
                 {
-                    dragons.add(new SBStats(this.replaceStatsString(statName, "kills"), value));
+                    dragons.add(new SBStats.Display(this.replaceStatsString(statName, "kills"), value));
                 }
                 else
                 {
-                    mobKills.add(new SBStats(this.replaceStatsString(statName, "kills"), value));
+                    mobKills.add(new SBStats.Display(this.replaceStatsString(statName, "kills"), value));
                 }
             }
             else if (statName.startsWith("deaths"))
             {
-                this.sbDeaths.add(new SBStats(this.replaceStatsString(statName, "deaths"), value));
+                this.sbDeaths.add(new SBStats.Display(this.replaceStatsString(statName, "deaths"), value));
             }
             else
             {
-                statName = RENAMED_STATS_MAP.getOrDefault(statName, statName);
+                statName = SBStats.STATS.getRenamed().getOrDefault(statName, statName);
 
                 if (statName.contains("auctions"))
                 {
-                    auctions.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    auctions.add(new SBStats.Display(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
                 else if (statName.contains("items_fished") || statName.contains("shredder"))
                 {
-                    fished.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    fished.add(new SBStats.Display(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
                 else if (statName.contains("gifts") || statName.contains("most_winter"))
                 {
-                    winter.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    winter.add(new SBStats.Display(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
                 else if (statName.contains("pet_milestone"))
                 {
-                    petMilestone.add(new SBStats(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
+                    petMilestone.add(new SBStats.Display(WordUtils.capitalize(statName.replace("pet_milestone_", "").replace("_", " ")), value));
                 }
                 else if (statName.contains("race") || statName.contains("dungeon_hub"))
                 {
-                    race.add(new SBStats(WordUtils.capitalize(statName.replaceAll("dungeon_hub_|_best_time", "").replace("_", " ")), String.format("%1$TM:%1$TS.%1$TL", (long)value)));
+                    race.add(new SBStats.Display(WordUtils.capitalize(statName.replaceAll("dungeon_hub_|_best_time", "").replace("_", " ")), String.format("%1$TM:%1$TS.%1$TL", (long)value)));
                 }
                 else if (statName.startsWith("mythos_burrows_"))
                 {
-                    mythosBurrowsDug.add(new SBStats(WordUtils.capitalize(statName.toLowerCase(Locale.ROOT).replace("mythos_burrows_", "").replace("_", " ")), value));
+                    mythosBurrowsDug.add(new SBStats.Display(WordUtils.capitalize(statName.toLowerCase(Locale.ROOT).replace("mythos_burrows_", "").replace("_", " ")), value));
                 }
                 else
                 {
-                    others.add(new SBStats(WordUtils.capitalize(statName.replace("_", " ")), value));
+                    others.add(new SBStats.Display(WordUtils.capitalize(statName.replace("_", " ")), value));
                 }
             }
         }
@@ -3962,16 +3954,16 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         // special case
         if (emperorKills > 0)
         {
-            seaCreatures.add(new SBStats("Sea Emperor kills", emperorKills));
+            seaCreatures.add(new SBStats.Display("Sea Emperor kills", emperorKills));
         }
         if (deepMonsterKills > 0)
         {
-            seaCreatures.add(new SBStats("Monster of the Deep kills", deepMonsterKills));
+            seaCreatures.add(new SBStats.Display("Monster of the Deep kills", deepMonsterKills));
         }
 
         this.sbDeaths.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
         auctions.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        auctions.add(0, new SBStats(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + "Auctions", 0.0F));
+        auctions.add(0, new SBStats.Display(EnumChatFormatting.YELLOW.toString() + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + "Auctions", 0.0F));
 
         this.sortStats(fished, "Fishing");
         this.sortStats(winter, "Winter Event");
@@ -4014,18 +4006,18 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    private void sortStats(List<SBStats> list, String name)
+    private void sortStats(List<SBStats.Display> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat1.getName(), stat2.getName()).build());
-        list.add(0, new SBStats(null, 0.0F));
-        list.add(1, new SBStats(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + name, 0.0F));
+        list.add(0, new SBStats.Display(null, 0.0F));
+        list.add(1, new SBStats.Display(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + name, 0.0F));
     }
 
-    private void sortStatsByValue(List<SBStats> list, String name)
+    private void sortStatsByValue(List<SBStats.Display> list, String name)
     {
         list.sort((stat1, stat2) -> new CompareToBuilder().append(stat2.getValue(), stat1.getValue()).build());
-        list.add(0, new SBStats(null, 0.0F));
-        list.add(1, new SBStats(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + name, 0.0F));
+        list.add(0, new SBStats.Display(null, 0.0F));
+        list.add(1, new SBStats.Display(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.UNDERLINE + EnumChatFormatting.BOLD + name, 0.0F));
     }
 
     private long checkSkyBlockItem(List<ItemStack> list, String type)
@@ -4110,7 +4102,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             this.mc.getNetHandler().playerInfoMap.put(this.profile.getId(), ((IViewerLoader)new NetworkPlayerInfo(this.profile)).setLoadedFromViewer(true)); // hack into map to show their skin :D
         }
 
-        this.player = new SBFakePlayerEntity(FAKE_WORLD, this.profile);
+        this.player = new SBFakePlayerEntity(this.mc.theWorld, this.profile);
         SkyBlockAPIViewerScreen.renderSecondLayer = true;
         this.setPlayerArmors();
     }
@@ -4717,7 +4709,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             case XP_AND_MOB:
                 if (stat.getText().equals("Zombie"))
                 {
-                    EntityZombie zombie = new EntityZombie(FAKE_WORLD);
+                    EntityZombie zombie = new EntityZombie(this.parent.mc.theWorld);
                     ItemStack heldItem = new ItemStack(Items.diamond_hoe);
                     heldItem.addEnchantment(Enchantment.unbreaking, 1);
                     ItemStack helmet = RenderUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
@@ -4736,7 +4728,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 }
                 else if (stat.getText().equals("Spider"))
                 {
-                    EntitySpider spider = new EntitySpider(FAKE_WORLD);
+                    EntitySpider spider = new EntitySpider(this.parent.mc.theWorld);
                     EntityCaveSpider cave = new EntityCaveSpider(this.parent.mc.theWorld);
                     SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
                     SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
@@ -4744,13 +4736,13 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 }
                 else if (stat.getText().equals("Wolf"))
                 {
-                    EntityWolf wolf = new EntityWolf(FAKE_WORLD);
+                    EntityWolf wolf = new EntityWolf(this.parent.mc.theWorld);
                     wolf.setAngry(true);
                     SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
                 }
                 else
                 {
-                    EntityEnderman enderman = new EntityEnderman(FAKE_WORLD);
+                    EntityEnderman enderman = new EntityEnderman(this.parent.mc.theWorld);
                     enderman.setScreaming(true);
                     SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 30, enderman);
                 }
@@ -4837,9 +4829,9 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 FontRenderer font = this.parent.mc.fontRendererObj;
                 Object obj = this.stats.get(index);
 
-                if (obj instanceof SBStats)
+                if (obj instanceof SBStats.Display)
                 {
-                    SBStats stat = (SBStats)obj;
+                    SBStats.Display stat = (SBStats.Display)obj;
 
                     if (!StringUtils.isNullOrEmpty(stat.getName()) && this.parent.mc.fontRendererObj.getStringWidth(stat.getName()) > 200)
                     {

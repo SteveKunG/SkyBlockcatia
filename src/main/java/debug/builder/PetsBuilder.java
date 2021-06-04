@@ -1,11 +1,12 @@
 package debug.builder;
 
+import static debug.Helper.make;
+
 import java.io.File;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.text.WordUtils;
@@ -2574,11 +2575,5 @@ public class PetsBuilder
             this.type = type;
             this.index = index;
         }
-    }
-
-    static <T> T make(T object, Consumer<T> consumer)
-    {
-        consumer.accept(object);
-        return object;
     }
 }

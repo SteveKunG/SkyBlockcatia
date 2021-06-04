@@ -1,5 +1,12 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.ModDecimalFormat;
 
 import net.minecraft.util.EnumChatFormatting;
@@ -7,44 +14,90 @@ import net.minecraft.util.StringUtils;
 
 public class SBStats
 {
-    private String name;
-    private final double value;
-    private String valueString;
-    private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###.#");
+    private static final Gson GSON = new Gson();
+    public static SBStats STATS;
 
-    public SBStats(String name, double value)
+    private final List<String> blacklist;
+    @SerializedName("current_locations")
+    private final Map<String, String> currentLocations;
+    @SerializedName("sea_creatures")
+    private final List<String> seaCreatures;
+    private final Map<String, String> renamed;
+
+    public SBStats(List<String> blacklist, Map<String, String> currentLocations, List<String> seaCreatures, Map<String, String> renamed)
     {
-        this.name = name;
-        this.value = value;
+        this.blacklist = blacklist;
+        this.currentLocations = currentLocations;
+        this.seaCreatures = seaCreatures;
+        this.renamed = renamed;
     }
 
-    public SBStats(String name, String valueString)
+    public static void getStats() throws IOException
     {
-        this.name = name;
-        this.value = 0;
-        this.valueString = valueString;
+        STATS = GSON.fromJson(DataUtils.getData("stats.json"), SBStats.class);
     }
 
-    public String getName()
+    public List<String> getBlacklist()
     {
-        return this.name;
+        return this.blacklist;
     }
 
-    public double getValue()
+    public Map<String, String> getCurrentLocations()
     {
-        return this.value;
+        return this.currentLocations;
     }
 
-    public String getValueByString()
+    public List<String> getSeaCreatures()
     {
-        if (this.name == null || this.name.startsWith(EnumChatFormatting.YELLOW.toString()))
+        return this.seaCreatures;
+    }
+
+    public Map<String, String> getRenamed()
+    {
+        return this.renamed;
+    }
+
+    public static class Display
+    {
+        private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###.#");
+        private String name;
+        private final double value;
+        private String valueString;
+
+        public Display(String name, double value)
         {
-            return "";
+            this.name = name;
+            this.value = value;
         }
-        else if (!StringUtils.isNullOrEmpty(this.valueString))
+
+        public Display(String name, String valueString)
         {
-            return this.valueString;
+            this.name = name;
+            this.value = 0;
+            this.valueString = valueString;
         }
-        return FORMAT.format(this.value);
+
+        public String getName()
+        {
+            return this.name;
+        }
+
+        public double getValue()
+        {
+            return this.value;
+        }
+
+        public String getValueByString()
+        {
+            if (this.name == null || this.name.startsWith(EnumChatFormatting.YELLOW.toString()))
+            {
+                return "";
+            }
+            else if (!StringUtils.isNullOrEmpty(this.valueString))
+            {
+                return this.valueString;
+            }
+            return FORMAT.format(this.value);
+        }
     }
 }

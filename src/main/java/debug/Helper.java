@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.function.Consumer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,5 +63,11 @@ public class Helper
         jsonWriter.setIndent("    ");
         jsonWriter.setSerializeNulls(false);
         return jsonWriter;
+    }
+    
+    public static <T> T make(T object, Consumer<T> consumer)
+    {
+        consumer.accept(object);
+        return object;
     }
 }

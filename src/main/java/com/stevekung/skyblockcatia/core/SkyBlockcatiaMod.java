@@ -152,6 +152,7 @@ public class SkyBlockcatiaMod
             SBPets.getPets();
             SBSlayers.getSlayers();
             SBSkills.getSkills();
+            SBStats.getStats();
         }
         catch (Throwable e)
         {
