@@ -16,41 +16,51 @@ public class SlayerBuilder
     static final String WOLF = "10,30,250,1500,5000,20000,100000,400000,1000000";
     static final String ENDERMAN = "10,30,250,1500,5000,20000,100000,400000,1000000";
 
-    static final List<SlayerBonus> ZOMBIE_BONUS = Lists.newLinkedList();
-    static final List<SlayerBonus> SPIDER_BONUS = Lists.newLinkedList();
-    static final List<SlayerBonus> WOLF_BONUS = Lists.newLinkedList();
-    static final List<SlayerBonus> ENDERMAN_BONUS = Lists.newLinkedList();
-
-    static
+    static final List<SlayerBonus> ZOMBIE_BONUS = Helper.make(Lists.newLinkedList(), list ->
     {
-        ZOMBIE_BONUS.add(new SlayerBonus(1, "health=2"));
-        ZOMBIE_BONUS.add(new SlayerBonus(3, "health=3"));
-        ZOMBIE_BONUS.add(new SlayerBonus(5, "health=4"));
-        ZOMBIE_BONUS.add(new SlayerBonus(7, "health=5"));
-        ZOMBIE_BONUS.add(new SlayerBonus(9, "health=6"));
+        list.add(new SlayerBonus(1, "health=2"));
+        list.add(new SlayerBonus(3, "health=3"));
+        list.add(new SlayerBonus(5, "health=4"));
+        list.add(new SlayerBonus(7, "health=5"));
+        list.add(new SlayerBonus(9, "health=6"));
+    });
+    static final List<SlayerBonus> SPIDER_BONUS = Helper.make(Lists.newLinkedList(), list ->
+    {
+        list.add(new SlayerBonus(1, "crit_damage=1"));
+        list.add(new SlayerBonus(5, "crit_damage=2"));
+        list.add(new SlayerBonus(7, "crit_chance=1"));
+        list.add(new SlayerBonus(8, "crit_damage=3"));
+    });
+    static final List<SlayerBonus> WOLF_BONUS = Helper.make(Lists.newLinkedList(), list ->
+    {
+        list.add(new SlayerBonus(1, "speed=1"));
+        list.add(new SlayerBonus(2, "health=2"));
+        list.add(new SlayerBonus(3, "speed=1"));
+        list.add(new SlayerBonus(4, "health=2"));
+        list.add(new SlayerBonus(5, "crit_damage=1"));
+        list.add(new SlayerBonus(6, "health=3"));
+        list.add(new SlayerBonus(7, "crit_damage=2"));
+        list.add(new SlayerBonus(8, "speed=1"));
+    });
+    static final List<SlayerBonus> ENDERMAN_BONUS = Helper.make(Lists.newLinkedList(), list ->
+    {
+        list.add(new SlayerBonus(1, "health=1"));
+        list.add(new SlayerBonus(2, "intelligence=2"));
+        list.add(new SlayerBonus(3, "health=2"));
+        list.add(new SlayerBonus(4, "intelligence=2"));
+        list.add(new SlayerBonus(5, "health=3"));
+        list.add(new SlayerBonus(6, "intelligence=3"));
+        list.add(new SlayerBonus(7, "health=4"));
+    });
 
-        SPIDER_BONUS.add(new SlayerBonus(1, "crit_damage=1"));
-        SPIDER_BONUS.add(new SlayerBonus(5, "crit_damage=2"));
-        SPIDER_BONUS.add(new SlayerBonus(7, "crit_chance=1"));
-        SPIDER_BONUS.add(new SlayerBonus(8, "crit_damage=3"));
-
-        WOLF_BONUS.add(new SlayerBonus(1, "speed=1"));
-        WOLF_BONUS.add(new SlayerBonus(2, "health=2"));
-        WOLF_BONUS.add(new SlayerBonus(3, "speed=1"));
-        WOLF_BONUS.add(new SlayerBonus(4, "health=2"));
-        WOLF_BONUS.add(new SlayerBonus(5, "crit_damage=1"));
-        WOLF_BONUS.add(new SlayerBonus(6, "health=3"));
-        WOLF_BONUS.add(new SlayerBonus(7, "crit_damage=2"));
-        WOLF_BONUS.add(new SlayerBonus(8, "speed=1"));
-
-        ENDERMAN_BONUS.add(new SlayerBonus(1, "health=1"));
-        ENDERMAN_BONUS.add(new SlayerBonus(2, "intelligence=2"));
-        ENDERMAN_BONUS.add(new SlayerBonus(3, "health=2"));
-        ENDERMAN_BONUS.add(new SlayerBonus(4, "intelligence=2"));
-        ENDERMAN_BONUS.add(new SlayerBonus(5, "health=3"));
-        ENDERMAN_BONUS.add(new SlayerBonus(6, "intelligence=3"));
-        ENDERMAN_BONUS.add(new SlayerBonus(7, "health=4"));
-    }
+    static final Map<Integer, Integer> SLAYER_PRICES = Helper.make(Maps.newLinkedHashMap(), map ->
+    {
+        map.put(0, 2000);
+        map.put(1, 7500);
+        map.put(2, 20000);
+        map.put(3, 50000);
+        map.put(4, 100000);
+    });
 
     public static void main(String[] args)
     {
@@ -71,6 +81,7 @@ public class SlayerBuilder
 
         maps.put("leveling", levelMaps);
         maps.put("bonus", bonusMap);
+        maps.put("price", SLAYER_PRICES);
 
         File file = new File("M:/Modding/SkyBlockcatia/SkyblockData", "slayers.json");
         File file2 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.8.9/src/main/resources/assets/skyblockcatia/api", "slayers.json");
@@ -113,7 +124,7 @@ public class SlayerBuilder
         int level;
         String bonus;
 
-        public SlayerBonus(int level, String bonus)
+        SlayerBonus(int level, String bonus)
         {
             this.level = level;
             this.bonus = bonus;

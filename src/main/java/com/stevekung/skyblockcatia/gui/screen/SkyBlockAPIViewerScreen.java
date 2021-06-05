@@ -4193,12 +4193,12 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 list.add(SkyBlockSlayerInfo.createMobAndXp(type.getName(), playerSlayerXp + "," + xpRequired + "," + xpToNextLvl, reachLimit));
                 int amount = 0;
 
-                for (int i = 1; i <= 4; i++)
+                for (int i = 1; i <= 5; i++)
                 {
                     JsonElement kill = slayer.getAsJsonObject().get("boss_kills_tier_" + (i - 1));
-                    int kills = this.getSlayerKill(kill);
-                    amount += this.getSlayerPrice(kills, i - 1);
-                    list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "Tier " + i + ": " + EnumChatFormatting.YELLOW + this.formatSlayerKill(this.getSlayerKill(kill))));
+                    int kills = kill != null ? kill.getAsInt() : 0;
+                    amount += kills * SBSlayers.SLAYERS.getPrice().get(i - 1);
+                    list.add(new SkyBlockSlayerInfo(EnumChatFormatting.GRAY + "Tier " + i + ": " + EnumChatFormatting.YELLOW + this.formatSlayerKill(kills)));
                 }
                 this.slayerTotalAmountSpent += amount;
                 this.totalSlayerXp += playerSlayerXp;
@@ -4229,39 +4229,6 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         default:
             break;
         }
-    }
-
-    private int getSlayerKill(JsonElement element)
-    {
-        if (element != null)
-        {
-            int kills = element.getAsInt();
-            return kills;
-        }
-        return 0;
-    }
-
-    private int getSlayerPrice(int kills, int index)
-    {
-        int price = 0;
-
-        switch (index)
-        {
-        default:
-        case 0:
-            price = 100;
-            break;
-        case 1:
-            price = 2000;
-            break;
-        case 2:
-            price = 10000;
-            break;
-        case 3:
-            price = 50000;
-            break;
-        }
-        return kills * price;
     }
 
     private String formatSlayerKill(int kills)

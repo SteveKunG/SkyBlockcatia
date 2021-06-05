@@ -1333,7 +1333,7 @@ public class PetsBuilder
             map.put("UNCOMMON", Pair.of(null, Property.build("[0.2]")));
             map.put("RARE", Pair.of(null, Property.build("[0.25, 0.2]")));
             map.put("EPIC", Pair.of(null, Property.build("[0.3, 0.25]")));
-            map.put("LEGENDARY", Pair.of(null, Property.build("[0.3, 0.25, 1]")));
+            map.put("LEGENDARY", Pair.of(null, Property.build("[0.3, 0.25, 0.5]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("COMMON", make(Lists.newLinkedList(), list ->
