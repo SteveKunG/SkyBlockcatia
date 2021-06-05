@@ -17,11 +17,13 @@ public class SBSlayers
 
     private final Map<String, int[]> leveling;
     private final Bonus bonus;
+    private final Map<Integer, Integer> price;
 
-    public SBSlayers(Map<String, int[]> leveling, Bonus bonus)
+    public SBSlayers(Map<String, int[]> leveling, Bonus bonus, Map<Integer, Integer> price)
     {
         this.leveling = leveling;
         this.bonus = bonus;
+        this.price = price;
     }
 
     public Map<String, int[]> getLeveling()
@@ -32,6 +34,11 @@ public class SBSlayers
     public Bonus getBonus()
     {
         return this.bonus;
+    }
+
+    public Map<Integer, Integer> getPrice()
+    {
+        return this.price;
     }
 
     public static void getSlayers()
@@ -174,7 +181,7 @@ public class SBSlayers
         }
     }
 
-    public class Enderman implements IBonusTemplate
+    public static class Enderman implements IBonusTemplate
     {
         private final int level;
         private final double health;
