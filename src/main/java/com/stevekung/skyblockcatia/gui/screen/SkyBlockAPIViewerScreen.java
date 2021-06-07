@@ -7,6 +7,8 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +19,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.text.WordUtils;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
@@ -102,7 +103,6 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private final String guild;
     private final String uuid;
     private final GameProfile profile;
-    private final StopWatch watch = new StopWatch();
     private GuiScrollingList currentSlot;
     private int currentSlotId = -1;
     private int currentBasicSlotId = -1;
@@ -264,16 +264,11 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             {
                 try
                 {
-                    this.watch.start();
+                    Instant start = Instant.now();
                     this.getPlayerData();
-                    this.watch.stop();
-
-                    if (this.skyblockProfiles == null)
-                    {
-                        LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
-                    }
-
-                    this.watch.reset();
+                    Instant after = Instant.now();
+                    long delta = Duration.between(start, after).toMillis();
+                    LoggerIN.info("Parsing Skyblock Profile took {} ms", delta);
                 }
                 catch (Throwable e)
                 {

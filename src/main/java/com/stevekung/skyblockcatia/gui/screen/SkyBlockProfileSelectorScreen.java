@@ -3,12 +3,14 @@ package com.stevekung.skyblockcatia.gui.screen;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
@@ -59,7 +61,6 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
     private String errorMessage;
     private String statusMessage;
     private List<ProfileDataCallback> profiles = new ArrayList<>();
-    private final StopWatch watch = new StopWatch();
     private List<GuiSkyBlockProfileButton> profileButtonList = new ArrayList<>();
     private boolean fromError;
     private boolean playerNamesFound;
@@ -134,15 +135,11 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
             {
                 try
                 {
-                    this.watch.start();
+                    Instant start = Instant.now();
                     this.checkAPI();
-                    this.watch.stop();
-
-                    if (this.watch.getTime() > 0)
-                    {
-                        LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
-                    }
-                    this.watch.reset();
+                    Instant after = Instant.now();
+                    long delta = Duration.between(start, after).toMillis();
+                    LoggerIN.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
@@ -227,15 +224,11 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
                 {
                     try
                     {
-                        this.watch.start();
+                        Instant start = Instant.now();
                         this.checkAPI();
-                        this.watch.stop();
-
-                        if (this.watch.getTime() > 0)
-                        {
-                            LoggerIN.info("API Download finished in: {}ms", this.watch.getTime());
-                        }
-                        this.watch.reset();
+                        Instant after = Instant.now();
+                        long delta = Duration.between(start, after).toMillis();
+                        LoggerIN.info("Profile Selector took {} ms", delta);
                     }
                     catch (Throwable e)
                     {
@@ -672,33 +665,33 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
             Set<Entry<String, SkyblockProfiles.Members>> membersEntry = profile.getMembers().entrySet();
             int memberSize = 1;
 
-            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry)
+            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
             {
-                String memberUuid = entry.getKey();
-
-                if (!memberUuid.equals(uuid))
-                {
-                    memberSize++;
-
-                    if (!hasOneProfile)
-                    {
-                        if (!USERNAME_CACHE.containsKey(memberUuid))
-                        {
-                            USERNAME_CACHE.put(memberUuid, this.getName(memberUuid));
-                        }
-                        islandMembers.add(USERNAME_CACHE.get(memberUuid));
-                        int allMembers = membersEntry.size() - memberSize;
-
-                        if (memberSize > 5 && allMembers > 0)
-                        {
-                            islandMembers.add(EnumChatFormatting.ITALIC + "and " + allMembers + " more...");
-                            break;
-                        }
-                    }
-                    continue;
-                }
                 Long lastSaveEle = entry.getValue().getLastSave();
                 lastSave = lastSaveEle == null ? -1 : lastSaveEle;
+            }
+
+            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> !en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+            {
+                String memberUuid = entry.getKey();
+                memberSize++;
+
+                if (!hasOneProfile)
+                {
+                    if (!USERNAME_CACHE.containsKey(memberUuid))
+                    {
+                        USERNAME_CACHE.put(memberUuid, this.getName(memberUuid));
+                    }
+
+                    islandMembers.add(USERNAME_CACHE.get(memberUuid));
+                    int allMembers = membersEntry.size() - memberSize;
+
+                    if (memberSize > 5 && allMembers > 0)
+                    {
+                        islandMembers.add(EnumChatFormatting.ITALIC + "and " + allMembers + " more...");
+                        break;
+                    }
+                }
             }
 
             availableProfile = profile;
@@ -824,8 +817,8 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
         catch (IOException e)
         {
             e.printStackTrace();
+            return EnumChatFormatting.RED + uuid;
         }
-        return EnumChatFormatting.RED + uuid;
     }
 
     public enum GuiState
