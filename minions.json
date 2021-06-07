@@ -1,5 +1,5 @@
 {
-    "unique_minions": 594,
+    "unique_minions": 620,
     "crafted_minions": [
         {
             "count": 0,
@@ -468,6 +468,13 @@
             "displayName": "Tarantula Minion",
             "uuid": "5715f21b-1a5f-3c8f-a831-23c71e80477f",
             "texture": "97e86007064c9ce26eb4bad8ac9aa30aac309e70a9e0b615936318dea40a721"
+        },
+        {
+            "type": "VOIDLING",
+            "category": "COMBAT",
+            "displayName": "Voidling Minion",
+            "uuid": "08d8787d-1bc6-41a6-ace7-7c39b75f86b8",
+            "texture": "3a851ed2ce5c2c0523af772d206d9555e2e1383ec87946e6ff4c51186e29ef7f"
         },
         {
             "type": "WHEAT",

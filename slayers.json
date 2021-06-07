@@ -148,6 +148,14 @@
             {
                 "level": 7,
                 "health": 4
+            },
+            {
+                "level": 8,
+                "intelligence": 4
+            },
+            {
+                "level": 9,
+                "health": 5
             }
         ]
     },
