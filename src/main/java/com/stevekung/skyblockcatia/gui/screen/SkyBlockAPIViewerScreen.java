@@ -2156,6 +2156,10 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             {
                 dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
             }
+            if (type == null)
+            {
+                LoggerIN.warning("Found an unknown minion!, type: {}", minionType);
+            }
 
             for (int craftedTier : craftedTiers)
             {
@@ -2199,6 +2203,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         List<SBMinions.CraftedInfo> combatMinion = new ArrayList<>();
         List<SBMinions.CraftedInfo> foragingMinion = new ArrayList<>();
         List<SBMinions.CraftedInfo> fishingMinion = new ArrayList<>();
+        List<SBMinions.CraftedInfo> unknownMinion = new ArrayList<>();
         SBMinions.CraftedInfo dummy = new SBMinions.CraftedInfo(null, null, 0, null, null, null);
         String displayName = null;
         ItemStack itemStack = null;
@@ -2224,7 +2229,6 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             switch (category)
             {
             case FARMING:
-            default:
                 farmingMinion.add(min);
                 break;
             case MINING:
@@ -2239,6 +2243,9 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             case FISHING:
                 fishingMinion.add(min);
                 break;
+            default:
+                unknownMinion.add(min);
+                break;
             }
         }
 
@@ -2247,6 +2254,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         combatMinion.sort(com);
         foragingMinion.sort(com);
         fishingMinion.sort(com);
+        unknownMinion.sort(com);
 
         if (!farmingMinion.isEmpty())
         {
@@ -2280,6 +2288,13 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         {
             this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Fishing", null, 0, null, null, null));
             this.sbCraftedMinions.addAll(fishingMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (!unknownMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo("Unknown", null, 0, null, null, null));
+            this.sbCraftedMinions.addAll(unknownMinion);
             this.sbCraftedMinions.add(dummy);
         }
 

@@ -54,7 +54,7 @@ public class MinionsBuilder
             slotslist.add(slots);
         }
 
-        maps.put("unique_minions", 594);
+        maps.put("unique_minions", 620);
         maps.put("crafted_minions", slotslist);
         maps.put("type", minionTypeList);
 
@@ -111,6 +111,7 @@ public class MinionsBuilder
         ENDERMAN("COMBAT", "5a8f2068-aadc-3bd3-bbad-770759233c4e", "e460d20ba1e9cd1d4cfd6d5fb0179ff41597ac6d2461bd7ccdb58b20291ec46e"),
         GHAST("COMBAT", "3d4096a7-cb00-3d44-8844-562317f13b3b", "2478547d122ec83a818b46f3b13c5230429559e40c7d144d4ec225f92c1494b3"),
         SLIME("COMBAT", "59e230be-99bd-33f5-a4d1-acc5ca825512", "c95eced85db62c922724efca804ea0060c4a87fcdedf2fd5c4f9ac1130a6eb26"),
+        VOIDLING("COMBAT", "08d8787d-1bc6-41a6-ace7-7c39b75f86b8", "3a851ed2ce5c2c0523af772d206d9555e2e1383ec87946e6ff4c51186e29ef7f"),
         COW("FARMING", "65247dc3-18db-3b4a-a131-ce575839a782", "c2fd8976e1b64aebfd38afbe62aa1429914253df3417ace1f589e5cf45fbd717", true),
         PIG("FARMING", "d30f7d75-d0d0-3857-8c11-0ec0867eb91d", "a9bb5f0c56408c73cfa412345c8fc51f75b6c7311ae60e7099c4781c48760562", true),
         CHICKEN("FARMING", "f01dbc43-b3e0-3766-a03f-c5add6b794d3", "a04b7da13b0a97839846aa5648f5ac6736ba0ca9fbf38cd366916e417153fd7f", true),

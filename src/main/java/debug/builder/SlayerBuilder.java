@@ -51,6 +51,8 @@ public class SlayerBuilder
         list.add(new SlayerBonus(5, "health=3"));
         list.add(new SlayerBonus(6, "intelligence=3"));
         list.add(new SlayerBonus(7, "health=4"));
+        list.add(new SlayerBonus(8, "intelligence=4"));
+        list.add(new SlayerBonus(9, "health=5"));
     });
 
     static final Map<Integer, Integer> SLAYER_PRICES = Helper.make(Maps.newLinkedHashMap(), map ->
