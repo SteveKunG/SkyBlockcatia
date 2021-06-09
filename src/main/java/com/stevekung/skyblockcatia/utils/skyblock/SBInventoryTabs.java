@@ -17,14 +17,15 @@ import net.minecraft.util.EnumChatFormatting;
 
 public class SBInventoryTabs
 {
-    public static SBInventoryTabs[] tabArray = new SBInventoryTabs[10];
+    public static SBInventoryTabs[] tabArray = new SBInventoryTabs[11];
     public static final SBInventoryTabs INVENTORY = new SBInventoryTabs(0, "inventory", Blocks.chest).setBackgroundImageName("player_inventory");
     public static final SBInventoryTabs ENDER_CHEST = new SBInventoryTabs(1, "ender_chest", Blocks.ender_chest);
-    public static final SBInventoryTabs PERSONAL_VAULT = new SBInventoryTabs(2, "personal_vault", RenderUtils.getSkullItemStack("5dc858cb-5ca4-4aef-90eb-091790d2ec0e", "2bdd62f25f4a49cc42e054a3f212c3e0092138299172d7d8f3d438214ca972ac"));
-    public static final SBInventoryTabs ACCESSORY = new SBInventoryTabs(3, "accessory", RenderUtils.getSkullItemStack("a97ab432-e9d4-4c42-aff7-2775265b2b4c", "961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff"));
-    public static final SBInventoryTabs POTION = new SBInventoryTabs(4, "potion", RenderUtils.getSkullItemStack("d01f7f54-635d-40a5-be43-7f322fd05cc6", "9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c"));
-    public static final SBInventoryTabs FISHING = new SBInventoryTabs(5, "fishing", RenderUtils.getSkullItemStack("49a4ee3b-7918-462b-9040-de9a9b2e9946", "eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631"));
-    public static final SBInventoryTabs WARDROBE = new SBInventoryTabs(6, "wardrobe", Items.leather_chestplate)
+    public static final SBInventoryTabs BACKPACK = new SBInventoryTabs(2, "backpack", RenderUtils.getSkullItemStack("eef3ea1b-d634-3067-ab58-16040aa7ca88", "439bed42aad5d87ecf16e546a29714de409feec6c15d1f745c35c104639f4d49"));
+    public static final SBInventoryTabs PERSONAL_VAULT = new SBInventoryTabs(3, "personal_vault", RenderUtils.getSkullItemStack("5dc858cb-5ca4-4aef-90eb-091790d2ec0e", "2bdd62f25f4a49cc42e054a3f212c3e0092138299172d7d8f3d438214ca972ac"));
+    public static final SBInventoryTabs ACCESSORY = new SBInventoryTabs(4, "accessory", RenderUtils.getSkullItemStack("a97ab432-e9d4-4c42-aff7-2775265b2b4c", "961a918c0c49ba8d053e522cb91abc74689367b4d8aa06bfc1ba9154730985ff"));
+    public static final SBInventoryTabs POTION = new SBInventoryTabs(5, "potion", RenderUtils.getSkullItemStack("d01f7f54-635d-40a5-be43-7f322fd05cc6", "9f8b82427b260d0a61e6483fc3b2c35a585851e08a9a9df372548b4168cc817c"));
+    public static final SBInventoryTabs FISHING = new SBInventoryTabs(6, "fishing", RenderUtils.getSkullItemStack("49a4ee3b-7918-462b-9040-de9a9b2e9946", "eb8e297df6b8dffcf135dba84ec792d420ad8ecb458d144288572a84603b1631"));
+    public static final SBInventoryTabs WARDROBE = new SBInventoryTabs(7, "wardrobe", Items.leather_chestplate)
     {
         @Override
         public ItemStack getIcon()
@@ -34,10 +35,10 @@ public class SBInventoryTabs
             return itemStack;
         }
     };
-    public static final SBInventoryTabs PET = new SBInventoryTabs(7, "pet", Items.bone);
-    public static final SBInventoryTabs SACKS = new SBInventoryTabs(8, "sacks", RenderUtils.getSkullItemStack("e2334248-bd14-37cd-8800-088f9aa8ead5", "80a077e248d142772ea800864f8c578b9d36885b29daf836b64a706882b6ec10"));
-    public static final SBInventoryTabs QUIVER = new SBInventoryTabs(9, "quiver", RenderUtils.getSkullItemStack("020241bd-6ddb-4358-895c-037c91f4f52d", "4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787"));
-    public static final SBInventoryTabs CANDY = new SBInventoryTabs(10, "candy", RenderUtils.getSkullItemStack("906876f2-55d9-3965-9e57-f5732c765617", "e50f712e877dfd910c97f3819a200a05d49ee6b83b592686e099b9ecd443f228"));
+    public static final SBInventoryTabs PET = new SBInventoryTabs(8, "pet", Items.bone);
+    public static final SBInventoryTabs SACKS = new SBInventoryTabs(9, "sacks", RenderUtils.getSkullItemStack("e2334248-bd14-37cd-8800-088f9aa8ead5", "80a077e248d142772ea800864f8c578b9d36885b29daf836b64a706882b6ec10"));
+    public static final SBInventoryTabs QUIVER = new SBInventoryTabs(10, "quiver", RenderUtils.getSkullItemStack("020241bd-6ddb-4358-895c-037c91f4f52d", "4cb3acdc11ca747bf710e59f4c8e9b3d949fdd364c6869831ca878f0763d1787"));
+    public static final SBInventoryTabs CANDY = new SBInventoryTabs(11, "candy", RenderUtils.getSkullItemStack("906876f2-55d9-3965-9e57-f5732c765617", "e50f712e877dfd910c97f3819a200a05d49ee6b83b592686e099b9ecd443f228"));
     private final int index;
     private final String label;
     private String texture = "items";

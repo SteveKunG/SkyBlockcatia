@@ -111,6 +111,7 @@ gui.sb_crafted_minions=Crafted Minions
 skyblock_tab.inventory=Inventory
 skyblock_tab.ender_chest=Ender Chest
 skyblock_tab.personal_vault=Personal Vault
+skyblock_tab.backpack=Backpack
 skyblock_tab.accessory=Accessory Bag
 skyblock_tab.potion=Potion Bag
 skyblock_tab.fishing=Fishing Bag

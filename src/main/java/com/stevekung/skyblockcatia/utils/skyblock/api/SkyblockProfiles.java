@@ -152,6 +152,8 @@ public class SkyblockProfiles
         private final Inventory quiverInventory;
         @SerializedName("candy_inventory_contents")
         private final Inventory candyInventory;
+        @SerializedName("backpack_contents")
+        private final Map<Integer, Inventory> backpackInventory;
 
         private final JsonObject stats;
         private final JsonElement dungeons;
@@ -171,7 +173,7 @@ public class SkyblockProfiles
                 double fishingExp, double runecraftingExp, double combatExp, double enchantingExp, double alchemyExp, double tamingExp, double carpentryExp,
                 int fairySoulsCollected, int fairyExchanges, int deathCount, double purse, Inventory armorInventory, Inventory mainInventory,
                 Inventory enderChestInventory, Inventory vaultInventory, Inventory accessoryInventory, Inventory potionInventory, Inventory fishingInventory,
-                Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, JsonObject stats, JsonElement dungeons,
+                Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, Map<Integer, Inventory> backpackInventory, JsonObject stats, JsonElement dungeons,
                 Map<String, Integer> collection, String[] unlockedCollections, Map<String, Integer> sacks, Pets[] pets, JsonObject slayerBoss, SlayerQuest slayerQuest)
         {
             this.firstJoin = firstJoin;
@@ -202,6 +204,7 @@ public class SkyblockProfiles
             this.wardrobeInventory = wardrobeInventory;
             this.quiverInventory = quiverInventory;
             this.candyInventory = candyInventory;
+            this.backpackInventory = backpackInventory;
             this.stats = stats;
             this.dungeons = dungeons;
             this.collection = collection;
@@ -350,6 +353,11 @@ public class SkyblockProfiles
         public Inventory getCandyInventory()
         {
             return this.candyInventory;
+        }
+
+        public Map<Integer, Inventory> getBackpackInventory()
+        {
+            return this.backpackInventory;
         }
 
         public JsonObject getStats()

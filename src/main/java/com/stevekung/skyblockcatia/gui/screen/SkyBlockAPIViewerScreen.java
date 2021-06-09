@@ -1791,7 +1791,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                     }
                 }
 
-                this.data.setHasInventories(this.totalDisabledInv != 12);
+                this.data.setHasInventories(this.totalDisabledInv != 13);
                 this.allStat.setEffectiveHealth(this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int)(this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)));
                 this.getBasicInfo(currentUserProfile, banking, status, userUUID, communityUpgrade);
                 break;
@@ -4049,9 +4049,19 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
         List<ItemStack> mainInventory = SBAPIUtils.decodeItem(currentProfile.getMainInventory(), InventoryType.INVENTORY);
         List<ItemStack> accessoryInventory = SBAPIUtils.decodeItem(currentProfile.getAccessoryInventory(), InventoryType.ACCESSORY_BAG);
+        List<ItemStack> backpackInventory = Lists.newArrayList();
+
+        if (currentProfile.getBackpackInventory() != null)
+        {
+            for (Map.Entry<Integer, SkyblockProfiles.Inventory> entry : currentProfile.getBackpackInventory().entrySet())
+            {
+                backpackInventory.addAll(SBAPIUtils.decodeItem(entry.getValue(), InventoryType.BACKPACK));
+            }
+        }
 
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(mainInventory, SBInventoryTabs.INVENTORY));
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile.getEnderChestInventory(), InventoryType.ENDER_CHEST), SBInventoryTabs.ENDER_CHEST));
+        SKYBLOCK_INV.add(new SBInventoryTabs.Data(backpackInventory, SBInventoryTabs.BACKPACK));
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile.getVaultInventory(), InventoryType.PERSONAL_VAULT), SBInventoryTabs.PERSONAL_VAULT));
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(accessoryInventory, SBInventoryTabs.ACCESSORY));
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(SBAPIUtils.decodeItem(currentProfile.getPotionInventory(), InventoryType.POTION_BAG), SBInventoryTabs.POTION));
