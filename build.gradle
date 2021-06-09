@@ -5,7 +5,7 @@ buildscript {
             url "https://maven.minecraftforge.net"
         }
         maven {
-            url "https://repo.spongepowered.org/repository/maven-public/"
+            url "https://repo.spongepowered.org/maven"
         }
     }
     dependencies {
@@ -20,6 +20,8 @@ plugins {
 }
 
 def mcVersion = project.mc_version
+def username = project.username
+def password = project.password
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "org.spongepowered.mixin"
@@ -35,6 +37,8 @@ minecraft {
     runDir = "run"
     mappings = "${mcp_mapping}"
     makeObfSourceJar = false
+    clientJvmArgs += "-Dmixin.debug.export=true -Dmixin.debug.verbose=true"
+    clientRunArgs += "--username ${username} --password ${password} --mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
 
     if (project.hasProperty("sha1")) {
         replace "@FINGERPRINT@", project.sha1
@@ -57,7 +61,7 @@ dependencies {
 
 repositories {
     maven {
-        url "https://repo.spongepowered.org/repository/maven-public/"
+        url "https://repo.spongepowered.org/maven"
     }
 }
 
