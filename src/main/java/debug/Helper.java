@@ -64,7 +64,7 @@ public class Helper
         jsonWriter.setSerializeNulls(false);
         return jsonWriter;
     }
-    
+
     public static <T> T make(T object, Consumer<T> consumer)
     {
         consumer.accept(object);

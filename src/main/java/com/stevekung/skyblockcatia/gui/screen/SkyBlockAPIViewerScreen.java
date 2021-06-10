@@ -2008,7 +2008,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                 if (levelToCheck <= leveling.length)
                 {
-                    xpRequired = (int)leveling[x];
+                    xpRequired = leveling[x];
                 }
             }
         }

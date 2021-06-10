@@ -24,7 +24,7 @@ public class DungeonsBuilder
     public static void main(String[] args)
     {
         Map<String, Object> maps = Maps.newLinkedHashMap();
-        
+
         String[] expSplit = CATACOMBS_LEVELING.split(",");
         List<Integer> levels = Lists.newLinkedList();
 
