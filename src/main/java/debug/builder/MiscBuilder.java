@@ -25,7 +25,7 @@ public class MiscBuilder
     {
         Map<String, Object> maps = Maps.newLinkedHashMap();
 
-        maps.put("max_fairy_souls", 222);
+        maps.put("max_fairy_souls", 227);
 
         List<Map<String, Object>> packs = Lists.newArrayList();
 
