@@ -100,7 +100,6 @@ public class PetsBuilder
         Map<String, Object> maps = Maps.newTreeMap();
         List<Map<String, Object>> petTypeList = Lists.newLinkedList();
         List<Map<String, Object>> heldItemList = Lists.newLinkedList();
-        List<Map<String, Object>> scoreList = Lists.newLinkedList();
         List<Map<String, Object>> skinList = Lists.newLinkedList();
 
         List<PetType> petTypeSort = Lists.newArrayList();
@@ -304,14 +303,11 @@ public class PetsBuilder
             heldItemList.add(prop);
         }
 
+        Map<Integer, Integer> scores = Maps.newLinkedHashMap();
+
         for (PetScore score : SCORES)
         {
-            Map<String, Object> prop = Maps.newLinkedHashMap();
-
-            prop.put("value", score.score);
-            prop.put("magic_find", score.magic_find);
-
-            scoreList.add(prop);
+            scores.put(score.score, score.magic_find);
         }
 
         SKINS.sort((o1, o2) -> new CompareToBuilder().append(o1.skin, o2.skin).build());
@@ -345,7 +341,7 @@ public class PetsBuilder
 
         maps.put("type", petTypeList);
         maps.put("held_item", heldItemList);
-        maps.put("score", scoreList);
+        maps.put("score", scores);
         maps.put("skin", skinList);
         maps.put("index", rarityIndex);
         maps.put("leveling", levels);

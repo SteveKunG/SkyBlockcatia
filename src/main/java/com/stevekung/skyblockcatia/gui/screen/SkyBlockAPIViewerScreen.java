@@ -3702,19 +3702,13 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
     private void getMagicFindFromPets(int petsScore)
     {
-        double magicFindBase = 0;
-
-        for (SBPets.Score score : SBPets.PETS.getScore())
+        for (Map.Entry<Integer, Integer> score : SBPets.PETS.getScore().entrySet())
         {
-            int scoreToCheck = score.getScore();
-            double magicFind = score.getMagicFind();
-
-            if (scoreToCheck <= petsScore)
+            if (score.getKey() <= petsScore)
             {
-                magicFindBase = magicFind;
+                this.allStat.addMagicFind(score.getValue());
             }
         }
-        this.allStat.addMagicFind(magicFindBase);
     }
 
     private String replaceStatsString(String statName, String replace)

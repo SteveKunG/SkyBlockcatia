@@ -24,11 +24,11 @@ public class SBPets
     private final HeldItem[] heldItem;
     private final Map<String, Integer> index;
     private final int[] leveling;
-    private final Score[] score;
+    private final Map<Integer, Integer> score;
     private final Skin[] skin;
     private final Type[] type;
 
-    public SBPets(HeldItem[] heldItem, Map<String, Integer> index, int[] leveling, Score[] score, Skin[] skin, Type[] type)
+    public SBPets(HeldItem[] heldItem, Map<String, Integer> index, int[] leveling, Map<Integer, Integer> score, Skin[] skin, Type[] type)
     {
         this.heldItem = heldItem;
         this.index = index;
@@ -65,7 +65,7 @@ public class SBPets
         return this.leveling;
     }
 
-    public Score[] getScore()
+    public Map<Integer, Integer> getScore()
     {
         return this.score;
     }
@@ -464,29 +464,6 @@ public class SBPets
         public Stats getStats()
         {
             return this.stats;
-        }
-    }
-
-    public class Score
-    {
-        private final int score;
-        @SerializedName("magic_find")
-        private final int magicFind;
-
-        public Score(int score, int magicFind)
-        {
-            this.score = score;
-            this.magicFind = magicFind;
-        }
-
-        public int getScore()
-        {
-            return this.score;
-        }
-
-        public int getMagicFind()
-        {
-            return this.magicFind;
         }
     }
 
