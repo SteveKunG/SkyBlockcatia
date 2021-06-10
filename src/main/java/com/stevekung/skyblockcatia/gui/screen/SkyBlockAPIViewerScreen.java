@@ -1986,7 +1986,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             }
             this.dungeonData.add(builder.toString());
         }
-        this.data.setHasDungeons(!this.dungeonData.isEmpty());
+        this.data.setHasDungeons(dungeons.getSelectedClass() != null);
     }
 
     private SBSkills.Info calculateDungeonSkill(double playerXp, int[] leveling, String name)
