@@ -28,7 +28,7 @@ public class SkillBuilder
     {
         CAPS.add(new Cap("farming", 50));
         CAPS.add(new Cap("mining", 60));
-        CAPS.add(new Cap("combat", 50));
+        CAPS.add(new Cap("combat", 60));
         CAPS.add(new Cap("foraging", 50));
         CAPS.add(new Cap("fishing", 50));
         CAPS.add(new Cap("enchanting", 60));
