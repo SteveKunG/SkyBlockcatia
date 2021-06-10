@@ -3,9 +3,9 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 import java.util.Locale;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.utils.skyblock.SBDungeons;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSlayers;
 
 public class SkyblockProfiles
@@ -152,9 +152,11 @@ public class SkyblockProfiles
         private final Inventory quiverInventory;
         @SerializedName("candy_inventory_contents")
         private final Inventory candyInventory;
+        @SerializedName("backpack_contents")
+        private final Map<Integer, Inventory> backpackInventory;
 
         private final JsonObject stats;
-        private final JsonElement dungeons;
+        private final SBDungeons.Dungeons dungeons;
         private final Map<String, Integer> collection;
         @SerializedName("unlocked_coll_tiers")
         private final String[] unlockedCollections;
@@ -167,7 +169,12 @@ public class SkyblockProfiles
         @SerializedName("slayer_quest")
         private final SlayerQuest slayerQuest;
 
-        public Members(long firstJoin, long lastSave, String[] craftedGenerators, Jacob jacob, double farmingExp, double foragingExp, double miningExp, double fishingExp, double runecraftingExp, double combatExp, double enchantingExp, double alchemyExp, double tamingExp, double carpentryExp, int fairySoulsCollected, int fairyExchanges, int deathCount, double purse, Inventory armorInventory, Inventory mainInventory, Inventory enderChestInventory, Inventory vaultInventory, Inventory accessoryInventory, Inventory potionInventory, Inventory fishingInventory, Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, JsonObject stats, JsonElement dungeons, Map<String, Integer> collection, String[] unlockedCollections, Map<String, Integer> sacks, Pets[] pets, JsonObject slayerBoss, SlayerQuest slayerQuest)
+        public Members(long firstJoin, long lastSave, String[] craftedGenerators, Jacob jacob, double farmingExp, double foragingExp, double miningExp,
+                double fishingExp, double runecraftingExp, double combatExp, double enchantingExp, double alchemyExp, double tamingExp, double carpentryExp,
+                int fairySoulsCollected, int fairyExchanges, int deathCount, double purse, Inventory armorInventory, Inventory mainInventory,
+                Inventory enderChestInventory, Inventory vaultInventory, Inventory accessoryInventory, Inventory potionInventory, Inventory fishingInventory,
+                Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, Map<Integer, Inventory> backpackInventory, JsonObject stats, SBDungeons.Dungeons dungeons,
+                Map<String, Integer> collection, String[] unlockedCollections, Map<String, Integer> sacks, Pets[] pets, JsonObject slayerBoss, SlayerQuest slayerQuest)
         {
             this.firstJoin = firstJoin;
             this.lastSave = lastSave;
@@ -197,6 +204,7 @@ public class SkyblockProfiles
             this.wardrobeInventory = wardrobeInventory;
             this.quiverInventory = quiverInventory;
             this.candyInventory = candyInventory;
+            this.backpackInventory = backpackInventory;
             this.stats = stats;
             this.dungeons = dungeons;
             this.collection = collection;
@@ -347,13 +355,17 @@ public class SkyblockProfiles
             return this.candyInventory;
         }
 
+        public Map<Integer, Inventory> getBackpackInventory()
+        {
+            return this.backpackInventory;
+        }
+
         public JsonObject getStats()
         {
             return this.stats;
         }
 
-        @Deprecated
-        public JsonElement getDungeons()
+        public SBDungeons.Dungeons getDungeons()
         {
             return this.dungeons;
         }

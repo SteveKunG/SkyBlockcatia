@@ -3,12 +3,13 @@ package com.stevekung.skyblockcatia.gui.screen;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.Lists;
@@ -61,7 +62,6 @@ public class SkyBlockProfileSelectorScreen extends Screen
     private String errorMessage;
     private String statusMessage;
     private List<ProfileDataCallback> profiles = Lists.newArrayList();
-    private final StopWatch watch = new StopWatch();
     private final boolean fromError;
     private PlayerNameSuggestionHelper suggestionHelper;
     private String guild;
@@ -117,14 +117,11 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 try
                 {
-                    this.watch.reset();
-                    this.watch.start();
+                    Instant start = Instant.now();
                     this.checkAPI();
-
-                    if (this.watch.getTime() > 0)
-                    {
-                        SkyBlockcatiaMod.LOGGER.info("API Download finished in: {}ms", this.watch.getTime());
-                    }
+                    Instant after = Instant.now();
+                    long delta = Duration.between(start, after).toMillis();
+                    SkyBlockcatiaMod.LOGGER.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
@@ -170,16 +167,11 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 try
                 {
-                    this.watch.start();
+                    Instant start = Instant.now();
                     this.checkAPI();
-                    this.watch.stop();
-
-                    if (this.watch.getTime() > 0)
-                    {
-                        SkyBlockcatiaMod.LOGGER.info("API Download finished in: {}ms", this.watch.getTime());
-                    }
-
-                    this.watch.reset();
+                    Instant after = Instant.now();
+                    long delta = Duration.between(start, after).toMillis();
+                    SkyBlockcatiaMod.LOGGER.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
@@ -625,34 +617,33 @@ public class SkyBlockProfileSelectorScreen extends Screen
             Set<Map.Entry<String, SkyblockProfiles.Members>> membersEntry = profile.getMembers().entrySet();
             int memberSize = 1;
 
-            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry)
+            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+            {
+                Long lastSaveEle = entry.getValue().getLastSave();
+                lastSave = lastSaveEle == null ? -1 : lastSaveEle;
+            }
+
+            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> !en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
             {
                 String memberUuid = entry.getKey();
+                memberSize++;
 
-                if (!memberUuid.equals(uuid))
+                if (!hasOneProfile)
                 {
-                    memberSize++;
-
-                    if (!hasOneProfile)
+                    if (!USERNAME_CACHE.containsKey(memberUuid))
                     {
-                        if (!USERNAME_CACHE.containsKey(memberUuid))
-                        {
-                            USERNAME_CACHE.put(memberUuid, TextComponentUtils.component(this.getName(memberUuid)));
-                        }
-
-                        islandMembers.add(USERNAME_CACHE.get(memberUuid));
-
-                        int allMembers = membersEntry.size() - memberSize;
-
-                        if (memberSize > 5 && allMembers > 0)
-                        {
-                            islandMembers.add(TextComponentUtils.formatted("and " + allMembers + " more...", ChatFormatting.ITALIC));
-                            break;
-                        }
+                        USERNAME_CACHE.put(memberUuid, TextComponentUtils.component(this.getName(memberUuid)));
                     }
-                    continue;
+
+                    islandMembers.add(USERNAME_CACHE.get(memberUuid));
+                    int allMembers = membersEntry.size() - memberSize;
+
+                    if (memberSize > 5 && allMembers > 0)
+                    {
+                        islandMembers.add(TextComponentUtils.formatted("and " + allMembers + " more...", ChatFormatting.ITALIC));
+                        break;
+                    }
                 }
-                lastSave = entry.getValue().getLastSave();
             }
 
             availableProfile = profile;
@@ -730,8 +721,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
         catch (IOException e)
         {
             e.printStackTrace();
+            return ChatFormatting.RED + uuid;
         }
-        return ChatFormatting.RED + uuid;
     }
 
     public enum Mode

@@ -13,8 +13,6 @@ import com.stevekung.skyblockcatia.utils.CompatibilityUtils;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
-import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
-import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
 
@@ -76,18 +74,12 @@ public class SkyBlockcatiaMod
     {
         try
         {
-            ExpProgress.DUNGEON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.DUNGEON);
-
-            for (PlayerStatsBonus.Type type : PlayerStatsBonus.Type.VALUES)
-            {
-                PlayerStatsBonus.getBonusFromRemote(type);
-            }
-
             SBMinions.getMinions();
             SBPets.getPets();
             SBSlayers.getSlayers();
             SBSkills.getSkills();
             SBStats.getStats();
+            SBDungeons.getDungeons();
         }
         catch (Throwable e)
         {

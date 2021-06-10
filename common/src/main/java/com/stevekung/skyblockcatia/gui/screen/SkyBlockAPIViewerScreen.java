@@ -7,6 +7,8 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -16,7 +18,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.text.WordUtils;
-import org.apache.commons.lang3.time.StopWatch;
 import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
@@ -118,7 +119,6 @@ public class SkyBlockAPIViewerScreen extends Screen
     private final String guild;
     private final String uuid;
     private final GameProfile profile;
-    private final StopWatch watch = new StopWatch();
     private ScrollingListScreen currentSlot;
     private ViewButton viewButton = ViewButton.PLAYER;
     private OthersViewButton othersButton = OthersViewButton.KILLS;
@@ -252,16 +252,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 try
                 {
-                    this.watch.start();
+                    Instant start = Instant.now();
                     this.getPlayerData();
-                    this.watch.stop();
-
-                    if (this.skyblockProfiles == null)
-                    {
-                        SkyBlockcatiaMod.LOGGER.info("API Download finished in: {}ms", this.watch.getTime());
-                    }
-
-                    this.watch.reset();
+                    Instant after = Instant.now();
+                    long delta = Duration.between(start, after).toMillis();
+                    SkyBlockcatiaMod.LOGGER.info("Parsing Skyblock Profile took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
@@ -1441,7 +1436,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     }
                 }
 
-                this.data.setHasInventories(this.totalDisabledInv != 12);
+                this.data.setHasInventories(this.totalDisabledInv != 13);
                 this.allStat.setEffectiveHealth(this.allStat.getDefense() <= 0 ? this.allStat.getHealth() : (int) (this.allStat.getHealth() * (1 + this.allStat.getDefense() / 100.0D)));
                 this.getBasicInfo(currentUserProfile, banking, status, communityUpgrade);
                 break;
@@ -1525,78 +1520,54 @@ public class SkyBlockAPIViewerScreen extends Screen
     @Deprecated
     private final List<String> dungeonData = Lists.newArrayList();
 
-    private void getDungeons(SkyblockProfiles.Members currentUserProfile)//TODO
+    //TODO Make it better
+    private void getDungeons(SkyblockProfiles.Members currentUserProfile)
     {
-        JsonElement dungeon = currentUserProfile.getDungeons();
-        int i = 0;
+        SBDungeons.Dungeons dungeons = currentUserProfile.getDungeons();
 
-        if (dungeon != null)
+        this.dungeonData.add(ChatFormatting.RED.toString() + ChatFormatting.BOLD + "WORK IN PROGRESS! NOT A FINAL GUI!");
+        this.dungeonData.add(ChatFormatting.YELLOW + "Selected Class: " + ChatFormatting.GOLD + WordUtils.capitalize(dungeons.getSelectedClass()));
+
+        for (Map.Entry<String, SBDungeons.Exp> entry : dungeons.getPlayerClasses().entrySet())
         {
-            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            //System.out.println(gson.toJson(dungeon));
-            this.dungeonData.add(ChatFormatting.RED.toString() + ChatFormatting.BOLD + "WORK IN PROGRESS! NOT A FINAL GUI!");
-            this.dungeonData.add("");
+            SBSkills.Info info2 = this.calculateDungeonSkill(entry.getValue().getExperience(), SBDungeons.DUNGEONS.getLeveling(), SBDungeons.Class.valueOf(entry.getKey().toUpperCase(Locale.ROOT)).getName());
+            this.dungeonData.add(ChatFormatting.YELLOW + info2.getName() + ":" + ChatFormatting.GOLD + " LVL " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
+        }
 
-            JsonElement dungeonType = dungeon.getAsJsonObject().get("dungeon_types");
-            JsonElement selectedClass = dungeon.getAsJsonObject().get("selected_dungeon_class");
-            JsonElement playerClassExp = dungeon.getAsJsonObject().get("player_classes");
-            JsonObject catacombsDungeon = dungeonType.getAsJsonObject().get("catacombs").getAsJsonObject();
-            JsonElement catacombsExp = catacombsDungeon.get("experience");
-            JsonElement highestFloor = catacombsDungeon.get("highest_tier_completed");
-            JsonElement tierCompletion = catacombsDungeon.get("tier_completions");
+        this.dungeonData.add("");
 
-            if (catacombsExp != null)
+        for (Map.Entry<String, SBDungeons.TypeData> entry : dungeons.getDungeonTypes().entrySet())
+        {
+            SBDungeons.TypeData typeData = entry.getValue();
+
+            if (SBDungeons.DUNGEONS.getValidDungeons().contains(entry.getKey()))
             {
-                SBSkills.Info info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), SBDungeons.Type.THE_CATACOMBS);
+                SBSkills.Info info = this.calculateDungeonSkill(typeData.getExperience(), SBDungeons.DUNGEONS.getLeveling(), WordUtils.capitalize(entry.getKey()));
                 this.catacombsLevel = info.getCurrentLvl();
-                this.dungeonData.add(ChatFormatting.RED + info.getName() + ChatFormatting.RESET + ", Level: " + info.getCurrentLvl() + " " + (int) Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
-                i++;
+                this.dungeonData.add(ChatFormatting.YELLOW + info.getName() + ":" + ChatFormatting.GOLD + " LVL " + info.getCurrentLvl() + " " + (int)Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
             }
 
-            if (selectedClass != null)
+            if (typeData.getHighestFloorCompleted() > 0)
             {
-                this.dungeonData.add("Selected Class: " + WordUtils.capitalize(selectedClass.getAsString()));
-                i++;
-            }
-            if (highestFloor != null)
-            {
-                this.dungeonData.add("Highest Floor: " + highestFloor.getAsInt());
-                i++;
-            }
-            this.dungeonData.add("");
-
-            for (Map.Entry<String, JsonElement> entry : playerClassExp.getAsJsonObject().entrySet())
-            {
-                JsonElement classExp = entry.getValue().getAsJsonObject().get("experience");
-
-                if (classExp != null)
-                {
-                    SBSkills.Info info2 = this.calculateDungeonSkill(classExp.getAsDouble(), SBDungeons.Type.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
-                    this.dungeonData.add(ChatFormatting.RED + info2.getName() + ChatFormatting.RESET + ", Level: " + info2.getCurrentLvl() + " " + (int) Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
-                    i++;
-                }
+                this.dungeonData.add(ChatFormatting.YELLOW + WordUtils.capitalize(entry.getKey().replace("_", " ")) + " Highest Floor: " + ChatFormatting.GOLD + typeData.getHighestFloorCompleted());
             }
 
-            this.dungeonData.add("");
             StringBuilder builder = new StringBuilder();
 
-            if (tierCompletion != null)
+            if (typeData.getFloorCompletions() != null)
             {
-                for (Map.Entry<String, JsonElement> entry : tierCompletion.getAsJsonObject().entrySet().stream().filter(entry -> !entry.getKey().equals("0")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+                for (Map.Entry<Integer, Integer> entry1 : typeData.getFloorCompletions().entrySet())
                 {
-                    builder.append("Floor: ").append(entry.getKey()).append("/").append(NumberUtils.NUMBER_FORMAT.format(entry.getValue().getAsInt())).append(", ");
+                    builder.append(ChatFormatting.YELLOW + "F" + entry1.getKey() + ": " + ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT.format(entry1.getValue()) + " ");
                 }
-                i++;
             }
-
             this.dungeonData.add(builder.toString());
         }
-        this.data.setHasDungeons(dungeon != null && i > 0);
+        this.data.setHasDungeons(dungeons.getSelectedClass() != null);
     }
 
-    private SBSkills.Info calculateDungeonSkill(double playerXp, SBDungeons.Type type)
+    private SBSkills.Info calculateDungeonSkill(double playerXp, int[] leveling, String name)
     {
-        ExpProgress[] progress = ExpProgress.DUNGEON;
         int xpRequired = 0;
         int currentLvl = 0;
         int levelToCheck = 0;
@@ -1604,39 +1575,39 @@ public class SkyBlockAPIViewerScreen extends Screen
         double xpToNextLvl = 0;
         double currentXp;
 
-        for (int x = 0; x < progress.length; ++x)
+        for (int x = 0; x < leveling.length; ++x)
         {
             if (playerXp >= xpTotal)
             {
-                xpTotal += progress[x].getXp();
+                xpTotal += leveling[x];
                 currentLvl = x;
-                levelToCheck = progress[x].getLevel();
+                levelToCheck = x + 1;
 
-                if (levelToCheck <= progress.length)
+                if (levelToCheck <= leveling.length)
                 {
-                    xpRequired = (int) progress[x].getXp();
+                    xpRequired = leveling[x];
                 }
             }
         }
 
-        if (levelToCheck < progress.length)
+        if (levelToCheck < leveling.length)
         {
             xpToNextLvl = xpTotal - playerXp;
             currentXp = xpRequired - xpToNextLvl;
         }
         else
         {
-            currentLvl = progress.length;
+            currentLvl = leveling.length;
             currentXp = playerXp - xpTotal;
         }
 
-        if (currentXp < 0 && levelToCheck <= progress.length) // fix for skill level almost reach to limit
+        if (currentXp < 0 && levelToCheck <= leveling.length) // fix for skill level almost reach to limit
         {
             xpToNextLvl = xpTotal - playerXp;
             currentXp = xpRequired - xpToNextLvl;
-            currentLvl = progress.length - 1;
+            currentLvl = leveling.length - 1;
         }
-        return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
+        return new SBSkills.Info(name, currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
     }
 
     private void getBankHistories(SkyblockProfiles.Banking banking)
@@ -1693,11 +1664,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void processCraftedMinions()
     {
-        for (SBMinions.CraftedMinions minion : SBMinions.MINIONS.getCraftedMinions())
+        for (Map.Entry<Integer, Integer> minion : SBMinions.MINIONS.getCraftedMinions().entrySet())
         {
-            if (minion.getCount() <= this.craftedMinionCount)
+            if (minion.getKey() <= this.craftedMinionCount)
             {
-                this.currentMinionSlot = minion.getSlot();
+                this.currentMinionSlot = minion.getValue();
             }
         }
 
@@ -1733,6 +1704,10 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (type != null && type.hasTier12())
             {
                 dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+            }
+            if (type == null)
+            {
+                SkyBlockcatiaMod.LOGGER.warning("Found an unknown minion!, type: {}", minionType);
             }
 
             for (int craftedTier : craftedTiers)
@@ -1777,6 +1752,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         List<SBMinions.CraftedInfo> combatMinion = Lists.newArrayList();
         List<SBMinions.CraftedInfo> foragingMinion = Lists.newArrayList();
         List<SBMinions.CraftedInfo> fishingMinion = Lists.newArrayList();
+        List<SBMinions.CraftedInfo> unknownMinion = Lists.newArrayList();
         SBMinions.CraftedInfo dummy = new SBMinions.CraftedInfo(null, null, 0, null, ItemStack.EMPTY);
         String displayName = null;
         ItemStack itemStack = ItemStack.EMPTY;
@@ -1802,7 +1778,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             switch (category)
             {
                 case FARMING:
-                default:
                     farmingMinion.add(min);
                     break;
                 case MINING:
@@ -1817,6 +1792,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 case FISHING:
                     fishingMinion.add(min);
                     break;
+                default:
+                    unknownMinion.add(min);
+                    break;
             }
         }
 
@@ -1825,6 +1803,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         combatMinion.sort(com);
         foragingMinion.sort(com);
         fishingMinion.sort(com);
+        unknownMinion.sort(com);
 
         if (!farmingMinion.isEmpty())
         {
@@ -1858,6 +1837,13 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             this.sbCraftedMinions.add(new SBMinions.CraftedInfo(TextComponentUtils.formatted("Fishing", ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE), null, 0, null, ItemStack.EMPTY));
             this.sbCraftedMinions.addAll(fishingMinion);
+            this.sbCraftedMinions.add(dummy);
+        }
+
+        if (!unknownMinion.isEmpty())
+        {
+            this.sbCraftedMinions.add(new SBMinions.CraftedInfo(TextComponentUtils.formatted("Unknown", ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE), null, 0, null, ItemStack.EMPTY));
+            this.sbCraftedMinions.addAll(unknownMinion);
             this.sbCraftedMinions.add(dummy);
         }
 
@@ -2873,7 +2859,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getEnchanting(), this.enchantingLevel));
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getAlchemy(), this.alchemyLevel));
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getTaming(), this.tamingLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.CATACOMBS_DUNGEON, this.catacombsLevel));
+        this.allStat.add(this.calculateSkillBonus(SBDungeons.DUNGEONS.getBonus().getCatacombs(), this.catacombsLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getZombie(), this.zombieSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getSpider(), this.spiderSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getWolf(), this.wolfSlayerLevel));
@@ -3289,19 +3275,13 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void getMagicFindFromPets(int petsScore)
     {
-        double magicFindBase = 0;
-
-        for (SBPets.Score score : SBPets.PETS.getScore())
+        for (Map.Entry<Integer, Integer> score : SBPets.PETS.getScore().entrySet())
         {
-            int scoreToCheck = score.getScore();
-            double magicFind = score.getMagicFind();
-
-            if (scoreToCheck <= petsScore)
+            if (score.getKey() <= petsScore)
             {
-                magicFindBase = magicFind;
+                this.allStat.addMagicFind(score.getValue());
             }
         }
-        this.allStat.addMagicFind(magicFindBase);
     }
 
     private String replaceStatsString(String statName, String replace)
@@ -3642,9 +3622,19 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         List<ItemStack> mainInventory = SBItemUtils.decodeItem(currentProfile.getMainInventory(), InventoryType.INVENTORY);
         List<ItemStack> accessoryInventory = SBItemUtils.decodeItem(currentProfile.getAccessoryInventory(), InventoryType.ACCESSORY_BAG);
+        List<ItemStack> backpackInventory = Lists.newArrayList();
+
+        if (currentProfile.getBackpackInventory() != null)
+        {
+            for (Map.Entry<Integer, SkyblockProfiles.Inventory> entry : currentProfile.getBackpackInventory().entrySet())
+            {
+                backpackInventory.addAll(SBItemUtils.decodeItem(entry.getValue(), InventoryType.BACKPACK));
+            }
+        }
 
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(mainInventory, SBInventoryGroup.INVENTORY));
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getEnderChestInventory(), InventoryType.ENDER_CHEST), SBInventoryGroup.ENDER_CHEST));
+        SKYBLOCK_INV.add(new SBInventoryGroup.Data(backpackInventory, SBInventoryGroup.BACKPACK));
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getVaultInventory(), InventoryType.PERSONAL_VAULT), SBInventoryGroup.PERSONAL_VAULT));
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(accessoryInventory, SBInventoryGroup.ACCESSORY));
         SKYBLOCK_INV.add(new SBInventoryGroup.Data(SBItemUtils.decodeItem(currentProfile.getPotionInventory(), InventoryType.POTION_BAG), SBInventoryGroup.POTION));

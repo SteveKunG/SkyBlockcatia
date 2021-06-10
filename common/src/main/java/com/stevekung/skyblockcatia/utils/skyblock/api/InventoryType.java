@@ -5,6 +5,7 @@ public enum InventoryType
     ARMOR("Armor"),
     INVENTORY("Main Inventory"),
     ENDER_CHEST("Ender Chest"),
+    BACKPACK("Backpack"),
     PERSONAL_VAULT("Personal Vault"),
     ACCESSORY_BAG("Accessory Bag"),
     POTION_BAG("Potion Bag"),
