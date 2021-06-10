@@ -3,9 +3,9 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 import java.util.Locale;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.utils.skyblock.SBDungeons;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSlayers;
 
 public class SkyblockProfiles
@@ -156,7 +156,7 @@ public class SkyblockProfiles
         private final Map<Integer, Inventory> backpackInventory;
 
         private final JsonObject stats;
-        private final JsonElement dungeons;
+        private final SBDungeons.Dungeons dungeons;
         private final Map<String, Integer> collection;
         @SerializedName("unlocked_coll_tiers")
         private final String[] unlockedCollections;
@@ -173,7 +173,7 @@ public class SkyblockProfiles
                 double fishingExp, double runecraftingExp, double combatExp, double enchantingExp, double alchemyExp, double tamingExp, double carpentryExp,
                 int fairySoulsCollected, int fairyExchanges, int deathCount, double purse, Inventory armorInventory, Inventory mainInventory,
                 Inventory enderChestInventory, Inventory vaultInventory, Inventory accessoryInventory, Inventory potionInventory, Inventory fishingInventory,
-                Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, Map<Integer, Inventory> backpackInventory, JsonObject stats, JsonElement dungeons,
+                Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, Map<Integer, Inventory> backpackInventory, JsonObject stats, SBDungeons.Dungeons dungeons,
                 Map<String, Integer> collection, String[] unlockedCollections, Map<String, Integer> sacks, Pets[] pets, JsonObject slayerBoss, SlayerQuest slayerQuest)
         {
             this.firstJoin = firstJoin;
@@ -365,8 +365,7 @@ public class SkyblockProfiles
             return this.stats;
         }
 
-        @Deprecated
-        public JsonElement getDungeons()
+        public SBDungeons.Dungeons getDungeons()
         {
             return this.dungeons;
         }

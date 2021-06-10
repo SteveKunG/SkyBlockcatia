@@ -20,8 +20,6 @@ import com.stevekung.skyblockcatia.gui.GuiChatExtended;
 import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
-import com.stevekung.skyblockcatia.utils.skyblock.api.ExpProgress;
-import com.stevekung.skyblockcatia.utils.skyblock.api.PlayerStatsBonus;
 
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
@@ -141,18 +139,12 @@ public class SkyBlockcatiaMod
     {
         try
         {
-            ExpProgress.DUNGEON = ExpProgress.getXpProgressFromRemote(ExpProgress.Type.DUNGEON);
-
-            for (PlayerStatsBonus.Type type : PlayerStatsBonus.Type.VALUES)
-            {
-                PlayerStatsBonus.getBonusFromRemote(type);
-            }
-
             SBMinions.getMinions();
             SBPets.getPets();
             SBSlayers.getSlayers();
             SBSkills.getSkills();
             SBStats.getStats();
+            SBDungeons.getDungeons();
         }
         catch (Throwable e)
         {

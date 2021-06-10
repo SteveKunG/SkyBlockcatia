@@ -1942,78 +1942,55 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
     @Deprecated
     private final List<String> dungeonData = new ArrayList<>();
-    private void getDungeons(SkyblockProfiles.Members currentUserProfile)//TODO
+
+    //TODO Make it better
+    private void getDungeons(SkyblockProfiles.Members currentUserProfile)
     {
-        JsonElement dungeon = currentUserProfile.getDungeons();
-        int i = 0;
+        SBDungeons.Dungeons dungeons = currentUserProfile.getDungeons();
 
-        if (dungeon != null)
+        this.dungeonData.add(EnumChatFormatting.RED.toString() + EnumChatFormatting.BOLD + "WORK IN PROGRESS! NOT A FINAL GUI!");
+        this.dungeonData.add(EnumChatFormatting.YELLOW + "Selected Class: " + EnumChatFormatting.GOLD + WordUtils.capitalize(dungeons.getSelectedClass()));
+
+        for (Map.Entry<String, SBDungeons.Exp> entry : dungeons.getPlayerClasses().entrySet())
         {
-            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            //System.out.println(gson.toJson(dungeon));
-            this.dungeonData.add(EnumChatFormatting.RED.toString() + EnumChatFormatting.BOLD + "WORK IN PROGRESS! NOT A FINAL GUI!");
-            this.dungeonData.add("");
+            SBSkills.Info info2 = this.calculateDungeonSkill(entry.getValue().getExperience(), SBDungeons.DUNGEONS.getLeveling(), SBDungeons.Class.valueOf(entry.getKey().toUpperCase(Locale.ROOT)).getName());
+            this.dungeonData.add(EnumChatFormatting.YELLOW + info2.getName() + ":" + EnumChatFormatting.GOLD + " LVL " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
+        }
 
-            JsonElement dungeonType = dungeon.getAsJsonObject().get("dungeon_types");
-            JsonElement selectedClass = dungeon.getAsJsonObject().get("selected_dungeon_class");
-            JsonElement playerClassExp = dungeon.getAsJsonObject().get("player_classes");
-            JsonObject catacombsDungeon = dungeonType.getAsJsonObject().get("catacombs").getAsJsonObject();
-            JsonElement catacombsExp = catacombsDungeon.get("experience");
-            JsonElement highestFloor = catacombsDungeon.get("highest_tier_completed");
-            JsonElement tierCompletion = catacombsDungeon.get("tier_completions");
+        this.dungeonData.add("");
 
-            if (catacombsExp != null)
+        for (Map.Entry<String, SBDungeons.TypeData> entry : dungeons.getDungeonTypes().entrySet())
+        {
+            SBDungeons.TypeData typeData = entry.getValue();
+
+            if (SBDungeons.DUNGEONS.getValidDungeons().contains(entry.getKey()))
             {
-                SBSkills.Info info = this.calculateDungeonSkill(catacombsExp.getAsDouble(), SBDungeons.Type.THE_CATACOMBS);
+                SBSkills.Info info = this.calculateDungeonSkill(typeData.getExperience(), SBDungeons.DUNGEONS.getLeveling(), WordUtils.capitalize(entry.getKey()));
                 this.catacombsLevel = info.getCurrentLvl();
-                this.dungeonData.add(EnumChatFormatting.RED + info.getName() + EnumChatFormatting.RESET + ", Level: " + info.getCurrentLvl() + " " + (int)Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
-                i++;
+                this.dungeonData.add(EnumChatFormatting.YELLOW + info.getName() + ":" + EnumChatFormatting.GOLD + " LVL " + info.getCurrentLvl() + " " + (int)Math.floor(info.getCurrentXp()) + "/" + info.getXpRequired());
             }
 
-            if (selectedClass != null)
+            if (typeData.getHighestFloorCompleted() > 0)
             {
-                this.dungeonData.add("Selected Class: " + WordUtils.capitalize(selectedClass.getAsString()));
-                i++;
-            }
-            if (highestFloor != null)
-            {
-                this.dungeonData.add("Highest Floor: " + highestFloor.getAsInt());
-                i++;
-            }
-            this.dungeonData.add("");
-
-            for (Map.Entry<String, JsonElement> entry : playerClassExp.getAsJsonObject().entrySet())
-            {
-                JsonElement classExp = entry.getValue().getAsJsonObject().get("experience");
-
-                if (classExp != null)
-                {
-                    SBSkills.Info info2 = this.calculateDungeonSkill(classExp.getAsDouble(), SBDungeons.Type.valueOf(entry.getKey().toUpperCase(Locale.ROOT)));
-                    this.dungeonData.add(EnumChatFormatting.RED + info2.getName() + EnumChatFormatting.RESET + ", Level: " + info2.getCurrentLvl() + " " + (int)Math.floor(info2.getCurrentXp()) + "/" + info2.getXpRequired());
-                    i++;
-                }
+                this.dungeonData.add(EnumChatFormatting.YELLOW + WordUtils.capitalize(entry.getKey().replace("_", " ")) + " Highest Floor: " + EnumChatFormatting.GOLD + typeData.getHighestFloorCompleted());
             }
 
-            this.dungeonData.add("");
             StringBuilder builder = new StringBuilder();
 
-            if (tierCompletion != null)
+            if (typeData.getFloorCompletions() != null)
             {
-                for (Map.Entry<String, JsonElement> entry : tierCompletion.getAsJsonObject().entrySet().stream().filter(entry -> !entry.getKey().equals("0")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+                for (Map.Entry<Integer, Integer> entry1 : typeData.getFloorCompletions().entrySet())
                 {
-                    builder.append("Floor: " + entry.getKey() + "/" + FORMAT.format(entry.getValue().getAsInt()) + ", ");
+                    builder.append(EnumChatFormatting.YELLOW + "F" + entry1.getKey() + ": " + EnumChatFormatting.GOLD + FORMAT.format(entry1.getValue()) + " ");
                 }
-                i++;
             }
-
             this.dungeonData.add(builder.toString());
         }
-        this.data.setHasDungeons(dungeon != null && i > 0);
+        this.data.setHasDungeons(!this.dungeonData.isEmpty());
     }
 
-    private SBSkills.Info calculateDungeonSkill(double playerXp, SBDungeons.Type type)
+    private SBSkills.Info calculateDungeonSkill(double playerXp, int[] leveling, String name)
     {
-        ExpProgress[] progress = ExpProgress.DUNGEON;
         int xpRequired = 0;
         int currentLvl = 0;
         int levelToCheck = 0;
@@ -2021,39 +1998,39 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         double xpToNextLvl = 0;
         double currentXp = 0;
 
-        for (int x = 0; x < progress.length; ++x)
+        for (int x = 0; x < leveling.length; ++x)
         {
             if (playerXp >= xpTotal)
             {
-                xpTotal += progress[x].getXp();
+                xpTotal += leveling[x];
                 currentLvl = x;
-                levelToCheck = progress[x].getLevel();
+                levelToCheck = x + 1;
 
-                if (levelToCheck <= progress.length)
+                if (levelToCheck <= leveling.length)
                 {
-                    xpRequired = (int)progress[x].getXp();
+                    xpRequired = (int)leveling[x];
                 }
             }
         }
 
-        if (levelToCheck < progress.length)
+        if (levelToCheck < leveling.length)
         {
             xpToNextLvl = xpTotal - playerXp;
             currentXp = xpRequired - xpToNextLvl;
         }
         else
         {
-            currentLvl = progress.length;
+            currentLvl = leveling.length;
             currentXp = playerXp - xpTotal;
         }
 
-        if (currentXp < 0 && levelToCheck <= progress.length) // fix for skill level almost reach to limit
+        if (currentXp < 0 && levelToCheck <= leveling.length) // fix for skill level almost reach to limit
         {
             xpToNextLvl = xpTotal - playerXp;
             currentXp = xpRequired - xpToNextLvl;
-            currentLvl = progress.length - 1;
+            currentLvl = leveling.length - 1;
         }
-        return new SBSkills.Info(type.getName(), currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
+        return new SBSkills.Info(name, currentXp, xpRequired, currentLvl, 0, xpToNextLvl <= 0);
     }
 
     private void getBankHistories(SkyblockProfiles.Banking banking)
@@ -3281,7 +3258,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getEnchanting(), this.enchantingLevel));
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getAlchemy(), this.alchemyLevel));
         this.allStat.add(this.calculateSkillBonus(SBSkills.SKILLS.getBonus().getTaming(), this.tamingLevel));
-        this.allStat.add(this.calculateSkillBonus(PlayerStatsBonus.CATACOMBS_DUNGEON, this.catacombsLevel));
+        this.allStat.add(this.calculateSkillBonus(SBDungeons.DUNGEONS.getBonus().getCatacombs(), this.catacombsLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getZombie(), this.zombieSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getSpider(), this.spiderSlayerLevel));
         this.allStat.add(this.calculateSkillBonus(SBSlayers.SLAYERS.getBonus().getWolf(), this.wolfSlayerLevel));
