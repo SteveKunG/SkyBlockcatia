@@ -2110,11 +2110,11 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
     private void processCraftedMinions()
     {
-        for (SBMinions.CraftedMinions minion : SBMinions.MINIONS.getCraftedMinions())
+        for (Map.Entry<Integer, Integer> minion : SBMinions.MINIONS.getCraftedMinions().entrySet())
         {
-            if (minion.getCount() <= this.craftedMinionCount)
+            if (minion.getKey() <= this.craftedMinionCount)
             {
-                this.currentMinionSlot = minion.getSlot();
+                this.currentMinionSlot = minion.getValue();
             }
         }
 

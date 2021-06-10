@@ -44,18 +44,15 @@ public class MinionsBuilder
             minionTypeList.add(prop);
         }
 
-        List<Map<String, Object>> slotslist = Lists.newArrayList();
+        Map<String, Object> slots = Maps.newLinkedHashMap();
 
         for (int i = 0; i < CRAFTED_MINIONS.split(",").length; i++)
         {
-            Map<String, Object> slots = Maps.newLinkedHashMap();
-            slots.put("count", Integer.parseInt(CRAFTED_MINIONS.split(",")[i]));
-            slots.put("slot", Integer.parseInt(MINION_SLOT.split(",")[i]));
-            slotslist.add(slots);
+            slots.put(CRAFTED_MINIONS.split(",")[i], Integer.parseInt(MINION_SLOT.split(",")[i]));
         }
 
         maps.put("unique_minions", 620);
-        maps.put("crafted_minions", slotslist);
+        maps.put("crafted_minions", slots);
         maps.put("type", minionTypeList);
 
         File file = new File("M:/Modding/SkyBlockcatia/SkyblockData", "minions.json");

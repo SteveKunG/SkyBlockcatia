@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -17,10 +18,10 @@ public class SBMinions
     @SerializedName("unique_minions")
     private final int uniqueMinions;
     @SerializedName("crafted_minions")
-    private final CraftedMinions[] craftedMinions;
+    private final Map<Integer, Integer> craftedMinions;
     private final Type[] type;
 
-    public SBMinions(int uniqueMinions, CraftedMinions[] craftedMinions, Type[] type)
+    public SBMinions(int uniqueMinions, Map<Integer, Integer> craftedMinions, Type[] type)
     {
         this.uniqueMinions = uniqueMinions;
         this.craftedMinions = craftedMinions;
@@ -32,7 +33,7 @@ public class SBMinions
         return this.uniqueMinions;
     }
 
-    public CraftedMinions[] getCraftedMinions()
+    public Map<Integer, Integer> getCraftedMinions()
     {
         return this.craftedMinions;
     }
@@ -57,28 +58,6 @@ public class SBMinions
             }
         }
         return null;
-    }
-
-    public class CraftedMinions
-    {
-        private final int count;
-        private final int slot;
-
-        public CraftedMinions(int count, int slot)
-        {
-            this.count = count;
-            this.slot = slot;
-        }
-
-        public int getCount()
-        {
-            return this.count;
-        }
-
-        public int getSlot()
-        {
-            return this.slot;
-        }
     }
 
     public class Type
