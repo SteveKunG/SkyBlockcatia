@@ -401,7 +401,7 @@ public class MainEventHandler
             try
             {
                 ServerAddress address = ServerAddress.fromString(server.serverIP);
-                NetworkManager manager = NetworkManager.func_181124_a(InetAddress.getByName(address.getIP()), address.getPort(), false);
+                NetworkManager manager = NetworkManager.createNetworkManagerAndConnect(InetAddress.getByName(address.getIP()), address.getPort(), false);
 
                 manager.setNetHandler(new INetHandlerStatusClient()
                 {

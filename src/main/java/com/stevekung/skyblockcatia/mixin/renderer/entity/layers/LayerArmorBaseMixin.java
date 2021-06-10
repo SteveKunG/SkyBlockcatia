@@ -40,10 +40,10 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
     private RendererLivingEntity<?> renderer;
 
     @Shadow
-    protected abstract void func_177179_a(T p_177179_1_, int p_177179_2_);
+    protected abstract void setModelPartVisible(T model, int armorSlot);
 
     @Shadow
-    public abstract T func_177175_a(int p_177175_1_);
+    public abstract T getArmorModel(int armorSlot);
 
     @Shadow
     protected abstract T getArmorModelHook(EntityLivingBase entity, ItemStack itemStack, int slot, T model);
@@ -59,7 +59,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
         this.renderGlowingLayer(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, 1);
     }
 
-    @Inject(method = "func_177183_a(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.color(FFFF)V", ordinal = 0))
+    @Inject(method = "renderGlint(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.color(FFFF)V", ordinal = 0))
     private void renderNewArmorGlintPre(EntityLivingBase entitylivingbaseIn, T modelbaseIn, float p_177183_3_, float p_177183_4_, float p_177183_5_, float p_177183_6_, float p_177183_7_, float p_177183_8_, float p_177183_9_, CallbackInfo info)
     {
         if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
@@ -69,7 +69,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
         }
     }
 
-    @Inject(method = "func_177183_a(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/model/ModelBase.render(Lnet/minecraft/entity/Entity;FFFFFF)V"))
+    @Inject(method = "renderGlint(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/model/ModelBase.render(Lnet/minecraft/entity/Entity;FFFFFF)V"))
     private void renderNewArmorGlintPost(EntityLivingBase entitylivingbaseIn, T modelbaseIn, float p_177183_3_, float p_177183_4_, float p_177183_5_, float p_177183_6_, float p_177183_7_, float p_177183_8_, float p_177183_9_, CallbackInfo info)
     {
         if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
@@ -81,7 +81,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
         }
     }
 
-    @Redirect(method = "func_177183_a(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.color(FFFF)V", ordinal = 1))
+    @Redirect(method = "renderGlint(Lnet/minecraft/entity/EntityLivingBase;Lnet/minecraft/client/model/ModelBase;FFFFFFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.color(FFFF)V", ordinal = 1))
     private void newArmorGlintColor(float colorRed, float colorGreen, float colorBlue, float colorAlpha)
     {
         if (SkyBlockcatiaConfig.enable1_15ArmorEnchantedGlint)
@@ -110,11 +110,11 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
                 return;
             }
 
-            T t = this.func_177175_a(armorSlot);
+            T t = this.getArmorModel(armorSlot);
             t.setModelAttributes(this.renderer.getMainModel());
             t.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
             t = this.getArmorModelHook(entity, itemstack, armorSlot, t);
-            this.func_177179_a(t, armorSlot);
+            this.setModelPartVisible(t, armorSlot);
             ResourceLocation res = this.getArmorType(itemstack, armorSlot);
 
             if (res == null)

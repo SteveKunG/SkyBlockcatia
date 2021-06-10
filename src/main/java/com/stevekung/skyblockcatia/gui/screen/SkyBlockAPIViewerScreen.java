@@ -1563,8 +1563,8 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 double health = itemStack.getItem().getDurabilityForDisplay(itemStack);
                 int i = Math.round(13.0F - (float)health * 13.0F);
                 int j = MathHelper.hsvToRGB(Math.max(0.0F, (float) (1.0F - health)) / 3.0F, 1.0F, 1.0F);
-                this.itemRender.func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
-                this.itemRender.func_181565_a(worldrenderer, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+                this.itemRender.draw(worldrenderer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+                this.itemRender.draw(worldrenderer, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 GlStateManager.enableAlpha();
                 GlStateManager.enableTexture2D();
                 GlStateManager.enableLighting();

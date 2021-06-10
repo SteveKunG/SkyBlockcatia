@@ -791,7 +791,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         if (this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN)
         {
             int i = this.mc.ingameGUI.getChatGUI().getLineCount();
-            int k = this.mc.ingameGUI.getChatGUI().field_146253_i.size();
+            int k = this.mc.ingameGUI.getChatGUI().drawnChatLines.size();
             float f = this.mc.gameSettings.chatOpacity * 0.9F + 0.1F;
 
             if (k > 0)
@@ -801,9 +801,9 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                 GlStateManager.translate(2.0F, 8.0F, 0.0F);
                 GlStateManager.scale(f1, f1, 1.0F);
 
-                for (int i1 = 0; i1 + this.mc.ingameGUI.getChatGUI().scrollPos < this.mc.ingameGUI.getChatGUI().field_146253_i.size() && i1 < i; ++i1)
+                for (int i1 = 0; i1 + this.mc.ingameGUI.getChatGUI().scrollPos < this.mc.ingameGUI.getChatGUI().drawnChatLines.size() && i1 < i; ++i1)
                 {
-                    ChatLine chatline = this.mc.ingameGUI.getChatGUI().field_146253_i.get(i1 + this.mc.ingameGUI.getChatGUI().scrollPos);
+                    ChatLine chatline = this.mc.ingameGUI.getChatGUI().drawnChatLines.get(i1 + this.mc.ingameGUI.getChatGUI().scrollPos);
 
                     if (chatline != null)
                     {

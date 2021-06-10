@@ -39,8 +39,8 @@ public class SkyBlockcatiaMod
     protected static final String NAME = "SkyBlockcatia";
     public static final String MOD_ID = "skyblockcatia";
     private static final int MAJOR_VERSION = 1;
-    private static final int MINOR_VERSION = 1;
-    private static final int BUILD_VERSION = 2;
+    private static final int MINOR_VERSION = 2;
+    private static final int BUILD_VERSION = 0;
     protected static final String GUI_FACTORY = "com.stevekung.skyblockcatia.config.ConfigGuiFactory";
     public static final String VERSION = SkyBlockcatiaMod.MAJOR_VERSION + "." + SkyBlockcatiaMod.MINOR_VERSION + "." + SkyBlockcatiaMod.BUILD_VERSION;
     protected static final String FORGE_VERSION = "required-after:Forge@[11.15.1.2318,);";
