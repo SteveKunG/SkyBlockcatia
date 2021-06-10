@@ -1,8 +1,11 @@
 # Change Log
 
-* + Added Disable Error Log config to hide client error logs
-* * Update ability damage icon
-* * Changed shortcut inventory from Ender Chest to Storage
-* * Fixed crash when inventory item detection changed
-* * Fixed SBA glowing teammates not working
-* * Fixed unknown data type detection in API Viewer
+* + Added Support for Enderman Slayer
+* + Added Backpack Container tab in API Viewer
+* + Pet Lore and Stats are now supported in API Viewer
+* * API Viewer is now slightly faster
+* * JSON Data parsing improvement for Bazaar/Hypixel API
+* * Dungeon Stats is now slightly better, but still worst
+* * Fixed crashed with beta NEU
+* * Fixed invalid recent active profile
+* - Removed SBA Backpack renderer from API Viewer
