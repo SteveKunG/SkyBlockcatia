@@ -19,7 +19,7 @@ import net.minecraft.client.audio.SoundManager;
 public class SoundManagerMixin
 {
     private final SoundManager that = (SoundManager) (Object) this;
-    private List<String> pausedSounds = new ArrayList<>();
+    private final List<String> pausedSounds = new ArrayList<>();
 
     @Shadow
     @Final

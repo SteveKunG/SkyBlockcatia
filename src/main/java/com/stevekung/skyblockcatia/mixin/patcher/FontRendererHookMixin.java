@@ -35,17 +35,17 @@ public abstract class FontRendererHookMixin
 
             switch (this.state)
             {
-            case 0:
-                this.redN = value1;
-                break;
-            case 1:
-                this.greenN = value1;
-                break;
-            case 2:
-                this.blueN = value1;
-                break;
-            default:
-                break;
+                case 0:
+                    this.redN = value1;
+                    break;
+                case 1:
+                    this.greenN = value1;
+                    break;
+                case 2:
+                    this.blueN = value1;
+                    break;
+                default:
+                    break;
             }
 
             this.state = ++this.state % 3;

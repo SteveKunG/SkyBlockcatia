@@ -52,7 +52,7 @@ public class SBDungeons
         DUNGEONS = GSON.fromJson(DataUtils.getData("dungeons.json"), SBDungeons.class);
     }
 
-    public class Bonus
+    public static class Bonus
     {
         private final Catacombs[] catacombs;
 
@@ -67,7 +67,7 @@ public class SBDungeons
         }
     }
 
-    public class Catacombs implements IBonusTemplate
+    public static class Catacombs implements IBonusTemplate
     {
         private final int level;
         private final double health;
@@ -91,7 +91,7 @@ public class SBDungeons
         }
     }
 
-    public class Dungeons
+    public static class Dungeons
     {
         @SerializedName("dungeon_types")
         private final Map<String, TypeData> dungeonTypes;
@@ -123,7 +123,7 @@ public class SBDungeons
         }
     }
 
-    public class TypeData
+    public static class TypeData
     {
         private final double experience;
         @SerializedName("highest_tier_completed")
@@ -262,7 +262,7 @@ public class SBDungeons
         }
     }
 
-    public class Runs
+    public static class Runs
     {
         private final long timestamp;
         @SerializedName("dungeon_class")
@@ -372,7 +372,7 @@ public class SBDungeons
         }
     }
 
-    public class PlayerClasses
+    public static class PlayerClasses
     {
         private final Exp healer;
         private final Exp mage;
@@ -415,7 +415,7 @@ public class SBDungeons
         }
     }
 
-    public class Exp
+    public static class Exp
     {
         private final double experience;
 

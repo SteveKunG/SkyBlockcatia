@@ -50,7 +50,7 @@ public class SBSkills
         SKILLS = GSON.fromJson(DataUtils.getData("skills.json"), SBSkills.class);
     }
 
-    public class Bonus
+    public static class Bonus
     {
         private final Farming[] farming;
         private final Mining[] mining;
@@ -114,7 +114,7 @@ public class SBSkills
         }
     }
 
-    public class Farming implements IBonusTemplate
+    public static class Farming implements IBonusTemplate
     {
         private final int level;
         private final double health;
@@ -147,7 +147,7 @@ public class SBSkills
         }
     }
 
-    public class Foraging implements IBonusTemplate
+    public static class Foraging implements IBonusTemplate
     {
         private final int level;
         private final double strength;
@@ -180,7 +180,7 @@ public class SBSkills
         }
     }
 
-    public class Mining implements IBonusTemplate
+    public static class Mining implements IBonusTemplate
     {
         private final int level;
         private final double defense;
@@ -213,7 +213,7 @@ public class SBSkills
         }
     }
 
-    public class Fishing implements IBonusTemplate
+    public static class Fishing implements IBonusTemplate
     {
         private final int level;
         private final double health;
@@ -237,7 +237,7 @@ public class SBSkills
         }
     }
 
-    public class Combat implements IBonusTemplate
+    public static class Combat implements IBonusTemplate
     {
         private final int level;
         @SerializedName("crit_chance")
@@ -262,7 +262,7 @@ public class SBSkills
         }
     }
 
-    public class Enchanting implements IBonusTemplate
+    public static class Enchanting implements IBonusTemplate
     {
         private final int level;
         private final double intelligence;
@@ -295,7 +295,7 @@ public class SBSkills
         }
     }
 
-    public class Alchemy implements IBonusTemplate
+    public static class Alchemy implements IBonusTemplate
     {
         private final int level;
         private final double intelligence;
@@ -319,7 +319,7 @@ public class SBSkills
         }
     }
 
-    public class Taming implements IBonusTemplate
+    public static class Taming implements IBonusTemplate
     {
         private final int level;
         @SerializedName("pet_luck")

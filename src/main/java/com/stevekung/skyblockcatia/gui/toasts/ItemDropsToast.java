@@ -25,7 +25,7 @@ public class ItemDropsToast implements IToast<ItemDropsToast>
     private static final ResourceLocation MAGIC_FIND_GLINT = new ResourceLocation("skyblockcatia:textures/gui/magic_find_glint.png");
     private final ToastUtils.ItemDrop rareDropOutput;
     private final FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);
-    private String magicFind;
+    private final String magicFind;
     private final boolean hasMagicFind;
     private final long maxDrawTime;
 

@@ -109,14 +109,11 @@ public class GuiConfigButtonRowList extends GuiListExtended
         {
             if (this.buttonA.mousePressed(this.mc, mouseX, mouseY))
             {
-                if (this.buttonA instanceof GuiConfigButton)
+                if (this.buttonA instanceof GuiConfigButton && mouseEvent == 0)
                 {
-                    if (mouseEvent == 0)
-                    {
-                        SkyBlockcatiaSettings.INSTANCE.setOptionValue(((GuiConfigButton)this.buttonA).getOption(), 1);
-                        this.buttonA.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonA.id));
-                        this.buttonA.playPressSound(this.mc.getSoundHandler());
-                    }
+                    SkyBlockcatiaSettings.INSTANCE.setOptionValue(((GuiConfigButton)this.buttonA).getOption(), 1);
+                    this.buttonA.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonA.id));
+                    this.buttonA.playPressSound(this.mc.getSoundHandler());
                 }
                 if (this.buttonA instanceof GuiConfigSlider)
                 {
@@ -126,14 +123,11 @@ public class GuiConfigButtonRowList extends GuiListExtended
             }
             else if (this.buttonB != null && this.buttonB.mousePressed(this.mc, mouseX, mouseY))
             {
-                if (this.buttonB instanceof GuiConfigButton)
+                if (this.buttonB instanceof GuiConfigButton && mouseEvent == 0)
                 {
-                    if (mouseEvent == 0)
-                    {
-                        SkyBlockcatiaSettings.INSTANCE.setOptionValue(((GuiConfigButton)this.buttonB).getOption(), 1);
-                        this.buttonB.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonB.id));
-                        this.buttonB.playPressSound(this.mc.getSoundHandler());
-                    }
+                    SkyBlockcatiaSettings.INSTANCE.setOptionValue(((GuiConfigButton)this.buttonB).getOption(), 1);
+                    this.buttonB.displayString = SkyBlockcatiaSettings.INSTANCE.getKeyBinding(SkyBlockcatiaSettings.Options.byOrdinal(this.buttonB.id));
+                    this.buttonB.playPressSound(this.mc.getSoundHandler());
                 }
                 if (this.buttonB instanceof GuiConfigSlider)
                 {

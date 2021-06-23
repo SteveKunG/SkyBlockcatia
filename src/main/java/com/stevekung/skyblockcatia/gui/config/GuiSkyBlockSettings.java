@@ -60,30 +60,29 @@ public class GuiSkyBlockSettings extends GuiScreen
     {
         if (button.enabled)
         {
-            if (button.id == 100)
+            switch (button.id)
             {
-                this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.qol.title", QOL_OPTIONS));
-            }
-            else if (button.id == 101)
-            {
-                this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.rendering.title", RENDERING_OPTIONS));
-            }
-            else if (button.id == 102)
-            {
-                this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.misc.title", MISC_OPTIONS));
-            }
-            else if (button.id == 103)
-            {
-                this.mc.displayGuiScreen(new ConfigGuiFactory.GuiMainConfig(this));
-            }
-            else if (button.id == 104)
-            {
-                this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.toast.title", TOAST_OPTIONS));
-            }
-            else if (button.id == 200)
-            {
-                SkyBlockcatiaSettings.INSTANCE.save();
-                this.mc.displayGuiScreen(null);
+                case 100:
+                    this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.qol.title", QOL_OPTIONS));
+                    break;
+                case 101:
+                    this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.rendering.title", RENDERING_OPTIONS));
+                    break;
+                case 102:
+                    this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.misc.title", MISC_OPTIONS));
+                    break;
+                case 103:
+                    this.mc.displayGuiScreen(new ConfigGuiFactory.GuiMainConfig(this));
+                    break;
+                case 104:
+                    this.mc.displayGuiScreen(new GuiSkyBlockOptionSettings(this, "extended_config.skyblock.toast.title", TOAST_OPTIONS));
+                    break;
+                case 200:
+                    SkyBlockcatiaSettings.INSTANCE.save();
+                    this.mc.displayGuiScreen(null);
+                    break;
+                default:
+                    break;
             }
         }
         SkyBlockcatiaSettings.INSTANCE.save();

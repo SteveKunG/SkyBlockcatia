@@ -30,7 +30,7 @@ public class HypixelProfiles
         return this.player;
     }
 
-    public class HypixelPlayerProfile
+    public static class HypixelPlayerProfile
     {
         private final String newPackageRank;
         private final String rank;

@@ -83,100 +83,86 @@ public class TextInputUtil
             this.deleteSelectedText();
             return true;
         }
-        else if (keyCode == Keyboard.KEY_BACK)
-        {
-            if (!s.isEmpty())
-            {
-                if (this.selectionEnd != this.selectionStart)
-                {
-                    this.deleteSelectedText();
-                }
-                else if (this.selectionStart > 0)
-                {
-                    s = new StringBuilder(s).deleteCharAt(Math.max(0, this.selectionStart - 1)).toString();
-                    this.selectionEnd = this.selectionStart = Math.max(0, this.selectionStart - 1);
-                    this.stringConsumer.accept(s);
-                }
-            }
-            return true;
-        }
-        else if (keyCode == Keyboard.KEY_DELETE)
-        {
-            if (!s.isEmpty())
-            {
-                if (this.selectionEnd != this.selectionStart)
-                {
-                    this.deleteSelectedText();
-                }
-                else if (this.selectionStart < s.length())
-                {
-                    s = new StringBuilder(s).deleteCharAt(Math.max(0, this.selectionStart)).toString();
-                    this.stringConsumer.accept(s);
-                }
-            }
-            return true;
-        }
-        else if (keyCode == Keyboard.KEY_LEFT)
-        {
-            int j = this.fontRenderer.getBidiFlag() ? 1 : -1;
-
-            if (GuiScreen.isCtrlKeyDown())
-            {
-                this.selectionStart = this.findWordEdge(s, j, this.selectionStart);
-            }
-            else
-            {
-                this.selectionStart = Math.max(0, Math.min(s.length(), this.selectionStart + j));
-            }
-
-            if (!GuiScreen.isShiftKeyDown())
-            {
-                this.selectionEnd = this.selectionStart;
-            }
-            return true;
-        }
-        else if (keyCode == Keyboard.KEY_RIGHT)
-        {
-            int i = this.fontRenderer.getBidiFlag() ? -1 : 1;
-
-            if (GuiScreen.isCtrlKeyDown())
-            {
-                this.selectionStart = this.findWordEdge(s, i, this.selectionStart);
-            }
-            else
-            {
-                this.selectionStart = Math.max(0, Math.min(s.length(), this.selectionStart + i));
-            }
-
-            if (!GuiScreen.isShiftKeyDown())
-            {
-                this.selectionEnd = this.selectionStart;
-            }
-            return true;
-        }
-        else if (keyCode == Keyboard.KEY_HOME)
-        {
-            this.selectionStart = 0;
-
-            if (!GuiScreen.isShiftKeyDown())
-            {
-                this.selectionEnd = this.selectionStart;
-            }
-            return true;
-        }
-        else if (keyCode == Keyboard.KEY_END)
-        {
-            this.selectionStart = this.stringSupplier.get().length();
-
-            if (!GuiScreen.isShiftKeyDown())
-            {
-                this.selectionEnd = this.selectionStart;
-            }
-            return true;
-        }
         else
         {
-            return false;
+            switch (keyCode)
+            {
+                case Keyboard.KEY_BACK:
+                    if (!s.isEmpty())
+                    {
+                        if (this.selectionEnd != this.selectionStart)
+                        {
+                            this.deleteSelectedText();
+                        }
+                        else if (this.selectionStart > 0)
+                        {
+                            s = new StringBuilder(s).deleteCharAt(Math.max(0, this.selectionStart - 1)).toString();
+                            this.selectionEnd = this.selectionStart = Math.max(0, this.selectionStart - 1);
+                            this.stringConsumer.accept(s);
+                        }
+                    }
+                    return true;
+                case Keyboard.KEY_DELETE:
+                    if (!s.isEmpty())
+                    {
+                        if (this.selectionEnd != this.selectionStart)
+                        {
+                            this.deleteSelectedText();
+                        }
+                        else if (this.selectionStart < s.length())
+                        {
+                            s = new StringBuilder(s).deleteCharAt(Math.max(0, this.selectionStart)).toString();
+                            this.stringConsumer.accept(s);
+                        }
+                    }
+                    return true;
+                case Keyboard.KEY_LEFT:
+                    int j = this.fontRenderer.getBidiFlag() ? 1 : -1;
+                    if (GuiScreen.isCtrlKeyDown())
+                    {
+                        this.selectionStart = this.findWordEdge(s, j, this.selectionStart);
+                    }
+                    else
+                    {
+                        this.selectionStart = Math.max(0, Math.min(s.length(), this.selectionStart + j));
+                    }
+                    if (!GuiScreen.isShiftKeyDown())
+                    {
+                        this.selectionEnd = this.selectionStart;
+                    }
+                    return true;
+                case Keyboard.KEY_RIGHT:
+                    int i = this.fontRenderer.getBidiFlag() ? -1 : 1;
+                    if (GuiScreen.isCtrlKeyDown())
+                    {
+                        this.selectionStart = this.findWordEdge(s, i, this.selectionStart);
+                    }
+                    else
+                    {
+                        this.selectionStart = Math.max(0, Math.min(s.length(), this.selectionStart + i));
+                    }
+                    if (!GuiScreen.isShiftKeyDown())
+                    {
+                        this.selectionEnd = this.selectionStart;
+                    }
+                    return true;
+                case Keyboard.KEY_HOME:
+                    this.selectionStart = 0;
+                    if (!GuiScreen.isShiftKeyDown())
+                    {
+                        this.selectionEnd = this.selectionStart;
+                    }
+                    return true;
+                case Keyboard.KEY_END:
+                    this.selectionStart = this.stringSupplier.get().length();
+                    if (!GuiScreen.isShiftKeyDown())
+                    {
+                        this.selectionEnd = this.selectionStart;
+                    }
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 

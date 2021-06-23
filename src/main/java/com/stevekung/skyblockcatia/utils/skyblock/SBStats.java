@@ -60,7 +60,7 @@ public class SBStats
     public static class Display
     {
         private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###.#");
-        private String name;
+        private final String name;
         private final double value;
         private String valueString;
 

@@ -9,13 +9,13 @@ public class ProfileDataCallback
     private SkyblockProfiles.Profile sbProfile;
     private String sbProfileId;
     private String profileName;
-    private String username;
-    private String displayName;
-    private String gameMode;
-    private String uuid;
-    private String guild;
-    private GameProfile profile;
-    private long lastSave;
+    private final String username;
+    private final String displayName;
+    private final String gameMode;
+    private final String uuid;
+    private final String guild;
+    private final GameProfile profile;
+    private final long lastSave;
     private List<String> islandMembers;
 
     public ProfileDataCallback(String sbProfileId, String profileName, String username, String displayName, String gameMode, String guild, String uuid, GameProfile profile, long lastSave)

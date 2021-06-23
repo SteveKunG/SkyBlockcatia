@@ -141,7 +141,7 @@ public class SignSelectionList extends GuiListExtended
         SignSelectionList.BAZAAR_PRICE.clear();
     }
 
-    public class Entry implements GuiListExtended.IGuiListEntry
+    public static class Entry implements GuiListExtended.IGuiListEntry
     {
         private final Minecraft mc;
         private final String value;
@@ -172,7 +172,7 @@ public class SignSelectionList extends GuiListExtended
             {
                 if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
                 {
-                    int price = Integer.valueOf(this.value);
+                    int price = Integer.parseInt(this.value);
 
                     if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
                     {
@@ -195,12 +195,9 @@ public class SignSelectionList extends GuiListExtended
 
             sign.signText[0] = new ChatComponentText(this.value);
 
-            if (this.mc.currentScreen != null)
+            if (this.mc.currentScreen instanceof IEditSign)
             {
-                if (this.mc.currentScreen instanceof IEditSign)
-                {
-                    ((IEditSign)this.mc.currentScreen).getTextInputUtil().moveCaretToEnd();
-                }
+                ((IEditSign)this.mc.currentScreen).getTextInputUtil().moveCaretToEnd();
             }
             this.lastClicked = Minecraft.getSystemTime();
             return false;

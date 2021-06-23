@@ -14,7 +14,7 @@ public class HypixelGuild
         return this.guild;
     }
 
-    public class Guild
+    public static class Guild
     {
         private final String name;
 

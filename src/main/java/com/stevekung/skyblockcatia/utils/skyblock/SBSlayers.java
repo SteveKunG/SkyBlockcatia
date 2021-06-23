@@ -48,7 +48,7 @@ public class SBSlayers
         SLAYERS = GSON.fromJson(DataUtils.getData("slayers.json"), SBSlayers.class);
     }
 
-    public class Bonus
+    public static class Bonus
     {
         private final Zombie[] zombie;
         private final Spider[] spider;
@@ -84,7 +84,7 @@ public class SBSlayers
         }
     }
 
-    public class Zombie implements IBonusTemplate
+    public static class Zombie implements IBonusTemplate
     {
         private final int level;
         private final double health;
@@ -108,7 +108,7 @@ public class SBSlayers
         }
     }
 
-    public class Spider implements IBonusTemplate
+    public static class Spider implements IBonusTemplate
     {
         private final int level;
         @SerializedName("crit_chance")
@@ -142,7 +142,7 @@ public class SBSlayers
         }
     }
 
-    public class Wolf implements IBonusTemplate
+    public static class Wolf implements IBonusTemplate
     {
         private final int level;
         private final double health;
@@ -183,7 +183,7 @@ public class SBSlayers
         }
     }
 
-    public class Enderman implements IBonusTemplate
+    public static class Enderman implements IBonusTemplate
     {
         private final int level;
         private final double health;

@@ -7,8 +7,8 @@ import org.apache.commons.lang3.mutable.MutableInt;
 // Credit to SkyblockAddons but I can't find source code reference
 public class CoordsPair
 {
-    private MutableInt x;
-    private MutableInt y;
+    private final MutableInt x;
+    private final MutableInt y;
 
     public CoordsPair(int x, int y)
     {

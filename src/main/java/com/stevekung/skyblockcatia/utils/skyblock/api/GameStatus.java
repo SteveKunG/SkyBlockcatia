@@ -14,7 +14,7 @@ public class GameStatus
         return this.session;
     }
 
-    public class Session
+    public static class Session
     {
         private final boolean online;
         private final String gameType;

@@ -53,7 +53,7 @@ public class HUDRenderEventHandler
     private long lastGrapplingHookUse = -1;
     private long lastZealotRespawn = -1;
     public static boolean foundDragon;
-    private Set<CoordsPair> recentlyLoadedChunks = new HashSet<>();
+    private final Set<CoordsPair> recentlyLoadedChunks = new HashSet<>();
     private static final ImmutableList<AxisAlignedBB> ZEALOT_SPAWN_AREA = ImmutableList.of(new AxisAlignedBB(-609, 9, -303, -631, 5, -320), new AxisAlignedBB(-622, 5, -321, -640, 5, -334), new AxisAlignedBB(-631, 7, -293, -648, 7, -312), new AxisAlignedBB(-658, 8, -308, -672, 7, -320), new AxisAlignedBB(-709, 9, -325, -694, 10, -315), new AxisAlignedBB(-702, 10, -303, -738, 5, -261), new AxisAlignedBB(-705, 5, -257, -678, 5, -296), new AxisAlignedBB(-657, 5, -210, -624, 8, -242), new AxisAlignedBB(-625, 7, -256, -662, 5, -286));
     public static boolean otherPlayerIsland;
 
@@ -98,7 +98,7 @@ public class HUDRenderEventHandler
     @SubscribeEvent
     public void onRenderChat(RenderGameOverlayEvent.Chat event)
     {
-        if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiChest)
+        if (this.mc.currentScreen instanceof GuiChest)
         {
             GuiChest chest = (GuiChest)this.mc.currentScreen;
 
@@ -199,38 +199,35 @@ public class HUDRenderEventHandler
                 center++;
             }
         }
-        if (event.type == RenderGameOverlayEvent.ElementType.BOSSHEALTH)
+        if (event.type == RenderGameOverlayEvent.ElementType.BOSSHEALTH && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
         {
-            if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd())
+            event.setCanceled(true);
+            this.mc.getTextureManager().bindTexture(Gui.icons);
+            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+            GlStateManager.enableBlend();
+
+            if (SBBossBar.bossName != null && SBBossBar.renderBossBar)
             {
-                event.setCanceled(true);
-                this.mc.getTextureManager().bindTexture(Gui.icons);
-                GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-                GlStateManager.enableBlend();
+                ScaledResolution res = new ScaledResolution(this.mc);
+                int i = res.getScaledWidth();
+                int j = 182;
+                int k = i / 2 - j / 2;
+                int l = (int)(SBBossBar.healthScale * (j + 1));
+                int i1 = 12;
 
-                if (SBBossBar.bossName != null && SBBossBar.renderBossBar)
+                this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 74, j, 5);
+
+                if (l > 0)
                 {
-                    ScaledResolution res = new ScaledResolution(this.mc);
-                    int i = res.getScaledWidth();
-                    int j = 182;
-                    int k = i / 2 - j / 2;
-                    int l = (int)(SBBossBar.healthScale * (j + 1));
-                    int i1 = 12;
-
-                    this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 74, j, 5);
-
-                    if (l > 0)
-                    {
-                        this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 79, l, 5);
-                    }
-
-                    String name = SBBossBar.bossName;
-                    this.mc.ingameGUI.getFontRenderer().drawStringWithShadow(name, i / 2 - this.mc.ingameGUI.getFontRenderer().getStringWidth(name) / 2, i1 - 10, 16777215);
-                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                    this.mc.getTextureManager().bindTexture(Gui.icons);
+                    this.mc.ingameGUI.drawTexturedModalRect(k, i1, 0, 79, l, 5);
                 }
-                GlStateManager.disableBlend();
+
+                String name = SBBossBar.bossName;
+                this.mc.ingameGUI.getFontRenderer().drawStringWithShadow(name, i / 2 - this.mc.ingameGUI.getFontRenderer().getStringWidth(name) / 2, i1 - 10, 16777215);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                this.mc.getTextureManager().bindTexture(Gui.icons);
             }
+            GlStateManager.disableBlend();
         }
     }
 
@@ -258,16 +255,13 @@ public class HUDRenderEventHandler
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event)
     {
-        if (SkyBlockEventHandler.isSkyBlock)
+        if (SkyBlockEventHandler.isSkyBlock && event.entity instanceof EntityDragon)
         {
-            if (event.entity instanceof EntityDragon)
-            {
-                HUDRenderEventHandler.foundDragon = false;
+            HUDRenderEventHandler.foundDragon = false;
 
-                if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
-                {
-                    this.mc.getRenderManager().setDebugBoundingBox(false);
-                }
+            if (SkyBlockcatiaSettings.INSTANCE.showHitboxWhenDragonSpawned)
+            {
+                this.mc.getRenderManager().setDebugBoundingBox(false);
             }
         }
     }
@@ -290,19 +284,13 @@ public class HUDRenderEventHandler
 
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
-            if (ZEALOT_SPAWN_AREA.stream().anyMatch(aabb -> aabb.isVecInside(new Vec3(entity.posX, entity.posY, entity.posZ))))
+            if (ZEALOT_SPAWN_AREA.stream().anyMatch(aabb -> aabb.isVecInside(new Vec3(entity.posX, entity.posY, entity.posZ))) && entity instanceof EntityEnderman && !this.recentlyLoadedChunks.contains(new CoordsPair(event.newChunkX, event.newChunkZ)) && entity.ticksExisted == 0)
             {
-                if (entity instanceof EntityEnderman)
-                {
-                    if (!this.recentlyLoadedChunks.contains(new CoordsPair(event.newChunkX, event.newChunkZ)) && entity.ticksExisted == 0)
-                    {
-                        long now = System.currentTimeMillis();
+                long now = System.currentTimeMillis();
 
-                        if (now - this.lastZealotRespawn > 11000L)
-                        {
-                            this.lastZealotRespawn = now;
-                        }
-                    }
+                if (now - this.lastZealotRespawn > 11000L)
+                {
+                    this.lastZealotRespawn = now;
                 }
             }
         }

@@ -60,7 +60,7 @@ public class SBMinions
         return null;
     }
 
-    public class Type
+    public static class Type
     {
         private final String type;
         private final String category;

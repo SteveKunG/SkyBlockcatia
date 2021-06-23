@@ -94,7 +94,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private GuiButton backButton;
     private GuiButtonItem showArmorButton;
     private SkyblockProfiles.Profile skyblockProfiles;
-    private List<ProfileDataCallback> profiles;
+    private final List<ProfileDataCallback> profiles;
     private final String sbProfileId;
     private final String sbProfileName;
     private final String username;
@@ -114,11 +114,8 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private final ViewerData data = new ViewerData();
     private int skillCount;
     private GuiScrollingList errorInfo;
-    private List<String> errorList = new ArrayList<>();
+    private final List<String> errorList = new ArrayList<>();
     private boolean showArmor = true;
-    private float oldMouseX;
-    private float oldMouseY;
-
     // API
     private static final Pattern STATS_PATTERN = Pattern.compile("(?<type>Strength|Crit Chance|Crit Damage|Health|Defense|Speed|Intelligence|True Defense|Sea Creature Chance|Magic Find|Pet Luck|Bonus Attack Speed|Ferocity|Ability Damage|Mining Speed|Mining Fortune|Farming Fortune|Foraging Fortune): (?<value>(?:\\+|\\-)[0-9,.]+)?(?:\\%){0,1}(?:(?: HP(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+ HP\\)){0,1})|(?: \\((?:\\+|\\-)[0-9,.]+\\))|(?: \\(\\w+ (?:\\+|\\-)[0-9,.]+(?:\\%){0,1}\\))){0,1}(?: \\((?:\\+|\\-)[0-9,.]+ HP\\)){0,1}");
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
@@ -183,11 +180,11 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     private int spiderSlayerLevel;
     private int wolfSlayerLevel;
     private int endermanSlayerLevel;
-    private BonusStatTemplate allStat = BonusStatTemplate.getDefault();
+    private final BonusStatTemplate allStat = BonusStatTemplate.getDefault();
 
     // GuiContainer fields
-    private int xSize;
-    private int ySize;
+    private final int xSize;
+    private final int ySize;
     private int guiLeft;
     private int guiTop;
     private Slot theSlot;
@@ -294,101 +291,43 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                 if (viewType != null)
                 {
-                    if (button.id == ViewButton.SKILLS.id)
+                    if (button.id == ViewButton.SKILLS.id && !this.data.hasSkills() || button.id == ViewButton.SLAYERS.id && !this.data.hasSlayers())
                     {
-                        if (!this.data.hasSkills())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
+                        button.enabled = false;
+                        continue;
                     }
-                    if (button.id == ViewButton.SLAYERS.id)
+                    if (button.id == ViewButton.DUNGEONS.id && !this.data.hasDungeons() || button.id == ViewButton.OTHERS.id && !this.data.hasOthersTab())
                     {
-                        if (!this.data.hasSlayers())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (button.id == ViewButton.DUNGEONS.id)
-                    {
-                        if (!this.data.hasDungeons())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (button.id == ViewButton.OTHERS.id)
-                    {
-                        if (!this.data.hasOthersTab())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
+                        button.enabled = false;
+                        continue;
                     }
                     button.enabled = this.viewButton != viewType;
                 }
                 if (basicInfoType != null)
                 {
-                    if (button.id == BasicInfoViewButton.INVENTORY.id)
+                    if (button.id == BasicInfoViewButton.INVENTORY.id && !this.data.hasInventories() || button.id == BasicInfoViewButton.COLLECTIONS.id && !this.data.hasCollections())
                     {
-                        if (!this.data.hasInventories())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
+                        button.enabled = false;
+                        continue;
                     }
-                    if (button.id == BasicInfoViewButton.COLLECTIONS.id)
+                    if (button.id == BasicInfoViewButton.CRAFTED_MINIONS.id && !this.data.hasMinions())
                     {
-                        if (!this.data.hasCollections())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (button.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
-                    {
-                        if (!this.data.hasMinions())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
+                        button.enabled = false;
+                        continue;
                     }
                     button.enabled = this.basicInfoButton != basicInfoType;
                 }
                 if (othersType != null)
                 {
-                    if (button.id == OthersViewButton.KILLS.id)
+                    if (button.id == OthersViewButton.KILLS.id && !this.data.hasKills() || button.id == OthersViewButton.DEATHS.id && !this.data.hasDeaths())
                     {
-                        if (!this.data.hasKills())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
+                        button.enabled = false;
+                        continue;
                     }
-                    if (button.id == OthersViewButton.DEATHS.id)
+                    if (button.id == OthersViewButton.OTHER_STATS.id && !this.data.hasOthers() || button.id == OthersViewButton.BANK_HISTORY.id && !this.data.hasBankHistory())
                     {
-                        if (!this.data.hasDeaths())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (button.id == OthersViewButton.OTHER_STATS.id)
-                    {
-                        if (!this.data.hasOthers())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (button.id == OthersViewButton.BANK_HISTORY.id)
-                    {
-                        if (!this.data.hasBankHistory())
-                        {
-                            button.enabled = false;
-                            continue;
-                        }
+                        button.enabled = false;
+                        continue;
                     }
                     button.enabled = this.othersButton != othersType;
                 }
@@ -490,37 +429,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 {
                     viewButton.visible = true;
 
-                    if (viewButton.id == OthersViewButton.KILLS.id)
+                    if (viewButton.id == OthersViewButton.KILLS.id && !this.data.hasKills() || viewButton.id == OthersViewButton.DEATHS.id && !this.data.hasDeaths())
                     {
-                        if (!this.data.hasKills())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
-                    if (viewButton.id == OthersViewButton.DEATHS.id)
+                    if (viewButton.id == OthersViewButton.OTHER_STATS.id && !this.data.hasOthers() || viewButton.id == OthersViewButton.BANK_HISTORY.id && !this.data.hasBankHistory())
                     {
-                        if (!this.data.hasDeaths())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (viewButton.id == OthersViewButton.OTHER_STATS.id)
-                    {
-                        if (!this.data.hasOthers())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (viewButton.id == OthersViewButton.BANK_HISTORY.id)
-                    {
-                        if (!this.data.hasBankHistory())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
 
                     viewButton.enabled = this.othersButton != type2;
@@ -569,31 +486,33 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             this.actionPerformedOthers(button);
             this.actionPerformedBasicInfo(button);
 
-            if (button.id == 0)
+            switch (button.id)
             {
-                this.mc.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null);
-            }
-            else if (button.id == 1)
-            {
-                this.mc.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY, this.username, this.displayName, "") : new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
-            }
-            else if (button.id == 2)
-            {
-                if (this.showArmor)
-                {
-                    for (int i = 0; i < this.player.inventory.armorInventory.length; i++)
+                case 0:
+                    this.mc.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles) : null);
+                    break;
+                case 1:
+                    this.mc.displayGuiScreen(this.profiles.size() == 0 ? new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.EMPTY, this.username, this.displayName, "") : new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.SEARCH, this.username, this.displayName, this.guild, this.profiles));
+                    break;
+                case 2:
+                    if (this.showArmor)
                     {
-                        this.player.setCurrentItemOrArmor(i, null);
+                        for (int i = 0; i < this.player.inventory.armorInventory.length; i++)
+                        {
+                            this.player.setCurrentItemOrArmor(i, null);
+                        }
+                        this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.RED + "OFF");
+                        this.showArmor = false;
                     }
-                    this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.RED + "OFF");
-                    this.showArmor = false;
-                }
-                else
-                {
-                    this.setPlayerArmors();
-                    this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.GREEN + "ON");
-                    this.showArmor = true;
-                }
+                    else
+                    {
+                        this.setPlayerArmors();
+                        this.showArmorButton.setName("Show Armor: " + EnumChatFormatting.GREEN + "ON");
+                        this.showArmor = true;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -601,17 +520,14 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException
     {
-        if (keyCode == KeyBindingsSB.KEY_SB_VIEW_RECIPE.getKeyCode())
+        if (keyCode == KeyBindingsSB.KEY_SB_VIEW_RECIPE.getKeyCode() && this.theSlot != null && this.theSlot.getHasStack() && this.theSlot.getStack().hasTagCompound())
         {
-            if (this.theSlot != null && this.theSlot.getHasStack() && this.theSlot.getStack().hasTagCompound())
-            {
-                NBTTagCompound extraAttrib = this.theSlot.getStack().getTagCompound().getCompoundTag("ExtraAttributes");
+            NBTTagCompound extraAttrib = this.theSlot.getStack().getTagCompound().getCompoundTag("ExtraAttributes");
 
-                if (extraAttrib.hasKey("id"))
-                {
-                    String itemId = extraAttrib.getString("id");
-                    ClientUtils.printClientMessage(JsonUtils.create("Click to view ").appendSibling(JsonUtils.create(this.theSlot.getStack().getDisplayName()).setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(" recipe").setChatStyle(JsonUtils.green()))).setChatStyle(JsonUtils.green().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewrecipe " + itemId))));
-                }
+            if (extraAttrib.hasKey("id"))
+            {
+                String itemId = extraAttrib.getString("id");
+                ClientUtils.printClientMessage(JsonUtils.create("Click to view ").appendSibling(JsonUtils.create(this.theSlot.getStack().getDisplayName()).setChatStyle(JsonUtils.gold()).appendSibling(JsonUtils.create(" recipe").setChatStyle(JsonUtils.green()))).setChatStyle(JsonUtils.green().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/viewrecipe " + itemId))));
             }
         }
         if (keyCode == 1)
@@ -628,11 +544,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int state) throws IOException
     {
-        if (this.loadingApi)
-        {
-            return;
-        }
-        else
+        if (!this.loadingApi)
         {
             if (state == 0 && this.currentSlot instanceof EmptyStats && ((EmptyStats)this.currentSlot).getType() == EmptyStats.Type.INVENTORY)
             {
@@ -655,11 +567,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state)
     {
-        if (this.loadingApi)
-        {
-            return;
-        }
-        else
+        if (!this.loadingApi)
         {
             super.mouseReleased(mouseX, mouseY, state);
         }
@@ -669,8 +577,8 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         this.drawDefaultBackground();
-        this.oldMouseX = mouseX;
-        this.oldMouseY = mouseY;
+        float oldMouseX = mouseX;
+        float oldMouseY = mouseY;
 
         if (this.loadingApi)
         {
@@ -754,7 +662,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 {
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                     GlStateManager.enableDepth();
-                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - this.oldMouseX, this.guiTop + 25 - this.oldMouseY, this.player);
+                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.width / 2 - 106, this.height / 2 + 40, 40, this.guiLeft - 55 - oldMouseX, this.guiTop + 25 - oldMouseY, this.player);
 
                     this.drawContainerSlot(mouseX, mouseY, true);
 
@@ -778,7 +686,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         GlStateManager.disableLighting();
 
-                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - this.oldMouseX, this.guiTop + 75 - 50 - this.oldMouseY, this.player);
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.width / 2 - 96, this.height / 2 + 40, 40, this.guiLeft - 46 - oldMouseX, this.guiTop + 75 - 50 - oldMouseY, this.player);
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
                         for (SBInventoryTabs tab : SBInventoryTabs.tabArray)
@@ -928,37 +836,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                 if (type2 != null)
                 {
-                    if (type2.id == ViewButton.SKILLS.id)
+                    if (type2.id == ViewButton.SKILLS.id && !this.data.hasSkills() || type2.id == ViewButton.SLAYERS.id && !this.data.hasSlayers())
                     {
-                        if (!this.data.hasSkills())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
-                    if (type2.id == ViewButton.SLAYERS.id)
+                    if (type2.id == ViewButton.DUNGEONS.id && !this.data.hasDungeons() || type2.id == ViewButton.OTHERS.id && !this.data.hasOthersTab())
                     {
-                        if (!this.data.hasSlayers())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (type2.id == ViewButton.DUNGEONS.id)
-                    {
-                        if (!this.data.hasDungeons())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (type2.id == ViewButton.OTHERS.id)
-                    {
-                        if (!this.data.hasOthersTab())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
                     viewButton.enabled = this.viewButton != type2;
                 }
@@ -1001,29 +887,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                     {
                         viewButton.visible = true;
 
-                        if (type2.id == BasicInfoViewButton.INVENTORY.id)
+                        if (type2.id == BasicInfoViewButton.INVENTORY.id && !this.data.hasInventories() || type2.id == BasicInfoViewButton.COLLECTIONS.id && !this.data.hasCollections())
                         {
-                            if (!this.data.hasInventories())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
+                            viewButton.enabled = false;
+                            continue;
                         }
-                        if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
+                        if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id && !this.data.hasMinions())
                         {
-                            if (!this.data.hasCollections())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
-                        }
-                        if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
-                        {
-                            if (!this.data.hasMinions())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
+                            viewButton.enabled = false;
+                            continue;
                         }
                         viewButton.enabled = this.basicInfoButton != type2;
                     }
@@ -1087,37 +959,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                     {
                         viewButton.visible = true;
 
-                        if (type2.id == OthersViewButton.KILLS.id)
+                        if (type2.id == OthersViewButton.KILLS.id && !this.data.hasKills() || type2.id == OthersViewButton.DEATHS.id && !this.data.hasDeaths())
                         {
-                            if (!this.data.hasKills())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
+                            viewButton.enabled = false;
+                            continue;
                         }
-                        if (type2.id == OthersViewButton.DEATHS.id)
+                        if (type2.id == OthersViewButton.OTHER_STATS.id && !this.data.hasOthers() || type2.id == OthersViewButton.BANK_HISTORY.id && !this.data.hasBankHistory())
                         {
-                            if (!this.data.hasDeaths())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
-                        }
-                        if (type2.id == OthersViewButton.OTHER_STATS.id)
-                        {
-                            if (!this.data.hasOthers())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
-                        }
-                        if (type2.id == OthersViewButton.BANK_HISTORY.id)
-                        {
-                            if (!this.data.hasBankHistory())
-                            {
-                                viewButton.enabled = false;
-                                continue;
-                            }
+                            viewButton.enabled = false;
+                            continue;
                         }
                         viewButton.enabled = this.othersButton != type2;
                     }
@@ -1146,37 +996,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                 if (type2 != null)
                 {
-                    if (type2.id == OthersViewButton.KILLS.id)
+                    if (type2.id == OthersViewButton.KILLS.id && !this.data.hasKills() || type2.id == OthersViewButton.DEATHS.id && !this.data.hasDeaths())
                     {
-                        if (!this.data.hasKills())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
-                    if (type2.id == OthersViewButton.DEATHS.id)
+                    if (type2.id == OthersViewButton.OTHER_STATS.id && !this.data.hasOthers() || type2.id == OthersViewButton.BANK_HISTORY.id && !this.data.hasBankHistory())
                     {
-                        if (!this.data.hasDeaths())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (type2.id == OthersViewButton.OTHER_STATS.id)
-                    {
-                        if (!this.data.hasOthers())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (type2.id == OthersViewButton.BANK_HISTORY.id)
-                    {
-                        if (!this.data.hasBankHistory())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
                     viewButton.enabled = this.othersButton != type2;
                 }
@@ -1226,29 +1054,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                 if (type2 != null)
                 {
-                    if (type2.id == BasicInfoViewButton.INVENTORY.id)
+                    if (type2.id == BasicInfoViewButton.INVENTORY.id && !this.data.hasInventories() || type2.id == BasicInfoViewButton.COLLECTIONS.id && !this.data.hasCollections())
                     {
-                        if (!this.data.hasInventories())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
-                    if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
+                    if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id && !this.data.hasMinions())
                     {
-                        if (!this.data.hasCollections())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
-                    }
-                    if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
-                    {
-                        if (!this.data.hasMinions())
-                        {
-                            viewButton.enabled = false;
-                            continue;
-                        }
+                        viewButton.enabled = false;
+                        continue;
                     }
                     viewButton.enabled = this.basicInfoButton != type2;
                 }
@@ -1810,37 +1624,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
             if (type2 != null)
             {
-                if (type2.id == ViewButton.SKILLS.id)
+                if (type2.id == ViewButton.SKILLS.id && !this.data.hasSkills() || type2.id == ViewButton.SLAYERS.id && !this.data.hasSlayers())
                 {
-                    if (!this.data.hasSkills())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
+                    viewButton.enabled = false;
+                    continue;
                 }
-                if (type2.id == ViewButton.SLAYERS.id)
+                if (type2.id == ViewButton.DUNGEONS.id && !this.data.hasDungeons() || type2.id == ViewButton.OTHERS.id && !this.data.hasOthersTab())
                 {
-                    if (!this.data.hasSlayers())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
-                }
-                if (type2.id == ViewButton.DUNGEONS.id)
-                {
-                    if (!this.data.hasDungeons())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
-                }
-                if (type2.id == ViewButton.OTHERS.id)
-                {
-                    if (!this.data.hasOthersTab())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
+                    viewButton.enabled = false;
+                    continue;
                 }
             }
         }
@@ -1850,29 +1642,15 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
             if (type2 != null)
             {
-                if (type2.id == BasicInfoViewButton.INVENTORY.id)
+                if (type2.id == BasicInfoViewButton.INVENTORY.id && !this.data.hasInventories() || type2.id == BasicInfoViewButton.COLLECTIONS.id && !this.data.hasCollections())
                 {
-                    if (!this.data.hasInventories())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
+                    viewButton.enabled = false;
+                    continue;
                 }
-                if (type2.id == BasicInfoViewButton.COLLECTIONS.id)
+                if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id && !this.data.hasMinions())
                 {
-                    if (!this.data.hasCollections())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
-                }
-                if (type2.id == BasicInfoViewButton.CRAFTED_MINIONS.id)
-                {
-                    if (!this.data.hasMinions())
-                    {
-                        viewButton.enabled = false;
-                        continue;
-                    }
+                    viewButton.enabled = false;
+                    continue;
                 }
             }
         }
@@ -2200,24 +1978,24 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
             switch (category)
             {
-            case FARMING:
-                farmingMinion.add(min);
-                break;
-            case MINING:
-                miningMinion.add(min);
-                break;
-            case COMBAT:
-                combatMinion.add(min);
-                break;
-            case FORAGING:
-                foragingMinion.add(min);
-                break;
-            case FISHING:
-                fishingMinion.add(min);
-                break;
-            default:
-                unknownMinion.add(min);
-                break;
+                case FARMING:
+                    farmingMinion.add(min);
+                    break;
+                case MINING:
+                    miningMinion.add(min);
+                    break;
+                case COMBAT:
+                    combatMinion.add(min);
+                    break;
+                case FORAGING:
+                    foragingMinion.add(min);
+                    break;
+                case FISHING:
+                    fishingMinion.add(min);
+                    break;
+                default:
+                    unknownMinion.add(min);
+                    break;
             }
         }
 
@@ -3085,26 +2863,26 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                 switch (tier)
                 {
-                case COMMON:
-                    this.petScore += 1;
-                    break;
-                case UNCOMMON:
-                    this.petScore += 2;
-                    break;
-                case RARE:
-                    this.petScore += 3;
-                    break;
-                case EPIC:
-                    this.petScore += 4;
-                    break;
-                case LEGENDARY:
-                    this.petScore += 5;
-                    break;
-                case MYTHIC:
-                    this.petScore += 6;
-                    break;
-                default:
-                    break;
+                    case COMMON:
+                        this.petScore += 1;
+                        break;
+                    case UNCOMMON:
+                        this.petScore += 2;
+                        break;
+                    case RARE:
+                        this.petScore += 3;
+                        break;
+                    case EPIC:
+                        this.petScore += 4;
+                        break;
+                    case LEGENDARY:
+                        this.petScore += 5;
+                        break;
+                    case MYTHIC:
+                        this.petScore += 6;
+                        break;
+                    default:
+                        break;
                 }
             }
             else
@@ -3478,60 +3256,60 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
                                 switch (type)
                                 {
-                                case "Health":
-                                    healthTemp += valueD;
-                                    break;
-                                case "Defense":
-                                    defenseTemp += valueD;
-                                    break;
-                                case "True Defense":
-                                    trueDefenseTemp += valueD;
-                                    break;
-                                case "Strength":
-                                    strengthTemp += valueD;
-                                    break;
-                                case "Speed":
-                                    speedTemp += valueD;
-                                    break;
-                                case "Crit Chance":
-                                    critChanceTemp += valueD;
-                                    break;
-                                case "Crit Damage":
-                                    critDamageTemp += valueD;
-                                    break;
-                                case "Intelligence":
-                                    intelligenceTemp += valueD;
-                                    break;
-                                case "Sea Creature Chance":
-                                    seaCreatureChanceTemp += valueD;
-                                    break;
-                                case "Magic Find":
-                                    magicFindTemp += valueD;
-                                    break;
-                                case "Pet Luck":
-                                    petLuckTemp += valueD;
-                                    break;
-                                case "Bonus Attack Speed":
-                                    attackSpeedTemp += valueD;
-                                    break;
-                                case "Ferocity":
-                                    ferocityTemp += valueD;
-                                    break;
-                                case "Ability Damage":
-                                    abilityDamageTemp += valueD;
-                                    break;
-                                case "Mining Speed":
-                                    miningSpeedTemp += valueD;
-                                    break;
-                                case "Mining Fortune":
-                                    miningFortuneTemp += valueD;
-                                    break;
-                                case "Farming Fortune":
-                                    farmingFortuneTemp += valueD;
-                                    break;
-                                case "Foraging Fortune":
-                                    foragingFortuneTemp += valueD;
-                                    break;
+                                    case "Health":
+                                        healthTemp += valueD;
+                                        break;
+                                    case "Defense":
+                                        defenseTemp += valueD;
+                                        break;
+                                    case "True Defense":
+                                        trueDefenseTemp += valueD;
+                                        break;
+                                    case "Strength":
+                                        strengthTemp += valueD;
+                                        break;
+                                    case "Speed":
+                                        speedTemp += valueD;
+                                        break;
+                                    case "Crit Chance":
+                                        critChanceTemp += valueD;
+                                        break;
+                                    case "Crit Damage":
+                                        critDamageTemp += valueD;
+                                        break;
+                                    case "Intelligence":
+                                        intelligenceTemp += valueD;
+                                        break;
+                                    case "Sea Creature Chance":
+                                        seaCreatureChanceTemp += valueD;
+                                        break;
+                                    case "Magic Find":
+                                        magicFindTemp += valueD;
+                                        break;
+                                    case "Pet Luck":
+                                        petLuckTemp += valueD;
+                                        break;
+                                    case "Bonus Attack Speed":
+                                        attackSpeedTemp += valueD;
+                                        break;
+                                    case "Ferocity":
+                                        ferocityTemp += valueD;
+                                        break;
+                                    case "Ability Damage":
+                                        abilityDamageTemp += valueD;
+                                        break;
+                                    case "Mining Speed":
+                                        miningSpeedTemp += valueD;
+                                        break;
+                                    case "Mining Fortune":
+                                        miningFortuneTemp += valueD;
+                                        break;
+                                    case "Farming Fortune":
+                                        farmingFortuneTemp += valueD;
+                                        break;
+                                    case "Foraging Fortune":
+                                        foragingFortuneTemp += valueD;
+                                        break;
                                 }
                             }
                         }
@@ -3711,8 +3489,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         double avg = 0.0D;
         double progress = 0.0D;
         int count = 0;
-        List<SBSkills.Info> skills = new ArrayList<>();
-        skills.addAll(this.skillLeftList);
+        List<SBSkills.Info> skills = new ArrayList<>(this.skillLeftList);
         skills.addAll(this.skillRightList);
 
         for (SBSkills.Info skill : skills)
@@ -3815,32 +3592,32 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     {
         switch (type)
         {
-        case FARMING:
-            this.farmingLevel = currentLevel;
-            break;
-        case FORAGING:
-            this.foragingLevel = currentLevel;
-            break;
-        case MINING:
-            this.miningLevel = currentLevel;
-            break;
-        case FISHING:
-            this.fishingLevel = currentLevel;
-            break;
-        case COMBAT:
-            this.combatLevel = currentLevel;
-            break;
-        case ENCHANTING:
-            this.enchantingLevel = currentLevel;
-            break;
-        case ALCHEMY:
-            this.alchemyLevel = currentLevel;
-            break;
-        case TAMING:
-            this.tamingLevel = currentLevel;
-            break;
-        default:
-            break;
+            case FARMING:
+                this.farmingLevel = currentLevel;
+                break;
+            case FORAGING:
+                this.foragingLevel = currentLevel;
+                break;
+            case MINING:
+                this.miningLevel = currentLevel;
+                break;
+            case FISHING:
+                this.fishingLevel = currentLevel;
+                break;
+            case COMBAT:
+                this.combatLevel = currentLevel;
+                break;
+            case ENCHANTING:
+                this.enchantingLevel = currentLevel;
+                break;
+            case ALCHEMY:
+                this.alchemyLevel = currentLevel;
+                break;
+            case TAMING:
+                this.tamingLevel = currentLevel;
+                break;
+            default:
+                break;
         }
     }
 
@@ -4205,20 +3982,20 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     {
         switch (type)
         {
-        case ZOMBIE:
-            this.zombieSlayerLevel = currentLevel;
-            break;
-        case SPIDER:
-            this.spiderSlayerLevel = currentLevel;
-            break;
-        case WOLF:
-            this.wolfSlayerLevel = currentLevel;
-            break;
-        case ENDERMAN:
-            this.endermanSlayerLevel = currentLevel;
-            break;
-        default:
-            break;
+            case ZOMBIE:
+                this.zombieSlayerLevel = currentLevel;
+                break;
+            case SPIDER:
+                this.spiderSlayerLevel = currentLevel;
+                break;
+            case WOLF:
+                this.wolfSlayerLevel = currentLevel;
+                break;
+            case ENDERMAN:
+                this.endermanSlayerLevel = currentLevel;
+                break;
+            default:
+                break;
         }
     }
 
@@ -4467,7 +4244,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    class SkyBlockInfo
+    static class SkyBlockInfo
     {
         private final String title;
         private final String value;
@@ -4489,7 +4266,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
             {
                 try
                 {
-                    return CommonUtils.getRelativeTime(Long.valueOf(this.value));
+                    return CommonUtils.getRelativeTime(Long.parseLong(this.value));
                 }
                 catch (Exception e)
                 {
@@ -4598,7 +4375,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    class InfoStats extends GuiScrollingList
+    static class InfoStats extends GuiScrollingList
     {
         private final List<SkyBlockInfo> stats;
         private final SkyBlockAPIViewerScreen parent;
@@ -4638,7 +4415,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    class SlayerStats extends GuiScrollingList
+    static class SlayerStats extends GuiScrollingList
     {
         private final List<SkyBlockSlayerInfo> stats;
         private final SkyBlockAPIViewerScreen parent;
@@ -4664,84 +4441,84 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
             switch (stat.getType())
             {
-            case XP_AND_MOB:
-                if (stat.getText().equals("Zombie"))
-                {
-                    EntityZombie zombie = new EntityZombie(this.parent.mc.theWorld);
-                    ItemStack heldItem = new ItemStack(Items.diamond_hoe);
-                    heldItem.addEnchantment(Enchantment.unbreaking, 1);
-                    ItemStack helmet = RenderUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
-                    ItemStack chestplate = new ItemStack(Items.diamond_chestplate);
-                    chestplate.addEnchantment(Enchantment.unbreaking, 1);
-                    ItemStack leggings = new ItemStack(Items.chainmail_leggings);
-                    leggings.addEnchantment(Enchantment.unbreaking, 1);
-                    ItemStack boots = new ItemStack(Items.diamond_boots);
-                    zombie.setCurrentItemOrArmor(0, heldItem);
-                    zombie.setCurrentItemOrArmor(1, boots);
-                    zombie.setCurrentItemOrArmor(2, leggings);
-                    zombie.setCurrentItemOrArmor(3, chestplate);
-                    zombie.setCurrentItemOrArmor(4, helmet);
-                    zombie.ticksExisted = ClientEventHandler.ticks;
-                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, zombie);
-                }
-                else if (stat.getText().equals("Spider"))
-                {
-                    EntitySpider spider = new EntitySpider(this.parent.mc.theWorld);
-                    EntityCaveSpider cave = new EntityCaveSpider(this.parent.mc.theWorld);
-                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
-                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
-                    GlStateManager.blendFunc(770, 771);
-                }
-                else if (stat.getText().equals("Wolf"))
-                {
-                    EntityWolf wolf = new EntityWolf(this.parent.mc.theWorld);
-                    wolf.setAngry(true);
-                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
-                }
-                else
-                {
-                    EntityEnderman enderman = new EntityEnderman(this.parent.mc.theWorld);
-                    enderman.setScreaming(true);
-                    SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 30, enderman);
-                }
+                case XP_AND_MOB:
+                    if (stat.getText().equals("Zombie"))
+                    {
+                        EntityZombie zombie = new EntityZombie(this.parent.mc.theWorld);
+                        ItemStack heldItem = new ItemStack(Items.diamond_hoe);
+                        heldItem.addEnchantment(Enchantment.unbreaking, 1);
+                        ItemStack helmet = RenderUtils.getSkullItemStack(SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[0], SkyBlockAPIViewerScreen.REVENANT_HORROR_HEAD[1]);
+                        ItemStack chestplate = new ItemStack(Items.diamond_chestplate);
+                        chestplate.addEnchantment(Enchantment.unbreaking, 1);
+                        ItemStack leggings = new ItemStack(Items.chainmail_leggings);
+                        leggings.addEnchantment(Enchantment.unbreaking, 1);
+                        ItemStack boots = new ItemStack(Items.diamond_boots);
+                        zombie.setCurrentItemOrArmor(0, heldItem);
+                        zombie.setCurrentItemOrArmor(1, boots);
+                        zombie.setCurrentItemOrArmor(2, leggings);
+                        zombie.setCurrentItemOrArmor(3, chestplate);
+                        zombie.setCurrentItemOrArmor(4, helmet);
+                        zombie.ticksExisted = ClientEventHandler.ticks;
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, zombie);
+                    }
+                    else if (stat.getText().equals("Spider"))
+                    {
+                        EntitySpider spider = new EntitySpider(this.parent.mc.theWorld);
+                        EntityCaveSpider cave = new EntityCaveSpider(this.parent.mc.theWorld);
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 40, 40, cave);
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, spider);
+                        GlStateManager.blendFunc(770, 771);
+                    }
+                    else if (stat.getText().equals("Wolf"))
+                    {
+                        EntityWolf wolf = new EntityWolf(this.parent.mc.theWorld);
+                        wolf.setAngry(true);
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 40, wolf);
+                    }
+                    else
+                    {
+                        EntityEnderman enderman = new EntityEnderman(this.parent.mc.theWorld);
+                        enderman.setScreaming(true);
+                        SkyBlockAPIViewerScreen.drawEntityOnScreen(this.parent.guiLeft - 30, top + 60, 30, enderman);
+                    }
 
-                ColorUtils.RGB color = ColorUtils.stringToRGB("0,255,255");
-                boolean reachLimit = stat.isReachLimit();
+                    ColorUtils.RGB color = ColorUtils.stringToRGB("0,255,255");
+                    boolean reachLimit = stat.isReachLimit();
 
-                if (reachLimit)
-                {
-                    color = ColorUtils.stringToRGB("255,185,0");
-                }
+                    if (reachLimit)
+                    {
+                        color = ColorUtils.stringToRGB("255,185,0");
+                    }
 
-                this.parent.mc.getTextureManager().bindTexture(XP_BARS);
-                GlStateManager.color(color.floatRed(), color.floatGreen(), color.floatBlue(), 1.0F);
-                GlStateManager.disableBlend();
+                    this.parent.mc.getTextureManager().bindTexture(XP_BARS);
+                    GlStateManager.color(color.floatRed(), color.floatGreen(), color.floatBlue(), 1.0F);
+                    GlStateManager.disableBlend();
 
-                String[] xpSplit = stat.getXp().split(",");
-                int playerSlayerXp = Integer.valueOf(xpSplit[0]);
-                int xpRequired = Integer.valueOf(xpSplit[1]);
+                    String[] xpSplit = stat.getXp().split(",");
+                    int playerSlayerXp = Integer.parseInt(xpSplit[0]);
+                    int xpRequired = Integer.parseInt(xpSplit[1]);
 
-                int filled = stat.isReachLimit() ? 91 : Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
-                Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
+                    int filled = stat.isReachLimit() ? 91 : Math.min((int)Math.floor(playerSlayerXp * 92 / xpRequired), 91);
+                    Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
-                if (filled > 0)
-                {
-                    Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
-                }
+                    if (filled > 0)
+                    {
+                        Gui.drawModalRectWithCustomSizedTexture(this.parent.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
+                    }
 
-                GlStateManager.enableBlend();
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                break;
-            default:
-                if (this.getSize() == 1)
-                {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.parent.guiLeft + 200, top, 16777215);
-                }
-                else
-                {
-                    this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getText()) + 180, top, 16777215);
-                }
-                break;
+                    GlStateManager.enableBlend();
+                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    break;
+                default:
+                    if (this.getSize() == 1)
+                    {
+                        this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.parent.guiLeft + 200, top, 16777215);
+                    }
+                    else
+                    {
+                        this.parent.drawString(this.parent.mc.fontRendererObj, stat.getText(), this.parent.guiLeft - this.parent.mc.fontRendererObj.getStringWidth(stat.getText()) + 180, top, 16777215);
+                    }
+                    break;
             }
         }
 
@@ -4761,7 +4538,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    class Others extends GuiScrollingList
+    static class Others extends GuiScrollingList
     {
         private final List<?> stats;
         private final SkyBlockAPIViewerScreen parent;
@@ -4820,7 +4597,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    class SkyBlockCollections extends GuiScrollingList
+    static class SkyBlockCollections extends GuiScrollingList
     {
         private final List<SBCollections> collection;
         private final SkyBlockAPIViewerScreen parent;
@@ -4872,7 +4649,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         }
     }
 
-    class SkyBlockCraftedMinions extends GuiScrollingList
+    static class SkyBlockCraftedMinions extends GuiScrollingList
     {
         private final List<SBMinions.CraftedInfo> craftMinions;
         private final SkyBlockAPIViewerScreen parent;

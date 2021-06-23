@@ -61,15 +61,15 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
     private String errorMessage;
     private String statusMessage;
     private List<ProfileDataCallback> profiles = new ArrayList<>();
-    private List<GuiSkyBlockProfileButton> profileButtonList = new ArrayList<>();
-    private boolean fromError;
+    private final List<GuiSkyBlockProfileButton> profileButtonList = new ArrayList<>();
+    private final boolean fromError;
     private boolean playerNamesFound;
     private boolean waitingOnAutocomplete;
     private int autocompleteIndex;
-    private List<String> foundPlayerNames = new ArrayList<>();
+    private final List<String> foundPlayerNames = new ArrayList<>();
     private String guild = "";
     private GuiScrollingList errorInfo;
-    private List<String> errorList = new ArrayList<>();
+    private final List<String> errorList = new ArrayList<>();
     private static final Map<String, String> USERNAME_CACHE = Maps.newHashMap();
     public static final Map<String, Pair<Long, HypixelProfiles>> INIT_PROFILE_CACHE = Maps.newConcurrentMap();
     public static final Map<String, Pair<Long, SkyblockProfiles>> PROFILE_CACHE = Maps.newConcurrentMap();
@@ -212,44 +212,45 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
     {
         if (button.enabled)
         {
-            if (button.id == 0)
+            switch (button.id)
             {
-                this.input = this.usernameTextField.getText();
-                this.profiles.clear();
-                this.profileButtonList.clear();
-                this.guild = "";
-                this.loadingApi = true;
-
-                CommonUtils.runAsync(() ->
-                {
-                    try
+                case 0:
+                    this.input = this.usernameTextField.getText();
+                    this.profiles.clear();
+                    this.profileButtonList.clear();
+                    this.guild = "";
+                    this.loadingApi = true;
+                    CommonUtils.runAsync(() ->
                     {
-                        Instant start = Instant.now();
-                        this.checkAPI();
-                        Instant after = Instant.now();
-                        long delta = Duration.between(start, after).toMillis();
-                        LoggerIN.info("Profile Selector took {} ms", delta);
-                    }
-                    catch (Throwable e)
-                    {
-                        this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
-
-                        for (StackTraceElement stack : e.getStackTrace())
+                        try
                         {
-                            this.errorList.add("at " + stack.toString());
+                            Instant start = Instant.now();
+                            this.checkAPI();
+                            Instant after = Instant.now();
+                            long delta = Duration.between(start, after).toMillis();
+                            LoggerIN.info("Profile Selector took {} ms", delta);
                         }
-                        this.setErrorMessage("", true);
-                        e.printStackTrace();
-                    }
-                });
-            }
-            else if (button.id == 1)
-            {
-                this.mc.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null);
-            }
-            else if (button.id == 2)
-            {
-                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""));
+                        catch (Throwable e)
+                        {
+                            this.errorList.add(EnumChatFormatting.UNDERLINE.toString() + EnumChatFormatting.BOLD + e.getClass().getName() + ": " + e.getMessage());
+
+                            for (StackTraceElement stack : e.getStackTrace())
+                            {
+                                this.errorList.add("at " + stack.toString());
+                            }
+                            this.setErrorMessage("", true);
+                            e.printStackTrace();
+                        }
+                    });
+                    break;
+                case 1:
+                    this.mc.displayGuiScreen(this.error ? new SkyBlockProfileSelectorScreen(GuiState.ERROR, this.input, this.displayName, this.guild) : null);
+                    break;
+                case 2:
+                    this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(GuiState.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""));
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -652,7 +653,7 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
         {
             boolean hasOneProfile = sbProfile.length == 1;
             long lastSave = -1;
-            SkyblockProfiles.Profile availableProfile = null;
+            SkyblockProfiles.Profile availableProfile;
             String gameModeType = profile.getGameMode();
             String gameMode = EnumChatFormatting.GOLD + "Normal";
 

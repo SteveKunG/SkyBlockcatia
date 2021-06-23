@@ -22,7 +22,7 @@ public class SkyblockProfiles
         return this.profiles;
     }
 
-    public class DirectProfile
+    public static class DirectProfile
     {
         private final Profile profile;
 
@@ -37,7 +37,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class Profile
+    public static class Profile
     {
         @SerializedName("game_mode")
         private final String gameMode;
@@ -91,7 +91,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class Members
+    public static class Members
     {
         @SerializedName("first_join")
         private final long firstJoin;
@@ -401,7 +401,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class Banking
+    public static class Banking
     {
         private final BankHistory[] transactions;
         private final double balance;
@@ -423,7 +423,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class Jacob
+    public static class Jacob
     {
         @SerializedName("medals_inv")
         private final MedalInventory medals;
@@ -446,7 +446,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class MedalInventory
+    public static class MedalInventory
     {
         private final int gold;
         private final int silver;
@@ -475,7 +475,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class FarmingPerks
+    public static class FarmingPerks
     {
         @SerializedName("double_drops")
         private final int doubleDrops;
@@ -499,7 +499,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class Pets
+    public static class Pets
     {
         private final double exp;
         private final String tier;
@@ -556,7 +556,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class Inventory
+    public static class Inventory
     {
         private final String data;
 
@@ -571,7 +571,7 @@ public class SkyblockProfiles
         }
     }
 
-    public class SlayerQuest
+    public static class SlayerQuest
     {
         private final String type;
         private final int tier;

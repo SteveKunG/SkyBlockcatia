@@ -70,7 +70,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
     private boolean playerNamesFound;
     private boolean waitingOnAutocomplete;
     private int autocompleteIndex;
-    private List<String> foundPlayerNames = new ArrayList<>();
+    private final List<String> foundPlayerNames = new ArrayList<>();
     private String historyBuffer = "";
 
     // Auction
@@ -311,34 +311,31 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
             {
                 GuiChest chest = (GuiChest)this.that;
 
-                if (itemStack != null)
+                if (itemStack != null && clickedButton == 2 && clickType == 3 && GuiScreenUtils.canViewSeller(chest.lowerChestInventory))
                 {
-                    if (clickedButton == 2 && clickType == 3 && GuiScreenUtils.canViewSeller(chest.lowerChestInventory))
+                    if (itemStack.hasTagCompound())
                     {
-                        if (itemStack.hasTagCompound())
+                        NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
+
+                        if (compound.getTagId("Lore") == 9)
                         {
-                            NBTTagCompound compound = itemStack.getTagCompound().getCompoundTag("display");
+                            NBTTagList list = compound.getTagList("Lore", 8);
 
-                            if (compound.getTagId("Lore") == 9)
+                            if (list.tagCount() > 0)
                             {
-                                NBTTagList list = compound.getTagList("Lore", 8);
-
-                                if (list.tagCount() > 0)
+                                for (int j1 = 0; j1 < list.tagCount(); ++j1)
                                 {
-                                    for (int j1 = 0; j1 < list.tagCount(); ++j1)
-                                    {
-                                        String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
+                                    String lore = EnumChatFormatting.getTextWithoutFormattingCodes(list.getStringTagAt(j1));
 
-                                        if (lore.startsWith("Seller: "))
-                                        {
-                                            this.mc.thePlayer.sendChatMessage("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
-                                        }
+                                    if (lore.startsWith("Seller: "))
+                                    {
+                                        this.mc.thePlayer.sendChatMessage("/ah " + lore.replaceAll("Seller: ?(?:\\[VIP?\\u002B{0,1}\\]|\\[MVP?\\u002B{0,2}\\]|\\[YOUTUBE\\]){0,1} ", ""));
                                     }
                                 }
                             }
                         }
-                        info.cancel();
                     }
+                    info.cancel();
                 }
             }
         }
@@ -620,12 +617,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                                     }
                                     else if (MainEventHandler.auctionPrice.matches("[\\d]+\\.\\."))
                                     {
-                                        priceMin = Integer.parseInt(MainEventHandler.auctionPrice.replaceAll("\\.\\.", ""));
+                                        priceMin = Integer.parseInt(MainEventHandler.auctionPrice.replace("..", ""));
                                         this.mode = SearchMode.MIN;
                                     }
                                     else if (MainEventHandler.auctionPrice.matches("\\.\\.[\\d]+"))
                                     {
-                                        priceMax = Integer.parseInt(MainEventHandler.auctionPrice.replaceAll("\\.\\.", ""));
+                                        priceMax = Integer.parseInt(MainEventHandler.auctionPrice.replace("..", ""));
                                         this.mode = SearchMode.MAX;
                                     }
                                     else
@@ -712,8 +709,8 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
                         {
                             lore = lore.substring(lore.indexOf(" ") + 1);
                             String[] loreCount = lore.split("/");
-                            int min = Integer.valueOf(loreCount[0]);
-                            int max = Integer.valueOf(loreCount[1]);
+                            int min = Integer.parseInt(loreCount[0]);
+                            int max = Integer.parseInt(loreCount[1]);
                             int playerCountColor = this.getRGBPlayerCount(min, max);
                             int color = ColorUtils.to32BitColor(128, playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255);
                             this.zLevel = 260.0F;
@@ -741,47 +738,47 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
     {
         switch (this.mode)
         {
-        default:
-        case SIMPLE:
-            if (moneyFromText == moneyFromAh)
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
-            }
-            else
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
-            }
-            break;
-        case MIN:
-            if (moneyFromAh >= priceMin)
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
-            }
-            else
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
-            }
-            break;
-        case MAX:
-            if (moneyFromAh <= priceMax)
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
-            }
-            else
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
-            }
-            break;
-        case RANGED:
-            if (moneyFromAh >= priceMin && moneyFromAh <= priceMax)
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
-            }
-            else
-            {
-                this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
-            }
-            break;
+            default:
+            case SIMPLE:
+                if (moneyFromText == moneyFromAh)
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                }
+                else
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                }
+                break;
+            case MIN:
+                if (moneyFromAh >= priceMin)
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                }
+                else
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                }
+                break;
+            case MAX:
+                if (moneyFromAh <= priceMax)
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                }
+                else
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                }
+                break;
+            case RANGED:
+                if (moneyFromAh >= priceMin && moneyFromAh <= priceMax)
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                }
+                else
+                {
+                    this.drawGradientRect(slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                }
+                break;
         }
     }
 

@@ -129,148 +129,139 @@ public class SkyBlockEventHandler
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
-        if (this.mc.thePlayer != null)
+        if (this.mc.thePlayer != null && event.phase == TickEvent.Phase.START)
         {
-            if (event.phase == TickEvent.Phase.START)
+            if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F7) && this.mc.currentScreen instanceof GuiContainer)
             {
-                if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F7))
-                {
-                    if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer)
-                    {
-                        GuiContainer container = (GuiContainer)this.mc.currentScreen;
-                        Slot slot = container.getSlotUnderMouse();
+                GuiContainer container = (GuiContainer)this.mc.currentScreen;
+                Slot slot = container.getSlotUnderMouse();
 
-                        if (slot != null && slot.getHasStack())
-                        {
-                            ItemStack itemStack = slot.getStack();
-                            GuiScreen.setClipboardString("/give @p " + itemStack.getItem().getRegistryName() + " " + 1 + " " + itemStack.getItemDamage() + " " + itemStack.getTagCompound());
-                            ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied item data!");
-                        }
-                    }
+                if (slot != null && slot.getHasStack())
+                {
+                    ItemStack itemStack = slot.getStack();
+                    GuiScreen.setClipboardString("/give @p " + itemStack.getItem().getRegistryName() + " " + 1 + " " + itemStack.getItemDamage() + " " + itemStack.getTagCompound());
+                    ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied item data!");
                 }
-                if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F8))
+            }
+            if (GameProfileUtils.isSteveKunG() && Keyboard.isKeyDown(Keyboard.KEY_F8) && this.mc.currentScreen instanceof GuiContainer)
+            {
+                GuiContainer container = (GuiContainer)this.mc.currentScreen;
+                Slot slot = container.getSlotUnderMouse();
+
+                if (slot != null && slot.getHasStack())
                 {
-                    if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiContainer)
+                    ItemStack itemStack = slot.getStack();
+                    StringBuilder builder = new StringBuilder();
+
+                    for (int i = 0; i < itemStack.getTagCompound().getCompoundTag("display").getTagList("Lore", 8).tagCount(); i++)
                     {
-                        GuiContainer container = (GuiContainer)this.mc.currentScreen;
-                        Slot slot = container.getSlotUnderMouse();
+                        String test = itemStack.getTagCompound().getCompoundTag("display").getTagList("Lore", 8).getStringTagAt(i);
+                        builder.append("list.add(\"");
+                        builder.append(test);
+                        builder.append("\");");
+                        builder.append("\n");
+                    }
+                    GuiScreen.setClipboardString(builder.toString());
+                    ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied lore data!");
+                }
+            }
 
-                        if (slot != null && slot.getHasStack())
+            for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
+            {
+                long now = System.currentTimeMillis();
+                long checkedTime = entry.getValue().getLeft();
+
+                if (now - checkedTime > 180000D)
+                {
+                    SkyBlockProfileSelectorScreen.PROFILE_CACHE.remove(entry.getKey());
+                }
+            }
+            for (Map.Entry<String, Pair<Long, HypixelProfiles>> entry : SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.entrySet())
+            {
+                long now = System.currentTimeMillis();
+                long checkedTime = entry.getValue().getLeft();
+
+                if (now - checkedTime > 180000D)
+                {
+                    SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.remove(entry.getKey());
+                }
+            }
+
+            if (this.mc.thePlayer.ticksExisted % 5 == 0)
+            {
+                this.getInventoryDifference(this.mc.thePlayer.inventory.mainInventory);
+            }
+            if (this.mc.theWorld != null)
+            {
+                boolean found = false;
+                boolean foundDrag = false;
+                ScoreObjective scoreObj = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+                Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
+                Collection<Score> collection = scoreboard.getSortedScores(scoreObj);
+                List<Score> list = Lists.newArrayList(collection.stream().filter(score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")).collect(Collectors.toList()));
+
+                if (list.size() > 15)
+                {
+                    collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
+                }
+                else
+                {
+                    collection = list;
+                }
+
+                for (Score score1 : collection)
+                {
+                    ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
+                    String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
+
+                    if (scoreText.startsWith("Dragon HP: "))
+                    {
+                        try
                         {
-                            ItemStack itemStack = slot.getStack();
-                            StringBuilder builder = new StringBuilder();
+                            SkyBlockEventHandler.dragonHealth = Float.parseFloat(scoreText.replaceAll("[^\\d]", ""));
 
-                            for (int i = 0; i < itemStack.getTagCompound().getCompoundTag("display").getTagList("Lore", 8).tagCount(); i++)
+                            if (this.dragonType != null)
                             {
-                                String test = itemStack.getTagCompound().getCompoundTag("display").getTagList("Lore", 8).getStringTagAt(i);
-                                builder.append("list.add(\"");
-                                builder.append(test);
-                                builder.append("\");");
-                                builder.append("\n");
+                                SBBossBar.healthScale = SkyBlockEventHandler.dragonHealth / this.dragonType.getMaxHealth();
                             }
-                            GuiScreen.setClipboardString(builder.toString());
-                            ClientUtils.printClientMessage(EnumChatFormatting.GREEN + "Copied lore data!");
+                            foundDrag = true;
+                            break;
                         }
+                        catch (Exception e) {}
                     }
                 }
 
-                for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
+                for (Score score1 : collection)
                 {
-                    long now = System.currentTimeMillis();
-                    long checkedTime = entry.getValue().getLeft();
+                    ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
+                    String scoreText = EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
 
-                    if (now - checkedTime > 180000D)
+                    for (SBLocation location : SBLocation.values())
                     {
-                        SkyBlockProfileSelectorScreen.PROFILE_CACHE.remove(entry.getKey());
-                    }
-                }
-                for (Map.Entry<String, Pair<Long, HypixelProfiles>> entry : SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.entrySet())
-                {
-                    long now = System.currentTimeMillis();
-                    long checkedTime = entry.getValue().getLeft();
-
-                    if (now - checkedTime > 180000D)
-                    {
-                        SkyBlockProfileSelectorScreen.INIT_PROFILE_CACHE.remove(entry.getKey());
-                    }
-                }
-
-                if (this.mc.thePlayer.ticksExisted % 5 == 0)
-                {
-                    this.getInventoryDifference(this.mc.thePlayer.inventory.mainInventory);
-                }
-                if (this.mc.theWorld != null)
-                {
-                    boolean found = false;
-                    boolean foundDrag = false;
-                    ScoreObjective scoreObj = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
-                    Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
-                    Collection<Score> collection = scoreboard.getSortedScores(scoreObj);
-                    List<Score> list = Lists.newArrayList(collection.stream().filter(score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")).collect(Collectors.toList()));
-
-                    if (list.size() > 15)
-                    {
-                        collection = Lists.newArrayList(Iterables.skip(list, collection.size() - 15));
-                    }
-                    else
-                    {
-                        collection = list;
-                    }
-
-                    for (Score score1 : collection)
-                    {
-                        ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = this.keepLettersAndNumbersOnly(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
-
-                        if (scoreText.startsWith("Dragon HP: "))
+                        if (scoreText.contains("⏣") && this.keepLettersAndNumbersOnly(scoreText).substring(2).equals(location.getLocation()))
                         {
-                            try
-                            {
-                                SkyBlockEventHandler.dragonHealth = Float.valueOf(scoreText.replaceAll("[^\\d]", ""));
-
-                                if (this.dragonType != null)
-                                {
-                                    SBBossBar.healthScale = SkyBlockEventHandler.dragonHealth / this.dragonType.getMaxHealth();
-                                }
-                                foundDrag = true;
-                                break;
-                            }
-                            catch (Exception e) {}
+                            SkyBlockEventHandler.SKY_BLOCK_LOCATION = location;
+                            found = true;
+                            break;
                         }
                     }
-
-                    for (Score score1 : collection)
-                    {
-                        ScorePlayerTeam scorePlayerTeam = scoreboard.getPlayersTeam(score1.getPlayerName());
-                        String scoreText = EnumChatFormatting.getTextWithoutFormattingCodes(ScorePlayerTeam.formatPlayerName(scorePlayerTeam, score1.getPlayerName()));
-
-                        for (SBLocation location : SBLocation.values())
-                        {
-                            if (scoreText.contains("⏣") && this.keepLettersAndNumbersOnly(scoreText).substring(2).equals(location.getLocation()))
-                            {
-                                SkyBlockEventHandler.SKY_BLOCK_LOCATION = location;
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (scoreObj != null)
-                    {
-                        SkyBlockEventHandler.isSkyBlock = EnumChatFormatting.getTextWithoutFormattingCodes(scoreObj.getDisplayName()).contains("SKYBLOCK");
-                        HUDRenderEventHandler.otherPlayerIsland = EnumChatFormatting.getTextWithoutFormattingCodes(scoreObj.getDisplayName()).contains("SKYBLOCK GUEST");
-                    }
-                    else
-                    {
-                        SkyBlockEventHandler.isSkyBlock = false;
-                    }
-
-                    if (!found)
-                    {
-                        SkyBlockEventHandler.SKY_BLOCK_LOCATION = SBLocation.NONE;
-                    }
-                    SBBossBar.renderBossBar = foundDrag;
                 }
+
+                if (scoreObj != null)
+                {
+                    SkyBlockEventHandler.isSkyBlock = EnumChatFormatting.getTextWithoutFormattingCodes(scoreObj.getDisplayName()).contains("SKYBLOCK");
+                    HUDRenderEventHandler.otherPlayerIsland = EnumChatFormatting.getTextWithoutFormattingCodes(scoreObj.getDisplayName()).contains("SKYBLOCK GUEST");
+                }
+                else
+                {
+                    SkyBlockEventHandler.isSkyBlock = false;
+                }
+
+                if (!found)
+                {
+                    SkyBlockEventHandler.SKY_BLOCK_LOCATION = SBLocation.NONE;
+                }
+                SBBossBar.renderBossBar = foundDrag;
             }
         }
     }
@@ -278,27 +269,18 @@ public class SkyBlockEventHandler
     @SubscribeEvent
     public void onMouseClick(MouseEvent event)
     {
-        if (InfoUtils.INSTANCE.isHypixel())
+        if (InfoUtils.INSTANCE.isHypixel() && event.button == 1 && event.buttonstate && this.mc.pointedEntity instanceof EntityOtherPlayerMP)
         {
-            if (event.button == 1 && event.buttonstate)
-            {
-                if (this.mc.pointedEntity != null && this.mc.pointedEntity instanceof EntityOtherPlayerMP)
-                {
-                    EntityOtherPlayerMP player = (EntityOtherPlayerMP)this.mc.pointedEntity;
+            EntityOtherPlayerMP player = (EntityOtherPlayerMP)this.mc.pointedEntity;
 
-                    if (!this.mc.thePlayer.isSneaking() && this.mc.thePlayer.getHeldItem() == null && SkyBlockcatiaSettings.INSTANCE.rightClickToAddParty)
-                    {
-                        if (CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue).stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
-                        {
-                            this.mc.thePlayer.sendChatMessage("/p " + player.getName());
-                            event.setCanceled(true);
-                        }
-                    }
-                    if (this.mc.thePlayer.isSneaking() && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland && HUDRenderEventHandler.otherPlayerIsland)
-                    {
-                        this.mc.thePlayer.sendChatMessage("/trade " + player.getName());
-                    }
-                }
+            if (!this.mc.thePlayer.isSneaking() && this.mc.thePlayer.getHeldItem() == null && SkyBlockcatiaSettings.INSTANCE.rightClickToAddParty && CommonUtils.getPlayerInfoMap(this.mc.thePlayer.sendQueue).stream().anyMatch(info -> info.getGameProfile().getName().equals(player.getName())))
+            {
+                this.mc.thePlayer.sendChatMessage("/p " + player.getName());
+                event.setCanceled(true);
+            }
+            if (this.mc.thePlayer.isSneaking() && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland && HUDRenderEventHandler.otherPlayerIsland)
+            {
+                this.mc.thePlayer.sendChatMessage("/trade " + player.getName());
             }
         }
     }
@@ -682,7 +664,7 @@ public class SkyBlockEventHandler
                 ClientUtils.printClientMessage("Example UUID pattern: " + UUID.randomUUID(), JsonUtils.yellow());
                 return;
             }
-            if (this.mc.pointedEntity != null && this.mc.pointedEntity instanceof EntityOtherPlayerMP)
+            if (this.mc.pointedEntity instanceof EntityOtherPlayerMP)
             {
                 EntityOtherPlayerMP player = (EntityOtherPlayerMP)this.mc.pointedEntity;
 
@@ -816,7 +798,7 @@ public class SkyBlockEventHandler
             {
                 String lore = EnumChatFormatting.getTextWithoutFormattingCodes(event.toolTip.get(i));
 
-                if (this.mc.currentScreen != null && this.mc.currentScreen instanceof GuiChest)
+                if (this.mc.currentScreen instanceof GuiChest)
                 {
                     GuiChest chest = (GuiChest)this.mc.currentScreen;
                     String name = chest.lowerChestInventory.getDisplayName().getUnformattedText();
@@ -992,12 +974,9 @@ public class SkyBlockEventHandler
                                         }
                                     }
                                 }
-                                else if (drop.getType().matches(ToastUtils.DropCondition.CONTAINS) && key.contains(dropName))
+                                else if (drop.getType().matches(ToastUtils.DropCondition.CONTAINS) && key.contains(dropName) && HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                 {
-                                    if (HUDRenderEventHandler.INSTANCE.getToastGui().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
-                                    {
-                                        iterator.remove();
-                                    }
+                                    iterator.remove();
                                 }
                             }
                         }
@@ -1058,21 +1037,21 @@ public class SkyBlockEventHandler
 
             if (timeEstimate.length == 2)
             {
-                minuteF = Integer.valueOf(timeEstimate[0]);
-                secondF = Integer.valueOf(timeEstimate[1]);
+                minuteF = Integer.parseInt(timeEstimate[0]);
+                secondF = Integer.parseInt(timeEstimate[1]);
             }
             else if (timeEstimate.length == 3)
             {
-                hourF = Integer.valueOf(timeEstimate[0]);
-                minuteF = Integer.valueOf(timeEstimate[1]);
-                secondF = Integer.valueOf(timeEstimate[2]);
+                hourF = Integer.parseInt(timeEstimate[0]);
+                minuteF = Integer.parseInt(timeEstimate[1]);
+                secondF = Integer.parseInt(timeEstimate[2]);
             }
             else
             {
-                dayF = Integer.valueOf(timeEstimate[0]);
-                hourF = Integer.valueOf(timeEstimate[1]);
-                minuteF = Integer.valueOf(timeEstimate[2]);
-                secondF = Integer.valueOf(timeEstimate[3]);
+                dayF = Integer.parseInt(timeEstimate[0]);
+                hourF = Integer.parseInt(timeEstimate[1]);
+                minuteF = Integer.parseInt(timeEstimate[2]);
+                secondF = Integer.parseInt(timeEstimate[3]);
             }
 
             calendar.add(Calendar.DATE, dayF);
@@ -1120,14 +1099,14 @@ public class SkyBlockEventHandler
 
             if (timeEstimate.length == 2)
             {
-                minuteF = Integer.valueOf(timeEstimate[0]);
-                secondF = Integer.valueOf(timeEstimate[1]);
+                minuteF = Integer.parseInt(timeEstimate[0]);
+                secondF = Integer.parseInt(timeEstimate[1]);
             }
             else if (timeEstimate.length == 3)
             {
-                hourF = Integer.valueOf(timeEstimate[0]);
-                minuteF = Integer.valueOf(timeEstimate[1]);
-                secondF = Integer.valueOf(timeEstimate[2]);
+                hourF = Integer.parseInt(timeEstimate[0]);
+                minuteF = Integer.parseInt(timeEstimate[1]);
+                secondF = Integer.parseInt(timeEstimate[2]);
             }
             else
             {
@@ -1135,15 +1114,15 @@ public class SkyBlockEventHandler
                 {
                     if (isHour)
                     {
-                        hourF = Integer.valueOf(timeEstimate[0]);
+                        hourF = Integer.parseInt(timeEstimate[0]);
                     }
                 }
                 else
                 {
-                    dayF = Integer.valueOf(timeEstimate[0]);
-                    hourF = Integer.valueOf(timeEstimate[1]);
-                    minuteF = Integer.valueOf(timeEstimate[2]);
-                    secondF = Integer.valueOf(timeEstimate[3]);
+                    dayF = Integer.parseInt(timeEstimate[0]);
+                    hourF = Integer.parseInt(timeEstimate[1]);
+                    minuteF = Integer.parseInt(timeEstimate[2]);
+                    secondF = Integer.parseInt(timeEstimate[3]);
                 }
             }
 
@@ -1183,18 +1162,18 @@ public class SkyBlockEventHandler
 
             if (timeEstimate.length == 1)
             {
-                hourF = Integer.valueOf(timeEstimate[0]);
+                hourF = Integer.parseInt(timeEstimate[0]);
             }
             else if (timeEstimate.length == 2)
             {
-                minuteF = Integer.valueOf(timeEstimate[0]);
-                secondF = Integer.valueOf(timeEstimate[1]);
+                minuteF = Integer.parseInt(timeEstimate[0]);
+                secondF = Integer.parseInt(timeEstimate[1]);
             }
             else
             {
-                hourF = Integer.valueOf(timeEstimate[0]);
-                minuteF = Integer.valueOf(timeEstimate[1]);
-                secondF = Integer.valueOf(timeEstimate[2]);
+                hourF = Integer.parseInt(timeEstimate[0]);
+                minuteF = Integer.parseInt(timeEstimate[1]);
+                secondF = Integer.parseInt(timeEstimate[2]);
             }
 
             calendar.add(Calendar.HOUR, hourF);
@@ -1248,23 +1227,23 @@ public class SkyBlockEventHandler
             {
                 if (isDay)
                 {
-                    dayF = Integer.valueOf(timeEstimate[0]);
+                    dayF = Integer.parseInt(timeEstimate[0]);
                 }
                 else
                 {
-                    hourF = Integer.valueOf(timeEstimate[0]);
+                    hourF = Integer.parseInt(timeEstimate[0]);
                 }
             }
             else if (timeEstimate.length == 2)
             {
-                minuteF = Integer.valueOf(timeEstimate[0]);
-                secondF = Integer.valueOf(timeEstimate[1]);
+                minuteF = Integer.parseInt(timeEstimate[0]);
+                secondF = Integer.parseInt(timeEstimate[1]);
             }
             else
             {
-                hourF = Integer.valueOf(timeEstimate[0]);
-                minuteF = Integer.valueOf(timeEstimate[1]);
-                secondF = Integer.valueOf(timeEstimate[2]);
+                hourF = Integer.parseInt(timeEstimate[0]);
+                minuteF = Integer.parseInt(timeEstimate[1]);
+                secondF = Integer.parseInt(timeEstimate[2]);
             }
 
             calendar.add(Calendar.DATE, dayF);
@@ -1280,7 +1259,7 @@ public class SkyBlockEventHandler
 
             String date2 = new SimpleDateFormat("d MMMMM yyyy", Locale.ROOT).format(calendar.getTime());
 
-            if (mc.currentScreen != null && mc.currentScreen instanceof GuiChest)
+            if (mc.currentScreen instanceof GuiChest)
             {
                 GuiChest chest = (GuiChest)mc.currentScreen;
                 String name = chest.lowerChestInventory.getDisplayName().getUnformattedText();
@@ -1313,7 +1292,7 @@ public class SkyBlockEventHandler
         }
     }
 
-    class ItemDropDiff
+    static class ItemDropDiff
     {
         final ItemStack itemStack;
         final int count;

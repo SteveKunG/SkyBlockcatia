@@ -80,20 +80,14 @@ public class MainEventHandler
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
-        if (this.mc.thePlayer != null)
+        if (this.mc.thePlayer != null && event.phase == TickEvent.Phase.START && this.mc.getCurrentServerData() != null)
         {
-            if (event.phase == TickEvent.Phase.START)
-            {
-                if (this.mc.getCurrentServerData() != null)
-                {
-                    long now = System.currentTimeMillis();
+            long now = System.currentTimeMillis();
 
-                    if (this.lastPinger == -1L || now - this.lastPinger > 5000L)
-                    {
-                        this.lastPinger = now;
-                        MainEventHandler.getRealTimeServerPing(this.mc.getCurrentServerData());
-                    }
-                }
+            if (this.lastPinger == -1L || now - this.lastPinger > 5000L)
+            {
+                this.lastPinger = now;
+                MainEventHandler.getRealTimeServerPing(this.mc.getCurrentServerData());
             }
         }
     }
@@ -101,13 +95,10 @@ public class MainEventHandler
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event)
     {
-        if (event.phase == TickEvent.Phase.START)
+        if (event.phase == TickEvent.Phase.START && MainEventHandler.playerToView != null)
         {
-            if (MainEventHandler.playerToView != null)
-            {
-                this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
-                MainEventHandler.playerToView = null;
-            }
+            this.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, MainEventHandler.playerToView, "", ""));
+            MainEventHandler.playerToView = null;
         }
     }
 
@@ -230,14 +221,11 @@ public class MainEventHandler
     @SubscribeEvent
     public void onPreActionPerformedGui(GuiScreenEvent.ActionPerformedEvent.Pre event)
     {
-        if (SkyBlockcatiaConfig.enableConfirmToDisconnect && event.gui instanceof GuiIngameMenu && !this.mc.isSingleplayer())
+        if (SkyBlockcatiaConfig.enableConfirmToDisconnect && event.gui instanceof GuiIngameMenu && !this.mc.isSingleplayer() && event.button.id == 1)
         {
-            if (event.button.id == 1)
-            {
-                event.setCanceled(true);
-                event.button.playPressSound(this.mc.getSoundHandler());
-                this.mc.displayGuiScreen(new GuiDisconnectConfirmation());
-            }
+            event.setCanceled(true);
+            event.button.playPressSound(this.mc.getSoundHandler());
+            this.mc.displayGuiScreen(new GuiDisconnectConfirmation());
         }
     }
 
@@ -250,74 +238,70 @@ public class MainEventHandler
         {
             if (now - this.lastButtonClick > 100L)
             {
-                if (event.button.id == 1000)
+                switch (event.button.id)
                 {
-                    this.mc.thePlayer.sendChatMessage("/storage");
-                }
-                else if (event.button.id == 1001)
-                {
-                    this.mc.thePlayer.sendChatMessage("/craft");
-                }
-                else if (event.button.id == 1002)
-                {
-                    this.mc.thePlayer.sendChatMessage("/pets");
-                }
-                else if (event.button.id == 1003)
-                {
-                    this.mc.thePlayer.sendChatMessage("/wardrobe");
-                }
-                else if (event.button.id == 1004)
-                {
-                    this.mc.thePlayer.sendChatMessage("/viewsbmenu");
-                }
-                else if (event.button.id == 1010)
-                {
-                    this.mc.thePlayer.sendChatMessage("/ah");
-                }
-                else if (event.button.id == 1011)
-                {
-                    this.mc.thePlayer.sendChatMessage("/bz");
-                }
-                else if (event.button.id == 1012)
-                {
-                    this.mc.thePlayer.sendChatMessage("/et");
-                }
-                else if (event.button.id == 1013)
-                {
-                    this.mc.thePlayer.sendChatMessage("/av");
-                }
-                else if (event.button.id == 1100)
-                {
-                    showAdditionalButtons = !showAdditionalButtons;
-
-                    for (GuiButton button : event.buttonList)
-                    {
-                        if (button.id == 1010 || button.id == 1011 || button.id == 1012 || button.id == 1013)
+                    case 1000:
+                        this.mc.thePlayer.sendChatMessage("/storage");
+                        break;
+                    case 1001:
+                        this.mc.thePlayer.sendChatMessage("/craft");
+                        break;
+                    case 1002:
+                        this.mc.thePlayer.sendChatMessage("/pets");
+                        break;
+                    case 1003:
+                        this.mc.thePlayer.sendChatMessage("/wardrobe");
+                        break;
+                    case 1004:
+                        this.mc.thePlayer.sendChatMessage("/viewsbmenu");
+                        break;
+                    case 1010:
+                        this.mc.thePlayer.sendChatMessage("/ah");
+                        break;
+                    case 1011:
+                        this.mc.thePlayer.sendChatMessage("/bz");
+                        break;
+                    case 1012:
+                        this.mc.thePlayer.sendChatMessage("/et");
+                        break;
+                    case 1013:
+                        this.mc.thePlayer.sendChatMessage("/av");
+                        break;
+                    case 1100:
+                        showAdditionalButtons = !showAdditionalButtons;
+                        for (GuiButton button : event.buttonList)
                         {
-                            button.visible = showAdditionalButtons;
+                            if (button.id == 1010 || button.id == 1011 || button.id == 1012 || button.id == 1013)
+                            {
+                                button.visible = showAdditionalButtons;
+                            }
                         }
-                    }
+                        break;
+                    default:
+                        break;
                 }
                 this.lastButtonClick = now;
             }
-            if (event.button.id == 500)
+            switch (event.button.id)
             {
-                MainEventHandler.showChat = !MainEventHandler.showChat;
-                String chat = MainEventHandler.showChat ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
-                ((GuiButtonItem)event.button).setName("Toggle Inventory Chat: " + chat);
-            }
-            else if (event.button.id == 1005)
-            {
-                MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
-                String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
-                ((GuiButtonItem)event.button).setName("Toggle Bid Highlight: " + bid);
-            }
-            else if (event.button.id == 1006)
-            {
-                SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
-                String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
-                ((GuiButtonItem)event.button).setName("Lobby Player Overlay: " + overlay);
-                SkyBlockcatiaSettings.INSTANCE.save();
+                case 500:
+                    MainEventHandler.showChat = !MainEventHandler.showChat;
+                    String chat = MainEventHandler.showChat ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    ((GuiButtonItem)event.button).setName("Toggle Inventory Chat: " + chat);
+                    break;
+                case 1005:
+                    MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
+                    String bid = MainEventHandler.bidHighlight ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    ((GuiButtonItem)event.button).setName("Toggle Bid Highlight: " + bid);
+                    break;
+                case 1006:
+                    SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
+                    String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? EnumChatFormatting.GREEN + "ON" : EnumChatFormatting.RED + "OFF";
+                    ((GuiButtonItem)event.button).setName("Lobby Player Overlay: " + overlay);
+                    SkyBlockcatiaSettings.INSTANCE.save();
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -325,7 +309,7 @@ public class MainEventHandler
     @SubscribeEvent
     public void onPostGuiDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event)
     {
-        for (GuiButton button : event.gui.buttonList.stream().filter(button -> button != null && button instanceof GuiButtonItem).collect(Collectors.toList()))
+        for (GuiButton button : event.gui.buttonList.stream().filter(button -> button instanceof GuiButtonItem).collect(Collectors.toList()))
         {
             boolean hover = event.mouseX >= button.xPosition && event.mouseY >= button.yPosition && event.mouseX < button.xPosition + button.width && event.mouseY < button.yPosition + button.height;
 

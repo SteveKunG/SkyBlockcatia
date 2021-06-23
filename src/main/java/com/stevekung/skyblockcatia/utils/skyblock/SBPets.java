@@ -87,7 +87,7 @@ public class SBPets
         return null;
     }
 
-    public class Skin
+    public static class Skin
     {
         private final String type;
         @SerializedName("displayName")
@@ -167,7 +167,7 @@ public class SBPets
         }
     }
 
-    public class Type
+    public static class Type
     {
         private final String type;
         private final String skill;
@@ -234,7 +234,7 @@ public class SBPets
         }
     }
 
-    public class Stats
+    public static class Stats
     {
         private final StatsProperty damage;
         private final StatsProperty health;
@@ -347,7 +347,7 @@ public class SBPets
         }
     }
 
-    public class StatsProperty
+    public static class StatsProperty
     {
         private final double base;
         private final double multiply;
@@ -372,7 +372,7 @@ public class SBPets
         }
     }
 
-    public class StatsPropertyArray
+    public static class StatsPropertyArray
     {
         private final double[] base;
         private final double[] multiply;
@@ -417,7 +417,7 @@ public class SBPets
         }
     }
 
-    public class HeldItem
+    public static class HeldItem
     {
         private final String type;
         private final String name;

@@ -43,7 +43,7 @@ public class SBInventoryTabs
     private final String label;
     private String texture = "items";
     private boolean hasScrollbar = true;
-    private ItemStack icon;
+    private final ItemStack icon;
 
     private SBInventoryTabs(int index, String label, ItemStack icon)
     {

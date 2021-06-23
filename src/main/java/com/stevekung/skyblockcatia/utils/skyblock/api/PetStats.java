@@ -70,7 +70,7 @@ public class PetStats
                 for (SkyblockProfiles.Profile profile : profilesList)
                 {
                     long lastSave = -1;
-                    SkyblockProfiles.Profile availableProfile = null;
+                    SkyblockProfiles.Profile availableProfile;
 
                     for (Map.Entry<String, SkyblockProfiles.Members> entry : profile.getMembers().entrySet())
                     {

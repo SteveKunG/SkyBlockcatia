@@ -37,12 +37,9 @@ public class SkyBlockcatiaConfig
 
     public static void syncConfig(boolean load)
     {
-        if (!SkyBlockcatiaConfig.config.isChild)
+        if (!SkyBlockcatiaConfig.config.isChild && load)
         {
-            if (load)
-            {
-                SkyBlockcatiaConfig.config.load();
-            }
+            SkyBlockcatiaConfig.config.load();
         }
 
         SkyBlockcatiaConfig.config.setCategoryPropertyOrder(SkyBlockcatiaConfig.MAIN_SETTINGS, SkyBlockcatiaConfig.addMainSetting());

@@ -88,18 +88,18 @@ public abstract class FontRendererMixin
 
             switch (this.state)
             {
-            case 0:
-                this.redN = value;
-                break;
-            case 1:
-                this.greenN = value;
-                break;
-            case 2:
-                this.blueN = value;
-                break;
-            default:
-                this.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-                info.setReturnValue(0.0F);
+                case 0:
+                    this.redN = value;
+                    break;
+                case 1:
+                    this.greenN = value;
+                    break;
+                case 2:
+                    this.blueN = value;
+                    break;
+                default:
+                    this.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+                    info.setReturnValue(0.0F);
             }
 
             this.state = ++this.state % 3;
@@ -132,18 +132,18 @@ public abstract class FontRendererMixin
 
             switch (this.state)
             {
-            case 0:
-                this.redN = value;
-                break;
-            case 1:
-                this.greenN = value;
-                break;
-            case 2:
-                this.blueN = value;
-                break;
-            default:
-                this.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-                return 0.0F;
+                case 0:
+                    this.redN = value;
+                    break;
+                case 1:
+                    this.greenN = value;
+                    break;
+                case 2:
+                    this.blueN = value;
+                    break;
+                default:
+                    this.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+                    return 0.0F;
             }
 
             this.state = ++this.state % 3;

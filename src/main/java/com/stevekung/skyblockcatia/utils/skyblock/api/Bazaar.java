@@ -25,7 +25,7 @@ public class Bazaar
         return this.products;
     }
 
-    public class Product
+    public static class Product
     {
         @SerializedName("quick_status")
         private final Status quickStatus;
@@ -79,7 +79,7 @@ public class Bazaar
         }
     }
 
-    public class Summary
+    public static class Summary
     {
         private final double pricePerUnit;
 

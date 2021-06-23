@@ -174,33 +174,33 @@ public class ToastUtils
         {
             switch (this)
             {
-            case RARE_DROP:
-            case MYTHOS_COINS:
-            case PET_DROP:
-            case DRAGON_CRYSTAL_FRAGMENT:
-                return SkyBlockcatiaSettings.INSTANCE.rareDropToastTime * 1000L;
-            case BOSS_DROP:
-            case SLAYER_RARE_DROP:
-            case SLAYER_VERY_RARE_DROP_BLUE:
-            case SLAYER_VERY_RARE_DROP_PURPLE:
-            case SLAYER_CRAZY_RARE_DROP:
-            case SANTA_TIER:
-            case DUNGEON_QUALITY_DROP:
-            case DUNGEON_REWARD_DROP:
-                return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
-            case GOOD_CATCH:
-            case GREAT_CATCH:
-            case GOOD_CATCH_COINS:
-            case GREAT_CATCH_COINS:
-                return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
-            case COMMON_GIFT:
-            case SWEET_GIFT:
-            case RARE_GIFT:
-                return SkyBlockcatiaSettings.INSTANCE.giftToastTime * 1000L;
-            case PET_LEVEL_UP:
-                return SkyBlockcatiaSettings.INSTANCE.petToastTime * 1000L;
-            default:
-                return 5000L;
+                case RARE_DROP:
+                case MYTHOS_COINS:
+                case PET_DROP:
+                case DRAGON_CRYSTAL_FRAGMENT:
+                    return SkyBlockcatiaSettings.INSTANCE.rareDropToastTime * 1000L;
+                case BOSS_DROP:
+                case SLAYER_RARE_DROP:
+                case SLAYER_VERY_RARE_DROP_BLUE:
+                case SLAYER_VERY_RARE_DROP_PURPLE:
+                case SLAYER_CRAZY_RARE_DROP:
+                case SANTA_TIER:
+                case DUNGEON_QUALITY_DROP:
+                case DUNGEON_REWARD_DROP:
+                    return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
+                case GOOD_CATCH:
+                case GREAT_CATCH:
+                case GOOD_CATCH_COINS:
+                case GREAT_CATCH_COINS:
+                    return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
+                case COMMON_GIFT:
+                case SWEET_GIFT:
+                case RARE_GIFT:
+                    return SkyBlockcatiaSettings.INSTANCE.giftToastTime * 1000L;
+                case PET_LEVEL_UP:
+                    return SkyBlockcatiaSettings.INSTANCE.petToastTime * 1000L;
+                default:
+                    return 5000L;
             }
         }
 

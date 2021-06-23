@@ -36,7 +36,7 @@ public class ColorUtils
 
     public static int hexToRgb(String color)
     {
-        return ColorUtils.rgbToDecimal(Integer.valueOf(color.substring(1, 3), 16), Integer.valueOf(color.substring(3, 5), 16), Integer.valueOf(color.substring(5, 7), 16));
+        return ColorUtils.rgbToDecimal(Integer.parseInt(color.substring(1, 3), 16), Integer.parseInt(color.substring(3, 5), 16), Integer.parseInt(color.substring(5, 7), 16));
     }
 
     public static int to32BitColor(int a, int r, int g, int b)

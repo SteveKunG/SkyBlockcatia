@@ -52,12 +52,9 @@ public class GuiScreenMixin
         {
             GuiEditSign sign = (GuiEditSign)this.that;
 
-            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && ((IEditSign)sign).getSignSelectionList() != null)
             {
-                if (((IEditSign)sign).getSignSelectionList() != null)
-                {
-                    ((IEditSign)sign).getSignSelectionList().mouseClicked(mouseX, mouseY, mouseButton);
-                }
+                ((IEditSign)sign).getSignSelectionList().mouseClicked(mouseX, mouseY, mouseButton);
             }
         }
     }
@@ -69,12 +66,9 @@ public class GuiScreenMixin
         {
             GuiEditSign sign = (GuiEditSign)this.that;
 
-            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && ((IEditSign)sign).getSignSelectionList() != null)
             {
-                if (((IEditSign)sign).getSignSelectionList() != null)
-                {
-                    ((IEditSign)sign).getSignSelectionList().mouseReleased(mouseX, mouseY, state);
-                }
+                ((IEditSign)sign).getSignSelectionList().mouseReleased(mouseX, mouseY, state);
             }
         }
     }
@@ -86,12 +80,9 @@ public class GuiScreenMixin
         {
             GuiEditSign sign = (GuiEditSign)this.that;
 
-            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList)
+            if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && ((IEditSign)sign).getSignSelectionList() != null)
             {
-                if (((IEditSign)sign).getSignSelectionList() != null)
-                {
-                    ((IEditSign)sign).getSignSelectionList().handleMouseInput();
-                }
+                ((IEditSign)sign).getSignSelectionList().handleMouseInput();
             }
         }
     }

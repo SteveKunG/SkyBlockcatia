@@ -41,39 +41,39 @@ public class TileEntityEnchantedSkullRenderer
 
         switch (meta)
         {
-        case 0:
-        default:
-            mc.getTextureManager().bindTexture(SKELETON_TEXTURES);
-            break;
-        case 1:
-            mc.getTextureManager().bindTexture(WITHER_SKELETON_TEXTURES);
-            break;
-        case 2:
-            mc.getTextureManager().bindTexture(ZOMBIE_TEXTURES);
-            model = this.humanoidHead;
-            break;
-        case 3:
-            model = this.humanoidHead;
-            ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
+            case 0:
+            default:
+                mc.getTextureManager().bindTexture(SKELETON_TEXTURES);
+                break;
+            case 1:
+                mc.getTextureManager().bindTexture(WITHER_SKELETON_TEXTURES);
+                break;
+            case 2:
+                mc.getTextureManager().bindTexture(ZOMBIE_TEXTURES);
+                model = this.humanoidHead;
+                break;
+            case 3:
+                model = this.humanoidHead;
+                ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
 
-            if (profile != null)
-            {
-                Map<Type, MinecraftProfileTexture> map = mc.getSkinManager().loadSkinFromCache(profile);
+                if (profile != null)
+                {
+                    Map<Type, MinecraftProfileTexture> map = mc.getSkinManager().loadSkinFromCache(profile);
 
-                if (map.containsKey(Type.SKIN))
-                {
-                    resourcelocation = mc.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
+                    if (map.containsKey(Type.SKIN))
+                    {
+                        resourcelocation = mc.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
+                    }
+                    else
+                    {
+                        UUID uuid = EntityPlayer.getUUID(profile);
+                        resourcelocation = DefaultPlayerSkin.getDefaultSkin(uuid);
+                    }
                 }
-                else
-                {
-                    UUID uuid = EntityPlayer.getUUID(profile);
-                    resourcelocation = DefaultPlayerSkin.getDefaultSkin(uuid);
-                }
-            }
-            mc.getTextureManager().bindTexture(resourcelocation);
-            break;
-        case 4:
-            mc.getTextureManager().bindTexture(CREEPER_TEXTURES);
+                mc.getTextureManager().bindTexture(resourcelocation);
+                break;
+            case 4:
+                mc.getTextureManager().bindTexture(CREEPER_TEXTURES);
         }
 
         GlStateManager.pushMatrix();
@@ -83,21 +83,21 @@ public class TileEntityEnchantedSkullRenderer
         {
             switch (facing)
             {
-            case NORTH:
-                GlStateManager.translate(x + 0.5F, y + 0.25F, z + 0.74F);
-                break;
-            case SOUTH:
-                GlStateManager.translate(x + 0.5F, y + 0.25F, z + 0.26F);
-                rotation = 180.0F;
-                break;
-            case WEST:
-                GlStateManager.translate(x + 0.74F, y + 0.25F, z + 0.5F);
-                rotation = 270.0F;
-                break;
-            case EAST:
-            default:
-                GlStateManager.translate(x + 0.26F, y + 0.25F, z + 0.5F);
-                rotation = 90.0F;
+                case NORTH:
+                    GlStateManager.translate(x + 0.5F, y + 0.25F, z + 0.74F);
+                    break;
+                case SOUTH:
+                    GlStateManager.translate(x + 0.5F, y + 0.25F, z + 0.26F);
+                    rotation = 180.0F;
+                    break;
+                case WEST:
+                    GlStateManager.translate(x + 0.74F, y + 0.25F, z + 0.5F);
+                    rotation = 270.0F;
+                    break;
+                case EAST:
+                default:
+                    GlStateManager.translate(x + 0.26F, y + 0.25F, z + 0.5F);
+                    rotation = 90.0F;
             }
         }
         else
