@@ -31,20 +31,20 @@ side = "CLIENT"
 [[dependencies.skyblockcatia]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.12,)"
+versionRange = "[1.17,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.skyblockcatia]]
 modId = "stevekungs_lib"
 mandatory = true
-versionRange = "[4.1.2,)"
+versionRange = "[4.1.3,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.skyblockcatia]]
 modId = "indicatia"
 mandatory = false
-versionRange = "[4.1.0,)"
+versionRange = "[4.1.5,)"
 ordering = "NONE"
 side = "CLIENT"

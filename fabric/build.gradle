@@ -62,7 +62,7 @@ processResources {
     }
 }
 
-def fileName = "${rootProject.archives_base_name}-mc${rootProject.mc_version}"
+String fileName = "${rootProject.archives_base_name}-mc${rootProject.mc_version}"
 
 jar {
     version "v${project.version}"
@@ -105,7 +105,7 @@ curseforge {
             id = "397441"
             changelog = file("../CHANGE_LOG.md")
             changelogType = "markdown"
-            releaseType = "beta"
+            releaseType = "release"
             addGameVersion "Fabric"
             addGameVersion rootProject.mc_version
 
