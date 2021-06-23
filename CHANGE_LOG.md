@@ -9,4 +9,4 @@
 * * JSON Data parsing improvement for Bazaar/Hypixel API
 * * Dungeon Stats is now slightly better, but still worst
 * * Fixed invalid recent active profile
-* * Fixed crash when cloth cloth config not installed (Fabric)
+* * Fixed crash when cloth config not installed (Fabric)
