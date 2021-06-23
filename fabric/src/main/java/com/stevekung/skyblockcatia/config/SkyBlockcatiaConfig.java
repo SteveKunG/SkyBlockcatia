@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.config;
 
 import java.io.IOException;
 
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaFabricMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaFabric;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.stevekungslib.utils.LangUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -20,13 +20,13 @@ public class SkyBlockcatiaConfig
 
     public static Screen createConfigScreen(Screen parent)
     {
-        SkyBlockcatiaConfig config = SkyBlockcatiaFabricMod.CONFIG.getConfig();
+        SkyBlockcatiaConfig config = SkyBlockcatiaFabric.CONFIG.getConfig();
         ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(LangUtils.translate("ui.skyblockcatia.config.title"));
         builder.setSavingRunnable(() ->
         {
             try
             {
-                SkyBlockcatiaFabricMod.CONFIG.saveConfig();
+                SkyBlockcatiaFabric.CONFIG.saveConfig();
                 SBAPIUtils.setApiKey();
             }
             catch (IOException e)

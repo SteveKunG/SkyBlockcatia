@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.stevekungslib.utils.ConfigHandlerBase;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
@@ -14,7 +14,7 @@ public class ConfigHandlerSB extends ConfigHandlerBase
 
     public ConfigHandlerSB()
     {
-        super(SkyBlockcatiaMod.MOD_ID);
+        super(SkyBlockcatia.MOD_ID);
     }
 
     public SkyBlockcatiaConfig getConfig()
@@ -27,7 +27,7 @@ public class ConfigHandlerSB extends ConfigHandlerBase
             }
             catch (IOException e)
             {
-                SkyBlockcatiaMod.LOGGER.error("Failed to load config, using default.", e);
+                SkyBlockcatia.LOGGER.error("Failed to load config, using default.", e);
                 return new SkyBlockcatiaConfig();
             }
         }
@@ -41,7 +41,7 @@ public class ConfigHandlerSB extends ConfigHandlerBase
 
         if (!this.configFile.exists())
         {
-            SkyBlockcatiaMod.LOGGER.error("Unable to find config file, creating new one.");
+            SkyBlockcatia.LOGGER.error("Unable to find config file, creating new one.");
             this.config = new SkyBlockcatiaConfig();
             this.saveConfig();
         }

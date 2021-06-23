@@ -32,7 +32,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
@@ -256,7 +256,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     this.getPlayerData();
                     Instant after = Instant.now();
                     long delta = Duration.between(start, after).toMillis();
-                    SkyBlockcatiaMod.LOGGER.info("Parsing Skyblock Profile took {} ms", delta);
+                    SkyBlockcatia.LOGGER.info("Parsing Skyblock Profile took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
@@ -1707,7 +1707,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
             if (type == null)
             {
-                SkyBlockcatiaMod.LOGGER.warning("Found an unknown minion!, type: {}", minionType);
+                SkyBlockcatia.LOGGER.warning("Found an unknown minion!, type: {}", minionType);
             }
 
             for (int craftedTier : craftedTiers)
@@ -2337,7 +2337,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (heldItem == null)
                 {
                     heldItemType = heldItemObj;
-                    SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemType);
+                    SkyBlockcatia.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemType);
                 }
             }
 
@@ -2715,7 +2715,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.RED.toString() + ChatFormatting.BOLD + "UNKNOWN PET")));
                 itemStack.getTag().getCompound("display").put("Lore", list);
                 petData.add(new SBPets.Data(SBPets.Tier.COMMON, 0, itemStack.getHoverName(), false, Lists.newArrayList(itemStack)));
-                SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet! type: {}", petType);
+                SkyBlockcatia.LOGGER.warning("Found an unknown pet! type: {}", petType);
             }
             petData.sort((o1, o2) -> new CompareToBuilder().append(o2.isActive(), o1.isActive()).append(o2.getTier().ordinal(), o1.getTier().ordinal()).append(o2.getCurrentLevel(), o1.getCurrentLevel()).append(o1.getName().getString(), o2.getName().getString()).build());
         }

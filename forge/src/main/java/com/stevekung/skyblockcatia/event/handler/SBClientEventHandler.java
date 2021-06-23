@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.event.handler;
 
 import org.lwjgl.glfw.GLFW;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaForgeMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatiaForge;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBFakePlayerEntity;
@@ -34,11 +34,11 @@ public class SBClientEventHandler
     {
         if (mc.player != null)
         {
-            if (!SkyBlockcatiaForgeMod.CHECKER.hasChecked())
+            if (!SkyBlockcatiaForge.CHECKER.hasChecked())
             {
-                SkyBlockcatiaForgeMod.CHECKER.checkFail();
-                SkyBlockcatiaForgeMod.CHECKER.printInfo();
-                SkyBlockcatiaForgeMod.CHECKER.setChecked(true);
+                SkyBlockcatiaForge.CHECKER.checkFail();
+                SkyBlockcatiaForge.CHECKER.printInfo();
+                SkyBlockcatiaForge.CHECKER.setChecked(true);
             }
         }
     }

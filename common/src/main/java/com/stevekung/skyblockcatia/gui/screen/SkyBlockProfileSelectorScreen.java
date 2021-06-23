@@ -19,7 +19,7 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
 import com.stevekung.skyblockcatia.gui.widget.RightClickTextFieldWidget;
@@ -121,7 +121,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                     this.checkAPI();
                     Instant after = Instant.now();
                     long delta = Duration.between(start, after).toMillis();
-                    SkyBlockcatiaMod.LOGGER.info("Profile Selector took {} ms", delta);
+                    SkyBlockcatia.LOGGER.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
@@ -171,7 +171,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                     this.checkAPI();
                     Instant after = Instant.now();
                     long delta = Duration.between(start, after).toMillis();
-                    SkyBlockcatiaMod.LOGGER.info("Profile Selector took {} ms", delta);
+                    SkyBlockcatia.LOGGER.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {

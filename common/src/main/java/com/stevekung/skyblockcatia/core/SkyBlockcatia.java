@@ -16,7 +16,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
 
-public class SkyBlockcatiaMod
+public class SkyBlockcatia
 {
     public static final String MOD_ID = "skyblockcatia";
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
@@ -49,19 +49,19 @@ public class SkyBlockcatiaMod
         }
         if (!SkyBlockcatiaSettings.PROFILE.exists())
         {
-            SkyBlockcatiaMod.LOGGER.info("Creating SkyBlockcatia settings");
+            SkyBlockcatia.LOGGER.info("Creating SkyBlockcatia settings");
             SkyBlockcatiaSettings.INSTANCE.save();
         }
         else
         {
-            SkyBlockcatiaMod.LOGGER.info("Loading SkyBlockcatia settings");
+            SkyBlockcatia.LOGGER.info("Loading SkyBlockcatia settings");
             SkyBlockcatiaSettings.INSTANCE.load();
         }
     }
 
     public static void init()
     {
-        CommonUtils.runAsync(SkyBlockcatiaMod::downloadAPIData);
+        CommonUtils.runAsync(SkyBlockcatia::downloadAPIData);
         SkyBlockcatiaSettings.INSTANCE.load();
         CompatibilityUtils.init();
         KeyBindingHandler.init();

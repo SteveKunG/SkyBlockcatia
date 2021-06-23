@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.text.WordUtils;
 import com.google.gson.annotations.SerializedName;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import net.minecraft.ChatFormatting;
 
 public class CommunityUpgrades
@@ -90,7 +90,7 @@ public class CommunityUpgrades
             catch (Exception e)
             {
                 this.displayName = ChatFormatting.RED + upgradeType;
-                SkyBlockcatiaMod.LOGGER.warning("Found an unknown upgrade! type: {}", upgradeType);
+                SkyBlockcatia.LOGGER.warning("Found an unknown upgrade! type: {}", upgradeType);
             }
         }
 

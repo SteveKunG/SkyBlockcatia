@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import net.minecraft.client.Minecraft;
@@ -68,17 +68,17 @@ public class MixinSimpleReloadableResourceManager
                 }
                 if (found)
                 {
-                    SkyBlockcatiaMod.LOGGER.info("Found '{}' Skyblock Pack with x" + SupportedPack.RESOLUTION + "! Loaded Glowing Texture for Dragon Armor Set", SupportedPack.TYPE);
+                    SkyBlockcatia.LOGGER.info("Found '{}' Skyblock Pack with x" + SupportedPack.RESOLUTION + "! Loaded Glowing Texture for Dragon Armor Set", SupportedPack.TYPE);
                 }
                 else
                 {
                     SupportedPack.FOUND = false;
-                    SkyBlockcatiaMod.LOGGER.info("No Skyblock Pack detected! Disable Glowing Texture for Dragon Armor Set");
+                    SkyBlockcatia.LOGGER.info("No Skyblock Pack detected! Disable Glowing Texture for Dragon Armor Set");
                 }
             }
             else
             {
-                SkyBlockcatiaMod.LOGGER.warning("SupportedPack is 'null'! Disable Glowing Texture for Dragon Armor Set");
+                SkyBlockcatia.LOGGER.warning("SupportedPack is 'null'! Disable Glowing Texture for Dragon Armor Set");
             }
         }
     }

@@ -2,7 +2,7 @@ package com.stevekung.skyblockcatia.gui.screen.config.forge;
 
 import java.io.File;
 
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.fml.config.ConfigTracker;
@@ -12,7 +12,7 @@ public class SkyBlockSettingsScreenImpl
 {
     public static void openConfig(Screen parent)
     {
-        String configPath = ConfigTracker.INSTANCE.getConfigFileName(SkyBlockcatiaMod.MOD_ID, ModConfig.Type.CLIENT);
+        String configPath = ConfigTracker.INSTANCE.getConfigFileName(SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT);
 
         if (configPath == null)
         {

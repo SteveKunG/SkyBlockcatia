@@ -14,14 +14,14 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 
-public class SkyBlockcatiaFabricMod implements ClientModInitializer
+public class SkyBlockcatiaFabric implements ClientModInitializer
 {
     public static final ConfigHandlerSB CONFIG = new ConfigHandlerSB();
 
     @Override
     public void onInitializeClient()
     {
-        SkyBlockcatiaMod.init();
+        SkyBlockcatia.init();
 
         new BazaarViewerCommand(ClientCommandManager.DISPATCHER);
         new SkyBlockAPIViewerCommand(ClientCommandManager.DISPATCHER);

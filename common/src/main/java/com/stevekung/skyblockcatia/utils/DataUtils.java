@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import me.shedaniel.architectury.platform.Platform;
 
 public class DataUtils
@@ -42,7 +42,7 @@ public class DataUtils
         catch (IOException e)
         {
             e.printStackTrace();
-            SkyBlockcatiaMod.LOGGER.error("Couldn't get {} from remote, using local data", fileName);
+            SkyBlockcatia.LOGGER.error("Couldn't get {} from remote, using local data", fileName);
             return new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/skyblockcatia/api/" + fileName)));
         }
     }

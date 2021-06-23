@@ -1,15 +1,7 @@
 package com.stevekung.skyblockcatia.mixin.gui;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import com.mojang.math.Matrix4f;
-import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
-import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
-import com.stevekung.stevekungslib.utils.ColorUtils;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 @Mixin(Font.class)
 public class MixinFontRenderer

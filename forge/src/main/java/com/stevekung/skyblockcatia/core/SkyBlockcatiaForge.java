@@ -16,18 +16,18 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
-@Mod(SkyBlockcatiaMod.MOD_ID)
-public class SkyBlockcatiaForgeMod
+@Mod(SkyBlockcatia.MOD_ID)
+public class SkyBlockcatiaForge
 {
-    public static final ModVersionChecker CHECKER = new ModVersionChecker(SkyBlockcatiaMod.MOD_ID);
+    public static final ModVersionChecker CHECKER = new ModVersionChecker(SkyBlockcatia.MOD_ID);
 
-    public SkyBlockcatiaForgeMod()
+    public SkyBlockcatiaForge()
     {
-        EventBuses.registerModEventBus(SkyBlockcatiaMod.MOD_ID, ForgeCommonUtils.getModEventBus());
-        SkyBlockcatiaMod.init();
+        EventBuses.registerModEventBus(SkyBlockcatia.MOD_ID, ForgeCommonUtils.getModEventBus());
+        SkyBlockcatia.init();
         ForgeCommonUtils.registerConfig(ModConfig.Type.CLIENT, SkyBlockcatiaConfig.GENERAL_BUILDER);
         ForgeCommonUtils.registerClientOnly();
-        ForgeCommonUtils.registerConfigScreen(() -> (mc, screen) -> ForgeCommonUtils.openConfigFile(screen, SkyBlockcatiaMod.MOD_ID, ModConfig.Type.CLIENT));
+        ForgeCommonUtils.registerConfigScreen(() -> (mc, screen) -> ForgeCommonUtils.openConfigFile(screen, SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT));
 
         ForgeCommonUtils.registerModEventBus(SkyBlockcatiaConfig.class);
         ForgeCommonUtils.addModListener(this::phaseOne);
@@ -48,6 +48,6 @@ public class SkyBlockcatiaForgeMod
     private void loadComplete(FMLLoadCompleteEvent event)
     {
         SBAPIUtils.setApiKey();
-        SkyBlockcatiaForgeMod.CHECKER.startCheck();
+        SkyBlockcatiaForge.CHECKER.startCheck();
     }
 }

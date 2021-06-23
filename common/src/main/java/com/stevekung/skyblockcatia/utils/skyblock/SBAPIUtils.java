@@ -1,6 +1,6 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.PlatformConfig;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
@@ -14,7 +14,7 @@ public class SBAPIUtils
 
     public static void setApiKey()
     {
-        SkyBlockcatiaMod.LOGGER.info("Setting an API Key");
+        SkyBlockcatia.LOGGER.info("Setting an API Key");
         SBAPIUtils.API_KEY = PlatformConfig.getApiKey();
     }
 

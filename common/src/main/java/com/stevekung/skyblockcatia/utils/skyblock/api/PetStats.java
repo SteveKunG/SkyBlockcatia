@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
-import com.stevekung.skyblockcatia.core.SkyBlockcatiaMod;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
@@ -126,7 +126,7 @@ public class PetStats
 
                         if (heldItem == null)
                         {
-                            SkyBlockcatiaMod.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemObj);
+                            SkyBlockcatia.LOGGER.warning("Found an unknown pet item!, type: {}", heldItemObj);
                         }
                     }
 
