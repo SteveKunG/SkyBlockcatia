@@ -116,6 +116,7 @@ curseforge {
                 requiredDependency "architectury-fabric"
                 requiredDependency "stevekungs-lib"
                 requiredDependency "fabric-api"
+                requiredDependency "cloth-config"
                 optionalDependency "indicatia"
             }
             afterEvaluate {
