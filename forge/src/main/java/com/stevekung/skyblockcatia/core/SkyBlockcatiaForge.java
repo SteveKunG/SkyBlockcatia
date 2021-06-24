@@ -25,7 +25,7 @@ public class SkyBlockcatiaForge
     {
         EventBuses.registerModEventBus(SkyBlockcatia.MOD_ID, ForgeCommonUtils.getModEventBus());
         SkyBlockcatia.init();
-        ForgeCommonUtils.registerConfig(ModConfig.Type.CLIENT, SkyBlockcatiaConfig.GENERAL_BUILDER);
+        ForgeCommonUtils.registerConfig(ModConfig.Type.CLIENT, SkyBlockcatiaConfig.GENERAL_SPEC);
         ForgeCommonUtils.registerClientOnly();
         ForgeCommonUtils.registerConfigScreen(() -> (mc, screen) -> ForgeCommonUtils.openConfigFile(screen, SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT));
 

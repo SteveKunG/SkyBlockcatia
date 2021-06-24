@@ -13,10 +13,10 @@ import net.minecraft.client.gui.screens.Screen;
 
 public class SkyBlockcatiaConfig
 {
-    public boolean enableSkinRenderingFix = false;
-    public boolean disableHurtCameraEffect = false;
-    public boolean enableChatInContainerScreen = true;
-    public String hypixelApiKey = "";
+    public boolean enableSkinRenderingFix;
+    public boolean disableHurtCameraEffect;
+    public boolean enableChatInContainerScreen;
+    public String hypixelApiKey;
 
     public static Screen createConfigScreen(Screen parent)
     {

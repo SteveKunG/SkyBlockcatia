@@ -1,5 +1,6 @@
 package com.stevekung.skyblockcatia.config;
 
+import org.apache.commons.lang3.tuple.Pair;
 import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -8,8 +9,15 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class SkyBlockcatiaConfig
 {
-    public static final ForgeConfigSpec.Builder GENERAL_BUILDER = new ForgeConfigSpec.Builder();
-    public static final SkyBlockcatiaConfig.General GENERAL = new SkyBlockcatiaConfig.General(SkyBlockcatiaConfig.GENERAL_BUILDER);
+    public static final ForgeConfigSpec GENERAL_SPEC;
+    public static final General GENERAL;
+
+    static
+    {
+        Pair<General, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(General::new);
+        GENERAL_SPEC = specPair.getRight();
+        GENERAL = specPair.getLeft();
+    }
 
     public static class General
     {
@@ -21,7 +29,8 @@ public class SkyBlockcatiaConfig
 
         General(ForgeConfigSpec.Builder builder)
         {
-            builder.comment("General settings").push("general");
+            builder.comment("General settings");
+            builder.push("general");
 
             this.hypixelApiKey = builder.translation("skyblockcatia.configgui.hypixel_api_key").define("hypixelApiKey", "");
 
