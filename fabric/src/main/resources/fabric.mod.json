@@ -17,7 +17,7 @@
     "environment": "client",
     "entrypoints": {
         "client": [
-            "com.stevekung.skyblockcatia.core.SkyBlockcatiaFabricMod"
+            "com.stevekung.skyblockcatia.core.SkyBlockcatiaFabric"
         ],
         "modmenu": [
             "com.stevekung.skyblockcatia.modmenu.ModMenuIntegrationSB"
