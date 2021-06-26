@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
@@ -26,7 +27,7 @@ public class SBRenderUtils
 {
     private static final ResourceLocation RARITY = new ResourceLocation("skyblockcatia:textures/gui/rarity.png");
     private static final Pattern PATTERN = Pattern.compile("(?<color>\\u00a7[0-9a-fk-or]).+");
-    private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+\\] (?<color>\\u00a7[0-9a-fk-or]).+");
+    private static final Pattern PET_PATTERN = Pattern.compile("\\u00a77\\[Lvl \\d+] (?<color>\\u00a7[0-9a-fk-or]).+");
 
     private static final ResourceLocation SUPERIOR_BABY = new ResourceLocation("skyblockcatia:textures/entity/superior_baby.png");
     private static final ResourceLocation HOLY_BABY = new ResourceLocation("skyblockcatia:textures/entity/holy_baby.png");
@@ -185,19 +186,19 @@ public class SBRenderUtils
         if (rarity != null)
         {
             float alpha = SkyBlockcatiaSettings.INSTANCE.itemRarityOpacity / 100.0F;
-            RenderSystem.disableLighting();
+            RenderSystem.pushMatrix();
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
             RenderSystem.enableAlphaTest();
             Minecraft.getInstance().getTextureManager().bind(RARITY);
             RenderSystem.color4f(rarity.getColorToRender()[0], rarity.getColorToRender()[1], rarity.getColorToRender()[2], alpha);
             RenderSystem.blendFunc(770, 771);
-            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
+            GlStateManager._texEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
             GuiComponent.blit(matrixStack, xPos, yPos, 0, 0, 16, 16, 16, 16);
-            GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-            RenderSystem.enableLighting();
+            GlStateManager._texEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
             RenderSystem.enableDepthTest();
             RenderSystem.disableAlphaTest();
+            RenderSystem.popMatrix();
         }
     }
 
