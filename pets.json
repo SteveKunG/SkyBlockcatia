@@ -700,6 +700,13 @@
             "texture": "e05c9b4f4218677c5b4bcc9c7d9e29e18d1684a536781fede1280fc5e6961538"
         },
         {
+            "type": "DRAGON_PASTEL",
+            "displayName": "Pastel Ender Dragon",
+            "color": "gold",
+            "uuid": "7f37ab10-e76b-3661-9304-7d8169a22fa7",
+            "texture": "4a62ec4e019fe0fed059663ae59daa0d91729517bf33ae7f7d7e722913602df4"
+        },
+        {
             "type": "ELEPHANT_BLUE",
             "displayName": "Blue Elephant",
             "color": "blue",
