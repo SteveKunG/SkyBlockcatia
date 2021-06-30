@@ -26,6 +26,10 @@ loom {
     mixinConfigs = ["mixins.skyblockcatia.json", "mixins.skyblockcatia_fabric.json"]
 }
 
+minecraft {
+    accessWidener = file("../fabric/src/main/resources/skyblockcatia.accesswidener")
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"

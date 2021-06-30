@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.text.WordUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +24,6 @@ import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.gui.screen.SkyBlockProfileSelectorScreen;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.mixin.InvokerChatComponent;
 import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.ITradeScreen;
 import com.stevekung.skyblockcatia.utils.SearchMode;
@@ -60,7 +60,6 @@ import net.minecraft.world.item.ItemStack;
 @Mixin(AbstractContainerScreen.class)
 public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 {
-    private final AbstractContainerScreen<?> that = (AbstractContainerScreen<?>) (Object) this;
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -90,7 +89,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "init()V", at = @At("RETURN"))
     private void init(CallbackInfo info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
@@ -140,7 +139,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "mouseClicked(DDI)Z", cancellable = true, at = @At("HEAD"))
     private void mouseClicked(double mouseX, double mouseY, int mouseButton, CallbackInfoReturnable<Boolean> info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
@@ -167,7 +166,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "onClose()V", at = @At("RETURN"))
     private void onClose(CallbackInfo info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isChatable(this.getTitle()) || GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
@@ -183,7 +182,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "tick()V", at = @At("RETURN"))
     private void tick(CallbackInfo info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
@@ -201,7 +200,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/Screen.render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", shift = Shift.BEFORE))
     private void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
@@ -252,7 +251,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             }
         }
 
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
@@ -374,7 +373,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         if (slot != null && SkyBlockEventHandler.isSkyBlock)
         {
-            if (this.that instanceof ContainerScreen)
+            if (this.getThis() instanceof ContainerScreen)
             {
                 if (mouseButton == 2 && type == ClickType.CLONE && GuiScreenUtils.canViewSeller(this.getTitle().getString()))
                 {
@@ -407,14 +406,14 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderAndDecorateItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;II)V", shift = Shift.AFTER))
     private void renderAnvilLevel(PoseStack matrixStack, Slot slot, CallbackInfo info)
     {
-        if (this.that instanceof ContainerScreen)
+        if (this.getThis() instanceof ContainerScreen)
         {
             String levelString = "";
 
             if (this.getTitle().getString().equals("Anvil") || this.getTitle().getString().equals("Reforge Item"))
             {
-                Slot anvilSlot = this.that.getMenu().slots.get(31);
-                ItemStack itemStack = this.that.getMenu().slots.get(22).getItem();
+                Slot anvilSlot = this.getThis().getMenu().slots.get(31);
+                ItemStack itemStack = this.getThis().getMenu().slots.get(22).getItem();
                 int i = anvilSlot.x;
                 int j = anvilSlot.y;
 
@@ -484,7 +483,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Inject(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
     private void renderOverlays(PoseStack matrixStack, Slot slot, CallbackInfo info)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (MainEventHandler.bidHighlight && GuiScreenUtils.canRenderBids(this.getTitle().getString()))
             {
@@ -505,7 +504,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         boolean found = false;
 
-        if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.that instanceof ContainerScreen)
+        if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.getThis() instanceof ContainerScreen)
         {
             if (this.title.getString().contains("Hub Selector") && !stack.isEmpty() && stack.hasTag())
             {
@@ -564,7 +563,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Override
     public void resize(Minecraft mc, int width, int height)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen)
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
@@ -595,7 +594,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta)
     {
-        if (SkyBlockEventHandler.isSkyBlock && this.that instanceof ContainerScreen && GuiScreenUtils.isChatable(this.getTitle()))
+        if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen && GuiScreenUtils.isChatable(this.getTitle()))
         {
             return true;
         }
@@ -648,10 +647,10 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         ChatComponent chat = this.minecraft.gui.getChat();
 
-        if (!((InvokerChatComponent) chat).invokeIsChatHidden())
+        if (!chat.isChatHidden())
         {
             int i = chat.getLinesPerPage();
-            int j = ((InvokerChatComponent) chat).getTrimmedMessages().size();
+            int j = chat.trimmedMessages.size();
 
             if (j > 0)
             {
@@ -661,9 +660,9 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 RenderSystem.scaled(d0, d0, 1.0D);
                 double d1 = this.minecraft.options.chatOpacity * 0.9F + 0.1F;
 
-                for (int i1 = 0; i1 + ((InvokerChatComponent) chat).getChatScrollbarPos() < ((InvokerChatComponent) chat).getTrimmedMessages().size() && i1 < i; ++i1)
+                for (int i1 = 0; i1 + chat.chatScrollbarPos < chat.trimmedMessages.size() && i1 < i; ++i1)
                 {
-                    GuiMessage<FormattedCharSequence> chatline = ((InvokerChatComponent) chat).getTrimmedMessages().get(i1 + ((InvokerChatComponent) chat).getChatScrollbarPos());
+                    GuiMessage<FormattedCharSequence> chatline = chat.trimmedMessages.get(i1 + chat.chatScrollbarPos);
 
                     if (chatline != null)
                     {
@@ -671,8 +670,9 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
                         if (j1 < 200)
                         {
-                            double d3 = InvokerChatComponent.invokeGetTimeFactor(j1);
+                            double d3 = ChatComponent.getTimeFactor(j1);
                             int l1 = (int) (255.0D * d3 * d1);
+
                             if (l1 > 3)
                             {
                                 int k2 = -i1 * 9;
@@ -716,7 +716,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
                     }
 
-                    if (((ITradeScreen) this.that).getNumberEditBox() == null || ((ITradeScreen) this.that).getNumberEditBox().getValue().isEmpty())
+                    if (((ITradeScreen) this.getThis()).getNumberEditBox() == null || ((ITradeScreen) this.getThis()).getNumberEditBox().getValue().isEmpty())
                     {
                         if (lore.startsWith("Starting bid:"))
                         {
@@ -927,5 +927,11 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             CommonUtils.openLink(this.fandomUrl);
         }
         this.minecraft.setScreen(this);
+    }
+
+    @Unique
+    private AbstractContainerScreen<?> getThis()
+    {
+        return(AbstractContainerScreen<?>) (Object) this;
     }
 }

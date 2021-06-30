@@ -21,7 +21,6 @@ import com.stevekung.skyblockcatia.gui.screen.config.SkyBlockSettingsScreen;
 import com.stevekung.skyblockcatia.gui.toasts.*;
 import com.stevekung.skyblockcatia.gui.toasts.ToastUtils.ToastType;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.mixin.InvokerToastComponent;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
@@ -863,7 +862,7 @@ public class SkyBlockEventHandler
                                 {
                                     newItem.setCount(diff);
 
-                                    if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    if (mc.getToasts().queued.add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                     {
                                         iterator.remove();
                                     }
@@ -884,14 +883,14 @@ public class SkyBlockEventHandler
 
                                     if (drop.getToastType() == ToastType.DROP)
                                     {
-                                        if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                        if (mc.getToasts().queued.add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                         {
                                             iterator.remove();
                                         }
                                     }
                                     else
                                     {
-                                        if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
+                                        if (mc.getToasts().queued.add(new GiftToast(newItem, drop.getType(), drop.getType() == ToastUtils.DropType.SANTA_TIER)))
                                         {
                                             iterator.remove();
                                         }
@@ -899,7 +898,7 @@ public class SkyBlockEventHandler
                                 }
                                 else if (drop.getType().matches(ToastUtils.DropCondition.CONTAINS) && key.contains(dropName))
                                 {
-                                    if (((InvokerToastComponent) mc.getToasts()).getQueued().add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
+                                    if (mc.getToasts().queued.add(new ItemDropsToast(newItem, drop.getType(), drop.getMagicFind())))
                                     {
                                         iterator.remove();
                                     }

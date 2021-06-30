@@ -74,7 +74,7 @@ public class SBClientEventHandler
     @SubscribeEvent
     public void onRenderChat(RenderGameOverlayEvent.Chat event)
     {
-        if (this.mc.screen != null && this.mc.screen instanceof ContainerScreen)
+        if (this.mc.screen instanceof ContainerScreen)
         {
             ContainerScreen chest = (ContainerScreen) this.mc.screen;
 

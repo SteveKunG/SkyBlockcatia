@@ -13,8 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SmallArrowButton;
-import com.stevekung.skyblockcatia.mixin.InvokerAbstractContainerScreen;
-import com.stevekung.skyblockcatia.mixin.InvokerTitleScreen;
 import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.api.Bazaar;
@@ -136,7 +134,7 @@ public class MainEventHandler
                 if (GuiScreenUtils.isAuctionBrowser(title.getString()))
                 {
                     String bid = MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
-                    ScreenHooks.addButton(screen, new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? ((InvokerAbstractContainerScreen) chest).getTopPos() + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
+                    ScreenHooks.addButton(screen, new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? chest.topPos + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
                     {
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
                         ((ItemButton) button).setName(TextComponentUtils.component("Toggle Bid Highlight: " + (MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF")));
@@ -183,7 +181,7 @@ public class MainEventHandler
 
             if (CalendarUtils.isMyBirthDay())
             {
-                ((InvokerTitleScreen) menu).setSplash("Happy birthday, SteveKunG!");
+                menu.splash = "Happy birthday, SteveKunG!";
             }
         }
         return InteractionResultHolder.pass(screen);

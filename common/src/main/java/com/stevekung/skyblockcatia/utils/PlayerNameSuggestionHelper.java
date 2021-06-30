@@ -3,7 +3,6 @@ package com.stevekung.skyblockcatia.utils;
 import java.util.Collection;
 
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import com.stevekung.skyblockcatia.mixin.InvokerCommandSuggestions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.CommandSuggestions;
@@ -21,19 +20,19 @@ public class PlayerNameSuggestionHelper extends CommandSuggestions
     @Override
     public void updateCommandInfo()
     {
-        String text = ((InvokerCommandSuggestions) this).getInput().getValue();
+        String text = this.input.getValue();
 
-        if (!((InvokerCommandSuggestions) this).isKeepSuggestions())
+        if (!this.keepSuggestions)
         {
-            ((InvokerCommandSuggestions) this).getInput().setSuggestion(null);
-            ((InvokerCommandSuggestions) this).setSuggestions(null);
+            this.input.setSuggestion(null);
+            this.suggestions = null;
         }
 
-        ((InvokerCommandSuggestions) this).getCommandUsage().clear();
-        int i = ((InvokerCommandSuggestions) this).getInput().getCursorPosition();
+        this.commandUsage.clear();
+        int i = this.input.getCursorPosition();
         String s1 = text.substring(0, i);
-        int k = InvokerCommandSuggestions.invokeGetLastWordIndex(s1);
-        Collection<String> collection = Utils.filteredPlayers(((InvokerCommandSuggestions) this).getMinecraft().player.connection.getSuggestionsProvider().getOnlinePlayerNames());
-        ((InvokerCommandSuggestions) this).setPendingSuggestions(SharedSuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k)));
+        int k = CommandSuggestions.getLastWordIndex(s1);
+        Collection<String> collection = Utils.filteredPlayers(this.minecraft.player.connection.getSuggestionsProvider().getOnlinePlayerNames());
+        this.pendingSuggestions = SharedSuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k));
     }
 }

@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.mixin.InvokerSignEditScreen;
 import com.stevekung.stevekungslib.utils.LangUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -125,7 +124,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int mouseEvent)
         {
-            SignBlockEntity sign = ((InvokerSignEditScreen) this.mc.screen).getSign();
+            SignBlockEntity sign = ((SignEditScreen) this.mc.screen).sign;
 
             if (mouseEvent == 0)
             {
@@ -164,7 +163,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
                 }
                 SignSelectionList.this.setSelected(this);
                 sign.setMessage(0, TextComponentUtils.component(this.value));
-                ((InvokerSignEditScreen) this.mc.screen).getSignField().setCursorToEnd();
+                ((SignEditScreen) this.mc.screen).signField.setCursorToEnd();
                 this.lastClicked = Util.getMillis();
                 return true;
             }

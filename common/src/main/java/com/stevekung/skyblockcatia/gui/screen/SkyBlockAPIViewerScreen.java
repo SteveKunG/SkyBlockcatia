@@ -37,8 +37,6 @@ import com.stevekung.skyblockcatia.gui.APIErrorInfo;
 import com.stevekung.skyblockcatia.gui.ScrollingListScreen;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.handler.KeyBindingHandler;
-import com.stevekung.skyblockcatia.mixin.InvokerClientPacketListener;
-import com.stevekung.skyblockcatia.mixin.InvokerItemRenderer;
 import com.stevekung.skyblockcatia.utils.IViewerLoader;
 import com.stevekung.skyblockcatia.utils.TimeUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
@@ -1212,8 +1210,8 @@ public class SkyBlockAPIViewerScreen extends Screen
             float h = Math.max(0.0F, (g - f) / g);
             int i = Math.round(13.0F - f * 13.0F / g);
             int j = Mth.hsvToRgb(h / 3.0F, 1.0F, 1.0F);
-            ((InvokerItemRenderer) this.itemRenderer).invokeFillRect(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
-            ((InvokerItemRenderer) this.itemRenderer).invokeFillRect(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
+            this.itemRenderer.fillRect(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+            this.itemRenderer.fillRect(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
             RenderSystem.enableBlend();
             RenderSystem.enableAlphaTest();
             RenderSystem.enableTexture();
@@ -3693,7 +3691,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (this.minecraft.getConnection().getPlayerInfo(this.profile.getName()) == null)
         {
             ClientboundPlayerInfoPacket.PlayerUpdate playerUpdate = new ClientboundPlayerInfoPacket().new PlayerUpdate(this.profile, 0, null, null);
-            ((InvokerClientPacketListener) this.minecraft.getConnection()).getPlayerInfoMap().put(this.profile.getId(), ((IViewerLoader) new PlayerInfo(playerUpdate)).setLoadedFromViewer(true)); // hack into map to show their skin :D
+            this.minecraft.getConnection().playerInfoMap.put(this.profile.getId(), ((IViewerLoader) new PlayerInfo(playerUpdate)).setLoadedFromViewer(true)); // hack into map to show their skin :D
         }
 
         this.player = new SBFakePlayerEntity(this.minecraft.level, this.profile);

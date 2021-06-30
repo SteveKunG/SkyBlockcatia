@@ -6,9 +6,6 @@ import java.util.*;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.DataFixUtils;
-import com.stevekung.skyblockcatia.mixin.InvokerEntityBlockStateFix;
-import com.stevekung.skyblockcatia.mixin.InvokerItemPotionFix;
-import com.stevekung.skyblockcatia.mixin.InvokerItemStackEnchantmentNamesFix;
 import com.stevekung.skyblockcatia.utils.skyblock.api.InventoryType;
 import com.stevekung.skyblockcatia.utils.skyblock.api.SkyblockProfiles;
 import com.stevekung.stevekungslib.utils.ItemUtils;
@@ -19,9 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.util.datafix.fixes.EntityTheRenameningFix;
-import net.minecraft.util.datafix.fixes.ItemIdFix;
-import net.minecraft.util.datafix.fixes.ItemStackTheFlatteningFix;
+import net.minecraft.util.datafix.fixes.*;
 import net.minecraft.world.item.ItemStack;
 
 public class SBItemUtils
@@ -95,7 +90,7 @@ public class SBItemUtils
         {
             try
             {
-                String itemId2 = SBItemUtils.getKey(InvokerEntityBlockStateFix.getMap(), (int) oldItemId);
+                String itemId2 = SBItemUtils.getKey(EntityBlockStateFix.MAP, (int) oldItemId);
                 String newItemReg2 = ItemStackTheFlatteningFix.updateItem(itemId2, damage);
 
                 if (newItemReg2 != null)
@@ -119,7 +114,7 @@ public class SBItemUtils
 
             if (itemId.equals("minecraft:potion"))
             {
-                String potionId = InvokerItemPotionFix.getPotions()[damage & 127];
+                String potionId = ItemPotionFix.POTIONS[damage & 127];
 
                 if ((damage & 16384) == 16384)
                 {
@@ -164,7 +159,7 @@ public class SBItemUtils
                     for (int enchI = 0; enchI < enchantmentList.size(); enchI++)
                     {
                         int enchant2 = enchantmentList.getCompound(enchI).getInt("id");
-                        enchantmentList.getCompound(enchI).putString("id", InvokerItemStackEnchantmentNamesFix.getMap().getOrDefault(enchant2, "null"));
+                        enchantmentList.getCompound(enchI).putString("id", ItemStackEnchantmentNamesFix.MAP.getOrDefault(enchant2, "null"));
                     }
                 }
                 sbTag.put("Enchantments", enchantmentList);

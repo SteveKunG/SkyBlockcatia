@@ -14,14 +14,13 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 @Mixin(Minecraft.class)
 public class MixinMinecraft
 {
-    private final Minecraft that = (Minecraft) (Object) this;
-
     @Redirect(method = "handleKeybinds()V", slice = @Slice(from = @At(value = "FIELD", target = "net/minecraft/client/Options.keyInventory:Lnet/minecraft/client/KeyMapping;"), to = @At(value = "INVOKE", target = "net/minecraft/client/multiplayer/MultiPlayerGameMode.isServerControlledInventory()Z")), at = @At(value = "INVOKE", target = "net/minecraft/client/KeyMapping.consumeClick()Z"))
     private boolean disableInventory(KeyMapping key)
     {
+        Minecraft mc = (Minecraft) (Object) this;
         boolean foundDragon = false;
 
-        for (Entity entity : this.that.level.entitiesForRendering())
+        for (Entity entity : mc.level.entitiesForRendering())
         {
             if (entity instanceof EnderDragon)
             {
@@ -31,7 +30,7 @@ public class MixinMinecraft
         }
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToOpenInventoryWhileFightDragon && foundDragon)
         {
-            return key.consumeClick() && this.that.player.isShiftKeyDown();
+            return key.consumeClick() && mc.player.isShiftKeyDown();
         }
         return key.consumeClick();
     }
@@ -39,10 +38,6 @@ public class MixinMinecraft
     @Redirect(method = "handleKeybinds()V", slice = @Slice(from = @At(value = "FIELD", target = "net/minecraft/client/Options.keySwapOffhand:Lnet/minecraft/client/KeyMapping;"), to = @At(value = "NEW", target = "net/minecraft/network/protocol/game/ServerboundPlayerActionPacket")), at = @At(value = "INVOKE", target = "net/minecraft/client/KeyMapping.consumeClick()Z"))
     private boolean disableSwapItem(KeyMapping key)
     {
-        if (SkyBlockEventHandler.isSkyBlock)
-        {
-            return false;
-        }
-        return key.consumeClick();
+        return !SkyBlockEventHandler.isSkyBlock && key.consumeClick();
     }
 }

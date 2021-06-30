@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 @Mixin(SignEditScreen.class)
 public class MixinSignEditScreen extends Screen
 {
-    private final SignEditScreen that = (SignEditScreen) (Object) this;
     private SignSelectionList globalSelector;
 
     @Shadow
@@ -86,7 +85,7 @@ public class MixinSignEditScreen extends Screen
             }
             if (list != null && title != null)
             {
-                this.globalSelector = new SignSelectionList(this.that, this.width + 200, this.height, 64, this.height - 64, list, title);
+                this.globalSelector = new SignSelectionList((SignEditScreen) (Object) this, this.width + 200, this.height, 64, this.height - 64, list, title);
             }
         }
     }
@@ -117,6 +116,7 @@ public class MixinSignEditScreen extends Screen
     @Overwrite
     private void onDone()
     {
+        SignEditScreen sign = (SignEditScreen) (Object) this;
         String text = this.messages[0];
 
         if (SkyBlockEventHandler.isSkyBlock)
@@ -125,15 +125,15 @@ public class MixinSignEditScreen extends Screen
             {
                 if (SBNumberUtils.isNumericWithKM(text) && (this.isAuctionPrice() || this.isAuctionStartBidSign() || this.isBazaarPrice() || this.isBankWithdraw() || this.isBankDeposit()))
                 {
-                    this.globalSelector.add(text, this.that);
+                    this.globalSelector.add(text, sign);
                 }
                 else if (NumberUtils.isNumeric(text) && this.isBazaarOrder())
                 {
-                    this.globalSelector.add(text, this.that);
+                    this.globalSelector.add(text, sign);
                 }
                 else if (this.isAuctionQuery())
                 {
-                    this.globalSelector.add(text, this.that);
+                    this.globalSelector.add(text, sign);
                 }
             }
         }

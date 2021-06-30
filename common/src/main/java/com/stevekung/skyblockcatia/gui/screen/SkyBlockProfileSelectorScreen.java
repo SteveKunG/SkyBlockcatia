@@ -26,7 +26,6 @@ import com.stevekung.skyblockcatia.gui.widget.RightClickTextFieldWidget;
 import com.stevekung.skyblockcatia.gui.widget.button.APISearchButton;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SkyBlockProfileButton;
-import com.stevekung.skyblockcatia.mixin.InvokerCommandSuggestions;
 import com.stevekung.skyblockcatia.utils.PlayerNameSuggestionHelper;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils.APIUrl;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
@@ -359,7 +358,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 this.suggestionHelper.render(matrixStack, mouseX, mouseY);
                 this.usernameTextField.render(matrixStack, mouseX, mouseY, partialTicks);
 
-                if (((InvokerCommandSuggestions) this.suggestionHelper).getSuggestions() == null && StringUtil.isNullOrEmpty(this.usernameTextField.getValue()) && !this.usernameTextField.isFocused())
+                if (this.suggestionHelper.suggestions == null && StringUtil.isNullOrEmpty(this.usernameTextField.getValue()) && !this.usernameTextField.isFocused())
                 {
                     GuiComponent.drawString(matrixStack, this.font, "Enter Username or UUID", this.width / 2 - 71, 51, 10526880);
                 }
@@ -369,8 +368,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                 for (SkyBlockProfileButton button : this.buttons.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
                 {
-                    boolean hover = ((InvokerCommandSuggestions) this.suggestionHelper).getSuggestions() == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
-                    button.visible = button.active = ((InvokerCommandSuggestions) this.suggestionHelper).getSuggestions() == null;
+                    boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+                    button.visible = button.active = this.suggestionHelper.suggestions == null;
 
                     if (hover)
                     {

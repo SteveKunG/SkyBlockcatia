@@ -15,10 +15,6 @@ public class MixinAbstractContainerScreenDev
     @Redirect(method = "checkHotbarKeyPressed(II)Z", slice = @Slice(from = @At(value = "INVOKE", target = "net/minecraft/world/item/ItemStack.isEmpty()Z"), to = @At(value = "CONSTANT", args = "intValue=40")), at = @At(value = "INVOKE", remap = false, target = "net/minecraft/client/KeyMapping.isActiveAndMatches(Lcom/mojang/blaze3d/platform/InputConstants$Key;)Z"))
     private boolean disableItemStackSwap(KeyMapping key, InputConstants.Key keyCodeInput)
     {
-        if (SkyBlockEventHandler.isSkyBlock)
-        {
-            return false;
-        }
-        return key.isActiveAndMatches(keyCodeInput);
+        return !SkyBlockEventHandler.isSkyBlock && key.isActiveAndMatches(keyCodeInput);
     }
 }
