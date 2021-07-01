@@ -87,6 +87,7 @@ sourcesJar {
     classifier "source"
     version "v${project.version}"
     baseName fileName
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 remapJar {

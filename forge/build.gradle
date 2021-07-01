@@ -67,10 +67,11 @@ String fileName = "${rootProject.archives_base_name}-mc${rootProject.mc_version}
 jar {
     version "v${project.version}"
     baseName fileName
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 shadowJar {
+    exclude "fabric.mod.json"
+    exclude "skyblockcatia.accesswidener"
     configurations = [project.configurations.shadow]
     classifier "dev"
     version "v${project.version}"
@@ -84,7 +85,7 @@ sourcesJar {
     classifier "source"
     version "v${project.version}"
     baseName fileName
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 remapJar {
