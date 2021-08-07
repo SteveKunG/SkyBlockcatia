@@ -423,12 +423,85 @@ public class PetsBuilder
 
     enum DisplayMode
     {
-        DISPLAY_AT_LEVEL_1,
-        COMBINE_WITH_BASE;
+        DISPLAY_AT_LEVEL_1;
     }
 
     enum PetType
     {
+        ARMADILLO("MINING", "6aa53fbd-54e9-4a5b-8079-3c0368b3960d", "c1eb6df4736ae24dd12a3d00f91e6e3aa7ade6bbefb0978afef2f0f92461018f", make(Lists.newLinkedList(), list ->
+        {
+            list.add(Stats.build("defense", 0, 2));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("RARE", Pair.of(Property.build("[59.7]"), Property.build("[-0.297]")));
+            map.put("EPIC", Pair.of(Property.build("[59.7]"), Property.build("[-0.297]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[59.7, 99.5]"), Property.build("[-0.297, -0.495]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Ridable");
+                list.add("§7Right-click your summoned pet");
+                list.add("§7to ride it!");
+                list.add("");
+                list.add("§6Tunneller");
+                list.add("§7The Armadillo breaks all stone");
+                list.add("§7or ore in it's path while you");
+                list.add("§7are riding it in the §3Crystal");
+                list.add("§3Hollows.");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Earth Surfer");
+                list.add("§7The Armadillo moves faster");
+                list.add("§7based on your §fSpeed.");
+            }));
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Rolling Miner");
+                list.add("§7Every §a{0} §7seconds, the");
+                list.add("§7next gemstone you mine gives 2x");
+                list.add("§7drops.");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Mobile Tank");
+                list.add("§7For every §a{1} §7Defense,");
+                list.add("§7gain §f+1✦ Speed §7and §6+1⸕");
+                list.add("§6Mining Speed.");
+            }));
+        })),
+
+        BAL("COMBAT", "1e63e737-d649-4cc2-939d-95b1ac517cda", "c469ba2047122e0a2de3c7437ad3dd5d31f1ac2d27abde9f8841e1d92a8c5b75", make(Lists.newLinkedList(), list ->
+        {
+            list.add(Stats.build("strength", 0, 0.25));
+            list.add(Stats.build("ferocity", 0, 0.1));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", Pair.of(Property.build("[0.1]"), Property.build(DisplayMode.DISPLAY_AT_LEVEL_1, "[0.1]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[0.1, 0.1]"), Property.build(DisplayMode.DISPLAY_AT_LEVEL_1, "[0.1, 0.15]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("EPIC", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Protective Skin");
+                list.add("§7Gives §cheat immunity.");
+                list.add("");
+                list.add("§6Fire Whip");
+                list.add("§7Every §a5s §7while in combat");
+                list.add("§7the Balrog will strike nearby");
+                list.add("§7enemies with his fire whip");
+                list.add("§7dealing §c{0}% §7of your damage");
+                list.add("§7as §ftrue damage.");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Made of Lava");
+                list.add("§7Gain §a{1}% §7on ALL stats");
+                list.add("§7when inside the §cMagma Fields.");
+            }));
+        })),
+
         BABY_YETI("FISHING", "7895e21a-8f3b-3e30-bea6-06108f64d5dc", "ab126814fc3fa846dad934c349628a7a1de5b415021a03ef4211d62514d5", make(Lists.newLinkedList(), list ->
         {
             list.add(Stats.build("strength", 0, 0.4));
@@ -1518,15 +1591,14 @@ public class PetsBuilder
             }));
         })),
 
-        //TODO Check stats, because i don't have it D:
         PHOENIX("COMBAT", "4173bc61-9e2f-3c84-8d31-4517e64062ab", "23aaf7b1a778949696cb99d4f04ad1aa518ceee256c72e5ed65bfa5c2d88d9e", make(Lists.newLinkedList(), list ->
         {
             list.add(Stats.build("intelligence", 51, 0.99));
-            list.add(Stats.build("strength", 10, 0.4));
+            list.add(Stats.build("strength", 10, 0.5));
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("EPIC", Pair.of(Property.build("[10.1, 2, 1.1, 2]"), Property.build(DisplayMode.DISPLAY_AT_LEVEL_1, "[0.099, 0.02, 0.119, 0.02]")));
-            map.put("LEGENDARY", Pair.of(Property.build("[15.2, 2, 0, 2]"), Property.build(DisplayMode.DISPLAY_AT_LEVEL_1, "[0.148, 0.02, 0.139, 0.03]")));
+            map.put("EPIC", Pair.of(Property.build("[10.1, 2, 1.1, 2]"), Property.build("[0.099, 0.02, 0.119, 0.02]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[15.2, 2, 1.1, 2]"), Property.build("[0.148, 0.02, 0.139, 0.03]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("EPIC", make(Lists.newLinkedList(), list ->

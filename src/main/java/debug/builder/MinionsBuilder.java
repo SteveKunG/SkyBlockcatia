@@ -119,7 +119,8 @@ public class MinionsBuilder
         BIRCH("FORAGING", "efc6ffa9-3a7a-3e77-9eda-c70dcb8c20b9", "eb74109dbb88178afb7a9874afc682904cedb3df75978a51f7beeb28f924251"),
         DARK_OAK("FORAGING", "d1d45cb5-6e2d-3f9a-877d-f9acef04178f", "5ecdc8d6b2b7e081ed9c36609052c91879b89730b9953adbc987e25bf16c5581"),
         ACACIA("FORAGING", "ec02b209-c96d-3c47-9ddf-e5fcb00bb6b4", "42183eaf5b133b838db13d145247e389ab4b4f33c67846363792dc3d82b524c0"),
-        JUNGLE("FORAGING", "060c1801-f359-3603-ae39-d485ecd64e38", "2fe73d981690c1be346a16331819c4e8800859fcdc3e5153718c6ad45861924c");
+        JUNGLE("FORAGING", "060c1801-f359-3603-ae39-d485ecd64e38", "2fe73d981690c1be346a16331819c4e8800859fcdc3e5153718c6ad45861924c"),
+        HARD_STONE("MINING", "1b834b24-8688-3ea6-8a92-682857fd084e", "1e8bab9493708beda34255606d5883b8762746bcbe6c94e8ca78a77a408c8ba8", true);
 
         private final String category;
         private final String altName;
