@@ -989,6 +989,76 @@
     ],
     "type": [
         {
+            "type": "ARMADILLO",
+            "skill": "MINING",
+            "uuid": "6aa53fbd-54e9-4a5b-8079-3c0368b3960d",
+            "texture": "c1eb6df4736ae24dd12a3d00f91e6e3aa7ade6bbefb0978afef2f0f92461018f",
+            "stats": {
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 2.0
+                }
+            },
+            "statsLore": {
+                "RARE": {
+                    "base": [
+                        59.7
+                    ],
+                    "multiply": [
+                        -0.297
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        59.7
+                    ],
+                    "multiply": [
+                        -0.297
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        59.7,
+                        99.5
+                    ],
+                    "multiply": [
+                        -0.297,
+                        -0.495
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Ridable",
+                    "§7Right-click your summoned pet",
+                    "§7to ride it!",
+                    "",
+                    "§6Tunneller",
+                    "§7The Armadillo breaks all stone",
+                    "§7or ore in it\u0027s path while you",
+                    "§7are riding it in the §3Crystal",
+                    "§3Hollows."
+                ],
+                "RARE": [
+                    "§6Earth Surfer",
+                    "§7The Armadillo moves faster",
+                    "§7based on your §fSpeed."
+                ],
+                "EPIC": [
+                    "§6Rolling Miner",
+                    "§7Every §a{0} §7seconds, the",
+                    "§7next gemstone you mine gives 2x",
+                    "§7drops."
+                ],
+                "LEGENDARY": [
+                    "§6Mobile Tank",
+                    "§7For every §a{1} §7Defense,",
+                    "§7gain §f+1✦ Speed §7and §6+1⸕",
+                    "§6Mining Speed."
+                ]
+            }
+        },
+        {
             "type": "BABY_YETI",
             "skill": "FISHING",
             "uuid": "7895e21a-8f3b-3e30-bea6-06108f64d5dc",
@@ -1042,6 +1112,62 @@
                     "§7Buff the Yeti sword by §a{2}",
                     "§c❁ Damage §7and §b✎",
                     "§bIntelligence"
+                ]
+            }
+        },
+        {
+            "type": "BAL",
+            "skill": "COMBAT",
+            "uuid": "1e63e737-d649-4cc2-939d-95b1ac517cda",
+            "texture": "c469ba2047122e0a2de3c7437ad3dd5d31f1ac2d27abde9f8841e1d92a8c5b75",
+            "stats": {
+                "strength": {
+                    "base": 0.0,
+                    "multiply": 0.25
+                },
+                "ferocity": {
+                    "base": 0.0,
+                    "multiply": 0.1
+                }
+            },
+            "statsLore": {
+                "EPIC": {
+                    "base": [
+                        0.1
+                    ],
+                    "multiply": [
+                        0.1
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                },
+                "LEGENDARY": {
+                    "base": [
+                        0.1,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.1,
+                        0.15
+                    ],
+                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                }
+            },
+            "lore": {
+                "EPIC": [
+                    "§6Protective Skin",
+                    "§7Gives §cheat immunity.",
+                    "",
+                    "§6Fire Whip",
+                    "§7Every §a5s §7while in combat",
+                    "§7the Balrog will strike nearby",
+                    "§7enemies with his fire whip",
+                    "§7dealing §c{0}% §7of your damage",
+                    "§7as §ftrue damage."
+                ],
+                "LEGENDARY": [
+                    "§6Made of Lava",
+                    "§7Gain §a{1}% §7on ALL stats",
+                    "§7when inside the §cMagma Fields."
                 ]
             }
         },
@@ -3330,7 +3456,7 @@
                 },
                 "strength": {
                     "base": 10.0,
-                    "multiply": 0.4
+                    "multiply": 0.5
                 }
             },
             "statsLore": {
@@ -3346,14 +3472,13 @@
                         0.02,
                         0.119,
                         0.02
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 },
                 "LEGENDARY": {
                     "base": [
                         15.2,
                         2.0,
-                        0.0,
+                        1.1,
                         2.0
                     ],
                     "multiply": [
@@ -3361,8 +3486,7 @@
                         0.02,
                         0.139,
                         0.03
-                    ],
-                    "display_mode": "DISPLAY_AT_LEVEL_1"
+                    ]
                 }
             },
             "lore": {
