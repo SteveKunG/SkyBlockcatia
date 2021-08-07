@@ -63,6 +63,7 @@ public class StatsBuilder
         map.put("mining_2", "Deep Caverns");
         map.put("mining_3", "Dwarven Mines");
         map.put("winter", "Jerry's Workshop");
+        map.put("crystal_hollows", "Crystal Hollows");
     });
 
     private static final Map<String, String> RENAMED_STATS_MAP = Helper.make(Maps.newTreeMap(), map ->
