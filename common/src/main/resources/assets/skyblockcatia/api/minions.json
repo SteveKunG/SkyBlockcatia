@@ -203,6 +203,14 @@
             "texture": "7458507ed31cf9a38986ac8795173c609637f03da653f30483a721d3fbe602d"
         },
         {
+            "type": "HARD_STONE",
+            "category": "MINING",
+            "displayName": "Hard Stone Minion",
+            "uuid": "1b834b24-8688-3ea6-8a92-682857fd084e",
+            "texture": "1e8bab9493708beda34255606d5883b8762746bcbe6c94e8ca78a77a408c8ba8",
+            "has_tier_12": true
+        },
+        {
             "type": "ICE",
             "category": "MINING",
             "displayName": "Ice Minion",

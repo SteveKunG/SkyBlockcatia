@@ -11,7 +11,7 @@ dependencies {
 }
 
 minecraft {
-    accessWidener = file("../fabric/src/main/resources/skyblockcatia.accesswidener")
+    accessWidener = file("../common/src/main/resources/skyblockcatia.accesswidener")
 }
 
 architectury {

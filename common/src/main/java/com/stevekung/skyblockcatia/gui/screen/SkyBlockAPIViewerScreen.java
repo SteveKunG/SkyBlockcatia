@@ -1556,7 +1556,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 for (Map.Entry<Integer, Integer> entry1 : typeData.getFloorCompletions().entrySet())
                 {
-                    builder.append(ChatFormatting.YELLOW + "F" + entry1.getKey() + ": " + ChatFormatting.GOLD + NumberUtils.NUMBER_FORMAT.format(entry1.getValue()) + " ");
+                    builder.append(ChatFormatting.YELLOW).append("F").append(entry1.getKey()).append(": ").append(ChatFormatting.GOLD).append(NumberUtils.NUMBER_FORMAT.format(entry1.getValue())).append(" ");
                 }
             }
             this.dungeonData.add(builder.toString());

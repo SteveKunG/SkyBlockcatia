@@ -6,26 +6,26 @@ public class PlatformConfigImpl
 {
     public static String getApiKey()
     {
-        return SkyBlockcatiaFabric.CONFIG.getConfig().hypixelApiKey;
+        return SkyBlockcatiaFabric.CONFIG.general.hypixelApiKey;
     }
 
     public static void setApiKey(String key)
     {
-        SkyBlockcatiaFabric.CONFIG.getConfig().hypixelApiKey = key;
+        SkyBlockcatiaFabric.CONFIG.general.hypixelApiKey = key;
     }
 
     public static boolean getDisableCameraEffect()
     {
-        return SkyBlockcatiaFabric.CONFIG.getConfig().disableHurtCameraEffect;
+        return SkyBlockcatiaFabric.CONFIG.general.disableHurtCameraEffect;
     }
 
     public static boolean getSkinRenderingFix()
     {
-        return SkyBlockcatiaFabric.CONFIG.getConfig().enableSkinRenderingFix;
+        return SkyBlockcatiaFabric.CONFIG.general.enableSkinRenderingFix;
     }
 
     public static boolean getChatInContainerScreen()
     {
-        return SkyBlockcatiaFabric.CONFIG.getConfig().enableChatInContainerScreen;
+        return SkyBlockcatiaFabric.CONFIG.general.enableChatInContainerScreen;
     }
 }
