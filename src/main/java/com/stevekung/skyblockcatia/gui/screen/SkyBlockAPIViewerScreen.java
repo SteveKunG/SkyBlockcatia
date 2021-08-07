@@ -2789,7 +2789,11 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                             break;
                         }
                     }
-                    skinName = ", " + (skinName.isEmpty() ? skin : skinName) + " Skin";
+                    if (skinName.isEmpty())
+                    {
+                        LoggerIN.warning("Found an unknown pet skin! type: {}", skin);
+                    }
+                    skinName = ", " + (skinName.isEmpty() ? EnumChatFormatting.RED + skin + EnumChatFormatting.DARK_GRAY : skinName) + " Skin";
                     skinMark = " ✦";
                 }
 
