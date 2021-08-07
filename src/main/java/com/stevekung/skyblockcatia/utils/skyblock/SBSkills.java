@@ -1,6 +1,7 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -400,7 +401,7 @@ public class SBSkills
         {
             for (SBSkills.Type type : SBSkills.Type.values())
             {
-                if (type.name().equals(name))
+                if (type.name().equals(name.toUpperCase(Locale.ROOT)))
                 {
                     return type;
                 }
