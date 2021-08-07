@@ -22,6 +22,7 @@ public final class SkyBlockcatiaConfig implements ConfigData
     {
         public String hypixelApiKey = "";
         @Comment("Some players has black overlay on their skin. Enable this will cutout the black overlay.\n" + "(default value: true)")
+        @ConfigEntry.Gui.RequiresRestart
         public boolean enableSkinRenderingFix = true;
         public boolean disableHurtCameraEffect = false;
         public boolean enableChatInContainerScreen = true;
