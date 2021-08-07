@@ -638,7 +638,7 @@ public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComp
         SkyblockProfiles.Profile[] sbProfile = sbProfiles.getProfiles();
         GameProfile gameProfile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
 
-        if (sbProfile.length <= 0)
+        if (sbProfile == null || sbProfile.length <= 0)
         {
             this.statusMessage = "Found default profile";
             ProfileDataCallback callback = new ProfileDataCallback(uuid, "Avocado", this.input, this.displayName, EnumChatFormatting.GOLD + "Normal", this.guild, uuid, gameProfile, -1);
