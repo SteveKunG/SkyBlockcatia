@@ -52,7 +52,7 @@ public class GuiPlayerTabOverlayMixin
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/network/NetHandlerPlayClient.getPlayerInfoMap()Ljava/util/Collection;"))
     private Collection<NetworkPlayerInfo> filterPlayerInfo(NetHandlerPlayClient nethandlerplayclient)
     {
-        return nethandlerplayclient.getPlayerInfoMap().stream().filter(network -> !((IViewerLoader)network).isLoadedFromViewer()).collect(Collectors.toList());
+        return nethandlerplayclient.getPlayerInfoMap().stream().filter(network -> network instanceof IViewerLoader && !((IViewerLoader)network).isLoadedFromViewer()).collect(Collectors.toList());
     }
 
     @Inject(method = "drawPing(IIILnet/minecraft/client/network/NetworkPlayerInfo;)V", cancellable = true, at = @At("HEAD"))

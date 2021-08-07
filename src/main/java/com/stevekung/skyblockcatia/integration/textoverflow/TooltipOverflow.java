@@ -10,7 +10,7 @@ public class TooltipOverflow
     {
         try
         {
-            Class<?> clazz = Class.forName("club.sk1er.mods.overflowscroll.GuiUtilsOverride");
+            Class<?> clazz = Class.forName("club.sk1er.mods.scrollabletooltips.GuiUtilsOverride");
             Field field = clazz.getDeclaredField("allowScrolling");
             return field.getBoolean(clazz);
         }

@@ -83,10 +83,9 @@ public class CompatibilityUtils
             try
             {
                 Object instance = neuConfig.getDeclaredField("INSTANCE").get(neuConfig);
-                Object manager = instance.getClass().getDeclaredField("manager").get(instance);
-                Object config = manager.getClass().getDeclaredField("config").get(manager);
-                Object hidePotionEffect = config.getClass().getDeclaredField("hidePotionEffect").get(config);
-                return (boolean)hidePotionEffect.getClass().getDeclaredField("value").get(hidePotionEffect);
+                Object config = instance.getClass().getDeclaredField("config").get(instance);
+                Object misc = config.getClass().getDeclaredField("misc").get(config);
+                return (boolean)misc.getClass().getDeclaredField("hidePotionEffect").get(misc);
             }
             catch (Exception e)
             {
