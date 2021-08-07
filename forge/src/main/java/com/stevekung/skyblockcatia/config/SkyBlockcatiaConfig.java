@@ -32,13 +32,13 @@ public class SkyBlockcatiaConfig
             builder.comment("General settings");
             builder.push("general");
 
-            this.hypixelApiKey = builder.translation("skyblockcatia.configgui.hypixel_api_key").define("hypixelApiKey", "");
+            this.hypixelApiKey = builder.translation("text.autoconfig.skyblockcatia.option.general.hypixelApiKey").define("hypixelApiKey", "");
 
-            this.enableSkinRenderingFix = builder.translation("skyblockcatia.configgui.enable_skin_rendering_fix").define("enableSkinRenderingFix", true);
+            this.enableSkinRenderingFix = builder.translation("text.autoconfig.skyblockcatia.option.general.enableSkinRenderingFix").define("enableSkinRenderingFix", true);
 
-            this.disableHurtCameraEffect = builder.translation("skyblockcatia.configgui.disable_hurt_camera_effect").define("disableHurtCameraEffect", false);
+            this.disableHurtCameraEffect = builder.translation("text.autoconfig.skyblockcatia.option.general.disableHurtCameraEffect").define("disableHurtCameraEffect", false);
 
-            this.enableChatInContainerScreen = builder.translation("skyblockcatia.configgui.enable_chat_in_container_screen").define("enableChatInContainerScreen", true);
+            this.enableChatInContainerScreen = builder.translation("text.autoconfig.skyblockcatia.option.general.enableChatInContainerScreen").define("enableChatInContainerScreen", true);
 
             builder.pop();
         }
