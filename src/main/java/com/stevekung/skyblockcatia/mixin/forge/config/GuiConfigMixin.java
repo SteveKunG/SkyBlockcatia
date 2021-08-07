@@ -18,32 +18,32 @@ import net.minecraftforge.fml.common.eventhandler.Event.Result;
 @Mixin(GuiConfig.class)
 public class GuiConfigMixin extends GuiScreen
 {
-    private final GuiConfig that = (GuiConfig) (Object) this;
-
     @Override
     protected void keyTyped(char eventChar, int eventKey)
     {
+        GuiConfig config = (GuiConfig) (Object) this;
+
         if (eventKey == Keyboard.KEY_ESCAPE)
         {
             try
             {
-                if ((this.that.configID != null || this.that.parentScreen == null || !(this.that.parentScreen instanceof GuiConfig)) && this.that.entryList.hasChangedEntry(true))
+                if ((config.configID != null || config.parentScreen == null || !(config.parentScreen instanceof GuiConfig)) && config.entryList.hasChangedEntry(true))
                 {
-                    boolean requiresMcRestart = this.that.entryList.saveConfigElements();
+                    boolean requiresMcRestart = config.entryList.saveConfigElements();
 
-                    if (Loader.isModLoaded(this.that.modID))
+                    if (Loader.isModLoaded(config.modID))
                     {
-                        ConfigChangedEvent event = new OnConfigChangedEvent(this.that.modID, this.that.configID, this.that.isWorldRunning, requiresMcRestart);
+                        ConfigChangedEvent event = new OnConfigChangedEvent(config.modID, config.configID, config.isWorldRunning, requiresMcRestart);
                         MinecraftForge.EVENT_BUS.post(event);
 
                         if (!event.getResult().equals(Result.DENY))
                         {
-                            MinecraftForge.EVENT_BUS.post(new PostConfigChangedEvent(this.that.modID, this.that.configID, this.that.isWorldRunning, requiresMcRestart));
+                            MinecraftForge.EVENT_BUS.post(new PostConfigChangedEvent(config.modID, config.configID, config.isWorldRunning, requiresMcRestart));
                         }
 
                         if (requiresMcRestart)
                         {
-                            this.that.mc.displayGuiScreen(new GuiMessageDialog(this.that.parentScreen, "fml.configgui.gameRestartTitle", new ChatComponentText(I18n.format("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
+                            config.mc.displayGuiScreen(new GuiMessageDialog(config.parentScreen, "fml.configgui.gameRestartTitle", new ChatComponentText(I18n.format("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
                         }
                     }
                 }
@@ -52,11 +52,11 @@ public class GuiConfigMixin extends GuiScreen
             {
                 e.printStackTrace();
             }
-            this.mc.displayGuiScreen(this.that.parentScreen);
+            this.mc.displayGuiScreen(config.parentScreen);
         }
         else
         {
-            this.that.entryList.keyTyped(eventChar, eventKey);
+            config.entryList.keyTyped(eventChar, eventKey);
         }
     }
 }

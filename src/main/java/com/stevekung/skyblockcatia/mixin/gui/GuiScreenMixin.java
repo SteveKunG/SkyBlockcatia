@@ -21,14 +21,14 @@ import net.minecraft.client.gui.inventory.GuiEditSign;
 @Mixin(GuiScreen.class)
 public class GuiScreenMixin
 {
-    private final GuiScreen that = (GuiScreen) (Object) this;
-
     @Inject(method = "confirmClicked(ZI)V", at = @At("HEAD"))
     private void confirmClicked(boolean result, int id, CallbackInfo info)
     {
-        if (this.that instanceof GuiEditSign)
+        GuiScreen screen = (GuiScreen) (Object) this;
+
+        if (screen instanceof GuiEditSign)
         {
-            GuiEditSign sign = (GuiEditSign)this.that;
+            GuiEditSign sign = (GuiEditSign)screen;
 
             if (result)
             {
@@ -36,11 +36,11 @@ public class GuiScreenMixin
                 sign.tileSign.markDirty();
                 SignSelectionList.processSignData(sign.tileSign);
                 ((IEditSign)sign).getSignSelectionList().add(text);
-                this.that.mc.displayGuiScreen(null);
+                screen.mc.displayGuiScreen(null);
             }
             else
             {
-                this.that.mc.displayGuiScreen(this.that);
+                screen.mc.displayGuiScreen(screen);
             }
         }
     }
@@ -48,9 +48,11 @@ public class GuiScreenMixin
     @Inject(method = "mouseClicked(III)V", at = @At("HEAD"))
     private void mouseClicked(int mouseX, int mouseY, int mouseButton, CallbackInfo info) throws IOException
     {
-        if (this.that instanceof GuiEditSign)
+        GuiScreen screen = (GuiScreen) (Object) this;
+
+        if (screen instanceof GuiEditSign)
         {
-            GuiEditSign sign = (GuiEditSign)this.that;
+            GuiEditSign sign = (GuiEditSign)screen;
 
             if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && ((IEditSign)sign).getSignSelectionList() != null)
             {
@@ -62,9 +64,11 @@ public class GuiScreenMixin
     @Inject(method = "mouseReleased(III)V", at = @At("HEAD"))
     private void mouseReleased(int mouseX, int mouseY, int state, CallbackInfo info) throws IOException
     {
-        if (this.that instanceof GuiEditSign)
+        GuiScreen screen = (GuiScreen) (Object) this;
+
+        if (screen instanceof GuiEditSign)
         {
-            GuiEditSign sign = (GuiEditSign)this.that;
+            GuiEditSign sign = (GuiEditSign)screen;
 
             if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && ((IEditSign)sign).getSignSelectionList() != null)
             {
@@ -76,9 +80,11 @@ public class GuiScreenMixin
     @Inject(method = "handleMouseInput()V", at = @At("HEAD"))
     private void handleMouseInput(CallbackInfo info) throws IOException
     {
-        if (this.that instanceof GuiEditSign)
+        GuiScreen screen = (GuiScreen) (Object) this;
+
+        if (screen instanceof GuiEditSign)
         {
-            GuiEditSign sign = (GuiEditSign)this.that;
+            GuiEditSign sign = (GuiEditSign)screen;
 
             if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && ((IEditSign)sign).getSignSelectionList() != null)
             {
@@ -90,9 +96,11 @@ public class GuiScreenMixin
     @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", at = @At("HEAD"))
     private void actionPerformed(GuiButton button, CallbackInfo info) throws IOException
     {
-        if (this.that instanceof GuiChest)
+        GuiScreen screen = (GuiScreen) (Object) this;
+
+        if (screen instanceof GuiChest)
         {
-            GuiChest chest = (GuiChest)this.that;
+            GuiChest chest = (GuiChest)screen;
 
             if (button.id == 155)
             {
@@ -103,7 +111,7 @@ public class GuiScreenMixin
             else if (button.id == 156)
             {
                 String text = chest.lowerChestInventory.getDisplayName().getUnformattedText();
-                this.that.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
+                screen.mc.displayGuiScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.GuiState.PLAYER, text.replace(text.substring(text.indexOf('\'')), ""), "", ""));
             }
         }
     }
@@ -111,9 +119,11 @@ public class GuiScreenMixin
     @Inject(method = "setText(Ljava/lang/String;Z)V", at = @At("HEAD"))
     private void setText(String newChatText, boolean shouldOverwrite, CallbackInfo info)
     {
-        if (this.that instanceof GuiChest)
+        GuiScreen screen = (GuiScreen) (Object) this;
+
+        if (screen instanceof GuiChest)
         {
-            GuiChest chest = (GuiChest)this.that;
+            GuiChest chest = (GuiChest)screen;
 
             if (GuiScreenUtils.isChatable(chest.lowerChestInventory))
             {

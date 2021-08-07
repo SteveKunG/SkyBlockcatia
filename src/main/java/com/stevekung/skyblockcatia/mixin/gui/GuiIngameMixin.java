@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiIngame;
 @Mixin(GuiIngame.class)
 public class GuiIngameMixin
 {
-    @Inject(method = "resetPlayersOverlayFooterHeader()V", at = @At("RETURN"))
+    @Inject(method = "resetPlayersOverlayFooterHeader()V", at = @At("TAIL"))
     private void resetToast(CallbackInfo info)
     {
         HUDRenderEventHandler.INSTANCE.getToastGui().clear();

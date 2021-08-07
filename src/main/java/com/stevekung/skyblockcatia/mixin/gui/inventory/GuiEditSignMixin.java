@@ -36,12 +36,12 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
     private SignSelectionList globalSelector;
 
     @Shadow
-    private int editLine;
+    int editLine;
 
     @Shadow
-    private int updateCounter;
+    int updateCounter;
 
-    @Inject(method = "initGui()V", at = @At("RETURN"))
+    @Inject(method = "initGui()V", at = @At("TAIL"))
     private void initGui(CallbackInfo info)
     {
         this.textInputUtil = new TextInputUtil(this.fontRendererObj, () -> ((IModifiedSign)this.that.tileSign).getText(this.editLine).getUnformattedText(), text -> ((IModifiedSign)this.that.tileSign).setText(this.editLine, new ChatComponentText(text)), 90);
@@ -222,7 +222,7 @@ public class GuiEditSignMixin extends GuiScreen implements IEditSign
         }
     }
 
-    @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("RETURN"))
+    @Inject(method = "drawScreen(IIF)V", cancellable = true, at = @At("TAIL"))
     private void drawScreenPost(int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
         if (!SkyBlockcatiaConfig.enableOverwriteSignEditing && SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaConfig.enableSignSelectionList && this.globalSelector != null)

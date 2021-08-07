@@ -17,7 +17,7 @@ public class GuiNewChatMixin
         GlStateManager.disableDepth();
     }
 
-    @Inject(method = "drawChat(I)V", at = @At("RETURN"))
+    @Inject(method = "drawChat(I)V", at = @At("TAIL"))
     private void renderDepthPost(int updateCounter, CallbackInfo info)
     {
         GlStateManager.enableDepth();

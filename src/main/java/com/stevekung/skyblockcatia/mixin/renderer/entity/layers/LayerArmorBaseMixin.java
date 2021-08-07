@@ -29,30 +29,28 @@ import net.minecraft.util.ResourceLocation;
 @Mixin(LayerArmorBase.class)
 public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerRenderer<EntityLivingBase>
 {
-    private final LayerArmorBase that = (LayerArmorBase) (Object) this;
+    @Shadow
+    @Final
+    static ResourceLocation ENCHANTED_ITEM_GLINT_RES;
 
     @Shadow
     @Final
-    protected static ResourceLocation ENCHANTED_ITEM_GLINT_RES;
+    RendererLivingEntity<?> renderer;
 
     @Shadow
-    @Final
-    private RendererLivingEntity<?> renderer;
+    abstract T getArmorModel(int armorSlot);
 
     @Shadow
-    protected abstract void setModelPartVisible(T model, int armorSlot);
+    abstract void setModelPartVisible(T model, int armorSlot);
 
     @Shadow
-    public abstract T getArmorModel(int armorSlot);
+    abstract T getArmorModelHook(EntityLivingBase entity, ItemStack itemStack, int slot, T model);
 
     @Shadow
-    protected abstract T getArmorModelHook(EntityLivingBase entity, ItemStack itemStack, int slot, T model);
-
-    @Shadow
-    protected abstract void renderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot);
+    abstract void renderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, int armorSlot);
 
     @Inject(method = "doRenderLayer(Lnet/minecraft/entity/EntityLivingBase;FFFFFFF)V", at = @At("RETURN"))
-    public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info)
+    private void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo info)
     {
         this.renderGlowingLayer(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, 3);
         this.renderGlowingLayer(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale, 2);
@@ -101,7 +99,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             return;
         }
 
-        ItemStack itemstack = this.that.getCurrentArmor(entity, armorSlot);
+        ItemStack itemstack = ((LayerArmorBase) (Object) this).getCurrentArmor(entity, armorSlot);
 
         if (itemstack != null && itemstack.getItem() instanceof ItemArmor)
         {

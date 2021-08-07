@@ -15,7 +15,7 @@ public class RenderMixin
 {
     @Shadow
     @Final
-    protected RenderManager renderManager;
+    RenderManager renderManager;
 
     @Redirect(method = "renderLivingLabel(Lnet/minecraft/entity/Entity;Ljava/lang/String;DDDI)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/GlStateManager.rotate(FFFF)V", ordinal = 1))
     private void rotate(float angle, float x, float y, float z)

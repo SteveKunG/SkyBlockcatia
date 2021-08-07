@@ -26,11 +26,11 @@ import net.minecraft.util.EnumChatFormatting;
 @Mixin(GuiPlayerTabOverlay.class)
 public class GuiPlayerTabOverlayMixin
 {
-    private int pingWidth;
+    int pingWidth;
 
     @Shadow
     @Final
-    private Minecraft mc;
+    Minecraft mc;
 
     @Redirect(method = "renderPlayerlist(ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreObjective;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/FontRenderer.getStringWidth(Ljava/lang/String;)I", ordinal = 0))
     private int addPingWidth(FontRenderer font, String text)
@@ -85,7 +85,6 @@ public class GuiPlayerTabOverlayMixin
             }
 
             fontRenderer.drawString(color + pingText, x1 + x2 - fontRenderer.getStringWidth(pingText), y + 0.625F, 0, true);
-
             info.cancel();
         }
     }

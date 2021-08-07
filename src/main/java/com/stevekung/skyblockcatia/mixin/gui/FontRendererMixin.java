@@ -21,48 +21,48 @@ public abstract class FontRendererMixin
     private static final int MARKER = 59136;
 
     @Unique
-    private boolean dropShadow;
+    boolean dropShadow;
 
     @Unique
-    private int state;
+    int state;
 
     @Unique
-    private int redN;
+    int redN;
 
     @Unique
-    private int greenN;
+    int greenN;
 
     @Unique
-    private int blueN;
+    int blueN;
 
     //////////////////////
 
     @Shadow
-    private float alpha;
+    float alpha;
 
     @Shadow
-    protected float posX;
+    float posX;
 
     @Shadow
-    protected float posY;
+    float posY;
 
     @Shadow
-    protected byte[] glyphWidth;
+    byte[] glyphWidth;
 
     @Shadow
-    protected abstract void setColor(float r, float g, float b, float a);
+    abstract void setColor(float r, float g, float b, float a);
 
     @Shadow
-    protected abstract void loadGlyphTexture(int page);
+    abstract void loadGlyphTexture(int page);
 
     @Shadow
-    private static boolean isFormatColor(char colorChar)
+    static boolean isFormatColor(char colorChar)
     {
         return false;
     }
 
     @Shadow
-    private static boolean isFormatSpecial(char formatChar)
+    static boolean isFormatSpecial(char formatChar)
     {
         return false;
     }

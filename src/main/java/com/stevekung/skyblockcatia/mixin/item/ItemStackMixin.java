@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.Constants;
 public class ItemStackMixin
 {
     @Shadow
-    private NBTTagCompound stackTagCompound;
+    NBTTagCompound stackTagCompound;
 
     @Inject(method = "isItemEnchanted()Z", cancellable = true, at = @At("HEAD"))
     private void addSkyblockEnchantTag(CallbackInfoReturnable info)

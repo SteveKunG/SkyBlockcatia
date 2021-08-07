@@ -24,13 +24,13 @@ import net.minecraft.util.AxisAlignedBB;
 public class RenderManagerMixin
 {
     @Shadow
-    private double renderPosX;
+    double renderPosX;
 
     @Shadow
-    private double renderPosY;
+    double renderPosY;
 
     @Shadow
-    private double renderPosZ;
+    double renderPosZ;
 
     @Inject(method = "renderDebugBoundingBox(Lnet/minecraft/entity/Entity;DDDFF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/RenderGlobal.drawOutlinedBoundingBox(Lnet/minecraft/util/AxisAlignedBB;IIII)V", ordinal = 0))
     private void renderDebugBoundingBoxMultipart(Entity entity, double x, double y, double z, float f1, float partialTicks, CallbackInfo info)

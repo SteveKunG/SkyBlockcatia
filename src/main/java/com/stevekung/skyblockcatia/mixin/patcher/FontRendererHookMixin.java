@@ -15,7 +15,7 @@ import club.sk1er.patcher.util.enhancement.text.CachedString;
 import net.minecraft.client.renderer.GlStateManager;
 
 @Mixin(value = FontRendererHook.class, remap = false)
-public abstract class FontRendererHookMixin
+public class FontRendererHookMixin
 {
     private int state;
     private int redN;

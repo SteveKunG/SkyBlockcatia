@@ -16,9 +16,9 @@ import net.minecraft.network.play.server.S3APacketTabComplete;
 public class NetHandlerPlayClientMixin
 {
     @Shadow
-    private Minecraft gameController;
+    Minecraft gameController;
 
-    @Inject(method = "handleTabComplete(Lnet/minecraft/network/play/server/S3APacketTabComplete;)V", at = @At("RETURN"))
+    @Inject(method = "handleTabComplete(Lnet/minecraft/network/play/server/S3APacketTabComplete;)V", at = @At("TAIL"))
     private void handleTabComplete(S3APacketTabComplete packet, CallbackInfo info)
     {
         if (this.gameController.currentScreen instanceof ITabComplete)

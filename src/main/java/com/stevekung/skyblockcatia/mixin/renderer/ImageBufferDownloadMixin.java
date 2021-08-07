@@ -16,19 +16,19 @@ import net.minecraft.client.renderer.ImageBufferDownload;
 public abstract class ImageBufferDownloadMixin
 {
     @Shadow
-    private int[] imageData;
+    int[] imageData;
 
     @Shadow
-    private int imageWidth;
+    int imageWidth;
 
     @Shadow
-    private int imageHeight;
+    int imageHeight;
 
     @Shadow
-    protected abstract void setAreaOpaque(int x, int y, int width, int height);
+    abstract void setAreaOpaque(int x, int y, int width, int height);
 
     @Shadow
-    protected abstract void setAreaTransparent(int x, int y, int width, int height);
+    abstract void setAreaTransparent(int x, int y, int width, int height);
 
     @Overwrite
     public BufferedImage parseUserSkin(BufferedImage image)

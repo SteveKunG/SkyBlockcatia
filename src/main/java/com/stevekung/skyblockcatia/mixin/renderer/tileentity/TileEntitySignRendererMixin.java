@@ -41,11 +41,11 @@ public abstract class TileEntitySignRendererMixin extends TileEntitySpecialRende
 {
     @Shadow
     @Final
-    private static ResourceLocation SIGN_TEXTURE;
+    static ResourceLocation SIGN_TEXTURE;
 
     @Shadow
     @Final
-    private ModelSign model;
+    ModelSign model;
 
     @Inject(method = "renderTileEntityAt(Lnet/minecraft/tileentity/TileEntitySign;DDDFI)V", cancellable = true, at = @At("HEAD"))
     private void renderTileEntityAt(TileEntitySign te, double x, double y, double z, float partialTicks, int destroyStage, CallbackInfo info)

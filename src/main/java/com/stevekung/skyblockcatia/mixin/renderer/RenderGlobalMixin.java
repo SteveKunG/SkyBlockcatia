@@ -21,11 +21,11 @@ import net.minecraftforge.common.MinecraftForge;
 public class RenderGlobalMixin
 {
     @Unique
-    private IBlockState prevState;
+    IBlockState prevState;
 
     @Shadow
     @Final
-    private Minecraft mc;
+    Minecraft mc;
 
     @Inject(method = "sendBlockBreakProgress(ILnet/minecraft/util/BlockPos;I)V", at = @At(value = "INVOKE", target = "java/util/Map.remove(Ljava/lang/Object;)Ljava/lang/Object;", remap = false))
     private void postServerBlockBreakProgress(int breakerId, BlockPos pos, int progress, CallbackInfo info)

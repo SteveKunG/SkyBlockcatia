@@ -50,19 +50,19 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
     private String fandomUrl;
 
     @Shadow
-    protected int guiLeft;
+    int guiLeft;
 
     @Shadow
-    protected int guiTop;
+    int guiTop;
 
     @Shadow
-    private Slot theSlot;
+    Slot theSlot;
 
     @Shadow
-    protected abstract boolean checkHotbarKeys(int keyCode);
+    abstract boolean checkHotbarKeys(int keyCode);
 
     @Shadow
-    protected abstract void handleMouseClick(Slot slotIn, int slotId, int clickedButton, int clickType);
+    abstract void handleMouseClick(Slot slotIn, int slotId, int clickedButton, int clickType);
 
     // GuiChat fields
     private GuiTextField inputField;
@@ -76,7 +76,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
     // Auction
     private GuiNumberField priceSearch;
 
-    @Inject(method = "initGui()V", at = @At("RETURN"))
+    @Inject(method = "initGui()V", at = @At("TAIL"))
     private void initGui(CallbackInfo info)
     {
         if (this.that instanceof GuiChest)
@@ -112,7 +112,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         }
     }
 
-    @Inject(method = "mouseClicked(III)V", at = @At("RETURN"))
+    @Inject(method = "mouseClicked(III)V", at = @At("TAIL"))
     private void mouseClicked(int mouseX, int mouseY, int mouseButton, CallbackInfo info)
     {
         if (this.that instanceof GuiChest)
@@ -130,7 +130,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         }
     }
 
-    @Inject(method = "onGuiClosed()V", at = @At("RETURN"))
+    @Inject(method = "onGuiClosed()V", at = @At("TAIL"))
     private void onGuiClosed(CallbackInfo info)
     {
         if (this.that instanceof GuiChest)
@@ -148,7 +148,7 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
         }
     }
 
-    @Inject(method = "updateScreen()V", at = @At("RETURN"))
+    @Inject(method = "updateScreen()V", at = @At("TAIL"))
     private void updateScreen(CallbackInfo info)
     {
         if (this.that instanceof GuiChest)

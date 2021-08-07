@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 public class EntityRendererMixin
 {
     @Shadow
-    private Minecraft mc;
+    Minecraft mc;
 
     @Inject(method = "hurtCameraEffect(F)V", cancellable = true, at = @At("HEAD"))
     private void hurtCameraEffect(float partialTicks, CallbackInfo info)

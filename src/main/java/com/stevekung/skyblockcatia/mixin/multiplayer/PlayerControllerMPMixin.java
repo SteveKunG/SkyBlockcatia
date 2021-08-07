@@ -20,7 +20,7 @@ public class PlayerControllerMPMixin
 {
     @Shadow
     @Final
-    private Minecraft mc;
+    Minecraft mc;
 
     @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z", at = @At(value = "INVOKE", target = "net/minecraft/block/Block.removedByPlayer(Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/entity/player/EntityPlayer;Z)Z"))
     private void addBlockBreakEvent(BlockPos pos, EnumFacing facing, CallbackInfoReturnable info)
