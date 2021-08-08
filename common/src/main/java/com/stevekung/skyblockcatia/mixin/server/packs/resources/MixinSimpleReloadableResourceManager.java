@@ -28,7 +28,7 @@ public class MixinSimpleReloadableResourceManager
 {
     @Shadow
     @Final
-    private PackType type;
+    PackType type;
 
     @Inject(method = "createFullReload", at = @At("HEAD"))
     private void reloadResources(Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, List<PackResources> resourcePacks, CallbackInfoReturnable<ReloadInstance> info)

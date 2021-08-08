@@ -18,11 +18,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class MixinLevelRenderer
 {
     @Unique
-    private BlockState prevState;
+    BlockState prevState;
 
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @Inject(method = "destroyBlockProgress", at = @At(value = "INVOKE", target = "it/unimi/dsi/fastutil/ints/Int2ObjectMap.remove(I)Ljava/lang/Object;", remap = false))
     private void postServerBlockBreakProgress(int breakerId, BlockPos pos, int progress, CallbackInfo info)

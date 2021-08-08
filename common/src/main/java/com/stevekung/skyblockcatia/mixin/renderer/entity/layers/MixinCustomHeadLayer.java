@@ -38,7 +38,7 @@ public abstract class MixinCustomHeadLayer<T extends LivingEntity, M extends Ent
         super(null);
     }
 
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "render", at = @At("TAIL"))
     private void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info)
     {
         if (!SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)

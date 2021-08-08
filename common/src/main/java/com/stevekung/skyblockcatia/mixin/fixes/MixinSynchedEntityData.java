@@ -10,10 +10,10 @@ import com.stevekung.skyblockcatia.utils.Utils;
 import net.minecraft.network.syncher.SynchedEntityData;
 
 @Mixin(SynchedEntityData.class)
-public class MixinSynchedEntityData
+public abstract class MixinSynchedEntityData
 {
     @Shadow
-    private <T> void assignValue(SynchedEntityData.DataItem<T> target, SynchedEntityData.DataItem<?> source) {}
+    abstract <T> void assignValue(SynchedEntityData.DataItem<T> target, SynchedEntityData.DataItem<?> source);
 
     @Redirect(method = "assignValues", at = @At(value = "INVOKE", target = "net/minecraft/network/syncher/SynchedEntityData.assignValue(Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;Lnet/minecraft/network/syncher/SynchedEntityData$DataItem;)V"))
     private <T> void assignValue(SynchedEntityData manager, SynchedEntityData.DataItem<T> target, SynchedEntityData.DataItem<?> source)

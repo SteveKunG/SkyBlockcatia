@@ -11,10 +11,10 @@ import net.minecraft.client.renderer.texture.HttpTexture;
 public class MixinHttpTexture
 {
     @Shadow
-    private static void doNotchTransparencyHack(NativeImage image, int x, int y, int width, int height) {}
+    static void doNotchTransparencyHack(NativeImage image, int x, int y, int width, int height) {}
 
     @Shadow
-    private static void setNoAlpha(NativeImage image, int x, int y, int width, int height) {}
+    static void setNoAlpha(NativeImage image, int x, int y, int width, int height) {}
 
     @Overwrite
     private static NativeImage processLegacySkin(NativeImage nativeImage)

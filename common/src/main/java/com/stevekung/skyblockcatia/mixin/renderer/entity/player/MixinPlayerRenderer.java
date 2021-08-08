@@ -22,7 +22,7 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
         super(null, null, 0);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Z)V", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Z)V", at = @At("TAIL"))
     private void init(EntityRenderDispatcher renderManager, boolean useSmallArms, CallbackInfo info)
     {
         this.addLayer(new GlowingSteveLayer((PlayerRenderer) (Object) this));

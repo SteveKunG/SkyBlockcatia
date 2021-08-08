@@ -66,27 +66,27 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     // ChatScreen fields
     private String historyBuffer = "";
     private int sentHistoryCursor = -1;
-    protected EditBox inputField;
+    private EditBox inputField;
     private CommandSuggestions commandSuggestionHelper;
 
     // Auction
     private NumberEditBox priceSearch;
 
     @Shadow
-    protected int leftPos;
+    int leftPos;
 
     @Shadow
-    protected int topPos;
+    int topPos;
 
     @Shadow
-    protected Slot hoveredSlot;
+    Slot hoveredSlot;
 
     MixinAbstractContainerScreen()
     {
         super(null);
     }
 
-    @Inject(method = "init()V", at = @At("RETURN"))
+    @Inject(method = "init()V", at = @At("TAIL"))
     private void init(CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
@@ -163,7 +163,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    @Inject(method = "onClose()V", at = @At("RETURN"))
+    @Inject(method = "onClose()V", at = @At("TAIL"))
     private void onClose(CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
@@ -179,7 +179,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    @Inject(method = "tick()V", at = @At("RETURN"))
+    @Inject(method = "tick()V", at = @At("TAIL"))
     private void tick(CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)

@@ -18,7 +18,7 @@ public class MixinChatComponent
 {
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @Inject(method = "render", cancellable = true, at = @At("HEAD"))
     private void render(PoseStack poseStack, int ticks, CallbackInfo info)

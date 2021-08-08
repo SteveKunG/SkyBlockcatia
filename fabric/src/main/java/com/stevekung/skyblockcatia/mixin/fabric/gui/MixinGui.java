@@ -16,7 +16,7 @@ public class MixinGui
 {
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At(value = "FIELD", target = "net/minecraft/client/Options.hideGui:Z", shift = At.Shift.BEFORE))
     private void renderHUD(PoseStack poseStack, float partialTicks, CallbackInfo info)

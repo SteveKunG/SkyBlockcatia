@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 public class MixinItemStack
 {
     @Shadow
-    private CompoundTag tag;
+    CompoundTag tag;
 
     @Inject(method = "isEnchanted()Z", cancellable = true, at = @At("HEAD"))
     private void addSkyblockEnchantTag(CallbackInfoReturnable<Boolean> info)

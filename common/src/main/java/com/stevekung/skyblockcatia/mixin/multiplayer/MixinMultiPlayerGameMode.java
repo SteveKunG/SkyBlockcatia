@@ -17,7 +17,7 @@ public class MixinMultiPlayerGameMode
 {
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @Inject(method = "destroyBlock", at = @At(value = "INVOKE", target = "net/minecraft/world/level/Level.getFluidState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/FluidState;", shift = Shift.BEFORE))
     private void addBlockBreakEvent(BlockPos pos, CallbackInfoReturnable<Boolean> info)

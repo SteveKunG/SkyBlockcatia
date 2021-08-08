@@ -29,11 +29,11 @@ public class MixinSignEditScreen extends Screen
 
     @Shadow
     @Final
-    private String[] messages;
+    String[] messages;
 
     @Shadow
     @Final
-    private SignBlockEntity sign;
+    SignBlockEntity sign;
 
     MixinSignEditScreen()
     {

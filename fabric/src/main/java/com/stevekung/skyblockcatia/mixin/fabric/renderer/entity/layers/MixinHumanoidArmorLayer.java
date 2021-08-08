@@ -30,23 +30,20 @@ import net.minecraft.world.item.ItemStack;
 public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends RenderLayer<T, M>
 {
     @Shadow
-    protected abstract void setPartVisibility(A modelIn, EquipmentSlot slot);
+    abstract void setPartVisibility(A modelIn, EquipmentSlot slot);
 
     @Shadow
-    protected abstract boolean usesInnerModel(EquipmentSlot slot);
+    abstract boolean usesInnerModel(EquipmentSlot slot);
 
     @Shadow
-    private A getArmorModel(EquipmentSlot slot)
-    {
-        return null;
-    }
+    abstract A getArmorModel(EquipmentSlot slot);
 
     MixinHumanoidArmorLayer()
     {
         super(null);
     }
 
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "render", at = @At("TAIL"))
     private void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info)
     {
         this.renderGlowingLayer(matrixStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.CHEST, packedLight);
