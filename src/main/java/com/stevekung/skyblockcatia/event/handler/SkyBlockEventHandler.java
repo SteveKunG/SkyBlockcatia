@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -115,7 +114,7 @@ public class SkyBlockEventHandler
     public static boolean isSkyBlock = false;
     public static SBLocation SKY_BLOCK_LOCATION = SBLocation.YOUR_ISLAND;
     public static float dragonHealth;
-    private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new CopyOnWriteArrayList<>();
+    private static final List<ToastUtils.ItemDropCheck> ITEM_DROP_CHECK_LIST = new ArrayList<>();
     private List<ItemStack> previousInventory;
     private SBBossBar.DragonType dragonType;
     private final Minecraft mc;
