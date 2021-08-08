@@ -19,10 +19,10 @@ public class MixinItemRenderer
     {
         if (SkyBlockcatiaSettings.INSTANCE.showItemRarity)
         {
-            PoseStack matrixStack = new PoseStack();
-            matrixStack.pushPose();
-            SBRenderUtils.renderRarity(matrixStack, itemStack, x, y);
-            matrixStack.popPose();
+            PoseStack poseStack = new PoseStack();
+            poseStack.pushPose();
+            SBRenderUtils.renderRarity(poseStack, itemStack, x, y);
+            poseStack.popPose();
         }
     }
 }

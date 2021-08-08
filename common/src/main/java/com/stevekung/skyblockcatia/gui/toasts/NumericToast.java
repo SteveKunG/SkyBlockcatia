@@ -34,7 +34,7 @@ public class NumericToast implements Toast
 
     @SuppressWarnings("deprecation")
     @Override
-    public Toast.Visibility render(PoseStack matrixStack, ToastComponent toastGui, long delta)
+    public Toast.Visibility render(PoseStack poseStack, ToastComponent toastGui, long delta)
     {
         if (this.hasNewValue)
         {
@@ -44,9 +44,9 @@ public class NumericToast implements Toast
 
         toastGui.getMinecraft().getTextureManager().bind(this.texture);
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-        GuiComponent.blit(matrixStack, 0, 0, 0, 0, 160, 32, 160, 32);
-        toastGui.getMinecraft().font.draw(matrixStack, TextComponentUtils.formatted(this.output.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.getType().getColor()));
-        SBRenderUtils.drawLongItemName(toastGui, matrixStack, delta, this.firstDrawTime, this.maxDrawTime, this.output.getDisplayName(NumberUtils.NUMBER_FORMAT.format(this.value)), false);
+        GuiComponent.blit(poseStack, 0, 0, 0, 0, 160, 32, 160, 32);
+        toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(this.output.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.getType().getColor()));
+        SBRenderUtils.drawLongItemName(toastGui, poseStack, delta, this.firstDrawTime, this.maxDrawTime, this.output.getDisplayName(NumberUtils.NUMBER_FORMAT.format(this.value)), false);
         toastGui.getMinecraft().getItemRenderer().renderAndDecorateItem(this.output.getItemStack(), 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }

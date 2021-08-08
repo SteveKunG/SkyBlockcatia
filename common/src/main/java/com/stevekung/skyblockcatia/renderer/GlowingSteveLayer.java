@@ -21,7 +21,7 @@ public class GlowingSteveLayer extends RenderLayer<AbstractClientPlayer, PlayerM
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, AbstractClientPlayer entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
+    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, AbstractClientPlayer entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch)
     {
         if (!entity.isInvisible() && entity.getName().getString().equals("SteveKunG"))
         {
@@ -33,7 +33,7 @@ public class GlowingSteveLayer extends RenderLayer<AbstractClientPlayer, PlayerM
                 alpha = 0.7F;
             }
             VertexConsumer ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(GlowingSteveLayer.TEXTURE));
-            this.getParentModel().renderToBuffer(matrixStack, ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
+            this.getParentModel().renderToBuffer(poseStack, ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
         }
     }
 }

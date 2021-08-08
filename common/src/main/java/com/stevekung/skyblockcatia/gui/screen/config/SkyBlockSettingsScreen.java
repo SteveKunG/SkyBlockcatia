@@ -64,11 +64,11 @@ public class SkyBlockSettingsScreen extends Screen
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground(matrixStack);
-        GuiComponent.drawCenteredString(matrixStack, this.font, LangUtils.translate("menu.skyblock.title"), this.width / 2, 10, 16777215);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.renderBackground(poseStack);
+        GuiComponent.drawCenteredString(poseStack, this.font, LangUtils.translate("menu.skyblock.title"), this.width / 2, 10, 16777215);
+        super.render(poseStack, mouseX, mouseY, partialTicks);
     }
 
     @ExpectPlatform

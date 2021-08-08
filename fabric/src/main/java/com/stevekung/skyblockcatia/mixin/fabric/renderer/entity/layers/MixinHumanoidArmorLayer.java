@@ -44,14 +44,14 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void render(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info)
+    private void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo info)
     {
-        this.renderGlowingLayer(matrixStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.CHEST, packedLight);
-        this.renderGlowingLayer(matrixStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.LEGS, packedLight);
-        this.renderGlowingLayer(matrixStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.FEET, packedLight);
+        this.renderGlowingLayer(poseStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.CHEST, packedLight);
+        this.renderGlowingLayer(poseStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.LEGS, packedLight);
+        this.renderGlowingLayer(poseStack, buffer, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, EquipmentSlot.FEET, packedLight);
     }
 
-    private void renderGlowingLayer(PoseStack matrixStack, MultiBufferSource buffer, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, EquipmentSlot slot, int packedLight)
+    private void renderGlowingLayer(PoseStack poseStack, MultiBufferSource buffer, T entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, EquipmentSlot slot, int packedLight)
     {
         if (SupportedPack.TYPE == null || !SupportedPack.FOUND || !SkyBlockcatiaSettings.INSTANCE.glowingDragonArmor)
         {
@@ -83,7 +83,7 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
                         alpha = 1.0F;
                     }
                     VertexConsumer ivertexbuilder = ItemRenderer.getFoilBuffer(buffer, DragonArmorRenderType.getGlowingDragonOverlay(location), false, false);
-                    model.renderToBuffer(matrixStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
+                    model.renderToBuffer(poseStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
                 }
             }
         }

@@ -102,13 +102,13 @@ public class MixinSignEditScreen extends Screen
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
-    private void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
+    private void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
             if (this.globalSelector != null)
             {
-                this.globalSelector.render(matrixStack, mouseX, mouseY, partialTicks);
+                this.globalSelector.render(poseStack, mouseX, mouseY, partialTicks);
             }
         }
     }

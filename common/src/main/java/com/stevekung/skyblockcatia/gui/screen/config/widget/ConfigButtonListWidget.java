@@ -54,12 +54,12 @@ public class ConfigButtonListWidget extends ContainerObjectSelectionList<ConfigB
         }
 
         @Override
-        public void render(PoseStack matrixStack, int index, int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks)
+        public void render(PoseStack poseStack, int index, int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks)
         {
             for (AbstractWidget button : this.buttons)
             {
                 button.y = rowTop;
-                button.render(matrixStack, mouseX, mouseY, partialTicks);
+                button.render(poseStack, mouseX, mouseY, partialTicks);
             }
         }
 

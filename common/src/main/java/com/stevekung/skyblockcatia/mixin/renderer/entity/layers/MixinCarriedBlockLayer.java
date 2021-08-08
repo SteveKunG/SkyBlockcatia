@@ -17,13 +17,13 @@ import net.minecraft.world.level.block.state.BlockState;
 public class MixinCarriedBlockLayer
 {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/block/BlockRenderDispatcher.renderSingleBlock(Lnet/minecraft/world/level/block/state/BlockState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V"))
-    private void changeSpecialZealotBlock(BlockRenderDispatcher blockRenderer, BlockState blockState, PoseStack matrixStack, MultiBufferSource bufferType, int combinedLight, int combinedOverlay)
+    private void changeSpecialZealotBlock(BlockRenderDispatcher blockRenderer, BlockState blockState, PoseStack poseStack, MultiBufferSource bufferType, int combinedLight, int combinedOverlay)
     {
         if (SkyBlockcatiaSettings.INSTANCE.makeSpecialZealotHeldGold && SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION.isTheEnd() && blockState.getBlock() == Blocks.END_PORTAL_FRAME)
         {
             blockState = Blocks.GOLD_BLOCK.defaultBlockState();
             combinedOverlay = OverlayTexture.pack(OverlayTexture.u(1.0F), 10);
         }
-        blockRenderer.renderSingleBlock(blockState, matrixStack, bufferType, combinedLight, combinedOverlay);
+        blockRenderer.renderSingleBlock(blockState, poseStack, bufferType, combinedLight, combinedOverlay);
     }
 }

@@ -99,7 +99,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
     }
 
     @SuppressWarnings("deprecation")
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder buffer = tess.getBuilder();
@@ -108,7 +108,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
 
         if (this.mc.level != null)
         {
-            drawGradientRect(matrixStack.last().pose(), 0, this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
+            drawGradientRect(poseStack.last().pose(), 0, this.left, this.top, this.right, this.bottom, 0xC0101010, 0xD0101010);
         }
         else
         {
@@ -134,7 +134,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
 
             if (top <= this.bottom && top + slotBuffer >= this.top)
             {
-                this.drawPanel(matrixStack, index, this.left, this.right, top);
+                this.drawPanel(poseStack, index, this.left, this.right, top);
             }
         }
 
@@ -193,7 +193,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
         return 1;
     }
 
-    protected abstract void drawPanel(PoseStack matrixStack, int index, int left, int right, int top);
+    protected abstract void drawPanel(PoseStack poseStack, int index, int left, int right, int top);
 
     private int getContentHeight()
     {

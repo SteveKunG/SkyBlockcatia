@@ -24,12 +24,12 @@ public class MixinBlockEntityWithoutLevelRendererOptifine
     private final SkullModel head = new HumanoidHeadModel();
 
     @Inject(method = "renderRaw(Lnet/minecraft/item/ItemStack;Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;II)V", remap = false, at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/tileentity/SkullTileEntityRenderer.func_228879_a_(Lnet/minecraft/util/Direction;FLnet/minecraft/block/SkullBlock$ISkullType;Lcom/mojang/authlib/GameProfile;FLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;I)V", remap = false, shift = Shift.AFTER))
-    private void renderDragonOverlay(ItemStack itemStack, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, CallbackInfo info)
+    private void renderDragonOverlay(ItemStack itemStack, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, CallbackInfo info)
     {
         if (itemStack.hasTag())
         {
-            matrixStack.pushPose();
-            matrixStack.translate(-0.5D, 0.0D, -0.5D);
+            poseStack.pushPose();
+            poseStack.translate(-0.5D, 0.0D, -0.5D);
 
             CompoundTag compound = itemStack.getTag().getCompound("ExtraAttributes");
             String id = compound.getString("id");
@@ -42,16 +42,16 @@ public class MixinBlockEntityWithoutLevelRendererOptifine
 
             if (location != null)
             {
-                matrixStack.pushPose();
-                matrixStack.translate(1.0D, 0.0D, 1.0D);
-                matrixStack.scale(-1.001F, -1.0F, 1.001F);
+                poseStack.pushPose();
+                poseStack.translate(1.0D, 0.0D, 1.0D);
+                poseStack.scale(-1.001F, -1.0F, 1.001F);
 
                 VertexConsumer ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(location));
                 this.head.setupAnim(0.0F, 180.0F, 0.0F);
-                this.head.renderToBuffer(matrixStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-                matrixStack.popPose();
+                this.head.renderToBuffer(poseStack, ivertexbuilder, combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                poseStack.popPose();
             }
-            matrixStack.popPose();
+            poseStack.popPose();
         }
     }
 }

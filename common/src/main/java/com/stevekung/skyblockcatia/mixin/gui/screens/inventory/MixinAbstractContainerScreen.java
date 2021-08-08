@@ -198,7 +198,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
     @SuppressWarnings("deprecation")
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/Screen.render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", shift = Shift.BEFORE))
-    private void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
+    private void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
@@ -211,17 +211,17 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                     RenderSystem.disableAlphaTest();
                     RenderSystem.pushMatrix();
                     RenderSystem.translatef(0.0F, this.height - 48, 0.0F);
-                    this.renderChat(matrixStack);
+                    this.renderChat(poseStack);
                     RenderSystem.popMatrix();
                 }
-                GuiComponent.fill(matrixStack, 2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
-                this.commandSuggestionHelper.render(matrixStack, mouseX, mouseY);
-                this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
+                GuiComponent.fill(poseStack, 2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+                this.commandSuggestionHelper.render(poseStack, mouseX, mouseY);
+                this.inputField.render(poseStack, mouseX, mouseY, partialTicks);
             }
             if (this.priceSearch != null && GuiScreenUtils.isAuctionBrowser(this.getTitle().getString()))
             {
-                GuiComponent.drawString(matrixStack, this.font, "Search for price:", this.leftPos + 180, this.topPos + 26, 10526880);
-                this.priceSearch.render(matrixStack, mouseX, mouseY, partialTicks);
+                GuiComponent.drawString(poseStack, this.font, "Search for price:", this.leftPos + 180, this.topPos + 26, 10526880);
+                this.priceSearch.render(poseStack, mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -404,7 +404,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
     @SuppressWarnings("deprecation")
     @Inject(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderAndDecorateItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;II)V", shift = Shift.AFTER))
-    private void renderAnvilLevel(PoseStack matrixStack, Slot slot, CallbackInfo info)
+    private void renderAnvilLevel(PoseStack poseStack, Slot slot, CallbackInfo info)
     {
         if (this.getThis() instanceof ContainerScreen)
         {
@@ -473,7 +473,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 RenderSystem.pushMatrix();
                 RenderSystem.disableDepthTest();
                 RenderSystem.translatef(0.0F, 0.0F, 300.0F);
-                GuiComponent.drawCenteredString(matrixStack, this.font, levelString, i + 8, j + 4, 0);
+                GuiComponent.drawCenteredString(poseStack, this.font, levelString, i + 8, j + 4, 0);
                 RenderSystem.enableDepthTest();
                 RenderSystem.popMatrix();
             }
@@ -481,20 +481,20 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     }
 
     @Inject(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderOverlays(PoseStack matrixStack, Slot slot, CallbackInfo info)
+    private void renderOverlays(PoseStack poseStack, Slot slot, CallbackInfo info)
     {
         if (SkyBlockEventHandler.isSkyBlock && this.getThis() instanceof ContainerScreen)
         {
             if (MainEventHandler.bidHighlight && GuiScreenUtils.canRenderBids(this.getTitle().getString()))
             {
-                this.renderBids(matrixStack, slot);
+                this.renderBids(poseStack, slot);
             }
 
-            this.renderCurrentSelectedPet(matrixStack, slot);
+            this.renderCurrentSelectedPet(poseStack, slot);
 
             if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.title.getString().contains("Hub Selector"))
             {
-                this.renderHubOverlay(matrixStack, slot);
+                this.renderHubOverlay(poseStack, slot);
             }
         }
     }
@@ -643,7 +643,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     }
 
     @SuppressWarnings("deprecation")
-    private void renderChat(PoseStack matrixStack)
+    private void renderChat(PoseStack poseStack)
     {
         ChatComponent chat = this.minecraft.gui.getChat();
 
@@ -677,7 +677,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                             {
                                 int k2 = -i1 * 9;
                                 RenderSystem.enableBlend();
-                                this.font.drawShadow(matrixStack, chatline.getMessage(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
+                                this.font.drawShadow(poseStack, chatline.getMessage(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
                                 RenderSystem.disableAlphaTest();
                                 RenderSystem.disableBlend();
                             }
@@ -689,7 +689,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    private void renderBids(PoseStack matrixStack, Slot slot)
+    private void renderBids(PoseStack poseStack, Slot slot)
     {
         if (!slot.getItem().isEmpty() && slot.getItem().hasTag())
         {
@@ -713,18 +713,18 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
                     if (lore.startsWith("Status: Sold!"))
                     {
-                        this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
+                        this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, yellow, yellow);
                     }
 
                     if (((ITradeScreen) this.getThis()).getNumberEditBox() == null || ((ITradeScreen) this.getThis()).getNumberEditBox().getValue().isEmpty())
                     {
                         if (lore.startsWith("Starting bid:"))
                         {
-                            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
+                            this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
                         }
                         else if (lore.startsWith("Bidder:"))
                         {
-                            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, red, red);
+                            this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, red, red);
                         }
                     }
                     else
@@ -764,15 +764,15 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
                                 if (lore.startsWith("Top bid:"))
                                 {
-                                    this.checkCondition(matrixStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, yellow, red);
+                                    this.checkCondition(poseStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, yellow, red);
                                 }
                                 else if (lore.startsWith("Starting bid:"))
                                 {
-                                    this.checkCondition(matrixStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
+                                    this.checkCondition(poseStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
                                 }
                                 else if (lore.startsWith("Buy it now:"))
                                 {
-                                    this.checkCondition(matrixStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
+                                    this.checkCondition(poseStack, moneyFromText, moneyFromAh, priceMin, priceMax, slotLeft, slotTop, slotRight, slotBottom, green, red);
                                 }
                             }
                         }
@@ -783,7 +783,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    private void renderCurrentSelectedPet(PoseStack matrixStack, Slot slot)
+    private void renderCurrentSelectedPet(PoseStack poseStack, Slot slot)
     {
         if (slot.getItem() != null && slot.getItem().hasTag())
         {
@@ -804,7 +804,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
                     if (lore.startsWith("Click to despawn"))
                     {
-                        this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
+                        this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
                         break;
                     }
                 }
@@ -812,7 +812,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    private void renderHubOverlay(PoseStack matrixStack, Slot slot)
+    private void renderHubOverlay(PoseStack poseStack, Slot slot)
     {
         if (slot.getItem() != null && slot.getItem().hasTag())
         {
@@ -839,7 +839,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         int playerCountColor = this.getRGBPlayerCount(min, max);
                         int color = ColorUtils.to32Bit(playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255, 128);
                         this.setBlitOffset(300);
-                        this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color, color);
+                        this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color, color);
                         this.setBlitOffset(0);
                         break;
                     }
@@ -858,7 +858,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         return (double) playerCount / maxedPlayerCount;
     }
 
-    private void checkCondition(PoseStack matrixStack, int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)
+    private void checkCondition(PoseStack poseStack, int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)
     {
         switch (this.mode)
         {
@@ -866,41 +866,41 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             case SIMPLE:
                 if (moneyFromText == moneyFromAh)
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
                 }
                 else
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
                 }
                 break;
             case MIN:
                 if (moneyFromAh >= priceMin)
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
                 }
                 else
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
                 }
                 break;
             case MAX:
                 if (moneyFromAh <= priceMax)
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
                 }
                 else
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
                 }
                 break;
             case RANGED:
                 if (moneyFromAh >= priceMin && moneyFromAh <= priceMax)
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color1, color1);
                 }
                 else
                 {
-                    this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
+                    this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color2, color2);
                 }
                 break;
         }

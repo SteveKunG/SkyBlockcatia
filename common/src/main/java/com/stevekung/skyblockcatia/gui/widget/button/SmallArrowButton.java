@@ -21,13 +21,13 @@ public class SmallArrowButton extends Button
 
     @SuppressWarnings("deprecation")
     @Override
-    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
         if (this.visible)
         {
             this.mc.getTextureManager().bind(TEXTURE);
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiComponent.blit(matrixStack, this.x, this.y, this.isHovered() ? 7 : 0, 0, this.width, this.height, 14, 11);
+            GuiComponent.blit(poseStack, this.x, this.y, this.isHovered() ? 7 : 0, 0, this.width, this.height, 14, 11);
         }
     }
 }

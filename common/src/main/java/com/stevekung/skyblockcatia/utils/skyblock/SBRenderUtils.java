@@ -39,7 +39,7 @@ public class SBRenderUtils
     private static final ResourceLocation YOUNG_BABY = new ResourceLocation("skyblockcatia:textures/entity/young_baby.png");
 
     // Well, this is the best way to render rarity in 1.16 because TextFormatting on this version is sucks -.-
-    public static void renderRarity(PoseStack matrixStack, ItemStack itemStack, int xPos, int yPos)
+    public static void renderRarity(PoseStack poseStack, ItemStack itemStack, int xPos, int yPos)
     {
         if (!itemStack.isEmpty() && itemStack.hasTag())
         {
@@ -60,7 +60,7 @@ public class SBRenderUtils
                 if (id.equals("PARTY_HAT_CRAB"))
                 {
                     SBRarity rarity = upgrade ? SBRarity.COMMON.getNextRarity() : SBRarity.COMMON;
-                    SBRenderUtils.renderRarity(matrixStack, xPos, yPos, rarity);
+                    SBRenderUtils.renderRarity(poseStack, xPos, yPos, rarity);
                     return;
                 }
                 if (id.equals("SKYBLOCK_MENU") || id.contains("GENERATOR") || id.contains("RUNE"))
@@ -90,11 +90,11 @@ public class SBRenderUtils
 
                                     if (color != null && color.getColor() != null)
                                     {
-                                        renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getColor().toString()).toString()));
+                                        renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getColor().toString()).toString()));
                                     }
                                     else
                                     {
-                                        renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(lore.getString().charAt(0) + "" + lore.getString().charAt(1)));
+                                        renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(lore.getString().charAt(0) + "" + lore.getString().charAt(1)));
                                     }
                                     break;
                                 }
@@ -122,7 +122,7 @@ public class SBRenderUtils
 
                                     if (color.getStyle().getColor() != null)
                                     {
-                                        renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getStyle().getColor().toString()).toString()));
+                                        renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getStyle().getColor().toString()).toString()));
                                         break;
                                     }
                                 }
@@ -133,12 +133,12 @@ public class SBRenderUtils
                         {
                             if (component3.getStyle().getColor() != null)
                             {
-                                renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(component3.getStyle().getColor().toString()).toString()));
+                                renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(component3.getStyle().getColor().toString()).toString()));
                                 break;
                             }
                         }
                     }
-                    SBRenderUtils.renderPetRarity(displayName, itemStack, matrixStack, xPos, yPos);
+                    SBRenderUtils.renderPetRarity(displayName, itemStack, poseStack, xPos, yPos);
                 }
                 catch (Exception e)
                 {
@@ -149,21 +149,21 @@ public class SBRenderUtils
 
                 if (mat.matches())
                 {
-                    renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(mat.group("color")));
+                    renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(mat.group("color")));
                 }
 
                 Matcher mat1 = PET_PATTERN.matcher(displayName);
 
                 if (mat1.matches())
                 {
-                    renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(mat1.group("color")));
+                    renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(mat1.group("color")));
                 }
             }
             else
             {
                 try
                 {
-                    SBRenderUtils.renderPetRarity(displayName, itemStack, matrixStack, xPos, yPos);
+                    SBRenderUtils.renderPetRarity(displayName, itemStack, poseStack, xPos, yPos);
                 }
                 catch (Exception e)
                 {
@@ -174,14 +174,14 @@ public class SBRenderUtils
 
                 if (mat1.matches())
                 {
-                    renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(mat1.group("color")));
+                    renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(mat1.group("color")));
                 }
             }
         }
     }
 
     @SuppressWarnings("deprecation")
-    public static void renderRarity(PoseStack matrixStack, int xPos, int yPos, SBRarity rarity)
+    public static void renderRarity(PoseStack poseStack, int xPos, int yPos, SBRarity rarity)
     {
         if (rarity != null)
         {
@@ -194,7 +194,7 @@ public class SBRenderUtils
             RenderSystem.color4f(rarity.getColorToRender()[0], rarity.getColorToRender()[1], rarity.getColorToRender()[2], alpha);
             RenderSystem.blendFunc(770, 771);
             GlStateManager._texEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
-            GuiComponent.blit(matrixStack, xPos, yPos, 0, 0, 16, 16, 16, 16);
+            GuiComponent.blit(poseStack, xPos, yPos, 0, 0, 16, 16, 16, 16);
             GlStateManager._texEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
             RenderSystem.enableDepthTest();
             RenderSystem.disableAlphaTest();
@@ -203,7 +203,7 @@ public class SBRenderUtils
     }
 
     // Credit to https://gist.github.com/killjoy1221/71b4cd975b92afe8dbd2e5f6222b1140
-    public static void drawLongItemName(ToastComponent toastGui, PoseStack matrixStack, long delta, long firstDrawTime, long maxDrawTime, Component itemName, boolean shadow)
+    public static void drawLongItemName(ToastComponent toastGui, PoseStack poseStack, long delta, long firstDrawTime, long maxDrawTime, Component itemName, boolean shadow)
     {
         long minDraw = (long) (maxDrawTime * 0.1D);
         long maxDraw = maxDrawTime + 500L;
@@ -241,11 +241,11 @@ public class SBRenderUtils
 
         if (shadow)
         {
-            toastGui.getMinecraft().font.drawShadow(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
+            toastGui.getMinecraft().font.drawShadow(poseStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
         else
         {
-            toastGui.getMinecraft().font.draw(matrixStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
+            toastGui.getMinecraft().font.draw(poseStack, itemName, x, 18, ColorUtils.toDecimal(255, 255, 255));
         }
 
         RenderSystem.disableScissor();
@@ -320,7 +320,7 @@ public class SBRenderUtils
         return null;
     }
 
-    private static void renderPetRarity(String displayName, ItemStack itemStack, PoseStack matrixStack, int xPos, int yPos)
+    private static void renderPetRarity(String displayName, ItemStack itemStack, PoseStack poseStack, int xPos, int yPos)
     {
         if (displayName.startsWith("[Lvl "))
         {
@@ -331,7 +331,7 @@ public class SBRenderUtils
                     if (i == 1)
                     {
                         Component color = component2.getSiblings().get(i);
-                        renderRarity(matrixStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getStyle().getColor().toString()).toString()));
+                        renderRarity(poseStack, xPos, yPos, SBRarity.byBaseColor(ChatFormatting.getByName(color.getStyle().getColor().toString()).toString()));
                         break;
                     }
                 }

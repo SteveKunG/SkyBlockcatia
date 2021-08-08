@@ -512,17 +512,17 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks)
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground(matrixStack);
+        this.renderBackground(poseStack);
 
         if (this.loadingApi)
         {
             String text = "Downloading SkyBlock stats";
             int i = this.font.width(text);
-            GuiComponent.drawCenteredString(matrixStack, this.font, text, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
-            GuiComponent.drawString(matrixStack, this.font, SkyBlockProfileSelectorScreen.downloadingStates[(int) (Util.getMillis() / 500L % SkyBlockProfileSelectorScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
-            GuiComponent.drawCenteredString(matrixStack, this.font, "Status: " + ChatFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 15, 16777215);
+            GuiComponent.drawCenteredString(poseStack, this.font, text, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
+            GuiComponent.drawString(poseStack, this.font, SkyBlockProfileSelectorScreen.downloadingStates[(int) (Util.getMillis() / 500L % SkyBlockProfileSelectorScreen.downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
+            GuiComponent.drawCenteredString(poseStack, this.font, "Status: " + ChatFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 15, 16777215);
 
             if (this.showArmorButton != null)
             {
@@ -533,30 +533,30 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             if (this.error)
             {
-                GuiComponent.drawCenteredString(matrixStack, this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
+                GuiComponent.drawCenteredString(poseStack, this.font, "SkyBlock API Viewer", this.width / 2, 20, 16777215);
 
                 if (this.errorInfo != null)
                 {
-                    this.errorInfo.render(matrixStack, mouseX, mouseY, partialTicks);
+                    this.errorInfo.render(poseStack, mouseX, mouseY, partialTicks);
                 }
                 else
                 {
-                    GuiComponent.drawCenteredString(matrixStack, this.font, ChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
+                    GuiComponent.drawCenteredString(poseStack, this.font, ChatFormatting.RED + this.errorMessage, this.width / 2, 100, 16777215);
                 }
                 if (this.showArmorButton != null)
                 {
                     this.showArmorButton.visible = false;
                 }
-                super.render(matrixStack, mouseX, mouseY, partialTicks);
+                super.render(poseStack, mouseX, mouseY, partialTicks);
             }
             else
             {
                 if (this.currentSlot != null)
                 {
-                    this.currentSlot.render(matrixStack, mouseX, mouseY, partialTicks);
+                    this.currentSlot.render(poseStack, mouseX, mouseY, partialTicks);
                 }
 
-                GuiComponent.drawCenteredString(matrixStack, this.font, TextComponentUtils.component(this.displayName).append(TextComponentUtils.formatted(" Profile: ", ChatFormatting.YELLOW)).append(this.sbProfileName.copy().withStyle(ChatFormatting.GOLD)).append(TextComponentUtils.formatted(" Game Mode: ", ChatFormatting.YELLOW)).append(this.gameMode).append(this.guild), this.width / 2, 29, 16777215);
+                GuiComponent.drawCenteredString(poseStack, this.font, TextComponentUtils.component(this.displayName).append(TextComponentUtils.formatted(" Profile: ", ChatFormatting.YELLOW)).append(this.sbProfileName.copy().withStyle(ChatFormatting.GOLD)).append(TextComponentUtils.formatted(" Game Mode: ", ChatFormatting.YELLOW)).append(this.gameMode).append(this.guild), this.width / 2, 29, 16777215);
 
                 if (this.currentSlot != null && this.currentSlot instanceof EmptyList)
                 {
@@ -564,11 +564,11 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                     if (stat.type == EmptyList.Type.INVENTORY)
                     {
-                        this.drawGroupsBackgroundLayer(matrixStack);
+                        this.drawGroupsBackgroundLayer(poseStack);
                     }
                 }
 
-                super.render(matrixStack, mouseX, mouseY, partialTicks);
+                super.render(poseStack, mouseX, mouseY, partialTicks);
 
                 if (this.currentSlot != null)
                 {
@@ -577,11 +577,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                         RenderSystem.enableDepthTest();
                         SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, this.guiLeft - 55 - (float) mouseX, this.guiTop + 25 - (float) mouseY, this.player);
-                        this.drawContainerSlot(matrixStack, mouseX, mouseY, true);
+                        this.drawContainerSlot(poseStack, mouseX, mouseY, true);
 
                         if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
                         {
-                            this.renderTooltip(matrixStack, this.hoveredSlot.getItem(), mouseX, mouseY);
+                            this.renderTooltip(poseStack, this.hoveredSlot.getItem(), mouseX, mouseY);
                         }
                     }
                     else if (this.currentSlot instanceof EmptyList)
@@ -590,14 +590,14 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                         if (stat.type == EmptyList.Type.INVENTORY)
                         {
-                            this.drawContainerSlot(matrixStack, mouseX, mouseY, false);
+                            this.drawContainerSlot(poseStack, mouseX, mouseY, false);
 
                             Lighting.turnOff();
-                            this.drawTabsForegroundLayer(matrixStack);
+                            this.drawTabsForegroundLayer(poseStack);
 
                             for (SBInventoryGroup group : SBInventoryGroup.GROUPS)
                             {
-                                if (this.renderGroupsHoveringText(matrixStack, group, mouseX, mouseY))
+                                if (this.renderGroupsHoveringText(poseStack, group, mouseX, mouseY))
                                 {
                                     break;
                                 }
@@ -611,7 +611,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
                             if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
                             {
-                                this.renderTooltip(matrixStack, this.hoveredSlot.getItem(), mouseX, mouseY);
+                                this.renderTooltip(poseStack, this.hoveredSlot.getItem(), mouseX, mouseY);
                             }
                         }
                         else if (stat.type == EmptyList.Type.DUNGEON)//TODO
@@ -623,7 +623,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 int x = this.width / 2 - 150;
                                 int y = 50;
                                 int textY = y + 12 * i;
-                                GuiComponent.drawString(matrixStack, this.font, dungeon, x, textY, -1);
+                                GuiComponent.drawString(poseStack, this.font, dungeon, x, textY, -1);
                                 ++i;
                             }
                         }
@@ -645,7 +645,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                     extraCap = ChatFormatting.GOLD + " (+" + this.farmingLevelCap + ")";
                                 }
 
-                                this.renderSkillBar(matrixStack, info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit(), extraCap);
+                                this.renderSkillBar(poseStack, info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit(), extraCap);
                                 ++i;
                             }
 
@@ -657,7 +657,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 int y = height + 12;
                                 int barY = y + 20 + height * i;
                                 int textY = y + height * i;
-                                this.renderSkillBar(matrixStack, info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit(), "");
+                                this.renderSkillBar(poseStack, info.getName(), x, barY, x + 46, textY, info.getCurrentXp(), info.getXpRequired(), info.getCurrentLvl(), info.isReachLimit(), "");
                                 ++i;
                             }
 
@@ -665,7 +665,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                             {
                                 MutableComponent component = TextComponentUtils.component("AVG: " + this.skillAvg);
                                 component.setStyle(component.getStyle().withFont(ClientUtils.UNICODE));
-                                GuiComponent.drawString(matrixStack, this.font, component, this.width - this.font.width(component) - 60, this.height - 38, 16777215);
+                                GuiComponent.drawString(poseStack, this.font, component, this.width - this.font.width(component) - 60, this.height - 38, 16777215);
                             }
                         }
                     }
@@ -673,21 +673,21 @@ public class SkyBlockAPIViewerScreen extends Screen
                     {
                         String total1 = ChatFormatting.GRAY + "Total Amount Spent: " + ChatFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.slayerTotalAmountSpent);
                         String total2 = ChatFormatting.GRAY + "Total Slayer XP: " + ChatFormatting.YELLOW + NumberUtils.NUMBER_FORMAT.format(this.totalSlayerXp);
-                        GuiComponent.drawString(matrixStack, this.font, total1, this.width - this.font.width(total1) - 60, this.height - 36, 16777215);
-                        GuiComponent.drawString(matrixStack, this.font, total2, this.width - this.font.width(total2) - 60, this.height - 46, 16777215);
+                        GuiComponent.drawString(poseStack, this.font, total1, this.width - this.font.width(total1) - 60, this.height - 36, 16777215);
+                        GuiComponent.drawString(poseStack, this.font, total2, this.width - this.font.width(total2) - 60, this.height - 46, 16777215);
 
                         if (this.activeSlayerType != null)
                         {
-                            GuiComponent.drawString(matrixStack, this.font, ChatFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
-                            GuiComponent.drawString(matrixStack, this.font, ChatFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
+                            GuiComponent.drawString(poseStack, this.font, ChatFormatting.GRAY + "Active Slayer: ", 60, this.height - 46, 16777215);
+                            GuiComponent.drawString(poseStack, this.font, ChatFormatting.YELLOW + this.activeSlayerType.getName() + " - Tier " + this.activeSlayerTier, 60, this.height - 36, 16777215);
                         }
                     }
                     else if (this.currentSlot instanceof CraftedMinionsList)
                     {
                         String total1 = ChatFormatting.GRAY + "Unique Minions: " + ChatFormatting.YELLOW + this.craftedMinionCount + "/" + SBMinions.MINIONS.getUniqueMinions() + ChatFormatting.GRAY + " (" + this.craftedMinionCount * 100 / SBMinions.MINIONS.getUniqueMinions() + "%)";
                         String total2 = ChatFormatting.GRAY + "Current Minion Slot: " + ChatFormatting.YELLOW + this.currentMinionSlot + (this.additionalMinionSlot > 0 ? ChatFormatting.GOLD + " (Bonus +" + this.additionalMinionSlot + ")" : "");
-                        GuiComponent.drawString(matrixStack, this.font, total1, this.width - this.font.width(total1) - 60, this.height - 68, 16777215);
-                        GuiComponent.drawString(matrixStack, this.font, total2, this.width - this.font.width(total2) - 60, this.height - 58, 16777215);
+                        GuiComponent.drawString(poseStack, this.font, total1, this.width - this.font.width(total1) - 60, this.height - 68, 16777215);
+                        GuiComponent.drawString(poseStack, this.font, total2, this.width - this.font.width(total2) - 60, this.height - 58, 16777215);
                     }
                 }
 
@@ -1054,7 +1054,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     }
 
     // Render
-    private void renderSkillBar(PoseStack matrixStack, String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit, String extra)
+    private void renderSkillBar(PoseStack poseStack, String name, int xBar, int yBar, int xText, int yText, double playerXp, int xpRequired, int currentLvl, boolean reachLimit, String extra)
     {
         float[] color = ColorUtils.toFloatArray(128, 255, 0);
 
@@ -1065,7 +1065,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         this.minecraft.getTextureManager().bind(XP_BARS);
         RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
-        GuiComponent.blit(matrixStack, xBar, yBar, 0, 0, 91, 5, 91, 10);
+        GuiComponent.blit(poseStack, xBar, yBar, 0, 0, 91, 5, 91, 10);
 
         if (xpRequired > 0)
         {
@@ -1073,27 +1073,27 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (filled > 0)
             {
-                GuiComponent.blit(matrixStack, xBar, yBar, 0, 5, filled, 5, 91, 10);
+                GuiComponent.blit(poseStack, xBar, yBar, 0, 5, filled, 5, 91, 10);
             }
 
-            GuiComponent.drawCenteredString(matrixStack, this.font, ChatFormatting.GRAY + name + (reachLimit ? ChatFormatting.GOLD : ChatFormatting.YELLOW) + " " + currentLvl + extra, xText, yText, 16777215);
+            GuiComponent.drawCenteredString(poseStack, this.font, ChatFormatting.GRAY + name + (reachLimit ? ChatFormatting.GOLD : ChatFormatting.YELLOW) + " " + currentLvl + extra, xText, yText, 16777215);
 
             if (reachLimit)
             {
-                GuiComponent.drawCenteredString(matrixStack, this.font, SBNumberUtils.formatWithM(playerXp), xText, yText + 10, 16777215);
+                GuiComponent.drawCenteredString(poseStack, this.font, SBNumberUtils.formatWithM(playerXp), xText, yText + 10, 16777215);
             }
             else
             {
-                GuiComponent.drawCenteredString(matrixStack, this.font, NumberUtils.formatCompact((long) playerXp) + "/" + NumberUtils.formatCompact(xpRequired), xText, yText + 10, 16777215);
+                GuiComponent.drawCenteredString(poseStack, this.font, NumberUtils.formatCompact((long) playerXp) + "/" + NumberUtils.formatCompact(xpRequired), xText, yText + 10, 16777215);
             }
         }
         else
         {
-            GuiComponent.drawCenteredString(matrixStack, this.font, name, xText, yText + 8, 16777215);
+            GuiComponent.drawCenteredString(poseStack, this.font, name, xText, yText + 8, 16777215);
         }
     }
 
-    private void drawContainerSlot(PoseStack matrixStack, int mouseX, int mouseY, boolean info)
+    private void drawContainerSlot(PoseStack poseStack, int mouseX, int mouseY, boolean info)
     {
         int i = this.guiLeft;
         int j = this.guiTop;
@@ -1109,7 +1109,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             for (Slot slot : this.skyBlockContainer.slots)
             {
-                this.drawSlot(matrixStack, slot);
+                this.drawSlot(poseStack, slot);
 
                 if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isActive())
                 {
@@ -1119,7 +1119,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                     int j1 = slot.x;
                     int k1 = slot.y;
                     RenderSystem.colorMask(true, true, true, false);
-                    this.fillGradient(matrixStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+                    this.fillGradient(poseStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
                     RenderSystem.colorMask(true, true, true, true);
                     RenderSystem.enableLighting();
                     RenderSystem.enableDepthTest();
@@ -1140,7 +1140,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    private void drawSlot(PoseStack matrixStack, Slot slot)
+    private void drawSlot(PoseStack poseStack, Slot slot)
     {
         int i = slot.x;
         int j = slot.y;
@@ -1156,7 +1156,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 TextureAtlasSprite sprite = this.minecraft.getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
                 this.minecraft.getTextureManager().bind(sprite.atlas().location());
-                GuiComponent.blit(matrixStack, i, j, this.getBlitOffset(), 16, 16, sprite);
+                GuiComponent.blit(poseStack, i, j, this.getBlitOffset(), 16, 16, sprite);
             }
         }
 
@@ -1171,7 +1171,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().getBoolean("active"))
         {
-            this.fillGradient(matrixStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
+            this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, green, green);
         }
 
         this.renderItemOverlayIntoGUI(itemStack, i, j);
@@ -1219,7 +1219,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private boolean renderGroupsHoveringText(PoseStack matrixStack, SBInventoryGroup group, int mouseX, int mouseY)
+    private boolean renderGroupsHoveringText(PoseStack poseStack, SBInventoryGroup group, int mouseX, int mouseY)
     {
         int i = group.getColumn();
         int j = 28 * i;
@@ -1240,7 +1240,7 @@ public class SkyBlockAPIViewerScreen extends Screen
 
         if (this.isPointInRegion(j + 2, k + 3, 25, 25, mouseX, mouseY))
         {
-            this.renderTooltip(matrixStack, group.getTranslationKey(), mouseX, mouseY);
+            this.renderTooltip(poseStack, group.getTranslationKey(), mouseX, mouseY);
             return true;
         }
         else
@@ -1249,7 +1249,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
     }
 
-    private void drawGroupsBackgroundLayer(PoseStack matrixStack)
+    private void drawGroupsBackgroundLayer(PoseStack poseStack)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         SBInventoryGroup group = SBInventoryGroup.GROUPS[this.selectedTabIndex];
@@ -1260,37 +1260,37 @@ public class SkyBlockAPIViewerScreen extends Screen
 
             if (group1.getIndex() != this.selectedTabIndex)
             {
-                this.drawGroup(matrixStack, group1);
+                this.drawGroup(poseStack, group1);
             }
         }
 
         this.minecraft.getTextureManager().bind(new ResourceLocation("skyblockcatia:textures/gui/group_" + group.getBackgroundTexture()));
-        this.blit(matrixStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        this.blit(poseStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.guiLeft + 182;
         int j = this.guiTop + 18;
         int k = j + 72;
         this.minecraft.getTextureManager().bind(INVENTORY_TABS);
-        this.blit(matrixStack, i, j + (int) ((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
-        this.drawGroup(matrixStack, group);
+        this.blit(poseStack, i, j + (int) ((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
+        this.drawGroup(poseStack, group);
         RenderSystem.disableRescaleNormal();
         Lighting.turnOff();
         RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
     }
 
-    private void drawTabsForegroundLayer(PoseStack matrixStack)
+    private void drawTabsForegroundLayer(PoseStack poseStack)
     {
         SBInventoryGroup group = SBInventoryGroup.GROUPS[this.selectedTabIndex];
 
         if (group != null)
         {
             RenderSystem.disableBlend();
-            this.font.draw(matrixStack, group.getTranslationKey(), this.guiLeft + 11, this.guiTop + 6, 4210752);
+            this.font.draw(poseStack, group.getTranslationKey(), this.guiLeft + 11, this.guiTop + 6, 4210752);
         }
     }
 
-    private void drawGroup(PoseStack matrixStack, SBInventoryGroup group)
+    private void drawGroup(PoseStack poseStack, SBInventoryGroup group)
     {
         boolean flag = group.getIndex() == this.selectedTabIndex;
         boolean flag1 = group.isOnTopRow();
@@ -1324,7 +1324,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        this.blit(matrixStack, l, i1, j, k, 28, j1);
+        this.blit(poseStack, l, i1, j, k, 28, j1);
         this.setBlitOffset(100);
         this.itemRenderer.blitOffset = 100.0F;
         l = l + 6;
@@ -3943,19 +3943,19 @@ public class SkyBlockAPIViewerScreen extends Screen
         RenderSystem.popMatrix();
     }
 
-    private void drawItemStackSlot(PoseStack matrixStack, int x, int y, ItemStack itemStack)
+    private void drawItemStackSlot(PoseStack poseStack, int x, int y, ItemStack itemStack)
     {
-        this.drawSprite(matrixStack, x + 1, y + 1);
+        this.drawSprite(poseStack, x + 1, y + 1);
         RenderSystem.enableRescaleNormal();
         this.itemRenderer.renderGuiItem(itemStack, x + 2, y + 2);
         RenderSystem.disableRescaleNormal();
     }
 
-    private void drawSprite(PoseStack matrixStack, int left, int top)
+    private void drawSprite(PoseStack poseStack, int left, int top)
     {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.minecraft.getTextureManager().bind(GuiComponent.STATS_ICON_LOCATION);
-        GuiComponent.blit(matrixStack, left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
+        GuiComponent.blit(poseStack, left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
     }
 
     private String getTextPercentage(int current, int total)
@@ -4175,7 +4175,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(PoseStack matrixStack, int index, int left, int right, int top) {}
+        protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top) {}
 
         enum Type
         {
@@ -4202,12 +4202,12 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(PoseStack matrixStack, int index, int left, int right, int top)
+        protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top)
         {
             SkyBlockInfo stat = this.stats.get(index);
             boolean isCurrentUpgrade = stat.title.equals("Current Upgrade");
-            this.font.draw(matrixStack, stat.title + (isCurrentUpgrade ? SkyBlockProfileSelectorScreen.downloadingStates[(int) (Util.getMillis() / 250L % SkyBlockProfileSelectorScreen.downloadingStates.length)] : ""), SkyBlockAPIViewerScreen.this.guiLeft - 20, top, stat.hex != null ? ColorUtils.hexToDecimal(stat.hex) : index % 2 == 0 ? 16777215 : 9474192);
-            this.font.draw(matrixStack, stat.getValue(), SkyBlockAPIViewerScreen.this.guiLeft - this.font.width(stat.getValue()) + 195, top, stat.hex != null ? ColorUtils.hexToDecimal(stat.hex) : index % 2 == 0 ? 16777215 : 9474192);
+            this.font.draw(poseStack, stat.title + (isCurrentUpgrade ? SkyBlockProfileSelectorScreen.downloadingStates[(int) (Util.getMillis() / 250L % SkyBlockProfileSelectorScreen.downloadingStates.length)] : ""), SkyBlockAPIViewerScreen.this.guiLeft - 20, top, stat.hex != null ? ColorUtils.hexToDecimal(stat.hex) : index % 2 == 0 ? 16777215 : 9474192);
+            this.font.draw(poseStack, stat.getValue(), SkyBlockAPIViewerScreen.this.guiLeft - this.font.width(stat.getValue()) + 195, top, stat.hex != null ? ColorUtils.hexToDecimal(stat.hex) : index % 2 == 0 ? 16777215 : 9474192);
         }
     }
 
@@ -4229,7 +4229,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(PoseStack matrixStack, int index, int left, int right, int top)
+        protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top)
         {
             SkyBlockSlayerInfo stat = this.stats.get(index);
 
@@ -4290,11 +4290,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                 int playerSlayerXp = Integer.parseInt(xpSplit[0]);
                 int xpRequired = Integer.parseInt(xpSplit[1]);
                 int filled = stat.reachLimit ? 91 : Math.min((int) Math.floor(playerSlayerXp * 92F / xpRequired), 91);
-                GuiComponent.blit(matrixStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
+                GuiComponent.blit(poseStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 0, 91, 5, 91, 10);
 
                 if (filled > 0)
                 {
-                    GuiComponent.blit(matrixStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
+                    GuiComponent.blit(poseStack, SkyBlockAPIViewerScreen.this.guiLeft + 90, top, 0, 5, filled, 5, 91, 10);
                 }
 
                 RenderSystem.enableBlend();
@@ -4304,11 +4304,11 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 if (this.getSize() == 1)
                 {
-                    this.font.draw(matrixStack, stat.text, SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
+                    this.font.draw(poseStack, stat.text, SkyBlockAPIViewerScreen.this.guiLeft + 200, top, 16777215);
                 }
                 else
                 {
-                    this.font.draw(matrixStack, stat.text, SkyBlockAPIViewerScreen.this.guiLeft - this.font.width(stat.text) + 180, top, 16777215);
+                    this.font.draw(poseStack, stat.text, SkyBlockAPIViewerScreen.this.guiLeft - this.font.width(stat.text) + 180, top, 16777215);
                 }
             }
         }
@@ -4331,7 +4331,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(PoseStack matrixStack, int index, int left, int right, int top)
+        protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top)
         {
             if (!this.stats.isEmpty())
             {
@@ -4347,13 +4347,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                         component.setStyle(component.getStyle().withFont(ClientUtils.UNICODE));
                     }
 
-                    this.font.draw(matrixStack, component, SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
-                    this.font.draw(matrixStack, stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - this.font.width(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
+                    this.font.draw(poseStack, component, SkyBlockAPIViewerScreen.this.guiLeft - 85, top, index % 2 == 0 ? 16777215 : 9474192);
+                    this.font.draw(poseStack, stat.getValueByString(), SkyBlockAPIViewerScreen.this.guiLeft - this.font.width(stat.getValueByString()) + 180, top, index % 2 == 0 ? 16777215 : 9474192);
                 }
                 else if (obj instanceof BankHistory.Stats)
                 {
                     BankHistory.Stats stat = (BankHistory.Stats) obj;
-                    this.font.draw(matrixStack, stat.getStats(), SkyBlockAPIViewerScreen.this.guiLeft - 55, top, 16777215);
+                    this.font.draw(poseStack, stat.getStats(), SkyBlockAPIViewerScreen.this.guiLeft - 55, top, 16777215);
                 }
             }
         }
@@ -4378,7 +4378,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(PoseStack matrixStack, int index, int left, int right, int top)
+        protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top)
         {
             SBCollections collection = this.collection.get(index);
 
@@ -4387,13 +4387,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (!collection.getItemStack().isEmpty())
                 {
                     String collectionLvl = collection.getCollectionType() == SBCollections.Type.UNKNOWN ? "" : " " + ChatFormatting.GOLD + collection.getLevel();
-                    this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 65, top, collection.getItemStack());
-                    this.font.draw(matrixStack, (collection.getCollectionType() == SBCollections.Type.UNKNOWN ? ChatFormatting.RED : "") + collection.getItemStack().getHoverName().getString() + collectionLvl, this.parent.guiLeft - 41, top + 6, 16777215);
-                    this.font.draw(matrixStack, collection.getCollectionAmount(), this.parent.guiLeft - this.font.width(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                    this.parent.drawItemStackSlot(poseStack, this.parent.guiLeft - 65, top, collection.getItemStack());
+                    this.font.draw(poseStack, (collection.getCollectionType() == SBCollections.Type.UNKNOWN ? ChatFormatting.RED : "") + collection.getItemStack().getHoverName().getString() + collectionLvl, this.parent.guiLeft - 41, top + 6, 16777215);
+                    this.font.draw(poseStack, collection.getCollectionAmount(), this.parent.guiLeft - this.font.width(collection.getCollectionAmount()) + 170, top + 6, index % 2 == 0 ? 16777215 : 9474192);
                 }
                 else
                 {
-                    this.font.draw(matrixStack, collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
+                    this.font.draw(poseStack, collection.getCollectionType().getName(), this.parent.guiLeft - 65, top + 5, 16777215);
                 }
             }
         }
@@ -4418,21 +4418,21 @@ public class SkyBlockAPIViewerScreen extends Screen
         }
 
         @Override
-        protected void drawPanel(PoseStack matrixStack, int index, int left, int right, int top)
+        protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top)
         {
             SBMinions.CraftedInfo craftedMinion = this.craftMinions.get(index);
 
             if (!craftedMinion.getMinionItem().isEmpty())
             {
-                this.parent.drawItemStackSlot(matrixStack, this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
-                this.font.draw(matrixStack, craftedMinion.getDisplayName() + " " + ChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
-                this.font.draw(matrixStack, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.font.width(craftedMinion.getCraftedTiers()) + 202, top + 6, index % 2 == 0 ? 16777215 : 9474192);
+                this.parent.drawItemStackSlot(poseStack, this.parent.guiLeft - 102, top, craftedMinion.getMinionItem());
+                this.font.draw(poseStack, craftedMinion.getDisplayName() + " " + ChatFormatting.GOLD + craftedMinion.getMinionMaxTier(), this.parent.guiLeft - 79, top + 6, 16777215);
+                this.font.draw(poseStack, craftedMinion.getCraftedTiers(), this.parent.guiLeft - this.font.width(craftedMinion.getCraftedTiers()) + 202, top + 6, index % 2 == 0 ? 16777215 : 9474192);
             }
             else
             {
                 if (craftedMinion.getMinionName() != null)
                 {
-                    this.font.draw(matrixStack, craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
+                    this.font.draw(poseStack, craftedMinion.getMinionName(), this.parent.guiLeft - 100, top + 5, 16777215);
                 }
             }
         }
