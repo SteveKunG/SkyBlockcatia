@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.core;
 
-import java.io.BufferedReader;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -30,7 +29,7 @@ public class SkyBlockcatia
         {
             try
             {
-                BufferedReader reader = DataUtils.getData("supporters_username");
+                var reader = DataUtils.getData("supporters_username");
                 String inputLine;
 
                 while ((inputLine = reader.readLine()) != null)

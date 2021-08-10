@@ -6,41 +6,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class SBCollections
+public record SBCollections(ItemStack itemStack, com.stevekung.skyblockcatia.utils.skyblock.SBCollections.Type type, int value, int level)
 {
-    private final ItemStack itemStack;
-    private final Type type;
-    private final int value;
-    private final int level;
-
-    public SBCollections(ItemStack itemStack, Type type, int value, int level)
-    {
-        this.itemStack = itemStack;
-        this.type = type;
-        this.value = value;
-        this.level = level;
-    }
-
-    public ItemStack getItemStack()
-    {
-        return this.itemStack;
-    }
-
-    public Type getCollectionType()
-    {
-        return this.type;
-    }
-
-    public int getValue()
-    {
-        return this.value;
-    }
-
-    public int getLevel()
-    {
-        return this.level;
-    }
-
     public String getCollectionAmount()
     {
         return NumberUtils.NUMBER_FORMAT.format(this.value);

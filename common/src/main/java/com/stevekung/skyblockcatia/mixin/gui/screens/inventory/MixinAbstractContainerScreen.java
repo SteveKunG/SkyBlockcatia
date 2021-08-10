@@ -3,7 +3,6 @@ package com.stevekung.skyblockcatia.mixin.gui.screens.inventory;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -49,8 +48,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.ClickType;
@@ -115,13 +112,13 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             {
                 this.addRenderableWidget(new Button(this.leftPos + 180, this.topPos + 70, 70, 20, TextComponentUtils.component("Copy Seller"), button ->
                 {
-                    String title = this.title.getString();
+                    var title = this.title.getString();
                     ClientUtils.printClientMessage(TextComponentUtils.formatted("Copied seller auction command!", ChatFormatting.GREEN));
                     this.minecraft.keyboardHandler.setClipboard("/ah " + title.replace(title.substring(title.indexOf('\'')), ""));
                 }));
                 this.addRenderableWidget(new Button(this.leftPos + 180, this.topPos + 92, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
-                    String title = this.title.getString();
+                    var title = this.title.getString();
                     this.minecraft.setScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
@@ -129,7 +126,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             {
                 this.addRenderableWidget(new Button(this.leftPos + 180, this.topPos + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
-                    String title = this.title.getString();
+                    var title = this.title.getString();
                     this.minecraft.setScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
                 }));
             }
@@ -208,7 +205,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 {
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
-                    PoseStack poseStack2 = RenderSystem.getModelViewStack();
+                    var poseStack2 = RenderSystem.getModelViewStack();
                     poseStack2.pushPose();
                     poseStack2.translate(0.0F, this.height - 48, 0.0F);
                     RenderSystem.applyModelViewMatrix();
@@ -239,11 +236,11 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             }
             else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getDefaultKey().getValue())
             {
-                ItemStack itemStack = this.hoveredSlot.getItem();
+                var itemStack = this.hoveredSlot.getItem();
 
                 if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                 {
-                    String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
+                    var itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                     itemId = WordUtils.capitalize(itemId);
                     this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                     this.minecraft.setScreen(new ConfirmLinkScreen(this::openFandom, this.fandomUrl, true));
@@ -289,7 +286,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                     }
                     else
                     {
-                        String text = this.inputField.getValue().trim();
+                        var text = this.inputField.getValue().trim();
 
                         if (!text.isEmpty())
                         {
@@ -311,11 +308,11 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getDefaultKey().getValue())
                         {
-                            ItemStack itemStack = this.hoveredSlot.getItem();
+                            var itemStack = this.hoveredSlot.getItem();
 
                             if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                             {
-                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
+                                var itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                                 itemId = WordUtils.capitalize(itemId);
                                 this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                                 this.minecraft.setScreen(new ConfirmLinkScreen(this::openFandom, this.fandomUrl, true));
@@ -351,11 +348,11 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         }
                         else if (keyCode == KeyBindingHandler.KEY_SB_OPEN_WIKI.getDefaultKey().getValue())
                         {
-                            ItemStack itemStack = this.hoveredSlot.getItem();
+                            var itemStack = this.hoveredSlot.getItem();
 
                             if (!itemStack.isEmpty() && itemStack.hasTag() && itemStack.getTag().contains("ExtraAttributes"))
                             {
-                                String itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
+                                var itemId = itemStack.getTag().getCompound("ExtraAttributes").getString("id").toLowerCase(Locale.ROOT).replace("_", " ");
                                 itemId = WordUtils.capitalize(itemId);
                                 this.fandomUrl = "https://hypixel-skyblock.fandom.com/wiki/" + itemId.replace(" ", "_");
                                 this.minecraft.setScreen(new ConfirmLinkScreen(this::openFandom, this.fandomUrl, true));
@@ -380,15 +377,15 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 {
                     if (!slot.getItem().isEmpty() && slot.getItem().hasTag())
                     {
-                        CompoundTag compound = slot.getItem().getTag().getCompound("display");
+                        var compound = slot.getItem().getTag().getCompound("display");
 
                         if (compound.getTagType("Lore") == 9)
                         {
-                            ListTag list = compound.getList("Lore", 8);
+                            var list = compound.getList("Lore", 8);
 
-                            for (int j1 = 0; j1 < list.size(); ++j1)
+                            for (var j1 = 0; j1 < list.size(); ++j1)
                             {
-                                String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                                var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                                 if (lore.startsWith("Seller: "))
                                 {
@@ -408,30 +405,30 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         if (this.getThis() instanceof ContainerScreen)
         {
-            String levelString = "";
+            var levelString = "";
 
             if (this.getTitle().getString().equals("Anvil") || this.getTitle().getString().equals("Reforge Item"))
             {
-                Slot anvilSlot = this.getThis().getMenu().slots.get(31);
-                ItemStack itemStack = this.getThis().getMenu().slots.get(22).getItem();
+                var anvilSlot = this.getThis().getMenu().slots.get(31);
+                var itemStack = this.getThis().getMenu().slots.get(22).getItem();
                 int i = anvilSlot.x;
                 int j = anvilSlot.y;
 
                 if (!itemStack.isEmpty() && itemStack.hasTag())
                 {
-                    CompoundTag compound = itemStack.getTag().getCompound("display");
+                    var compound = itemStack.getTag().getCompound("display");
 
                     if (compound.getTagType("Lore") == 9)
                     {
-                        ListTag list = compound.getList("Lore", 8);
+                        var list = compound.getList("Lore", 8);
 
-                        for (int j1 = 0; j1 < list.size(); ++j1)
+                        for (var j1 = 0; j1 < list.size(); ++j1)
                         {
-                            String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                            var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                             if (lore.endsWith("Exp Levels") || lore.endsWith("Exp Level"))
                             {
-                                int level = 0;
+                                var level = 0;
 
                                 try
                                 {
@@ -453,7 +450,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                             }
                             else if (lore.endsWith("Coins") || lore.endsWith("Coin"))
                             {
-                                int coin = 0;
+                                var coin = 0;
 
                                 try
                                 {
@@ -471,7 +468,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                     }
                 }
                 RenderSystem.disableDepthTest();
-                PoseStack poseStack2 = RenderSystem.getModelViewStack();
+                var poseStack2 = RenderSystem.getModelViewStack();
                 poseStack2.pushPose();
                 poseStack2.translate(0.0F, 0.0F, 300.0F);
                 RenderSystem.applyModelViewMatrix();
@@ -504,26 +501,26 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Redirect(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
     private void renderPlayerCount(ItemRenderer renderer, Font font, ItemStack stack, int xPosition, int yPosition, String text)
     {
-        boolean found = false;
+        var found = false;
 
         if (SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer && this.getThis() instanceof ContainerScreen)
         {
             if (this.title.getString().contains("Hub Selector") && !stack.isEmpty() && stack.hasTag())
             {
-                CompoundTag compound = stack.getTag().getCompound("display");
+                var compound = stack.getTag().getCompound("display");
 
                 if (compound.getTagType("Lore") == 9)
                 {
-                    ListTag list = compound.getList("Lore", 8);
+                    var list = compound.getList("Lore", 8);
 
-                    for (int j1 = 0; j1 < list.size(); ++j1)
+                    for (var j1 = 0; j1 < list.size(); ++j1)
                     {
-                        String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                        var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                         if (lore.startsWith("Players: "))
                         {
                             lore = lore.substring(lore.indexOf(" ") + 1);
-                            String[] loreCount = lore.split("/");
+                            var loreCount = lore.split("/");
                             renderer.renderGuiItemDecorations(font, stack, xPosition, yPosition, loreCount[0]);
                             found = true;
                             break;
@@ -569,8 +566,8 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         {
             if (GuiScreenUtils.isChatable(this.getTitle()))
             {
-                String text = this.inputField.getValue();
-                boolean focus = this.inputField.isFocused();
+                var text = this.inputField.getValue();
+                var focus = this.inputField.isFocused();
                 super.resize(mc, width, height);
                 this.inputField.setValue(text);
                 this.inputField.setFocus(focus);
@@ -620,8 +617,8 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
 
     private void getSentHistory(int msgPos)
     {
-        int i = this.sentHistoryCursor + msgPos;
-        int j = this.minecraft.gui.getChat().getRecentChat().size();
+        var i = this.sentHistoryCursor + msgPos;
+        var j = this.minecraft.gui.getChat().getRecentChat().size();
         i = Mth.clamp(i, 0, j);
 
         if (i != this.sentHistoryCursor)
@@ -644,42 +641,41 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void renderChat(PoseStack poseStack)
     {
-        ChatComponent chat = this.minecraft.gui.getChat();
+        var chat = this.minecraft.gui.getChat();
 
         if (!chat.isChatHidden())
         {
-            int i = chat.getLinesPerPage();
-            int j = chat.trimmedMessages.size();
+            var i = chat.getLinesPerPage();
+            var j = chat.trimmedMessages.size();
 
             if (j > 0)
             {
-                double d0 = chat.getScale();
-                PoseStack poseStack2 = RenderSystem.getModelViewStack();
+                var d0 = chat.getScale();
+                var poseStack2 = RenderSystem.getModelViewStack();
                 poseStack2.pushPose();
                 poseStack2.translate(2.0F, 8.0F, 0.0F);
-                poseStack2.scale((float)d0, (float)d0, 1.0F);
+                poseStack2.scale((float) d0, (float) d0, 1.0F);
                 RenderSystem.applyModelViewMatrix();
-                double d1 = this.minecraft.options.chatOpacity * 0.9F + 0.1F;
+                var d1 = this.minecraft.options.chatOpacity * 0.9F + 0.1F;
 
-                for (int i1 = 0; i1 + chat.chatScrollbarPos < chat.trimmedMessages.size() && i1 < i; ++i1)
+                for (var i1 = 0; i1 + chat.chatScrollbarPos < chat.trimmedMessages.size() && i1 < i; ++i1)
                 {
                     GuiMessage<FormattedCharSequence> chatline = chat.trimmedMessages.get(i1 + chat.chatScrollbarPos);
 
                     if (chatline != null)
                     {
-                        int j1 = this.minecraft.gui.getGuiTicks() - chatline.getAddedTime();
+                        var j1 = this.minecraft.gui.getGuiTicks() - chatline.getAddedTime();
 
                         if (j1 < 200)
                         {
-                            double d3 = ChatComponent.getTimeFactor(j1);
-                            int l1 = (int) (255.0D * d3 * d1);
+                            var d3 = ChatComponent.getTimeFactor(j1);
+                            var l1 = (int) (255.0D * d3 * d1);
 
                             if (l1 > 3)
                             {
-                                int k2 = -i1 * 9;
+                                var k2 = -i1 * 9;
                                 RenderSystem.enableBlend();
                                 this.font.drawShadow(poseStack, chatline.getMessage(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
                                 RenderSystem.disableBlend();
@@ -696,23 +692,23 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         if (!slot.getItem().isEmpty() && slot.getItem().hasTag())
         {
-            CompoundTag compound = slot.getItem().getTag().getCompound("display");
+            var compound = slot.getItem().getTag().getCompound("display");
 
             if (compound.getTagType("Lore") == 9)
             {
-                ListTag list = compound.getList("Lore", 8);
+                var list = compound.getList("Lore", 8);
 
-                for (int j1 = 0; j1 < list.size(); ++j1)
+                for (var j1 = 0; j1 < list.size(); ++j1)
                 {
-                    int slotLeft = slot.x;
-                    int slotTop = slot.y;
-                    int slotRight = slotLeft + 16;
-                    int slotBottom = slotTop + 16;
-                    String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
-                    Matcher matcher = Pattern.compile("(?:(?:Top|Starting) bid|Buy it now): (?<coin>[0-9,]+) coins").matcher(lore);
-                    int red = ColorUtils.to32Bit(255, 85, 85, 128);
-                    int green = ColorUtils.to32Bit(85, 255, 85, 128);
-                    int yellow = ColorUtils.to32Bit(255, 255, 85, 128);
+                    var slotLeft = slot.x;
+                    var slotTop = slot.y;
+                    var slotRight = slotLeft + 16;
+                    var slotBottom = slotTop + 16;
+                    var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                    var matcher = Pattern.compile("(?:(?:Top|Starting) bid|Buy it now): (?<coin>[0-9,]+) coins").matcher(lore);
+                    var red = ColorUtils.to32Bit(255, 85, 85, 128);
+                    var green = ColorUtils.to32Bit(85, 255, 85, 128);
+                    var yellow = ColorUtils.to32Bit(255, 255, 85, 128);
 
                     if (lore.startsWith("Status: Sold!"))
                     {
@@ -734,14 +730,14 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                     {
                         try
                         {
-                            int priceMin = 0;
-                            int priceMax = 0;
-                            int moneyFromText = 0;
+                            var priceMin = 0;
+                            var priceMax = 0;
+                            var moneyFromText = 0;
 
                             if (matcher.matches())
                             {
-                                String[] priceSplit = MainEventHandler.auctionPrice.split("\\.\\.");
-                                int moneyFromAh = Integer.parseInt(matcher.group("coin").replaceAll("[^\\d.]+", ""));
+                                var priceSplit = MainEventHandler.auctionPrice.split("\\.\\.");
+                                var moneyFromAh = Integer.parseInt(matcher.group("coin").replaceAll("[^\\d.]+", ""));
 
                                 if (MainEventHandler.auctionPrice.matches("[\\d]+\\.\\.[\\d]+"))
                                 {
@@ -790,20 +786,20 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         if (slot.getItem() != null && slot.getItem().hasTag())
         {
-            CompoundTag compound = slot.getItem().getTag().getCompound("display");
+            var compound = slot.getItem().getTag().getCompound("display");
 
             if (compound.getTagType("Lore") == 9)
             {
-                ListTag list = compound.getList("Lore", 8);
+                var list = compound.getList("Lore", 8);
 
-                for (int j1 = 0; j1 < list.size(); ++j1)
+                for (var j1 = 0; j1 < list.size(); ++j1)
                 {
-                    int slotLeft = slot.x;
-                    int slotTop = slot.y;
-                    int slotRight = slotLeft + 16;
-                    int slotBottom = slotTop + 16;
-                    String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
-                    int green = ColorUtils.to32Bit(85, 255, 85, 150);
+                    var slotLeft = slot.x;
+                    var slotTop = slot.y;
+                    var slotRight = slotLeft + 16;
+                    var slotBottom = slotTop + 16;
+                    var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                    var green = ColorUtils.to32Bit(85, 255, 85, 150);
 
                     if (lore.startsWith("Click to despawn"))
                     {
@@ -819,28 +815,28 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         if (slot.getItem() != null && slot.getItem().hasTag())
         {
-            CompoundTag compound = slot.getItem().getTag().getCompound("display");
+            var compound = slot.getItem().getTag().getCompound("display");
 
             if (compound.getTagType("Lore") == 9)
             {
-                ListTag list = compound.getList("Lore", 8);
+                var list = compound.getList("Lore", 8);
 
-                for (int j1 = 0; j1 < list.size(); ++j1)
+                for (var j1 = 0; j1 < list.size(); ++j1)
                 {
-                    int slotLeft = slot.x;
-                    int slotTop = slot.y;
-                    int slotRight = slotLeft + 16;
-                    int slotBottom = slotTop + 16;
-                    String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                    var slotLeft = slot.x;
+                    var slotTop = slot.y;
+                    var slotRight = slotLeft + 16;
+                    var slotBottom = slotTop + 16;
+                    var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                     if (lore.startsWith("Players: "))
                     {
                         lore = lore.substring(lore.indexOf(" ") + 1);
-                        String[] loreCount = lore.split("/");
-                        int min = Integer.parseInt(loreCount[0]);
-                        int max = Integer.parseInt(loreCount[1]);
-                        int playerCountColor = this.getRGBPlayerCount(min, max);
-                        int color = ColorUtils.to32Bit(playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255, 128);
+                        var loreCount = lore.split("/");
+                        var min = Integer.parseInt(loreCount[0]);
+                        var max = Integer.parseInt(loreCount[1]);
+                        var playerCountColor = this.getRGBPlayerCount(min, max);
+                        var color = ColorUtils.to32Bit(playerCountColor >> 16 & 255, playerCountColor >> 8 & 255, playerCountColor & 255, 128);
                         this.setBlitOffset(300);
                         this.fillGradient(poseStack, slotLeft, slotTop, slotRight, slotBottom, color, color);
                         this.setBlitOffset(0);
@@ -913,11 +909,11 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     {
         if (!slot.getItem().isEmpty() && slot.getItem().hasTag())
         {
-            CompoundTag extraAttrib = slot.getItem().getTag().getCompound("ExtraAttributes");
+            var extraAttrib = slot.getItem().getTag().getCompound("ExtraAttributes");
 
             if (extraAttrib.contains("id"))
             {
-                String itemId = extraAttrib.getString("id");
+                var itemId = extraAttrib.getString("id");
                 player.chat("/viewrecipe " + itemId);
             }
         }
@@ -935,6 +931,6 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
     @Unique
     private AbstractContainerScreen<?> getThis()
     {
-        return(AbstractContainerScreen<?>) (Object) this;
+        return (AbstractContainerScreen<?>) (Object) this;
     }
 }

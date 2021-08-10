@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
@@ -24,7 +23,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ItemStack;
 
 @Mixin(HumanoidArmorLayer.class)
 public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>, A extends HumanoidModel<T>> extends RenderLayer<T, M>
@@ -58,16 +56,14 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
             return;
         }
 
-        ItemStack itemStack = entity.getItemBySlot(slot);
+        var itemStack = entity.getItemBySlot(slot);
 
-        if (itemStack.getItem() instanceof ArmorItem && itemStack.hasTag())
+        if (itemStack.getItem() instanceof ArmorItem armorItem && itemStack.hasTag())
         {
-            ArmorItem armorItem = (ArmorItem) itemStack.getItem();
-
             if (armorItem.getSlot() == slot)
             {
-                A model = this.getArmorModel(slot);
-                ResourceLocation location = this.getArmorType(itemStack.getTag().getCompound("ExtraAttributes").getString("id"), this.usesInnerModel(slot));
+                var model = this.getArmorModel(slot);
+                var location = this.getArmorType(itemStack.getTag().getCompound("ExtraAttributes").getString("id"), this.usesInnerModel(slot));
                 this.getParentModel().copyPropertiesTo(model);
                 model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
                 this.setPartVisibility(model, slot);
@@ -75,14 +71,14 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
 
                 if (location != null)
                 {
-                    float time = entity.tickCount + partialTicks;
-                    float alpha = 0.5F + (Mth.sin(time / 24) + 1F) / 3F + 0.05F;
+                    var time = entity.tickCount + partialTicks;
+                    var alpha = 0.5F + (Mth.sin(time / 24) + 1F) / 3F + 0.05F;
 
                     if (alpha > 1.0F)
                     {
                         alpha = 1.0F;
                     }
-                    VertexConsumer ivertexbuilder = ItemRenderer.getFoilBuffer(buffer, RenderType.eyes(location), false, false);
+                    var ivertexbuilder = ItemRenderer.getFoilBuffer(buffer, RenderType.eyes(location), false, false);
                     model.renderToBuffer(poseStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
                 }
             }
@@ -91,7 +87,7 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
 
     private ResourceLocation getArmorType(String id, boolean isLeg)
     {
-        DragonType dragonType = DragonType.getDragonTypeById(id);
+        var dragonType = DragonType.getDragonTypeById(id);
         return dragonType != null ? new ResourceLocation("skyblockcatia:textures/models/armor/" + SupportedPack.RESOLUTION + "/" + SupportedPack.TYPE.toLowerCase(Locale.ROOT) + "/" + dragonType.getShortName() + "_layer_" + (isLeg ? 2 : 1) + ".png") : null;
     }
 }

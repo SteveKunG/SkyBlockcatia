@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.config;
 
-import org.apache.commons.lang3.tuple.Pair;
 import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -14,7 +13,7 @@ public class SkyBlockcatiaConfig
 
     static
     {
-        Pair<General, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(General::new);
+        var specPair = new ForgeConfigSpec.Builder().configure(General::new);
         GENERAL_SPEC = specPair.getRight();
         GENERAL = specPair.getLeft();
     }

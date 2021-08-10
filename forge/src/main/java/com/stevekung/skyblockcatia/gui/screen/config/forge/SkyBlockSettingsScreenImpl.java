@@ -12,13 +12,13 @@ public class SkyBlockSettingsScreenImpl
 {
     public static void openConfig(Screen parent)
     {
-        String configPath = ConfigTracker.INSTANCE.getConfigFileName(SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT);
+        var configPath = ConfigTracker.INSTANCE.getConfigFileName(SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT);
 
         if (configPath == null)
         {
             return;
         }
-        File config = new File(configPath);
+        var config = new File(configPath);
         Util.getPlatform().openUri(config.toURI());
     }
 }

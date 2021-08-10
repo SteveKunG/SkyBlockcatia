@@ -103,9 +103,9 @@ public class SBInventoryGroup
     {
         for (SBInventoryGroup.Data inventory : SkyBlockAPIViewerScreen.SKYBLOCK_INV)
         {
-            if (inventory.getGroup() == this)
+            if (inventory.group() == this)
             {
-                items.addAll(inventory.getItems());
+                items.addAll(inventory.items());
             }
         }
     }
@@ -114,9 +114,9 @@ public class SBInventoryGroup
     {
         for (SBInventoryGroup.Data inventory : SkyBlockAPIViewerScreen.SKYBLOCK_INV)
         {
-            if (inventory.getGroup() == this)
+            if (inventory.group() == this)
             {
-                List<ItemStack> itemList = inventory.getItems();
+                List<ItemStack> itemList = inventory.items();
                 return itemList.isEmpty() || itemList.stream().allMatch(ItemStack::isEmpty);
             }
         }
@@ -139,27 +139,7 @@ public class SBInventoryGroup
         return index;
     }
 
-    public static class Data
-    {
-        private final List<ItemStack> items;
-        private final SBInventoryGroup group;
-
-        public Data(List<ItemStack> items, SBInventoryGroup group)
-        {
-            this.items = items;
-            this.group = group;
-        }
-
-        public List<ItemStack> getItems()
-        {
-            return this.items;
-        }
-
-        public SBInventoryGroup getGroup()
-        {
-            return this.group;
-        }
-    }
+    public record Data(List<ItemStack> items, SBInventoryGroup group) {}
 
     public static class ExtendedInventory extends SimpleContainer
     {

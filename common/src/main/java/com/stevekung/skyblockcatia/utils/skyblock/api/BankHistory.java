@@ -4,56 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public class BankHistory
+public record BankHistory(float amount, long timestamp, com.stevekung.skyblockcatia.utils.skyblock.api.BankHistory.Action action, @SerializedName("initiator_name") String name)
 {
-    private final float amount;
-    private final long timestamp;
-    private final Action action;
-    @SerializedName("initiator_name")
-    private final String name;
-
-    public BankHistory(float amount, long timestamp, Action action, String name)
-    {
-        this.amount = amount;
-        this.timestamp = timestamp;
-        this.action = action;
-        this.name = name;
-    }
-
-    public float getAmount()
-    {
-        return this.amount;
-    }
-
-    public long getTimestamp()
-    {
-        return this.timestamp;
-    }
-
-    public Action getAction()
-    {
-        return this.action;
-    }
-
-    public String getName()
-    {
-        return this.name;
-    }
-
-    public static class Stats
-    {
-        private final Component stats;
-
-        public Stats(Component stats)
-        {
-            this.stats = stats;
-        }
-
-        public Component getStats()
-        {
-            return this.stats;
-        }
-    }
+    public record Stats(Component stats) {}
 
     public enum Action
     {

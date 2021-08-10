@@ -104,7 +104,7 @@ public class SkyBlockcatiaSettings extends Settings
     {
         try
         {
-            CompoundTag nbt = NbtIo.read(SkyBlockcatiaSettings.PROFILE);
+            var nbt = NbtIo.read(SkyBlockcatiaSettings.PROFILE);
 
             if (nbt == null)
             {
@@ -156,7 +156,7 @@ public class SkyBlockcatiaSettings extends Settings
     {
         try
         {
-            CompoundTag nbt = new CompoundTag();
+            var nbt = new CompoundTag();
 
             // Hypixel
             nbt.putBoolean("AxeCooldown", this.axeCooldown);

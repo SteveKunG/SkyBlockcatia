@@ -25,7 +25,6 @@ public class VisitIslandToast implements Toast
         this.name = name;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Toast.Visibility render(PoseStack poseStack, ToastComponent toastGui, long delta)
     {

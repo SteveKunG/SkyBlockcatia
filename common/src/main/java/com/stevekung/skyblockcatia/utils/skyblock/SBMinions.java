@@ -9,38 +9,10 @@ import com.stevekung.stevekungslib.utils.ItemUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class SBMinions
+public record SBMinions(@SerializedName("unique_minions") int uniqueMinions, @SerializedName("crafted_minions") Map<Integer, Integer> craftedMinions, com.stevekung.skyblockcatia.utils.skyblock.SBMinions.Type[] type)
 {
     private static final Gson GSON = new Gson();
     public static SBMinions MINIONS;
-
-    @SerializedName("unique_minions")
-    private final int uniqueMinions;
-    @SerializedName("crafted_minions")
-    private final Map<Integer, Integer> craftedMinions;
-    private final Type[] type;
-
-    public SBMinions(int uniqueMinions, Map<Integer, Integer> craftedMinions, Type[] type)
-    {
-        this.uniqueMinions = uniqueMinions;
-        this.craftedMinions = craftedMinions;
-        this.type = type;
-    }
-
-    public int getUniqueMinions()
-    {
-        return this.uniqueMinions;
-    }
-
-    public Map<Integer, Integer> getCraftedMinions()
-    {
-        return this.craftedMinions;
-    }
-
-    public Type[] getType()
-    {
-        return this.type;
-    }
 
     public static void getMinions()
     {
@@ -51,7 +23,7 @@ public class SBMinions
     {
         for (SBMinions.Type type : this.type)
         {
-            if (type.getType().equals(name))
+            if (type.type().equals(name))
             {
                 return type;
             }
@@ -59,157 +31,20 @@ public class SBMinions
         return null;
     }
 
-    public static class Type
+    public record Type(String type, String category, String displayName, String uuid, String texture, @SerializedName("has_tier_12") boolean hasTier12)
     {
-        private final String type;
-        private final String category;
-        private final String displayName;
-        private final String uuid;
-        private final String texture;
-        @SerializedName("has_tier_12")
-        private final boolean hasTier12;
-
-        public Type(String type, String category, String displayName, String uuid, String texture, boolean hasTier12)
-        {
-            this.type = type;
-            this.category = category;
-            this.displayName = displayName;
-            this.uuid = uuid;
-            this.texture = texture;
-            this.hasTier12 = hasTier12;
-        }
-
-        public String getType()
-        {
-            return this.type;
-        }
-
         public SBSkills.Type getCategory()
         {
             return SBSkills.Type.byName(this.category);
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
         }
 
         public ItemStack getMinionItem()
         {
             return ItemUtils.getSkullItemStack(this.uuid, this.texture);
         }
-
-        public boolean hasTier12()
-        {
-            return this.hasTier12;
-        }
     }
 
-    public static class Info
-    {
-        private final String minionType;
-        private final String displayName;
-        private final ItemStack minionItem;
-        private final int minionMaxTier;
-        private final SBSkills.Type category;
-
-        public Info(String minionType, String displayName, ItemStack minionItem, int minionMaxTier, SBSkills.Type category)
-        {
-            this.minionType = minionType;
-            this.displayName = displayName;
-            this.minionItem = minionItem;
-            this.minionMaxTier = minionMaxTier;
-            this.category = category;
-        }
-
-        public String getMinionType()
-        {
-            return this.minionType;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public ItemStack getMinionItem()
-        {
-            return this.minionItem;
-        }
-
-        public int getMinionMaxTier()
-        {
-            return this.minionMaxTier;
-        }
-
-        public SBSkills.Type getMinionCategory()
-        {
-            return this.category;
-        }
-    }
-
-    public static class Data
-    {
-        private final String minionType;
-        private final String craftedTiers;
-
-        public Data(String minionType, String craftedTiers)
-        {
-            this.minionType = minionType;
-            this.craftedTiers = craftedTiers;
-        }
-
-        public String getMinionType()
-        {
-            return this.minionType;
-        }
-
-        public String getCraftedTiers()
-        {
-            return this.craftedTiers;
-        }
-    }
-
-    public static class CraftedInfo
-    {
-        private final Component minionName;
-        private final String displayName;
-        private final int minionMaxTier;
-        private final String craftedTiers;
-        private final ItemStack minionItem;
-
-        public CraftedInfo(Component minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem)
-        {
-            this.minionName = minionName;
-            this.displayName = displayName;
-            this.minionMaxTier = minionMaxTier;
-            this.craftedTiers = craftedTiers;
-            this.minionItem = minionItem;
-        }
-
-        public Component getMinionName()
-        {
-            return this.minionName;
-        }
-
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        public int getMinionMaxTier()
-        {
-            return this.minionMaxTier;
-        }
-
-        public String getCraftedTiers()
-        {
-            return this.craftedTiers;
-        }
-
-        public ItemStack getMinionItem()
-        {
-            return this.minionItem;
-        }
-    }
+    public record Info(String minionType, String displayName, ItemStack minionItem, int minionMaxTier, SBSkills.Type category) {}
+    public record Data(String minionType, String craftedTiers) {}
+    public record CraftedInfo(Component minionName, String displayName, int minionMaxTier, String craftedTiers, ItemStack minionItem) {}
 }

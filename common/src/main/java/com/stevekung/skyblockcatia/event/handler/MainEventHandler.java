@@ -29,7 +29,6 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -66,34 +65,33 @@ public class MainEventHandler
 
     private void onInitGui(Screen screen, ScreenAccess access)
     {
-        int width = screen.width / 2;
-        int height = screen.height / 2 - 106;
+        var width = screen.width / 2;
+        var height = screen.height / 2 - 106;
 
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            ItemStack wardRobeItem = new ItemStack(Items.LEATHER_CHESTPLATE);
+            var wardRobeItem = new ItemStack(Items.LEATHER_CHESTPLATE);
             ((DyeableArmorItem) wardRobeItem.getItem()).setColor(wardRobeItem, 8339378);
 
             if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory && screen instanceof InventoryScreen)
             {
                 this.addRenderableWidgetsToInventory(screen, wardRobeItem, width, height);
             }
-            else if (screen instanceof ContainerScreen)
+            else if (screen instanceof ContainerScreen chest)
             {
-                ContainerScreen chest = (ContainerScreen) screen;
-                Component title = chest.getTitle();
+                var title = chest.getTitle();
 
                 if (SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory)
                 {
-                    ItemStack skyBlockMenu = new ItemStack(Items.NETHER_STAR);
-                    ListTag list = new ListTag();
+                    var skyBlockMenu = new ItemStack(Items.NETHER_STAR);
+                    var list = new ListTag();
                     skyBlockMenu.setHoverName(TextComponentUtils.component("SkyBlock Menu"));
                     list.add(StringTag.valueOf(TextComponentUtils.toJson(ChatFormatting.GRAY + "View all of your SkyBlock")));
                     skyBlockMenu.getTag().getCompound("display").put("Lore", list);
 
                     if (GuiScreenUtils.isChatable(title))
                     {
-                        String chat = MainEventHandler.showChat ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
+                        var chat = MainEventHandler.showChat ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
 
                         ScreenHooks.addRenderableWidget(screen, new ItemButton(2, screen.height - 35, Items.ENDER_EYE, TextComponentUtils.component("Toggle Inventory Chat: " + chat), button ->
                         {
@@ -130,7 +128,7 @@ public class MainEventHandler
 
                 if (GuiScreenUtils.isAuctionBrowser(title.getString()))
                 {
-                    String bid = MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
+                    var bid = MainEventHandler.bidHighlight ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
                     ScreenHooks.addRenderableWidget(screen, new ItemButton(width + 89, GuiScreenUtils.isOtherAuction(title.getString()) ? chest.topPos + 4 : height + 60, Blocks.REDSTONE_BLOCK, TextComponentUtils.component("Toggle Bid Highlight: " + bid), button ->
                     {
                         MainEventHandler.bidHighlight = !MainEventHandler.bidHighlight;
@@ -139,7 +137,7 @@ public class MainEventHandler
                 }
                 else if (title.getString().contains("Hub Selector"))
                 {
-                    String overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
+                    var overlay = SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer ? ChatFormatting.GREEN + "ON" : ChatFormatting.RED + "OFF";
                     ScreenHooks.addRenderableWidget(screen, new ItemButton(width + 89, height + 29, Items.COMPASS, TextComponentUtils.component("Lobby Player Overlay: " + overlay), button ->
                     {
                         SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer = !SkyBlockcatiaSettings.INSTANCE.lobbyPlayerViewer;
@@ -158,7 +156,7 @@ public class MainEventHandler
         {
             for (ItemButton button : ScreenHooks.getRenderables(screen).stream().filter(ItemButton.class::isInstance).map(ItemButton.class::cast).collect(Collectors.toList()))
             {
-                boolean hover = mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+                var hover = mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
 
                 if (hover && button.visible)
                 {
@@ -171,13 +169,11 @@ public class MainEventHandler
 
     private CompoundEventResult<Screen> onGuiOpen(Screen screen)
     {
-        if (screen instanceof TitleScreen)
+        if (screen instanceof TitleScreen titleScreen)
         {
-            TitleScreen menu = (TitleScreen) screen;
-
             if (CalendarUtils.isMyBirthDay())
             {
-                menu.splash = "Happy birthday, SteveKunG!";
+                titleScreen.splash = "Happy birthday, SteveKunG!"; // why not
             }
         }
         return CompoundEventResult.pass();
@@ -192,19 +188,19 @@ public class MainEventHandler
 
         try
         {
-            URL url = new URL(APIUrl.BAZAAR.getUrl());
-            Bazaar bazaar = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), Bazaar.class);
-            long lastUpdated = bazaar.getLastUpdated();
+            var url = new URL(APIUrl.BAZAAR.getUrl());
+            var bazaar = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), Bazaar.class);
+            var lastUpdated = bazaar.lastUpdated();
 
-            for (Map.Entry<String, Bazaar.Product> product : bazaar.getProducts().entrySet())
+            for (var product : bazaar.products().entrySet())
             {
-                String productName = product.getKey();
-                Bazaar.Product currentProduct = product.getValue();
-                Bazaar.Status quickStatus = currentProduct.getQuickStatus();
-                double buyPrice = quickStatus.getBuyPrice();
-                double sellPrice = quickStatus.getSellPrice();
-                Bazaar.Summary[] buyArray = currentProduct.getBuySummary();
-                Bazaar.Summary[] sellArray = currentProduct.getSellSummary();
+                var productName = product.getKey();
+                var currentProduct = product.getValue();
+                var quickStatus = currentProduct.quickStatus();
+                var buyPrice = quickStatus.buyPrice();
+                var sellPrice = quickStatus.sellPrice();
+                var buyArray = currentProduct.buySummary();
+                var sellArray = currentProduct.sellSummary();
 
                 if (sellArray.length == 0 || buyArray.length == 0)
                 {
@@ -212,7 +208,7 @@ public class MainEventHandler
                 }
                 else
                 {
-                    BAZAAR_DATA.put(productName, new Bazaar.Data(lastUpdated, new Bazaar.Status(buyArray[0].getPricePerUnit(), sellArray[0].getPricePerUnit())));
+                    BAZAAR_DATA.put(productName, new Bazaar.Data(lastUpdated, new Bazaar.Status(buyArray[0].pricePerUnit(), sellArray[0].pricePerUnit())));
                 }
             }
         }
@@ -230,7 +226,7 @@ public class MainEventHandler
         ScreenHooks.addRenderableWidget(screen, new ItemButton(width + 48, height + 86, wardRobeItem, TextComponentUtils.component("Wardrobe"), button -> this.mc.player.chat("/wardrobe")));
         ScreenHooks.addRenderableWidget(screen, new SmallArrowButton(width + 72, height + 90, button -> this.changeButtonPage(screen, wardRobeItem, width, height)));
 
-        ItemButton item = new ItemButton(width + 88, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.chat("/ah"));
+        var item = new ItemButton(width + 88, height + 86, new ItemStack(Items.GOLDEN_HORSE_ARMOR), TextComponentUtils.component("Auction House"), button -> this.mc.player.chat("/ah"));
         item.visible = showAdditionalButtons;
         ScreenHooks.addRenderableWidget(screen, item);
         item = new ItemButton(width + 88, height + 105, new ItemStack(Blocks.GOLD_ORE), TextComponentUtils.component("Bazaar"), button -> this.mc.player.chat("/bz"));

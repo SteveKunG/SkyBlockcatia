@@ -7,5 +7,6 @@ import net.minecraft.world.item.ItemStack;
 public interface GrapplingHookEvent
 {
     Event<GrapplingHookEvent> GRAPPLING_HOOK = EventFactory.createLoop();
+
     void onHooked(ItemStack itemStack);
 }

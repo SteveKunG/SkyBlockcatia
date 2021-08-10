@@ -29,11 +29,10 @@ public class NumericToast implements Toast
         this.output = new ToastUtils.ItemDrop(itemStack, dropType);
         this.value = value;
         this.obj = obj;
-        this.maxDrawTime = this.output.getType().getTime();
-        this.texture = this.output.getType().getTexture();
+        this.maxDrawTime = this.output.type().getTime();
+        this.texture = this.output.type().getTexture();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Toast.Visibility render(PoseStack poseStack, ToastComponent toastGui, long delta)
     {
@@ -47,9 +46,9 @@ public class NumericToast implements Toast
         RenderSystem.setShaderTexture(0, this.texture);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GuiComponent.blit(poseStack, 0, 0, 0, 0, 160, 32, 160, 32);
-        toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(this.output.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.getType().getColor()));
+        toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(this.output.type().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.type().getColor()));
         SBRenderUtils.drawLongItemName(toastGui, poseStack, delta, this.firstDrawTime, this.maxDrawTime, this.output.getDisplayName(NumberUtils.NUMBER_FORMAT.format(this.value)), false);
-        toastGui.getMinecraft().getItemRenderer().renderAndDecorateItem(this.output.getItemStack(), 8, 8);
+        toastGui.getMinecraft().getItemRenderer().renderAndDecorateItem(this.output.itemStack(), 8, 8);
         return delta - this.firstDrawTime >= this.maxDrawTime ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 
@@ -80,7 +79,7 @@ public class NumericToast implements Toast
     {
         try
         {
-            NumericToast toast = toastGui.getToast(NumericToast.class, obj);
+            var toast = toastGui.getToast(NumericToast.class, obj);
 
             if (toast == null)
             {

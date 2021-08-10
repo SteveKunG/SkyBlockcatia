@@ -23,10 +23,8 @@ public class MixinChatComponent
     @Inject(method = "render", cancellable = true, at = @At("HEAD"))
     private void render(PoseStack poseStack, int ticks, CallbackInfo info)
     {
-        if (this.minecraft.screen instanceof ContainerScreen)
+        if (this.minecraft.screen instanceof ContainerScreen chest)
         {
-            ContainerScreen chest = (ContainerScreen) this.minecraft.screen;
-
             if (MainEventHandler.showChat && GuiScreenUtils.isChatable(chest.getTitle()))
             {
                 info.cancel();

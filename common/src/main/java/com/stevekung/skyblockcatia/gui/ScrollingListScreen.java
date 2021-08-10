@@ -1,7 +1,10 @@
 package com.stevekung.skyblockcatia.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -70,7 +73,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button)
     {
-        boolean ret = this.scrolling;
+        var ret = this.scrolling;
         this.scrolling = false;
         return ret;
     }
@@ -80,8 +83,8 @@ public abstract class ScrollingListScreen implements GuiEventListener
     {
         if (this.scrolling)
         {
-            int maxScroll = this.height - this.getBarHeight();
-            double moved = deltaY / maxScroll;
+            var maxScroll = this.height - this.getBarHeight();
+            var moved = deltaY / maxScroll;
             this.scrollDistance += this.getContentHeight() * moved;
             this.applyScrollLimits();
             return true;
@@ -95,12 +98,11 @@ public abstract class ScrollingListScreen implements GuiEventListener
         return mouseX >= this.left && mouseX <= this.left + this.width && mouseY >= this.top && mouseY <= this.bottom;
     }
 
-    @SuppressWarnings("deprecation")
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
-        Tesselator tess = Tesselator.getInstance();
-        BufferBuilder buffer = tess.getBuilder();
-        double scale = this.mc.getWindow().getGuiScale();
+        var tess = Tesselator.getInstance();
+        var buffer = tess.getBuilder();
+        var scale = this.mc.getWindow().getGuiScale();
         RenderSystem.enableScissor((int) (this.left * scale), (int) (this.mc.getWindow().getScreenHeight() - this.bottom * scale), (int) (this.width * scale), (int) (this.viewHeight * scale));
 
         if (this.mc.level != null)
@@ -111,7 +113,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
         {
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
-            float texScale = 32.0F;
+            var texScale = 32.0F;
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             buffer.vertex(this.left, this.bottom, 0.0D).uv(this.left / texScale, (this.bottom + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
             buffer.vertex(this.right, this.bottom, 0.0D).uv(this.right / texScale, (this.bottom + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
@@ -120,12 +122,12 @@ public abstract class ScrollingListScreen implements GuiEventListener
             tess.end();
         }
 
-        int baseY = this.top + this.border - (int) this.scrollDistance;
+        var baseY = this.top + this.border - (int) this.scrollDistance;
 
-        for (int index = 0; index < this.getSize(); ++index)
+        for (var index = 0; index < this.getSize(); ++index)
         {
-            int top = baseY + index * this.slotHeight + this.headerHeight;
-            int slotBuffer = this.slotHeight - this.border;
+            var top = baseY + index * this.slotHeight + this.headerHeight;
+            var slotBuffer = this.slotHeight - this.border;
 
             if (top <= this.bottom && top + slotBuffer >= this.top)
             {
@@ -134,11 +136,11 @@ public abstract class ScrollingListScreen implements GuiEventListener
         }
 
         RenderSystem.disableDepthTest();
-        int extraHeight = this.getContentHeight() + this.border - this.viewHeight;
+        var extraHeight = this.getContentHeight() + this.border - this.viewHeight;
 
         if (extraHeight > 0)
         {
-            int height = this.viewHeight * this.viewHeight / this.getContentHeight();
+            var height = this.viewHeight * this.viewHeight / this.getContentHeight();
 
             if (height < 32)
             {
@@ -149,7 +151,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
                 height = this.viewHeight - this.border * 2;
             }
 
-            int barTop = (int) this.scrollDistance * (this.viewHeight - height) / extraHeight + this.top;
+            var barTop = (int) this.scrollDistance * (this.viewHeight - height) / extraHeight + this.top;
 
             if (barTop < this.top)
             {
@@ -195,7 +197,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
 
     private void applyScrollLimits()
     {
-        int listHeight = this.getContentHeight() - (this.viewHeight - this.border);
+        var listHeight = this.getContentHeight() - (this.viewHeight - this.border);
 
         if (listHeight < 0)
         {
@@ -214,7 +216,7 @@ public abstract class ScrollingListScreen implements GuiEventListener
 
     private int getBarHeight()
     {
-        int barHeight = this.height * this.height / this.getContentHeight();
+        var barHeight = this.height * this.height / this.getContentHeight();
 
         if (barHeight < 32)
         {
@@ -227,23 +229,22 @@ public abstract class ScrollingListScreen implements GuiEventListener
         return barHeight;
     }
 
-    @SuppressWarnings("deprecation")
     private static void drawGradientRect(Matrix4f mat, int zLevel, int left, int top, int right, int bottom, int startColor, int endColor)
     {
-        float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
-        float startRed = (float) (startColor >> 16 & 255) / 255.0F;
-        float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
-        float startBlue = (float) (startColor & 255) / 255.0F;
-        float endAlpha = (float) (endColor >> 24 & 255) / 255.0F;
-        float endRed = (float) (endColor >> 16 & 255) / 255.0F;
-        float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
-        float endBlue = (float) (endColor & 255) / 255.0F;
+        var startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
+        var startRed = (float) (startColor >> 16 & 255) / 255.0F;
+        var startGreen = (float) (startColor >> 8 & 255) / 255.0F;
+        var startBlue = (float) (startColor & 255) / 255.0F;
+        var endAlpha = (float) (endColor >> 24 & 255) / 255.0F;
+        var endRed = (float) (endColor >> 16 & 255) / 255.0F;
+        var endGreen = (float) (endColor >> 8 & 255) / 255.0F;
+        var endBlue = (float) (endColor & 255) / 255.0F;
         RenderSystem.enableDepthTest();
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder buffer = tessellator.getBuilder();
+        var tessellator = Tesselator.getInstance();
+        var buffer = tessellator.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.vertex(mat, (float) right, (float) top, (float) zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
         buffer.vertex(mat, (float) left, (float) top, (float) zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();

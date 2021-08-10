@@ -8,8 +8,8 @@ public class TimeUtils
     public static String getRelativeTime(long timeDiff)
     {
         timeDiff = timeDiff / 1000;
-        long current = System.currentTimeMillis() / 1000;
-        long timeElapsed = current - timeDiff;
+        var current = System.currentTimeMillis() / 1000;
+        var timeElapsed = current - timeDiff;
 
         if (timeElapsed <= 60)
         {
@@ -21,7 +21,7 @@ public class TimeUtils
         }
         else
         {
-            int minutes = Math.round(timeElapsed / 60F);
+            var minutes = Math.round(timeElapsed / 60F);
 
             if (minutes <= 60)
             {
@@ -29,7 +29,7 @@ public class TimeUtils
             }
             else
             {
-                int hours = Math.round(timeElapsed / 3600F);
+                var hours = Math.round(timeElapsed / 3600F);
 
                 if (hours <= 24)
                 {
@@ -37,7 +37,7 @@ public class TimeUtils
                 }
                 else
                 {
-                    int days = Math.round(timeElapsed / 86400F);
+                    var days = Math.round(timeElapsed / 86400F);
 
                     if (days <= 7)
                     {
@@ -45,7 +45,7 @@ public class TimeUtils
                     }
                     else
                     {
-                        int weeks = Math.round(timeElapsed / 604800F);
+                        var weeks = Math.round(timeElapsed / 604800F);
 
                         if (weeks <= 4)
                         {
@@ -53,7 +53,7 @@ public class TimeUtils
                         }
                         else
                         {
-                            int months = Math.round(timeElapsed / 2600640F);
+                            var months = Math.round(timeElapsed / 2600640F);
 
                             if (months <= 12)
                             {
@@ -61,7 +61,7 @@ public class TimeUtils
                             }
                             else
                             {
-                                int years = Math.round(timeElapsed / 31207680F);
+                                var years = Math.round(timeElapsed / 31207680F);
                                 return TimeUtils.convertCorrectTime(years, "year", false);
                             }
                         }
@@ -74,15 +74,15 @@ public class TimeUtils
     public static String getRelativeDay(long timeDiff)
     {
         timeDiff = timeDiff / 1000;
-        long current = System.currentTimeMillis() / 1000;
-        long timeElapsed = current - timeDiff;
-        int days = Math.round(timeElapsed / 86400F);
+        var current = System.currentTimeMillis() / 1000;
+        var timeElapsed = current - timeDiff;
+        var days = Math.round(timeElapsed / 86400F);
         return days + " day" + (days == 1 ? "" : "s");
     }
 
     public static void schedule(Runnable runnable, long delay)
     {
-        TimerTask task = new TimerTask()
+        var task = new TimerTask()
         {
             @Override
             public void run()

@@ -14,7 +14,7 @@ public class RightClickTextFieldWidget extends EditBox
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton)
     {
-        boolean flag = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
+        var flag = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
 
         if (this.isFocused() && flag && mouseButton == 1)
         {

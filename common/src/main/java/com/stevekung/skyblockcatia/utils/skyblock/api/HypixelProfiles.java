@@ -2,34 +2,8 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 
 import com.google.gson.annotations.SerializedName;
 
-public class HypixelProfiles
+public record HypixelProfiles(boolean success, String cause, HypixelPlayerProfile player)
 {
-    private final boolean success;
-    private final String cause;
-    private final HypixelPlayerProfile player;
-
-    public HypixelProfiles(boolean success, String cause, HypixelPlayerProfile player)
-    {
-        this.success = success;
-        this.cause = cause;
-        this.player = player;
-    }
-
-    public boolean isSuccess()
-    {
-        return this.success;
-    }
-
-    public String getCause()
-    {
-        return this.cause;
-    }
-
-    public HypixelPlayerProfile getPlayer()
-    {
-        return this.player;
-    }
-
     public static class HypixelPlayerProfile
     {
         private final String newPackageRank;

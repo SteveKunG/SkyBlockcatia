@@ -39,7 +39,7 @@ public class ConfigButtonListWidget extends ContainerObjectSelectionList<ConfigB
 
     public void addAll(List<AbstractSettings<SkyBlockcatiaSettings>> config)
     {
-        for (int i = 0; i < config.size(); i += 2)
+        for (var i = 0; i < config.size(); i += 2)
         {
             this.addButton(config.get(i), i < config.size() - 1 ? config.get(i + 1) : null);
         }
@@ -57,7 +57,7 @@ public class ConfigButtonListWidget extends ContainerObjectSelectionList<ConfigB
         @Override
         public void render(PoseStack poseStack, int index, int rowTop, int rowLeft, int rowWidth, int itemHeight, int mouseX, int mouseY, boolean isSelected, float partialTicks)
         {
-            for (AbstractWidget button : this.buttons)
+            for (var button : this.buttons)
             {
                 button.y = rowTop;
                 button.render(poseStack, mouseX, mouseY, partialTicks);
@@ -78,7 +78,7 @@ public class ConfigButtonListWidget extends ContainerObjectSelectionList<ConfigB
 
         public static ConfigButtonListWidget.ButtonItem createItems(int x, AbstractSettings<SkyBlockcatiaSettings> configOpt1, AbstractSettings<SkyBlockcatiaSettings> configOpt2)
         {
-            AbstractWidget button = configOpt1.createWidget(SkyBlockcatiaSettings.INSTANCE, x / 2 - 155, 0, 150);
+            var button = configOpt1.createWidget(SkyBlockcatiaSettings.INSTANCE, x / 2 - 155, 0, 150);
             return configOpt2 == null ? new ConfigButtonListWidget.ButtonItem(ImmutableList.of(button)) : new ConfigButtonListWidget.ButtonItem(ImmutableList.of(button, configOpt2.createWidget(SkyBlockcatiaSettings.INSTANCE, x / 2 - 155 + 160, 0, 150)));
         }
     }

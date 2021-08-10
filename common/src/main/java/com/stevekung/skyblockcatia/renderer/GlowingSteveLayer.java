@@ -1,7 +1,6 @@
 package com.stevekung.skyblockcatia.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,14 +25,14 @@ public class GlowingSteveLayer extends RenderLayer<AbstractClientPlayer, PlayerM
     {
         if (!entity.isInvisible() && entity.getName().getString().equals("SteveKunG"))
         {
-            float time = entity.tickCount + partialTicks;
-            float alpha = (Mth.sin(time / 24) + 1F) / 2F + 0.15F;
+            var time = entity.tickCount + partialTicks;
+            var alpha = (Mth.sin(time / 24) + 1F) / 2F + 0.15F;
 
             if (alpha > 0.7F)
             {
                 alpha = 0.7F;
             }
-            VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.eyes(GlowingSteveLayer.TEXTURE));
+            var ivertexbuilder = buffer.getBuffer(RenderType.eyes(GlowingSteveLayer.TEXTURE));
             this.getParentModel().renderToBuffer(poseStack, ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
         }
     }

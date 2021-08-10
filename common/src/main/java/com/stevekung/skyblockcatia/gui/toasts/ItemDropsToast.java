@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -43,13 +42,13 @@ public class ItemDropsToast implements Toast
     @Override
     public Toast.Visibility render(PoseStack poseStack, ToastComponent toastGui, long delta)
     {
-        ToastUtils.ItemDrop drop = this.rareDropOutput;
-        ItemStack itemStack = drop.getItemStack();
-        Component itemName = itemStack.getHoverName().copy().append(this.magicFind);
+        var drop = this.rareDropOutput;
+        var itemStack = drop.itemStack();
+        var itemName = itemStack.getHoverName().copy().append(this.magicFind);
 
         if (itemStack.getItem() == Items.ENCHANTED_BOOK)
         {
-            itemName = itemStack.getTooltipLines(null, TooltipFlag.Default.NORMAL).get(1);
+            itemName = itemStack.getTooltipLines(null, TooltipFlag.Default.NORMAL).get(1).copy();
         }
 
         if (this.hasMagicFind)
@@ -96,17 +95,17 @@ public class ItemDropsToast implements Toast
 
         if (this.hasMagicFind)
         {
-            toastGui.getMinecraft().font.drawShadow(poseStack, TextComponentUtils.formatted(drop.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
+            toastGui.getMinecraft().font.drawShadow(poseStack, TextComponentUtils.formatted(drop.type().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.type().getColor()));
         }
         else
         {
-            toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(drop.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
+            toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(drop.type().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.type().getColor()));
         }
 
         SBRenderUtils.drawLongItemName(toastGui, poseStack, delta, 0L, this.maxDrawTime, itemName, this.hasMagicFind);
 
         toastGui.getMinecraft().getItemRenderer().renderAndDecorateItem(itemStack, 8, 8);
-        PoseStack poseStack1 = RenderSystem.getModelViewStack();
+        var poseStack1 = RenderSystem.getModelViewStack();
         poseStack1.pushPose();
         poseStack1.translate(0.0F, 0.0F, -32.0F);
         toastGui.getMinecraft().getItemRenderer().renderGuiItemDecorations(toastGui.getMinecraft().font, itemStack, 8, 8);

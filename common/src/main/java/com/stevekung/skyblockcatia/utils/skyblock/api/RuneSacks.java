@@ -62,7 +62,7 @@ public enum RuneSacks
     {
         name = name.substring(5);
 
-        for (RuneSacks rune : values())
+        for (var rune : values())
         {
             if (rune.name().toLowerCase(Locale.ROOT).equals(name))
             {

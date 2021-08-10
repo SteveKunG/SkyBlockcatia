@@ -1,6 +1,5 @@
 package com.stevekung.skyblockcatia.event.handler;
 
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
@@ -24,8 +23,6 @@ import dev.architectury.event.events.common.EntityEvent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -68,8 +65,8 @@ public class HUDRenderEventHandler
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
-            long now = System.currentTimeMillis();
-            boolean isHook = itemStack.getHoverName().getString().equals("Grappling Hook");
+            var now = System.currentTimeMillis();
+            var isHook = itemStack.getHoverName().getString().equals("Grappling Hook");
 
             if (now - this.lastGrapplingHookUse > 2000L && isHook)
             {
@@ -80,11 +77,11 @@ public class HUDRenderEventHandler
 
     private void onClientBlockBreak(Level level, BlockPos pos, BlockState prevState)
     {
-        long now = System.currentTimeMillis();
+        var now = System.currentTimeMillis();
 
         if (SkyBlockEventHandler.isSkyBlock && !this.mc.player.getMainHandItem().isEmpty() && this.mc.player.getMainHandItem().hasTag() && (this.mc.player.getMainHandItem().getTag().getCompound("ExtraAttributes").getString("id").equals("JUNGLE_AXE") || this.mc.player.getMainHandItem().getTag().getCompound("ExtraAttributes").getString("id").equals("TREECAPITATOR_AXE")))
         {
-            boolean isLog = prevState != null ? prevState.is(BlockTags.LOGS) : level.getBlockState(pos).is(BlockTags.LOGS);
+            var isLog = prevState != null ? prevState.is(BlockTags.LOGS) : level.getBlockState(pos).is(BlockTags.LOGS);
 
             if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && isLog)
             {
@@ -95,9 +92,9 @@ public class HUDRenderEventHandler
 
     public void onPreInfoRender(PoseStack poseStack, Window window)
     {
-        double jungleAxeDelay = 0;
-        double grapplingHookDelay = 0;
-        double zealotRespawnDelay = 0;
+        var jungleAxeDelay = 0D;
+        var grapplingHookDelay = 0D;
+        var zealotRespawnDelay = 0D;
 
         if (SkyBlockcatiaSettings.INSTANCE.axeCooldown)
         {
@@ -119,30 +116,30 @@ public class HUDRenderEventHandler
 
         if (CompatibilityUtils.isSkyblockAddonsLoaded && SkyBlockcatiaSettings.INSTANCE.displayItemAbilityMaxUsed && !this.mc.player.getMainHandItem().isEmpty())
         {
-            ItemStack itemStack = this.mc.player.getMainHandItem();
+            var itemStack = this.mc.player.getMainHandItem();
 
             if (itemStack.hasTag())
             {
-                CompoundTag compound = itemStack.getTag().getCompound("display");
+                var compound = itemStack.getTag().getCompound("display");
 
                 if (compound.getTagType("Lore") == 9)
                 {
-                    ListTag list = compound.getList("Lore", 8);
+                    var list = compound.getList("Lore", 8);
 
-                    for (int j1 = 0; j1 < list.size(); ++j1)
+                    for (var j1 = 0; j1 < list.size(); ++j1)
                     {
-                        String lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
+                        var lore = TextComponentUtils.fromJsonUnformatted(list.getString(j1));
 
                         if (lore.startsWith("Mana Cost: "))
                         {
-                            int count = SBAMana.INSTANCE.getMana() / Integer.parseInt(lore.replace("Mana Cost: ", ""));
+                            var count = SBAMana.INSTANCE.getMana() / Integer.parseInt(lore.replace("Mana Cost: ", ""));
 
                             if (count > 0)
                             {
-                                String usedCount = ChatFormatting.AQUA + String.valueOf(count);
-                                float fontHeight = this.mc.font.lineHeight + 1;
-                                float width = window.getGuiScaledWidth() / 2F + 1.0625F;
-                                float height = window.getGuiScaledHeight() / 2F - 24 + fontHeight;
+                                var usedCount = ChatFormatting.AQUA + String.valueOf(count);
+                                var fontHeight = this.mc.font.lineHeight + 1;
+                                var width = window.getGuiScaledWidth() / 2F + 1.0625F;
+                                var height = window.getGuiScaledHeight() / 2F - 24 + fontHeight;
                                 this.mc.font.drawShadow(poseStack, usedCount, width - this.mc.font.width(usedCount) / 2F, height, 16777215);
                             }
                             break;
@@ -152,8 +149,8 @@ public class HUDRenderEventHandler
             }
         }
 
-        List<CrosshairOverlay> crosshairInfo = Lists.newArrayList();
-        int center = 0;
+        var crosshairInfo = Lists.<CrosshairOverlay>newArrayList();
+        var center = 0;
 
         if (SkyBlockcatiaSettings.INSTANCE.axeCooldown && jungleAxeDelay >= 0.01D)
         {
@@ -168,11 +165,11 @@ public class HUDRenderEventHandler
             crosshairInfo.add(new CrosshairOverlay(zealotRespawnDelay));
         }
 
-        for (CrosshairOverlay overlay : crosshairInfo)
+        for (var overlay : crosshairInfo)
         {
-            float fontHeight = this.mc.font.lineHeight + 1;
-            float width = window.getGuiScaledWidth() / 2F + 1.0625F;
-            float height = window.getGuiScaledHeight() / 2F + 6 + fontHeight * center;
+            var fontHeight = this.mc.font.lineHeight + 1;
+            var width = window.getGuiScaledWidth() / 2F + 1.0625F;
+            var height = window.getGuiScaledHeight() / 2F + 6 + fontHeight * center;
             this.mc.font.drawShadow(poseStack, TextComponentUtils.component(overlay.getDelay()), width - this.mc.font.width(overlay.getDelay()) / 2F, height, 16777215);
             center++;
         }
@@ -223,7 +220,7 @@ public class HUDRenderEventHandler
     {
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
-            CoordsPair coords = new CoordsPair(chunkX, chunkZ);
+            var coords = new CoordsPair(chunkX, chunkZ);
             this.recentlyLoadedChunks.add(coords);
             TimeUtils.schedule(() -> this.recentlyLoadedChunks.remove(coords), 20);
         }
@@ -239,7 +236,7 @@ public class HUDRenderEventHandler
                 {
                     if (!this.recentlyLoadedChunks.contains(new CoordsPair(sectionX, sectionZ)) && entity.tickCount == 0)
                     {
-                        long now = System.currentTimeMillis();
+                        var now = System.currentTimeMillis();
 
                         if (now - this.lastZealotRespawn > 11000L)
                         {
@@ -257,9 +254,9 @@ public class HUDRenderEventHandler
 
     private double getItemDelay(int base, long delay)
     {
-        long now = System.currentTimeMillis();
-        ModDecimalFormat numberFormat = new ModDecimalFormat("##.#");
-        double seconds = base / 1000.0D - (now - delay) / 1000.0D;
+        var now = System.currentTimeMillis();
+        var numberFormat = new ModDecimalFormat("##.#");
+        var seconds = base / 1000.0D - (now - delay) / 1000.0D;
 
         if (seconds >= 0.01D)
         {
@@ -268,15 +265,8 @@ public class HUDRenderEventHandler
         return 0.0D;
     }
 
-    static class CrosshairOverlay
+    record CrosshairOverlay(double delay)
     {
-        final double delay;
-
-        CrosshairOverlay(double delay)
-        {
-            this.delay = delay;
-        }
-
         public String getDelay()
         {
             return String.valueOf(this.delay);

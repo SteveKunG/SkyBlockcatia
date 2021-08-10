@@ -19,7 +19,7 @@ public class MixinItemRenderer
     {
         if (SkyBlockcatiaSettings.INSTANCE.showItemRarity)
         {
-            PoseStack poseStack = new PoseStack();
+            var poseStack = new PoseStack();
             poseStack.pushPose();
             SBRenderUtils.renderRarity(poseStack, itemStack, x, y);
             poseStack.popPose();

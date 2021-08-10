@@ -3,7 +3,6 @@ package com.stevekung.skyblockcatia.mixin.server.packs.resources;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.spongepowered.asm.mixin.Final;
@@ -18,7 +17,6 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.resources.ReloadInstance;
 import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.Unit;
@@ -37,14 +35,14 @@ public class MixinSimpleReloadableResourceManager
         {
             if (SBAPIUtils.PACKS != null && SBAPIUtils.PACKS.length > 0)
             {
-                boolean found = false;
+                var found = false;
 
-                for (Pack entry : Minecraft.getInstance().getResourcePackRepository().getSelectedPacks())
+                for (var entry : Minecraft.getInstance().getResourcePackRepository().getSelectedPacks())
                 {
-                    String packName = entry.open().getName();
-                    String packDesc = entry.getDescription().getContents();
+                    var packName = entry.open().getName();
+                    var packDesc = entry.getDescription().getContents();
 
-                    for (SupportedPack pack : SBAPIUtils.PACKS)
+                    for (var pack : SBAPIUtils.PACKS)
                     {
                         if (pack.getPack16().stream().anyMatch(packName::contains))
                         {
@@ -55,8 +53,8 @@ public class MixinSimpleReloadableResourceManager
                             SupportedPack.RESOLUTION = "32";
                         }
 
-                        Matcher nameMat = Pattern.compile(pack.getName()).matcher(packName);
-                        Matcher descMat = Pattern.compile(pack.getDescription()).matcher(packDesc);
+                        var nameMat = Pattern.compile(pack.getName()).matcher(packName);
+                        var descMat = Pattern.compile(pack.getDescription()).matcher(packDesc);
 
                         if (nameMat.find() && descMat.find())
                         {

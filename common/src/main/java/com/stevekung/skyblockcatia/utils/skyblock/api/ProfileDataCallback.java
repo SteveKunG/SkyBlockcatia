@@ -53,12 +53,12 @@ public class ProfileDataCallback
 
     public String getProfileId()
     {
-        return this.sbProfile == null ? this.sbProfileId : this.sbProfile.getProfileId();
+        return this.sbProfile == null ? this.sbProfileId : this.sbProfile.profileId();
     }
 
     public Component getProfileName()
     {
-        return this.sbProfile == null ? this.profileName : TextComponentUtils.component(this.sbProfile.getCuteName());
+        return this.sbProfile == null ? this.profileName : TextComponentUtils.component(this.sbProfile.cuteName());
     }
 
     public String getUsername()

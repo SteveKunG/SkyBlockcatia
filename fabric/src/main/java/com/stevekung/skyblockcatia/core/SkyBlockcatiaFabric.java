@@ -8,7 +8,6 @@ import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
@@ -27,7 +26,7 @@ public class SkyBlockcatiaFabric implements ClientModInitializer
     {
         SkyBlockcatia.init();
 
-        ConfigHolder<SkyBlockcatiaConfig> holder = AutoConfig.register(SkyBlockcatiaConfig.class, GsonConfigSerializer::new);
+        var holder = AutoConfig.register(SkyBlockcatiaConfig.class, GsonConfigSerializer::new);
 
         holder.registerSaveListener((holder2, configuration) ->
         {

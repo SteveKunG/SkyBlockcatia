@@ -15,9 +15,9 @@ public class APIErrorInfo extends ScrollingListScreen
     public APIErrorInfo(Screen parent, int width, int height, int top, int bottom, int left, int slotHeight, List<Component> error)
     {
         super(width, height, top, bottom, left, slotHeight);
-        List<FormattedCharSequence> errorList = Lists.newArrayList();
+        var errorList = Lists.<FormattedCharSequence>newArrayList();
 
-        for (Component errorLog : error)
+        for (var errorLog : error)
         {
             errorList.addAll(this.font.split(errorLog, parent.width - 100));
         }
@@ -33,7 +33,7 @@ public class APIErrorInfo extends ScrollingListScreen
     @Override
     protected void drawPanel(PoseStack poseStack, int index, int left, int right, int top)
     {
-        FormattedCharSequence stat = this.error.get(index);
+        var stat = this.error.get(index);
         this.font.drawShadow(poseStack, stat, 40, top, 16777215);
     }
 }

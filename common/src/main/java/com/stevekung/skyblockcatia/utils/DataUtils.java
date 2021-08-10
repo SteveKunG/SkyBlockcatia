@@ -14,7 +14,7 @@ public class DataUtils
     @Deprecated
     public static BufferedReader get(String path) throws Exception
     {
-        URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/1.8.9/" + path);
+        var url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/1.8.9/" + path);
 
         try
         {
@@ -36,7 +36,7 @@ public class DataUtils
 
         try
         {
-            URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/skyblock_data/" + fileName);
+            var url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/skyblock_data/" + fileName);
             return new BufferedReader(new InputStreamReader(url.openConnection().getInputStream(), StandardCharsets.UTF_8));
         }
         catch (IOException e)

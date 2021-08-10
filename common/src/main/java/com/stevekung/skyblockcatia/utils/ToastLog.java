@@ -19,10 +19,10 @@ public class ToastLog
 
     public static void logToast(Object object)
     {
-        String message = object == null ? "null" : object.toString();
-        String preLine = new SimpleDateFormat("[HH:mm:ss]").format(new Date()) + " [" + Level.DEBUG.name() + "] ";
+        var message = object == null ? "null" : object.toString();
+        var preLine = new SimpleDateFormat("[HH:mm:ss]").format(new Date()) + " [" + Level.DEBUG.name() + "] ";
 
-        for (String line : message.split("\\n"))
+        for (var line : message.split("\\n"))
         {
             LOG.log(Level.DEBUG, line);
             logWriter.println(preLine + line);
@@ -32,11 +32,11 @@ public class ToastLog
 
     public static void setup()
     {
-        File logDirectory = new File("./logs/skyblockcatia/" + GameProfileUtils.getUUID().toString() + "/");
+        var logDirectory = new File("./logs/skyblockcatia/" + GameProfileUtils.getUUID().toString() + "/");
         logDirectory.mkdirs();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
-        File logFile = new File(logDirectory, dtf.format(now) + "-toast.log");
+        var dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        var now = LocalDateTime.now();
+        var logFile = new File(logDirectory, dtf.format(now) + "-toast.log");
 
         try
         {

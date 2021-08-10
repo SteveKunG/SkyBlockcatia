@@ -1,7 +1,6 @@
 package com.stevekung.skyblockcatia.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.stevekung.skyblockcatia.gui.screen.config.SkyBlockSettingsScreen;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
@@ -11,7 +10,7 @@ public class SkyBlockcatiaCommand
 {
     public SkyBlockcatiaCommand(CommandDispatcher<FabricClientCommandSource> dispatcher)
     {
-        LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(ClientCommandManager.literal("skyblockcatia").executes(requirement -> SkyBlockcatiaCommand.openSettingScreen()));
+        var node = dispatcher.register(ClientCommandManager.literal("skyblockcatia").executes(requirement -> SkyBlockcatiaCommand.openSettingScreen()));
         dispatcher.register(ClientCommandManager.literal("sbc").redirect(node));
         dispatcher.register(ClientCommandManager.literal("sbcatia").redirect(node));
     }

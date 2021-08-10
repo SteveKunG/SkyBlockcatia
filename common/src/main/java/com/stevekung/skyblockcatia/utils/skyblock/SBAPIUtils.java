@@ -26,9 +26,9 @@ public class SBAPIUtils
 
     public static void getMisc()
     {
-        SBMisc misc = TextComponentUtils.GSON.fromJson(DataUtils.getData("misc.json"), SBMisc.class);
-        PACKS = misc.getSupportedPack();
-        MAX_FAIRY_SOULS = misc.getMaxFairySouls();
+        var misc = TextComponentUtils.GSON.fromJson(DataUtils.getData("misc.json"), SBMisc.class);
+        PACKS = misc.supportedPack();
+        MAX_FAIRY_SOULS = misc.maxFairySouls();
     }
 
     public enum APIUrl

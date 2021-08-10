@@ -1,7 +1,5 @@
 package com.stevekung.skyblockcatia.utils;
 
-import java.util.Collection;
-
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -20,7 +18,7 @@ public class PlayerNameSuggestionHelper extends CommandSuggestions
     @Override
     public void updateCommandInfo()
     {
-        String text = this.input.getValue();
+        var text = this.input.getValue();
 
         if (!this.keepSuggestions)
         {
@@ -29,10 +27,10 @@ public class PlayerNameSuggestionHelper extends CommandSuggestions
         }
 
         this.commandUsage.clear();
-        int i = this.input.getCursorPosition();
-        String s1 = text.substring(0, i);
-        int k = CommandSuggestions.getLastWordIndex(s1);
-        Collection<String> collection = Utils.filteredPlayers(this.minecraft.player.connection.getSuggestionsProvider().getOnlinePlayerNames());
+        var i = this.input.getCursorPosition();
+        var s1 = text.substring(0, i);
+        var k = CommandSuggestions.getLastWordIndex(s1);
+        var collection = Utils.filteredPlayers(this.minecraft.player.connection.getSuggestionsProvider().getOnlinePlayerNames());
         this.pendingSuggestions = SharedSuggestionProvider.suggest(collection, new SuggestionsBuilder(s1, k));
     }
 }

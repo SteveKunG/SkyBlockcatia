@@ -29,12 +29,12 @@ public class MixinHttpTexture
     @Overwrite
     private NativeImage processLegacySkin(NativeImage nativeImage)
     {
-        int width = nativeImage.getWidth();
-        int height = nativeImage.getHeight();
+        var width = nativeImage.getWidth();
+        var height = nativeImage.getHeight();
 
         if (width == 64 && (height == 32 || height == 64))
         {
-            boolean flag = nativeImage.getHeight() == 32;
+            var flag = nativeImage.getHeight() == 32;
 
             if (flag)
             {

@@ -12,119 +12,19 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
-public class SBSkills
+public record SBSkills(Map<String, Integer> cap, Map<String, int[]> leveling, com.stevekung.skyblockcatia.utils.skyblock.SBSkills.Bonus bonus)
 {
     public static SBSkills SKILLS;
-
-    private final Map<String, Integer> cap;
-    private final Map<String, int[]> leveling;
-    private final Bonus bonus;
-
-    public SBSkills(Map<String, Integer> cap, Map<String, int[]> leveling, Bonus bonus)
-    {
-        this.cap = cap;
-        this.leveling = leveling;
-        this.bonus = bonus;
-    }
-
-    public Map<String, Integer> getCap()
-    {
-        return this.cap;
-    }
-
-    public Map<String, int[]> getLeveling()
-    {
-        return this.leveling;
-    }
-
-    public Bonus getBonus()
-    {
-        return this.bonus;
-    }
 
     public static void getSkills()
     {
         SKILLS = TextComponentUtils.GSON.fromJson(DataUtils.getData("skills.json"), SBSkills.class);
     }
 
-    public static class Bonus
+    public record Bonus(Farming[] farming, Mining[] mining, Combat[] combat, Foraging[] foraging, Fishing[] fishing, Enchanting[] enchanting, Alchemy[] alchemy, Taming[] taming) {}
+
+    public record Farming(int level, double health, @SerializedName("farming_fortune") double farmingFortune) implements IBonusTemplate
     {
-        private final Farming[] farming;
-        private final Mining[] mining;
-        private final Combat[] combat;
-        private final Foraging[] foraging;
-        private final Fishing[] fishing;
-        private final Enchanting[] enchanting;
-        private final Alchemy[] alchemy;
-        private final Taming[] taming;
-
-        public Bonus(Farming[] farming, Mining[] mining, Combat[] combat, Foraging[] foraging, Fishing[] fishing, Enchanting[] enchanting, Alchemy[] alchemy, Taming[] taming)
-        {
-            this.farming = farming;
-            this.mining = mining;
-            this.combat = combat;
-            this.foraging = foraging;
-            this.fishing = fishing;
-            this.enchanting = enchanting;
-            this.alchemy = alchemy;
-            this.taming = taming;
-        }
-
-        public Farming[] getFarming()
-        {
-            return this.farming;
-        }
-
-        public Mining[] getMining()
-        {
-            return this.mining;
-        }
-
-        public Combat[] getCombat()
-        {
-            return this.combat;
-        }
-
-        public Foraging[] getForaging()
-        {
-            return this.foraging;
-        }
-
-        public Fishing[] getFishing()
-        {
-            return this.fishing;
-        }
-
-        public Enchanting[] getEnchanting()
-        {
-            return this.enchanting;
-        }
-
-        public Alchemy[] getAlchemy()
-        {
-            return this.alchemy;
-        }
-
-        public Taming[] getTaming()
-        {
-            return this.taming;
-        }
-    }
-
-    public static class Farming implements IBonusTemplate
-    {
-        private final int level;
-        private final double health;
-        @SerializedName("farming_fortune")
-        private final double farmingFortune;
-
-        public Farming(int level, double health, double farmingFortune)
-        {
-            this.level = level;
-            this.health = health;
-            this.farmingFortune = farmingFortune;
-        }
-
         @Override
         public int getLevel()
         {
@@ -144,20 +44,8 @@ public class SBSkills
         }
     }
 
-    public static class Foraging implements IBonusTemplate
+    public record Foraging(int level, double strength, @SerializedName("foraging_fortune") double foragingFortune) implements IBonusTemplate
     {
-        private final int level;
-        private final double strength;
-        @SerializedName("foraging_fortune")
-        private final double foragingFortune;
-
-        public Foraging(int level, double strength, double foragingFortune)
-        {
-            this.level = level;
-            this.strength = strength;
-            this.foragingFortune = foragingFortune;
-        }
-
         @Override
         public int getLevel()
         {
@@ -177,20 +65,8 @@ public class SBSkills
         }
     }
 
-    public static class Mining implements IBonusTemplate
+    public record Mining(int level, double defense, @SerializedName("mining_fortune") double miningFortune) implements IBonusTemplate
     {
-        private final int level;
-        private final double defense;
-        @SerializedName("mining_fortune")
-        private final double miningFortune;
-
-        public Mining(int level, double defense, double miningFortune)
-        {
-            this.level = level;
-            this.defense = defense;
-            this.miningFortune = miningFortune;
-        }
-
         @Override
         public int getLevel()
         {
@@ -210,17 +86,8 @@ public class SBSkills
         }
     }
 
-    public static class Fishing implements IBonusTemplate
+    public record Fishing(int level, double health) implements IBonusTemplate
     {
-        private final int level;
-        private final double health;
-
-        public Fishing(int level, double health)
-        {
-            this.level = level;
-            this.health = health;
-        }
-
         @Override
         public int getLevel()
         {
@@ -234,18 +101,8 @@ public class SBSkills
         }
     }
 
-    public static class Combat implements IBonusTemplate
+    public record Combat(int level, @SerializedName("crit_chance") double critChance) implements IBonusTemplate
     {
-        private final int level;
-        @SerializedName("crit_chance")
-        private final double critChance;
-
-        public Combat(int level, double critChance)
-        {
-            this.level = level;
-            this.critChance = critChance;
-        }
-
         @Override
         public int getLevel()
         {
@@ -259,20 +116,8 @@ public class SBSkills
         }
     }
 
-    public static class Enchanting implements IBonusTemplate
+    public record Enchanting(int level, double intelligence, @SerializedName("ability_damage") double abilityDamage) implements IBonusTemplate
     {
-        private final int level;
-        private final double intelligence;
-        @SerializedName("ability_damage")
-        private final double abilityDamage;
-
-        public Enchanting(int level, double intelligence, double abilityDamage)
-        {
-            this.level = level;
-            this.intelligence = intelligence;
-            this.abilityDamage = abilityDamage;
-        }
-
         @Override
         public int getLevel()
         {
@@ -292,17 +137,8 @@ public class SBSkills
         }
     }
 
-    public static class Alchemy implements IBonusTemplate
+    public record Alchemy(int level, double intelligence) implements IBonusTemplate
     {
-        private final int level;
-        private final double intelligence;
-
-        public Alchemy(int level, double intelligence)
-        {
-            this.level = level;
-            this.intelligence = intelligence;
-        }
-
         @Override
         public int getLevel()
         {
@@ -316,18 +152,8 @@ public class SBSkills
         }
     }
 
-    public static class Taming implements IBonusTemplate
+    public record Taming(int level, @SerializedName("pet_luck") double petLuck) implements IBonusTemplate
     {
-        private final int level;
-        @SerializedName("pet_luck")
-        private final double petLuck;
-
-        public Taming(int level, double petLuck)
-        {
-            this.level = level;
-            this.petLuck = petLuck;
-        }
-
         @Override
         public int getLevel()
         {
@@ -401,53 +227,5 @@ public class SBSkills
         }
     }
 
-    public static class Info
-    {
-        private final String name;
-        private final double currentXp;
-        private final int xpRequired;
-        private final int currentLvl;
-        private final double skillProgress;
-        private final boolean reachLimit;
-
-        public Info(String name, double currentXp, int xpRequired, int currentLvl, double skillProgress, boolean reachLimit)
-        {
-            this.name = name;
-            this.currentXp = currentXp;
-            this.xpRequired = xpRequired;
-            this.currentLvl = currentLvl;
-            this.skillProgress = skillProgress;
-            this.reachLimit = reachLimit;
-        }
-
-        public String getName()
-        {
-            return this.name;
-        }
-
-        public double getCurrentXp()
-        {
-            return this.currentXp;
-        }
-
-        public int getXpRequired()
-        {
-            return this.xpRequired;
-        }
-
-        public int getCurrentLvl()
-        {
-            return this.currentLvl;
-        }
-
-        public double getSkillProgress()
-        {
-            return this.skillProgress;
-        }
-
-        public boolean isReachLimit()
-        {
-            return this.reachLimit;
-        }
-    }
+    public record Info(String name, double currentXp, int xpRequired, int currentLvl, double skillProgress, boolean reachLimit) {}
 }

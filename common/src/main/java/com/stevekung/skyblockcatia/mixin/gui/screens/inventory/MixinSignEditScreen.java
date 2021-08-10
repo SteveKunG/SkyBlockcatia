@@ -116,8 +116,8 @@ public class MixinSignEditScreen extends Screen
     @Overwrite
     private void onDone()
     {
-        SignEditScreen sign = (SignEditScreen) (Object) this;
-        String text = this.messages[0];
+        var sign = (SignEditScreen) (Object) this;
+        var text = this.messages[0];
 
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -140,7 +140,7 @@ public class MixinSignEditScreen extends Screen
 
         if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && !StringUtil.isNullOrEmpty(text) && NumberUtils.isNumeric(text) && this.isAuctionStartBidSign())
         {
-            int price = Integer.parseInt(text);
+            var price = Integer.parseInt(text);
 
             if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
             {

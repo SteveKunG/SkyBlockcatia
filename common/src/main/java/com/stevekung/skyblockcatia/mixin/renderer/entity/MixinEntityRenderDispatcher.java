@@ -21,7 +21,7 @@ public class MixinEntityRenderDispatcher
     @Inject(method = "renderHitbox", cancellable = true, at = @At("HEAD"))
     private static void renderDebugBoundingBox(PoseStack poseStack, VertexConsumer buffer, Entity entity, float partialTicks, CallbackInfo info)
     {
-        HitboxRenderMode mode = SkyBlockcatiaSettings.INSTANCE.hitboxRenderMode;
+        var mode = SkyBlockcatiaSettings.INSTANCE.hitboxRenderMode;
 
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {

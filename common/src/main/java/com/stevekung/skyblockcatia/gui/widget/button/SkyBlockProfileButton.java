@@ -41,7 +41,7 @@ public class SkyBlockProfileButton extends Button
 
     public String getLastActive()
     {
-        String time = "Invalid data!";
+        var time = "Invalid data!";
 
         if (this.callback.getLastSave() > 0)
         {

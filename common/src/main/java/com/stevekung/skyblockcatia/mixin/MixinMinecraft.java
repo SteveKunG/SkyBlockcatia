@@ -8,7 +8,6 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 
 @Mixin(Minecraft.class)
@@ -17,10 +16,10 @@ public class MixinMinecraft
     @Redirect(method = "handleKeybinds()V", slice = @Slice(from = @At(value = "FIELD", target = "net/minecraft/client/Options.keyInventory:Lnet/minecraft/client/KeyMapping;"), to = @At(value = "INVOKE", target = "net/minecraft/client/multiplayer/MultiPlayerGameMode.isServerControlledInventory()Z")), at = @At(value = "INVOKE", target = "net/minecraft/client/KeyMapping.consumeClick()Z"))
     private boolean disableInventory(KeyMapping key)
     {
-        Minecraft mc = (Minecraft) (Object) this;
-        boolean foundDragon = false;
+        var mc = (Minecraft) (Object) this;
+        var foundDragon = false;
 
-        for (Entity entity : mc.level.entitiesForRendering())
+        for (var entity : mc.level.entitiesForRendering())
         {
             if (entity instanceof EnderDragon)
             {

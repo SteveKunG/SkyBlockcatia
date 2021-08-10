@@ -5,7 +5,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
@@ -14,7 +17,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -115,17 +117,17 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 try
                 {
-                    Instant start = Instant.now();
+                    var start = Instant.now();
                     this.checkAPI();
-                    Instant after = Instant.now();
-                    long delta = Duration.between(start, after).toMillis();
+                    var after = Instant.now();
+                    var delta = Duration.between(start, after).toMillis();
                     SkyBlockcatia.LOGGER.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
                     this.errorList.add(TextComponentUtils.formatted(e.getClass().getName() + ": " + e.getMessage(), ChatFormatting.RED, ChatFormatting.UNDERLINE, ChatFormatting.BOLD));
 
-                    for (StackTraceElement stack : e.getStackTrace())
+                    for (var stack : e.getStackTrace())
                     {
                         this.errorList.add(TextComponentUtils.formatted("at " + stack.toString(), ChatFormatting.RED));
                     }
@@ -165,17 +167,17 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 try
                 {
-                    Instant start = Instant.now();
+                    var start = Instant.now();
                     this.checkAPI();
-                    Instant after = Instant.now();
-                    long delta = Duration.between(start, after).toMillis();
+                    var after = Instant.now();
+                    var delta = Duration.between(start, after).toMillis();
                     SkyBlockcatia.LOGGER.info("Profile Selector took {} ms", delta);
                 }
                 catch (Throwable e)
                 {
                     this.errorList.add(TextComponentUtils.formatted(e.getClass().getName() + ": " + e.getMessage(), ChatFormatting.RED, ChatFormatting.UNDERLINE, ChatFormatting.BOLD));
 
-                    for (StackTraceElement stack : e.getStackTrace())
+                    for (var stack : e.getStackTrace())
                     {
                         this.errorList.add(TextComponentUtils.formatted("at " + stack.toString(), ChatFormatting.RED));
                     }
@@ -186,19 +188,18 @@ public class SkyBlockProfileSelectorScreen extends Screen
         }
         if (!this.profiles.isEmpty())
         {
-            List<SkyBlockProfileButton> buttons = Lists.newArrayList();
+            var buttons = Lists.<SkyBlockProfileButton>newArrayList();
 
-            for (ProfileDataCallback data : this.profiles)
+            for (var data : this.profiles)
             {
-                SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, data);
-                buttons.add(button);
+                buttons.add(new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, data));
             }
 
             buttons.sort((button1, button2) -> new CompareToBuilder().append(button2.getLastSave(), button1.getLastSave()).build());
 
-            int i2 = 0;
+            var i2 = 0;
 
-            for (SkyBlockProfileButton button : buttons)
+            for (var button : buttons)
             {
                 if (i2 == 0)
                 {
@@ -225,9 +226,9 @@ public class SkyBlockProfileSelectorScreen extends Screen
     @Override
     public void resize(Minecraft mc, int width, int height)
     {
-        String s = this.usernameTextField.getValue();
+        var text = this.usernameTextField.getValue();
         this.init(mc, width, height);
-        this.usernameTextField.setValue(s);
+        this.usernameTextField.setValue(text);
         this.suggestionHelper.updateCommandInfo();
     }
 
@@ -316,7 +317,6 @@ public class SkyBlockProfileSelectorScreen extends Screen
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
@@ -325,8 +325,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
         if (this.loadingApi)
         {
-            String text = "Downloading SkyBlock stats";
-            int i = this.font.width(text);
+            var text = "Downloading SkyBlock stats";
+            var i = this.font.width(text);
             GuiComponent.drawCenteredString(poseStack, this.font, text, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
             GuiComponent.drawString(poseStack, this.font, downloadingStates[(int) (Util.getMillis() / 500L % downloadingStates.length)], this.width / 2 + i / 2, this.height / 2 + this.font.lineHeight * 2 - 35, 16777215);
             GuiComponent.drawCenteredString(poseStack, this.font, "Status: " + ChatFormatting.GRAY + this.statusMessage, this.width / 2, this.height / 2 + this.font.lineHeight * 2 - 15, 16777215);
@@ -363,11 +363,11 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
 
                 super.render(poseStack, mouseX, mouseY, partialTicks);
-                List<Component> displayStrings = Lists.newArrayList();
+                var displayStrings = Lists.<Component>newArrayList();
 
-                for (SkyBlockProfileButton button : this.renderables.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
+                for (var button : this.renderables.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
                 {
-                    boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
+                    var hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
                     button.visible = button.active = this.suggestionHelper.suggestions == null;
 
                     if (hover)
@@ -413,7 +413,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         this.statusMessage = "Getting Hypixel API";
 
         HypixelProfiles profiles;
-        String lowerInput = this.input.toLowerCase(Locale.ROOT);
+        var lowerInput = this.input.toLowerCase(Locale.ROOT);
 
         if (INIT_PROFILE_CACHE.containsKey(lowerInput))
         {
@@ -425,13 +425,13 @@ public class SkyBlockProfileSelectorScreen extends Screen
             INIT_PROFILE_CACHE.put(lowerInput, Pair.of(System.currentTimeMillis(), profiles));
         }
 
-        if (!profiles.isSuccess())
+        if (!profiles.success())
         {
-            this.setErrorMessage(profiles.getCause(), false);
+            this.setErrorMessage(profiles.cause(), false);
             return;
         }
 
-        HypixelProfiles.HypixelPlayerProfile player = profiles.getPlayer();
+        var player = profiles.player();
 
         if (player == null)
         {
@@ -439,17 +439,17 @@ public class SkyBlockProfileSelectorScreen extends Screen
             return;
         }
 
-        String newPackageRank = player.getNewPackageRank(); // base rank
-        String rank = player.getRank(); // rank priority NORMAL/YOUTUBER
-        String rankPlusColor = player.getRankPlusColor();
+        var newPackageRank = player.getNewPackageRank(); // base rank
+        var rank = player.getRank(); // rank priority NORMAL/YOUTUBER
+        var rankPlusColor = player.getRankPlusColor();
 
-        String monthlyPackageRank = player.getMonthlyPackageRank();
-        String monthlyRankColor = player.getMonthlyRankColor();
-        String prefix = player.getPrefix();
+        var monthlyPackageRank = player.getMonthlyPackageRank();
+        var monthlyRankColor = player.getMonthlyRankColor();
+        var prefix = player.getPrefix();
 
-        String baseRankText = "";
-        String rankPlus = "";
-        String color = "";
+        var baseRankText = "";
+        var rankPlus = "";
+        var color = "";
 
         try
         {
@@ -457,11 +457,11 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 if (rank != null)
                 {
-                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank);
+                    var rankType = HypixelRank.Type.valueOf(rank);
 
                     if (rankType == HypixelRank.Type.NORMAL)
                     {
-                        HypixelRank.Base baseRank = HypixelRank.Base.valueOf(newPackageRank);
+                        var baseRank = HypixelRank.Base.valueOf(newPackageRank);
                         baseRankText = baseRank.getName();
                         color = baseRank.getColor().toString();
                         rankPlus = ChatFormatting.valueOf(rankPlusColor) + "+";
@@ -474,7 +474,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
                 else
                 {
-                    HypixelRank.Base baseRank = HypixelRank.Base.valueOf(newPackageRank);
+                    var baseRank = HypixelRank.Base.valueOf(newPackageRank);
 
                     if (monthlyPackageRank != null && !monthlyPackageRank.equals("NONE"))
                     {
@@ -519,7 +519,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             {
                 if (rank != null)
                 {
-                    HypixelRank.Type rankType = HypixelRank.Type.valueOf(rank);
+                    var rankType = HypixelRank.Type.valueOf(rank);
                     baseRankText = rankType == HypixelRank.Type.YOUTUBER ? ChatFormatting.WHITE + rankType.getName() : rankType.getName();
                     color = rankType.getColor().toString();
                 }
@@ -561,17 +561,17 @@ public class SkyBlockProfileSelectorScreen extends Screen
             }
         }
 
-        String uuid = player.getUUID();
-        URL urlGuild = new URL(APIUrl.GUILD.getUrl() + uuid);
-        HypixelGuild.Guild guild = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelGuild.class).getGuild();
+        var uuid = player.getUUID();
+        var urlGuild = new URL(APIUrl.GUILD.getUrl() + uuid);
+        var guild = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelGuild.class).guild();
 
         if (guild != null)
         {
-            String guildName = guild.getName();
+            var guildName = guild.name();
             this.guild = ChatFormatting.YELLOW + " Guild: " + ChatFormatting.GOLD + guildName;
         }
 
-        URL urlSB = new URL(APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
+        var urlSB = new URL(APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
         SkyblockProfiles sbProfiles;
 
         if (PROFILE_CACHE.containsKey(uuid))
@@ -584,7 +584,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             PROFILE_CACHE.put(uuid, Pair.of(System.currentTimeMillis(), sbProfiles));
         }
 
-        SkyblockProfiles.Profile[] sbProfile = sbProfiles.getProfiles();
+        var sbProfile = sbProfiles.profiles();
         SkullBlockEntity.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input), gameProfile ->
         {
             if (sbProfile == null || sbProfile.length <= 0)
@@ -595,34 +595,33 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 return;
             }
 
-            List<SkyBlockProfileButton> buttons = Lists.newArrayList();
+            var buttons = Lists.<SkyBlockProfileButton>newArrayList();
 
-            for (SkyblockProfiles.Profile profile : sbProfile)
+            for (var profile : sbProfile)
             {
-                boolean hasOneProfile = sbProfile.length == 1;
-                long lastSave = -1;
+                var hasOneProfile = sbProfile.length == 1;
+                var lastSave = -1L;
                 SkyblockProfiles.Profile availableProfile;
-                String gameModeType = profile.getGameMode();
-                Component gameMode = TextComponentUtils.formatted("Normal", ChatFormatting.GOLD);
+                var gameModeType = profile.gameMode();
+                var gameMode = TextComponentUtils.formatted("Normal", ChatFormatting.GOLD);
 
                 if (gameModeType != null)
                 {
                     gameMode = gameModeType.equals("ironman") ? TextComponentUtils.formatted("♲ Iron Man", ChatFormatting.GRAY) : TextComponentUtils.formatted(gameModeType, ChatFormatting.RED);
                 }
 
-                List<Component> islandMembers = Lists.newLinkedList();
-                Set<Map.Entry<String, SkyblockProfiles.Members>> membersEntry = profile.getMembers().entrySet();
-                int memberSize = 1;
+                var islandMembers = Lists.<Component>newLinkedList();
+                var membersEntry = profile.members().entrySet();
+                var memberSize = 1;
 
-                for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+                for (var entry : membersEntry.stream().filter(en -> en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
                 {
-                    Long lastSaveEle = entry.getValue().getLastSave();
-                    lastSave = lastSaveEle == null ? -1 : lastSaveEle;
+                    lastSave = entry.getValue().getLastSave();
                 }
 
-                for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> !en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+                for (var entry : membersEntry.stream().filter(en -> !en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
                 {
-                    String memberUuid = entry.getKey();
+                    var memberUuid = entry.getKey();
                     memberSize++;
 
                     if (!hasOneProfile)
@@ -633,7 +632,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                         }
 
                         islandMembers.add(USERNAME_CACHE.get(memberUuid));
-                        int allMembers = membersEntry.size() - memberSize;
+                        var allMembers = membersEntry.size() - memberSize;
 
                         if (memberSize > 5 && allMembers > 0)
                         {
@@ -644,8 +643,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
 
                 availableProfile = profile;
-                ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
-                SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
+                var callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
+                var button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
 
                 if (hasOneProfile)
                 {
@@ -659,9 +658,9 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
             buttons.sort((button1, button2) -> new CompareToBuilder().append(button2.getLastSave(), button1.getLastSave()).build());
 
-            int i2 = 0;
+            var i2 = 0;
 
-            for (SkyBlockProfileButton button : buttons)
+            for (var button : buttons)
             {
                 if (i2 == 0)
                 {
@@ -713,7 +712,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
     {
         try
         {
-            JsonArray array = new JsonParser().parse(IOUtils.toString(new URL("https://api.mojang.com/user/profiles/" + uuid + "/names"), StandardCharsets.UTF_8)).getAsJsonArray();
+            var array = new JsonParser().parse(IOUtils.toString(new URL("https://api.mojang.com/user/profiles/" + uuid + "/names"), StandardCharsets.UTF_8)).getAsJsonArray();
             return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
         }
         catch (IOException e)

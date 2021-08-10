@@ -8,88 +8,10 @@ import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.skyblock.SBDungeons;
 import com.stevekung.skyblockcatia.utils.skyblock.SBSlayers;
 
-public class SkyblockProfiles
+public record SkyblockProfiles(Profile[] profiles)
 {
-    private final Profile[] profiles;
-
-    public SkyblockProfiles(Profile[] profiles)
-    {
-        this.profiles = profiles;
-    }
-
-    public Profile[] getProfiles()
-    {
-        return this.profiles;
-    }
-
-    public static class DirectProfile
-    {
-        private final Profile profile;
-
-        public DirectProfile(Profile profile)
-        {
-            this.profile = profile;
-        }
-
-        public Profile getProfile()
-        {
-            return this.profile;
-        }
-    }
-
-    public static class Profile
-    {
-        @SerializedName("game_mode")
-        private final String gameMode;
-        @SerializedName("profile_id")
-        private final String profileId;
-        @SerializedName("cute_name")
-        private final String cuteName;
-        private final Map<String, Members> members;
-        private final Banking banking;
-        @SerializedName("community_upgrades")
-        private final CommunityUpgrades communityUpgrades;
-
-        public Profile(String gameMode, String profileId, String cuteName, Map<String, Members> members, Banking banking, CommunityUpgrades communityUpgrades)
-        {
-            this.gameMode = gameMode;
-            this.profileId = profileId;
-            this.cuteName = cuteName;
-            this.members = members;
-            this.banking = banking;
-            this.communityUpgrades = communityUpgrades;
-        }
-
-        public String getGameMode()
-        {
-            return this.gameMode;
-        }
-
-        public String getProfileId()
-        {
-            return this.profileId;
-        }
-
-        public String getCuteName()
-        {
-            return this.cuteName;
-        }
-
-        public Map<String, Members> getMembers()
-        {
-            return this.members;
-        }
-
-        public Banking getBanking()
-        {
-            return this.banking;
-        }
-
-        public CommunityUpgrades getCommunityUpgrades()
-        {
-            return this.communityUpgrades;
-        }
-    }
+    public record DirectProfile(Profile profile) {}
+    public record Profile(@SerializedName("game_mode") String gameMode, @SerializedName("profile_id") String profileId, @SerializedName("cute_name") String cuteName, Map<String, Members> members, Banking banking, @SerializedName("community_upgrades") CommunityUpgrades communityUpgrades) {}
 
     public static class Members
     {
@@ -169,12 +91,7 @@ public class SkyblockProfiles
         @SerializedName("slayer_quest")
         private final SlayerQuest slayerQuest;
 
-        public Members(long firstJoin, long lastSave, String[] craftedGenerators, Jacob jacob, double farmingExp, double foragingExp, double miningExp,
-                double fishingExp, double runecraftingExp, double combatExp, double enchantingExp, double alchemyExp, double tamingExp, double carpentryExp,
-                int fairySoulsCollected, int fairyExchanges, int deathCount, double purse, Inventory armorInventory, Inventory mainInventory,
-                Inventory enderChestInventory, Inventory vaultInventory, Inventory accessoryInventory, Inventory potionInventory, Inventory fishingInventory,
-                Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, Map<Integer, Inventory> backpackInventory, JsonObject stats, SBDungeons.Dungeons dungeons,
-                Map<String, Integer> collection, String[] unlockedCollections, Map<String, Integer> sacks, Pets[] pets, JsonObject slayerBoss, SlayerQuest slayerQuest)
+        public Members(long firstJoin, long lastSave, String[] craftedGenerators, Jacob jacob, double farmingExp, double foragingExp, double miningExp, double fishingExp, double runecraftingExp, double combatExp, double enchantingExp, double alchemyExp, double tamingExp, double carpentryExp, int fairySoulsCollected, int fairyExchanges, int deathCount, double purse, Inventory armorInventory, Inventory mainInventory, Inventory enderChestInventory, Inventory vaultInventory, Inventory accessoryInventory, Inventory potionInventory, Inventory fishingInventory, Inventory wardrobeInventory, Inventory quiverInventory, Inventory candyInventory, Map<Integer, Inventory> backpackInventory, JsonObject stats, SBDungeons.Dungeons dungeons, Map<String, Integer> collection, String[] unlockedCollections, Map<String, Integer> sacks, Pets[] pets, JsonObject slayerBoss, SlayerQuest slayerQuest)
         {
             this.firstJoin = firstJoin;
             this.lastSave = lastSave;
@@ -401,195 +318,25 @@ public class SkyblockProfiles
         }
     }
 
-    public static class Banking
+    public record Banking(BankHistory[] transactions, double balance) {}
+    public record Jacob(@SerializedName("medals_inv") MedalInventory medals, FarmingPerks perks) {}
+    public record MedalInventory(int gold, int silver, int bronze) {}
+    public record FarmingPerks(@SerializedName("double_drops") int doubleDrops, @SerializedName("farming_level_cap") int levelCap) {}
+    public record Pets(double exp, String tier, String type, String heldItem, String skin, boolean active, int candyUsed) {}
+
+    public record Inventory(String data)
     {
-        private final BankHistory[] transactions;
-        private final double balance;
-
-        public Banking(BankHistory[] transactions, double balance)
-        {
-            this.transactions = transactions;
-            this.balance = balance;
-        }
-
-        public BankHistory[] getTransactions()
-        {
-            return this.transactions;
-        }
-
-        public double getBalance()
-        {
-            return this.balance;
-        }
-    }
-
-    public static class Jacob
-    {
-        @SerializedName("medals_inv")
-        private final MedalInventory medals;
-        private final FarmingPerks perks;
-
-        public Jacob(MedalInventory medals, FarmingPerks perks)
-        {
-            this.medals = medals;
-            this.perks = perks;
-        }
-
-        public MedalInventory getMedals()
-        {
-            return this.medals;
-        }
-
-        public FarmingPerks getPerks()
-        {
-            return this.perks;
-        }
-    }
-
-    public static class MedalInventory
-    {
-        private final int gold;
-        private final int silver;
-        private final int bronze;
-
-        public MedalInventory(int gold, int silver, int bronze)
-        {
-            this.gold = gold;
-            this.silver = silver;
-            this.bronze = bronze;
-        }
-
-        public int getGold()
-        {
-            return this.gold;
-        }
-
-        public int getSilver()
-        {
-            return this.silver;
-        }
-
-        public int getBronze()
-        {
-            return this.bronze;
-        }
-    }
-
-    public static class FarmingPerks
-    {
-        @SerializedName("double_drops")
-        private final int doubleDrops;
-        @SerializedName("farming_level_cap")
-        private final int levelCap;
-
-        public FarmingPerks(int doubleDrops, int levelCap)
-        {
-            this.doubleDrops = doubleDrops;
-            this.levelCap = levelCap;
-        }
-
-        public int getDoubleDrops()
-        {
-            return this.doubleDrops;
-        }
-
-        public int getLevelCap()
-        {
-            return this.levelCap;
-        }
-    }
-
-    public static class Pets
-    {
-        private final double exp;
-        private final String tier;
-        private final String type;
-        private final String heldItem;
-        private final String skin;
-        private final boolean active;
-        private final int candyUsed;
-
-        public Pets(double exp, String tier, String type, String heldItem, String skin, boolean active, int candyUsed)
-        {
-            this.exp = exp;
-            this.tier = tier;
-            this.type = type;
-            this.heldItem = heldItem;
-            this.skin = skin;
-            this.active = active;
-            this.candyUsed = candyUsed;
-        }
-
-        public double getExp()
-        {
-            return this.exp;
-        }
-
-        public String getTier()
-        {
-            return this.tier;
-        }
-
-        public String getType()
-        {
-            return this.type;
-        }
-
-        public String getHeldItem()
-        {
-            return this.heldItem;
-        }
-
-        public String getSkin()
-        {
-            return this.skin;
-        }
-
-        public boolean isActive()
-        {
-            return this.active;
-        }
-
-        public int getCandyUsed()
-        {
-            return this.candyUsed;
-        }
-    }
-
-    public static class Inventory
-    {
-        private final String data;
-
-        public Inventory(String data)
-        {
-            this.data = data;
-        }
-
         public String getData()
         {
             return this.data.replace("\\u003d", "=");
         }
     }
 
-    public static class SlayerQuest
+    public record SlayerQuest(String type, int tier)
     {
-        private final String type;
-        private final int tier;
-
-        public SlayerQuest(String type, int tier)
-        {
-            this.type = type;
-            this.tier = tier;
-        }
-
         public SBSlayers.Type getType()
         {
             return SBSlayers.Type.getSlayerByName(this.type.toUpperCase(Locale.ROOT));
-        }
-
-        public int getTier()
-        {
-            return this.tier;
         }
     }
 }

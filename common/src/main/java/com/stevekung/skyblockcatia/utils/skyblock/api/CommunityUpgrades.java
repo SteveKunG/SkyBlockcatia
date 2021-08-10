@@ -8,41 +8,10 @@ import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import net.minecraft.ChatFormatting;
 
-public class CommunityUpgrades
+public record CommunityUpgrades(@SerializedName("currently_upgrading") com.stevekung.skyblockcatia.utils.skyblock.api.CommunityUpgrades.Upgrading currentUpgrade, @SerializedName("upgrade_states") List<States> upgradeStates)
 {
-    @SerializedName("currently_upgrading")
-    private final CommunityUpgrades.Upgrading currentUpgrade;
-    @SerializedName("upgrade_states")
-    private final List<CommunityUpgrades.States> upgradeStates;
-
-    public CommunityUpgrades(CommunityUpgrades.Upgrading currentUpgrade, List<CommunityUpgrades.States> upgradeStates)
+    public record Upgrading(String upgrade, @SerializedName("new_tier") int tier)
     {
-        this.currentUpgrade = currentUpgrade;
-        this.upgradeStates = upgradeStates;
-    }
-
-    public CommunityUpgrades.Upgrading getCurrentUpgrade()
-    {
-        return this.currentUpgrade;
-    }
-
-    public List<CommunityUpgrades.States> getUpgradeStates()
-    {
-        return this.upgradeStates;
-    }
-
-    public static class Upgrading
-    {
-        private final String upgrade;
-        @SerializedName("new_tier")
-        private final int tier;
-
-        public Upgrading(String upgrade, int tier)
-        {
-            this.upgrade = upgrade;
-            this.tier = tier;
-        }
-
         @Override
         public String toString()
         {
@@ -50,27 +19,7 @@ public class CommunityUpgrades
         }
     }
 
-    public static class States
-    {
-        private final String upgrade;
-        private final int tier;
-
-        public States(String upgrade, int tier)
-        {
-            this.upgrade = upgrade;
-            this.tier = tier;
-        }
-
-        public String getUpgrade()
-        {
-            return this.upgrade;
-        }
-
-        public int getTier()
-        {
-            return this.tier;
-        }
-    }
+    public record States(String upgrade, int tier) {}
 
     public static class Data
     {

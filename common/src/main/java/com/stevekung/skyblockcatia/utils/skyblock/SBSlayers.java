@@ -11,88 +11,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
-public class SBSlayers
+public record SBSlayers(Map<String, int[]> leveling, com.stevekung.skyblockcatia.utils.skyblock.SBSlayers.Bonus bonus, Map<Integer, Integer> price)
 {
     public static SBSlayers SLAYERS;
-
-    private final Map<String, int[]> leveling;
-    private final Bonus bonus;
-    private final Map<Integer, Integer> price;
-
-    public SBSlayers(Map<String, int[]> leveling, Bonus bonus, Map<Integer, Integer> price)
-    {
-        this.leveling = leveling;
-        this.bonus = bonus;
-        this.price = price;
-    }
-
-    public Map<String, int[]> getLeveling()
-    {
-        return this.leveling;
-    }
-
-    public Bonus getBonus()
-    {
-        return this.bonus;
-    }
-
-    public Map<Integer, Integer> getPrice()
-    {
-        return this.price;
-    }
 
     public static void getSlayers()
     {
         SLAYERS = TextComponentUtils.GSON.fromJson(DataUtils.getData("slayers.json"), SBSlayers.class);
     }
 
-    public static class Bonus
+    public record Bonus(Zombie[] zombie, Spider[] spider, Wolf[] wolf, Enderman[] enderman) {}
+
+    public record Zombie(int level, double health) implements IBonusTemplate
     {
-        private final Zombie[] zombie;
-        private final Spider[] spider;
-        private final Wolf[] wolf;
-        private final Enderman[] enderman;
-
-        public Bonus(Zombie[] zombie, Spider[] spider, Wolf[] wolf, Enderman[] enderman)
-        {
-            this.zombie = zombie;
-            this.spider = spider;
-            this.wolf = wolf;
-            this.enderman = enderman;
-        }
-
-        public Zombie[] getZombie()
-        {
-            return this.zombie;
-        }
-
-        public Spider[] getSpider()
-        {
-            return this.spider;
-        }
-
-        public Wolf[] getWolf()
-        {
-            return this.wolf;
-        }
-
-        public Enderman[] getEnderman()
-        {
-            return this.enderman;
-        }
-    }
-
-    public static class Zombie implements IBonusTemplate
-    {
-        private final int level;
-        private final double health;
-
-        public Zombie(int level, double health)
-        {
-            this.level = level;
-            this.health = health;
-        }
-
         @Override
         public int getLevel()
         {
@@ -106,21 +37,8 @@ public class SBSlayers
         }
     }
 
-    public static class Spider implements IBonusTemplate
+    public record Spider(int level, @SerializedName("crit_chance") double critChance, @SerializedName("crit_damage") double critDamage) implements IBonusTemplate
     {
-        private final int level;
-        @SerializedName("crit_chance")
-        private final double critChance;
-        @SerializedName("crit_damage")
-        private final double critDamage;
-
-        public Spider(int level, double critChance, double critDamage)
-        {
-            this.level = level;
-            this.critChance = critChance;
-            this.critDamage = critDamage;
-        }
-
         @Override
         public int getLevel()
         {
@@ -140,22 +58,8 @@ public class SBSlayers
         }
     }
 
-    public static class Wolf implements IBonusTemplate
+    public record Wolf(int level, double health, double speed, @SerializedName("crit_damage") double critDamage) implements IBonusTemplate
     {
-        private final int level;
-        private final double health;
-        private final double speed;
-        @SerializedName("crit_damage")
-        private final double critDamage;
-
-        public Wolf(int level, double health, double speed, double critDamage)
-        {
-            this.level = level;
-            this.health = health;
-            this.speed = speed;
-            this.critDamage = critDamage;
-        }
-
         @Override
         public int getLevel()
         {
@@ -181,19 +85,8 @@ public class SBSlayers
         }
     }
 
-    public static class Enderman implements IBonusTemplate
+    public record Enderman(int level, double health, double intelligence) implements IBonusTemplate
     {
-        private final int level;
-        private final double health;
-        private final double intelligence;
-
-        public Enderman(int level, double health, double intelligence)
-        {
-            this.level = level;
-            this.health = health;
-            this.intelligence = intelligence;
-        }
-
         @Override
         public int getLevel()
         {

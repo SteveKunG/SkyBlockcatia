@@ -27,7 +27,7 @@ public class MixinLevelRenderer
     @Inject(method = "destroyBlockProgress", at = @At(value = "INVOKE", target = "it/unimi/dsi/fastutil/ints/Int2ObjectMap.remove(I)Ljava/lang/Object;", remap = false))
     private void postServerBlockBreakProgress(int breakerId, BlockPos pos, int progress, CallbackInfo info)
     {
-        BlockState state = this.minecraft.level.getBlockState(pos);
+        var state = this.minecraft.level.getBlockState(pos);
 
         if (breakerId == this.minecraft.player.getId() && progress == -1)
         {

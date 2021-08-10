@@ -13,9 +13,9 @@ public class SBNumberUtils
             return false;
         }
 
-        int sz = cs.length();
+        var sz = cs.length();
 
-        for (int i = 0; i < sz; i++)
+        for (var i = 0; i < sz; i++)
         {
             if (!Character.isDigit(cs.charAt(i)) && !(cs.charAt(i) == 'k' || cs.charAt(i) == 'm'))
             {
@@ -27,9 +27,9 @@ public class SBNumberUtils
 
     public static String formatWithM(double number)
     {
-        char[] suffix = {' ', 'K', 'M', 'B', 'T', 'P', 'E'};
-        int value = (int) Math.floor(Math.log10(number));
-        int base = value / 3;
+        var suffix = new char[] {' ', 'K', 'M', 'B', 'T', 'P', 'E'};
+        var value = (int) Math.floor(Math.log10(number));
+        var base = value / 3;
 
         if (value >= 3 && base < suffix.length)
         {

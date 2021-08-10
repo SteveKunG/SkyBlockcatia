@@ -3,8 +3,6 @@ package com.stevekung.skyblockcatia.utils.skyblock.api;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -31,7 +29,7 @@ public class PetStats
 
     public void setClientStatByType(SBPets.Type type, int level, boolean active)
     {
-        if (type.getType().equals("MONKEY"))
+        if (type.type().equals("MONKEY"))
         {
             this.setAxeCooldown(active ? level * 0.5D : 0);
             System.out.println("axe cooldown: " + this.axeCooldown);
@@ -53,21 +51,21 @@ public class PetStats
     {
         try
         {
-            String uuid = GameProfileUtils.getUUID().toString().replace("-", "");
-            URL urlSB = new URL(SBAPIUtils.APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
-            SkyblockProfiles sbProfiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
-            List<Profile> profiles = Lists.newArrayList();
+            var uuid = GameProfileUtils.getUUID().toString().replace("-", "");
+            var urlSB = new URL(SBAPIUtils.APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
+            var sbProfiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
+            var profiles = Lists.<Profile>newArrayList();
 
             if (sbProfiles != null)
             {
-                SkyblockProfiles.Profile[] profilesList = sbProfiles.getProfiles();
-                boolean hasOneProfile = profilesList.length == 1;
+                var profilesList = sbProfiles.profiles();
+                var hasOneProfile = profilesList.length == 1;
 
-                for (SkyblockProfiles.Profile profile : profilesList)
+                for (var profile : profilesList)
                 {
-                    long lastSave = -1;
+                    var lastSave = -1L;
 
-                    for (Map.Entry<String, SkyblockProfiles.Members> entry : profile.getMembers().entrySet())
+                    for (var entry : profile.members().entrySet())
                     {
                         if (!entry.getKey().equals(uuid))
                         {
@@ -85,7 +83,7 @@ public class PetStats
                 }
                 profiles.sort((profile1, profile2) -> new CompareToBuilder().append(profile2.lastSave, profile1.lastSave).build());
             }
-            Profile profile = Iterables.getFirst(profiles, null);
+            var profile = Iterables.getFirst(profiles, null);
             PetStats.refreshPetStats(profile.profile, uuid);
         }
         catch (JsonSyntaxException | IOException e)
@@ -96,28 +94,28 @@ public class PetStats
 
     private static void refreshPetStats(SkyblockProfiles.Profile profile, String uuid) throws JsonSyntaxException, IOException
     {
-        Map<String, SkyblockProfiles.Members> profiles = profile.getMembers();
+        var profiles = profile.members();
 
-        for (Map.Entry<String, SkyblockProfiles.Members> entry : profiles.entrySet())
+        for (var entry : profiles.entrySet())
         {
-            String userUUID = entry.getKey();
+            var userUUID = entry.getKey();
 
             if (userUUID.equals(uuid))
             {
-                SkyblockProfiles.Members currentUserProfile = profiles.get(userUUID);
-                SkyblockProfiles.Pets[] pets = currentUserProfile.getPets();
+                var currentUserProfile = profiles.get(userUUID);
+                var pets = currentUserProfile.getPets();
 
                 if (pets == null || pets.length <= 0)
                 {
                     return;
                 }
 
-                for (SkyblockProfiles.Pets pet : pets)
+                for (var pet : pets)
                 {
-                    double exp = pet.getExp();
-                    String petRarity = pet.getTier();
-                    String heldItemObj = pet.getHeldItem();
-                    boolean active = pet.isActive();
+                    var exp = pet.exp();
+                    var petRarity = pet.tier();
+                    var heldItemObj = pet.heldItem();
+                    var active = pet.active();
                     SBPets.HeldItem heldItem = null;
 
                     if (heldItemObj != null)
@@ -130,19 +128,19 @@ public class PetStats
                         }
                     }
 
-                    SBPets.Tier tier = SBPets.Tier.valueOf(petRarity);
-                    String petType = pet.getType();
+                    var tier = SBPets.Tier.valueOf(petRarity);
+                    var petType = pet.type();
 
                     if (heldItem != null && heldItem.isUpgrade())
                     {
                         tier = tier.getNextRarity();
                     }
 
-                    int level = PetStats.checkPetLevel(exp, tier);
+                    var level = PetStats.checkPetLevel(exp, tier);
 
                     try
                     {
-                        SBPets.Type type = SBPets.PETS.getTypeByName(petType);
+                        var type = SBPets.PETS.getTypeByName(petType);
                         PetStats.INSTANCE.setClientStatByType(type, level, active);
                     }
                     catch (Exception e)
@@ -157,18 +155,18 @@ public class PetStats
 
     private static int checkPetLevel(double petExp, SBPets.Tier tier)
     {
-        int index = SBPets.PETS.getIndex().get(tier.name());
-        int xpRequired = 0;
-        int currentLvl = 0;
-        double xpTotal = 0;
+        var index = SBPets.PETS.index().get(tier.name());
+        var xpRequired = 0;
+        var currentLvl = 0;
+        var xpTotal = 0D;
         double xpToNextLvl;
-        double currentXp = 0;
+        var currentXp = 0D;
 
-        for (int i = index; i < 99 + index; i++)
+        for (var i = index; i < 99 + index; i++)
         {
             if (petExp >= xpTotal)
             {
-                int level = SBPets.PETS.getLeveling()[i];
+                var level = SBPets.PETS.leveling()[i];
                 xpTotal += level;
                 currentLvl = i - index + 1;
                 xpRequired = level;

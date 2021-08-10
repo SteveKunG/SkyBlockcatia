@@ -17,7 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -53,7 +52,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
             test.remove(test.size() - 1);
             this.list.remove(test.size() - 1);
         }*/
-        for (SignSelectionList.Entry element : list)
+        for (var element : list)
         {
             this.addEntry(new SignSelectionList.Entry(element.getValue(), parent));
         }
@@ -81,8 +80,8 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
     {
-        int k = this.getRowLeft();
-        int l = this.y0 + 4 - (int) this.getScrollAmount();
+        var k = this.getRowLeft();
+        var l = this.y0 + 4 - (int) this.getScrollAmount();
         this.renderList(poseStack, k, l, mouseX, mouseY, partialTicks);
         this.minecraft.font.draw(poseStack, this.title + ":", k, this.y0 - 12, 16777215);
     }
@@ -126,7 +125,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int mouseEvent)
         {
-            SignBlockEntity sign = ((SignEditScreen) this.mc.screen).sign;
+            var sign = ((SignEditScreen) this.mc.screen).sign;
 
             if (mouseEvent == 0)
             {
@@ -136,7 +135,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
                 {
                     if (SkyBlockcatiaSettings.INSTANCE.auctionBidConfirm && NumberUtils.isNumeric(this.value))
                     {
-                        int price = Integer.parseInt(this.value);
+                        var price = Integer.parseInt(this.value);
 
                         if (price >= SkyBlockcatiaSettings.INSTANCE.auctionBidConfirmValue)
                         {
@@ -191,7 +190,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
         @Override
         public boolean equals(Object obj)
         {
-            if (!(obj instanceof SignSelectionList.Entry))
+            if (!(obj instanceof Entry other))
             {
                 return false;
             }
@@ -199,7 +198,6 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
             {
                 return true;
             }
-            SignSelectionList.Entry other = (SignSelectionList.Entry) obj;
             return new EqualsBuilder().append(this.value, other.value).isEquals();
         }
 
@@ -217,7 +215,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
 
     public static void processSignData(SignBlockEntity sign)
     {
-        ClientPacketListener clientplaynethandler = Minecraft.getInstance().getConnection();
+        var clientplaynethandler = Minecraft.getInstance().getConnection();
 
         if (clientplaynethandler != null)
         {

@@ -17,27 +17,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class ToastUtils
 {
-    public static class ItemDrop
+    public record ItemDrop(ItemStack itemStack, DropType type)
     {
-        private final ItemStack itemStack;
-        private final DropType type;
-
-        public ItemDrop(ItemStack itemStack, DropType type)
-        {
-            this.itemStack = itemStack;
-            this.type = type;
-        }
-
-        public ItemStack getItemStack()
-        {
-            return this.itemStack;
-        }
-
-        public DropType getType()
-        {
-            return this.type;
-        }
-
         public Component getDisplayName(String value)
         {
             if (this.type.matches(ToastUtils.DropCondition.COINS))
@@ -173,35 +154,14 @@ public class ToastUtils
 
         public long getTime()
         {
-            switch (this)
-            {
-                case RARE_DROP:
-                case MYTHOS_COINS:
-                case PET_DROP:
-                case DRAGON_CRYSTAL_FRAGMENT:
-                    return SkyBlockcatiaSettings.INSTANCE.rareDropToastTime * 1000L;
-                case BOSS_DROP:
-                case SLAYER_RARE_DROP:
-                case SLAYER_VERY_RARE_DROP_BLUE:
-                case SLAYER_VERY_RARE_DROP_PURPLE:
-                case SLAYER_CRAZY_RARE_DROP:
-                case SANTA_TIER:
-                case DUNGEON_QUALITY_DROP:
-                case DUNGEON_REWARD_DROP:
-                case GOOD_CATCH:
-                case GREAT_CATCH:
-                case GOOD_CATCH_COINS:
-                case GREAT_CATCH_COINS:
-                    return SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
-                case COMMON_GIFT:
-                case SWEET_GIFT:
-                case RARE_GIFT:
-                    return SkyBlockcatiaSettings.INSTANCE.giftToastTime * 1000L;
-                case PET_LEVEL_UP:
-                    return SkyBlockcatiaSettings.INSTANCE.petToastTime * 1000L;
-                default:
-                    return 5000L;
-            }
+            return switch (this)
+                    {
+                        case RARE_DROP, MYTHOS_COINS, PET_DROP, DRAGON_CRYSTAL_FRAGMENT -> SkyBlockcatiaSettings.INSTANCE.rareDropToastTime * 1000L;
+                        case BOSS_DROP, SLAYER_RARE_DROP, SLAYER_VERY_RARE_DROP_BLUE, SLAYER_VERY_RARE_DROP_PURPLE, SLAYER_CRAZY_RARE_DROP, SANTA_TIER, DUNGEON_QUALITY_DROP, DUNGEON_REWARD_DROP, GOOD_CATCH, GREAT_CATCH, GOOD_CATCH_COINS, GREAT_CATCH_COINS -> SkyBlockcatiaSettings.INSTANCE.specialDropToastTime * 1000L;
+                        case COMMON_GIFT, SWEET_GIFT, RARE_GIFT -> SkyBlockcatiaSettings.INSTANCE.giftToastTime * 1000L;
+                        case PET_LEVEL_UP -> SkyBlockcatiaSettings.INSTANCE.petToastTime * 1000L;
+                        default -> 5000L;
+                    };
         }
 
         public boolean matches(DropCondition... condition)
