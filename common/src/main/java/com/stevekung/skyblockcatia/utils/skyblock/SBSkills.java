@@ -1,5 +1,6 @@
 package com.stevekung.skyblockcatia.utils.skyblock;
 
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
@@ -391,7 +392,7 @@ public class SBSkills
         {
             for (SBSkills.Type type : SBSkills.Type.values())
             {
-                if (type.name().equals(name))
+                if (type.name().equals(name.toLowerCase(Locale.ROOT)))
                 {
                     return type;
                 }

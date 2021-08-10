@@ -2618,7 +2618,11 @@ public class SkyBlockAPIViewerScreen extends Screen
                             break;
                         }
                     }
-                    skinName = ", " + (skinName.isEmpty() ? skin : skinName) + " Skin";
+                    if (skinName.isEmpty())
+                    {
+                        SkyBlockcatia.LOGGER.warning("Found an unknown pet skin! type: {}", skin);
+                    }
+                    skinName = ", " + (skinName.isEmpty() ? ChatFormatting.RED + skin + ChatFormatting.DARK_GRAY : skinName) + " Skin";
                     skinMark = " ✦";
                 }
 
