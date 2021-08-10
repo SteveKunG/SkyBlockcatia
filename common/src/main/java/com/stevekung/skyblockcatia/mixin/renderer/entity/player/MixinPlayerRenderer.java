@@ -9,7 +9,7 @@ import com.stevekung.skyblockcatia.gui.screen.SkyBlockAPIViewerScreen;
 import com.stevekung.skyblockcatia.renderer.GlowingSteveLayer;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.player.PlayerModelPart;
@@ -22,8 +22,8 @@ public abstract class MixinPlayerRenderer extends LivingEntityRenderer<AbstractC
         super(null, null, 0);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Z)V", at = @At("TAIL"))
-    private void init(EntityRenderDispatcher renderManager, boolean useSmallArms, CallbackInfo info)
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void init(EntityRendererProvider.Context context, boolean useSmallArms, CallbackInfo info)
     {
         this.addLayer(new GlowingSteveLayer((PlayerRenderer) (Object) this));
     }

@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
 import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -82,7 +82,7 @@ public abstract class MixinHumanoidArmorLayer<T extends LivingEntity, M extends 
                     {
                         alpha = 1.0F;
                     }
-                    VertexConsumer ivertexbuilder = ItemRenderer.getFoilBuffer(buffer, DragonArmorRenderType.getGlowingDragonOverlay(location), false, false);
+                    VertexConsumer ivertexbuilder = ItemRenderer.getFoilBuffer(buffer, RenderType.eyes(location), false, false);
                     model.renderToBuffer(poseStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
                 }
             }

@@ -9,6 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,8 +29,9 @@ public class VisitIslandToast implements Toast
     @Override
     public Toast.Visibility render(PoseStack poseStack, ToastComponent toastGui, long delta)
     {
-        toastGui.getMinecraft().getTextureManager().bind(TEXTURE);
-        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GuiComponent.blit(poseStack, 0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(this.name, ChatFormatting.BOLD), 30, 7, ColorUtils.toDecimal(255, 255, 85));
         toastGui.getMinecraft().font.draw(poseStack, "is visiting Your Island!", 30, 18, ColorUtils.toDecimal(255, 255, 255));

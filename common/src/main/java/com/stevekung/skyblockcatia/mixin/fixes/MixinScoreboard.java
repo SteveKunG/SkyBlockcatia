@@ -10,7 +10,7 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 
 @Mixin(Scoreboard.class)
-public abstract class MixinScoreboard
+public class MixinScoreboard
 {
     @Inject(method = "removePlayerTeam", cancellable = true, at = @At("HEAD"))
     private void disableLog(PlayerTeam playerTeam, CallbackInfo info)

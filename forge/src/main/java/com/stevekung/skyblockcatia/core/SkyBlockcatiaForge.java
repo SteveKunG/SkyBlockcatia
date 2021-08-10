@@ -10,7 +10,7 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.stevekungslib.utils.ForgeCommonUtils;
 import com.stevekung.stevekungslib.utils.ModVersionChecker;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
-import me.shedaniel.architectury.platform.forge.EventBuses;
+import dev.architectury.platform.forge.EventBuses;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -27,7 +27,7 @@ public class SkyBlockcatiaForge
         SkyBlockcatia.init();
         ForgeCommonUtils.registerConfig(ModConfig.Type.CLIENT, SkyBlockcatiaConfig.GENERAL_SPEC);
         ForgeCommonUtils.registerClientOnly();
-        ForgeCommonUtils.registerConfigScreen(() -> (mc, screen) -> ForgeCommonUtils.openConfigFile(screen, SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT));
+        ForgeCommonUtils.registerConfigScreen((mc, screen) -> ForgeCommonUtils.openConfigFile(screen, SkyBlockcatia.MOD_ID, ModConfig.Type.CLIENT));
 
         ForgeCommonUtils.registerModEventBus(SkyBlockcatiaConfig.class);
         ForgeCommonUtils.addModListener(this::phaseOne);

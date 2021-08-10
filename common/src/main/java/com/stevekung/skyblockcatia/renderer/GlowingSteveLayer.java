@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -32,7 +33,7 @@ public class GlowingSteveLayer extends RenderLayer<AbstractClientPlayer, PlayerM
             {
                 alpha = 0.7F;
             }
-            VertexConsumer ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(GlowingSteveLayer.TEXTURE));
+            VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.eyes(GlowingSteveLayer.TEXTURE));
             this.getParentModel().renderToBuffer(poseStack, ivertexbuilder, 15728640, OverlayTexture.NO_OVERLAY, alpha, alpha, alpha, 1.0F);
         }
     }

@@ -7,7 +7,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import com.stevekung.skyblockcatia.core.SkyBlockcatia;
-import me.shedaniel.architectury.platform.Platform;
+import dev.architectury.platform.Platform;
 
 public class DataUtils
 {

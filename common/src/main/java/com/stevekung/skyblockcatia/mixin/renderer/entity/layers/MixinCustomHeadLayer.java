@@ -1,19 +1,22 @@
 package com.stevekung.skyblockcatia.mixin.renderer.entity.layers;
 
+import java.util.Map;
+
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
-import com.stevekung.skyblockcatia.renderer.DragonArmorRenderType;
 import com.stevekung.skyblockcatia.utils.skyblock.SBRenderUtils;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
-import net.minecraft.client.model.HumanoidHeadModel;
-import net.minecraft.client.model.SkullModel;
+import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -27,11 +30,14 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.AbstractSkullBlock;
+import net.minecraft.world.level.block.SkullBlock;
 
 @Mixin(CustomHeadLayer.class)
 public abstract class MixinCustomHeadLayer<T extends LivingEntity, M extends EntityModel<T> & HeadedModel> extends RenderLayer<T, M>
 {
-    private final SkullModel head = new HumanoidHeadModel();
+    @Shadow
+    @Final
+    Map<SkullBlock.Type, SkullModelBase> skullModels;
 
     MixinCustomHeadLayer()
     {
@@ -89,9 +95,9 @@ public abstract class MixinCustomHeadLayer<T extends LivingEntity, M extends Ent
                     poseStack.translate(0.5D, 0.0D, 0.5D);
                     poseStack.scale(-1.0F, -1.0F, 1.0F);
 
-                    VertexConsumer ivertexbuilder = buffer.getBuffer(DragonArmorRenderType.getGlowingDragonOverlay(location));
-                    this.head.setupAnim(0.0F, 180.0F, 0.0F);
-                    this.head.renderToBuffer(poseStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+                    VertexConsumer ivertexbuilder = buffer.getBuffer(RenderType.eyes(location));
+                    this.skullModels.get(SkullBlock.Types.PLAYER).setupAnim(0.0F, 180.0F, 0.0F);
+                    this.skullModels.get(SkullBlock.Types.PLAYER).renderToBuffer(poseStack, ivertexbuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
                     poseStack.popPose();
                 }
             }

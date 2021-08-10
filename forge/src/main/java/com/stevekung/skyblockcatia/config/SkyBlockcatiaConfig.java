@@ -5,7 +5,7 @@ import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class SkyBlockcatiaConfig
 {
@@ -45,14 +45,14 @@ public class SkyBlockcatiaConfig
     }
 
     @SubscribeEvent
-    public static void onLoad(ModConfig.Loading event)
+    public static void onLoad(ModConfigEvent.Loading event)
     {
         SBAPIUtils.setApiKey();
         SkyBlockcatia.LOGGER.info("Loaded config file {}", event.getConfig().getFileName());
     }
 
     @SubscribeEvent
-    public static void onFileChange(ModConfig.Reloading event)
+    public static void onFileChange(ModConfigEvent.Reloading event)
     {
         SBAPIUtils.setApiKey();
         SkyBlockcatia.LOGGER.info("SkyBlockcatia config just got changed on the file system");

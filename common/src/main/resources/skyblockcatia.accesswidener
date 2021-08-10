@@ -16,6 +16,7 @@ accessible field net/minecraft/util/datafix/fixes/ItemPotionFix POTIONS [Ljava/l
 accessible field net/minecraft/util/datafix/fixes/ItemStackEnchantmentNamesFix MAP Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 accessible field net/minecraft/client/gui/screens/inventory/SignEditScreen signField Lnet/minecraft/client/gui/font/TextFieldHelper;
 accessible field net/minecraft/client/gui/screens/inventory/SignEditScreen sign Lnet/minecraft/world/level/block/entity/SignBlockEntity;
+accessible field net/minecraft/client/gui/screens/Screen renderables Ljava/util/List;
 
 accessible method net/minecraft/client/gui/components/ChatComponent isChatHidden ()Z
 accessible method net/minecraft/client/gui/components/ChatComponent getTimeFactor (I)D

@@ -80,6 +80,7 @@ public class SkyBlockcatia
             SBSkills.getSkills();
             SBStats.getStats();
             SBDungeons.getDungeons();
+            SBAPIUtils.getMisc();
         }
         catch (Throwable e)
         {

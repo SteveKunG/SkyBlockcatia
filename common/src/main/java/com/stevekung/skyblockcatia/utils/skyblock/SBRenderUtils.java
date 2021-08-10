@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.GL11;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
@@ -12,9 +11,9 @@ import com.stevekung.skyblockcatia.utils.skyblock.api.DragonType;
 import com.stevekung.stevekungslib.utils.ColorUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -186,19 +185,14 @@ public class SBRenderUtils
         if (rarity != null)
         {
             float alpha = SkyBlockcatiaSettings.INSTANCE.itemRarityOpacity / 100.0F;
-            RenderSystem.pushMatrix();
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
-            RenderSystem.enableAlphaTest();
-            Minecraft.getInstance().getTextureManager().bind(RARITY);
-            RenderSystem.color4f(rarity.getColorToRender()[0], rarity.getColorToRender()[1], rarity.getColorToRender()[2], alpha);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.setShaderColor(rarity.getColorToRender()[0], rarity.getColorToRender()[1], rarity.getColorToRender()[2], alpha);
+            RenderSystem.setShaderTexture(0, RARITY);
             RenderSystem.blendFunc(770, 771);
-            GlStateManager._texEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_BLEND);
             GuiComponent.blit(poseStack, xPos, yPos, 0, 0, 16, 16, 16, 16);
-            GlStateManager._texEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
             RenderSystem.enableDepthTest();
-            RenderSystem.disableAlphaTest();
-            RenderSystem.popMatrix();
         }
     }
 

@@ -1,16 +1,13 @@
 package com.stevekung.skyblockcatia.gui;
 
-import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.level.Level;
 
 public abstract class ScrollingListScreen implements GuiEventListener
@@ -112,12 +109,10 @@ public abstract class ScrollingListScreen implements GuiEventListener
         }
         else
         {
-            RenderSystem.disableLighting();
-            RenderSystem.disableFog();
-            this.mc.getTextureManager().bind(GuiComponent.BACKGROUND_LOCATION);
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            final float texScale = 32.0F;
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.setShaderTexture(0, GuiComponent.BACKGROUND_LOCATION);
+            float texScale = 32.0F;
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             buffer.vertex(this.left, this.bottom, 0.0D).uv(this.left / texScale, (this.bottom + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
             buffer.vertex(this.right, this.bottom, 0.0D).uv(this.right / texScale, (this.bottom + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
             buffer.vertex(this.right, this.top, 0.0D).uv(this.right / texScale, (this.top + (int) this.scrollDistance) / texScale).color(0x20, 0x20, 0x20, 0xFF).endVertex();
@@ -162,19 +157,19 @@ public abstract class ScrollingListScreen implements GuiEventListener
             }
 
             RenderSystem.disableTexture();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             buffer.vertex(this.scrollBarLeft, this.bottom, 0.0D).uv(0.0F, 1.0F).color(0x00, 0x00, 0x00, 0xFF).endVertex();
             buffer.vertex(this.scrollBarRight, this.bottom, 0.0D).uv(1.0F, 1.0F).color(0x00, 0x00, 0x00, 0xFF).endVertex();
             buffer.vertex(this.scrollBarRight, this.top, 0.0D).uv(1.0F, 0.0F).color(0x00, 0x00, 0x00, 0xFF).endVertex();
             buffer.vertex(this.scrollBarLeft, this.top, 0.0D).uv(0.0F, 0.0F).color(0x00, 0x00, 0x00, 0xFF).endVertex();
             tess.end();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             buffer.vertex(this.scrollBarLeft, barTop + height, 0.0D).uv(0.0F, 1.0F).color(0x80, 0x80, 0x80, 0xFF).endVertex();
             buffer.vertex(this.scrollBarRight, barTop + height, 0.0D).uv(1.0F, 1.0F).color(0x80, 0x80, 0x80, 0xFF).endVertex();
             buffer.vertex(this.scrollBarRight, barTop, 0.0D).uv(1.0F, 0.0F).color(0x80, 0x80, 0x80, 0xFF).endVertex();
             buffer.vertex(this.scrollBarLeft, barTop, 0.0D).uv(0.0F, 0.0F).color(0x80, 0x80, 0x80, 0xFF).endVertex();
             tess.end();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             buffer.vertex(this.scrollBarLeft, barTop + height - 1, 0.0D).uv(0.0F, 1.0F).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
             buffer.vertex(this.scrollBarRight - 1, barTop + height - 1, 0.0D).uv(1.0F, 1.0F).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
             buffer.vertex(this.scrollBarRight - 1, barTop, 0.0D).uv(1.0F, 0.0F).color(0xC0, 0xC0, 0xC0, 0xFF).endVertex();
@@ -182,8 +177,6 @@ public abstract class ScrollingListScreen implements GuiEventListener
             tess.end();
         }
         RenderSystem.enableTexture();
-        RenderSystem.shadeModel(GL11.GL_FLAT);
-        RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
         RenderSystem.disableScissor();
     }
@@ -249,16 +242,14 @@ public abstract class ScrollingListScreen implements GuiEventListener
         RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.shadeModel(7425);
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(7, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.vertex(mat, (float) right, (float) top, (float) zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
         buffer.vertex(mat, (float) left, (float) top, (float) zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
         buffer.vertex(mat, (float) left, (float) bottom, (float) zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
         buffer.vertex(mat, (float) right, (float) bottom, (float) zLevel).color(endRed, endGreen, endBlue, endAlpha).endVertex();
         tessellator.end();
-        RenderSystem.shadeModel(7424);
         RenderSystem.disableBlend();
         RenderSystem.enableTexture();
     }

@@ -32,7 +32,7 @@ public class SBClientEventHandler
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event)
     {
-        if (mc.player != null)
+        if (this.mc.player != null)
         {
             if (!SkyBlockcatiaForge.CHECKER.hasChecked())
             {
@@ -100,10 +100,10 @@ public class SBClientEventHandler
     @SubscribeEvent
     public void onMouseClick(InputEvent.MouseInputEvent event)
     {
-        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && mc.crosshairPickEntity != null && mc.crosshairPickEntity instanceof RemotePlayer && mc.player.isShiftKeyDown() && SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland && SkyBlockEventHandler.otherPlayerIsland)
+        if (event.getButton() == GLFW.GLFW_PRESS && event.getAction() == GLFW.GLFW_MOUSE_BUTTON_2 && this.mc.crosshairPickEntity != null && this.mc.crosshairPickEntity instanceof RemotePlayer && this.mc.player.isShiftKeyDown() && SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToTradeOtherPlayerIsland && SkyBlockEventHandler.otherPlayerIsland)
         {
-            RemotePlayer player = (RemotePlayer) mc.crosshairPickEntity;
-            mc.player.chat("/trade " + ChatFormatting.stripFormatting(player.getName().getString()));
+            RemotePlayer player = (RemotePlayer) this.mc.crosshairPickEntity;
+            this.mc.player.chat("/trade " + ChatFormatting.stripFormatting(player.getName().getString()));
         }
     }
 

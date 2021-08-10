@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -44,15 +45,19 @@ public class GiftToast implements Toast
             itemName = itemStack.getTooltipLines(null, TooltipFlag.Default.NORMAL).get(1);
         }
 
-        toastGui.getMinecraft().getTextureManager().bind(this.texture);
-        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, this.texture);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GuiComponent.blit(poseStack, 0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(drop.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(drop.getType().getColor()));
         SBRenderUtils.drawLongItemName(toastGui, poseStack, delta, 0L, this.maxDrawTime, itemName, false);
-        RenderSystem.translatef(0.0F, 0.0F, -32.0F);
+        PoseStack poseStack2 = RenderSystem.getModelViewStack();
+        poseStack2.pushPose();
+        poseStack2.scale(0.0F, 0.0F, -32.0F);
+        RenderSystem.applyModelViewMatrix();
         toastGui.getMinecraft().getItemRenderer().renderAndDecorateItem(itemStack, 8, 8);
         toastGui.getMinecraft().getItemRenderer().renderGuiItemDecorations(toastGui.getMinecraft().font, itemStack, 8, 8, null);
-        RenderSystem.disableLighting();
+        poseStack2.popPose();
         return delta >= this.maxDrawTime ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
     }
 }

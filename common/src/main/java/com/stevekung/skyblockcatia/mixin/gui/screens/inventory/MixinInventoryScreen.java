@@ -6,6 +6,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -18,9 +21,9 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
         super(null, null, null);
     }
 
-    @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/inventory/InventoryScreen.addButton(Lnet/minecraft/client/gui/components/AbstractWidget;)Lnet/minecraft/client/gui/components/AbstractWidget;"))
-    private <T extends AbstractWidget> T disableRecipeBook(InventoryScreen screen, T widget)
+    @Redirect(method = "init()V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/inventory/InventoryScreen.addRenderableWidget(Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;"))
+    private <T extends GuiEventListener & Widget & NarratableEntry> T disableRecipeBook(InventoryScreen screen, T guiEventListener)
     {
-        return SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory ? widget : this.addButton(widget);
+        return SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.shortcutButtonInInventory ? guiEventListener : this.addRenderableWidget(guiEventListener);
     }
 }

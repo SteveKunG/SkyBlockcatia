@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -42,8 +43,9 @@ public class NumericToast implements Toast
             this.hasNewValue = false;
         }
 
-        toastGui.getMinecraft().getTextureManager().bind(this.texture);
-        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, this.texture);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         GuiComponent.blit(poseStack, 0, 0, 0, 0, 160, 32, 160, 32);
         toastGui.getMinecraft().font.draw(poseStack, TextComponentUtils.formatted(this.output.getType().getName(), ChatFormatting.BOLD), 30, 7, ColorUtils.rgbToDecimal(this.output.getType().getColor()));
         SBRenderUtils.drawLongItemName(toastGui, poseStack, delta, this.firstDrawTime, this.maxDrawTime, this.output.getDisplayName(NumberUtils.NUMBER_FORMAT.format(this.value)), false);

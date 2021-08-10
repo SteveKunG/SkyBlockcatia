@@ -1,6 +1,6 @@
 package com.stevekung.skyblockcatia.utils;
 
-import me.shedaniel.architectury.platform.Platform;
+import dev.architectury.platform.Platform;
 
 public class CompatibilityUtils
 {

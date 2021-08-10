@@ -24,7 +24,6 @@ import com.google.common.primitives.Ints;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -52,9 +51,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -574,7 +576,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     if (this.currentSlot instanceof InfosList)
                     {
-                        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                         RenderSystem.enableDepthTest();
                         SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, this.guiLeft - 55 - (float) mouseX, this.guiTop + 25 - (float) mouseY, this.player);
                         this.drawContainerSlot(poseStack, mouseX, mouseY, true);
@@ -591,8 +592,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                         if (stat.type == EmptyList.Type.INVENTORY)
                         {
                             this.drawContainerSlot(poseStack, mouseX, mouseY, false);
-
-                            Lighting.turnOff();
                             this.drawTabsForegroundLayer(poseStack);
 
                             for (SBInventoryGroup group : SBInventoryGroup.GROUPS)
@@ -603,10 +602,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                                 }
                             }
 
-                            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                            RenderSystem.disableLighting();
-
-                            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                             SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, this.guiLeft - 46 - (float) mouseX, this.guiTop + 75 - 50 - (float) mouseY, this.player);
 
                             if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
@@ -975,11 +970,11 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.doneButton.y = this.height / 4 + 132;
         this.doneButton.setMessage(CommonComponents.GUI_BACK);
 
-        for (AbstractWidget button : this.buttons)
+        for (Widget widget : this.renderables)
         {
-            if (button != this.doneButton)
+            if (widget instanceof AbstractWidget abstractWidget && abstractWidget != this.doneButton)
             {
-                button.visible = false;
+                abstractWidget.visible = false;
             }
         }
     }
@@ -1063,8 +1058,9 @@ public class SkyBlockAPIViewerScreen extends Screen
             color = ColorUtils.toFloatArray(255, 185, 0);
         }
 
-        this.minecraft.getTextureManager().bind(XP_BARS);
-        RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
+        RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, XP_BARS);
         GuiComponent.blit(poseStack, xBar, yBar, 0, 0, 91, 5, 91, 10);
 
         if (xpRequired > 0)
@@ -1097,13 +1093,13 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         int i = this.guiLeft;
         int j = this.guiTop;
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(i, j, 0.0F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.enableRescaleNormal();
+        PoseStack poseStack2 = RenderSystem.getModelViewStack();
+        poseStack2.pushPose();
+        poseStack2.translate(i, j, 0.0D);
+        RenderSystem.applyModelViewMatrix();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.hoveredSlot = null;
-        RenderSystem.glMultiTexCoord2f(33986, 240.0F, 240.0F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (!info)
         {
@@ -1114,15 +1110,7 @@ public class SkyBlockAPIViewerScreen extends Screen
                 if (this.isSlotSelected(slot, mouseX, mouseY) && slot.isActive())
                 {
                     this.hoveredSlot = slot;
-                    RenderSystem.disableLighting();
-                    RenderSystem.disableDepthTest();
-                    int j1 = slot.x;
-                    int k1 = slot.y;
-                    RenderSystem.colorMask(true, true, true, false);
-                    this.fillGradient(poseStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-                    RenderSystem.colorMask(true, true, true, true);
-                    RenderSystem.enableLighting();
-                    RenderSystem.enableDepthTest();
+                    AbstractContainerScreen.renderSlotHighlight(poseStack, i, j, this.getBlitOffset());
                 }
             }
         }
@@ -1137,7 +1125,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
             }
         }
-        RenderSystem.popMatrix();
     }
 
     private void drawSlot(PoseStack poseStack, Slot slot)
@@ -1155,7 +1142,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             if (pair != null)
             {
                 TextureAtlasSprite sprite = this.minecraft.getTextureAtlas(pair.getFirst()).apply(pair.getSecond());
-                this.minecraft.getTextureManager().bind(sprite.atlas().location());
+                RenderSystem.setShaderTexture(0, sprite.atlas().location());
                 GuiComponent.blit(poseStack, i, j, this.getBlitOffset(), 16, 16, sprite);
             }
         }
@@ -1201,7 +1188,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         {
             RenderSystem.disableDepthTest();
             RenderSystem.disableTexture();
-            RenderSystem.disableAlphaTest();
             RenderSystem.disableBlend();
             Tesselator tessellator = Tesselator.getInstance();
             BufferBuilder bufferbuilder = tessellator.getBuilder();
@@ -1213,7 +1199,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             this.itemRenderer.fillRect(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
             this.itemRenderer.fillRect(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
             RenderSystem.enableBlend();
-            RenderSystem.enableAlphaTest();
             RenderSystem.enableTexture();
             RenderSystem.enableDepthTest();
         }
@@ -1251,12 +1236,13 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private void drawGroupsBackgroundLayer(PoseStack poseStack)
     {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         SBInventoryGroup group = SBInventoryGroup.GROUPS[this.selectedTabIndex];
 
         for (SBInventoryGroup group1 : SBInventoryGroup.GROUPS)
         {
-            this.minecraft.getTextureManager().bind(INVENTORY_TABS);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, INVENTORY_TABS);
 
             if (group1.getIndex() != this.selectedTabIndex)
             {
@@ -1264,18 +1250,18 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
         }
 
-        this.minecraft.getTextureManager().bind(new ResourceLocation("skyblockcatia:textures/gui/group_" + group.getBackgroundTexture()));
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, new ResourceLocation("skyblockcatia:textures/gui/group_" + group.getBackgroundTexture()));
         this.blit(poseStack, this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.guiLeft + 182;
         int j = this.guiTop + 18;
         int k = j + 72;
-        this.minecraft.getTextureManager().bind(INVENTORY_TABS);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, INVENTORY_TABS);
         this.blit(poseStack, i, j + (int) ((k - j - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
         this.drawGroup(poseStack, group);
-        RenderSystem.disableRescaleNormal();
-        Lighting.turnOff();
-        RenderSystem.disableLighting();
         RenderSystem.disableDepthTest();
     }
 
@@ -1320,8 +1306,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             i1 = i1 + this.ySize - 33;
         }
 
-        RenderSystem.disableLighting();
-        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         this.blit(poseStack, l, i1, j, k, 28, j1);
@@ -1329,8 +1313,6 @@ public class SkyBlockAPIViewerScreen extends Screen
         this.itemRenderer.blitOffset = 100.0F;
         l = l + 6;
         i1 = i1 + 8 + (flag1 ? 1 : -1);
-        RenderSystem.enableLighting();
-        RenderSystem.enableRescaleNormal();
         ItemStack itemStack = group.getIcon();
         this.itemRenderer.renderAndDecorateItem(itemStack, l, i1);
         this.itemRenderer.renderGuiItemDecorations(this.font, itemStack, l, i1);
@@ -1346,7 +1328,6 @@ public class SkyBlockAPIViewerScreen extends Screen
             RenderSystem.enableDepthTest();
         }
 
-        RenderSystem.disableLighting();
         this.itemRenderer.blitOffset = 0.0F;
         this.setBlitOffset(0);
     }
@@ -3694,7 +3675,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         if (this.minecraft.getConnection().getPlayerInfo(this.profile.getName()) == null)
         {
-            ClientboundPlayerInfoPacket.PlayerUpdate playerUpdate = new ClientboundPlayerInfoPacket().new PlayerUpdate(this.profile, 0, null, null);
+            ClientboundPlayerInfoPacket.PlayerUpdate playerUpdate = new ClientboundPlayerInfoPacket.PlayerUpdate(this.profile, 0, null, null);
             this.minecraft.getConnection().playerInfoMap.put(this.profile.getId(), ((IViewerLoader) new PlayerInfo(playerUpdate)).setLoadedFromViewer(true)); // hack into map to show their skin :D
         }
 
@@ -3843,7 +3824,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         if (this.showArmor)
         {
-            for (int i = 0; i < this.player.inventory.armor.size(); i++)
+            for (int i = 0; i < this.player.getInventory().armor.size(); i++)
             {
                 this.player.setItemSlot(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i), ItemStack.EMPTY);
             }
@@ -3881,84 +3862,87 @@ public class SkyBlockAPIViewerScreen extends Screen
 
     private static void renderEntity(int posX, int posY, LivingEntity entity, float scale)
     {
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(posX, posY, 1050.0F);
-        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
-        PoseStack matrixstack = new PoseStack();
-        matrixstack.translate(0.0D, 0.0D, 1000.0D);
-        matrixstack.scale(scale, scale, scale);
+        PoseStack poseStack = RenderSystem.getModelViewStack();
+        poseStack.pushPose();
+        poseStack.translate(posX, posY, 1050.0D);
+        poseStack.scale(1.0F, 1.0F, -1.0F);
+        PoseStack poseStack1 = new PoseStack();
+        poseStack1.translate(0.0D, 0.0D, 1000.0D);
+        poseStack1.scale(scale, scale, scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(-180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(-10.0F);
         Quaternion quaternion2 = Vector3f.YP.rotationDegrees(-190.0F);
         quaternion.mul(quaternion1);
-        matrixstack.mulPose(quaternion);
-        matrixstack.mulPose(quaternion2);
-        entity.yRot = (float) (Math.atan(0) * 40.0F);
-        entity.yHeadRot = entity.yRot;
+        poseStack1.mulPose(quaternion);
+        poseStack1.mulPose(quaternion2);
+        entity.setYRot((float) (Math.atan(0) * 40.0F));
+        entity.yHeadRot = entity.getYRot();
         EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
         quaternion1.conj();
         entityrenderermanager.overrideCameraOrientation(quaternion1);
         entityrenderermanager.setRenderShadow(false);
         MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.runAsFancy(() -> entityrenderermanager.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880));
+        RenderSystem.runAsFancy(() -> entityrenderermanager.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, poseStack1, irendertypebuffer$impl, 15728880));
         irendertypebuffer$impl.endBatch();
+        poseStack.popPose();
+        RenderSystem.applyModelViewMatrix();
         entityrenderermanager.setRenderShadow(true);
-        RenderSystem.popMatrix();
     }
 
     private static void renderEntity(int posX, int posY, float mouseX, float mouseY, LivingEntity livingEntity)
     {
         float f = (float) Math.atan(mouseX / 40.0F);
         float f1 = (float) Math.atan(mouseY / 40.0F);
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(posX, posY, 1050.0F);
-        RenderSystem.scalef(1.0F, 1.0F, -1.0F);
-        PoseStack matrixstack = new PoseStack();
-        matrixstack.translate(0.0D, 0.0D, 1000.0D);
+        PoseStack poseStack = RenderSystem.getModelViewStack();
+        poseStack.pushPose();
+        poseStack.translate(posX, posY, 1050.0D);
+        poseStack.scale(1.0F, 1.0F, -1.0F);
+        PoseStack poseStack1 = new PoseStack();
+        poseStack1.translate(0.0D, 0.0D, 1000.0D);
         float scale = 40F;
-        matrixstack.scale(scale, scale, scale);
+        poseStack1.scale(scale, scale, scale);
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
         Quaternion quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
         quaternion.mul(quaternion1);
-        matrixstack.mulPose(quaternion);
+        poseStack1.mulPose(quaternion);
         float f2 = livingEntity.yBodyRot;
-        float f3 = livingEntity.yRot;
-        float f4 = livingEntity.xRot;
+        float f3 = livingEntity.getYRot();
+        float f4 = livingEntity.getXRot();
         float f5 = livingEntity.yHeadRotO;
         float f6 = livingEntity.yHeadRot;
         livingEntity.yBodyRot = 180.0F + f * 20.0F;
-        livingEntity.yRot = 180.0F + f * 40.0F;
-        livingEntity.xRot = -f1 * 20.0F;
-        livingEntity.yHeadRot = livingEntity.yRot;
-        livingEntity.yHeadRotO = livingEntity.yRot;
+        livingEntity.setYRot(180.0F + f * 40.0F);
+        livingEntity.setXRot(-f1 * 20.0F);
+        livingEntity.yHeadRot = livingEntity.getYRot();
+        livingEntity.yHeadRotO = livingEntity.getYRot();
         EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
         quaternion1.conj();
         entityrenderermanager.overrideCameraOrientation(quaternion1);
         entityrenderermanager.setRenderShadow(false);
         MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
-        RenderSystem.runAsFancy(() -> entityrenderermanager.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixstack, irendertypebuffer$impl, 15728880));
+        RenderSystem.runAsFancy(() -> entityrenderermanager.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, poseStack1, irendertypebuffer$impl, 15728880));
         irendertypebuffer$impl.endBatch();
         entityrenderermanager.setRenderShadow(true);
         livingEntity.yBodyRot = f2;
-        livingEntity.yRot = f3;
-        livingEntity.xRot = f4;
+        livingEntity.setYRot(f3);
+        livingEntity.setXRot(f4);
         livingEntity.yHeadRotO = f5;
         livingEntity.yHeadRot = f6;
-        RenderSystem.popMatrix();
+        poseStack.popPose();
+        RenderSystem.applyModelViewMatrix();
     }
 
     private void drawItemStackSlot(PoseStack poseStack, int x, int y, ItemStack itemStack)
     {
         this.drawSprite(poseStack, x + 1, y + 1);
-        RenderSystem.enableRescaleNormal();
         this.itemRenderer.renderGuiItem(itemStack, x + 2, y + 2);
-        RenderSystem.disableRescaleNormal();
     }
 
     private void drawSprite(PoseStack poseStack, int left, int top)
     {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.minecraft.getTextureManager().bind(GuiComponent.STATS_ICON_LOCATION);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, GuiComponent.STATS_ICON_LOCATION);
         GuiComponent.blit(poseStack, left, top, this.getBlitOffset(), 0, 0, 18, 18, 128, 128);
     }
 
@@ -4286,8 +4270,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                     color = ColorUtils.toFloatArray(255, 185, 0);
                 }
 
-                this.mc.getTextureManager().bind(XP_BARS);
-                RenderSystem.color4f(color[0], color[1], color[2], 1.0F);
+                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+                RenderSystem.setShaderColor(color[0], color[1], color[2], 1.0F);
+                RenderSystem.setShaderTexture(0, XP_BARS);
                 RenderSystem.disableBlend();
 
                 String[] xpSplit = stat.xp.split(",");
@@ -4302,7 +4287,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
 
                 RenderSystem.enableBlend();
-                RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             }
             else
             {

@@ -17,7 +17,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.gui.APIErrorInfo;
@@ -144,7 +143,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         this.usernameTextField.setResponder(text -> this.setCommandResponder());
         this.checkButton.active = this.usernameTextField.getValue().trim().length() > 0;
         this.checkButton.visible = !this.error;
-        this.children.add(this.usernameTextField);
+        this.addWidget(this.usernameTextField);
         this.suggestionHelper = new PlayerNameSuggestionHelper(this.minecraft, this, this.usernameTextField, this.font, 10);
         this.suggestionHelper.setAllowSuggestions(true);
         this.suggestionHelper.updateCommandInfo();
@@ -366,7 +365,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 super.render(poseStack, mouseX, mouseY, partialTicks);
                 List<Component> displayStrings = Lists.newArrayList();
 
-                for (SkyBlockProfileButton button : this.buttons.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
+                for (SkyBlockProfileButton button : this.renderables.stream().filter(SkyBlockProfileButton.class::isInstance).map(SkyBlockProfileButton.class::cast).collect(Collectors.toList()))
                 {
                     boolean hover = this.suggestionHelper.suggestions == null && mouseX >= button.x && mouseY >= button.y && mouseX < button.x + button.getWidth() && mouseY < button.y + button.getHeight();
                     button.visible = button.active = this.suggestionHelper.suggestions == null;
@@ -391,7 +390,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
     private void checkAPI() throws IOException
     {
-        this.buttons.removeIf(SkyBlockProfileButton.class::isInstance);
+        this.renderables.removeIf(SkyBlockProfileButton.class::isInstance);
         URL url;
 
         if (this.input.length() == 32)
@@ -586,93 +585,94 @@ public class SkyBlockProfileSelectorScreen extends Screen
         }
 
         SkyblockProfiles.Profile[] sbProfile = sbProfiles.getProfiles();
-        GameProfile gameProfile = SkullBlockEntity.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input));
-
-        if (sbProfile == null || sbProfile.length <= 0)
+        SkullBlockEntity.updateGameprofile(new GameProfile(UUID.fromString(uuid.replaceFirst("([0-9a-fA-F]{8})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]{4})([0-9a-fA-F]+)", "$1-$2-$3-$4-$5")), this.input), gameProfile ->
         {
-            this.statusMessage = "Found default profile";
-            ProfileDataCallback callback = new ProfileDataCallback(uuid, TextComponentUtils.component("Avocado"), this.input, this.displayName, TextComponentUtils.formatted("Normal", ChatFormatting.GOLD), this.guild, uuid, gameProfile, -1);
-            this.minecraft.setScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
-            return;
-        }
-
-        List<SkyBlockProfileButton> buttons = Lists.newArrayList();
-
-        for (SkyblockProfiles.Profile profile : sbProfile)
-        {
-            boolean hasOneProfile = sbProfile.length == 1;
-            long lastSave = -1;
-            SkyblockProfiles.Profile availableProfile;
-            String gameModeType = profile.getGameMode();
-            Component gameMode = TextComponentUtils.formatted("Normal", ChatFormatting.GOLD);
-
-            if (gameModeType != null)
+            if (sbProfile == null || sbProfile.length <= 0)
             {
-                gameMode = gameModeType.equals("ironman") ? TextComponentUtils.formatted("♲ Iron Man", ChatFormatting.GRAY) : TextComponentUtils.formatted(gameModeType, ChatFormatting.RED);
+                this.statusMessage = "Found default profile";
+                ProfileDataCallback callback = new ProfileDataCallback(uuid, TextComponentUtils.component("Avocado"), this.input, this.displayName, TextComponentUtils.formatted("Normal", ChatFormatting.GOLD), this.guild, uuid, gameProfile, -1);
+                this.minecraft.setScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
+                return;
             }
 
-            List<Component> islandMembers = Lists.newLinkedList();
-            Set<Map.Entry<String, SkyblockProfiles.Members>> membersEntry = profile.getMembers().entrySet();
-            int memberSize = 1;
+            List<SkyBlockProfileButton> buttons = Lists.newArrayList();
 
-            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+            for (SkyblockProfiles.Profile profile : sbProfile)
             {
-                Long lastSaveEle = entry.getValue().getLastSave();
-                lastSave = lastSaveEle == null ? -1 : lastSaveEle;
-            }
+                boolean hasOneProfile = sbProfile.length == 1;
+                long lastSave = -1;
+                SkyblockProfiles.Profile availableProfile;
+                String gameModeType = profile.getGameMode();
+                Component gameMode = TextComponentUtils.formatted("Normal", ChatFormatting.GOLD);
 
-            for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> !en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
-            {
-                String memberUuid = entry.getKey();
-                memberSize++;
-
-                if (!hasOneProfile)
+                if (gameModeType != null)
                 {
-                    if (!USERNAME_CACHE.containsKey(memberUuid))
-                    {
-                        USERNAME_CACHE.put(memberUuid, TextComponentUtils.component(this.getName(memberUuid)));
-                    }
+                    gameMode = gameModeType.equals("ironman") ? TextComponentUtils.formatted("♲ Iron Man", ChatFormatting.GRAY) : TextComponentUtils.formatted(gameModeType, ChatFormatting.RED);
+                }
 
-                    islandMembers.add(USERNAME_CACHE.get(memberUuid));
-                    int allMembers = membersEntry.size() - memberSize;
+                List<Component> islandMembers = Lists.newLinkedList();
+                Set<Map.Entry<String, SkyblockProfiles.Members>> membersEntry = profile.getMembers().entrySet();
+                int memberSize = 1;
 
-                    if (memberSize > 5 && allMembers > 0)
+                for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+                {
+                    Long lastSaveEle = entry.getValue().getLastSave();
+                    lastSave = lastSaveEle == null ? -1 : lastSaveEle;
+                }
+
+                for (Map.Entry<String, SkyblockProfiles.Members> entry : membersEntry.stream().filter(en -> !en.getKey().equals(uuid)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).entrySet())
+                {
+                    String memberUuid = entry.getKey();
+                    memberSize++;
+
+                    if (!hasOneProfile)
                     {
-                        islandMembers.add(TextComponentUtils.formatted("and " + allMembers + " more...", ChatFormatting.ITALIC));
-                        break;
+                        if (!USERNAME_CACHE.containsKey(memberUuid))
+                        {
+                            USERNAME_CACHE.put(memberUuid, TextComponentUtils.component(this.getName(memberUuid)));
+                        }
+
+                        islandMembers.add(USERNAME_CACHE.get(memberUuid));
+                        int allMembers = membersEntry.size() - memberSize;
+
+                        if (memberSize > 5 && allMembers > 0)
+                        {
+                            islandMembers.add(TextComponentUtils.formatted("and " + allMembers + " more...", ChatFormatting.ITALIC));
+                            break;
+                        }
                     }
                 }
+
+                availableProfile = profile;
+                ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
+                SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
+
+                if (hasOneProfile)
+                {
+                    this.minecraft.setScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
+                    break;
+                }
+
+                buttons.add(button);
+                this.profiles.add(callback);
             }
 
-            availableProfile = profile;
-            ProfileDataCallback callback = new ProfileDataCallback(availableProfile, this.input, this.displayName, gameMode, this.guild, uuid, gameProfile, hasOneProfile ? -1 : lastSave, islandMembers);
-            SkyBlockProfileButton button = new SkyBlockProfileButton(this.width / 2 - 75, 75, 150, 20, callback);
+            buttons.sort((button1, button2) -> new CompareToBuilder().append(button2.getLastSave(), button1.getLastSave()).build());
 
-            if (hasOneProfile)
+            int i2 = 0;
+
+            for (SkyBlockProfileButton button : buttons)
             {
-                this.minecraft.setScreen(new SkyBlockAPIViewerScreen(this.profiles, callback));
-                break;
+                if (i2 == 0)
+                {
+                    button.setMessage(button.getMessage().copy().withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
+                }
+                button.y += i2 * 22;
+                button.setProfileList(this.profiles);
+                this.addRenderableWidget(button);
+                ++i2;
             }
-
-            buttons.add(button);
-            this.profiles.add(callback);
-        }
-
-        buttons.sort((button1, button2) -> new CompareToBuilder().append(button2.getLastSave(), button1.getLastSave()).build());
-
-        int i2 = 0;
-
-        for (SkyBlockProfileButton button : buttons)
-        {
-            if (i2 == 0)
-            {
-                button.setMessage(button.getMessage().copy().withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
-            }
-            button.y += i2 * 22;
-            button.setProfileList(this.profiles);
-            this.addRenderableWidget(button);
-            ++i2;
-        }
+        });
         this.usernameTextField.setValue(this.input);
         this.loadingApi = false;
     }

@@ -19,7 +19,7 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 public class MixinEntityRenderDispatcher
 {
     @Inject(method = "renderHitbox", cancellable = true, at = @At("HEAD"))
-    private void renderDebugBoundingBox(PoseStack poseStack, VertexConsumer buffer, Entity entity, float partialTicks, CallbackInfo info)
+    private static void renderDebugBoundingBox(PoseStack poseStack, VertexConsumer buffer, Entity entity, float partialTicks, CallbackInfo info)
     {
         HitboxRenderMode mode = SkyBlockcatiaSettings.INSTANCE.hitboxRenderMode;
 

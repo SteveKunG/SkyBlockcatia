@@ -35,7 +35,7 @@ public class SBOptionsScreen extends Screen
 
         this.optionsRowList = new ConfigButtonListWidget(this.width, this.height, 16, this.height - 30, 25);
         this.optionsRowList.addAll(this.configs);
-        this.children.add(this.optionsRowList);
+        this.addWidget(this.optionsRowList);
     }
 
     @Override

@@ -107,19 +107,19 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 this.inputField.setBordered(false);
                 this.inputField.setValue("");
                 this.inputField.setResponder(text -> this.setCommandResponder());
-                this.children.add(this.inputField);
+                this.addWidget(this.inputField);
                 this.commandSuggestionHelper = new CommandSuggestions(this.minecraft, this, this.inputField, this.font, false, false, 1, 10, true, -805306368);
                 this.commandSuggestionHelper.updateCommandInfo();
             }
             if (GuiScreenUtils.isOtherAuction(this.getTitle().getString()))
             {
-                this.addButton(new Button(this.leftPos + 180, this.topPos + 70, 70, 20, TextComponentUtils.component("Copy Seller"), button ->
+                this.addRenderableWidget(new Button(this.leftPos + 180, this.topPos + 70, 70, 20, TextComponentUtils.component("Copy Seller"), button ->
                 {
                     String title = this.title.getString();
                     ClientUtils.printClientMessage(TextComponentUtils.formatted("Copied seller auction command!", ChatFormatting.GREEN));
                     this.minecraft.keyboardHandler.setClipboard("/ah " + title.replace(title.substring(title.indexOf('\'')), ""));
                 }));
-                this.addButton(new Button(this.leftPos + 180, this.topPos + 92, 70, 20, TextComponentUtils.component("View API"), button ->
+                this.addRenderableWidget(new Button(this.leftPos + 180, this.topPos + 92, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getString();
                     this.minecraft.setScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
@@ -127,7 +127,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             }
             if (GuiScreenUtils.isOtherProfile(this.getTitle().getString()))
             {
-                this.addButton(new Button(this.leftPos + 180, this.topPos + 40, 70, 20, TextComponentUtils.component("View API"), button ->
+                this.addRenderableWidget(new Button(this.leftPos + 180, this.topPos + 40, 70, 20, TextComponentUtils.component("View API"), button ->
                 {
                     String title = this.title.getString();
                     this.minecraft.setScreen(new SkyBlockProfileSelectorScreen(SkyBlockProfileSelectorScreen.Mode.PLAYER, title.replace(title.substring(title.indexOf('\'')), ""), "", ""));
@@ -208,11 +208,12 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                 {
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
-                    RenderSystem.disableAlphaTest();
-                    RenderSystem.pushMatrix();
-                    RenderSystem.translatef(0.0F, this.height - 48, 0.0F);
+                    PoseStack poseStack2 = RenderSystem.getModelViewStack();
+                    poseStack2.pushPose();
+                    poseStack2.translate(0.0F, this.height - 48, 0.0F);
+                    RenderSystem.applyModelViewMatrix();
+                    poseStack2.popPose();
                     this.renderChat(poseStack);
-                    RenderSystem.popMatrix();
                 }
                 GuiComponent.fill(poseStack, 2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
                 this.commandSuggestionHelper.render(poseStack, mouseX, mouseY);
@@ -402,8 +403,7 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @Inject(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderAndDecorateItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;II)V", shift = Shift.AFTER))
+    @Inject(method = "renderSlot(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/inventory/Slot;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/entity/ItemRenderer.renderAndDecorateItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;III)V", shift = Shift.AFTER))
     private void renderAnvilLevel(PoseStack poseStack, Slot slot, CallbackInfo info)
     {
         if (this.getThis() instanceof ContainerScreen)
@@ -470,12 +470,14 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                         }
                     }
                 }
-                RenderSystem.pushMatrix();
                 RenderSystem.disableDepthTest();
-                RenderSystem.translatef(0.0F, 0.0F, 300.0F);
+                PoseStack poseStack2 = RenderSystem.getModelViewStack();
+                poseStack2.pushPose();
+                poseStack2.translate(0.0F, 0.0F, 300.0F);
+                RenderSystem.applyModelViewMatrix();
                 GuiComponent.drawCenteredString(poseStack, this.font, levelString, i + 8, j + 4, 0);
+                poseStack2.popPose();
                 RenderSystem.enableDepthTest();
-                RenderSystem.popMatrix();
             }
         }
     }
@@ -655,9 +657,11 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
             if (j > 0)
             {
                 double d0 = chat.getScale();
-                RenderSystem.pushMatrix();
-                RenderSystem.translatef(2.0F, 8.0F, 0.0F);
-                RenderSystem.scaled(d0, d0, 1.0D);
+                PoseStack poseStack2 = RenderSystem.getModelViewStack();
+                poseStack2.pushPose();
+                poseStack2.translate(2.0F, 8.0F, 0.0F);
+                poseStack2.scale((float)d0, (float)d0, 1.0F);
+                RenderSystem.applyModelViewMatrix();
                 double d1 = this.minecraft.options.chatOpacity * 0.9F + 0.1F;
 
                 for (int i1 = 0; i1 + chat.chatScrollbarPos < chat.trimmedMessages.size() && i1 < i; ++i1)
@@ -678,13 +682,12 @@ public class MixinAbstractContainerScreen extends Screen implements ITradeScreen
                                 int k2 = -i1 * 9;
                                 RenderSystem.enableBlend();
                                 this.font.drawShadow(poseStack, chatline.getMessage(), 0.0F, k2 - 8, 16777215 + (l1 << 24));
-                                RenderSystem.disableAlphaTest();
                                 RenderSystem.disableBlend();
                             }
                         }
                     }
                 }
-                RenderSystem.popMatrix();
+                poseStack2.popPose();
             }
         }
     }
