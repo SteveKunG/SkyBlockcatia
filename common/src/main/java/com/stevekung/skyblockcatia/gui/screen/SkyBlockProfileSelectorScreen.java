@@ -671,9 +671,9 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 this.addRenderableWidget(button);
                 ++i2;
             }
+            this.usernameTextField.setValue(this.input);
+            this.loadingApi = false;
         });
-        this.usernameTextField.setValue(this.input);
-        this.loadingApi = false;
     }
 
     private void setErrorMessage(String message, boolean errorList)
