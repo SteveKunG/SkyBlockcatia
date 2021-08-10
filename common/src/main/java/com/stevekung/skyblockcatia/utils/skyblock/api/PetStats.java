@@ -13,7 +13,6 @@ import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.SBPets;
 import com.stevekung.stevekungslib.utils.GameProfileUtils;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.util.Mth;
 
 /**
@@ -53,7 +52,7 @@ public class PetStats
         {
             var uuid = GameProfileUtils.getUUID().toString().replace("-", "");
             var urlSB = new URL(SBAPIUtils.APIUrl.SKYBLOCK_PROFILES.getUrl() + uuid);
-            var sbProfiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
+            var sbProfiles = SkyBlockcatia.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
             var profiles = Lists.<Profile>newArrayList();
 
             if (sbProfiles != null)

@@ -3,6 +3,8 @@ package com.stevekung.skyblockcatia.core;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.MainEventHandler;
@@ -14,12 +16,14 @@ import com.stevekung.skyblockcatia.utils.ToastLog;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
 import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.LoggerBase;
+import com.stevekung.stevekungslib.utils.RecordTypeAdapterFactory;
 
 public class SkyBlockcatia
 {
     public static final String MOD_ID = "skyblockcatia";
     public static final LoggerBase LOGGER = new LoggerBase("SkyBlockcatia");
     public static final List<String> SUPPORTERS_NAME = Lists.newCopyOnWriteArrayList();
+    public static final Gson GSON = new GsonBuilder().registerTypeAdapterFactory(new RecordTypeAdapterFactory()).create();
 
     static
     {

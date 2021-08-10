@@ -2,8 +2,8 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import net.minecraft.network.chat.Component;
@@ -11,17 +11,16 @@ import net.minecraft.world.item.ItemStack;
 
 public record SBMinions(@SerializedName("unique_minions") int uniqueMinions, @SerializedName("crafted_minions") Map<Integer, Integer> craftedMinions, com.stevekung.skyblockcatia.utils.skyblock.SBMinions.Type[] type)
 {
-    private static final Gson GSON = new Gson();
     public static SBMinions MINIONS;
 
     public static void getMinions()
     {
-        MINIONS = GSON.fromJson(DataUtils.getData("minions.json"), SBMinions.class);
+        MINIONS = SkyBlockcatia.GSON.fromJson(DataUtils.getData("minions.json"), SBMinions.class);
     }
 
     public SBMinions.Type getTypeByName(String name)
     {
-        for (SBMinions.Type type : this.type)
+        for (var type : this.type)
         {
             if (type.type().equals(name))
             {

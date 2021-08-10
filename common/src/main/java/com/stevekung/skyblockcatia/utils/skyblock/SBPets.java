@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.ItemUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -20,12 +20,12 @@ public record SBPets(@SerializedName("held_item") com.stevekung.skyblockcatia.ut
 
     public static void getPets()
     {
-        PETS = TextComponentUtils.GSON.fromJson(DataUtils.getData("pets.json"), SBPets.class);
+        PETS = SkyBlockcatia.GSON.fromJson(DataUtils.getData("pets.json"), SBPets.class);
     }
 
     public HeldItem getHeldItemByName(String name)
     {
-        for (HeldItem item : this.heldItem)
+        for (var item : this.heldItem)
         {
             if (item.type().equals(name))
             {
@@ -37,7 +37,7 @@ public record SBPets(@SerializedName("held_item") com.stevekung.skyblockcatia.ut
 
     public Type getTypeByName(String name)
     {
-        for (Type type : this.type)
+        for (var type : this.type)
         {
             if (type.type().equals(name))
             {
@@ -69,7 +69,7 @@ public record SBPets(@SerializedName("held_item") com.stevekung.skyblockcatia.ut
 
         static
         {
-            for (Tier rarity : values())
+            for (var rarity : values())
             {
                 VALUES[rarity.ordinal()] = rarity;
             }
@@ -115,7 +115,7 @@ public record SBPets(@SerializedName("held_item") com.stevekung.skyblockcatia.ut
 
         public String getString(String type, int level)
         {
-            int value = this.getValue(level);
+            var value = this.getValue(level);
             return ChatFormatting.RESET.toString() + ChatFormatting.GRAY + type + ": " + ChatFormatting.GREEN + (value < 0 ? "" : "+") + value + (this.percent ? "%" : "");
         }
     }

@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.stevekung.skyblockcatia.config.SkyBlockcatiaSettings;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.gui.widget.button.ItemButton;
 import com.stevekung.skyblockcatia.gui.widget.button.SmallArrowButton;
 import com.stevekung.skyblockcatia.utils.GuiScreenUtils;
@@ -189,7 +190,7 @@ public class MainEventHandler
         try
         {
             var url = new URL(APIUrl.BAZAAR.getUrl());
-            var bazaar = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), Bazaar.class);
+            var bazaar = SkyBlockcatia.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), Bazaar.class);
             var lastUpdated = bazaar.lastUpdated();
 
             for (var product : bazaar.products().entrySet())

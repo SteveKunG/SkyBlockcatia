@@ -1321,7 +1321,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         if (this.skyblockProfiles == null)
         {
             var url = new URL(APIUrl.SKYBLOCK_PROFILE.getUrl() + this.sbProfileId);
-            var profile = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.DirectProfile.class);
+            var profile = SkyBlockcatia.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.DirectProfile.class);
 
             if (profile.profile() == null)
             {
@@ -1364,7 +1364,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             {
                 var currentUserProfile = profiles.get(userUUID);
                 var urlStatus = new URL(SBAPIUtils.APIUrl.STATUS.getUrl() + this.uuid);
-                var status = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8), GameStatus.class);
+                var status = SkyBlockcatia.GSON.fromJson(IOUtils.toString(urlStatus.openConnection().getInputStream(), StandardCharsets.UTF_8), GameStatus.class);
 
                 if (currentUserProfile.getJacob() != null)
                 {

@@ -3,6 +3,7 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.IBonusTemplate;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -17,7 +18,7 @@ public record SBSlayers(Map<String, int[]> leveling, com.stevekung.skyblockcatia
 
     public static void getSlayers()
     {
-        SLAYERS = TextComponentUtils.GSON.fromJson(DataUtils.getData("slayers.json"), SBSlayers.class);
+        SLAYERS = SkyBlockcatia.GSON.fromJson(DataUtils.getData("slayers.json"), SBSlayers.class);
     }
 
     public record Bonus(Zombie[] zombie, Spider[] spider, Wolf[] wolf, Enderman[] enderman) {}
@@ -128,7 +129,7 @@ public record SBSlayers(Map<String, int[]> leveling, com.stevekung.skyblockcatia
 
         public static Type getSlayerByName(String name)
         {
-            for (Type type : values())
+            for (var type : values())
             {
                 if (name.equals(type.name()))
                 {

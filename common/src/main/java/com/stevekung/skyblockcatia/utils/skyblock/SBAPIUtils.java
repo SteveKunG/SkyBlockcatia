@@ -4,7 +4,6 @@ import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.PlatformConfig;
 import com.stevekung.skyblockcatia.utils.SupportedPack;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
 
 public class SBAPIUtils
 {
@@ -26,7 +25,7 @@ public class SBAPIUtils
 
     public static void getMisc()
     {
-        var misc = TextComponentUtils.GSON.fromJson(DataUtils.getData("misc.json"), SBMisc.class);
+        var misc = SkyBlockcatia.GSON.fromJson(DataUtils.getData("misc.json"), SBMisc.class);
         PACKS = misc.supportedPack();
         MAX_FAIRY_SOULS = misc.maxFairySouls();
     }

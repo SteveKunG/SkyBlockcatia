@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.stevekungslib.utils.NumberUtils;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -18,7 +19,7 @@ public record SBStats(List<String> blacklist, @SerializedName("current_locations
 
     public static void getStats()
     {
-        STATS = TextComponentUtils.GSON.fromJson(DataUtils.getData("stats.json"), SBStats.class);
+        STATS = SkyBlockcatia.GSON.fromJson(DataUtils.getData("stats.json"), SBStats.class);
     }
 
     public static class Display

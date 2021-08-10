@@ -4,9 +4,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.IBonusTemplate;
-import com.stevekung.stevekungslib.utils.TextComponentUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -18,7 +18,7 @@ public record SBSkills(Map<String, Integer> cap, Map<String, int[]> leveling, co
 
     public static void getSkills()
     {
-        SKILLS = TextComponentUtils.GSON.fromJson(DataUtils.getData("skills.json"), SBSkills.class);
+        SKILLS = SkyBlockcatia.GSON.fromJson(DataUtils.getData("skills.json"), SBSkills.class);
     }
 
     public record Bonus(Farming[] farming, Mining[] mining, Combat[] combat, Foraging[] foraging, Fishing[] fishing, Enchanting[] enchanting, Alchemy[] alchemy, Taming[] taming) {}
@@ -216,7 +216,7 @@ public record SBSkills(Map<String, Integer> cap, Map<String, int[]> leveling, co
 
         public static SBSkills.Type byName(String name)
         {
-            for (SBSkills.Type type : SBSkills.Type.values())
+            for (var type : SBSkills.Type.values())
             {
                 if (type.name().equals(name.toUpperCase(Locale.ROOT)))
                 {

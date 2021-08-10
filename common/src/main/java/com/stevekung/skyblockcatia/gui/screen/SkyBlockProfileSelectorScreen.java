@@ -421,7 +421,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         }
         else
         {
-            profiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelProfiles.class);
+            profiles = SkyBlockcatia.GSON.fromJson(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelProfiles.class);
             INIT_PROFILE_CACHE.put(lowerInput, Pair.of(System.currentTimeMillis(), profiles));
         }
 
@@ -563,7 +563,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
         var uuid = player.getUUID();
         var urlGuild = new URL(APIUrl.GUILD.getUrl() + uuid);
-        var guild = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelGuild.class).guild();
+        var guild = SkyBlockcatia.GSON.fromJson(IOUtils.toString(urlGuild.openConnection().getInputStream(), StandardCharsets.UTF_8), HypixelGuild.class).guild();
 
         if (guild != null)
         {
@@ -580,7 +580,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         }
         else
         {
-            sbProfiles = TextComponentUtils.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
+            sbProfiles = SkyBlockcatia.GSON.fromJson(IOUtils.toString(urlSB.openConnection().getInputStream(), StandardCharsets.UTF_8), SkyblockProfiles.class);
             PROFILE_CACHE.put(uuid, Pair.of(System.currentTimeMillis(), sbProfiles));
         }
 

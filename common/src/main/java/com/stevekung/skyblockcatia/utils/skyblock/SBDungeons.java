@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+import com.stevekung.skyblockcatia.core.SkyBlockcatia;
 import com.stevekung.skyblockcatia.utils.DataUtils;
 import com.stevekung.skyblockcatia.utils.skyblock.api.IBonusTemplate;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
@@ -19,7 +20,7 @@ public record SBDungeons(int[] leveling, com.stevekung.skyblockcatia.utils.skybl
 
     public static void getDungeons()
     {
-        DUNGEONS = TextComponentUtils.GSON.fromJson(DataUtils.getData("dungeons.json"), SBDungeons.class);
+        DUNGEONS = SkyBlockcatia.GSON.fromJson(DataUtils.getData("dungeons.json"), SBDungeons.class);
     }
 
     public record Bonus(Catacombs[] catacombs) {}
