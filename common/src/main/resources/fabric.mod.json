@@ -26,10 +26,10 @@
     "depends": {
         "fabricloader": ">=0.11",
         "fabric": "*",
-        "minecraft": ">=1.16.5",
-        "stevekungs_lib": ">=4.1.5",
-        "architectury": ">=1.17",
-        "cloth-config2": ">=4.11"
+        "minecraft": ">=1.17.1",
+        "stevekungs_lib": ">=5.0.0",
+        "architectury": ">=2.3",
+        "cloth-config2": ">=5.0"
     },
     "mixins": [
         "mixins.skyblockcatia.json",

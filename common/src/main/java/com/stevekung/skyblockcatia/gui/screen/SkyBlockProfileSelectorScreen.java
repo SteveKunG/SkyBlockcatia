@@ -105,7 +105,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
         }
 
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.addButton(this.checkButton = new APISearchButton(this.width / 2 + 78, 46, button ->
+        this.addRenderableWidget(this.checkButton = new APISearchButton(this.width / 2 + 78, 46, button ->
         {
             this.input = this.usernameTextField.getValue();
             this.profiles.clear();
@@ -135,8 +135,8 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
             });
         }));
-        this.addButton(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.setScreen(this.error ? new SkyBlockProfileSelectorScreen(Mode.ERROR, this.input, this.displayName, this.guild) : null)));
-        this.addButton(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.setScreen(new SkyBlockProfileSelectorScreen(Mode.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""))));
+        this.addRenderableWidget(this.closeButton = new Button(this.width / 2 - 75, this.height / 4 + 152, 150, 20, LangUtils.translate("gui.close"), button -> this.minecraft.setScreen(this.error ? new SkyBlockProfileSelectorScreen(Mode.ERROR, this.input, this.displayName, this.guild) : null)));
+        this.addRenderableWidget(this.selfButton = new ItemButton(this.width / 2 - 96, 46, selfItemCache, TextComponentUtils.component("Check Self"), button -> this.minecraft.setScreen(new SkyBlockProfileSelectorScreen(Mode.PLAYER, GameProfileUtils.getUsername(), this.displayName, ""))));
         this.usernameTextField = new RightClickTextFieldWidget(this.width / 2 - 75, 45, 150, 20);
         this.usernameTextField.setMaxLength(32767);
         this.usernameTextField.setFocus(true);
@@ -207,7 +207,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
                 }
                 button.y += i2 * 22;
                 button.setProfileList(this.profiles);
-                this.addButton(button);
+                this.addRenderableWidget(button);
                 ++i2;
             }
         }
@@ -382,7 +382,6 @@ public class SkyBlockProfileSelectorScreen extends Screen
 
                         displayStrings.addAll(Lists.newArrayList(TextComponentUtils.component(button.getLastActive()), button.getGameMode()));
                         this.renderComponentTooltip(poseStack, displayStrings, mouseX, mouseY);
-                        RenderSystem.disableLighting();
                         break;
                     }
                 }
@@ -671,7 +670,7 @@ public class SkyBlockProfileSelectorScreen extends Screen
             }
             button.y += i2 * 22;
             button.setProfileList(this.profiles);
-            this.addButton(button);
+            this.addRenderableWidget(button);
             ++i2;
         }
         this.usernameTextField.setValue(this.input);

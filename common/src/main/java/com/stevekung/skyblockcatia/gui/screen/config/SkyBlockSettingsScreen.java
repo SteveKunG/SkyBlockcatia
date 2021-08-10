@@ -28,28 +28,28 @@ public class SkyBlockSettingsScreen extends Screen
     @Override
     public void init()
     {
-        this.addButton(new Button(this.width / 2 - 155, this.height / 6 - 12, 150, 20, LangUtils.translate("menu.skyblock_qol.title"), button ->
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 - 12, 150, 20, LangUtils.translate("menu.skyblock_qol.title"), button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(new SBOptionsScreen(this, LangUtils.translate("menu.skyblock_qol.title"), QOL_OPTIONS));
         }));
-        this.addButton(new Button(this.width / 2 + 5, this.height / 6 - 12, 150, 20, LangUtils.translate("menu.skyblock_rendering.title"), button ->
+        this.addRenderableWidget(new Button(this.width / 2 + 5, this.height / 6 - 12, 150, 20, LangUtils.translate("menu.skyblock_rendering.title"), button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(new SBOptionsScreen(this, LangUtils.translate("menu.skyblock_rendering.title"), RENDERING_OPTIONS));
         }));
-        this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 13, 150, 20, LangUtils.translate("menu.skyblock_misc.title"), button ->
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 13, 150, 20, LangUtils.translate("menu.skyblock_misc.title"), button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(new SBOptionsScreen(this, LangUtils.translate("menu.skyblock_misc.title"), MISC_OPTIONS));
         }));
-        this.addButton(new Button(this.width / 2 + 5, this.height / 6 + 13, 150, 20, LangUtils.translate("menu.skyblock_global.title"), button -> openConfig(this)));
-        this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 38, 150, 20, LangUtils.translate("menu.skyblock_toast.title"), button ->
+        this.addRenderableWidget(new Button(this.width / 2 + 5, this.height / 6 + 13, 150, 20, LangUtils.translate("menu.skyblock_global.title"), button -> openConfig(this)));
+        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 38, 150, 20, LangUtils.translate("menu.skyblock_toast.title"), button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(new SBOptionsScreen(this, LangUtils.translate("menu.skyblock_toast.title"), TOAST_OPTIONS));
         }));
-        this.addButton(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, CommonComponents.GUI_DONE, button ->
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 6 + 168, 200, 20, CommonComponents.GUI_DONE, button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(null);

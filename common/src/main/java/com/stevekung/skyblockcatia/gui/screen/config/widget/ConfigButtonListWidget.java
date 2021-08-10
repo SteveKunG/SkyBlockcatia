@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 
 public class ConfigButtonListWidget extends ContainerObjectSelectionList<ConfigButtonListWidget.ButtonItem>
 {
@@ -65,6 +66,12 @@ public class ConfigButtonListWidget extends ContainerObjectSelectionList<ConfigB
 
         @Override
         public List<? extends GuiEventListener> children()
+        {
+            return this.buttons;
+        }
+
+        @Override
+        public List<? extends NarratableEntry> narratables()
         {
             return this.buttons;
         }

@@ -29,10 +29,12 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBSkills;
 import com.stevekung.skyblockcatia.utils.skyblock.api.*;
 import com.stevekung.stevekungslib.utils.*;
 import com.stevekung.stevekungslib.utils.client.ClientUtils;
-import me.shedaniel.architectury.event.events.EntityEvent;
-import me.shedaniel.architectury.event.events.client.ClientChatEvent;
-import me.shedaniel.architectury.event.events.client.ClientTickEvent;
-import me.shedaniel.architectury.platform.Platform;
+import dev.architectury.event.CompoundEventResult;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.client.ClientChatEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.event.events.common.EntityEvent;
+import dev.architectury.platform.Platform;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -41,8 +43,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.*;
 import net.minecraft.util.StringUtil;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -114,7 +114,7 @@ public class SkyBlockEventHandler
         if (register)
         {
             ClientTickEvent.CLIENT_PRE.register(this::onClientTick);
-            ClientChatEvent.CLIENT_RECEIVED.register((chatType, component, sender) -> this.onClientChatReceived(chatType, component));
+            ClientChatEvent.RECEIVED.register((chatType, component, sender) -> this.onClientChatReceived(chatType, component));
             EntityEvent.ADD.register(this::onWorldJoin);
         }
     }
@@ -125,7 +125,7 @@ public class SkyBlockEventHandler
         {
             if (mc.player.tickCount % 5 == 0)
             {
-                this.getInventoryDifference(mc, mc.player.inventory.items);
+                this.getInventoryDifference(mc, mc.player.getInventory().items);
             }
 
             for (Map.Entry<String, Pair<Long, SkyblockProfiles>> entry : SkyBlockProfileSelectorScreen.PROFILE_CACHE.entrySet())
@@ -222,7 +222,7 @@ public class SkyBlockEventHandler
         }
     }
 
-    private InteractionResultHolder<Component> onClientChatReceived(ChatType chatType, Component smessage)
+    private CompoundEventResult<Component> onClientChatReceived(ChatType chatType, Component smessage)
     {
         Minecraft mc = Minecraft.getInstance();
         String formattedMessage = smessage.getString();
@@ -536,11 +536,11 @@ public class SkyBlockEventHandler
                 }
                 if (cancelMessage)
                 {
-                    return InteractionResultHolder.pass(TextComponent.EMPTY);
+                    return CompoundEventResult.interruptTrue(TextComponent.EMPTY);
                 }
             }
         }
-        return InteractionResultHolder.pass(smessage);
+        return CompoundEventResult.interruptDefault(smessage);
     }
 
     public void onPressKey()
@@ -621,7 +621,7 @@ public class SkyBlockEventHandler
         }
     }
 
-    private InteractionResult onWorldJoin(Entity entity, Level level)
+    private EventResult onWorldJoin(Entity entity, Level level)
     {
         if (entity == Minecraft.getInstance().player)
         {
@@ -636,10 +636,10 @@ public class SkyBlockEventHandler
                 ScheduledExecutorService exec1 = Executors.newSingleThreadScheduledExecutor();
                 exec1.scheduleAtFixedRate(PetStats::scheduleDownloadPetStats, 0, 2, TimeUnit.MINUTES);
                 this.initApiData = true;
-                return InteractionResult.SUCCESS;
+                return EventResult.interruptTrue();
             }
         }
-        return InteractionResult.PASS;
+        return EventResult.pass();
     }
 
     public void onDisconnectedFromServerEvent()

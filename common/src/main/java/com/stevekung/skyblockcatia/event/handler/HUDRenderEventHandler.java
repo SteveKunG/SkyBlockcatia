@@ -19,14 +19,14 @@ import com.stevekung.skyblockcatia.utils.skyblock.SBLocation;
 import com.stevekung.skyblockcatia.utils.skyblock.api.PetStats;
 import com.stevekung.stevekungslib.utils.ModDecimalFormat;
 import com.stevekung.stevekungslib.utils.TextComponentUtils;
-import me.shedaniel.architectury.event.events.EntityEvent;
+import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.EntityEvent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +34,6 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -61,7 +60,7 @@ public class HUDRenderEventHandler
             ClientBlockBreakEvent.CLIENT_BLOCK_BREAK.register(this::onClientBlockBreak);
             EntityEvent.LIVING_DEATH.register(this::onLivingDeath);
             EntityEvent.ADD.register(this::onEntityJoinWorld);
-            EntityEvent.ENTER_CHUNK.register(this::onEntityEnteringChunk);
+            EntityEvent.ENTER_SECTION.register(this::onEntityEnteringChunk);
         }
     }
 
@@ -85,9 +84,9 @@ public class HUDRenderEventHandler
 
         if (SkyBlockEventHandler.isSkyBlock && !this.mc.player.getMainHandItem().isEmpty() && this.mc.player.getMainHandItem().hasTag() && (this.mc.player.getMainHandItem().getTag().getCompound("ExtraAttributes").getString("id").equals("JUNGLE_AXE") || this.mc.player.getMainHandItem().getTag().getCompound("ExtraAttributes").getString("id").equals("TREECAPITATOR_AXE")))
         {
-            Block block = prevState != null ? prevState.getBlock() : level.getBlockState(pos).getBlock();
+            boolean isLog = prevState != null ? prevState.is(BlockTags.LOGS) : level.getBlockState(pos).is(BlockTags.LOGS);
 
-            if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && block.is(BlockTags.LOGS))
+            if (now - this.lastBlockBreak > PetStats.INSTANCE.getAxeCooldown(2000) && isLog)
             {
                 this.lastBlockBreak = now;
             }
@@ -179,14 +178,14 @@ public class HUDRenderEventHandler
         }
     }
 
-    private InteractionResult onEntityJoinWorld(Entity entity, Level level)
+    private EventResult onEntityJoinWorld(Entity entity, Level level)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
             if (entity == this.mc.player)
             {
                 this.recentlyLoadedChunks.clear();
-                return InteractionResult.SUCCESS;
+                return EventResult.interruptTrue();
             }
             if (entity instanceof EnderDragon)
             {
@@ -196,13 +195,13 @@ public class HUDRenderEventHandler
                 {
                     this.mc.getEntityRenderDispatcher().setRenderHitBoxes(true);
                 }
-                return InteractionResult.SUCCESS;
+                return EventResult.interruptTrue();
             }
         }
-        return InteractionResult.PASS;
+        return EventResult.pass();
     }
 
-    private InteractionResult onLivingDeath(LivingEntity entity, DamageSource source)
+    private EventResult onLivingDeath(LivingEntity entity, DamageSource source)
     {
         if (SkyBlockEventHandler.isSkyBlock)
         {
@@ -214,10 +213,10 @@ public class HUDRenderEventHandler
                 {
                     this.mc.getEntityRenderDispatcher().setRenderHitBoxes(false);
                 }
-                return InteractionResult.SUCCESS;
+                return EventResult.interruptTrue();
             }
         }
-        return InteractionResult.PASS;
+        return EventResult.pass();
     }
 
     public void onChunkLoad(int chunkX, int chunkZ)
@@ -230,7 +229,7 @@ public class HUDRenderEventHandler
         }
     }
 
-    private void onEntityEnteringChunk(Entity entity, int chunkX, int chunkZ, int prevX, int prevZ)
+    private void onEntityEnteringChunk(Entity entity, int sectionX, int sectionY, int sectionZ, int prevX, int prevY, int prevZ)
     {
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockEventHandler.SKY_BLOCK_LOCATION == SBLocation.DRAGON_NEST)
         {
@@ -238,7 +237,7 @@ public class HUDRenderEventHandler
             {
                 if (entity instanceof EnderMan)
                 {
-                    if (!this.recentlyLoadedChunks.contains(new CoordsPair(chunkX, chunkZ)) && entity.tickCount == 0)
+                    if (!this.recentlyLoadedChunks.contains(new CoordsPair(sectionX, sectionZ)) && entity.tickCount == 0)
                     {
                         long now = System.currentTimeMillis();
 

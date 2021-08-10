@@ -27,7 +27,7 @@ public class SBOptionsScreen extends Screen
     @Override
     public void init()
     {
-        this.addButton(new Button(this.width / 2 - 100, this.height - 25, 200, 20, CommonComponents.GUI_DONE, button ->
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height - 25, 200, 20, CommonComponents.GUI_DONE, button ->
         {
             SkyBlockcatiaSettings.INSTANCE.save();
             this.minecraft.setScreen(this.parent);

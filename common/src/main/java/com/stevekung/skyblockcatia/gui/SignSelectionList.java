@@ -19,6 +19,8 @@ import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ServerboundSignUpdatePacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -181,6 +183,12 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
         }
 
         @Override
+        public Component getNarration()
+        {
+            return new TextComponent(this.getValue());
+        }
+
+        @Override
         public boolean equals(Object obj)
         {
             if (!(obj instanceof SignSelectionList.Entry))
@@ -213,7 +221,7 @@ public class SignSelectionList extends ObjectSelectionList<SignSelectionList.Ent
 
         if (clientplaynethandler != null)
         {
-            clientplaynethandler.send(new ServerboundSignUpdatePacket(sign.getBlockPos(), sign.getMessage(0).getString(), sign.getMessage(1).getString(), sign.getMessage(2).getString(), sign.getMessage(3).getString()));
+            clientplaynethandler.send(new ServerboundSignUpdatePacket(sign.getBlockPos(), sign.getMessage(0, false).getString(), sign.getMessage(1, false).getString(), sign.getMessage(2, false).getString(), sign.getMessage(3, false).getString()));
         }
         sign.setEditable(true);
     }
