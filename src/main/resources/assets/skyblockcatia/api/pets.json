@@ -2387,7 +2387,10 @@
                     "§7Gain §c{2}% §7damage for every",
                     "§7million coins in your bank."
                 ]
-            }
+            },
+            "specialRules": [
+                "HATCHES_AT_100"
+            ]
         },
         {
             "type": "GOLEM",

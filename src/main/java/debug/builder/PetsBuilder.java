@@ -257,6 +257,10 @@ public class PetsBuilder
             {
                 prop.put("lore_mode", type.loreMode);
             }
+            if (type.specialRules != null)
+            {
+                prop.put("specialRules", type.specialRules);
+            }
             petTypeList.add(prop);
         }
 
@@ -821,7 +825,7 @@ public class PetsBuilder
             }));
         })),
         //TODO Check stats, because i don't have it D:
-        GOLDEN_DRAGON("COMBAT", "0e455321-f4a7-338a-96a4-d0df166e6e48", "2e9f9b1fc014166cb46a093e5349b2bf6edd201b680d62e48dbf3af9b0459116", make(Lists.newLinkedList(), list ->
+        GOLDEN_DRAGON("COMBAT", "0e455321-f4a7-338a-96a4-d0df166e6e48", "2e9f9b1fc014166cb46a093e5349b2bf6edd201b680d62e48dbf3af9b0459116", null, make(Lists.newLinkedList(), list ->
         {
             list.add(Stats.build("attack_speed", 25, 0.25));
             list.add(Stats.build("strength", 25, 0.25));
@@ -850,8 +854,8 @@ public class PetsBuilder
                 list.add("§7Gain §c{2}% §7damage for every");
                 list.add("§7million coins in your bank.");
             }));
-        })),
-        
+        }), null, Lists.newArrayList("HATCHES_AT_100")),
+
         AMMONITE("FISHING", "d68bb32f-5a36-40ae-b928-3fc1227bf8e9", "a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553", make(Lists.newLinkedList(), list ->
         {
             list.add(Stats.build("sea_creature_chance", 0, 0.07, true));
@@ -2370,8 +2374,9 @@ public class PetsBuilder
         Map<String, Object> descStats;
         Map<String, List<String>> petLore;
         String loreMode;
+        List<String> specialRules;
 
-        PetType(String type, String uuid, String value, List<String> desc, List<Stats> stats, Map<String, Object> descStats, Map<String, List<String>> petLore, String loreMode)
+        PetType(String type, String uuid, String value, List<String> desc, List<Stats> stats, Map<String, Object> descStats, Map<String, List<String>> petLore, String loreMode, List<String> specialRules)
         {
             this.type = type;
             this.uuid = uuid;
@@ -2381,6 +2386,12 @@ public class PetsBuilder
             this.descStats = descStats;
             this.petLore = petLore;
             this.loreMode = loreMode;
+            this.specialRules = specialRules;
+        }
+
+        PetType(String type, String uuid, String value, List<String> desc, List<Stats> stats, Map<String, Object> descStats, Map<String, List<String>> petLore, String loreMode)
+        {
+            this(type, uuid, value, desc, stats, descStats, petLore, loreMode, null);
         }
 
         PetType(String type, String uuid, String value, List<String> desc, List<Stats> stats, Map<String, Object> descStats, Map<String, List<String>> petLore)
@@ -2396,16 +2407,6 @@ public class PetsBuilder
         PetType(String type, String uuid, String value, List<Stats> stats, Map<String, Object> descStats, Map<String, List<String>> petLore)
         {
             this(type, uuid, value, stats, descStats, petLore, null);
-        }
-
-        PetType(String type, String uuid, String value, List<Stats> stats, Map<String, Object> descStats)
-        {
-            this(type, uuid, value, stats, descStats, null, null);
-        }
-
-        PetType(String type, String uuid, String value)
-        {
-            this(type, uuid, value, null, null, null, null, null);
         }
     }
 
