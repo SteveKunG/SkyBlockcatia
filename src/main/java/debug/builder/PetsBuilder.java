@@ -820,6 +820,96 @@ public class PetsBuilder
                 list.add("§7Increases most stats by §a{3}%");
             }));
         })),
+        //TODO Check stats, because i don't have it D:
+        GOLDEN_DRAGON("COMBAT", "0e455321-f4a7-338a-96a4-d0df166e6e48", "2e9f9b1fc014166cb46a093e5349b2bf6edd201b680d62e48dbf3af9b0459116", make(Lists.newLinkedList(), list ->
+        {
+            list.add(Stats.build("attack_speed", 25, 0.25));
+            list.add(Stats.build("strength", 25, 0.25));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("LEGENDARY", Pair.of(Property.build("[50, 20, 0.1]"), Property.build("[0.5, 0.2, 0.001]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Gold's Power");
+                list.add("§7Adds §c+{0}❁ Strength §7to all");
+                list.add("§6golden §7weapons.");
+                list.add("");
+                list.add("§6Shining Scales");
+                list.add("§7For each digit in your §6gold");
+                list.add("§6collection §7gain §c+10❁");
+                list.add("§cStrength §7 and §b+2✯ Magic");
+                list.add("§bFind.");
+                list.add("");
+                list.add("§6Dragon's Greed");
+                list.add("§7Gain §a{1}% §7of your §b✯");
+                list.add("§bMagic Find §7as §c❁ Strength.");
+                list.add("");
+                list.add("§6Legendary Treasure");
+                list.add("§7Gain §c{2}% §7damage for every");
+                list.add("§7million coins in your bank.");
+            }));
+        })),
+        
+        AMMONITE("FISHING", "d68bb32f-5a36-40ae-b928-3fc1227bf8e9", "a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553", make(Lists.newLinkedList(), list ->
+        {
+            list.add(Stats.build("sea_creature_chance", 0, 0.07, true));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("LEGENDARY", Pair.of(null, Property.build("[0.01, 0.02, 0.02, 0.006]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Heart of the Sea");
+                list.add("§7Each Heart of the Mountain");
+                list.add("§7level grants §3+{0}α Sea Creature");
+                list.add("§3Chance.");
+                list.add("");
+                list.add("§6Not a Snail");
+                list.add("§7Each fishing and mining level");
+                list.add("§7grants §f+{1}✦ Speed §7and §a+{2}❈");
+                list.add("§aDefense.");
+                list.add("");
+                list.add("§6Gift of the Ammonite");
+                list.add("§7Increases your fishing speed");
+                list.add("§7by §a{3}% §7for each mining level.");
+            }));
+        })),
+        //TODO Check stats, because i don't have it D:
+        SCATHA("MINING", "730a6086-ad87-38fa-8fa4-0b76a060f4fc", "df03ad96092f3f789902436709cdf69de6b727c121b3c2daef9ffa1ccaed186c", make(Lists.newLinkedList(), list ->
+        {
+            list.add(Stats.build("defense", 0, 1));
+            list.add(Stats.build("mining_speed", 0, 1));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", Pair.of(Property.build("[1.2]"), Property.build("[0.988]")));
+            map.put("UNCOMMON", Pair.of(Property.build("[1.2]"), Property.build("[0.988]")));
+            map.put("RARE", Pair.of(Property.build("[1.2, 0]"), Property.build("[0.988, 0.025]")));
+            map.put("EPIC", Pair.of(Property.build("[1.2, 0]"), Property.build("[1.238, 0.03]")));
+            map.put("LEGENDARY", Pair.of(Property.build("[1.2, 0, 0]"), Property.build("[1.238, 0.03, 1]")));
+        }), make(Maps.newLinkedHashMap(), map ->
+        {
+            map.put("COMMON", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Grounded");
+                list.add("§7Gain §6+{0}☘ Mining Fortune.");
+            }));
+            map.put("RARE", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Burrowing");
+                list.add("§7When mining, there is a §a{1}%");
+                list.add("§7chance to mine up a treasure");
+                list.add("§7burrow.");
+            }));
+            map.put("LEGENDARY", make(Lists.newLinkedList(), list ->
+            {
+                list.add("§6Wormhole");
+                list.add("§7Gives a §a{2}% §7to mine 2");
+                list.add("§7adjacent stone or hard stone");
+            }));
+        })),
 
         ENDERMAN("COMBAT", "fb3c5e13-61e9-4584-99db-9f9ef9fb834d", "6eab75eaa5c9f2c43a0d23cfdce35f4df632e9815001850377385f7b2f039ce1", make(Lists.newLinkedList(), list ->
         {

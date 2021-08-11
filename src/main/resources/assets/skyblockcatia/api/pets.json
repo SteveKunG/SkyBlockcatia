@@ -1003,6 +1003,52 @@
     ],
     "type": [
         {
+            "type": "AMMONITE",
+            "skill": "FISHING",
+            "uuid": "d68bb32f-5a36-40ae-b928-3fc1227bf8e9",
+            "texture": "a074a7bd976fe6aba1624161793be547d54c835cf422243a851ba09d1e650553",
+            "stats": {
+                "sea_creature_chance": {
+                    "base": 0.0,
+                    "multiply": 0.07,
+                    "percent": true
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.01,
+                        0.02,
+                        0.02,
+                        0.006
+                    ]
+                }
+            },
+            "lore": {
+                "LEGENDARY": [
+                    "§6Heart of the Sea",
+                    "§7Each Heart of the Mountain",
+                    "§7level grants §3+{0}α Sea Creature",
+                    "§3Chance.",
+                    "",
+                    "§6Not a Snail",
+                    "§7Each fishing and mining level",
+                    "§7grants §f+{1}✦ Speed §7and §a+{2}❈",
+                    "§aDefense.",
+                    "",
+                    "§6Gift of the Ammonite",
+                    "§7Increases your fishing speed",
+                    "§7by §a{3}% §7for each mining level."
+                ]
+            }
+        },
+        {
             "type": "ARMADILLO",
             "skill": "MINING",
             "uuid": "6aa53fbd-54e9-4a5b-8079-3c0368b3960d",
@@ -2289,6 +2335,57 @@
                     "§6Long Neck",
                     "§7See enemies from afar and gain",
                     "§a{3}% §7dodge chance"
+                ]
+            }
+        },
+        {
+            "type": "GOLDEN_DRAGON",
+            "skill": "COMBAT",
+            "uuid": "0e455321-f4a7-338a-96a4-d0df166e6e48",
+            "texture": "2e9f9b1fc014166cb46a093e5349b2bf6edd201b680d62e48dbf3af9b0459116",
+            "stats": {
+                "attack_speed": {
+                    "base": 25.0,
+                    "multiply": 0.25
+                },
+                "strength": {
+                    "base": 25.0,
+                    "multiply": 0.25
+                }
+            },
+            "statsLore": {
+                "LEGENDARY": {
+                    "base": [
+                        50.0,
+                        20.0,
+                        0.1
+                    ],
+                    "multiply": [
+                        0.5,
+                        0.2,
+                        0.001
+                    ]
+                }
+            },
+            "lore": {
+                "LEGENDARY": [
+                    "§6Gold\u0027s Power",
+                    "§7Adds §c+{0}❁ Strength §7to all",
+                    "§6golden §7weapons.",
+                    "",
+                    "§6Shining Scales",
+                    "§7For each digit in your §6gold",
+                    "§6collection §7gain §c+10❁",
+                    "§cStrength §7 and §b+2✯ Magic",
+                    "§bFind.",
+                    "",
+                    "§6Dragon\u0027s Greed",
+                    "§7Gain §a{1}% §7of your §b✯",
+                    "§bMagic Find §7as §c❁ Strength.",
+                    "",
+                    "§6Legendary Treasure",
+                    "§7Gain §c{2}% §7damage for every",
+                    "§7million coins in your bank."
                 ]
             }
         },
@@ -3873,6 +3970,89 @@
                     "§6Steady Ground",
                     "§7While sitting on your rock,",
                     "§7gain +§a{1}%§7 damage"
+                ]
+            }
+        },
+        {
+            "type": "SCATHA",
+            "skill": "MINING",
+            "uuid": "730a6086-ad87-38fa-8fa4-0b76a060f4fc",
+            "texture": "df03ad96092f3f789902436709cdf69de6b727c121b3c2daef9ffa1ccaed186c",
+            "stats": {
+                "defense": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                },
+                "mining_speed": {
+                    "base": 0.0,
+                    "multiply": 1.0
+                }
+            },
+            "statsLore": {
+                "COMMON": {
+                    "base": [
+                        1.2
+                    ],
+                    "multiply": [
+                        0.988
+                    ]
+                },
+                "UNCOMMON": {
+                    "base": [
+                        1.2
+                    ],
+                    "multiply": [
+                        0.988
+                    ]
+                },
+                "RARE": {
+                    "base": [
+                        1.2,
+                        0.0
+                    ],
+                    "multiply": [
+                        0.988,
+                        0.025
+                    ]
+                },
+                "EPIC": {
+                    "base": [
+                        1.2,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.238,
+                        0.03
+                    ]
+                },
+                "LEGENDARY": {
+                    "base": [
+                        1.2,
+                        0.0,
+                        0.0
+                    ],
+                    "multiply": [
+                        1.238,
+                        0.03,
+                        1.0
+                    ]
+                }
+            },
+            "lore": {
+                "COMMON": [
+                    "§6Grounded",
+                    "§7Gain §6+{0}☘ Mining Fortune."
+                ],
+                "RARE": [
+                    "§6Burrowing",
+                    "§7When mining, there is a §a{1}%",
+                    "§7chance to mine up a treasure",
+                    "§7burrow."
+                ],
+                "LEGENDARY": [
+                    "§6Wormhole",
+                    "§7Gives a §a{2}% §7to mine 2",
+                    "§7adjacent stone or hard stone"
                 ]
             }
         },
