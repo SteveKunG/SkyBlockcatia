@@ -763,6 +763,13 @@
             "texture": "ea84cc8818c293484fdaafc8fa2f0bf39e55733a247d68023df2c6c6b9b671d0"
         },
         {
+            "type": "ENDERMAN_SLAYER",
+            "displayName": "Void Conqueror",
+            "color": "dark_purple",
+            "uuid": "301afb75-07dd-37ce-94a1-7c5c40ab2512",
+            "texture": "8fff41e1afc597b14f77b8e44e2a134dabe161a1526ade80e6290f2df331dc11"
+        },
+        {
             "type": "ENDERMITE_RADIANT",
             "displayName": "Radiant Endermite",
             "color": "light_purple",
@@ -978,6 +985,13 @@
             "color": "dark_purple",
             "uuid": "f336e789-b720-36ff-9326-71c8bf135db4",
             "texture": "224c2d14a0219af5ccfcaa36e8a333e271724ed61276611f9529e16c10273a0d"
+        },
+        {
+            "type": "WOLF",
+            "displayName": "Dark Wolf",
+            "color": "dark_purple",
+            "uuid": "be4a9ed9-609c-32ea-b49b-44a7bd7ab0f2",
+            "texture": "c8e414e762e1024c799e70b7a527c22fb95648f141d660b10c512cc124334218"
         },
         {
             "type": "YETI_GROWN_UP",
