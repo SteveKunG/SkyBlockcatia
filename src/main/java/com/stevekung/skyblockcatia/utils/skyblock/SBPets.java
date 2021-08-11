@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.stevekung.skyblockcatia.utils.DataUtils;
@@ -179,8 +180,9 @@ public class SBPets
         private final Map<String, List<String>> lore;
         @SerializedName("lore_mode")
         private final String loreMode;
+        private final List<String> specialRules;
 
-        public Type(String type, String skill, String uuid, String texture, Stats stats, List<String> description, Map<String, StatsPropertyArray> statsLore, Map<String, List<String>> lore, String loreMode)
+        public Type(String type, String skill, String uuid, String texture, Stats stats, List<String> description, Map<String, StatsPropertyArray> statsLore, Map<String, List<String>> lore, String loreMode, List<String> specialRules)
         {
             this.type = type;
             this.skill = skill;
@@ -191,6 +193,7 @@ public class SBPets
             this.statsLore = statsLore;
             this.lore = lore;
             this.loreMode = loreMode;
+            this.specialRules = specialRules;
         }
 
         public String getType()
@@ -226,6 +229,20 @@ public class SBPets
         public String getLoreMode()
         {
             return this.loreMode;
+        }
+
+        public List<SpecialRules> getSpecialRules()
+        {
+            List<SpecialRules> rawRules = Lists.newArrayList();
+
+            if (this.specialRules != null)
+            {
+                for (String raw : this.specialRules)
+                {
+                    rawRules.add(SpecialRules.valueOf(raw));
+                }
+            }
+            return rawRules;
         }
 
         public ItemStack getPetItem()
@@ -571,5 +588,10 @@ public class SBPets
         {
             return this.isActive;
         }
+    }
+
+    public enum SpecialRules
+    {
+        HATCHES_AT_100
     }
 }

@@ -805,8 +805,8 @@ public class PetsBuilder
             list.add(Stats.build("strength", 0, 0.5));
         }), make(Maps.newLinkedHashMap(), map ->
         {
-            map.put("EPIC", Pair.of(null, Property.build("[0.2, 0.5, 0.3]")));
-            map.put("LEGENDARY", Pair.of(null, Property.build("[0.2, 0.5, 0.3, 0.1]")));
+            map.put("EPIC", Pair.of(null, Property.build("[0.25, 0.5, 0.3]")));
+            map.put("LEGENDARY", Pair.of(null, Property.build("[0.25, 0.5, 0.3, 0.1]")));
         }), make(Maps.newLinkedHashMap(), map ->
         {
             map.put("EPIC", make(Lists.newLinkedList(), list ->
