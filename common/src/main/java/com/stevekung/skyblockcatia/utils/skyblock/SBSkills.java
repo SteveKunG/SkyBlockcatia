@@ -392,7 +392,7 @@ public class SBSkills
         {
             for (SBSkills.Type type : SBSkills.Type.values())
             {
-                if (type.name().equals(name.toLowerCase(Locale.ROOT)))
+                if (type.name().equals(name.toUpperCase(Locale.ROOT)))
                 {
                     return type;
                 }

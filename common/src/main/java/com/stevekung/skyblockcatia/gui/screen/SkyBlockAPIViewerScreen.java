@@ -1523,8 +1523,20 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         SBDungeons.Dungeons dungeons = currentUserProfile.getDungeons();
 
+        if (dungeons == null)
+        {
+            this.data.setHasDungeons(false);
+            return;
+        }
+
+        String selectedClass = dungeons.getSelectedClass();
+
         this.dungeonData.add(ChatFormatting.RED.toString() + ChatFormatting.BOLD + "WORK IN PROGRESS! NOT A FINAL GUI!");
-        this.dungeonData.add(ChatFormatting.YELLOW + "Selected Class: " + ChatFormatting.GOLD + WordUtils.capitalize(dungeons.getSelectedClass()));
+
+        if (selectedClass != null)
+        {
+            this.dungeonData.add(ChatFormatting.YELLOW + "Selected Class: " + ChatFormatting.GOLD + WordUtils.capitalize(selectedClass));
+        }
 
         for (Map.Entry<String, SBDungeons.Exp> entry : dungeons.getPlayerClasses().entrySet())
         {
@@ -1561,7 +1573,7 @@ public class SkyBlockAPIViewerScreen extends Screen
             }
             this.dungeonData.add(builder.toString());
         }
-        this.data.setHasDungeons(dungeons.getSelectedClass() != null);
+        this.data.setHasDungeons(selectedClass != null);
     }
 
     private SBSkills.Info calculateDungeonSkill(double playerXp, int[] leveling, String name)
