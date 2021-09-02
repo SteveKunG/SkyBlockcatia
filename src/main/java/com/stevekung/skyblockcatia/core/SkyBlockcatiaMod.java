@@ -2,13 +2,16 @@ package com.stevekung.skyblockcatia.core;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.stevekung.skyblockcatia.command.CommandApiViewer;
 import com.stevekung.skyblockcatia.command.CommandBazaarViewer;
@@ -21,6 +24,8 @@ import com.stevekung.skyblockcatia.keybinding.KeyBindingsSB;
 import com.stevekung.skyblockcatia.utils.*;
 import com.stevekung.skyblockcatia.utils.skyblock.*;
 
+import i.am.cal.antisteal.Antisteal;
+import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -90,6 +95,8 @@ public class SkyBlockcatiaMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        initAntisteal(event.getSourceFile().toPath());
+
         SkyBlockcatiaMod.init(event.getModMetadata());
         SkyBlockcatiaConfig.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
         KeyBindingsSB.init();
@@ -236,5 +243,19 @@ public class SkyBlockcatiaMod
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void initAntisteal(Path path)
+    {
+        Map<String, String> domainMaps = Maps.newHashMap();
+        LoggerIN.info(path.toUri().toString());
+        domainMaps.put("Curseforge", "curseforge.com");
+        domainMaps.put("Modrinth", "modrinth.com");
+        domainMaps.put("GitHub", "github.com");
+        Antisteal.check(path, () ->
+        {
+            LoggerIN.error("Get official mod download here: {}", URL);
+            Minecraft.getMinecraft().shutdown();
+        }, domainMaps, SkyBlockcatiaMod.class);
     }
 }
