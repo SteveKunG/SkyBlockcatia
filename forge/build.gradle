@@ -26,7 +26,7 @@ loom {
 
     launches {
         client {
-            arg "--username", username, "--password", password
+            //arg "--username", username, "--password", password
         }
     }
 }
@@ -45,8 +45,8 @@ dependencies {
         transitive = false
     }
 
-    if (file("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar").exists()) {
-        modImplementation(":SteveKunG's-Lib-mc${mc_version}-dev")
+    if (file("libs/SteveKunG's-Lib-mc${mc_version}-forge.jar").exists()) {
+        modImplementation(":SteveKunG's-Lib-mc${mc_version}-forge")
         println("Use existing deobf artifact")
     } else {
         modCompile("curse.maven:stevekungs-lib-296019:${rootProject.stevekung_lib_forge_deobf}")
