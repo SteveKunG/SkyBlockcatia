@@ -7,10 +7,12 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.SBClientEventHandler;
 import com.stevekung.skyblockcatia.event.handler.ToastTestEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
+import com.stevekung.stevekungslib.utils.CommonUtils;
 import com.stevekung.stevekungslib.utils.ForgeCommonUtils;
 import com.stevekung.stevekungslib.utils.ModVersionChecker;
 import com.stevekung.stevekungslib.utils.client.command.ClientCommands;
 import dev.architectury.platform.forge.EventBuses;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -36,6 +38,7 @@ public class SkyBlockcatiaForge
 
     private void phaseOne(FMLCommonSetupEvent event)
     {
+        CommonUtils.initAntisteal("skyblockcatia", SkyBlockcatiaForge.class, Minecraft.getInstance()::close);
         ForgeCommonUtils.registerEventHandler(this);
         ForgeCommonUtils.registerEventHandler(new SBClientEventHandler());
         ForgeCommonUtils.registerEventHandler(new ToastTestEventHandler());

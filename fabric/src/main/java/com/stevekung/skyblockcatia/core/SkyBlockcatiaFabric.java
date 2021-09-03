@@ -7,6 +7,7 @@ import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.event.handler.HUDRenderEventHandler;
 import com.stevekung.skyblockcatia.event.handler.SkyBlockEventHandler;
 import com.stevekung.skyblockcatia.utils.skyblock.SBAPIUtils;
+import com.stevekung.stevekungslib.utils.CommonUtils;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionResult;
 
 public class SkyBlockcatiaFabric implements ClientModInitializer
@@ -25,6 +27,7 @@ public class SkyBlockcatiaFabric implements ClientModInitializer
     public void onInitializeClient()
     {
         SkyBlockcatia.init();
+        CommonUtils.initAntisteal("skyblockcatia", SkyBlockcatiaFabric.class, Minecraft.getInstance()::close);
 
         var holder = AutoConfig.register(SkyBlockcatiaConfig.class, GsonConfigSerializer::new);
 

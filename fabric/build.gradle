@@ -39,7 +39,6 @@ dependencies {
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
-    include "me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}"
 
     implementation(project(path: ":common")) {
         transitive = false
@@ -51,9 +50,9 @@ dependencies {
         transitive = false
     }
 
-    if (file("libs/SteveKunG's-Lib-mc${mc_version}-dev.jar").exists()) {
-        modImplementation(":SteveKunG's-Lib-mc${mc_version}-dev")
-        include ":SteveKunG's-Lib-mc${mc_version}-dev"
+    if (file("libs/SteveKunG's-Lib-mc${mc_version}-fabric.jar").exists()) {
+        modImplementation(":SteveKunG's-Lib-mc${mc_version}-fabric")
+        include ":SteveKunG's-Lib-mc${mc_version}-fabric"
         println("Use existing deobf artifact")
     } else {
         modCompile("curse.maven:stevekungs-lib-296019:${rootProject.stevekung_lib_fabric_deobf}")
