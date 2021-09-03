@@ -569,7 +569,6 @@ public class SkyBlockAPIViewerScreen extends Screen
                 {
                     if (this.currentSlot instanceof InfosList)
                     {
-                        RenderSystem.enableDepthTest();
                         SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 106, this.height / 2 + 40, this.leftPos - 55 - (float) mouseX, this.topPos + 25 - (float) mouseY, this.player);
                         this.renderContainerSlot(poseStack, mouseX, mouseY, true);
 
@@ -592,13 +591,13 @@ public class SkyBlockAPIViewerScreen extends Screen
                                     break;
                                 }
                             }
-//
-//                            SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, this.guiLeft - 46 - (float) mouseX, this.guiTop + 75 - 50 - (float) mouseY, this.player);
-//
-//                            if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
-//                            {
-//                                this.renderTooltip(poseStack, this.hoveredSlot.getItem(), mouseX, mouseY);
-//                            }
+
+                            SkyBlockAPIViewerScreen.renderEntity(this.width / 2 - 96, this.height / 2 + 40, this.leftPos - 46 - (float) mouseX, this.topPos + 75 - 50 - (float) mouseY, this.player);
+
+                            if (this.hoveredSlot != null && this.hoveredSlot.hasItem())
+                            {
+                                this.renderTooltip(poseStack, this.hoveredSlot.getItem(), mouseX, mouseY);
+                            }
                         }
                         else if (stat.type == EmptyList.Type.DUNGEON)//TODO
                         {
@@ -1072,6 +1071,7 @@ public class SkyBlockAPIViewerScreen extends Screen
     {
         var i = this.leftPos;
         var j = this.topPos;
+        RenderSystem.disableDepthTest();
         var poseStack2 = RenderSystem.getModelViewStack();
         poseStack2.pushPose();
         poseStack2.translate(i, j, 0.0D);
@@ -1104,6 +1104,9 @@ public class SkyBlockAPIViewerScreen extends Screen
                 }
             }
         }
+        poseStack2.popPose();
+        RenderSystem.applyModelViewMatrix();
+        RenderSystem.enableDepthTest();
     }
 
     private void renderSlot(PoseStack poseStack, Slot slot)
@@ -4313,7 +4316,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         DUNGEONS,
         OTHERS;
 
-        protected static final ViewButton[] VALUES = ViewButton.values();
+        private static final ViewButton[] VALUES = ViewButton.values();
         Button button;
     }
 
@@ -4324,7 +4327,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         OTHER_STATS,
         BANK_HISTORY;
 
-        protected static final OthersViewButton[] VALUES = OthersViewButton.values();
+        private static final OthersViewButton[] VALUES = OthersViewButton.values();
         Button button;
     }
 
@@ -4335,7 +4338,7 @@ public class SkyBlockAPIViewerScreen extends Screen
         COLLECTIONS,
         CRAFTED_MINIONS;
 
-        protected static final BasicInfoViewButton[] VALUES = BasicInfoViewButton.values();
+        private static final BasicInfoViewButton[] VALUES = BasicInfoViewButton.values();
         Button button;
     }
 }
