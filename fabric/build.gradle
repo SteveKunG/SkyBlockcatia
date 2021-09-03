@@ -20,6 +20,7 @@ repositories {
         name "ModMenu Maven"
         url "https://maven.terraformersmc.com/releases/"
     }
+    maven { url 'https://jitpack.io' }
 }
 
 loom {
@@ -35,6 +36,7 @@ dependencies {
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
     modApi "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
+    implementation("com.github.i-am-cal:antisteal:${rootProject.antisteal_version}")
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
