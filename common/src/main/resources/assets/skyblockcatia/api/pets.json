@@ -791,6 +791,13 @@
             "texture": "578211e1b4d99d1c7bfda4838e48fc884c3eae376f58d932bc2f78b0a919f8e7"
         },
         {
+            "type": "HOUND_BEAGLE",
+            "displayName": "Beagle",
+            "color": "blue",
+            "uuid": "be6aae4e-4833-3527-9b9c-1934c394b758",
+            "texture": "877364e0ce27f0239b7754706b93022d0cf945854015d6096f9cf43d24a38269"
+        },
+        {
             "type": "JERRY_GREEN_ELF",
             "displayName": "Green Elf",
             "color": "green",
