@@ -47,6 +47,8 @@ public class UpdateName
         Files.write(file, nameList, StandardCharsets.UTF_8);
         file = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.16.5_architectury\\common\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
         Files.write(file, nameList, StandardCharsets.UTF_8);
+        file = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.17.x_architectury\\common\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
+        Files.write(file, nameList, StandardCharsets.UTF_8);
     }
 
     static String getName(String uuid) throws JsonSyntaxException, IOException
