@@ -1,6 +1,5 @@
 package debug.builder;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -92,13 +91,7 @@ public class SkillBuilder
         addBonus(bonusMap, TAMING, "taming");
         maps.put("bonus", bonusMap);
 
-        File file = new File("M:/Modding/SkyBlockcatia/SkyblockData", "skills.json");
-        File file2 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.8.9/src/main/resources/assets/skyblockcatia/api", "skills.json");
-        File file3 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.16.5_architectury/common/src/main/resources/assets/skyblockcatia/api", "skills.json");
-
-        Helper.writeFile(maps, file);
-        Helper.writeFile(maps, file2);
-        Helper.writeFile(maps, file3);
+        Helper.exportJson(maps, "skills");
     }
 
     static void addSkill(Map<String, Object> levelingMap, String type, String skill)

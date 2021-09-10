@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import com.google.gson.Gson;
@@ -63,6 +64,19 @@ public class Helper
         jsonWriter.setIndent("    ");
         jsonWriter.setSerializeNulls(false);
         return jsonWriter;
+    }
+
+    public static void exportJson(Map<String, Object> maps, String name)
+    {
+        File file = new File("M:/Modding/SkyBlockcatia/SkyblockData", name + ".json");
+        File file2 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.8.9/src/main/resources/assets/skyblockcatia/api", name + ".json");
+        File file3 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.16.5_architectury/common/src/main/resources/assets/skyblockcatia/api", name + ".json");
+        File file4 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.17.x_architectury/common/src/main/resources/assets/skyblockcatia/api", name + ".json");
+
+        Helper.writeFile(maps, file);
+        Helper.writeFile(maps, file2);
+        Helper.writeFile(maps, file3);
+        Helper.writeFile(maps, file4);
     }
 
     public static <T> T make(T object, Consumer<T> consumer)

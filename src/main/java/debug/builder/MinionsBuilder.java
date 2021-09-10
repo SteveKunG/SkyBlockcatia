@@ -1,6 +1,5 @@
 package debug.builder;
 
-import java.io.File;
 import java.util.*;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
@@ -55,13 +54,7 @@ public class MinionsBuilder
         maps.put("crafted_minions", slots);
         maps.put("type", minionTypeList);
 
-        File file = new File("M:/Modding/SkyBlockcatia/SkyblockData", "minions.json");
-        File file2 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.8.9/src/main/resources/assets/skyblockcatia/api", "minions.json");
-        File file3 = new File("M:/Modding/SkyBlockcatia/SkyBlockcatia_1.16.5_architectury/common/src/main/resources/assets/skyblockcatia/api", "minions.json");
-
-        Helper.writeFile(maps, file);
-        Helper.writeFile(maps, file2);
-        Helper.writeFile(maps, file3);
+        Helper.exportJson(maps, "minions");
     }
 
     public enum MinionType
