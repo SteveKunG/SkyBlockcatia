@@ -1,3 +1,3 @@
 # Change Log
 
-* * Added Antisteal
+* Fixed slow game startup

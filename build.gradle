@@ -21,7 +21,6 @@ plugins {
 
 def mcVersion = project.mc_version
 def username = project.username
-def password = project.password
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "org.spongepowered.mixin"
@@ -38,7 +37,7 @@ minecraft {
     mappings = "${mcp_mapping}"
     makeObfSourceJar = false
     clientJvmArgs += "-Dmixin.debug.export=true -Dmixin.debug.verbose=true"
-    clientRunArgs += "--username ${username} --password ${password} --mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
+    clientRunArgs += "--username ${username} --uuid ${uuid} --mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
 
     if (project.hasProperty("sha1")) {
         replace "@FINGERPRINT@", project.sha1
