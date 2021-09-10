@@ -95,7 +95,7 @@ public class SkyBlockcatiaMod
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        initAntisteal(event.getSourceFile().toPath());
+        CommonUtils.runAsync(() -> initAntisteal(event.getSourceFile().toPath()));
 
         SkyBlockcatiaMod.init(event.getModMetadata());
         SkyBlockcatiaConfig.init(new File(event.getModConfigurationDirectory(), "skyblockcatia.cfg"));
