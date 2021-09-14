@@ -973,6 +973,13 @@
             "texture": "ca3a363368ed1e06cee3900717f062e02ec39aee1747675392255b48f7f83600"
         },
         {
+            "type": "SQUID_GLOW",
+            "displayName": "Glow",
+            "color": "light_purple",
+            "uuid": "8abdb7cd-e70c-3903-b14e-28c3d6d56e8b",
+            "texture": "fca9982520eee4066bab0ae697f3b3656084b6639ba89113bd8e23ab7288563d"
+        },
+        {
             "type": "TIGER_TWILIGHT",
             "displayName": "Twilight",
             "color": "light_purple",
