@@ -826,6 +826,13 @@
             "texture": "c3eb3e37e9873bfc176b9ed8ef4fbef833de144546bfaefdf24863c3eb87bb86"
         },
         {
+            "type": "PARROT_GOLD_MACAW",
+            "displayName": "Gold Macaw",
+            "color": "blue",
+            "uuid": "02c2e5c0-67d3-3c2d-99fd-411a8a2b845e",
+            "texture": "5dad34650f8d1c6afbfd979b38d7e1412e636215b8f85240e06d998278879b8b"
+        },
+        {
             "type": "RABBIT",
             "displayName": "Pretty",
             "color": "dark_purple",
@@ -971,6 +978,20 @@
             "color": "dark_purple",
             "uuid": "9383ffbc-3aa1-3c38-a957-97d4968ee2b7",
             "texture": "ca3a363368ed1e06cee3900717f062e02ec39aee1747675392255b48f7f83600"
+        },
+        {
+            "type": "SQUID_GLOW",
+            "displayName": "Glow",
+            "color": "light_purple",
+            "uuid": "8abdb7cd-e70c-3903-b14e-28c3d6d56e8b",
+            "texture": "fca9982520eee4066bab0ae697f3b3656084b6639ba89113bd8e23ab7288563d"
+        },
+        {
+            "type": "TIGER_SABER_TOOTH",
+            "displayName": "Saber-Tooth",
+            "color": "dark_purple",
+            "uuid": "7ceec9f6-db6f-3d28-987c-8a27542c7390",
+            "texture": "e92dba2fbd699d541b2fa0fbcaff640ad8c311987ade59a13b2a65d0ce319316"
         },
         {
             "type": "TIGER_TWILIGHT",
