@@ -51,6 +51,7 @@ public class SkyBlockcatiaSettings
     public boolean showHitboxWhenDragonSpawned = false;
     public boolean sneakToOpenInventoryWhileFightDragon = false;
     public boolean leavePartyWhenLastEyePlaced = false;
+    public boolean disableSuperboomNotification = false;
     public boolean lobbyPlayerViewer = true;
     public boolean auctionBidConfirm = false;
     public boolean disableBlockParticles = false;
@@ -130,6 +131,7 @@ public class SkyBlockcatiaSettings
             this.fixSkyblockEnchantTag = SkyBlockcatiaSettings.getBoolean(nbt, "FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
             this.disableNightVision = SkyBlockcatiaSettings.getBoolean(nbt, "DisableNightVision", this.disableNightVision);
             this.displayRealtimePing = SkyBlockcatiaSettings.getBoolean(nbt, "DisplayRealtimePing", this.displayRealtimePing);
+            this.disableSuperboomNotification = SkyBlockcatiaSettings.getBoolean(nbt, "disableSuperboomNotification", this.disableSuperboomNotification);
 
             LoggerIN.info("Loading extended config {}", SkyBlockcatiaSettings.file.getPath());
         }
@@ -186,6 +188,7 @@ public class SkyBlockcatiaSettings
             nbt.setBoolean("FixSkyblockEnchantTag", this.fixSkyblockEnchantTag);
             nbt.setBoolean("DisableNightVision", this.disableNightVision);
             nbt.setBoolean("DisplayRealtimePing", this.displayRealtimePing);
+            nbt.setBoolean("disableSuperboomNotification", this.disableSuperboomNotification);
             nbt.setInteger("SelectedHypixelMinigame", this.selectedHypixelMinigame);
             nbt.setInteger("HypixelMinigameScrollPos", this.hypixelMinigameScrollPos);
             nbt.setInteger("ItemRarityOpacity", this.itemRarityOpacity);
@@ -414,6 +417,10 @@ public class SkyBlockcatiaSettings
         {
             this.disableNightVision = !this.disableNightVision;
         }
+        else if (options == Options.DISABLE_SUPERBOOM_NOTIFICATION)
+        {
+            this.disableSuperboomNotification = !this.disableSuperboomNotification;
+        }
         else if (options == SkyBlockcatiaSettings.Options.DISPLAY_REALTIME_PING)
         {
             this.displayRealtimePing = !this.displayRealtimePing;
@@ -545,6 +552,8 @@ public class SkyBlockcatiaSettings
                 return this.disableNightVision;
             case DISPLAY_REALTIME_PING:
                 return this.displayRealtimePing;
+            case DISABLE_SUPERBOOM_NOTIFICATION:
+                return this.disableSuperboomNotification;
             default:
                 return false;
         }
@@ -592,14 +601,15 @@ public class SkyBlockcatiaSettings
         FIX_SKYBLOCK_ENCHANT_TAG(false, true),
         DISABLE_NIGHT_VISION(false, true),
         DISPLAY_REALTIME_PING(false, true),
+        DISABLE_SUPERBOOM_NOTIFICATION(false, true),
         ITEM_RARITY_OPACITY(true, false, 1.0F, 100.0F, 1.0F),
         AUCTION_BID_CONFIRM_VALUE(true, false, 100000.0F, 20000000.0F, 100000.0F),
-        VISIT_ISLAND_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),
-        RARE_DROP_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),
-        SPECIAL_DROP_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),
-        FISH_CATCH_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),
-        GIFT_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),
-        PET_TOAST_TIME(true, false, 5.0F, 20.0F, 1.0F),
+        VISIT_ISLAND_TOAST_TIME(true, false, 2.0F, 20.0F, 1.0F),
+        RARE_DROP_TOAST_TIME(true, false, 2.0F, 20.0F, 1.0F),
+        SPECIAL_DROP_TOAST_TIME(true, false, 2.0F, 20.0F, 1.0F),
+        FISH_CATCH_TOAST_TIME(true, false, 2.0F, 20.0F, 1.0F),
+        GIFT_TOAST_TIME(true, false, 2.0F, 20.0F, 1.0F),
+        PET_TOAST_TIME(true, false, 2.0F, 20.0F, 1.0F),
         ;
 
         private final boolean isFloat;
