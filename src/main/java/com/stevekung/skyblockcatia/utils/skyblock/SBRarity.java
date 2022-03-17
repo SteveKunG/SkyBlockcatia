@@ -3,21 +3,22 @@ package com.stevekung.skyblockcatia.utils.skyblock;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.stevekung.skyblockcatia.config.SkyBlockcatiaConfig;
 import com.stevekung.skyblockcatia.utils.ColorUtils;
 
 import net.minecraft.util.EnumChatFormatting;
 
 public enum SBRarity
 {
-    COMMON("COMMON", EnumChatFormatting.WHITE, ColorUtils.stringToRGB("255,255,255")),
-    UNCOMMON("UNCOMMON", EnumChatFormatting.GREEN, ColorUtils.stringToRGB("85,255,85")),
-    RARE("RARE", EnumChatFormatting.BLUE, ColorUtils.stringToRGB("85,85,255")),
-    EPIC("EPIC", EnumChatFormatting.DARK_PURPLE, ColorUtils.stringToRGB("170,0,170")),
-    LEGENDARY("LEGENDARY", EnumChatFormatting.GOLD, ColorUtils.stringToRGB("255,170,0")),
-    MYTHIC("MYTHIC", EnumChatFormatting.LIGHT_PURPLE, ColorUtils.stringToRGB("255,85,255")),
-    SUPREME("SUPREME", EnumChatFormatting.DARK_RED, ColorUtils.stringToRGB("170,0,0")),
-    SPECIAL("SPECIAL", EnumChatFormatting.RED, ColorUtils.stringToRGB("255,85,85")),
-    VERY_SPECIAL("VERY SPECIAL", EnumChatFormatting.RED, ColorUtils.stringToRGB("170,0,0"));
+    COMMON("COMMON", EnumChatFormatting.WHITE, ColorUtils.stringToRGB(SkyBlockcatiaConfig.commonRarityColor)),
+    UNCOMMON("UNCOMMON", EnumChatFormatting.GREEN, ColorUtils.stringToRGB(SkyBlockcatiaConfig.uncommonRarityColor)),
+    RARE("RARE", EnumChatFormatting.BLUE, ColorUtils.stringToRGB(SkyBlockcatiaConfig.rareRarityColor)),
+    EPIC("EPIC", EnumChatFormatting.DARK_PURPLE, ColorUtils.stringToRGB(SkyBlockcatiaConfig.epicRarityColor)),
+    LEGENDARY("LEGENDARY", EnumChatFormatting.GOLD, ColorUtils.stringToRGB(SkyBlockcatiaConfig.legendaryRarityColor)),
+    MYTHIC("MYTHIC", EnumChatFormatting.LIGHT_PURPLE, ColorUtils.stringToRGB(SkyBlockcatiaConfig.mythicRarityColor)),
+    SUPREME("SUPREME", EnumChatFormatting.DARK_RED, ColorUtils.stringToRGB(SkyBlockcatiaConfig.supremeRarityColor)),
+    SPECIAL("SPECIAL", EnumChatFormatting.RED, ColorUtils.stringToRGB(SkyBlockcatiaConfig.specialRarityColor)),
+    VERY_SPECIAL("VERY SPECIAL", EnumChatFormatting.RED, ColorUtils.stringToRGB(SkyBlockcatiaConfig.verySpecialRarityColor));
 
     private static final SBRarity[] VALUES = Arrays.stream(values()).sorted(Comparator.comparingInt(SBRarity::ordinal)).toArray(size -> new SBRarity[size]);
     private final String name;

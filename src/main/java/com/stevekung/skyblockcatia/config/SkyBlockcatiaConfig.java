@@ -18,6 +18,15 @@ public class SkyBlockcatiaConfig
 
     // Main Settings
     public static String hypixelApiKey;
+    public static String commonRarityColor;
+    public static String uncommonRarityColor;
+    public static String rareRarityColor;
+    public static String epicRarityColor;
+    public static String legendaryRarityColor;
+    public static String mythicRarityColor;
+    public static String supremeRarityColor;
+    public static String specialRarityColor;
+    public static String verySpecialRarityColor;
     public static boolean enableConfirmToDisconnect;
     public static boolean enableSkinRenderingFix;
     public static boolean disableHurtCameraEffect;
@@ -100,6 +109,43 @@ public class SkyBlockcatiaConfig
         prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Disable Error Log", true);
         SkyBlockcatiaConfig.disableErrorLog = prop.getBoolean();
         propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Common Rarity Color", "255,255,255").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.commonRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Uncommon Rarity Color", "85,255,85").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.uncommonRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "RareRarity Color", "85,85,255").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.rareRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Epic Rarity Color", "170,0,170").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.epicRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Legendary Rarity Color", "255,170,0").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.legendaryRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Mythic Rarity Color", "255,85,255").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.mythicRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Supreme Rarity Color", "170,0,0").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.supremeRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Special Rarity Color", "255,85,85").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.specialRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
+        prop = SkyBlockcatiaConfig.getProperty(SkyBlockcatiaConfig.MAIN_SETTINGS, "Very Special Rarity Color", "170,0,0").setRequiresMcRestart(true);
+        SkyBlockcatiaConfig.verySpecialRarityColor = prop.getString();
+        propOrder.add(prop.getName());
+
 
         return propOrder;
     }
