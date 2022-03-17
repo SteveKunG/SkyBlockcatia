@@ -20,7 +20,6 @@ plugins {
 }
 
 def mcVersion = project.mc_version
-def username = project.username
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "org.spongepowered.mixin"
@@ -37,7 +36,7 @@ minecraft {
     mappings = "${mcp_mapping}"
     makeObfSourceJar = false
     clientJvmArgs += "-Dmixin.debug.export=true -Dmixin.debug.verbose=true"
-    clientRunArgs += "--username ${username} --uuid ${uuid} --mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
+    clientRunArgs += "--mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
 
     if (project.hasProperty("sha1")) {
         replace "@FINGERPRINT@", project.sha1
@@ -67,6 +66,7 @@ repositories {
 sourceSets {
     main {
         ext.refMap = "mixins.skyblockcatia.refmap.json"
+        output.resourcesDir = java.outputDir
     }
 }
 
@@ -76,7 +76,7 @@ jar {
     }
     manifest {
         attributes("FMLAT": "skyblockcatia_at.cfg",
-                   "FMLCorePluginContainsFMLMod": "true",
+                   "FMLCorePluginContainsFMLMod": "false",
                    "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
                    "MixinConfigs": "mixins.skyblockcatia.json",
                    "ForceLoadAsMod": "true"
