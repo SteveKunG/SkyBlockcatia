@@ -1,17 +1,11 @@
 # folder
-.settings
 .gradle
-.sba
+.settings
 bin
 build
-eclipse
-libs
 run
 
 # file
-!gradlew.bat
-*.bat
 *.launch
-.metadata
 .classpath
 .project

@@ -1,12 +1,8 @@
 buildscript {
     repositories {
+        maven { url "https://repo.spongepowered.org/maven" }
+        maven { url "https://maven.minecraftforge.net" }
         gradlePluginPortal()
-        maven {
-            url "https://maven.minecraftforge.net"
-        }
-        maven {
-            url "https://repo.spongepowered.org/maven"
-        }
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
@@ -37,12 +33,12 @@ minecraft {
     mappings = "${mcp_mapping}"
     makeObfSourceJar = false
     clientJvmArgs += "-Dmixin.debug.export=true -Dmixin.debug.verbose=true"
-    clientRunArgs += "--username ${username} --uuid ${uuid} --mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
 
-    if (project.hasProperty("sha1")) {
-        replace "@FINGERPRINT@", project.sha1
-        replaceIn "SkyBlockcatiaMod.java"
+    if (project.hasProperty("devauth_dir")) {
+        clientJvmArgs += "-Ddevauth.configDir=${devauth_dir}"
     }
+
+    clientRunArgs += "--mixin mixins.skyblockcatia.json --tweakClass org.spongepowered.asm.launch.MixinTweaker"
 }
 
 configurations {
@@ -50,18 +46,29 @@ configurations {
     implementation.extendsFrom(embed)
 }
 
-dependencies {
-    embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") { transitive = false }
-
-    if (file("libs/SkyblockAddons.jar").exists()) {
-        compile files("libs/SkyblockAddons.jar")
+// thanks to https://stackoverflow.com/a/38105112
+def urlFile = { url, name ->
+    File file = new File("$buildDir/download/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
     }
+    files(file.absolutePath)
 }
 
 repositories {
-    maven {
-        url "https://repo.spongepowered.org/maven"
-    }
+    maven { url "https://repo.spongepowered.org/maven" }
+    maven { url "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
+}
+
+dependencies {
+    embed("org.spongepowered:mixin:0.7.11-SNAPSHOT") { transitive = false }
+    compile urlFile("https://github.com/BiscuitDevelopment/SkyblockAddons/releases/download/${sba_version}/SkyblockAddons-${sba_jar_name}.jar", "SkyblockAddons")
+    compile "me.djtheredstoner:DevAuth-forge-legacy:1.0.0"
 }
 
 sourceSets {
@@ -135,16 +142,3 @@ curseforge {
         }
     }
 }
-
-task signJar(type: SignJar, dependsOn: reobfJar) {
-    if (project.hasProperty("upload_api_key")) {
-        keyStore = project.keystore_path
-        alias = project.alias
-        storePass = project.keystore_pass
-        keyPass = project.keystore_pass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    }
-}
-
-build.dependsOn signJar
