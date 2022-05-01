@@ -2359,7 +2359,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         SKYBLOCK_INV.add(new SBInventoryTabs.Data(sacks, SBInventoryTabs.SACKS));
     }
 
-    private <T extends Enum> boolean matchSackId(String itemId, T[] enums)
+    private <T extends Enum<?>> boolean matchSackId(String itemId, T[] enums)
     {
         return Arrays.stream(enums).anyMatch(drop -> itemId.contains(drop.name().toLowerCase(Locale.ROOT)));
     }

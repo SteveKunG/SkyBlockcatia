@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-public class NumericToast implements IToast<NumericToast>
+public class NumericToast implements IToast
 {
     private static final ModDecimalFormat FORMAT = new ModDecimalFormat("#,###");
     private final FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);

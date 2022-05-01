@@ -47,7 +47,7 @@ public class GuiToast extends Gui
                 }
                 if (this.visible[i] == null && !this.toastsQueue.isEmpty())
                 {
-                    this.visible[i] = new GuiToast.ToastInstance(this.toastsQueue.removeFirst());
+                    this.visible[i] = new GuiToast.ToastInstance<>(this.toastsQueue.removeFirst());
                 }
             }
         }
@@ -106,6 +106,7 @@ public class GuiToast extends Gui
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public <T extends IToast> T getToast(Class<? extends T> clazz, Object obj)
     {

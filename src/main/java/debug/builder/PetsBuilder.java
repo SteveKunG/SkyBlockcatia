@@ -152,8 +152,8 @@ public class PetsBuilder
                 {
                     if (lore.getValue() instanceof Pair)
                     {
-                        Property leftProp = (Property)((Pair)lore.getValue()).getLeft();
-                        Property rightProp = (Property)((Pair)lore.getValue()).getRight();
+                        Property leftProp = (Property)((Pair<?, ?>)lore.getValue()).getLeft();
+                        Property rightProp = (Property)((Pair<?, ?>)lore.getValue()).getRight();
                         List<Double> baseList;
                         List<Double> multiplyList = new Gson().fromJson(rightProp.doubleList, new TypeToken<List<Double>>() {}.getType());
 
@@ -194,9 +194,9 @@ public class PetsBuilder
                     }
                     else
                     {
-                        Property leftProp = (Property)((Triple)lore.getValue()).getLeft();
-                        Property middleProp = (Property)((Triple)lore.getValue()).getMiddle();
-                        Property rightProp = (Property)((Triple)lore.getValue()).getRight();
+                        Property leftProp = (Property)((Triple<?, ?, ?>)lore.getValue()).getLeft();
+                        Property middleProp = (Property)((Triple<?, ?, ?>)lore.getValue()).getMiddle();
+                        Property rightProp = (Property)((Triple<?, ?, ?>)lore.getValue()).getRight();
                         Map<String, Object> realstats = Maps.newLinkedHashMap();
                         List<Double> baseList;
                         List<Double> additionalList = new Gson().fromJson(rightProp.doubleList, new TypeToken<List<Double>>() {}.getType());

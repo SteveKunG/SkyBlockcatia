@@ -45,7 +45,7 @@ public class EntityRendererMixin
     }
 
     @Inject(method = "getNightVisionBrightness(Lnet/minecraft/entity/EntityLivingBase;F)F", cancellable = true, at = @At("HEAD"))
-    private void getNightVisionBrightness(EntityLivingBase living, float partialTicks, CallbackInfoReturnable info)
+    private void getNightVisionBrightness(EntityLivingBase living, float partialTicks, CallbackInfoReturnable<Float> info)
     {
         if (SkyBlockcatiaSettings.INSTANCE.disableNightVision)
         {

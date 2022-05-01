@@ -23,7 +23,7 @@ public class PlayerControllerMPMixin
     Minecraft mc;
 
     @Inject(method = "onPlayerDestroyBlock(Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z", at = @At(value = "INVOKE", target = "net/minecraft/block/Block.removedByPlayer(Lnet/minecraft/world/World;Lnet/minecraft/util/BlockPos;Lnet/minecraft/entity/player/EntityPlayer;Z)Z"))
-    private void addBlockBreakEvent(BlockPos pos, EnumFacing facing, CallbackInfoReturnable info)
+    private void addBlockBreakEvent(BlockPos pos, EnumFacing facing, CallbackInfoReturnable<Boolean> info)
     {
         MinecraftForge.EVENT_BUS.post(new ClientBlockBreakEvent(this.mc.theWorld, pos));
     }

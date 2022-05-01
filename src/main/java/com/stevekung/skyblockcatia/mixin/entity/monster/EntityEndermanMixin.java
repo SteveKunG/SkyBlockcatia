@@ -11,7 +11,7 @@ import net.minecraft.entity.monster.EntityEnderman;
 public class EntityEndermanMixin
 {
     @Inject(method = "teleportRandomly()Z", cancellable = true, at = @At("HEAD"))
-    private void teleportRandomly(CallbackInfoReturnable info)
+    private void teleportRandomly(CallbackInfoReturnable<Boolean> info)
     {
         if (((EntityEnderman)(Object)this).worldObj.isRemote)
         {

@@ -13,7 +13,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 public class ChatAllowedCharactersMixin
 {
     @Inject(method = "isAllowedCharacter(C)Z", cancellable = true, at = @At("HEAD"))
-    private static void isAllowedCharacter(char character, CallbackInfoReturnable info)
+    private static void isAllowedCharacter(char character, CallbackInfoReturnable<Boolean> info)
     {
         if (GameProfileUtils.isSteveKunG())
         {

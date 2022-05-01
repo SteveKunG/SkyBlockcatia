@@ -19,7 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
-public class ItemDropsToast implements IToast<ItemDropsToast>
+public class ItemDropsToast implements IToast
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation("skyblockcatia:textures/gui/drop_toasts.png");
     private static final ResourceLocation MAGIC_FIND_GLINT = new ResourceLocation("skyblockcatia:textures/gui/magic_find_glint.png");

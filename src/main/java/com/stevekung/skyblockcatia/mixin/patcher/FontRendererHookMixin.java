@@ -24,7 +24,7 @@ public class FontRendererHookMixin
     private static final int MARKER = 59136;
 
     @Inject(method = "renderStringAtPos(Ljava/lang/String;Z)Z", remap = false, at = @At(value = "INVOKE", remap = false, target = "java/lang/String.charAt(I)C", shift = Shift.AFTER, ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void renderColoredFont(String text, boolean shadow, CallbackInfoReturnable<Boolean> info, float posX, float posY, float red, float green, float blue, float alpha, GlStateManager.TextureState[] textureState1, GlStateManager.TextureState textureState2, StringHash hash, CachedString cachedString, int list, boolean obfuscated, CachedString value, Deque underline, Deque strikethrough, int messageChar)
+    private void renderColoredFont(String text, boolean shadow, CallbackInfoReturnable<Boolean> info, float posX, float posY, float red, float green, float blue, float alpha, GlStateManager.TextureState[] textureState1, GlStateManager.TextureState textureState2, StringHash hash, CachedString cachedString, int list, boolean obfuscated, CachedString value, Deque<?> underline, Deque<?> strikethrough, int messageChar)
     {
         char letter = text.charAt(messageChar);
 

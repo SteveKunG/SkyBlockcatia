@@ -22,7 +22,7 @@ public abstract class RendererLivingEntityMixin extends Render<EntityLivingBase>
     }
 
     @Inject(method = "canRenderName(Lnet/minecraft/entity/EntityLivingBase;)Z", cancellable = true, at = @At("HEAD"))
-    private void renderName(EntityLivingBase entity, CallbackInfoReturnable info)
+    private void renderName(EntityLivingBase entity, CallbackInfoReturnable<Boolean> info)
     {
         if (entity instanceof SBFakePlayerEntity)
         {

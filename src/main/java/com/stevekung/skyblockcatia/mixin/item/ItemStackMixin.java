@@ -19,7 +19,7 @@ public class ItemStackMixin
     NBTTagCompound stackTagCompound;
 
     @Inject(method = "isItemEnchanted()Z", cancellable = true, at = @At("HEAD"))
-    private void addSkyblockEnchantTag(CallbackInfoReturnable info)
+    private void addSkyblockEnchantTag(CallbackInfoReturnable<Boolean> info)
     {
         if (SkyBlockcatiaSettings.INSTANCE.fixSkyblockEnchantTag && this.stackTagCompound != null && this.stackTagCompound.hasKey("ExtraAttributes", Constants.NBT.TAG_COMPOUND) && this.stackTagCompound.getCompoundTag("ExtraAttributes").hasKey("enchantments", Constants.NBT.TAG_COMPOUND) && !this.stackTagCompound.getCompoundTag("ExtraAttributes").getCompoundTag("enchantments").hasNoTags())
         {

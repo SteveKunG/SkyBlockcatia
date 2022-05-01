@@ -99,7 +99,7 @@ public abstract class LayerArmorBaseMixin<T extends ModelBase> implements LayerR
             return;
         }
 
-        ItemStack itemstack = ((LayerArmorBase) (Object) this).getCurrentArmor(entity, armorSlot);
+        ItemStack itemstack = ((LayerArmorBase<?>)(Object)this).getCurrentArmor(entity, armorSlot);
 
         if (itemstack != null && itemstack.getItem() instanceof ItemArmor)
         {

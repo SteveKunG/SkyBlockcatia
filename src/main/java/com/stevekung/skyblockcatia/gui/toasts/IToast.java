@@ -5,7 +5,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 
-public interface IToast<T>
+public interface IToast
 {
     Object NO_TOKEN = new Object();
     IToast.Visibility draw(GuiToast toastGui, long delta);
