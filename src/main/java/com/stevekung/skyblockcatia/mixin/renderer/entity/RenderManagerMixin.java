@@ -41,7 +41,7 @@ public class RenderManagerMixin
         {
             for (Entity partEntity : aentity)
             {
-                double d0 = (partEntity.posX -partEntity.prevPosX) * partialTicks;
+                double d0 = (partEntity.posX - partEntity.prevPosX) * partialTicks;
                 double d1 = (partEntity.posY - partEntity.prevPosY) * partialTicks;
                 double d2 = (partEntity.posZ - partEntity.prevPosZ) * partialTicks;
                 AxisAlignedBB axisalignedbb1 = partEntity.getEntityBoundingBox();

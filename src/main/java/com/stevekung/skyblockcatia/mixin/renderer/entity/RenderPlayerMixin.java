@@ -20,7 +20,7 @@ public class RenderPlayerMixin
     @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/RenderManager;Z)V", at = @At("RETURN"))
     private void init(RenderManager renderManager, boolean useSmallArms, CallbackInfo info)
     {
-        ((RenderPlayer) (Object) this).addLayer(new LayerGlowingSteveKunG((RenderPlayer) (Object) this));
+        ((RenderPlayer)(Object)this).addLayer(new LayerGlowingSteveKunG((RenderPlayer)(Object)this));
     }
 
     @Redirect(method = "setModelVisibilities(Lnet/minecraft/client/entity/AbstractClientPlayer;)V", at = @At(value = "INVOKE", target = "net/minecraft/client/entity/AbstractClientPlayer.isWearing(Lnet/minecraft/entity/player/EnumPlayerModelParts;)Z"))

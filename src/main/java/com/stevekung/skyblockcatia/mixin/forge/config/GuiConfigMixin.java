@@ -21,7 +21,7 @@ public class GuiConfigMixin extends GuiScreen
     @Override
     protected void keyTyped(char eventChar, int eventKey)
     {
-        GuiConfig config = (GuiConfig) (Object) this;
+        GuiConfig config = (GuiConfig)(Object)this;
 
         if (eventKey == Keyboard.KEY_ESCAPE)
         {

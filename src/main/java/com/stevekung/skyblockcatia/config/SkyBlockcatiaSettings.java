@@ -19,9 +19,9 @@ public class SkyBlockcatiaSettings
     public static final File userDir = new File(skyblockcatiaDir, GameProfileUtils.getUUID().toString());
     public static final File defaultConfig = new File(userDir, "default.dat");
     public static String currentProfile = "";
-    private static final String[] TOAST_MODE_DISABLED = new String[] {"skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast", "skyblockcatia.disabled"};
-    private static final String[] TOAST_MODE = new String[] {"skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast"};
-    private static final String[] HITBOX_RENDER_MODE = new String[] {"skyblockcatia.default", "skyblockcatia.dragon", "skyblockcatia.crystal", "skyblockcatia.dragon_and_crystal"};
+    private static final String[] TOAST_MODE_DISABLED = new String[] { "skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast", "skyblockcatia.disabled" };
+    private static final String[] TOAST_MODE = new String[] { "skyblockcatia.chat", "skyblockcatia.toast", "skyblockcatia.chat_and_toast" };
+    private static final String[] HITBOX_RENDER_MODE = new String[] { "skyblockcatia.default", "skyblockcatia.dragon", "skyblockcatia.crystal", "skyblockcatia.dragon_and_crystal" };
     private static File file;
 
     // Main
@@ -424,35 +424,35 @@ public class SkyBlockcatiaSettings
     {
         if (options == SkyBlockcatiaSettings.Options.ITEM_RARITY_OPACITY)
         {
-            this.itemRarityOpacity = (int) value;
+            this.itemRarityOpacity = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.AUCTION_BID_CONFIRM_VALUE)
         {
-            this.auctionBidConfirmValue = (int) value;
+            this.auctionBidConfirmValue = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.VISIT_ISLAND_TOAST_TIME)
         {
-            this.visitIslandToastTime = (int) value;
+            this.visitIslandToastTime = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.RARE_DROP_TOAST_TIME)
         {
-            this.rareDropToastTime = (int) value;
+            this.rareDropToastTime = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.SPECIAL_DROP_TOAST_TIME)
         {
-            this.specialDropToastTime = (int) value;
+            this.specialDropToastTime = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.FISH_CATCH_TOAST_TIME)
         {
-            this.fishCatchToastTime = (int) value;
+            this.fishCatchToastTime = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.GIFT_TOAST_TIME)
         {
-            this.giftToastTime = (int) value;
+            this.giftToastTime = (int)value;
         }
         else if (options == SkyBlockcatiaSettings.Options.PET_TOAST_TIME)
         {
-            this.petToastTime = (int) value;
+            this.petToastTime = (int)value;
         }
     }
 

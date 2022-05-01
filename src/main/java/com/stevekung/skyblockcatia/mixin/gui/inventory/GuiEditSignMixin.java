@@ -31,7 +31,7 @@ import net.minecraft.util.StringUtils;
 @Mixin(GuiEditSign.class)
 public class GuiEditSignMixin extends GuiScreen implements IEditSign
 {
-    private final GuiEditSign that = (GuiEditSign) (Object) this;
+    private final GuiEditSign that = (GuiEditSign)(Object)this;
     private TextInputUtil textInputUtil;
     private SignSelectionList globalSelector;
 

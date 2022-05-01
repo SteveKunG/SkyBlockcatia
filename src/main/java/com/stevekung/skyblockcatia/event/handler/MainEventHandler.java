@@ -403,7 +403,7 @@ public class MainEventHandler
                     {
                         long i = this.currentSystemTime;
                         long j = Minecraft.getSystemTime();
-                        MainEventHandler.currentServerPing = (int) (j - i);
+                        MainEventHandler.currentServerPing = (int)(j - i);
                     }
 
                     @Override

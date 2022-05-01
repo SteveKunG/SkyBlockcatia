@@ -17,19 +17,19 @@ public class TileEntitySignMixin implements IModifiedSign
     @Override
     public IChatComponent getText(int line)
     {
-        return ((TileEntitySign) (Object) this).signText[line];
+        return ((TileEntitySign)(Object)this).signText[line];
     }
 
     @Override
     public void setText(int line, IChatComponent component)
     {
-        ((TileEntitySign) (Object) this).signText[line] = component;
+        ((TileEntitySign)(Object)this).signText[line] = component;
     }
 
     @Override
     public void setSelectionState(int currentRow, int selectionStart, int selectionEnd, boolean caretVisible)
     {
-        ((TileEntitySign) (Object) this).lineBeingEdited = currentRow;
+        ((TileEntitySign)(Object)this).lineBeingEdited = currentRow;
         this.selectionStart = selectionStart;
         this.selectionEnd = selectionEnd;
         this.caretVisible = caretVisible;
@@ -38,7 +38,7 @@ public class TileEntitySignMixin implements IModifiedSign
     @Override
     public void resetSelectionState()
     {
-        ((TileEntitySign) (Object) this).lineBeingEdited = -1;
+        ((TileEntitySign)(Object)this).lineBeingEdited = -1;
         this.selectionStart = -1;
         this.selectionEnd = -1;
         this.caretVisible = false;

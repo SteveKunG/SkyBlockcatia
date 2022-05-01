@@ -55,7 +55,6 @@ public class UpdateName
     {
         URL url = new URL("https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names");
         JsonArray array = new JsonParser().parse(IOUtils.toString(url.openConnection().getInputStream(), StandardCharsets.UTF_8)).getAsJsonArray();
-        String name = array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
-        return name;
+        return array.get(array.size() - 1).getAsJsonObject().get("name").getAsString();
     }
 }

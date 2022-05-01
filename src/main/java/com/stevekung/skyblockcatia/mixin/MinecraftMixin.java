@@ -35,7 +35,7 @@ public class MinecraftMixin
     @Inject(method = "runGameLoop()V", at = @At(value = "INVOKE", target = "net/minecraft/client/renderer/EntityRenderer.updateCameraAndRender(FJ)V", shift = At.Shift.AFTER))
     private void runGameLoop(CallbackInfo info)
     {
-        HUDRenderEventHandler.INSTANCE.getToastGui().drawToast(new ScaledResolution((Minecraft) (Object) this));
+        HUDRenderEventHandler.INSTANCE.getToastGui().drawToast(new ScaledResolution((Minecraft)(Object)this));
     }
 
     @Inject(method = "refreshResources()V", at = @At("HEAD"))
@@ -45,7 +45,7 @@ public class MinecraftMixin
         {
             boolean found = false;
 
-            for (ResourcePackRepository.Entry entry : ((Minecraft) (Object) this).getResourcePackRepository().getRepositoryEntries())
+            for (ResourcePackRepository.Entry entry : ((Minecraft)(Object)this).getResourcePackRepository().getRepositoryEntries())
             {
                 String packName = entry.getResourcePack().getPackName();
                 String packDesc = entry.getTexturePackDescription();
@@ -93,7 +93,7 @@ public class MinecraftMixin
     {
         boolean foundDragon = false;
 
-        for (Entity entity : ((Minecraft) (Object) this).theWorld.loadedEntityList)
+        for (Entity entity : ((Minecraft)(Object)this).theWorld.loadedEntityList)
         {
             if (entity instanceof EntityDragon)
             {
@@ -103,7 +103,7 @@ public class MinecraftMixin
         }
         if (SkyBlockEventHandler.isSkyBlock && SkyBlockcatiaSettings.INSTANCE.sneakToOpenInventoryWhileFightDragon && foundDragon)
         {
-            return key.isPressed() && ((Minecraft) (Object) this).thePlayer.isSneaking();
+            return key.isPressed() && ((Minecraft)(Object)this).thePlayer.isSneaking();
         }
         return key.isPressed();
     }

@@ -45,7 +45,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 @Mixin(GuiContainer.class)
 public abstract class GuiContainerMixin extends GuiScreen implements IExtendedChatGui
 {
-    private final GuiContainer that = (GuiContainer) (Object) this;
+    private final GuiContainer that = (GuiContainer)(Object)this;
     private SearchMode mode = SearchMode.SIMPLE;
     private String fandomUrl;
 
@@ -726,12 +726,12 @@ public abstract class GuiContainerMixin extends GuiScreen implements IExtendedCh
 
     private int getRGBPlayerCount(int playerCount, int maxedPlayerCount)
     {
-        return MathHelper.hsvToRGB(Math.max(0.0F, (float) (1.0F - this.getPlayerCount(playerCount, maxedPlayerCount))) / 3.0F, 1.0F, 1.0F);
+        return MathHelper.hsvToRGB(Math.max(0.0F, (float)(1.0F - this.getPlayerCount(playerCount, maxedPlayerCount))) / 3.0F, 1.0F, 1.0F);
     }
 
     private double getPlayerCount(int playerCount, int maxedPlayerCount)
     {
-        return (double) playerCount / maxedPlayerCount;
+        return (double)playerCount / maxedPlayerCount;
     }
 
     private void checkCondition(int moneyFromText, int moneyFromAh, int priceMin, int priceMax, int slotLeft, int slotTop, int slotRight, int slotBottom, int color1, int color2)

@@ -52,14 +52,14 @@ public class SupporterUtils
 
     public static String replaceSupportersName(String text, String name, String color)
     {
-        String namePatt = "(?:(?:\\u00a7[0-9a-fbr])\\B(?:" + name + ")\\b)|(?:\\u00a7[rb]" + name + "\\u00a7r)|\\b" + name + "\\b";
+        Pattern namePatt = Pattern.compile("(?:(?:\\u00a7[0-9a-fbr])\\B(?:" + name + ")\\b)|(?:\\u00a7[rb]" + name + "\\u00a7r)|\\b" + name + "\\b");
         Pattern prevColor = Pattern.compile("(?:.*\\B(?:(?<color>\\u00a7[0-9a-fbr])" + name + ")\\b.*)");
         Matcher prevColorMat = prevColor.matcher(text);
 
         if (prevColorMat.matches())
         {
-            return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + prevColorMat.group("color"));
+            return namePatt.matcher(text).replaceAll(ColorUtils.stringToRGB(color).toColoredFont() + name + prevColorMat.group("color"));
         }
-        return text.replaceAll(namePatt, ColorUtils.stringToRGB(color).toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
+        return namePatt.matcher(text).replaceAll(ColorUtils.stringToRGB(color).toColoredFont() + name + ColorUtils.stringToRGB("255,255,255").toColoredFont());
     }
 }

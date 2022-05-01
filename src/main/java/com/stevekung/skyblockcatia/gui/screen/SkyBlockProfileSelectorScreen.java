@@ -45,7 +45,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class SkyBlockProfileSelectorScreen extends GuiScreen implements ITabComplete
 {
-    public static final String[] downloadingStates = new String[] {"", ".", "..", "..."};
+    public static final String[] downloadingStates = new String[] { "", ".", "..", "..." };
     private static boolean firstLoad;
     private static ItemStack selfItemCache;
     private static final Gson GSON = new Gson();

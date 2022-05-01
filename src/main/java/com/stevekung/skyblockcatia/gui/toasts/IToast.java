@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 public interface IToast
 {
     Object NO_TOKEN = new Object();
+
     IToast.Visibility draw(GuiToast toastGui, long delta);
 
     default Object getType()

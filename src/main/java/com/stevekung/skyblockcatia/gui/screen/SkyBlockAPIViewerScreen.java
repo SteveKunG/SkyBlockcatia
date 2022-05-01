@@ -82,7 +82,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 {
     private static final ResourceLocation INVENTORY_TABS = new ResourceLocation("skyblockcatia:textures/gui/tabs.png");
     private static final ResourceLocation XP_BARS = new ResourceLocation("skyblockcatia:textures/gui/skill_xp_bar.png");
-    private static final String[] REVENANT_HORROR_HEAD = new String[] {"0862e0b0-a14f-3f93-894f-013502936b59", "dbad99ed3c820b7978190ad08a934a68dfa90d9986825da1c97f6f21f49ad626"};
+    private static final String[] REVENANT_HORROR_HEAD = new String[] { "0862e0b0-a14f-3f93-894f-013502936b59", "dbad99ed3c820b7978190ad08a934a68dfa90d9986825da1c97f6f21f49ad626" };
 
     // Based stuff
     private boolean firstLoad;
@@ -705,7 +705,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                             this.renderToolTip(this.theSlot.getStack(), mouseX, mouseY);
                         }
                     }
-                    else if (stat.getType() == EmptyStats.Type.DUNGEON)//TODO
+                    else if (stat.getType() == EmptyStats.Type.DUNGEON)// TODO
                     {
                         int i = 0;
 
@@ -1151,8 +1151,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         {
             k = k + this.ySize - 32;
         }
-        boolean test = mouseX >= j + 1 && mouseX <= j + 27 && mouseY >= k && mouseY <= k + 26;
-        return test;
+        return mouseX >= j + 1 && mouseX <= j + 27 && mouseY >= k && mouseY <= k + 26;
     }
 
     private boolean isMouseOverSlot(Slot slot, int mouseX, int mouseY)
@@ -1376,7 +1375,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
                 WorldRenderer worldrenderer = tessellator.getWorldRenderer();
                 double health = itemStack.getItem().getDurabilityForDisplay(itemStack);
                 int i = Math.round(13.0F - (float)health * 13.0F);
-                int j = MathHelper.hsvToRGB(Math.max(0.0F, (float) (1.0F - health)) / 3.0F, 1.0F, 1.0F);
+                int j = MathHelper.hsvToRGB(Math.max(0.0F, (float)(1.0F - health)) / 3.0F, 1.0F, 1.0F);
                 this.itemRender.draw(worldrenderer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
                 this.itemRender.draw(worldrenderer, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255, 255);
                 GlStateManager.enableAlpha();
@@ -1721,7 +1720,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
     @Deprecated
     private final List<String> dungeonData = new ArrayList<>();
 
-    //TODO Make it better
+    // TODO Make it better
     private void getDungeons(SkyblockProfiles.Members currentUserProfile)
     {
         SBDungeons.Dungeons dungeons = currentUserProfile.getDungeons();
@@ -1905,7 +1904,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
         for (Map.Entry<String, Collection<Integer>> entry : this.craftedMinions.asMap().entrySet())
         {
             String minionType = entry.getKey();
-            int[] dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+            int[] dummyTiers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
             Collection<Integer> craftedList = entry.getValue();
             StringBuilder builder = new StringBuilder();
             int[] craftedTiers = Ints.toArray(craftedList);
@@ -1916,7 +1915,7 @@ public class SkyBlockAPIViewerScreen extends GuiScreen
 
             if (type != null && type.hasTier12())
             {
-                dummyTiers = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+                dummyTiers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
             }
             if (type == null)
             {

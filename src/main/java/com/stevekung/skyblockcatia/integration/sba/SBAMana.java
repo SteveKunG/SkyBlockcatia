@@ -32,8 +32,7 @@ public class SBAMana
             }
 
             Object getManaAttribute = getAttributes.getClass().getDeclaredMethod("get", Object.class).invoke(getAttributes, mana);
-            int manaValue = (int)getManaAttribute.getClass().getDeclaredMethod("getValue").invoke(getManaAttribute);
-            return manaValue;
+            return (int)getManaAttribute.getClass().getDeclaredMethod("getValue").invoke(getManaAttribute);
         }
         catch (Exception e)
         {

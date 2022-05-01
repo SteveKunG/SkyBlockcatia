@@ -7,8 +7,10 @@
     "plugin": "com.stevekung.skyblockcatia.core.SkyBlockcatiaMixinConfigPlugin",
     "client": [
         "MinecraftMixin",
+        
         "entity.EntityPlayerSPMixin",
         "entity.monster.EntityEndermanMixin",
+        
         "gui.FontRendererMixin",
         "gui.GuiChatMixin",
         "gui.GuiIngameMixin",
@@ -17,13 +19,18 @@
         "gui.GuiScreenMixin",
         "gui.inventory.GuiContainerMixin",
         "gui.inventory.GuiEditSignMixin",
+        
         "item.ItemFishingRodMixin",
         "item.ItemStackMixin",
+        
         "multiplayer.PlayerControllerMPMixin",
+        
         "network.NetHandlerPlayClientMixin",
         "network.NetworkPlayerInfoMixin",
+        
         "particle.EffectRendererMixin",
         "particle.EntityFirework_OverlayFXMixin",
+        
         "renderer.EntityRendererMixin",
         "renderer.ImageBufferDownloadMixin",
         "renderer.RenderGlobalMixin",
@@ -43,16 +50,24 @@
         "renderer.entity.layers.LayerHeldBlockMixin",
         "renderer.tileentity.TileEntityItemStackRendererMixin",
         "renderer.tileentity.TileEntitySignRendererMixin",
+        
         "tileentity.TileEntitySignMixin",
+        
         "world.WorldMixin",
+        
         "debug.ChatAllowedCharactersMixin",
+        
         "fixes.NetHandlerPlayClientMixin",
         "fixes.S34PacketMapsMixin",
         "fixes.ScoreboardMixin",
         "fixes.WorldRendererMixin",
+        
         "forge.config.GuiConfigMixin",
+        
         "patcher.FontRendererHookMixin",
+        
         "player_api.entity.EntityPlayerSPMixin",
+        
         "render_player_api.renderer.entity.RenderPlayerMixin"
     ],
     "injectors": {

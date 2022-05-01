@@ -5,5 +5,6 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 public interface IViewerLoader
 {
     boolean isLoadedFromViewer();
+
     NetworkPlayerInfo setLoadedFromViewer(boolean loaded);
 }

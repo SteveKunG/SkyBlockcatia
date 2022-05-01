@@ -217,7 +217,7 @@ public class SignSelectionList extends GuiListExtended
             {
                 return true;
             }
-            Entry other = (Entry) obj;
+            Entry other = (Entry)obj;
             return new EqualsBuilder().append(this.value, other.value).isEquals();
         }
 

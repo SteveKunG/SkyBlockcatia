@@ -70,10 +70,10 @@ public class GuiToast extends Gui
         {
             if (timeElapsed > 0)
             {
-                x = Math.max((int) (-textWidth * timeElapsed / textSpeed + x), -maxSize + 16);
+                x = Math.max((int)(-textWidth * timeElapsed / textSpeed + x), -maxSize + 16);
             }
 
-            int backward = Math.max(Math.min((int) -(textWidth * timeElapsed2 / textSpeed), 30), -maxSize + 16);
+            int backward = Math.max(Math.min((int)-(textWidth * timeElapsed2 / textSpeed), 30), -maxSize + 16);
 
             if (timeElapsed > timeElapsed2)
             {
@@ -92,7 +92,7 @@ public class GuiToast extends Gui
         float xpos = trans[12];
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor((int) ((xpos + 29) * scale), (int) ((height - 196) * scale), (int) (126 * scale), (int) (195 * scale));
+        GL11.glScissor((int)((xpos + 29) * scale), (int)((height - 196) * scale), (int)(126 * scale), (int)(195 * scale));
 
         if (shadow)
         {

@@ -52,7 +52,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
         {
             if (button instanceof GuiButtonCustomize)
             {
-                GuiButtonCustomize customButton = (GuiButtonCustomize) button;
+                GuiButtonCustomize customButton = (GuiButtonCustomize)button;
                 boolean isHover = mouseX >= customButton.xPosition && mouseY >= customButton.yPosition && mouseX < customButton.xPosition + customButton.width && mouseY < customButton.yPosition + customButton.height;
 
                 if (isHover && customButton.visible)
@@ -83,7 +83,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
                 {
                     if (button instanceof GuiButtonCustomize)
                     {
-                        GuiButtonCustomize buttonCustom = (GuiButtonCustomize) button;
+                        GuiButtonCustomize buttonCustom = (GuiButtonCustomize)button;
                         buttonCustom.visible = clicked;
                     }
                 });
@@ -104,7 +104,7 @@ public class GuiChatExtended implements IGuiChat, IDropboxCallback
 
         if (button instanceof GuiButtonCustomize)
         {
-            GuiButtonCustomize buttomCustom = (GuiButtonCustomize) button;
+            GuiButtonCustomize buttomCustom = (GuiButtonCustomize)button;
 
             if (button.id == buttomCustom.id)
             {

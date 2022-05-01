@@ -24,7 +24,7 @@ public class GuiScreenMixin
     @Inject(method = "confirmClicked(ZI)V", at = @At("HEAD"))
     private void confirmClicked(boolean result, int id, CallbackInfo info)
     {
-        GuiScreen screen = (GuiScreen) (Object) this;
+        GuiScreen screen = (GuiScreen)(Object)this;
 
         if (screen instanceof GuiEditSign)
         {
@@ -48,7 +48,7 @@ public class GuiScreenMixin
     @Inject(method = "mouseClicked(III)V", at = @At("HEAD"))
     private void mouseClicked(int mouseX, int mouseY, int mouseButton, CallbackInfo info) throws IOException
     {
-        GuiScreen screen = (GuiScreen) (Object) this;
+        GuiScreen screen = (GuiScreen)(Object)this;
 
         if (screen instanceof GuiEditSign)
         {
@@ -64,7 +64,7 @@ public class GuiScreenMixin
     @Inject(method = "mouseReleased(III)V", at = @At("HEAD"))
     private void mouseReleased(int mouseX, int mouseY, int state, CallbackInfo info) throws IOException
     {
-        GuiScreen screen = (GuiScreen) (Object) this;
+        GuiScreen screen = (GuiScreen)(Object)this;
 
         if (screen instanceof GuiEditSign)
         {
@@ -80,7 +80,7 @@ public class GuiScreenMixin
     @Inject(method = "handleMouseInput()V", at = @At("HEAD"))
     private void handleMouseInput(CallbackInfo info) throws IOException
     {
-        GuiScreen screen = (GuiScreen) (Object) this;
+        GuiScreen screen = (GuiScreen)(Object)this;
 
         if (screen instanceof GuiEditSign)
         {
@@ -96,7 +96,7 @@ public class GuiScreenMixin
     @Inject(method = "actionPerformed(Lnet/minecraft/client/gui/GuiButton;)V", at = @At("HEAD"))
     private void actionPerformed(GuiButton button, CallbackInfo info) throws IOException
     {
-        GuiScreen screen = (GuiScreen) (Object) this;
+        GuiScreen screen = (GuiScreen)(Object)this;
 
         if (screen instanceof GuiChest)
         {
@@ -119,7 +119,7 @@ public class GuiScreenMixin
     @Inject(method = "setText(Ljava/lang/String;Z)V", at = @At("HEAD"))
     private void setText(String newChatText, boolean shouldOverwrite, CallbackInfo info)
     {
-        GuiScreen screen = (GuiScreen) (Object) this;
+        GuiScreen screen = (GuiScreen)(Object)this;
 
         if (screen instanceof GuiChest)
         {

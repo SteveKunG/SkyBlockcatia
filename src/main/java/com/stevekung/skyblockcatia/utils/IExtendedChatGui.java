@@ -7,5 +7,6 @@ import net.minecraft.client.gui.GuiTextField;
 public interface IExtendedChatGui extends ITabComplete
 {
     GuiNumberField getNumberField();
+
     GuiTextField getChatTextField();
 }

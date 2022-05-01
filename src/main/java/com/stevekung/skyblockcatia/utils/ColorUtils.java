@@ -139,22 +139,22 @@ public class ColorUtils
 
         public int packedRed()
         {
-            return (int) (this.red * 255.0F);
+            return (int)(this.red * 255.0F);
         }
 
         public int packedGreen()
         {
-            return (int) (this.green * 255.0F);
+            return (int)(this.green * 255.0F);
         }
 
         public int packedBlue()
         {
-            return (int) (this.blue * 255.0F);
+            return (int)(this.blue * 255.0F);
         }
 
         public int packedAlpha()
         {
-            return (int) (this.alpha * 255.0F);
+            return (int)(this.alpha * 255.0F);
         }
 
         public float floatRed()
@@ -179,22 +179,22 @@ public class ColorUtils
 
         public int red()
         {
-            return (int) this.red;
+            return (int)this.red;
         }
 
         public int green()
         {
-            return (int) this.green;
+            return (int)this.green;
         }
 
         public int blue()
         {
-            return (int) this.blue;
+            return (int)this.blue;
         }
 
         public int alpha()
         {
-            return (int) this.alpha;
+            return (int)this.alpha;
         }
 
         public String toColoredFont()
@@ -221,7 +221,7 @@ public class ColorUtils
         private String formatColored(int r, int g, int b)
         {
             int marker = 59136;
-            return String.format("%c%c%c", (char) (marker + (r & 255)), (char) (marker + (g & 255)), (char) (marker + (b & 255)));
+            return String.format("%c%c%c", (char)(marker + (r & 255)), (char)(marker + (g & 255)), (char)(marker + (b & 255)));
         }
     }
 }

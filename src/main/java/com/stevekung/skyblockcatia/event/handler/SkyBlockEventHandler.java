@@ -873,7 +873,7 @@ public class SkyBlockEventHandler
 
                     if (extraAttributes != null)
                     {
-                        extraAttributes = (NBTTagCompound) extraAttributes.copy();
+                        extraAttributes = (NBTTagCompound)extraAttributes.copy();
                     }
                     previousInventoryMap.put(previousItem.getDisplayName(), new ItemDropDiff(previousItem, amount, extraAttributes));
                 }
@@ -895,7 +895,7 @@ public class SkyBlockEventHandler
 
                     if (extraAttributes != null)
                     {
-                        extraAttributes = (NBTTagCompound) extraAttributes.copy();
+                        extraAttributes = (NBTTagCompound)extraAttributes.copy();
                     }
                     newInventoryMap.put(newItem.getDisplayName(), new ItemDropDiff(newItem, amount, extraAttributes));
                 }
