@@ -403,6 +403,11 @@ public class SkyBlockEventHandler
                     this.mc.thePlayer.sendChatMessage("/p leave");
                 }
 
+                if (SkyBlockcatiaSettings.INSTANCE.disableSuperboomNotification && message.contains("Your Superboom TNT is ineffective"))
+                {
+                     cancelMessage = true;
+                }
+
                 if (SkyBlockEventHandler.isSkyBlock || SkyBlockcatiaMod.isDevelopment)
                 {
                     if (dragonDownMatcher.matches())

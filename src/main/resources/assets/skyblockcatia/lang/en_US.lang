@@ -41,6 +41,7 @@ extended_config.skyblock.global.title=Global Config...
 extended_config.skyblock.toast.title=Toast Config...
 
 disable_night_vision.extended_config=Disable Night Vision
+disable_superboom_notification.extended_config=Disable Superboom Notification
 right_click_add_party.extended_config=Right Click to Add Party
 jungle_axe_cooldown.extended_config=Jungle Axe Cooldown
 grappling_hook_cooldown.extended_config=Grappling Hook Cooldown
