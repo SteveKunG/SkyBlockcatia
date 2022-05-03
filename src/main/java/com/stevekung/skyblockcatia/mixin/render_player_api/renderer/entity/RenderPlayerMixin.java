@@ -15,17 +15,14 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 
 @Mixin(RenderPlayer.class)
-public class RenderPlayerMixin
-{
+public class RenderPlayerMixin {
     @Inject(method = "<init>(Lnet/minecraft/client/renderer/entity/RenderManager;Z)V", at = @At("RETURN"))
-    private void init(RenderManager renderManager, boolean useSmallArms, CallbackInfo info)
-    {
+    private void init(RenderManager renderManager, boolean useSmallArms, CallbackInfo info) {
         ((RenderPlayer) (Object) this).addLayer(new LayerGlowingSteveKunG((RenderPlayer) (Object) this));
     }
 
-    @Redirect(method = "localSetModelVisibilities(Lnet/minecraft/client/entity/AbstractClientPlayer;)V", remap = false, at = @At(value = "INVOKE", remap = false, target = "net/minecraft/client/entity/AbstractClientPlayer.func_175148_a(Lnet/minecraft/entity/player/EnumPlayerModelParts;)Z"))
-    private boolean fixSecondLayer(AbstractClientPlayer clientPlayer, EnumPlayerModelParts part)
-    {
+    @Redirect(method = "setModelVisibilities", remap = false, at = @At(value = "INVOKE", remap = false, target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isWearing(Lnet/minecraft/entity/player/EnumPlayerModelParts;)Z"))
+    private boolean fixSecondLayer(AbstractClientPlayer clientPlayer, EnumPlayerModelParts part) {
         return SkyBlockAPIViewerScreen.renderSecondLayer || clientPlayer.isWearing(part);
     }
 }
