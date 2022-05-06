@@ -53,8 +53,6 @@
         
         "tileentity.TileEntitySignMixin",
         
-        "world.WorldMixin",
-        
         "debug.ChatAllowedCharactersMixin",
         
         "fixes.NetHandlerPlayClientMixin",
