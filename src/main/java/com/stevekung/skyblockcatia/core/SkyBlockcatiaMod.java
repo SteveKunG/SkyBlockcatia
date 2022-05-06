@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, updateJSON = SkyBlockcatiaMod.JSON_URL, guiFactory = SkyBlockcatiaMod.GUI_FACTORY, certificateFingerprint = SkyBlockcatiaMod.CERTIFICATE)
+@Mod(modid = SkyBlockcatiaMod.MOD_ID, name = SkyBlockcatiaMod.NAME, version = SkyBlockcatiaMod.VERSION, dependencies = SkyBlockcatiaMod.DEPENDENCIES, clientSideOnly = true, updateJSON = SkyBlockcatiaMod.JSON_URL, guiFactory = SkyBlockcatiaMod.GUI_FACTORY)
 public class SkyBlockcatiaMod
 {
     protected static final String NAME = "SkyBlockcatia";
@@ -44,7 +44,6 @@ public class SkyBlockcatiaMod
     protected static final String GUI_FACTORY = "com.stevekung.skyblockcatia.config.ConfigGuiFactory";
     public static final String VERSION = SkyBlockcatiaMod.MAJOR_VERSION + "." + SkyBlockcatiaMod.MINOR_VERSION + "." + SkyBlockcatiaMod.BUILD_VERSION;
     protected static final String FORGE_VERSION = "required-after:Forge@[11.15.1.2318,);";
-    protected static final String CERTIFICATE = "@FINGERPRINT@";
     protected static final String DEPENDENCIES = "after:skyblockaddons@[1.6.0,); after:notenoughupdates@[2.0.0-REL,); after:text_overflow_scroll@[1.4.0,); " + SkyBlockcatiaMod.FORGE_VERSION;
     private static final String URL = "https://www.curseforge.com/minecraft/mc-mods/skyblockcatia";
     protected static final String JSON_URL = "https://raw.githubusercontent.com/SteveKunG/VersionCheckLibrary/master/skyblockcatia_version.json";
