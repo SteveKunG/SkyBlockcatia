@@ -25,7 +25,7 @@ public class UpdateName
         List<String> uuidList = Lists.newArrayList();
         List<String> nameList = Lists.newArrayList();
 
-        Path path = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyblockData\\supporters_uuid");
+        Path path = Paths.get("E:\\Modding\\SkyBlockcatia\\SkyblockData\\supporters_uuid");
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile()), StandardCharsets.UTF_8));
         String inputLine;
 
@@ -41,13 +41,13 @@ public class UpdateName
             System.out.println(name);
         }
 
-        Path file = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyblockData\\supporters_username");
+        Path file = Paths.get("E:\\Modding\\SkyBlockcatia\\SkyblockData\\supporters_username");
         Files.write(file, nameList, StandardCharsets.UTF_8);
-        file = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.8.9\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
+        file = Paths.get("E:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.8.9\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
         Files.write(file, nameList, StandardCharsets.UTF_8);
-        file = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.16.5_architectury\\common\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
+        file = Paths.get("E:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.16.5_architectury\\common\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
         Files.write(file, nameList, StandardCharsets.UTF_8);
-        file = Paths.get("M:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.17.x_architectury\\common\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
+        file = Paths.get("E:\\Modding\\SkyBlockcatia\\SkyBlockcatia_1.17.x_architectury\\common\\src\\main\\resources\\assets\\skyblockcatia\\api\\supporters_username");
         Files.write(file, nameList, StandardCharsets.UTF_8);
     }
 
