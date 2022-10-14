@@ -39,7 +39,7 @@ public class DataUtils
             URL url = new URL("https://raw.githubusercontent.com/SteveKunG/SkyBlockcatia/skyblock_data/" + fileName);
             return new BufferedReader(new InputStreamReader(url.openConnection().getInputStream(), StandardCharsets.UTF_8));
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
             SkyBlockcatia.LOGGER.error("Couldn't get {} from remote, using local data", fileName);
